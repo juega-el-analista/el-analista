@@ -1,0 +1,10 @@
+node_modules/
+package-lock.json
+
+# artefactos que generan los scripts de prueba al correr
+pruebas/compilado.js
+pruebas/probe*.js
+pruebas/conteo*.js
+pruebas/puente.js
+pruebas/*-log.txt
+*.output

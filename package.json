@@ -1,0 +1,25 @@
+{
+  "name": "el-analista",
+  "version": "5.1.0",
+  "private": true,
+  "description": "Simulador de carrera e inversion: 30 anos, 20 minijuegos y un temario de finanzas que sube contigo.",
+  "scripts": {
+    "build": "node pruebas/empaquetar.js",
+    "servir": "node pruebas/servidor.js",
+    "sintaxis": "node pruebas/chk.js",
+    "robustez": "node pruebas/comparar.js",
+    "cobertura": "node pruebas/cobertura.js 20",
+    "finales": "node pruebas/finales.js 20",
+    "alcance": "node pruebas/alcance.js 12",
+    "deuda": "node pruebas/deuda.js",
+    "fondo": "node pruebas/fondo3.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7",
+    "@babel/parser": "^7",
+    "@babel/preset-react": "^7",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-test-renderer": "^18"
+  }
+}
