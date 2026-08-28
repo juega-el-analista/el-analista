@@ -1,0 +1,83 @@
+# Construye el juego y lo publica en GitHub Pages en cada push a main.
+#
+# Antes esto era manual —npm run build, git add, git push— y bastaba con
+# olvidarse una vez para que el sitio quedara mostrando una versión vieja
+# sin que nadie se diera cuenta.
+#
+# Las pruebas van ANTES del despliegue a propósito: si algo está roto, el
+# sitio se queda con la última versión buena en vez de publicar el fallo.
+# Es la única barrera automática que tenemos, porque la protección de rama
+# no está disponible en este plan.
+
+name: Publicar el juego
+
+on:
+  push:
+    branches: [main]
+  # y a mano desde la pestaña Actions, por si hace falta republicar
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Si llegan dos push seguidos, se publica el último y se cancela el anterior.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    name: Construir y verificar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Traer el repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Sintaxis
+        run: npm run sintaxis
+
+      - name: Construir el juego
+        run: npm run build
+
+      - name: El documento sabe reconstruirse
+        run: npm run quine
+
+      # La batería de guardados corruptos y estados imposibles. Es lenta,
+      # y es la que ha cazado los bugs que nadie vio leyendo el código.
+      - name: Robustez
+        run: npm run robustez
+
+      - name: Preparar la carpeta del sitio
+        run: |
+          mkdir -p sitio
+          cp index.html sitio/index.html
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir el sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: sitio
+
+  desplegar:
+    name: Publicar en Pages
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - name: Desplegar
+        id: despliegue
+        uses: actions/deploy-pages@v4

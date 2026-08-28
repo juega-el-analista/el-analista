@@ -35,9 +35,11 @@ npm run build        # src/el-analista.jsx  ->  index.html
 npm run servir       # sirve el juego en http://localhost:5173
 ```
 
-El archivo `index.html` se abre con doble clic, sin más. Es también lo que sirve
-GitHub Pages, así que el juego está en vivo en
-**https://aleferrara1807.github.io/el-analista/**
+El archivo `index.html` se abre con doble clic, sin más.
+
+El juego está en vivo en **https://aleferrara1807.github.io/el-analista/**, y se
+reconstruye y republica solo en cada push a `main` — pero solo si las pruebas
+pasan. Si fallan, el sitio se queda con la última versión buena.
 
 ## Cómo se verifica
 

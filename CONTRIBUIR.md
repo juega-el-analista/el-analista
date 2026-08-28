@@ -52,11 +52,17 @@ equivocada. Ninguno se veía jugando.
 **Si añades contenido, añádele su marcador** en `pruebas/cobertura.js`. Sin
 marcador, la prueba da por bueno un contenido que quizá no aparece nunca.
 
-## 3 · Publicar es aparte, y lo hace Alessandro
+## 3 · El sitio se publica solo; el artifact no
 
-Que un cambio entre en `main` no lo publica. El juego vive en un artifact y se
-republica a mano. Así que un pull request incorporado **todavía no lo están
-jugando**: hay un paso más, y es deliberado.
+En cuanto algo entra en `main`, GitHub reconstruye el juego y lo publica en
+**https://aleferrara1807.github.io/el-analista/**. No hay que acordarse de nada.
+
+Pero el despliegue **corre las pruebas primero**. Si fallan, no se publica y el
+sitio se queda con la última versión buena. Esa es la única barrera automática
+que tenemos: la protección de rama no está disponible en este plan.
+
+Lo que **no** es automático es el artifact de claude.ai, que es donde funciona el
+registro de carreras. Ese lo republica Alessandro a mano.
 
 ---
 
