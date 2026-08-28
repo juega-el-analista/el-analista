@@ -1004,29 +1004,29 @@ const CSS5 = `
 /* --- el titular: lo único que se lee sin abrir nada --- */
 .ea-titular{border-top:2px solid var(--tintaPapel);border-bottom:1px dashed rgba(26,37,40,.35);
   padding:12px 0 13px;margin-top:14px}
-.ea-panel .ea-titular{border-top-color:var(--borde);border-bottom-color:var(--borde)}
+.ea-panel .ea-titular,.ea-modal .ea-titular{border-top-color:var(--borde);border-bottom-color:var(--borde)}
 .ea-titularK{font-size:10.5px;letter-spacing:.2em;color:var(--gris)}
-.ea-panel .ea-titularK{color:var(--tenue)}
+.ea-panel .ea-titularK,.ea-modal .ea-titularK{color:var(--tenue)}
 .ea-titularV{font-size:31px;line-height:1.05;color:#111B1D;margin:3px 0 6px}
-.ea-panel .ea-titularV{color:var(--papel)}
+.ea-panel .ea-titularV,.ea-modal .ea-titularV{color:var(--papel)}
 .ea-titularL{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px}
-.ea-panel .ea-titularL{color:var(--tenue)}
+.ea-panel .ea-titularL,.ea-modal .ea-titularL{color:var(--tenue)}
 .ea-titularA{font-size:15px;color:var(--cobre);margin-top:8px}
 
 /* --- secciones plegables: cerradas enseñan su cifra --- */
 .ea-plegs{margin-top:14px;border-top:1px dotted rgba(26,37,40,.32)}
-.ea-panel .ea-plegs{border-top-color:var(--borde)}
+.ea-panel .ea-plegs,.ea-modal .ea-plegs{border-top-color:var(--borde)}
 .ea-pleg{border-bottom:1px dotted rgba(26,37,40,.32)}
-.ea-panel .ea-pleg{border-bottom-color:var(--borde)}
+.ea-panel .ea-pleg,.ea-modal .ea-pleg{border-bottom-color:var(--borde)}
 .ea-plegB{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:10px;width:100%;
   background:transparent;border:none;padding:11px 2px;cursor:pointer;text-align:left;font:inherit}
 .ea-plegB:hover .ea-plegT{color:var(--cobre)}
 .ea-plegF{font-size:15px;color:var(--gris);line-height:1;width:12px}
-.ea-panel .ea-plegF{color:var(--tenue)}
+.ea-panel .ea-plegF,.ea-modal .ea-plegF{color:var(--tenue)}
 .ea-plegT{font-size:12.5px;letter-spacing:.08em;color:#2A3639}
-.ea-panel .ea-plegT{color:var(--hueso)}
+.ea-panel .ea-plegT,.ea-modal .ea-plegT{color:var(--hueso)}
 .ea-plegR{font-size:13px;color:var(--gris);white-space:nowrap;font-variant-numeric:tabular-nums}
-.ea-panel .ea-plegR{color:var(--tenue)}
+.ea-panel .ea-plegR,.ea-modal .ea-plegR{color:var(--tenue)}
 .ea-plegC{padding:2px 0 15px;animation:ea-abre .16s ease-out}
 
 /* --- los avisos de la guía --- */
