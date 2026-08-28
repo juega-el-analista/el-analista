@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>El Analista</title>
 <style>
   html, body { margin: 0; padding: 0; background: #0C191D; }
@@ -28,11 +33,301 @@
     }
   }
 </style>
+</head>
+<body>
 
 <div id="raiz"><div id="cargando">Cargando El Analista&hellip;</div></div>
 <div id="tronado"></div>
 
-<script>/**
+<script type="application/json" id="registro">[]</script>
+<script type="text/plain" id="plantilla"><!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El Analista</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #0C191D; }
+  #raiz { min-height: 100vh; }
+  /* mientras carga, algo que no sea una pantalla en blanco */
+  #cargando { color: #7B8D8F; font-family: system-ui, sans-serif; padding: 40px 24px; font-size: 14px; letter-spacing: .06em; }
+  #tronado { color: #CFC9BA; background: #13252A; border: 1px solid #20393E; margin: 24px;
+             padding: 20px; font-family: ui-monospace, Menlo, monospace; font-size: 13px;
+             white-space: pre-wrap; word-break: break-word; display: none; }
+
+  /* el juego se puede jugar con el teclado: que se vea dónde estás.
+     El diseño propio ya lo hace en las opciones del memorando; esto lo
+     extiende al resto de los botones y controles. */
+  #raiz button:focus-visible,
+  #raiz input:focus-visible,
+  #raiz [role="button"]:focus-visible {
+    outline: 2px solid #C0763A;
+    outline-offset: 2px;
+  }
+
+  /* quien haya pedido menos movimiento en su sistema no debería recibir
+     los sellos que rebotan ni los memorandos que entran deslizándose */
+  @media (prefers-reduced-motion: reduce) {
+    #raiz *, #raiz *::before, #raiz *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="raiz"><div id="cargando">Cargando El Analista&hellip;</div></div>
+<div id="tronado"></div>
+
+<script type="application/json" id="registro">%%REGISTRO%%[[FIN-SCRIPT]]>
+<script type="text/plain" id="plantilla">%%PLANTILLA%%[[FIN-SCRIPT]]>
+
+<script id="puente">
+/* ============================================================
+   EL PUENTE
+   Vive en la cáscara, no en el motor: así el motor sigue siendo React
+   puro y toda la lógica de reconstruir el documento queda en un sitio
+   pequeño y fácil de leer.
+
+   Le ofrece tres cosas al juego:
+     window.__REGISTRO           el registro de carreras, ya leído
+     window.__puedeAnotar()      si esta vista puede publicar
+     window.__anotarCarrera(x)   añade una carrera y publica
+   ============================================================ */
+(function () {
+  "use strict";
+
+  /* El informe de errores va aquí, en el primer bloque que corre, para
+     que llegue a tiempo de cazar un fallo del propio motor. */
+  window.__tronar = function (e) {
+    try {
+      var caja = document.getElementById("tronado");
+      caja.style.display = "block";
+      caja.textContent = "El juego no pudo arrancar.\n\n" + (e && e.stack ? e.stack : String(e));
+    } catch (_) {}
+  };
+  window.addEventListener("error", function (ev) { window.__tronar(ev.error || ev.message); });
+
+  /* Marcas por trozos: si aparecieran literales, el generador vería dos
+     copias de cada una y no sabría cuál es la de verdad. */
+  var CIE = "<" + "/script";
+  var M_FIN = "[[FIN-" + "SCRIPT]]";
+  var M_REG = "%%" + "REGISTRO" + "%%";
+  var M_PLANT = "%%" + "PLANTILLA" + "%%";
+  var M_REACT = "%%" + "REACT" + "%%";
+  var M_DOM = "%%" + "REACTDOM" + "%%";
+  var M_JUEGO = "%%" + "JUEGO" + "%%";
+  var TOPE = 200;
+
+  function textoDe(id) {
+    var el = document.getElementById(id);
+    return el ? (el.textContent || "") : "";
+  }
+  function proteger(s) { return s.split(CIE).join(M_FIN); }
+  function leerPlantilla() { return textoDe("plantilla").split(M_FIN).join(CIE); }
+
+  function leerRegistro() {
+    try {
+      var v = JSON.parse(textoDe("registro"));
+      return Array.isArray(v) ? v : [];
+    } catch (e) { return []; }
+  }
+
+  window.__REGISTRO = leerRegistro();
+
+  /* La capacidad se resuelve una vez y se recuerda. null significa que
+     esta vista no puede publicar: ni servida, ni concedida, ni cargada,
+     indistinguibles a propósito, así que se tratan igual. */
+  var pedido = null;
+  function capacidad() {
+    if (pedido) return pedido;
+    var c = window.claude;
+    if (!c || typeof c.use !== "function") {
+      pedido = Promise.resolve(null);
+    } else {
+      pedido = c.use("artifact").then(function (api) {
+        return api && typeof api.publish === "function" ? api : null;
+      }).catch(function () { return null; });
+    }
+    return pedido;
+  }
+
+  window.__puedeAnotar = function () {
+    return capacidad().then(function (api) { return !!api; });
+  };
+
+  /* Añade una carrera al registro y publica el documento nuevo. Resuelve
+     con null si fue bien, o con un motivo si no. No lanza: el juego no
+     tiene por qué saber de códigos de error. */
+  window.__anotarCarrera = function (entrada) {
+    return capacidad().then(function (api) {
+      if (!api) return "sin-permiso";
+
+      var lista = window.__REGISTRO.concat([entrada])
+        .sort(function (a, b) { return ((b && b.p) || 0) - ((a && a.p) || 0); })
+        .slice(0, TOPE);
+
+      var plantilla = leerPlantilla();
+      if (!plantilla || plantilla.indexOf(M_PLANT) < 0) return "sin-plantilla";
+
+      /* EL ORDEN IMPORTA. Rellenar la plantilla inserta la cáscara entera,
+         que lleva todas las marcas sin rellenar dentro; a partir de ahí
+         cualquier replace siguiente golpearía la copia de la isla en vez
+         de la parte viva del documento, y los motores se quedarían sin
+         inyectar. Los motores van primero y la plantilla al final. */
+      var doc = plantilla
+        .replace(M_REG, function () { return JSON.stringify(lista); })
+        .replace(M_REACT, function () { return textoDe("motor-react"); })
+        .replace(M_DOM, function () { return textoDe("motor-dom"); })
+        .replace(M_JUEGO, function () { return textoDe("motor-juego"); })
+        .replace(M_PLANT, function () { return proteger(plantilla); });
+
+      return api.publish(doc).then(function () { return null; }, function (err) {
+        var codigo = err && (err.code || err.name) ? String(err.code || err.name) : "";
+        if (codigo === "conflict") return "conflicto";
+        if (codigo === "not_granted" || codigo === "not_writer") return "sin-permiso";
+        return "fallo";
+      });
+    });
+  };
+})();
+[[FIN-SCRIPT]]>
+
+<script id="motor-react">%%REACT%%[[FIN-SCRIPT]]>
+<script id="motor-dom">%%REACTDOM%%[[FIN-SCRIPT]]>
+<!-- El motor del juego va SOLO en su bloque, sin envoltorio ninguno.
+     Si la marca estuviera dentro de un envoltorio, al republicar se
+     reinyectaría el bloque entero dentro de ese mismo envoltorio y
+     quedaría anidado dos veces: ElAnalista viviría en el ámbito interno
+     y el montaje de fuera tronaría. El arranque va aparte, debajo. -->
+<script id="motor-juego">%%JUEGO%%[[FIN-SCRIPT]]>
+<script id="arranque">
+(function () {
+  try {
+    var raiz = document.getElementById("raiz");
+    raiz.innerHTML = "";
+    ReactDOM.createRoot(raiz).render(React.createElement(ElAnalista));
+  } catch (e) { window.__tronar(e); }
+})();
+[[FIN-SCRIPT]]>
+</body>
+</html>
+</script>
+
+<script id="puente">
+/* ============================================================
+   EL PUENTE
+   Vive en la cáscara, no en el motor: así el motor sigue siendo React
+   puro y toda la lógica de reconstruir el documento queda en un sitio
+   pequeño y fácil de leer.
+
+   Le ofrece tres cosas al juego:
+     window.__REGISTRO           el registro de carreras, ya leído
+     window.__puedeAnotar()      si esta vista puede publicar
+     window.__anotarCarrera(x)   añade una carrera y publica
+   ============================================================ */
+(function () {
+  "use strict";
+
+  /* El informe de errores va aquí, en el primer bloque que corre, para
+     que llegue a tiempo de cazar un fallo del propio motor. */
+  window.__tronar = function (e) {
+    try {
+      var caja = document.getElementById("tronado");
+      caja.style.display = "block";
+      caja.textContent = "El juego no pudo arrancar.\n\n" + (e && e.stack ? e.stack : String(e));
+    } catch (_) {}
+  };
+  window.addEventListener("error", function (ev) { window.__tronar(ev.error || ev.message); });
+
+  /* Marcas por trozos: si aparecieran literales, el generador vería dos
+     copias de cada una y no sabría cuál es la de verdad. */
+  var CIE = "<" + "/script";
+  var M_FIN = "[[FIN-" + "SCRIPT]]";
+  var M_REG = "%%" + "REGISTRO" + "%%";
+  var M_PLANT = "%%" + "PLANTILLA" + "%%";
+  var M_REACT = "%%" + "REACT" + "%%";
+  var M_DOM = "%%" + "REACTDOM" + "%%";
+  var M_JUEGO = "%%" + "JUEGO" + "%%";
+  var TOPE = 200;
+
+  function textoDe(id) {
+    var el = document.getElementById(id);
+    return el ? (el.textContent || "") : "";
+  }
+  function proteger(s) { return s.split(CIE).join(M_FIN); }
+  function leerPlantilla() { return textoDe("plantilla").split(M_FIN).join(CIE); }
+
+  function leerRegistro() {
+    try {
+      var v = JSON.parse(textoDe("registro"));
+      return Array.isArray(v) ? v : [];
+    } catch (e) { return []; }
+  }
+
+  window.__REGISTRO = leerRegistro();
+
+  /* La capacidad se resuelve una vez y se recuerda. null significa que
+     esta vista no puede publicar: ni servida, ni concedida, ni cargada,
+     indistinguibles a propósito, así que se tratan igual. */
+  var pedido = null;
+  function capacidad() {
+    if (pedido) return pedido;
+    var c = window.claude;
+    if (!c || typeof c.use !== "function") {
+      pedido = Promise.resolve(null);
+    } else {
+      pedido = c.use("artifact").then(function (api) {
+        return api && typeof api.publish === "function" ? api : null;
+      }).catch(function () { return null; });
+    }
+    return pedido;
+  }
+
+  window.__puedeAnotar = function () {
+    return capacidad().then(function (api) { return !!api; });
+  };
+
+  /* Añade una carrera al registro y publica el documento nuevo. Resuelve
+     con null si fue bien, o con un motivo si no. No lanza: el juego no
+     tiene por qué saber de códigos de error. */
+  window.__anotarCarrera = function (entrada) {
+    return capacidad().then(function (api) {
+      if (!api) return "sin-permiso";
+
+      var lista = window.__REGISTRO.concat([entrada])
+        .sort(function (a, b) { return ((b && b.p) || 0) - ((a && a.p) || 0); })
+        .slice(0, TOPE);
+
+      var plantilla = leerPlantilla();
+      if (!plantilla || plantilla.indexOf(M_PLANT) < 0) return "sin-plantilla";
+
+      /* EL ORDEN IMPORTA. Rellenar la plantilla inserta la cáscara entera,
+         que lleva todas las marcas sin rellenar dentro; a partir de ahí
+         cualquier replace siguiente golpearía la copia de la isla en vez
+         de la parte viva del documento, y los motores se quedarían sin
+         inyectar. Los motores van primero y la plantilla al final. */
+      var doc = plantilla
+        .replace(M_REG, function () { return JSON.stringify(lista); })
+        .replace(M_REACT, function () { return textoDe("motor-react"); })
+        .replace(M_DOM, function () { return textoDe("motor-dom"); })
+        .replace(M_JUEGO, function () { return textoDe("motor-juego"); })
+        .replace(M_PLANT, function () { return proteger(plantilla); });
+
+      return api.publish(doc).then(function () { return null; }, function (err) {
+        var codigo = err && (err.code || err.name) ? String(err.code || err.name) : "";
+        if (codigo === "conflict") return "conflicto";
+        if (codigo === "not_granted" || codigo === "not_writer") return "sin-permiso";
+        return "fallo";
+      });
+    });
+  };
+})();
+</script>
+
+<script id="motor-react">/**
  * @license React
  * react.production.min.js
  *
@@ -64,7 +359,7 @@ c.useEffect=function(a,b){return g.current.useEffect(a,b)};c.useId=function(){re
 c.useState=function(a){return g.current.useState(a)};c.useSyncExternalStore=function(a,b,c){return g.current.useSyncExternalStore(a,b,c)};c.useTransition=function(){return g.current.useTransition()};c.version="18.3.1"});
 })();
 </script>
-<script>/**
+<script id="motor-dom">/**
  * @license React
  * react-dom.production.min.js
  *
@@ -332,18 +627,12 @@ var d=null!=c&&c.hydratedSources||null,e=!1,f="",g=aj;null!==c&&void 0!==c&&(!0=
 function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmountComponentAtNode=function(a){if(!Vd(a))throw Error(m(40));return a._reactRootContainer?(yb(function(){Wd(null,null,a,!1,function(){a._reactRootContainer=null;a[Ja]=null})}),!0):!1};Q.unstable_batchedUpdates=Tf;Q.unstable_renderSubtreeIntoContainer=function(a,b,c,d){if(!Vd(c))throw Error(m(200));if(null==a||void 0===a._reactInternals)throw Error(m(38));return Wd(a,b,c,!1,d)};Q.version="18.3.1-next-f1338f8080-20240426"});
 })();
 </script>
-<script>
-(function () {
-  var caja = document.getElementById("tronado");
-  function tronar(e) {
-    try {
-      caja.style.display = "block";
-      caja.textContent = "El juego no pudo arrancar.\n\n" + (e && e.stack ? e.stack : String(e));
-    } catch (_) {}
-  }
-  window.addEventListener("error", function (ev) { tronar(ev.error || ev.message); });
-  try {
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+<!-- El motor del juego va SOLO en su bloque, sin envoltorio ninguno.
+     Si la marca estuviera dentro de un envoltorio, al republicar se
+     reinyectaría el bloque entero dentro de ese mismo envoltorio y
+     quedaría anidado dos veces: ElAnalista viviría en el ámbito interno
+     y el montaje de fuera tronaría. El arranque va aparte, debajo. -->
+<script id="motor-juego">function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 var React = window.React; var { useState, useEffect, useRef, useMemo } = React;
 
 /* ============================================================
@@ -8861,6 +9150,9 @@ const BASE = {
   propia: false,
   /* reconocimientos ganados: el legado, que no se mide en dinero */
   premios: [],
+  /* la cola de escenas del año en curso, por id: lo que permite retomar
+     en la misma decisión en vez de al principio del año */
+  cola: [],
   ritmo: "normal",
   nivelGasto: "normal",
   /* lo que debes y su historia */
@@ -9797,6 +10089,40 @@ const SORPRESAS_MALAS = [{
 }];
 const IDS_APERTURA = APERTURAS.map(a => a.id);
 
+/* ============================================================
+   REHIDRATAR LA COLA DEL ANIO
+   Una recarga a mitad de partida tiene que devolver al jugador a la
+   misma decision, no al principio del anio. Para eso se guarda la cola
+   de escenas del anio por **id**, no por objeto: las escenas llevan
+   funciones dentro (cuando, requiere) y eso no se serializa.
+
+   Guardar tras cada decision, sin mas, seria peor que el problema: al
+   retomar tendrias los efectos ya aplicados y un anio nuevo entero por
+   jugar, asi que se podria farmear el mismo anio dos veces. Por eso el
+   snapshot se toma **al presentar cada escena**, antes de aplicar nada.
+   ============================================================ */
+const ESCENAS_FIJAS = [].concat(E, D, VIDA, LEGENDARIAS, [DECISION_RAMA, ESCENA_CONTRATO], APERTURAS.map(a => a.escena)).filter(e => e && e.id != null);
+const IDS_FIRMA = [9720, 9721];
+
+/* Devuelve la escena de ese id, o null. Las de firma propia se generan
+   al vuelo desde el titulo del jugador, asi que se reconstruyen. */
+const escenaDeId = (id, st) => {
+  if (IDS_FIRMA.indexOf(id) >= 0) {
+    try {
+      return escenaFirma(st, id);
+    } catch (e) {
+      return null;
+    }
+  }
+  const e = ESCENAS_FIJAS.find(x => x.id === id);
+  return e || null;
+};
+
+/* La cola guardada, convertida en escenas jugables. Cualquier id que ya
+   no exista se descarta en silencio: el juego sigue con lo que quede. */
+const colaDeIds = (ids, st) => (Array.isArray(ids) ? ids : []).map(id => escenaDeId(id, st)).filter(e => e && e.t && Array.isArray(e.o) && e.o.length);
+const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map(e => e.id).concat(IDS_FIRMA);
+
 /* si a un sistema ya le toca, por rango alcanzado o por año cumplido */
 const tocaAbrir = (st, a) => entero(st && st.rango, 0, 0, 99) >= a.rango || entero(st && st.turno, 0, 0, 99) >= a.ano;
 
@@ -9951,6 +10277,7 @@ const sanear = bruto => {
   st.patron = texto(r.patron, "", 48);
   st.propia = r.propia === true;
   st.premios = unicos(listaDe(r.premios, x => PREMIOS.some(p => p.id === x), 20));
+  st.cola = listaDe(r.cola, x => IDS_ESCENA_VALIDOS.indexOf(x) >= 0, 14).map(x => entero(x, 0, 0, 99999));
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
   st.contrato = r.contrato && typeof r.contrato === "object" ? {
     anos: entero(r.contrato.anos, 3, 1, 10),
@@ -13441,17 +13768,29 @@ function Motor() {
     leerPartida().then(d => {
       if (!vivo || !d) return;
       const st = sanear(d.s);
-      if (partidaJugable(st)) setGuardado({
+      if (!partidaJugable(st)) return;
+      setGuardado({
         v: VERSION,
         ts: numero(d.ts, 0),
         s: st
       });
+      /* Y se entra directo donde estaba. Antes la recarga te dejaba en la
+         portada teniendo que pulsar «Retomar», que es exactamente lo que
+         convierte una recarga ajena en una interrupción. El aviso legal
+         sigue mandando: si no se ha aceptado, no se entra a nada. */
+      if (yaAceptoAviso() && colaDeIds(st.cola, st).length) {
+        entrarEnPartida(st, "Vuelves donde estabas");
+      }
     }).catch(() => {});
     return () => {
       vivo = false;
     };
   }, []);
-  const persistir = st => {
+
+  /* Ahora se guarda en cada escena, no una vez al año, así que el aviso
+     de «Partida guardada» pasa a ser opcional: si saltara siempre estaría
+     parpadeando en la cinta todo el rato. */
+  const persistir = (st, callado) => {
     let limpio;
     try {
       limpio = sanear(st);
@@ -13459,13 +13798,15 @@ function Motor() {
       return;
     }
     guardarPartida(limpio).then(ok => {
-      setAviso(ok ? "Partida guardada" : "");
+      if (!callado) setAviso(ok ? "Partida guardada" : "");
       if (ok) setGuardado({
         v: VERSION,
         ts: Date.now(),
         s: limpio
       });
-    }).catch(() => setAviso(""));
+    }).catch(() => {
+      if (!callado) setAviso("");
+    });
   };
   const tirarPartida = () => {
     try {
@@ -13691,6 +14032,23 @@ function Motor() {
     setEv(lista[0]);
     setOp(null);
     irA("evento");
+    /* El snapshot va aquí, con la escena todavía sin resolver: así una
+       recarga devuelve a esta misma decisión y no hay nada que duplicar. */
+    guardarEscena(st, lista);
+  };
+
+  /* Guarda el estado tal como está ahora más la cola pendiente, por id.
+     La cola no se mete en el estado de React: solo viaja al guardado. */
+  const guardarEscena = (st, pendientes) => {
+    var ids = (Array.isArray(pendientes) ? pendientes : []).map(function (e) {
+      return e && e.id != null ? e.id : null;
+    }).filter(function (x) {
+      return x != null;
+    });
+    persistir({
+      ...st,
+      cola: ids
+    }, true);
   };
 
   /* Construye la partida entera de una vez, a partir de las cuatro
@@ -13820,7 +14178,13 @@ function Motor() {
   /* retomar donde quedó: se reanuda al comienzo del año siguiente */
   const retomar = () => {
     if (!guardado) return;
-    const st = sanear(guardado.s);
+    entrarEnPartida(sanear(guardado.s), "Partida retomada");
+  };
+
+  /* Entra en una partida guardada. Si trae cola, se rehidrata y el jugador
+     vuelve a la decisión exacta en la que estaba; si no la trae (guardado
+     viejo, o guardado al cerrar el año), se arranca el año como antes. */
+  const entrarEnPartida = (st, aviso) => {
     if (!partidaJugable(st)) {
       tirarPartida();
       return;
@@ -13830,7 +14194,15 @@ function Motor() {
     setRes(null);
     setCierre(null);
     setTab(null);
-    setAviso("Partida retomada");
+    if (aviso) setAviso(aviso);
+    const pendientes = colaDeIds(st.cola, st);
+    if (pendientes.length) {
+      setEv(pendientes[0]);
+      setCola(pendientes.slice(1));
+      setOp(null);
+      irA("evento");
+      return;
+    }
     arrancarAno(st);
   };
 
@@ -14801,6 +15173,7 @@ function Motor() {
       setCola(resto.slice(1));
       setOp(null);
       irA("evento");
+      guardarEscena(s, resto);
     } else cerrarAno();
   };
   const siguienteAno = () => {
@@ -15933,7 +16306,17 @@ function Motor() {
         color: razon >= 1 ? "var(--verde)" : razon >= 0.5 ? "var(--cobre)" : "var(--rojo)"
       }
     }, meta.aun ? "Todavía no te toca esta vara: la primera referencia es a los treinta. Lo que hagas ahora es lo que la hará fácil." : razon >= 1 ? "Vas por delante de la referencia. Sigue y no subas el tren de vida por costumbre." : razon >= 0.5 ? "Vas por detrás, y a tiempo. Cada punto de tasa de ahorro cierra esa distancia más rápido que cualquier acierto en el mercado." : "Vas bastante por detrás. Lo que mueve esto no es el retorno: es cuánto de lo que entra no se gasta."));
-  })(), (abierto(s, "banco") || s.deuda > 0) && /*#__PURE__*/React.createElement(Plegable, {
+  })(), /*#__PURE__*/React.createElement("button", {
+    className: "ea-cerrar ea-dis",
+    style: {
+      marginBottom: 14
+    },
+    onClick: () => {
+      persistir(s, true);
+      setTab(null);
+      irA("portada");
+    }
+  }, "Guardar y volver a la portada"), (abierto(s, "banco") || s.deuda > 0) && /*#__PURE__*/React.createElement(Plegable, {
     titulo: "El banco",
     resumen: s.deuda > 0 ? "debes " + fmtCorto(s.deuda) : "sin deuda",
     tono: s.deuda > 0 ? "#BE4B3B" : "#5F8F5C"
@@ -17507,10 +17890,15 @@ class Blindaje extends React.Component {
 }
 function ElAnalista() {
   return /*#__PURE__*/React.createElement(Blindaje, null, /*#__PURE__*/React.createElement(Motor, null));
-}
+}</script>
+<script id="arranque">
+(function () {
+  try {
     var raiz = document.getElementById("raiz");
     raiz.innerHTML = "";
     ReactDOM.createRoot(raiz).render(React.createElement(ElAnalista));
-  } catch (e) { tronar(e); }
+  } catch (e) { window.__tronar(e); }
 })();
 </script>
+</body>
+</html>

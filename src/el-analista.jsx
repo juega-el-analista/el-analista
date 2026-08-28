@@ -3373,6 +3373,9 @@ const BASE = {
   propia: false,
   /* reconocimientos ganados: el legado, que no se mide en dinero */
   premios: [],
+  /* la cola de escenas del año en curso, por id: lo que permite retomar
+     en la misma decisión en vez de al principio del año */
+  cola: [],
   ritmo: "normal", nivelGasto: "normal",
   /* lo que debes y su historia */
   deuda: 0, quiebras: 0, embargos: 0, vetoCredito: 0,
@@ -3870,6 +3873,47 @@ const SORPRESAS_MALAS = [
 
 const IDS_APERTURA = APERTURAS.map((a) => a.id);
 
+/* ============================================================
+   REHIDRATAR LA COLA DEL ANIO
+   Una recarga a mitad de partida tiene que devolver al jugador a la
+   misma decision, no al principio del anio. Para eso se guarda la cola
+   de escenas del anio por **id**, no por objeto: las escenas llevan
+   funciones dentro (cuando, requiere) y eso no se serializa.
+
+   Guardar tras cada decision, sin mas, seria peor que el problema: al
+   retomar tendrias los efectos ya aplicados y un anio nuevo entero por
+   jugar, asi que se podria farmear el mismo anio dos veces. Por eso el
+   snapshot se toma **al presentar cada escena**, antes de aplicar nada.
+   ============================================================ */
+const ESCENAS_FIJAS = [].concat(
+  E, D, VIDA, LEGENDARIAS,
+  [DECISION_RAMA, ESCENA_CONTRATO],
+  APERTURAS.map((a) => a.escena)
+).filter((e) => e && e.id != null);
+
+const IDS_FIRMA = [9720, 9721];
+
+/* Devuelve la escena de ese id, o null. Las de firma propia se generan
+   al vuelo desde el titulo del jugador, asi que se reconstruyen. */
+const escenaDeId = (id, st) => {
+  if (IDS_FIRMA.indexOf(id) >= 0) {
+    try { return escenaFirma(st, id); } catch (e) { return null; }
+  }
+  const e = ESCENAS_FIJAS.find((x) => x.id === id);
+  return e || null;
+};
+
+/* La cola guardada, convertida en escenas jugables. Cualquier id que ya
+   no exista se descarta en silencio: el juego sigue con lo que quede. */
+const colaDeIds = (ids, st) =>
+  (Array.isArray(ids) ? ids : [])
+    .map((id) => escenaDeId(id, st))
+    .filter((e) => e && e.t && Array.isArray(e.o) && e.o.length);
+
+const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA);
+
+
+
 /* si a un sistema ya le toca, por rango alcanzado o por año cumplido */
 const tocaAbrir = (st, a) =>
   entero(st && st.rango, 0, 0, 99) >= a.rango || entero(st && st.turno, 0, 0, 99) >= a.ano;
@@ -4022,6 +4066,7 @@ const sanear = (bruto) => {
   st.patron = texto(r.patron, "", 48);
   st.propia = r.propia === true;
   st.premios = unicos(listaDe(r.premios, (x) => PREMIOS.some((p) => p.id === x), 20));
+  st.cola = listaDe(r.cola, (x) => IDS_ESCENA_VALIDOS.indexOf(x) >= 0, 14).map((x) => entero(x, 0, 0, 99999));
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
   st.contrato = (r.contrato && typeof r.contrato === "object")
     ? { anos: entero(r.contrato.anos, 3, 1, 10), desde: entero(r.contrato.desde, 0, 0, 60) }
@@ -6631,21 +6676,32 @@ function Motor() {
       .then((d) => {
         if (!vivo || !d) return;
         const st = sanear(d.s);
-        if (partidaJugable(st)) setGuardado({ v: VERSION, ts: numero(d.ts, 0), s: st });
+        if (!partidaJugable(st)) return;
+        setGuardado({ v: VERSION, ts: numero(d.ts, 0), s: st });
+        /* Y se entra directo donde estaba. Antes la recarga te dejaba en la
+           portada teniendo que pulsar «Retomar», que es exactamente lo que
+           convierte una recarga ajena en una interrupción. El aviso legal
+           sigue mandando: si no se ha aceptado, no se entra a nada. */
+        if (yaAceptoAviso() && colaDeIds(st.cola, st).length) {
+          entrarEnPartida(st, "Vuelves donde estabas");
+        }
       })
       .catch(() => {});
     return () => { vivo = false; };
   }, []);
 
-  const persistir = (st) => {
+  /* Ahora se guarda en cada escena, no una vez al año, así que el aviso
+     de «Partida guardada» pasa a ser opcional: si saltara siempre estaría
+     parpadeando en la cinta todo el rato. */
+  const persistir = (st, callado) => {
     let limpio;
     try { limpio = sanear(st); } catch (e) { return; }
     guardarPartida(limpio)
       .then((ok) => {
-        setAviso(ok ? "Partida guardada" : "");
+        if (!callado) setAviso(ok ? "Partida guardada" : "");
         if (ok) setGuardado({ v: VERSION, ts: Date.now(), s: limpio });
       })
-      .catch(() => setAviso(""));
+      .catch(() => { if (!callado) setAviso(""); });
   };
   const tirarPartida = () => {
     try { const p = olvidarPartida(); if (p && p.catch) p.catch(() => {}); } catch (e) {}
@@ -6836,6 +6892,18 @@ function Motor() {
     setEv(lista[0]);
     setOp(null);
     irA("evento");
+    /* El snapshot va aquí, con la escena todavía sin resolver: así una
+       recarga devuelve a esta misma decisión y no hay nada que duplicar. */
+    guardarEscena(st, lista);
+  };
+
+  /* Guarda el estado tal como está ahora más la cola pendiente, por id.
+     La cola no se mete en el estado de React: solo viaja al guardado. */
+  const guardarEscena = (st, pendientes) => {
+    var ids = (Array.isArray(pendientes) ? pendientes : [])
+      .map(function (e) { return e && e.id != null ? e.id : null; })
+      .filter(function (x) { return x != null; });
+    persistir({ ...st, cola: ids }, true);
   };
 
   /* Construye la partida entera de una vez, a partir de las cuatro
@@ -6933,11 +7001,25 @@ function Motor() {
   /* retomar donde quedó: se reanuda al comienzo del año siguiente */
   const retomar = () => {
     if (!guardado) return;
-    const st = sanear(guardado.s);
+    entrarEnPartida(sanear(guardado.s), "Partida retomada");
+  };
+
+  /* Entra en una partida guardada. Si trae cola, se rehidrata y el jugador
+     vuelve a la decisión exacta en la que estaba; si no la trae (guardado
+     viejo, o guardado al cerrar el año), se arranca el año como antes. */
+  const entrarEnPartida = (st, aviso) => {
     if (!partidaJugable(st)) { tirarPartida(); return; }
     setS(st);
     setFin(null); setRes(null); setCierre(null); setTab(null);
-    setAviso("Partida retomada");
+    if (aviso) setAviso(aviso);
+    const pendientes = colaDeIds(st.cola, st);
+    if (pendientes.length) {
+      setEv(pendientes[0]);
+      setCola(pendientes.slice(1));
+      setOp(null);
+      irA("evento");
+      return;
+    }
     arrancarAno(st);
   };
 
@@ -7618,6 +7700,7 @@ function Motor() {
     const resto = (Array.isArray(cola) ? cola : []).filter(escenaValida);
     if (resto.length > 0) {
       setEv(resto[0]); setCola(resto.slice(1)); setOp(null); irA("evento");
+      guardarEscena(s, resto);
     } else cerrarAno();
   };
 
@@ -8244,6 +8327,14 @@ function Motor() {
                         </Plegable>
                       );
                     })()}
+
+                    {/* Con el retomar automático el jugador ya no pasa por la
+                        portada, así que hace falta una puerta de vuelta. No
+                        borra nada: la partida queda guardada. */}
+                    <button className="ea-cerrar ea-dis" style={{ marginBottom: 14 }}
+                      onClick={() => { persistir(s, true); setTab(null); irA("portada"); }}>
+                      Guardar y volver a la portada
+                    </button>
 
                     {(abierto(s, "banco") || s.deuda > 0) && (
                     <Plegable titulo="El banco"

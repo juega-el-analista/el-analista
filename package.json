@@ -5,6 +5,7 @@
   "description": "Simulador de carrera e inversion: 30 anos, 20 minijuegos y un temario de finanzas que sube contigo.",
   "scripts": {
     "build": "node pruebas/empaquetar.js",
+    "quine": "node pruebas/quine.js",
     "servir": "node pruebas/servidor.js",
     "sintaxis": "node pruebas/chk.js",
     "robustez": "node pruebas/comparar.js",
