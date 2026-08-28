@@ -59,12 +59,19 @@ async function unaVida(semilla) {
   await act(async () => { reloj(400); await micro(); });
   await pulsa(porRot(/acepto y quiero jugar/i));
   await pulsa(porRot(/^Empezar$/));
+  /* La pantalla de identidad: genero y nombre. Esta prueba era anterior
+     a ella y se quedaba clavada justo aqui, con las 20 partidas en
+     duracion 0 y sin llegar nunca a una pantalla final. */
+  await pulsa(porRot(/^(Femenino|Masculino|Prefiero no decirlo)$/));
+  await pulsa(porRot(/^Seguir sin nombre$/));
   await pulsa(porRot(/^Analista/));
   await pulsa(porRot(/^Empezar a los 20/));
   const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
   await pulsa(p[semilla % Math.max(1, p.length)] || p[0]);
   const c = bs().filter((b) => /^(Graduarte de esto|Empezar con esto)$/.test(rot(b)));
   await pulsa(c[semilla % Math.max(1, c.length)] || c[0]);
+  /* y el ultimo paso: guia si o no */
+  await pulsa(porRot(/^(Sé lo que hago|Guíame por el camino)$/));
 
   let ano = 0, pasos = 0, cargo = "Pasante", burnouts = 0, ultimaEne = null;
   while (pasos++ < 1600) {
@@ -86,6 +93,10 @@ async function unaVida(semilla) {
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
     if (ops.length) { await pulsa(ops[Math.floor(Math.random() * ops.length) % ops.length]); continue; }
+    /* Los emergentes (guia, ficha de seccion nueva, panel de seccion)
+       hay que poder cerrarlos, o la prueba se queda dentro de uno y la
+       partida no avanza nunca. Van primero, justo por eso. */
+    if (await pulsa(porRot(/^(Entendido|Después|Ver la sección|Cerrar y volver|Aplica o descarta|✕)$/))) continue;
     if (await pulsa(porRot(/^(Lo siguiente|Cerrar el año|Continuar|Entendido, empezar|Ya lo tengo|Terminar|Siguiente|Entregar el informe|Cerrar el trato|Fijar|Poner el número|Cerrar posición|Aguantar|Comprar|Empezar 20|Poner el capital|Sentarte a hacer|Ver el balance)/))) continue;
     let z = null;
     try { z = r.root.findAll((x) => x.props && x.props.role === "button" && typeof x.props.onClick === "function")[0]; } catch (e) {}

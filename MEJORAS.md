@@ -69,12 +69,12 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
 
 ## Lote 6 — el cierre de la partida
 
-- [ ] **27.** Al retirarte, **proyectar hasta los 65** (edad de retiro normal): qué habrías
+- [x] **27.** Al retirarte, **proyectar hasta los 65** (edad de retiro normal): qué habrías
   generado en esos años que no se juegan. Y **mostrar el rendimiento del fondo** a lo largo
   de la partida: terminó a los 50 y nunca pudo ver cómo le fue a su fondo.
-- [ ] **28.** El **expediente** debe recoger la vida entera: de qué temas aprendiste, todas
+- [x] **28.** El **expediente** debe recoger la vida entera: de qué temas aprendiste, todas
   las decisiones importantes, los ascensos, las caídas y el mejor año.
-- [ ] **29.** **Reconocimientos** nacionales y mundiales según la carrera (del estilo de un
+- [x] **29.** **Reconocimientos** nacionales y mundiales según la carrera (del estilo de un
   Nobel para Economía). Sirven para construir legado y para tener un nombre que la gente
   conozca, no solo un patrimonio.
 - [x] **30.** A partir de los 30 poder **declarar si tienes pareja e hijos**. Interpretado
@@ -300,3 +300,50 @@ juego deja de jubilarte por decreto a la segunda prórroga: solo termina solo cu
 queda tabla. Y en el cierre de cada año, **en cuanto `cobertura >= 1`**, aparece un botón
 de «Retirarme ya» que dice qué porcentaje de tu vida cubre tu patrimonio y de cuánto
 dispondrías retirando el 4%. Retirarse deja de ser algo que el juego te impone.
+
+### Lote 6 — el cierre de la partida (28-ago-2026)
+
+**27 · lo que venía después.** Dos paneles nuevos en la pantalla final.
+
+- «Lo que venía después», solo si te retiras antes de los 65: cuántos años faltaban, tu
+  patrimonio a los 65 sin tocarlo al retorno esperado de tu cartera, cuánto ganó solo por
+  estar quieto, y el sueldo neto que dejaste sobre la mesa. Dice explícitamente que no
+  descuenta lo que habrías gastado: es orden de magnitud, no promesa.
+- «Lo que tu fondo tenía todavía en el suelo»: **esta era la queja real**. Las posiciones sin
+  salir nunca se valoraban, así que el rendimiento del fondo quedaba invisible al cerrar
+  antes. Ahora se valoran a su múltiplo base (sin azar, porque es una estimación y no una
+  tirada), posición por posición, con el capital metido, el valor esperado, lo que te habría
+  tocado y el múltiplo total sobre el capital comprometido.
+
+**28 · el expediente cuenta la vida entera.** Tres bloques nuevos en la sección Vida:
+«Tu nombre» (los reconocimientos), «De qué aprendiste» (los temas dados, que son los
+mismos de los que te puede examinar el juego) y «Los años que se recuerdan» (cargo
+alcanzado, mejor año y peor año calculados de `st.histo`, y las caídas: agotamientos,
+despidos, quiebras y embargos).
+
+**29 · reconocimientos.** Doce premios, dos por carrera: uno nacional alcanzable a media
+carrera con el atributo que esa formación trabaja, y uno mundial que pide atributo 92,
+rango 5 y 18 años de recorrido — el Nobel de Economía es uno de ellos. Se conceden solos al
+cerrar el año, suben reputación y red, y quedan en el expediente y en la pantalla final.
+
+### La prueba `finales.js`, arreglada
+
+Estaba rota desde antes de todo esto: las 20 partidas daban duración 0 porque la prueba era
+anterior a la pantalla de identidad y se quedaba clavada ahí. Arreglado el recorrido del
+setup, y además se le enseñó a **cerrar los emergentes** (guía, ficha de sección nueva,
+panel de sección), que si no la atrapaban dentro.
+
+Resultado: de **0 de 20** partidas útiles a **6 llegando a los 30 años** y 5 alcanzando un
+veredicto final. Eso es lo que permitió verificar los paneles nuevos: ninguna de esas cinco
+reportó «error», que es lo que devuelve la prueba si el render revienta. La cobertura no
+sirve para esto porque nunca llega al final — todos los marcadores `final:` salen NUNCA
+también en la versión base.
+
+Quedan 15 partidas colgadas en minijuegos que piden clics en el tablero y no botones. Es
+una limitación previa de la prueba, no del juego.
+
+### El nombre
+
+Se propuso cambiarlo (el título nombra el segundo peldaño de la escalera que el juego trata
+de subir, y deja de hablar de ti cuando eres Socio). **Decisión de Alessandro: se queda
+«El Analista».** No volver a proponerlo.

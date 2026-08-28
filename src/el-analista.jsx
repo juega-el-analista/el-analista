@@ -3371,6 +3371,8 @@ const BASE = {
   patron: "", contrato: null, sueldoMult: 1,
   /* si te independizaste y la firma es tuya */
   propia: false,
+  /* reconocimientos ganados: el legado, que no se mide en dinero */
+  premios: [],
   ritmo: "normal", nivelGasto: "normal",
   /* lo que debes y su historia */
   deuda: 0, quiebras: 0, embargos: 0, vetoCredito: 0,
@@ -3488,6 +3490,71 @@ const escalar = (d, nivel) => {
     out[k] = Math.round(out[k] > 0 ? out[k] * f : out[k] * g);
   });
   return out;
+};
+
+/* ============================================================
+   RECONOCIMIENTOS
+   Un patrimonio no es un legado. Estos premios son la otra forma de
+   ganar: un nombre que la gente reconoce. Hay uno nacional por carrera,
+   alcanzable a media carrera con el atributo que esa formacion trabaja,
+   y uno mundial que solo llega a quien llega muy arriba y muy lejos.
+   Se conceden solos al cerrar el anio, una vez cada uno.
+   ============================================================ */
+const PREMIOS = [
+  { id: "eco-n", est: "eco", mundial: false, n: "Premio Nacional de Economía",
+    cuando: (st) => st.cri >= 68 && st.rango >= 3,
+    x: "Tu lectura del ciclo dejó de ser una opinión y pasó a ser una referencia." },
+  { id: "eco-m", est: "eco", mundial: true, n: "Nobel de Economía",
+    cuando: (st) => st.cri >= 92 && st.rango >= 5 && st.turno >= 18,
+    x: "Un trabajo tuyo cambió cómo se enseña una parte de la disciplina. Eso ya no se mide en dinero." },
+
+  { id: "con-n", est: "con", mundial: false, n: "Reconocimiento del Colegio de Contadores",
+    cuando: (st) => st.mod >= 68 && st.rango >= 3,
+    x: "Tu criterio contable se cita en las guías que estudian los que vienen detrás." },
+  { id: "con-m", est: "con", mundial: true, n: "Premio Mundial de Normas Contables",
+    cuando: (st) => st.mod >= 92 && st.rango >= 5 && st.turno >= 18,
+    x: "Ayudaste a redactar una norma que ahora aplican en cuarenta países." },
+
+  { id: "ing-n", est: "ing", mundial: false, n: "Premio Nacional de Ingeniería",
+    cuando: (st) => st.mod >= 62 && st.car >= 90,
+    x: "Una obra que estructuraste tú se estudia como caso de eficiencia." },
+  { id: "ing-m", est: "ing", mundial: true, n: "Medalla Mundial de Infraestructura",
+    cuando: (st) => st.mod >= 88 && st.rango >= 5 && st.turno >= 18,
+    x: "Financiaste algo que cambió cómo se mueve un país entero." },
+
+  { id: "der-n", est: "der", mundial: false, n: "Abogado del Año",
+    cuando: (st) => st.rep >= 72 && st.rango >= 3,
+    x: "Tu nombre se volvió la primera llamada cuando algo se pone serio." },
+  { id: "der-m", est: "der", mundial: true, n: "Premio Internacional de Arbitraje",
+    cuando: (st) => st.rep >= 92 && st.rango >= 5 && st.turno >= 18,
+    x: "Presidiste un arbitraje que sentó precedente en tres continentes." },
+
+  { id: "adm-n", est: "adm", mundial: false, n: "Empresario del Año",
+    cuando: (st) => st.red >= 72 && st.rango >= 3,
+    x: "Todo el mundo conoce a alguien que te conoce. Eso ya es un activo." },
+  { id: "adm-m", est: "adm", mundial: true, n: "Reconocimiento Global de Liderazgo",
+    cuando: (st) => st.red >= 92 && st.rango >= 5 && st.turno >= 18,
+    x: "Te ponen de ejemplo en escuelas de negocios que nunca pisaste." },
+
+  { id: "sis-n", est: "sis", mundial: false, n: "Premio Nacional de Innovación",
+    cuando: (st) => st.mod >= 70 && st.cri >= 55,
+    x: "Automatizaste algo que media industria copió al año siguiente." },
+  { id: "sis-m", est: "sis", mundial: true, n: "Premio Mundial de IA Aplicada",
+    cuando: (st) => st.mod >= 92 && st.cri >= 80 && st.turno >= 18,
+    x: "Un modelo tuyo se volvió infraestructura: se usa sin saber que es tuyo." },
+];
+
+const PREMIO_DE = (id) => PREMIOS.find((p) => p.id === id) || null;
+
+/* Los que ya te toca y todavia no tienes. Con try/catch por la misma
+   razon que puedeComprar: un predicado mal escrito no puede tumbar el
+   cierre del anio. */
+const premiosNuevos = (st) => {
+  const ya = Array.isArray(st.premios) ? st.premios : [];
+  return PREMIOS.filter((p) => {
+    if (p.est !== st.estudio || ya.indexOf(p.id) >= 0) return false;
+    try { return !!p.cuando(st); } catch (e) { return false; }
+  });
 };
 
 /* ============================================================
@@ -3954,6 +4021,7 @@ const sanear = (bruto) => {
      se acota por longitud en vez de por lista cerrada. */
   st.patron = texto(r.patron, "", 48);
   st.propia = r.propia === true;
+  st.premios = unicos(listaDe(r.premios, (x) => PREMIOS.some((p) => p.id === x), 20));
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
   st.contrato = (r.contrato && typeof r.contrato === "object")
     ? { anos: entero(r.contrato.anos, 3, 1, 10), desde: entero(r.contrato.desde, 0, 0, 60) }
@@ -7487,6 +7555,15 @@ function Motor() {
     const leccion = escogerLeccion(ctx, st.lecs || []);
     if (leccion) st.lecs = (st.lecs || []).concat(leccion.id).slice(-20);
 
+    /* Los reconocimientos se conceden solos: si ya te toca, te toca. */
+    premiosNuevos(st).forEach((p) => {
+      st.premios = (Array.isArray(st.premios) ? st.premios : []).concat(p.id);
+      st.rep = clamp(numero(st.rep, 0) + (p.mundial ? 14 : 7), 0, 100);
+      st.red = clamp(numero(st.red, 0) + (p.mundial ? 10 : 5), 0, 100);
+      notas.push((p.mundial ? "Reconocimiento mundial: " : "Reconocimiento nacional: ") + p.n + ". " + p.x);
+      st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Recibes el " + p.n });
+    });
+
     st.histo = (st.histo || []).concat(patrimonio);
     st.gastoAnt = gastos;
 
@@ -8541,6 +8618,84 @@ function Motor() {
                       );
                     })}
 
+                    {/* ---- el legado: premios ---- */}
+                    {(Array.isArray(s.premios) ? s.premios : []).length > 0 && (
+                      <div>
+                        <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Tu nombre</div>
+                        {s.premios.map((id) => {
+                          const p = PREMIO_DE(id);
+                          if (!p) return null;
+                          return (
+                            <div className="ea-item" key={id}>
+                              <div className="ea-itemTop">
+                                <span className="ea-itemN">{p.n}</span>
+                                <span className="ea-etq act" style={{ flexShrink: 0 }}>{p.mundial ? "mundial" : "nacional"}</span>
+                              </div>
+                              <div className="ea-itemD">{p.x}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* ---- lo que aprendiste ---- */}
+                    <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>De qué aprendiste</div>
+                    {(Array.isArray(s.temas) ? s.temas : []).length === 0 ? (
+                      <div className="ea-itemD">Todavía no has dado ninguna clase. Aparecen cuando te toca una cátedra.</div>
+                    ) : (
+                      <div>
+                        <div className="ea-itemD" style={{ marginBottom: 8 }}>
+                          {s.temas.length} {s.temas.length === 1 ? "tema dado" : "temas dados"}. De estos, y solo de
+                          estos, te puede examinar el juego.
+                        </div>
+                        <div className="ea-etqs">
+                          {s.temas.map((id) => {
+                            const t = TEMAS.find((x) => x.id === id);
+                            return t ? <span className="ea-etq" key={id}>{t.n}</span> : null;
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ---- el mejor año, el peor, y las caídas ---- */}
+                    {(() => {
+                      const h = Array.isArray(s.histo) ? s.histo : [];
+                      let mejor = null, peor = null;
+                      for (let i = 1; i < h.length; i++) {
+                        const dif = numero(h[i], 0) - numero(h[i - 1], 0);
+                        if (!mejor || dif > mejor.dif) mejor = { dif, ano: 2026 + i - 1 };
+                        if (!peor || dif < peor.dif) peor = { dif, ano: 2026 + i - 1 };
+                      }
+                      const caidas = [];
+                      if (s.burnouts > 0) caidas.push(s.burnouts + (s.burnouts === 1 ? " parón por agotamiento" : " parones por agotamiento"));
+                      if (s.despidos > 0) caidas.push(s.despidos + (s.despidos === 1 ? " despido" : " despidos"));
+                      if (s.quiebras > 0) caidas.push(s.quiebras + (s.quiebras === 1 ? " quiebra" : " quiebras"));
+                      if (s.embargos > 0) caidas.push(s.embargos + (s.embargos === 1 ? " embargo" : " embargos"));
+                      if (!mejor && !caidas.length) return null;
+                      return (
+                        <div>
+                          <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Los años que se recuerdan</div>
+                          <div className="ea-fila"><span className="ea-dis" style={{ fontSize: 12 }}>Cargo alcanzado</span><span className="ea-mono">{RANGO(s.rango).n}</span></div>
+                          {mejor && mejor.dif > 0 && (
+                            <div className="ea-fila">
+                              <span className="ea-dis" style={{ fontSize: 12 }}>Tu mejor año</span>
+                              <span className="ea-mono" style={{ color: "#5F8F5C" }}>{mejor.ano} · +USD {fmt(mejor.dif)}</span>
+                            </div>
+                          )}
+                          {peor && peor.dif < 0 && (
+                            <div className="ea-fila">
+                              <span className="ea-dis" style={{ fontSize: 12 }}>El año que dolió</span>
+                              <span className="ea-mono" style={{ color: "var(--rojo)" }}>{peor.ano} · −USD {fmt(Math.abs(peor.dif))}</span>
+                            </div>
+                          )}
+                          <div className="ea-fila">
+                            <span className="ea-dis" style={{ fontSize: 12 }}>Caídas</span>
+                            <span className="ea-mono">{caidas.length ? caidas.join(" · ") : "ninguna"}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     {/* ---- el expediente ---- */}
                     <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Lo que quedó en tu expediente</div>
                     {s.titulares.length === 0 && <div className="ea-itemD">Todavía no ha pasado nada digno de archivo.</div>}
@@ -8886,6 +9041,12 @@ function Motor() {
             <div><div className="ea-cifraK">Renta anual al 4%</div><div className="ea-cifraV ea-mono">USD {fmt(retiroAnual)}</div></div>
             <div><div className="ea-cifraK">Gasto anual</div><div className="ea-cifraV ea-mono">USD {fmt(gastosAnuales)}</div></div>
             <div><div className="ea-cifraK">Tren de vida</div><div className="ea-cifraV ea-dis">{nivelDeVida(vidaTotal(s)).n}</div></div>
+            {(Array.isArray(s.premios) ? s.premios : []).length > 0 && (
+              <div>
+                <div className="ea-cifraK">Reconocimientos</div>
+                <div className="ea-cifraV ea-dis">{s.premios.length}{s.premios.some((id) => (PREMIO_DE(id) || {}).mundial) ? " · con uno mundial" : ""}</div>
+              </div>
+            )}
             <div>
               <div className="ea-cifraK">Cuánto cuesta sostenerlo</div>
               <div className="ea-cifraV ea-mono">USD {fmt(gastosAnuales)} al año</div>
@@ -8901,6 +9062,73 @@ function Motor() {
               <div className="ea-fila"><span style={{ fontSize: 13 }}>Múltiplo sobre lo comprometido</span><span className="ea-mono">{s.fondo.tam > 0 ? (1 + (s.fondo.realizado || 0) / s.fondo.tam).toFixed(2) + "x" : "—"}</span></div>
             </div>
           )}
+          {/* Lo que venía después. Retirarse a los 50 dejaba invisible lo que
+              faltaba: quince años de interés compuesto y de sueldo. */}
+          {(() => {
+            const miEdad = edad(s.turno, s.edadIni);
+            if (miEdad >= 65) return null;
+            const faltan = 65 - miEdad;
+            const mu = statsPesos(mezclaAct).mu;
+            const sinTocar = patrimonio * Math.pow(1 + mu, faltan);
+            const deSueldo = netoAnual(s) * faltan;
+            return (
+              <div className="ea-panel" style={{ marginTop: 24 }}>
+                <div className="ea-rot ea-dis">Lo que venía después</div>
+                <div className="ea-itemD" style={{ marginBottom: 10 }}>
+                  Te retiraste a los {miEdad}. Hasta la edad en la que se retira la mayoría te
+                  quedaban {faltan} {faltan === 1 ? "año" : "años"}, y esto es lo que traían.
+                </div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Tu patrimonio a los 65, sin tocarlo</span><span className="ea-mono">USD {fmt(sinTocar)}</span></div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Solo por dejarlo quieto</span><span className="ea-mono">+USD {fmt(sinTocar - patrimonio)}</span></div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Sueldo neto que dejaste sobre la mesa</span><span className="ea-mono">USD {fmt(deSueldo)}</span></div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Retirando 4% al año</span><span className="ea-mono">USD {fmt(retiroAnual)} · gastas {fmt(gastosAnuales)}</span></div>
+                <div className="ea-itemD" style={{ marginTop: 9 }}>
+                  {mu > 0
+                    ? "Calculado al " + (mu * 100).toFixed(1) + "% que esperaba tu cartera el día que la dejaste, y sin descontar lo que habrías gastado. No es una promesa: es el orden de magnitud de lo que hace el tiempo cuando ya no tienes que hacer nada."
+                    : "Tu cartera no esperaba rendir nada, así que el tiempo tampoco iba a trabajar a tu favor."}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* El fondo se cerraba sin contar sus posiciones abiertas, así que
+              su rendimiento real quedaba invisible. Aquí se valoran al
+              múltiplo base de cada una, sin azar. */}
+          {s.fondo && s.fondo.posiciones && s.fondo.posiciones.length > 0 && (() => {
+            const abiertas = s.fondo.posiciones;
+            const capital = abiertas.reduce((a, p) => a + numero(p.ticket, 0), 0);
+            const valor = abiertas.reduce((a, p) => a + numero(p.ticket, 0) * numero(p.base, 1.5), 0);
+            const tuParte = abiertas.reduce((a, p) => {
+              const proc = numero(p.ticket, 0) * numero(p.base, 1.5);
+              const carry = Math.max(0, proc - numero(p.ticket, 0) * 1.4) * 0.2;
+              return a + carry + (proc - numero(p.ticket, 0)) * numero(s.fondo.pct, 0.02);
+            }, 0);
+            return (
+              <div className="ea-panel" style={{ marginTop: 16 }}>
+                <div className="ea-rot ea-dis">Lo que tu fondo tenía todavía en el suelo</div>
+                <div className="ea-itemD" style={{ marginBottom: 10 }}>
+                  {abiertas.length === 1 ? "Quedaba una posición sin salir" : "Quedaban " + abiertas.length + " posiciones sin salir"}
+                  {" "}cuando cerraste. Valoradas a su múltiplo esperado, esto es lo que traían.
+                </div>
+                {abiertas.map((p, i) => (
+                  <div className="ea-fila" key={i}>
+                    <span style={{ fontSize: 13 }}>{p.n}</span>
+                    <span className="ea-mono">{numero(p.base, 1.5).toFixed(2)}x · USD {fmt(numero(p.ticket, 0) * numero(p.base, 1.5))}</span>
+                  </div>
+                ))}
+                <div className="ea-fila" style={{ marginTop: 8 }}><span style={{ fontSize: 13 }}>Capital metido</span><span className="ea-mono">USD {fmt(capital)}</span></div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Valor esperado</span><span className="ea-mono">USD {fmt(valor)}</span></div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Lo que te habría tocado a ti</span><span className="ea-mono" style={{ color: "#5F8F5C" }}>USD {fmt(tuParte)}</span></div>
+                <div className="ea-itemD" style={{ marginTop: 9 }}>
+                  Un fondo se juzga cuando ha salido de todo, y tú cerraste antes. Esta es la parte
+                  que no llegaste a ver: sumando lo realizado, tu gestora iba camino de un múltiplo
+                  de {(numero(s.fondo.tam, 0) > 0 ? (1 + (numero(s.fondo.realizado, 0) + (valor - capital)) / numero(s.fondo.tam, 1)) : 1).toFixed(2)}x
+                  {" "}sobre el capital comprometido.
+                </div>
+              </div>
+            );
+          })()}
+
           {conservanValor.length > 0 && (
             <div className="ea-panel" style={{ marginTop: 16 }}>
               <div className="ea-rot ea-dis">Lo que conservó valor</div>

@@ -120,6 +120,13 @@ const MARCAS = {
   "compra: vicios ocultos": "Aparecen vicios ocultos",
   "compra: tasan por encima": "Lo tasan bastante por encima",
   "retiro voluntario": "Retirarme ya",
+  /* el cierre de la partida: legado, proyeccion y expediente */
+  "premio: nacional": "Reconocimiento nacional:",
+  "premio: mundial": "Reconocimiento mundial:",
+  "expediente: de qué aprendiste": "De qué aprendiste",
+  "expediente: años que se recuerdan": "Los años que se recuerdan",
+  "final: lo que venía después": "Lo que venía después",
+  "final: fondo en el suelo": "tenía todavía en el suelo",
 };
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });
