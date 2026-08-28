@@ -84,6 +84,14 @@ const MARCAS = {
   "banderas: se te pasó": "Bandera roja · se te pasó",
   "banderas: recuento": "Marcaste de más",
   "banderas: pista aprendiz": "Qué estás buscando",
+
+  /* apertura escalonada: cada sistema entra como escena propia */
+  "apertura: cartera": "Lo que sobra a fin de mes",
+  "apertura: vida": "La vida que estás pagando",
+  "apertura: banco": "El banco te empieza a mirar",
+  "apertura: inmuebles": "Un ladrillo con tu nombre",
+  "apertura: mejoras": "Dónde gastar el poco tiempo que queda",
+  "apertura: fondo": "Del otro lado de la mesa",
 };
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });
