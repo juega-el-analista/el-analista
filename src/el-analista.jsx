@@ -3244,6 +3244,8 @@ const BASE = {
   modo: "normal", edadIni: 20, estudia: 0,
   nombre: "", genero: null,
   guia: false, guiaVistas: [],
+  /* qué sistemas del juego ya se abrieron */
+  abiertos: [],
   ritmo: "normal", nivelGasto: "normal",
   /* lo que debes y su historia */
   deuda: 0, quiebras: 0, embargos: 0, vetoCredito: 0,
@@ -3357,6 +3359,91 @@ const escalar = (d, nivel) => {
   });
   return out;
 };
+
+/* ============================================================
+   APERTURA ESCALONADA
+   El juego no se muestra entero desde el primer año. Cada sistema
+   espera a que tengas rango suficiente o a que pase un año tope, y
+   cuando por fin llega lo hace como escena narrada, no como una
+   pestaña que apareció sola en la barra.
+
+   El rango premia a quien juega bien; el año tope garantiza que una
+   carrera lenta también vea cosas nuevas. Manda el que llegue primero,
+   y nunca se abre más de un sistema por año: el año en que algo nuevo
+   entra, eso es el acontecimiento del año.
+   ============================================================ */
+const APERTURAS = [
+  { id: "cartera", rango: 1, ano: 3,
+    escena: { id: 9001, min: 0, max: 6, apertura: true,
+      t: "Lo que sobra a fin de mes",
+      x: "Con el sueldo nuevo aparece una pregunta que antes no tenías. Hasta ahora el dinero entraba y salía el mismo mes; de aquí en adelante hay una parte que no tiene tarea asignada, y dejarla quieta también es una decisión.",
+      o: [
+        { t: "Repartirlo entre varios tipos de activo", abre: "cartera",
+          d: { cri: 4, msg: "Abres tu primera cartera. Arriba aparece la sección Cartera: ahí decides qué parte de tu dinero trabaja y en qué. Nada se aplica hasta que confirmas." } },
+        { t: "Empezar prudente, casi todo en efectivo", abre: "cartera",
+          d: { cri: 2, ene: 3, msg: "Prefieres mojarte los pies antes de nadar. La cartera queda abierta en conservador y puedes mover los pesos cuando quieras." } },
+      ] } },
+  { id: "vida", rango: 1, ano: 4,
+    escena: { id: 9002, min: 0, max: 6, apertura: true,
+      t: "La vida que estás pagando",
+      x: "Un sábado cualquiera haces la cuenta de lo que te cuesta vivir como vives. No es un número dramático, pero es un número: y sube mucho más fácil de lo que baja.",
+      o: [
+        { t: "Anotarlo y vigilarlo de ahora en adelante", abre: "vida",
+          d: { cri: 5, msg: "Se abre la sección Vida: tu tren de vida, lo que lo empuja hacia arriba y cuánto patrimonio necesitas para no depender del sueldo." } },
+        { t: "Mirarlo de reojo y seguir", abre: "vida",
+          d: { ene: 4, msg: "Cierras la libreta sin sacar conclusiones. La sección Vida queda ahí para cuando quieras volver." } },
+      ] } },
+  { id: "banco", rango: 2, ano: 6,
+    escena: { id: 9003, min: 0, max: 6, apertura: true,
+      t: "El banco te empieza a mirar",
+      x: "Te llega la carta que le llega a todo el que ya gana lo suficiente: una línea de crédito preaprobada, redactada en tono de felicitación. No te están premiando, te están vendiendo.",
+      o: [
+        { t: "Entender qué te ofrecen antes de necesitarlo", abre: "banco",
+          d: { cri: 6, msg: "Lees la letra pequeña sin firmar nada. En Ficha se abre El banco: cuánto te prestarían, a qué tasa, y cómo pagar lo que debas." } },
+        { t: "Guardar la carta y no pensarlo hoy", abre: "banco",
+          d: { ene: 2, msg: "La carta va al cajón. La sección del banco queda disponible en Ficha el día que la necesites." } },
+      ] } },
+  { id: "inmuebles", rango: 3, ano: 9,
+    escena: { id: 9004, min: 0, max: 6, apertura: true,
+      t: "Un ladrillo con tu nombre",
+      x: "Un cliente vende y te lo cuenta antes de sacarlo al mercado. No es una oportunidad irrepetible, pero es la primera vez que un inmueble te queda a distancia de la mano.",
+      o: [
+        { t: "Aprender a mirar inmuebles como se miran los activos", abre: "inmuebles",
+          d: { cri: 5, mod: 3, msg: "Se abre la sección Inmuebles. Un ladrillo tiene renta, gastos y una salida lenta: son tres números, no uno." } },
+        { t: "Escuchar por educación y no comprometerte", abre: "inmuebles",
+          d: { red: 3, msg: "Agradeces sin cerrar la puerta. La sección Inmuebles queda abierta para cuando los números te cuadren." } },
+      ] } },
+  { id: "mejoras", rango: 3, ano: 11,
+    escena: { id: 9005, min: 0, max: 6, apertura: true,
+      t: "Dónde gastar el poco tiempo que queda",
+      x: "Ya no puedes trabajar más horas: las horas se acabaron. Lo único que queda por mejorar es con qué las llenas.",
+      o: [
+        { t: "Invertir en ti de forma deliberada", abre: "mejoras",
+          d: { cri: 4, mod: 3, msg: "Se abre la sección Mejoras: cosas que se compran una vez y rinden todos los años que quedan." } },
+        { t: "Seguir con lo que ya te funciona", abre: "mejoras",
+          d: { ene: 5, msg: "No cambias nada por ahora. La sección Mejoras queda arriba para cuando lo consideres." } },
+      ] } },
+  { id: "fondo", rango: 4, ano: 14,
+    escena: { id: 9006, min: 0, max: 6, apertura: true,
+      t: "Del otro lado de la mesa",
+      x: "Toda tu carrera has ejecutado lo que otros decidieron invertir. Te invitan a levantar un vehículo propio: decidir tú, con dinero ajeno y responsabilidad tuya.",
+      o: [
+        { t: "Aceptar y montar el vehículo", abre: "fondo",
+          d: { car: 5, rep: 3, cri: 3, msg: "Se abre la sección Fondo. Aquí el criterio no lo califica un examen: lo califican los resultados de otros." } },
+        { t: "Escuchar la propuesta sin firmar todavía", abre: "fondo",
+          d: { cri: 2, msg: "Pides tiempo para pensarlo. La sección Fondo queda disponible cuando decidas entrar." } },
+      ] } },
+];
+
+const IDS_APERTURA = APERTURAS.map((a) => a.id);
+
+/* si a un sistema ya le toca, por rango alcanzado o por año cumplido */
+const tocaAbrir = (st, a) =>
+  entero(st && st.rango, 0, 0, 99) >= a.rango || entero(st && st.turno, 0, 0, 99) >= a.ano;
+
+/* la única consulta que hace el resto del juego */
+const abierto = (st, id) =>
+  !!(st && Array.isArray(st.abiertos) && st.abiertos.indexOf(id) >= 0);
 
 /* ============================================================
    BLINDAJE . CAPA DOS: EL SANEADOR
@@ -3493,6 +3580,12 @@ const sanear = (bruto) => {
   st.nivelGasto = GASTOS.some((x) => x.id === r.nivelGasto) ? r.nivelGasto : "normal";
   st.guia = r.guia === true;
   st.guiaVistas = unicos(listaDe(r.guiaVistas, (x) => GUIA.some((g) => g.id === x), 20));
+  /* Una partida guardada antes de la apertura escalonada no trae la
+     lista: se reconstruye de su rango y su turno, para no quitarle nada
+     de lo que ya tenía en pantalla. */
+  st.abiertos = Array.isArray(r.abiertos)
+    ? unicos(listaDe(r.abiertos, (x) => IDS_APERTURA.indexOf(x) >= 0, 20))
+    : APERTURAS.filter((a) => tocaAbrir(st, a)).map((a) => a.id);
   st.edadIni = EDADES.some((x) => x.e === entero(r.edadIni, 20, 20, 50)) ? entero(r.edadIni, 20, 20, 50) : 20;
   st.estudia = clamp(numero(r.estudia, 0), 0, 500);
   st.hitoLibre = r.hitoLibre === true;
@@ -3515,7 +3608,7 @@ const GUIA = [
     x: "Ninguna opción es la obviamente correcta: cada una te cuesta algo. Elige y sigue; el año avanza contigo." },
   { id: "secciones", cuando: (c) => c.fase === "evento" && c.vistas.indexOf("decidir") >= 0,
     t: "Arriba están tus secciones",
-    x: "Ficha, Cartera, Términos, Inmuebles, Mejoras, Fondo y Vida. Se abren y se cierran cuando quieras: el juego te espera, no hay reloj." },
+    x: "Por ahora tienes dos: tu Ficha y el diccionario de Términos. El juego irá abriendo las demás a medida que avance tu carrera, y te avisará cuando pase. Se abren y se cierran cuando quieras: el juego te espera, no hay reloj." },
   { id: "terminos", cuando: (c) => c.tab === "terminos",
     t: "El diccionario",
     x: "Cualquier palabra que no entiendas está aquí explicada sin jerga. Puedes consultarlo en medio de una decisión." },
@@ -6063,6 +6156,11 @@ function Motor() {
   const generarAno = (st) => {
     const lista = [];
     const usados = [];
+    /* Lo primero del año: si algo se abre, se abre como escena y es el
+       acontecimiento del año. Nunca más de una, para que llegar a un
+       sistema nuevo no se sienta como que se destapó un menú. */
+    const nueva = APERTURAS.filter((a) => !abierto(st, a.id) && tocaAbrir(st, a))[0];
+    if (nueva) { lista.push(nueva.escena); usados.push(nueva.escena.id); }
     /* la vida no espera a que te asciendan: casi todos los años pasa algo */
     const vidas = vidaDisponible(st).filter((v) => usados.indexOf(v.id) < 0 && st.vistos.indexOf(v.id) < 0);
     if (vidas.length && Math.random() < 0.62) {
@@ -6084,7 +6182,10 @@ function Motor() {
       const k = sacar(D, st, usados);
       if (k) { lista.push(k); usados.push(k.id); }
     }
-    const objetivo = 2 + (Math.random() < 0.45 ? 1 : 0);
+    /* La escena de apertura se SUMA al anio, no ocupa el sitio de un
+       evento: si no, el anio en que se abre algo pierde variedad y se
+       dejan de ver minijuegos que solo cuelgan de escenas aleatorias. */
+    const objetivo = 2 + (Math.random() < 0.45 ? 1 : 0) + (nueva ? 1 : 0);
     while (lista.length < objetivo) {
       const e = sacar(E, st, usados);
       if (!e) break;
@@ -6323,6 +6424,7 @@ function Motor() {
     let st = { ...s, valores: { ...s.valores } };
     const cambios = [];
     if (o && o.ramaId) st.rama = o.ramaId;
+    if (o && o.abre) st.abiertos = unicos((Array.isArray(st.abiertos) ? st.abiertos : []).concat(o.abre));
     if (o && o.mudar) st.pais = o.mudar;
 
     /* --- la vida --- */
@@ -6887,7 +6989,17 @@ function Motor() {
 
   const selloTxt = { exito: "Ejecutado", parcial: "A medias", fallo: "Fallido" };
   const selloCls = { exito: "", parcial: " med", fallo: " mal" };
-  const TABS = [["ficha", "Ficha"], ["portafolio", "Cartera"], ["terminos", "Términos"], ["props", "Inmuebles"], ["mejoras", "Mejoras"], ["fondo", "Fondo"], ["expediente", "Vida"]];
+  /* La barra solo muestra lo que ya está abierto: en el primer año son
+     dos secciones, no siete. El tercer elemento de cada par es la llave. */
+  const TABS = [
+    ["ficha", "Ficha", null],
+    ["portafolio", "Cartera", "cartera"],
+    ["terminos", "Términos", null],
+    ["props", "Inmuebles", "inmuebles"],
+    ["mejoras", "Mejoras", "mejoras"],
+    ["fondo", "Fondo", "fondo"],
+    ["expediente", "Vida", "vida"],
+  ].filter((p) => p[2] === null || abierto(s, p[2]));
   const PAREJA_N = { solo: "sin pareja", noviazgo: "en pareja", casado: "casado", divorciado: "divorciado", viudo: "viudo" };
   const parejaTxt = PAREJA_TXT(s);
   const ramaN = s.rama ? (RAMAS.find((r) => r.id === s.rama) || {}).n : null;
@@ -7174,7 +7286,9 @@ function Motor() {
             <div className="ea-reloj">
               <div className="ea-dis">{ano} · {edad(s.turno, s.edadIni)} años · año {Math.min(s.turno + 1, tope)} de {tope}</div>
               <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")}>USD {fmt(patrimonio)}</div>
-              <div className="ea-mono" style={{ fontSize: 11.5, marginTop: 2 }}>efectivo {fmt(s.cash)} · cartera {fmt(s.cartera)}</div>
+              {abierto(s, "cartera") && (
+                <div className="ea-mono" style={{ fontSize: 11.5, marginTop: 2 }}>efectivo {fmt(s.cash)} · cartera {fmt(s.cartera)}</div>
+              )}
               <div className="ea-mono ea-signos">
                 <span className={s.ene < 30 ? "mal" : s.ene < 50 ? "ojo" : ""}>energía {Math.round(s.ene)}</span>
                 <span className={s.rep < 20 ? "mal" : s.rep < 30 ? "ojo" : ""}>reputación {Math.round(s.rep)}</span>
@@ -7185,7 +7299,7 @@ function Motor() {
           {fase !== "cierre" && (fase === "evento" || fase === "minijuego" || fase === "resultado") && (
             <div className="ea-cinta">
               <span className="ea-cintaK ea-dis">{ano}</span>
-              <span>Quedan {cola.length + (fase === "evento" ? 1 : fase === "minijuego" ? 1 : 0)} situaciones este año · cartera {perfilN.toLowerCase()}</span>
+              <span>Quedan {cola.length + (fase === "evento" ? 1 : fase === "minijuego" ? 1 : 0)} situaciones este año{abierto(s, "cartera") ? " · cartera " + perfilN.toLowerCase() : ""}</span>
               {aviso && <span style={{ marginLeft: "auto", color: "var(--verde)", flexShrink: 0 }}>{aviso}</span>}
             </div>
           )}
@@ -7335,6 +7449,7 @@ function Motor() {
                       );
                     })()}
 
+                    {(abierto(s, "banco") || s.deuda > 0) && (
                     <Plegable titulo="El banco"
                       resumen={s.deuda > 0 ? "debes " + fmtCorto(s.deuda) : "sin deuda"}
                       tono={s.deuda > 0 ? "#BE4B3B" : "#5F8F5C"}>
@@ -7381,6 +7496,7 @@ function Motor() {
                       );
                     })()}
                     </Plegable>
+                    )}
                     </div>
                   </div>
                 )}
