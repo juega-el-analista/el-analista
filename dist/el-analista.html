@@ -9006,7 +9006,7 @@ const APERTURAS = [{
     puntos: ["La primera barra dice cómo está repartido ahora mismo. La segunda, cómo quieres que quede.", "Debajo reparte entre tipos de activo: cada uno trae su retorno esperado y su volatilidad.", "Nada se mueve hasta que pulsas Aplicar, y cada movimiento cuesta comisión."]
   },
   escena: {
-    id: 9001,
+    id: 9701,
     min: 0,
     max: 6,
     apertura: true,
@@ -9039,7 +9039,7 @@ const APERTURAS = [{
     puntos: ["El índice de tren de vida sube con lo que compras. La meta sube con él.", "Necesitas 25 veces tu gasto anual para que el patrimonio te mantenga sin trabajar.", "Los caprichos suben el índice; algunos además rentan algo cada año."]
   },
   escena: {
-    id: 9002,
+    id: 9702,
     min: 0,
     max: 6,
     apertura: true,
@@ -9071,7 +9071,7 @@ const APERTURAS = [{
     puntos: ["Pedir prestado no es un error por sí solo: lo es pedirlo para algo que no rinde más que la tasa.", "Mientras la deuda cueste más que tu cartera, pagarla es la mejor inversión que tienes, y sin riesgo.", "Quebrar borra la deuda y con ella todo lo demás. Y nadie te presta durante años."]
   },
   escena: {
-    id: 9003,
+    id: 9703,
     min: 0,
     max: 6,
     apertura: true,
@@ -9103,7 +9103,7 @@ const APERTURAS = [{
     puntos: ["Cada uno tiene renta, mantenimiento y una salida lenta: son tres números, no uno.", "La renta y el mantenimiento aparecen los dos en el informe de cierre del año.", "Un inmueble no se vende cuando tú quieres. Eso es iliquidez, y se paga."]
   },
   escena: {
-    id: 9004,
+    id: 9704,
     min: 0,
     max: 6,
     apertura: true,
@@ -9136,7 +9136,7 @@ const APERTURAS = [{
     puntos: ["No dan dinero directo: dan ventaja en los minijuegos y en tus atributos.", "Cuanto antes las compras, más años tienen para pagarse solas."]
   },
   escena: {
-    id: 9005,
+    id: 9705,
     min: 0,
     max: 6,
     apertura: true,
@@ -9169,7 +9169,7 @@ const APERTURAS = [{
     puntos: ["Tienes capacidad limitada: cada ticket que tomas es uno que ya no podrás tomar después.", "Las posiciones tardan años en salir, y salen solas cuando les toca.", "Aquí el criterio no lo califica un examen: lo califican los resultados."]
   },
   escena: {
-    id: 9006,
+    id: 9706,
     min: 0,
     max: 6,
     apertura: true,
@@ -12794,7 +12794,9 @@ function Motor() {
     edad: 20,
     pais: null,
     estudio: null,
-    guia: null
+    guia: null,
+    pareja: "solo",
+    hijos: 0
   };
   const [elec, setElec] = useState(SETUP0);
   const aceptarAviso = () => {
@@ -13052,6 +13054,15 @@ function Motor() {
       st[k] = clamp(numero(st[k], 0) + ed.mods[k], 0, 100);
     });
 
+    /* La familia con la que llegas, solo si empiezas pasados los 30.
+       No hace falta bloquear escenas a mano: las de vida ya se filtran
+       por st.pareja y st.hijos, así que declararse casado apaga sola la
+       escena que te pregunta si quieres pareja. */
+    if (ed.e >= 30) {
+      st.pareja = PAREJAS.indexOf(sel.pareja) >= 0 ? sel.pareja : "solo";
+      st.hijos = entero(sel.hijos, 0, 0, 4);
+    }
+
     /* el país: efectivo de partida, más lo que la edad traía ahorrado */
     st.pais = na.id;
     st.cash = numero(na.cash, 0) + numero(ed.cash, 0);
@@ -13067,6 +13078,13 @@ function Motor() {
 
     /* el cargo se pone al día con la trayectoria que traes */
     while (st.rango < RANGOS.length - 1 && st.carrera >= RANGOS[st.rango].umbral) st.rango += 1;
+
+    /* Y con el cargo se abren los sistemas que ese cargo ya justifica.
+       Sin esto, empezar a los 40 como Asociado te obligaba a "descubrir"
+       durante cinco años que existen las carteras, cuando el umbral de la
+       cartera es rango 1 y tú ya entras en rango 3. Lo que queda por
+       encima de tu rango sí llega como escena, que es lo que se buscaba. */
+    st.abiertos = APERTURAS.filter(a => st.rango >= a.rango).map(a => a.id);
     st.titulares = [{
       q: "2026",
       t: ed.e <= 20 ? "Te gradúas de " + ca.n + " en " + na.ban : "Entras al sector a los " + ed.e + ", con tu título de " + ca.n + " en " + na.ban
@@ -14476,7 +14494,7 @@ function Motor() {
     className: "ea-opcion" + (elec.edad === e.e ? " on" : ""),
     key: e.e,
     onClick: () => {
-      if (enFase("edad")) elige("edad", e.e, "pais");
+      if (enFase("edad")) elige("edad", e.e, e.e >= 30 ? "familia" : "pais");
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-opcionN"
@@ -14484,7 +14502,7 @@ function Motor() {
     className: "ea-opcionD"
   }, e.d), /*#__PURE__*/React.createElement("div", {
     className: "ea-opcionM"
-  }, "Terminas a los ", e.e + 30, e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado", Object.keys(e.mods || {}).length ? " · " + Object.keys(e.mods).map(k => ETIQ[k] + " " + (e.mods[k] > 0 ? "+" : "") + e.mods[k]).join(" · ") : "")))), fase === "pais" && /*#__PURE__*/React.createElement("div", {
+  }, "Terminas a los ", e.e + 30, e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado", Object.keys(e.mods || {}).length ? " · " + Object.keys(e.mods).map(k => ETIQ[k] + " " + (e.mods[k] > 0 ? "+" : "") + e.mods[k]).join(" · ") : "")))), fase === "familia" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
@@ -14493,6 +14511,72 @@ function Motor() {
   }, /*#__PURE__*/React.createElement(Atras, {
     a: "edad",
     texto: "Cambiar la edad"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "ea-dis",
+    style: {
+      fontSize: 12,
+      letterSpacing: ".26em",
+      color: "var(--cobre)"
+    }
+  }, "Paso tres de cinco"), /*#__PURE__*/React.createElement("h2", {
+    className: "ea-final ea-dis",
+    style: {
+      marginTop: 8
+    }
+  }, "\xBFC\xF3mo llegas a los ", EDAD_DE(elec.edad).e, "?"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-rastro ea-mono"
+  }, "Empiezas a los ", EDAD_DE(elec.edad).e), /*#__PURE__*/React.createElement("p", {
+    className: "ea-lede",
+    style: {
+      marginBottom: 18
+    }
+  }, "A esta edad casi nadie llega sin nadie y sin cuentas que pagar. Lo que digas aqu\xED cambia lo que te cuesta vivir desde el primer a\xF1o, y tambi\xE9n qu\xE9 te va a ofrecer el juego: no tiene sentido que te pregunte si quieres pareja cuando llegas casado."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-campoK ea-dis"
+  }, "Con qui\xE9n llegas"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-generos"
+  }, [["solo", "Sin pareja"], ["noviazgo", "En pareja"], ["casado", "Casado"], ["divorciado", "Divorciado"]].map(par => /*#__PURE__*/React.createElement("button", {
+    key: par[0],
+    className: "ea-mini" + (elec.pareja === par[0] ? " on" : ""),
+    onClick: () => setElec(x => ({
+      ...x,
+      pareja: par[0]
+    }))
+  }, par[1]))), /*#__PURE__*/React.createElement("div", {
+    className: "ea-campoK ea-dis",
+    style: {
+      marginTop: 18
+    }
+  }, "Cu\xE1ntos hijos"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-generos"
+  }, [0, 1, 2, 3, 4].map(h => /*#__PURE__*/React.createElement("button", {
+    key: h,
+    className: "ea-mini" + (elec.hijos === h ? " on" : ""),
+    onClick: () => setElec(x => ({
+      ...x,
+      hijos: h
+    }))
+  }, h === 0 ? "Ninguno" : h))), /*#__PURE__*/React.createElement("div", {
+    className: "ea-itemD",
+    style: {
+      marginTop: 9
+    }
+  }, elec.hijos > 0 ? "Cada hijo cuesta del orden de USD " + fmt(COSTO_HIJO) + " al año antes de ajustar por país, y pesa en tu tren de vida desde el primer cierre." : "Sin hijos el gasto arranca más bajo. Nada impide que lleguen jugando."), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    style: {
+      marginTop: 22
+    },
+    onClick: () => {
+      if (enFase("familia")) irA("pais");
+    }
+  }, "Seguir")), fase === "pais" && /*#__PURE__*/React.createElement("div", {
+    className: "ea-wrap",
+    style: {
+      maxWidth: 760,
+      margin: "4vh auto"
+    }
+  }, /*#__PURE__*/React.createElement(Atras, {
+    a: EDAD_DE(elec.edad).e >= 30 ? "familia" : "edad",
+    texto: EDAD_DE(elec.edad).e >= 30 ? "Cambiar tu situación" : "Cambiar la edad"
   }), /*#__PURE__*/React.createElement("div", {
     className: "ea-dis",
     style: {

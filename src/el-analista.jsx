@@ -3463,7 +3463,7 @@ const APERTURAS = [
         "Debajo reparte entre tipos de activo: cada uno trae su retorno esperado y su volatilidad.",
         "Nada se mueve hasta que pulsas Aplicar, y cada movimiento cuesta comisión.",
       ] },
-    escena: { id: 9001, min: 0, max: 6, apertura: true,
+    escena: { id: 9701, min: 0, max: 6, apertura: true,
       t: "Lo que sobra a fin de mes",
       x: "Con el sueldo nuevo aparece una pregunta que antes no tenías. Hasta ahora el dinero entraba y salía el mismo mes; de aquí en adelante hay una parte que no tiene tarea asignada, y dejarla quieta también es una decisión.",
       o: [
@@ -3479,7 +3479,7 @@ const APERTURAS = [
         "Necesitas 25 veces tu gasto anual para que el patrimonio te mantenga sin trabajar.",
         "Los caprichos suben el índice; algunos además rentan algo cada año.",
       ] },
-    escena: { id: 9002, min: 0, max: 6, apertura: true,
+    escena: { id: 9702, min: 0, max: 6, apertura: true,
       t: "La vida que estás pagando",
       x: "Un sábado cualquiera haces la cuenta de lo que te cuesta vivir como vives. No es un número dramático, pero es un número: y sube mucho más fácil de lo que baja.",
       o: [
@@ -3495,7 +3495,7 @@ const APERTURAS = [
         "Mientras la deuda cueste más que tu cartera, pagarla es la mejor inversión que tienes, y sin riesgo.",
         "Quebrar borra la deuda y con ella todo lo demás. Y nadie te presta durante años.",
       ] },
-    escena: { id: 9003, min: 0, max: 6, apertura: true,
+    escena: { id: 9703, min: 0, max: 6, apertura: true,
       t: "El banco te empieza a mirar",
       x: "Te llega la carta que le llega a todo el que ya gana lo suficiente: una línea de crédito preaprobada, redactada en tono de felicitación. No te están premiando, te están vendiendo.",
       o: [
@@ -3511,7 +3511,7 @@ const APERTURAS = [
         "La renta y el mantenimiento aparecen los dos en el informe de cierre del año.",
         "Un inmueble no se vende cuando tú quieres. Eso es iliquidez, y se paga.",
       ] },
-    escena: { id: 9004, min: 0, max: 6, apertura: true,
+    escena: { id: 9704, min: 0, max: 6, apertura: true,
       t: "Un ladrillo con tu nombre",
       x: "Un cliente vende y te lo cuenta antes de sacarlo al mercado. No es una oportunidad irrepetible, pero es la primera vez que un inmueble te queda a distancia de la mano.",
       o: [
@@ -3526,7 +3526,7 @@ const APERTURAS = [
         "No dan dinero directo: dan ventaja en los minijuegos y en tus atributos.",
         "Cuanto antes las compras, más años tienen para pagarse solas.",
       ] },
-    escena: { id: 9005, min: 0, max: 6, apertura: true,
+    escena: { id: 9705, min: 0, max: 6, apertura: true,
       t: "Dónde gastar el poco tiempo que queda",
       x: "Ya no puedes trabajar más horas: las horas se acabaron. Lo único que queda por mejorar es con qué las llenas.",
       o: [
@@ -3542,7 +3542,7 @@ const APERTURAS = [
         "Las posiciones tardan años en salir, y salen solas cuando les toca.",
         "Aquí el criterio no lo califica un examen: lo califican los resultados.",
       ] },
-    escena: { id: 9006, min: 0, max: 6, apertura: true,
+    escena: { id: 9706, min: 0, max: 6, apertura: true,
       t: "Del otro lado de la mesa",
       x: "Toda tu carrera has ejecutado lo que otros decidieron invertir. Te invitan a levantar un vehículo propio: decidir tú, con dinero ajeno y responsabilidad tuya.",
       o: [
@@ -6281,7 +6281,8 @@ function Motor() {
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
      duplica sus bonos: no hay nada acumulado que duplicar. */
-  const SETUP0 = { nombre: "", genero: null, modo: "normal", edad: 20, pais: null, estudio: null, guia: null };
+  const SETUP0 = { nombre: "", genero: null, modo: "normal", edad: 20, pais: null, estudio: null, guia: null,
+    pareja: "solo", hijos: 0 };
   const [elec, setElec] = useState(SETUP0);
   const aceptarAviso = () => { anotarAviso(); irA("portada"); };
 
@@ -6480,6 +6481,15 @@ function Motor() {
     st.carrera = numero(st.carrera, 0) + numero(ed.car, 0);
     Object.keys(ed.mods || {}).forEach((k) => { st[k] = clamp(numero(st[k], 0) + ed.mods[k], 0, 100); });
 
+    /* La familia con la que llegas, solo si empiezas pasados los 30.
+       No hace falta bloquear escenas a mano: las de vida ya se filtran
+       por st.pareja y st.hijos, así que declararse casado apaga sola la
+       escena que te pregunta si quieres pareja. */
+    if (ed.e >= 30) {
+      st.pareja = PAREJAS.indexOf(sel.pareja) >= 0 ? sel.pareja : "solo";
+      st.hijos = entero(sel.hijos, 0, 0, 4);
+    }
+
     /* el país: efectivo de partida, más lo que la edad traía ahorrado */
     st.pais = na.id;
     st.cash = numero(na.cash, 0) + numero(ed.cash, 0);
@@ -6491,6 +6501,13 @@ function Motor() {
 
     /* el cargo se pone al día con la trayectoria que traes */
     while (st.rango < RANGOS.length - 1 && st.carrera >= RANGOS[st.rango].umbral) st.rango += 1;
+
+    /* Y con el cargo se abren los sistemas que ese cargo ya justifica.
+       Sin esto, empezar a los 40 como Asociado te obligaba a "descubrir"
+       durante cinco años que existen las carteras, cuando el umbral de la
+       cartera es rango 1 y tú ya entras en rango 3. Lo que queda por
+       encima de tu rango sí llega como escena, que es lo que se buscaba. */
+    st.abiertos = APERTURAS.filter((a) => st.rango >= a.rango).map((a) => a.id);
 
     st.titulares = [{
       q: "2026",
@@ -7422,7 +7439,7 @@ function Motor() {
           </p>
           {EDADES.map((e) => (
             <button className={"ea-opcion" + (elec.edad === e.e ? " on" : "")} key={e.e}
-              onClick={() => { if (enFase("edad")) elige("edad", e.e, "pais"); }}>
+              onClick={() => { if (enFase("edad")) elige("edad", e.e, e.e >= 30 ? "familia" : "pais"); }}>
               <div className="ea-opcionN">Empezar a los {e.e}</div>
               <div className="ea-opcionD">{e.d}</div>
               <div className="ea-opcionM">
@@ -7435,9 +7452,48 @@ function Motor() {
         </div>
       )}
 
-      {fase === "pais" && (
+      {fase === "familia" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a="edad" texto="Cambiar la edad" />
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso tres de cinco</div>
+          <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Cómo llegas a los {EDAD_DE(elec.edad).e}?</h2>
+          <div className="ea-rastro ea-mono">Empiezas a los {EDAD_DE(elec.edad).e}</div>
+          <p className="ea-lede" style={{ marginBottom: 18 }}>
+            A esta edad casi nadie llega sin nadie y sin cuentas que pagar. Lo que digas aquí cambia lo que
+            te cuesta vivir desde el primer año, y también qué te va a ofrecer el juego: no tiene sentido
+            que te pregunte si quieres pareja cuando llegas casado.
+          </p>
+
+          <div className="ea-campoK ea-dis">Con quién llegas</div>
+          <div className="ea-generos">
+            {[["solo", "Sin pareja"], ["noviazgo", "En pareja"], ["casado", "Casado"], ["divorciado", "Divorciado"]].map((par) => (
+              <button key={par[0]} className={"ea-mini" + (elec.pareja === par[0] ? " on" : "")}
+                onClick={() => setElec((x) => ({ ...x, pareja: par[0] }))}>{par[1]}</button>
+            ))}
+          </div>
+
+          <div className="ea-campoK ea-dis" style={{ marginTop: 18 }}>Cuántos hijos</div>
+          <div className="ea-generos">
+            {[0, 1, 2, 3, 4].map((h) => (
+              <button key={h} className={"ea-mini" + (elec.hijos === h ? " on" : "")}
+                onClick={() => setElec((x) => ({ ...x, hijos: h }))}>{h === 0 ? "Ninguno" : h}</button>
+            ))}
+          </div>
+          <div className="ea-itemD" style={{ marginTop: 9 }}>
+            {elec.hijos > 0
+              ? "Cada hijo cuesta del orden de USD " + fmt(COSTO_HIJO) + " al año antes de ajustar por país, y pesa en tu tren de vida desde el primer cierre."
+              : "Sin hijos el gasto arranca más bajo. Nada impide que lleguen jugando."}
+          </div>
+
+          <button className="ea-btn" style={{ marginTop: 22 }}
+            onClick={() => { if (enFase("familia")) irA("pais"); }}>Seguir</button>
+        </div>
+      )}
+
+      {fase === "pais" && (
+        <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
+          <Atras a={EDAD_DE(elec.edad).e >= 30 ? "familia" : "edad"}
+            texto={EDAD_DE(elec.edad).e >= 30 ? "Cambiar tu situación" : "Cambiar la edad"} />
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso cuatro de cinco</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿De dónde vienes?</h2>
           <div className="ea-rastro ea-mono">{rastro()}</div>

@@ -77,6 +77,9 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
 - [ ] **29.** **Reconocimientos** nacionales y mundiales según la carrera (del estilo de un
   Nobel para Economía). Sirven para construir legado y para tener un nombre que la gente
   conozca, no solo un patrimonio.
+- [x] **30.** A partir de los 30 poder **declarar si tienes pareja e hijos**. Interpretado
+  como paso del setup cuando se elige empezar a los 30, 40 o 50: hoy empezabas a los 50
+  soltero y sin hijos siempre.
 
 ---
 
@@ -166,10 +169,52 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
   **A propósito sin cifras:** saber que algo cuesta energía es información útil; saber que
   cuesta exactamente 18 convierte la decisión en aritmética y le quita la apuesta.
 
-### Hallazgo de la prueba de cobertura (28-ago-2026)
+### BUG PROPIO encontrado por la prueba (28-ago-2026)
 
-El marcador **«evento de vida: pareja»** pasó de aparecer 2 veces en 20 partidas a no
-aparecer ninguna. **No es una regresión:** con 2 de 20 ya estaba en el ruido. La prueba
+**Colisión de ids de escena.** Las escenas de apertura del primer lote se numeraron
+9001-9006, que son **los mismos ids que seis escenas de VIDA**. Como `resolverEscena()`
+hace `st.vistos = st.vistos.concat(ev.id)`, cada apertura bloqueaba para siempre una
+escena de vida. Renumeradas a **9701-9706** (rango libre y comprobado).
+
+Efecto medido: «evento de vida: pareja» pasó de 0 a **8** apariciones en 20 partidas, y
+«evento de vida: estafa» de 0 a **4**. En la versión original pareja salía solo 2 veces,
+así que arreglarlo dejó la vida más viva que antes del primer lote. Cobertura 45/51, con
+exactamente los 6 marcadores sin ver de la base.
+
+**Lección:** al inventar ids de escena, comprobar el rango completo. Añadido al script de
+verificación: contar ids duplicados >= 900 antes de dar un lote por bueno.
+
+### Nota anterior (corregida)
+
+~~El marcador «evento de vida: pareja» pasó de 2 apariciones a ninguna. No es una regresión:
+con 2 de 20 ya estaba en el ruido.~~ **Falso: sí era una regresión**, la colisión de ids de
+arriba. La prueba
 confirma por su cuenta la queja del punto 25, y da una forma de medir si se arregla:
 cuando las decisiones de vida sean más frecuentes, ese marcador debe subir claramente.
 Los otros 7 sin ver son los mismos de antes del primer lote.
+
+### Punto 30 — declarar la familia al empezar pasados los 30
+
+Nueva fase de setup `familia`, solo cuando la edad elegida es 30, 40 o 50. Se declara la
+pareja (sin pareja / en pareja / casado / divorciado) y los hijos (0 a 4).
+
+- Se etiqueta también como «Paso tres de cinco», como sub-paso de la edad, para no
+  renumerar los otros cuatro pasos según una rama condicional.
+- **No hace falta bloquear escenas a mano:** las de vida ya se filtran por `st.pareja` y
+  `st.hijos`, así que declararse casado apaga sola la escena que pregunta si quieres
+  pareja. Eso resuelve de paso parte del punto 26 (coherencia temporal).
+- Se permiten hijos sin pareja: madre o padre solo es una situación real, y las escenas
+  que dependen de `hijos >= 1` siguen funcionando igual.
+
+### Segundo fallo del escalonamiento, encontrado probando el punto 30
+
+Al arrancar a los 40 el jugador entra como **Asociado (rango 3)**, pero `arrancarPartida()`
+dejaba `abiertos: []`, así que empezaba solo con Ficha y Términos y tenía que «descubrir»
+durante cinco años que existen las carteras — cuando el umbral de la cartera es rango 1.
+
+Arreglado en `arrancarPartida()`, justo después de poner el cargo al día:
+`st.abiertos = APERTURAS.filter((a) => st.rango >= a.rango).map((a) => a.id)`.
+
+Verificado en el juego: un Asociado de 40 arranca ahora con Ficha, Cartera, Términos,
+Inmuebles, Mejoras y Vida, y solo le queda Fondo (rango 4), que sí llega como escena. Un
+recién graduado de 20 (rango 0) sigue arrancando con dos secciones, como debe.
