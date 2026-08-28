@@ -43,7 +43,7 @@ y eso no se serializa. De ahí que se guarden ids y se rehidraten desde las tabl
 
 ## Pasos, en orden de riesgo
 
-### 1 · Cola persistida y retomar automático  ← empezar aquí
+### 1 · Cola persistida y retomar automático  ✅ HECHO
 
 - Añadir `st.cola` (lista de ids) al estado, saneada como los demás campos.
 - Registro de escenas por id para rehidratar: `E`, `D`, `E2`…`E6`, `VIDA`,
@@ -59,7 +59,7 @@ y eso no se serializa. De ahí que se guarden ids y se rehidraten desde las tabl
 **Esta pieza vale la pena aunque el resto no se haga**, y es verificable con las
 pruebas que ya existen. Cerrarla en verde antes de seguir.
 
-### 2 · Empaquetado con islas
+### 2 · Empaquetado con islas  ✅ HECHO
 
 `pruebas/empaquetar.js` pasa a emitir un documento con:
 
@@ -77,7 +77,7 @@ página. El documento publicado se queda en ~820 KB, no en 1,6 MB.
 semilla y cada republicación tienen que tener **la misma forma** o el quine se
 desalinea. Ver `salon/README.md` para las tres trampas del quine, que aplican igual.
 
-### 3 · Registro dentro del juego
+### 3 · Registro dentro del juego  ✅ HECHO
 
 - Una pantalla o sección que pinta la tabla desde la isla de datos.
 - En la pantalla final, botón «Anotar mi carrera»: arma el documento nuevo y publica.
@@ -100,3 +100,46 @@ desalinea. Ver `salon/README.md` para las tres trampas del quine, que aplican ig
 No existe capacidad de identidad para páginas publicadas, así que **el registro es
 autodeclarado**: los datos los pone el juego, pero nada impide que alguien edite y
 publique otra cosa. Decirlo en la página, como ya lo dice el salón.
+
+---
+
+## Estado: los tres pasos, cerrados
+
+### Lo que se construyó
+
+- **Paso 1.** `st.cola` guarda la cola del año por id; el snapshot se toma al presentar
+  cada escena; `entrarEnPartida()` rehidrata y devuelve a la misma decisión; el retomar es
+  automático al cargar. `persistir(st, callado)` para no parpadear en la cinta.
+- **Paso 2.** `empaquetar.js` emite un documento con cinco islas. El motor va en una sola
+  copia: sobrecoste total 14 KB. `pruebas/quine.js` (`npm run quine`) lo verifica con 21
+  comprobaciones.
+- **Paso 3.** `PanelRegistro` y `BotonAnotar`. El registro sale en la **portada** (los
+  números a batir) y en la **pantalla final** (dónde caíste, y el botón de anotar). **No
+  es una pestaña del juego a propósito**: el año 1 arranca con dos secciones y eso costó
+  trabajo. Los seis datos del registro salen del estado, no de un formulario.
+
+### Los tres bugs que cazaron las comprobaciones
+
+Ninguno se vio jugando; los tres los encontró una comprobación automática antes de
+publicar nada. Vale la pena tenerlos presentes al tocar esto:
+
+1. **Orden de sustitución.** Rellenar la plantilla inserta la cáscara entera, con todas las
+   marcas sin rellenar dentro. Cualquier `replace` posterior golpea la copia de la isla en
+   vez de la parte viva. **Los motores primero, la plantilla al final.** Estaba también en
+   el código de la página, no solo en el generador.
+2. **Envoltorio anidado.** La marca del motor estaba dentro del envoltorio de arranque, así
+   que reinyectar el bloque lo habría anidado dos veces: `ElAnalista` en el ámbito interno
+   y el montaje de fuera tronando. Habría roto el juego **en la primera publicación**, para
+   todos. El motor va solo en su bloque y el arranque aparte.
+3. **Búsqueda por texto plano.** En `quine.js`, buscar `id="motor-react"` encuentra primero
+   la copia inerte que vive dentro de la isla. Hay que buscar **después** del cierre de la
+   isla. La página no tiene este problema porque usa `getElementById`, que solo ve el DOM.
+
+### Lo que falta para que esto esté vivo
+
+Publicar el juego con `capabilities: {artifact: {}}`. Hasta que no se publique así, el
+botón de anotar detecta que no puede publicar y muestra el aviso de solo lectura, que es
+el comportamiento correcto.
+
+Y **el salón separado (`salon/`) queda obsoleto** en cuanto el registro viva dentro del
+juego. Su artifact sigue publicado; decidir si se retira.

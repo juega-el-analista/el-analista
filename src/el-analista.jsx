@@ -439,6 +439,29 @@ const CSS5 = `
   line-height:1.55;color:var(--tenue)}
 .ea-nuevoP li:before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;
   background:var(--cobre)}
+
+/* --- el registro compartido de carreras cerradas --- */
+.ea-regCab{display:grid;grid-template-columns:24px 1fr auto auto;gap:10px;
+  padding:0 0 7px;border-bottom:1px solid var(--borde);
+  font-size:10px;letter-spacing:.14em;color:var(--tenue)}
+.ea-regFila{display:grid;grid-template-columns:24px 1fr auto auto;gap:10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px dotted var(--borde);font-size:13.5px}
+.ea-regFila:last-child{border-bottom:none}
+.ea-regP{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--tenue);
+  font-variant-numeric:tabular-nums}
+.ea-regFila.podio .ea-regP{color:var(--cobre)}
+.ea-regN{color:var(--papel);line-height:1.3}
+.ea-regC{display:block;font-size:11.5px;color:var(--tenue)}
+.ea-regV{font-family:'IBM Plex Mono',monospace;color:var(--papel);text-align:right;
+  white-space:nowrap;font-variant-numeric:tabular-nums}
+.ea-regM{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--cobre);
+  text-align:right;white-space:nowrap;min-width:3ch}
+.ea-regFila.tuya{background:rgba(192,118,58,.11);border-left:2px solid var(--cobre);
+  padding-left:8px;margin-left:-10px}
+.ea-regVacio{padding:22px 0;color:var(--tenue);font-size:13.5px}
+.ea-regNombre{width:100%;background:var(--tinta);border:1px solid var(--borde);color:var(--papel);
+  font-family:'IBM Plex Mono',monospace;font-size:14px;padding:9px 11px;border-radius:0;margin-top:6px}
+
 .ea-panelAb{animation:ea-abre .18s ease-out}
 @keyframes ea-abre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .ea-cerrar{display:block;width:100%;background:transparent;border:1px solid var(--borde);
@@ -6344,6 +6367,143 @@ function Flujo({ titulo, lista, tope, neg }) {
    perfiles quedan como punto de partida de un toque. Nada se aplica
    hasta que confirmas, y se te dice lo que cuesta el cambio.
    ============================================================ */
+
+/* ============================================================
+   EL REGISTRO COMPARTIDO
+   Las carreras que otros cerraron. Viven en el propio documento, en la
+   isla que el puente lee, y se anotan publicando una version nueva de la
+   pagina. No hay servidor ni cuentas: por eso el registro es
+   autodeclarado y la pagina lo dice.
+
+   No es una pestania del juego a proposito: el anio 1 arranca con dos
+   secciones y eso costo trabajo. El registro sale donde de verdad se
+   mira, en la portada y al terminar.
+   ============================================================ */
+const registroActual = () => {
+  try {
+    return (typeof window !== "undefined" && Array.isArray(window.__REGISTRO))
+      ? window.__REGISTRO : [];
+  } catch (e) { return []; }
+};
+
+function PanelRegistro({ tope, tuya, titulo }) {
+  const lista = registroActual()
+    .slice()
+    .sort((a, b) => numero(b && b.p, 0) - numero(a && a.p, 0))
+    .slice(0, entero(tope, 10, 1, 200));
+
+  return (
+    <div>
+      <div className="ea-rot ea-dis">{titulo || "Carreras cerradas"}</div>
+      {lista.length === 0 ? (
+        <div className="ea-regVacio">
+          Todavía no hay ninguna carrera anotada. La primera puede ser tuya.
+        </div>
+      ) : (
+        <div>
+          <div className="ea-regCab ea-dis">
+            <span>#</span><span>QUIÉN</span><span>PATRIMONIO</span><span>◆</span>
+          </div>
+          {lista.map((x, i) => {
+            const esMia = tuya != null && x === tuya;
+            return (
+              <div className={"ea-regFila" + (i < 3 ? " podio" : "") + (esMia ? " tuya" : "")} key={i}>
+                <span className="ea-regP">{i + 1}</span>
+                <span className="ea-regN">
+                  {texto(x && x.n, 24) || "Anónimo"}
+                  <span className="ea-regC">
+                    {texto(x && x.c, 24) || "—"} · se retiró a los {entero(x && x.e, 50, 20, 99)}
+                    {texto(x && x.v, 60) ? " · " + texto(x.v, 60) : ""}
+                  </span>
+                </span>
+                <span className="ea-regV">USD {fmt(numero(x && x.p, 0))}</span>
+                <span className="ea-regM">{entero(x && x.m, 0, 0, 12) > 0 ? "◆" + entero(x.m, 0, 0, 12) : "—"}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* El boton que anota tu carrera. Los seis datos salen del estado, no de
+   un formulario: el jugador no tiene que copiar nada a mano. */
+function BotonAnotar({ entrada }) {
+  const [puede, setPuede] = useState(null);      /* null = comprobando */
+  const [estado, setEstado] = useState("listo"); /* listo · enviando · hecho · error */
+  const [motivo, setMotivo] = useState("");
+  const [nombre, setNombre] = useState(texto(entrada && entrada.n, 24));
+
+  useEffect(() => {
+    let vivo = true;
+    let p;
+    try {
+      p = (typeof window !== "undefined" && typeof window.__puedeAnotar === "function")
+        ? window.__puedeAnotar() : Promise.resolve(false);
+    } catch (e) { p = Promise.resolve(false); }
+    p.then((v) => { if (vivo) setPuede(!!v); }).catch(() => { if (vivo) setPuede(false); });
+    return () => { vivo = false; };
+  }, []);
+
+  if (puede === null) return null;
+
+  if (!puede) {
+    return (
+      <div className="ea-itemD" style={{ marginTop: 16 }}>
+        El registro compartido no está disponible en esta vista, así que tu carrera no se puede
+        anotar desde aquí. Queda igual en tu expediente.
+      </div>
+    );
+  }
+
+  if (estado === "hecho") {
+    return (
+      <div className="ea-ok2" style={{ marginTop: 16 }}>
+        Anotada. La página se recarga para todo el mundo con tu carrera dentro.
+      </div>
+    );
+  }
+
+  const anotar = () => {
+    const n = texto(nombre, 24);
+    if (!n) { setEstado("error"); setMotivo("Escribe un nombre para figurar en el registro."); return; }
+    setEstado("enviando"); setMotivo("");
+    let p;
+    try { p = window.__anotarCarrera({ ...entrada, n }); }
+    catch (e) { p = Promise.resolve("fallo"); }
+    p.then((err) => {
+      if (!err) { setEstado("hecho"); return; }
+      setEstado("error");
+      setMotivo(
+        err === "conflicto" ? "Alguien anotó justo antes que tú. Recarga la página y vuelve a intentarlo."
+        : err === "sin-permiso" ? "Esta vista no tiene permiso para anotar en el registro."
+        : "No se pudo anotar. Recarga la página e inténtalo otra vez."
+      );
+    }).catch(() => { setEstado("error"); setMotivo("No se pudo anotar. Recarga la página e inténtalo otra vez."); });
+  };
+
+  return (
+    <div className="ea-panel" style={{ marginTop: 24 }}>
+      <div className="ea-rot ea-dis">Anotar tu carrera</div>
+      <div className="ea-itemD" style={{ marginBottom: 4 }}>
+        Queda en el registro que ve todo el mundo, con tu cargo, tu patrimonio y cómo terminaste.
+        Nadie verifica nada: se anota por confianza.
+      </div>
+      <div className="ea-campoK ea-dis" style={{ marginTop: 12 }}>Con qué nombre figuras</div>
+      <input className="ea-regNombre" maxLength={24} value={nombre} autoComplete="off"
+        placeholder="Como quieras que te vean" aria-label="Nombre para el registro"
+        onChange={(e) => setNombre(e.target.value)} />
+      <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", marginTop: 14 }}>
+        <button className="ea-aplicar ea-dis" disabled={estado === "enviando"} onClick={anotar}>
+          {estado === "enviando" ? "Anotando…" : "Anotar en el registro"}
+        </button>
+        {motivo && <span style={{ fontSize: 13, color: "var(--rojo)", flex: 1, minWidth: 200 }}>{motivo}</span>}
+      </div>
+    </div>
+  );
+}
+
 function PanelCartera({ st, onAplicar, onPendiente }) {
   const actual = st.pesos || PERFILES[0].w;
   const objAct = st.objetivo == null ? 0.7 : st.objetivo;
@@ -7923,6 +8083,15 @@ function Motor() {
           ) : (
             <button className="ea-btnO" onClick={empezar}>Empezar</button>
           )}
+
+          {/* Los números a batir, antes de empezar. Es el gancho: se ve
+              hasta dónde llegó otra gente con las mismas reglas. */}
+          <div className="ea-panel" style={{ marginTop: 30, textAlign: "left" }}>
+            <PanelRegistro tope={8} titulo="Hasta dónde han llegado otros" />
+            <div style={{ fontSize: 11.5, color: "var(--tenue)", marginTop: 12 }}>
+              Se anota al terminar una carrera. Nadie verifica nada: es un registro por confianza.
+            </div>
+          </div>
         </div>
       )}
 
@@ -9142,6 +9311,20 @@ function Motor() {
               <div className="ea-cifraK">Cuánto cuesta sostenerlo</div>
               <div className="ea-cifraV ea-mono">USD {fmt(gastosAnuales)} al año</div>
             </div>
+          </div>
+
+          {/* Los seis datos salen del estado: nada que copiar a mano. */}
+          <BotonAnotar entrada={{
+            n: s.nombre,
+            c: RANGO(s.rango).n,
+            e: edad(s.turno, s.edadIni),
+            p: Math.round(patrimonio),
+            m: (Array.isArray(s.premios) ? s.premios : []).length,
+            v: texto(veredicto && veredicto.t, 60),
+          }} />
+
+          <div className="ea-panel" style={{ marginTop: 16, textAlign: "left" }}>
+            <PanelRegistro tope={20} titulo="El registro, por patrimonio" />
           </div>
           {s.fondo && (
             <div className="ea-panel" style={{ marginTop: 24 }}>
