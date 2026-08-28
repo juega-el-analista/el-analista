@@ -34,19 +34,19 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
 
 ## Lote 3 — Menús emergentes
 
-- [ ] **12.** Los menús deben ser **emergentes**, para que la decisión siga siendo lo
+- [x] **12.** Los menús deben ser **emergentes**, para que la decisión siga siendo lo
   principal en pantalla.
-- [ ] **13.** Al desbloquear una sección, **ventana emergente** que explique para qué
+- [x] **13.** Al desbloquear una sección, **ventana emergente** que explique para qué
   sirve esa área nueva.
 
 ## Lote 4 — Que se entienda
 
-- [ ] **14.** El **juego de anclaje** no se entiende: pones un número en una negociación
+- [x] **14.** El **juego de anclaje** no se entiende: pones un número en una negociación
   pero no explica qué es ese número ni para qué.
-- [ ] **15.** Explicar mejor la frase «**el gasto persigue al sueldo**».
-- [ ] **16.** Los exámenes tipo CIO deben preguntar **solo temas ya tocados** en esa
+- [x] **15.** Explicar mejor la frase «**el gasto persigue al sueldo**».
+- [x] **16.** Los exámenes tipo CIO deben preguntar **solo temas ya tocados** en esa
   partida.
-- [ ] **17.** Cada decisión debe decir **qué atributo sube**.
+- [x] **17.** Cada decisión debe decir **qué atributo sube**.
 
 ## Lote 5 — Contenido y sistemas nuevos
 
@@ -66,6 +66,17 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
   salió novia a los 21, ruptura a los 24, y nada más en el resto de la vida.
 - [ ] **26.** **Coherencia temporal**: no puede aparecer «conseguir novia» a los 36 si a
   los 32 ya compraste la boda soñada.
+
+## Lote 6 — el cierre de la partida
+
+- [ ] **27.** Al retirarte, **proyectar hasta los 65** (edad de retiro normal): qué habrías
+  generado en esos años que no se juegan. Y **mostrar el rendimiento del fondo** a lo largo
+  de la partida: terminó a los 50 y nunca pudo ver cómo le fue a su fondo.
+- [ ] **28.** El **expediente** debe recoger la vida entera: de qué temas aprendiste, todas
+  las decisiones importantes, los ascensos, las caídas y el mejor año.
+- [ ] **29.** **Reconocimientos** nacionales y mundiales según la carrera (del estilo de un
+  Nobel para Economía). Sirven para construir legado y para tener un nombre que la gente
+  conozca, no solo un patrimonio.
 
 ---
 
@@ -111,3 +122,54 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
   izquierda y colores atenuados por elemento.
 - **11 (El carril):** barra de 3 posiciones; los nombres de carril quedan debajo como
   etiquetas alineadas, y el activo se resalta en cobre. Reglas `.ea-carrilB` eliminadas.
+
+### Lote 3 — menús emergentes (28-ago-2026)
+
+- **12 (emergentes):** el panel lateral de 300px desaparece; las secciones se abren en un
+  `position:fixed` sobre la pantalla y el tablero de la decisión ocupa siempre el ancho
+  completo. No hizo falta mover el JSX de sitio: basta con forzar `.ea-grid.solo` y
+  convertir los dos `div` envolventes en fondo + ventana, porque `fixed` sale del flujo y
+  se pinta encima aunque siga primero en el DOM. Se cierra con la X, con clic en el fondo
+  y con Escape.
+- El listener de Escape lleva un guardarraíl `typeof window.addEventListener === "function"`
+  porque el arnés de pruebas monta un `window` falso que solo tiene `localStorage`. Sin
+  eso, las 27 pruebas de robustez petardean al montar.
+- **13 (ficha del sistema nuevo):** cada entrada de `APERTURAS` lleva ahora un campo `guia`
+  con título, una frase y 2-3 puntos. Al resolverse la escena de apertura se dispara un
+  emergente que lo explica, con botón «Ver la sección» que abre la sección directamente.
+  Para el banco, que no tiene pestaña propia, el botón lleva a Ficha.
+- **Consecuencia limpiada:** el aviso «DECISIÓN EN ESPERA» del Lote 2 quedó inalcanzable,
+  porque `carteraPend` solo puede estar encendida mientras el emergente tapa la pantalla.
+  Se elimina el aviso; los `disabled` se quedan, porque sí evitan llegar por teclado a un
+  botón que está detrás del emergente.
+
+### Lote 4 — que se entienda (28-ago-2026)
+
+- **14 (anclaje):** el juego SÍ explicaba las reglas en la tarjeta previa, pero la pantalla
+  de juego solo tenía un slider de 0 a 100 rotulado «Tu número», sin unidad ni referencia.
+  Ahora la cifra manda en pantalla a 38px, se explica que el número es **lo agresiva que es
+  tu oferta**, y los extremos van rotulados: «0 · lo regalas» / «100 · te levantan de la
+  mesa». También se dice cuántas ofertas quedan en vez de repetir el número.
+- **15 (la frase):** la lección ahora abre explicando la metáfora («cuando sube lo que ganas
+  sube casi igual lo que gastas, sin que llegues a decidirlo») antes de dar las cifras, y
+  cierra con el por qué importa: la distancia entre sueldo y gasto nunca crece.
+- **16 (exámenes justos):** las preguntas derivadas del temario llevan `tema: tema.id`; las
+  de banco general no cuelgan de ningún tema. `armarExamen()` recibe ahora los temas ya
+  dados y descarta toda pregunta atada a un tema que nunca se explicó. Como al principio
+  casi no hay temas dados, el examen se completa con **fundamentos generales de tu nivel o
+  por debajo**, nunca con un tema sin clase previa.
+  El registro entra por `st.temas`: la Cátedra avisa del tema que acaba de dar y desde ese
+  momento puede salir en examen. Hubo que cablear `temas`/`onTema` por
+  Motor -> TarjetaJuego -> MiniJuego -> JuegoQuiz/JuegoCatedra.
+- **17 (qué sube cada decisión):** helper `efectoDe(o)` que lee `o.d`, o el mejor caso de
+  `o.res`, o `o.chk.ok`. Muestra una etiqueta «sube X, Y · cuesta Z» en cada opción.
+  **A propósito sin cifras:** saber que algo cuesta energía es información útil; saber que
+  cuesta exactamente 18 convierte la decisión en aritmética y le quita la apuesta.
+
+### Hallazgo de la prueba de cobertura (28-ago-2026)
+
+El marcador **«evento de vida: pareja»** pasó de aparecer 2 veces en 20 partidas a no
+aparecer ninguna. **No es una regresión:** con 2 de 20 ya estaba en el ruido. La prueba
+confirma por su cuenta la queja del punto 25, y da una forma de medir si se arregla:
+cuando las decisiones de vida sean más frecuentes, ese marcador debe subir claramente.
+Los otros 7 sin ver son los mismos de antes del primer lote.

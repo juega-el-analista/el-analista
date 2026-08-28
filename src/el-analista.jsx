@@ -412,6 +412,33 @@ const CSS5 = `
 
 /* --- el tablero, que ya no estorba --- */
 .ea-grid.solo{grid-template-columns:1fr}
+
+/* Las secciones dejan de robarle la mitad de la pantalla a la decision:
+   se abren encima, y al cerrarlas el jugador vuelve exactamente a donde
+   estaba. La decision es lo principal y ahora se ve asi. */
+.ea-modalFondo{position:fixed;inset:0;background:rgba(5,13,16,.84);z-index:60;
+  display:flex;align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto}
+.ea-modal{background:var(--fieltro);border:1px solid var(--borde);width:100%;max-width:580px;
+  box-shadow:0 20px 64px rgba(0,0,0,.55)}
+.ea-modalCab{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:12px 15px;border-bottom:1px solid var(--borde);position:sticky;top:0;
+  background:var(--fieltro);z-index:2}
+.ea-modalT{font-size:12px;letter-spacing:.2em;color:var(--cobre)}
+.ea-modalX{background:transparent;border:1px solid var(--borde);color:var(--tenue);
+  width:31px;height:31px;cursor:pointer;font:inherit;font-size:14px;line-height:1;flex-shrink:0}
+.ea-modalX:hover:not(:disabled){border-color:var(--cobre);color:var(--papel)}
+.ea-modalX:disabled{opacity:.35;cursor:default}
+.ea-modalCuerpo{padding:14px 15px 18px}
+
+/* la ficha que explica un sistema recien abierto */
+.ea-nuevoK{font-size:10.5px;letter-spacing:.22em;color:var(--cobre);margin-bottom:7px}
+.ea-nuevoT{font-size:27px;line-height:1.08;color:var(--papel);margin-bottom:9px}
+.ea-nuevoX{font-size:14px;line-height:1.6;color:var(--hueso);margin-bottom:14px}
+.ea-nuevoP{list-style:none;padding:0;margin:0 0 4px}
+.ea-nuevoP li{position:relative;padding-left:19px;margin-bottom:10px;font-size:13px;
+  line-height:1.55;color:var(--tenue)}
+.ea-nuevoP li:before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;
+  background:var(--cobre)}
 .ea-panelAb{animation:ea-abre .18s ease-out}
 @keyframes ea-abre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .ea-cerrar{display:block;width:100%;background:transparent;border:1px solid var(--borde);
@@ -869,6 +896,15 @@ const CSS3 = `
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700;text-transform:uppercase}
 .ea-obj.bueno{background:rgba(95,143,92,.55);color:#1B2426}
 .ea-obj.malo{background:rgba(190,75,59,.6);color:var(--papel)}
+/* El numero del anclaje no tenia unidad ni referencia: se veia un
+   slider de 0 a 100 y nada mas. Ahora la cifra manda en pantalla y la
+   escala esta rotulada en los dos extremos. */
+.ea-anclaN{font-size:38px;line-height:1;color:var(--tintaPapel);margin:6px 0 0;
+  font-family:'IBM Plex Mono',monospace}
+.ea-anclaE{display:flex;justify-content:space-between;gap:10px;margin-top:2px;
+  font-size:10.5px;letter-spacing:.1em;color:var(--gris);
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+
 .ea-carrilS{height:7px;margin:12px 0 3px}
 .ea-carrilS::-webkit-slider-thumb{width:26px;height:20px}
 .ea-carrilS::-moz-range-thumb{width:26px;height:20px}
@@ -1718,8 +1754,13 @@ const nivelDe = (turno, estudia) => clamp(
 const largoExamen = (nv) => (nv <= 1 ? 3 : nv <= 3 ? 4 : 5);
 
 /* mayoría del nivel que te toca, una de repaso y una del nivel siguiente */
-const armarExamen = (nv, cuantas) => {
-  const del = (k) => PREGUNTAS.filter((x) => x.nv === k).sort(() => Math.random() - 0.5);
+const armarExamen = (nv, cuantas, temasVistos) => {
+  /* Una pregunta atada a un tema solo es justa si ese tema ya se dio en
+     clase. Las de banco general no cuelgan de ningun tema: esas se rigen
+     solo por el nivel, que ya sube con la carrera. */
+  const vistos = Array.isArray(temasVistos) ? temasVistos : [];
+  const justa = (x) => !x.tema || vistos.indexOf(x.tema) >= 0;
+  const del = (k) => PREGUNTAS.filter((x) => x.nv === k && justa(x)).sort(() => Math.random() - 0.5);
   const cur = del(nv), ant = del(Math.max(1, nv - 1)), sig = del(Math.min(5, nv + 1));
   const out = [];
   const meter = (arr, n) => { for (let i = 0; i < n && arr.length; i++) { const q = arr.pop(); if (!out.some((y) => y.q === q.q)) out.push(q); } };
@@ -1727,6 +1768,13 @@ const armarExamen = (nv, cuantas) => {
   if (nv < 5 && cuantas >= 4) meter(sig, 1);
   meter(cur, cuantas - out.length);
   meter(del(nv), cuantas - out.length);
+  /* Al principio de la partida casi ningun tema se ha dado todavia, asi
+     que el examen se completa con fundamentos generales de tu nivel o por
+     debajo, nunca con un tema que nadie te explico. */
+  if (out.length < cuantas) {
+    const generales = PREGUNTAS.filter((x) => !x.tema && x.nv <= nv).sort(() => Math.random() - 0.5);
+    meter(generales, cuantas - out.length);
+  }
   return out.sort(() => Math.random() - 0.5).slice(0, cuantas);
 };
 
@@ -3040,7 +3088,7 @@ const LECCIONES = [
     x: (c) => `Ganaste ${(c.ret * 100).toFixed(1)}%. El riesgo ahora es concluir que tu criterio es excelente y subir la apuesta. Un año no distingue habilidad de suerte: para eso hacen falta muchos, y aún así cuesta.` },
   { id: "gasto", pri: 9, cuando: (c) => c.gastoAnt > 0 && c.gastos > c.gastoAnt * 1.16,
     t: "El gasto persigue al sueldo",
-    x: (c) => `Tus gastos pasaron de ${fmt(c.gastoAnt)} a ${fmt(c.gastos)}, casi ${Math.round((c.gastos / c.gastoAnt - 1) * 100)}% más. Es lo normal cuando sube el ingreso, y es la razón por la que gente que gana mucho no acumula nada. Cada dólar de gasto fijo nuevo son veinticinco dólares que necesitas para poder dejar de trabajar.` },
+    x: (c) => `La frase significa que cuando sube lo que ganas sube casi igual lo que gastas, sin que llegues a decidirlo. Tus gastos pasaron de ${fmt(c.gastoAnt)} a ${fmt(c.gastos)}, un ${Math.round((c.gastos / c.gastoAnt - 1) * 100)}% más, y por eso el aumento se nota bastante menos de lo que esperabas. Es la razón por la que hay gente que gana mucho y no acumula nada: el sueldo sube, el nivel de vida lo persigue, y la distancia entre los dos nunca crece. Y cada dólar de gasto fijo nuevo son 25 dólares que necesitas tener guardados para poder dejar de trabajar.` },
   { id: "consumo", pri: 7, cuando: (c) => c.consumo > c.patrimonio * 0.12 && c.consumo > 20000,
     t: "Lo que compraste no es patrimonio",
     x: (c) => `Llevas ${fmt(c.consumo)} en cosas que no se recuperan y encima cuestan mantener. No es un error, es una decisión: solo conviene saber que ese dinero no está trabajando y que su mantenimiento se paga todos los años.` },
@@ -3278,6 +3326,9 @@ const BASE = {
   guia: false, guiaVistas: [],
   /* qué sistemas del juego ya se abrieron */
   abiertos: [],
+  /* temas del temario que ya se dieron en clase, para no examinar de
+     algo que el juego nunca explicó */
+  temas: [],
   ritmo: "normal", nivelGasto: "normal",
   /* lo que debes y su historia */
   deuda: 0, quiebras: 0, embargos: 0, vetoCredito: 0,
@@ -3406,6 +3457,12 @@ const escalar = (d, nivel) => {
    ============================================================ */
 const APERTURAS = [
   { id: "cartera", rango: 1, ano: 3,
+    guia: { t: "Cartera", x: "Aquí decides qué hace tu dinero mientras tú trabajas.",
+      puntos: [
+        "La primera barra dice cómo está repartido ahora mismo. La segunda, cómo quieres que quede.",
+        "Debajo reparte entre tipos de activo: cada uno trae su retorno esperado y su volatilidad.",
+        "Nada se mueve hasta que pulsas Aplicar, y cada movimiento cuesta comisión.",
+      ] },
     escena: { id: 9001, min: 0, max: 6, apertura: true,
       t: "Lo que sobra a fin de mes",
       x: "Con el sueldo nuevo aparece una pregunta que antes no tenías. Hasta ahora el dinero entraba y salía el mismo mes; de aquí en adelante hay una parte que no tiene tarea asignada, y dejarla quieta también es una decisión.",
@@ -3416,6 +3473,12 @@ const APERTURAS = [
           d: { cri: 2, ene: 3, msg: "Prefieres mojarte los pies antes de nadar. La cartera queda abierta en conservador y puedes mover los pesos cuando quieras." } },
       ] } },
   { id: "vida", rango: 1, ano: 4,
+    guia: { t: "Vida", x: "Lo que te cuesta vivir como vives, y cuánto necesitas para no depender del sueldo.",
+      puntos: [
+        "El índice de tren de vida sube con lo que compras. La meta sube con él.",
+        "Necesitas 25 veces tu gasto anual para que el patrimonio te mantenga sin trabajar.",
+        "Los caprichos suben el índice; algunos además rentan algo cada año.",
+      ] },
     escena: { id: 9002, min: 0, max: 6, apertura: true,
       t: "La vida que estás pagando",
       x: "Un sábado cualquiera haces la cuenta de lo que te cuesta vivir como vives. No es un número dramático, pero es un número: y sube mucho más fácil de lo que baja.",
@@ -3426,6 +3489,12 @@ const APERTURAS = [
           d: { ene: 4, msg: "Cierras la libreta sin sacar conclusiones. La sección Vida queda ahí para cuando quieras volver." } },
       ] } },
   { id: "banco", rango: 2, ano: 6,
+    guia: { t: "El banco", x: "Vive dentro de Ficha: cuánto te prestarían, a qué tasa, y cómo pagar lo que debes.",
+      puntos: [
+        "Pedir prestado no es un error por sí solo: lo es pedirlo para algo que no rinde más que la tasa.",
+        "Mientras la deuda cueste más que tu cartera, pagarla es la mejor inversión que tienes, y sin riesgo.",
+        "Quebrar borra la deuda y con ella todo lo demás. Y nadie te presta durante años.",
+      ] },
     escena: { id: 9003, min: 0, max: 6, apertura: true,
       t: "El banco te empieza a mirar",
       x: "Te llega la carta que le llega a todo el que ya gana lo suficiente: una línea de crédito preaprobada, redactada en tono de felicitación. No te están premiando, te están vendiendo.",
@@ -3436,6 +3505,12 @@ const APERTURAS = [
           d: { ene: 2, msg: "La carta va al cajón. La sección del banco queda disponible en Ficha el día que la necesites." } },
       ] } },
   { id: "inmuebles", rango: 3, ano: 9,
+    guia: { t: "Inmuebles", x: "Ladrillos que pagan algo cada año, no solo que suben de precio.",
+      puntos: [
+        "Cada uno tiene renta, mantenimiento y una salida lenta: son tres números, no uno.",
+        "La renta y el mantenimiento aparecen los dos en el informe de cierre del año.",
+        "Un inmueble no se vende cuando tú quieres. Eso es iliquidez, y se paga.",
+      ] },
     escena: { id: 9004, min: 0, max: 6, apertura: true,
       t: "Un ladrillo con tu nombre",
       x: "Un cliente vende y te lo cuenta antes de sacarlo al mercado. No es una oportunidad irrepetible, pero es la primera vez que un inmueble te queda a distancia de la mano.",
@@ -3446,6 +3521,11 @@ const APERTURAS = [
           d: { red: 3, msg: "Agradeces sin cerrar la puerta. La sección Inmuebles queda abierta para cuando los números te cuadren." } },
       ] } },
   { id: "mejoras", rango: 3, ano: 11,
+    guia: { t: "Mejoras", x: "Cosas que se compran una vez y rinden todos los años que te quedan.",
+      puntos: [
+        "No dan dinero directo: dan ventaja en los minijuegos y en tus atributos.",
+        "Cuanto antes las compras, más años tienen para pagarse solas.",
+      ] },
     escena: { id: 9005, min: 0, max: 6, apertura: true,
       t: "Dónde gastar el poco tiempo que queda",
       x: "Ya no puedes trabajar más horas: las horas se acabaron. Lo único que queda por mejorar es con qué las llenas.",
@@ -3456,6 +3536,12 @@ const APERTURAS = [
           d: { ene: 5, msg: "No cambias nada por ahora. La sección Mejoras queda arriba para cuando lo consideres." } },
       ] } },
   { id: "fondo", rango: 4, ano: 14,
+    guia: { t: "Fondo", x: "Dinero ajeno, decisiones tuyas. El otro lado de la mesa.",
+      puntos: [
+        "Tienes capacidad limitada: cada ticket que tomas es uno que ya no podrás tomar después.",
+        "Las posiciones tardan años en salir, y salen solas cuando les toca.",
+        "Aquí el criterio no lo califica un examen: lo califican los resultados.",
+      ] },
     escena: { id: 9006, min: 0, max: 6, apertura: true,
       t: "Del otro lado de la mesa",
       x: "Toda tu carrera has ejecutado lo que otros decidieron invertir. Te invitan a levantar un vehículo propio: decidir tú, con dinero ajeno y responsabilidad tuya.",
@@ -3615,6 +3701,7 @@ const sanear = (bruto) => {
   /* Una partida guardada antes de la apertura escalonada no trae la
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
+  st.temas = unicos(listaDe(r.temas, (x) => TEMAS.some((t) => t.id === x), 60));
   st.abiertos = Array.isArray(r.abiertos)
     ? unicos(listaDe(r.abiertos, (x) => IDS_APERTURA.indexOf(x) >= 0, 20))
     : APERTURAS.filter((a) => tocaAbrir(st, a)).map((a) => a.id);
@@ -3660,6 +3747,28 @@ const GUIA = [
     t: "Cómo vives",
     x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo." },
 ];
+
+/* Qué atributos mueve una opción, para poder decirlo ANTES de elegir en
+   vez de después. A propósito sin cifras: saber que algo cuesta energía
+   es información útil; saber que cuesta exactamente 18 convierte la
+   decisión en aritmética y le quita la apuesta. */
+const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
+const efectoDe = (o) => {
+  if (!o || typeof o !== "object") return null;
+  const d = o.d
+    || (o.res && (o.res.exito || o.res.parcial || o.res.fallo))
+    || (o.chk && o.chk.ok)
+    || null;
+  if (!d || typeof d !== "object") return null;
+  const sube = [], cuesta = [];
+  CLAVES_ATRIB.forEach((k) => {
+    const v = numero(d[k], 0);
+    if (v > 0) sube.push((ETIQ[k] || k).toLowerCase());
+    else if (v < 0) cuesta.push((ETIQ[k] || k).toLowerCase());
+  });
+  if (!sube.length && !cuesta.length) return null;
+  return { sube, cuesta };
+};
 
 /* Términos del glosario que se pueden reconocer dentro del enunciado
    de una pregunta. Sirven de red: si la pregunta no está atada a un
@@ -4027,9 +4136,19 @@ function JuegoAnclaje({ ayuda, onFin }) {
 
   return (
     <div className="ea-jw">
-      <div className="ea-jinfo ea-dis"><span>Oferta {Math.min(n + 1, 4)} de 4</span><span>Tu número {v}</span></div>
+      <div className="ea-jinfo ea-dis"><span>Oferta {Math.min(n + 1, 4)} de 4</span><span>Te quedan {Math.max(0, 4 - n)}</span></div>
+      <p className="ea-memoTxt" style={{ marginTop: 0 }}>
+        Tu número es <strong>lo agresiva que es tu oferta</strong>, de 0 a 100. La otra parte acepta dentro
+        de una franja estrecha que no ves. Cada vez que pones un número te dicen si te quedaste corto, si te
+        pasaste o si estás cerca, y con eso vas cerrando el cerco.
+      </p>
+      <div className="ea-anclaN">{v}</div>
       <input className="ea-slider" type="range" min="0" max="100" value={v} disabled={cerrado}
-        onChange={(e) => setV(entero(e.target.value, 50, 0, 100))} aria-label="Tu oferta" />
+        onChange={(e) => setV(entero(e.target.value, 50, 0, 100))} aria-label="Lo agresiva que es tu oferta" />
+      <div className="ea-anclaE ea-dis">
+        <span>0 · lo regalas</span>
+        <span>100 · te levantan de la mesa</span>
+      </div>
       <div style={{ marginTop: 10 }}>
         {hist.map((h, i) => (
           <div key={i} style={{ fontSize: 13.5, color: h.dentro ? "#3E6B3C" : "#3A4649" }}>
@@ -4143,12 +4262,12 @@ const PREGUNTA_RESERVA = {
   nv: 1,
 };
 
-function JuegoQuiz({ ayuda, nivel, onFin, modo }) {
+function JuegoQuiz({ ayuda, nivel, onFin, modo, temas }) {
   const nv = clamp(numero(nivel, 1), 1, 5);
   const total = largoExamen(nv);
   const [preg] = useState(() => {
     let crudas = [];
-    try { crudas = armarExamen(nv, total) || []; } catch (e) { crudas = []; }
+    try { crudas = armarExamen(nv, total, temas) || []; } catch (e) { crudas = []; }
     crudas = crudas.filter(preguntaValida);
     while (crudas.length === 0) crudas = [PREGUNTA_RESERVA];
     return crudas.map((p) => {
@@ -4575,14 +4694,14 @@ function JuegoSemaforo({ ayuda, nivel, onFin }) {
   );
 }
 
-function MiniJuego({ tipo, ayuda, nivel, onFin, modo }) {
+function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
   if (tipo === "precision") return <JuegoPrecision ayuda={ayuda} onFin={onFin} />;
   if (tipo === "memoria") return <JuegoMemoria ayuda={ayuda} onFin={onFin} />;
   if (tipo === "ojo") return <JuegoOjo ayuda={ayuda} onFin={onFin} />;
   if (tipo === "anclaje") return <JuegoAnclaje ayuda={ayuda} onFin={onFin} />;
   if (tipo === "tresraya") return <JuegoTresRaya ayuda={ayuda} onFin={onFin} />;
-  if (tipo === "quiz") return <JuegoQuiz ayuda={ayuda} nivel={nivel} onFin={onFin} modo={modo} />;
-  if (tipo === "catedra") return <JuegoCatedra ayuda={ayuda} nivel={nivel} onFin={onFin} />;
+  if (tipo === "quiz") return <JuegoQuiz ayuda={ayuda} nivel={nivel} onFin={onFin} modo={modo} temas={temas} />;
+  if (tipo === "catedra") return <JuegoCatedra ayuda={ayuda} nivel={nivel} onFin={onFin} onTema={onTema} />;
   if (tipo === "comite") return <JuegoComite ayuda={ayuda} onFin={onFin} />;
   if (tipo === "reaccion") return <JuegoReaccion ayuda={ayuda} onFin={onFin} />;
   if (tipo === "calculo") return <JuegoCalculo ayuda={ayuda} nivel={nivel} onFin={onFin} />;
@@ -4601,7 +4720,7 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo }) {
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
-function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo }) {
+function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema }) {
   const [listo, setListo] = useState(false);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
@@ -4616,8 +4735,8 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo }) {
     try { onFin(nv); } catch (e) { try { console.error("[El Analista] fin de juego", e); } catch (_) {} }
   };
   const j = JUEGOS[tipo];
-  if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} />;
-  if (listo) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} />;
+  if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
+  if (listo) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
   return (
     <div className="ea-jw">
@@ -4663,7 +4782,7 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo }) {
    acto seguido te pregunta por él. Nada de examinar sobre cosas que el
    juego nunca se molestó en enseñar. El tema sale del nivel que te toca,
    y si ya viste todos los de tu nivel, sube o baja uno. */
-function JuegoCatedra({ ayuda, nivel, onFin }) {
+function JuegoCatedra({ ayuda, nivel, onFin, onTema }) {
   const nv = clamp(numero(nivel, 1), 1, 5);
   const [tema] = useState(() => {
     const enNivel = TEMAS.filter((x) => x.nv === nv);
@@ -4680,6 +4799,13 @@ function JuegoCatedra({ ayuda, nivel, onFin }) {
   const [i, setI] = useState(0);
   const [sel, setSel] = useState(null);
   const [ok, setOk] = useState(0);
+
+  /* Desde que se da la clase, este tema ya puede salir en un examen. */
+  const avisaTema = useRef(onTema);
+  avisaTema.current = onTema;
+  useEffect(() => {
+    if (avisaTema.current && tema && tema.id) avisaTema.current(tema.id);
+  }, []);
 
   if (fase === "clase") {
     return (
@@ -6134,6 +6260,16 @@ function Motor() {
      se podía mover los pesos, seguir jugando y perder el cambio sin que
      nada lo dijera. */
   const [carteraPend, setCarteraPend] = useState(false);
+  /* que sistema se acaba de abrir, para explicarlo antes de que el
+     jugador tenga que adivinar para que sirve la seccion nueva */
+  const [nuevoSistema, setNuevoSistema] = useState(null);
+  /* la catedra avisa de que tema acaba de dar, y desde ese momento ese
+     tema puede aparecer en un examen */
+  const apuntarTema = (id) => setS((st) => {
+    const ya = Array.isArray(st.temas) ? st.temas : [];
+    if (!id || ya.indexOf(id) >= 0) return st;
+    return { ...st, temas: ya.concat(id).slice(-60) };
+  });
   const [ev, setEv] = useState(null);
   const [op, setOp] = useState(null);
   const [res, setRes] = useState(null);
@@ -6181,6 +6317,18 @@ function Motor() {
     try { const p = olvidarPartida(); if (p && p.catch) p.catch(() => {}); } catch (e) {}
     setGuardado(null); setAviso("");
   };
+
+  /* Escape cierra la seccion abierta. El guardarraíl de window es por el
+     arnes de pruebas, que monta un window falso sin addEventListener. */
+  useEffect(() => {
+    if (!tab) return;
+    if (typeof window === "undefined" || typeof window.addEventListener !== "function") return;
+    const alPulsar = (e) => { if (e.key === "Escape" && !carteraPend) setTab(null); };
+    window.addEventListener("keydown", alPulsar);
+    return () => {
+      try { window.removeEventListener("keydown", alPulsar); } catch (err) { /* nada */ }
+    };
+  }, [tab, carteraPend]);
 
   const tope = TOPE_DE(s.seguir);
   const nacion = NACIONES.find((x) => x.id === s.pais) || NACIONES[0];
@@ -6512,7 +6660,10 @@ function Motor() {
     let st = { ...s, valores: { ...s.valores } };
     const cambios = [];
     if (o && o.ramaId) st.rama = o.ramaId;
-    if (o && o.abre) st.abiertos = unicos((Array.isArray(st.abiertos) ? st.abiertos : []).concat(o.abre));
+    if (o && o.abre) {
+      st.abiertos = unicos((Array.isArray(st.abiertos) ? st.abiertos : []).concat(o.abre));
+      setNuevoSistema(o.abre);
+    }
     if (o && o.mudar) st.pais = o.mudar;
 
     /* --- la vida --- */
@@ -7418,10 +7569,16 @@ function Motor() {
             </div>
           )}
 
-          <div className={"ea-grid" + (tab ? "" : " solo")}>
+          <div className="ea-grid solo">
             {tab && (
-            <div>
-              <div className="ea-panel ea-panelAb" style={{ maxHeight: 470, overflowY: "auto" }}>
+            <div className="ea-modalFondo" onClick={() => { if (!carteraPend) setTab(null); }}>
+              <div className="ea-modal ea-panelAb" onClick={(e) => e.stopPropagation()}>
+                <div className="ea-modalCab">
+                  <span className="ea-modalT ea-dis">{(TABS.find((p) => p[0] === tab) || ["", ""])[1]}</span>
+                  <button className="ea-modalX ea-dis" disabled={carteraPend} aria-label="Cerrar la sección"
+                    onClick={() => { if (!carteraPend) setTab(null); }}>✕</button>
+                </div>
+                <div className="ea-modalCuerpo">
                 <button className="ea-cerrar ea-dis" disabled={carteraPend} onClick={() => { if (!carteraPend) setTab(null); }}>
                   {carteraPend ? "Aplica o descarta el cambio para volver" : "Cerrar y volver a la decisión"}
                 </button>
@@ -7923,6 +8080,7 @@ function Motor() {
                     ))}
                   </div>
                 )}
+                </div>
               </div>
             </div>
             )}
@@ -7935,13 +8093,6 @@ function Motor() {
                   </div>
                   <h2 className="ea-memoTit ea-dis">{ev.t}</h2>
                   <p className="ea-memoTxt">{ev.x}</p>
-                  {carteraPend && (
-                    <div className="ea-pend">
-                      <div className="ea-pendK ea-dis">DECISIÓN EN ESPERA</div>
-                      Tienes un cambio de cartera sin aplicar. Vuelve a Cartera y confirma o descarta;
-                      el año no avanza mientras tanto.
-                    </div>
-                  )}
                   <div className="ea-ops">
                     {opcionesDe(ev).map((o, i) => (
                       <button className="ea-op" key={i} disabled={carteraPend} onClick={() => elegir(o)}>
@@ -7949,6 +8100,14 @@ function Motor() {
                         {o.req && <span className="ea-opTag" style={{ color: "var(--cobre)" }}>Solo tú puedes tomar esta</span>}
                         {(o.juego || o.j) && <span className="ea-opTag">{JUEGO(o.juego || o.j).n} · {JUEGO(o.juego || o.j).tema} · te ayuda {ETIQ[o.stat] || "Criterio"} {Math.round(ayudaDe(o))}</span>}
                         {o.ramaId && <span className="ea-opTag">{(RAMAS.find((r) => r.id === o.ramaId) || {}).d}</span>}
+                        {(() => {
+                          const ef = efectoDe(o);
+                          if (!ef) return null;
+                          const partes = [];
+                          if (ef.sube.length) partes.push("sube " + ef.sube.join(", "));
+                          if (ef.cuesta.length) partes.push("cuesta " + ef.cuesta.join(", "));
+                          return <span className="ea-opTag">{partes.join(" · ")}</span>;
+                        })()}
                       </button>
                     ))}
                     {opcionesDe(ev).length === 0 && (
@@ -7965,7 +8124,8 @@ function Motor() {
                   <div className="ea-memoHead ea-dis clave"><span>{JUEGO(op.juego || op.j).n} · {JUEGO(op.juego || op.j).dur}</span><span>{ano}</span></div>
                   <h2 className="ea-memoTit ea-dis">{op.t}</h2>
                   <TarjetaJuego tipo={op.juego || op.j} ayuda={ayudaDe(op)} nivel={nivelDe(s.turno, s.estudia)}
-                    statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo} />
+                    statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo}
+                    temas={s.temas} onTema={apuntarTema} />
                 </div>
               )}
 
@@ -8189,6 +8349,40 @@ function Motor() {
           </div>
         </div>
       )}
+
+      {nuevoSistema && (() => {
+        const ap = APERTURAS.find((a) => a.id === nuevoSistema);
+        const g = ap && ap.guia;
+        if (!g) return null;
+        const par = TABS.find((p) => p[2] === nuevoSistema);
+        const destino = par ? par[0] : (nuevoSistema === "banco" ? "ficha" : null);
+        return (
+          <div className="ea-modalFondo" onClick={() => setNuevoSistema(null)}>
+            <div className="ea-modal ea-panelAb" onClick={(e) => e.stopPropagation()}>
+              <div className="ea-modalCab">
+                <span className="ea-modalT ea-dis">SECCIÓN NUEVA</span>
+                <button className="ea-modalX ea-dis" aria-label="Cerrar" onClick={() => setNuevoSistema(null)}>✕</button>
+              </div>
+              <div className="ea-modalCuerpo">
+                <div className="ea-nuevoK ea-dis">ACABAS DE ABRIR</div>
+                <div className="ea-nuevoT ea-dis">{g.t}</div>
+                <div className="ea-nuevoX">{g.x}</div>
+                <ul className="ea-nuevoP">
+                  {g.puntos.map((p, i) => <li key={i}>{p}</li>)}
+                </ul>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
+                  {destino && (
+                    <button className="ea-aplicar ea-dis" onClick={() => { setTab(destino); setNuevoSistema(null); }}>
+                      Ver la sección
+                    </button>
+                  )}
+                  <button className="ea-descartar ea-dis" onClick={() => setNuevoSistema(null)}>Después</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {fase === "fin" && (
         <div className="ea-wrap ea-portada">

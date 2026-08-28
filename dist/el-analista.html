@@ -757,6 +757,33 @@ const CSS5 = `
 
 /* --- el tablero, que ya no estorba --- */
 .ea-grid.solo{grid-template-columns:1fr}
+
+/* Las secciones dejan de robarle la mitad de la pantalla a la decision:
+   se abren encima, y al cerrarlas el jugador vuelve exactamente a donde
+   estaba. La decision es lo principal y ahora se ve asi. */
+.ea-modalFondo{position:fixed;inset:0;background:rgba(5,13,16,.84);z-index:60;
+  display:flex;align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto}
+.ea-modal{background:var(--fieltro);border:1px solid var(--borde);width:100%;max-width:580px;
+  box-shadow:0 20px 64px rgba(0,0,0,.55)}
+.ea-modalCab{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:12px 15px;border-bottom:1px solid var(--borde);position:sticky;top:0;
+  background:var(--fieltro);z-index:2}
+.ea-modalT{font-size:12px;letter-spacing:.2em;color:var(--cobre)}
+.ea-modalX{background:transparent;border:1px solid var(--borde);color:var(--tenue);
+  width:31px;height:31px;cursor:pointer;font:inherit;font-size:14px;line-height:1;flex-shrink:0}
+.ea-modalX:hover:not(:disabled){border-color:var(--cobre);color:var(--papel)}
+.ea-modalX:disabled{opacity:.35;cursor:default}
+.ea-modalCuerpo{padding:14px 15px 18px}
+
+/* la ficha que explica un sistema recien abierto */
+.ea-nuevoK{font-size:10.5px;letter-spacing:.22em;color:var(--cobre);margin-bottom:7px}
+.ea-nuevoT{font-size:27px;line-height:1.08;color:var(--papel);margin-bottom:9px}
+.ea-nuevoX{font-size:14px;line-height:1.6;color:var(--hueso);margin-bottom:14px}
+.ea-nuevoP{list-style:none;padding:0;margin:0 0 4px}
+.ea-nuevoP li{position:relative;padding-left:19px;margin-bottom:10px;font-size:13px;
+  line-height:1.55;color:var(--tenue)}
+.ea-nuevoP li:before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;
+  background:var(--cobre)}
 .ea-panelAb{animation:ea-abre .18s ease-out}
 @keyframes ea-abre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .ea-cerrar{display:block;width:100%;background:transparent;border:1px solid var(--borde);
@@ -1253,6 +1280,15 @@ const CSS3 = `
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700;text-transform:uppercase}
 .ea-obj.bueno{background:rgba(95,143,92,.55);color:#1B2426}
 .ea-obj.malo{background:rgba(190,75,59,.6);color:var(--papel)}
+/* El numero del anclaje no tenia unidad ni referencia: se veia un
+   slider de 0 a 100 y nada mas. Ahora la cifra manda en pantalla y la
+   escala esta rotulada en los dos extremos. */
+.ea-anclaN{font-size:38px;line-height:1;color:var(--tintaPapel);margin:6px 0 0;
+  font-family:'IBM Plex Mono',monospace}
+.ea-anclaE{display:flex;justify-content:space-between;gap:10px;margin-top:2px;
+  font-size:10.5px;letter-spacing:.1em;color:var(--gris);
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+
 .ea-carrilS{height:7px;margin:12px 0 3px}
 .ea-carrilS::-webkit-slider-thumb{width:26px;height:20px}
 .ea-carrilS::-moz-range-thumb{width:26px;height:20px}
@@ -3772,8 +3808,13 @@ const nivelDe = (turno, estudia) => clamp(1 + Math.floor(entero(turno, 0, 0, 60)
 const largoExamen = nv => nv <= 1 ? 3 : nv <= 3 ? 4 : 5;
 
 /* mayoría del nivel que te toca, una de repaso y una del nivel siguiente */
-const armarExamen = (nv, cuantas) => {
-  const del = k => PREGUNTAS.filter(x => x.nv === k).sort(() => Math.random() - 0.5);
+const armarExamen = (nv, cuantas, temasVistos) => {
+  /* Una pregunta atada a un tema solo es justa si ese tema ya se dio en
+     clase. Las de banco general no cuelgan de ningun tema: esas se rigen
+     solo por el nivel, que ya sube con la carrera. */
+  const vistos = Array.isArray(temasVistos) ? temasVistos : [];
+  const justa = x => !x.tema || vistos.indexOf(x.tema) >= 0;
+  const del = k => PREGUNTAS.filter(x => x.nv === k && justa(x)).sort(() => Math.random() - 0.5);
   const cur = del(nv),
     ant = del(Math.max(1, nv - 1)),
     sig = del(Math.min(5, nv + 1));
@@ -3788,6 +3829,13 @@ const armarExamen = (nv, cuantas) => {
   if (nv < 5 && cuantas >= 4) meter(sig, 1);
   meter(cur, cuantas - out.length);
   meter(del(nv), cuantas - out.length);
+  /* Al principio de la partida casi ningun tema se ha dado todavia, asi
+     que el examen se completa con fundamentos generales de tu nivel o por
+     debajo, nunca con un tema que nadie te explico. */
+  if (out.length < cuantas) {
+    const generales = PREGUNTAS.filter(x => !x.tema && x.nv <= nv).sort(() => Math.random() - 0.5);
+    meter(generales, cuantas - out.length);
+  }
   return out.sort(() => Math.random() - 0.5).slice(0, cuantas);
 };
 
@@ -8309,7 +8357,7 @@ const LECCIONES = [{
   pri: 9,
   cuando: c => c.gastoAnt > 0 && c.gastos > c.gastoAnt * 1.16,
   t: "El gasto persigue al sueldo",
-  x: c => `Tus gastos pasaron de ${fmt(c.gastoAnt)} a ${fmt(c.gastos)}, casi ${Math.round((c.gastos / c.gastoAnt - 1) * 100)}% más. Es lo normal cuando sube el ingreso, y es la razón por la que gente que gana mucho no acumula nada. Cada dólar de gasto fijo nuevo son veinticinco dólares que necesitas para poder dejar de trabajar.`
+  x: c => `La frase significa que cuando sube lo que ganas sube casi igual lo que gastas, sin que llegues a decidirlo. Tus gastos pasaron de ${fmt(c.gastoAnt)} a ${fmt(c.gastos)}, un ${Math.round((c.gastos / c.gastoAnt - 1) * 100)}% más, y por eso el aumento se nota bastante menos de lo que esperabas. Es la razón por la que hay gente que gana mucho y no acumula nada: el sueldo sube, el nivel de vida lo persigue, y la distancia entre los dos nunca crece. Y cada dólar de gasto fijo nuevo son 25 dólares que necesitas tener guardados para poder dejar de trabajar.`
 }, {
   id: "consumo",
   pri: 7,
@@ -8711,6 +8759,9 @@ const BASE = {
   guiaVistas: [],
   /* qué sistemas del juego ya se abrieron */
   abiertos: [],
+  /* temas del temario que ya se dieron en clase, para no examinar de
+     algo que el juego nunca explicó */
+  temas: [],
   ritmo: "normal",
   nivelGasto: "normal",
   /* lo que debes y su historia */
@@ -8949,6 +9000,11 @@ const APERTURAS = [{
   id: "cartera",
   rango: 1,
   ano: 3,
+  guia: {
+    t: "Cartera",
+    x: "Aquí decides qué hace tu dinero mientras tú trabajas.",
+    puntos: ["La primera barra dice cómo está repartido ahora mismo. La segunda, cómo quieres que quede.", "Debajo reparte entre tipos de activo: cada uno trae su retorno esperado y su volatilidad.", "Nada se mueve hasta que pulsas Aplicar, y cada movimiento cuesta comisión."]
+  },
   escena: {
     id: 9001,
     min: 0,
@@ -8977,6 +9033,11 @@ const APERTURAS = [{
   id: "vida",
   rango: 1,
   ano: 4,
+  guia: {
+    t: "Vida",
+    x: "Lo que te cuesta vivir como vives, y cuánto necesitas para no depender del sueldo.",
+    puntos: ["El índice de tren de vida sube con lo que compras. La meta sube con él.", "Necesitas 25 veces tu gasto anual para que el patrimonio te mantenga sin trabajar.", "Los caprichos suben el índice; algunos además rentan algo cada año."]
+  },
   escena: {
     id: 9002,
     min: 0,
@@ -9004,6 +9065,11 @@ const APERTURAS = [{
   id: "banco",
   rango: 2,
   ano: 6,
+  guia: {
+    t: "El banco",
+    x: "Vive dentro de Ficha: cuánto te prestarían, a qué tasa, y cómo pagar lo que debes.",
+    puntos: ["Pedir prestado no es un error por sí solo: lo es pedirlo para algo que no rinde más que la tasa.", "Mientras la deuda cueste más que tu cartera, pagarla es la mejor inversión que tienes, y sin riesgo.", "Quebrar borra la deuda y con ella todo lo demás. Y nadie te presta durante años."]
+  },
   escena: {
     id: 9003,
     min: 0,
@@ -9031,6 +9097,11 @@ const APERTURAS = [{
   id: "inmuebles",
   rango: 3,
   ano: 9,
+  guia: {
+    t: "Inmuebles",
+    x: "Ladrillos que pagan algo cada año, no solo que suben de precio.",
+    puntos: ["Cada uno tiene renta, mantenimiento y una salida lenta: son tres números, no uno.", "La renta y el mantenimiento aparecen los dos en el informe de cierre del año.", "Un inmueble no se vende cuando tú quieres. Eso es iliquidez, y se paga."]
+  },
   escena: {
     id: 9004,
     min: 0,
@@ -9059,6 +9130,11 @@ const APERTURAS = [{
   id: "mejoras",
   rango: 3,
   ano: 11,
+  guia: {
+    t: "Mejoras",
+    x: "Cosas que se compran una vez y rinden todos los años que te quedan.",
+    puntos: ["No dan dinero directo: dan ventaja en los minijuegos y en tus atributos.", "Cuanto antes las compras, más años tienen para pagarse solas."]
+  },
   escena: {
     id: 9005,
     min: 0,
@@ -9087,6 +9163,11 @@ const APERTURAS = [{
   id: "fondo",
   rango: 4,
   ano: 14,
+  guia: {
+    t: "Fondo",
+    x: "Dinero ajeno, decisiones tuyas. El otro lado de la mesa.",
+    puntos: ["Tienes capacidad limitada: cada ticket que tomas es uno que ya no podrás tomar después.", "Las posiciones tardan años en salir, y salen solas cuando les toca.", "Aquí el criterio no lo califica un examen: lo califican los resultados."]
+  },
   escena: {
     id: 9006,
     min: 0,
@@ -9263,6 +9344,7 @@ const sanear = bruto => {
   /* Una partida guardada antes de la apertura escalonada no trae la
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
+  st.temas = unicos(listaDe(r.temas, x => TEMAS.some(t => t.id === x), 60));
   st.abiertos = Array.isArray(r.abiertos) ? unicos(listaDe(r.abiertos, x => IDS_APERTURA.indexOf(x) >= 0, 20)) : APERTURAS.filter(a => tocaAbrir(st, a)).map(a => a.id);
   st.edadIni = EDADES.some(x => x.e === entero(r.edadIni, 20, 20, 50)) ? entero(r.edadIni, 20, 20, 50) : 20;
   st.estudia = clamp(numero(r.estudia, 0), 0, 500);
@@ -9320,6 +9402,28 @@ const GUIA = [{
   t: "Cómo vives",
   x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo."
 }];
+
+/* Qué atributos mueve una opción, para poder decirlo ANTES de elegir en
+   vez de después. A propósito sin cifras: saber que algo cuesta energía
+   es información útil; saber que cuesta exactamente 18 convierte la
+   decisión en aritmética y le quita la apuesta. */
+const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
+const efectoDe = o => {
+  if (!o || typeof o !== "object") return null;
+  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
+  if (!d || typeof d !== "object") return null;
+  const sube = [],
+    cuesta = [];
+  CLAVES_ATRIB.forEach(k => {
+    const v = numero(d[k], 0);
+    if (v > 0) sube.push((ETIQ[k] || k).toLowerCase());else if (v < 0) cuesta.push((ETIQ[k] || k).toLowerCase());
+  });
+  if (!sube.length && !cuesta.length) return null;
+  return {
+    sube,
+    cuesta
+  };
+};
 
 /* Términos del glosario que se pueden reconocer dentro del enunciado
    de una pregunta. Sirven de red: si la pregunta no está atada a un
@@ -9737,7 +9841,14 @@ function JuegoAnclaje({
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Oferta ", Math.min(n + 1, 4), " de 4"), /*#__PURE__*/React.createElement("span", null, "Tu n\xFAmero ", v)), /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/React.createElement("span", null, "Oferta ", Math.min(n + 1, 4), " de 4"), /*#__PURE__*/React.createElement("span", null, "Te quedan ", Math.max(0, 4 - n))), /*#__PURE__*/React.createElement("p", {
+    className: "ea-memoTxt",
+    style: {
+      marginTop: 0
+    }
+  }, "Tu n\xFAmero es ", /*#__PURE__*/React.createElement("strong", null, "lo agresiva que es tu oferta"), ", de 0 a 100. La otra parte acepta dentro de una franja estrecha que no ves. Cada vez que pones un n\xFAmero te dicen si te quedaste corto, si te pasaste o si est\xE1s cerca, y con eso vas cerrando el cerco."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-anclaN"
+  }, v), /*#__PURE__*/React.createElement("input", {
     className: "ea-slider",
     type: "range",
     min: "0",
@@ -9745,8 +9856,10 @@ function JuegoAnclaje({
     value: v,
     disabled: cerrado,
     onChange: e => setV(entero(e.target.value, 50, 0, 100)),
-    "aria-label": "Tu oferta"
+    "aria-label": "Lo agresiva que es tu oferta"
   }), /*#__PURE__*/React.createElement("div", {
+    className: "ea-anclaE ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, "0 \xB7 lo regalas"), /*#__PURE__*/React.createElement("span", null, "100 \xB7 te levantan de la mesa")), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 10
     }
@@ -9923,14 +10036,15 @@ function JuegoQuiz({
   ayuda,
   nivel,
   onFin,
-  modo
+  modo,
+  temas
 }) {
   const nv = clamp(numero(nivel, 1), 1, 5);
   const total = largoExamen(nv);
   const [preg] = useState(() => {
     let crudas = [];
     try {
-      crudas = armarExamen(nv, total) || [];
+      crudas = armarExamen(nv, total, temas) || [];
     } catch (e) {
       crudas = [];
     }
@@ -10520,7 +10634,9 @@ function MiniJuego({
   ayuda,
   nivel,
   onFin,
-  modo
+  modo,
+  temas,
+  onTema
 }) {
   if (tipo === "precision") return /*#__PURE__*/React.createElement(JuegoPrecision, {
     ayuda: ayuda,
@@ -10546,12 +10662,14 @@ function MiniJuego({
     ayuda: ayuda,
     nivel: nivel,
     onFin: onFin,
-    modo: modo
+    modo: modo,
+    temas: temas
   });
   if (tipo === "catedra") return /*#__PURE__*/React.createElement(JuegoCatedra, {
     ayuda: ayuda,
     nivel: nivel,
-    onFin: onFin
+    onFin: onFin,
+    onTema: onTema
   });
   if (tipo === "comite") return /*#__PURE__*/React.createElement(JuegoComite, {
     ayuda: ayuda,
@@ -10619,7 +10737,9 @@ function TarjetaJuego({
   nivel,
   statN,
   onFin,
-  modo
+  modo,
+  temas,
+  onTema
 }) {
   const [listo, setListo] = useState(false);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
@@ -10648,14 +10768,18 @@ function TarjetaJuego({
     ayuda: ayuda,
     nivel: nivel,
     onFin: cerrarUnaVez,
-    modo: modo
+    modo: modo,
+    temas: temas,
+    onTema: onTema
   });
   if (listo) return /*#__PURE__*/React.createElement(MiniJuego, {
     tipo: tipo,
     ayuda: ayuda,
     nivel: nivel,
     onFin: cerrarUnaVez,
-    modo: modo
+    modo: modo,
+    temas: temas,
+    onTema: onTema
   });
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
   return /*#__PURE__*/React.createElement("div", {
@@ -10728,7 +10852,8 @@ function TarjetaJuego({
 function JuegoCatedra({
   ayuda,
   nivel,
-  onFin
+  onFin,
+  onTema
 }) {
   const nv = clamp(numero(nivel, 1), 1, 5);
   const [tema] = useState(() => {
@@ -10748,6 +10873,13 @@ function JuegoCatedra({
   const [i, setI] = useState(0);
   const [sel, setSel] = useState(null);
   const [ok, setOk] = useState(0);
+
+  /* Desde que se da la clase, este tema ya puede salir en un examen. */
+  const avisaTema = useRef(onTema);
+  avisaTema.current = onTema;
+  useEffect(() => {
+    if (avisaTema.current && tema && tema.id) avisaTema.current(tema.id);
+  }, []);
   if (fase === "clase") {
     return /*#__PURE__*/React.createElement("div", {
       className: "ea-jw"
@@ -12631,6 +12763,19 @@ function Motor() {
      se podía mover los pesos, seguir jugando y perder el cambio sin que
      nada lo dijera. */
   const [carteraPend, setCarteraPend] = useState(false);
+  /* que sistema se acaba de abrir, para explicarlo antes de que el
+     jugador tenga que adivinar para que sirve la seccion nueva */
+  const [nuevoSistema, setNuevoSistema] = useState(null);
+  /* la catedra avisa de que tema acaba de dar, y desde ese momento ese
+     tema puede aparecer en un examen */
+  const apuntarTema = id => setS(st => {
+    const ya = Array.isArray(st.temas) ? st.temas : [];
+    if (!id || ya.indexOf(id) >= 0) return st;
+    return {
+      ...st,
+      temas: ya.concat(id).slice(-60)
+    };
+  });
   const [ev, setEv] = useState(null);
   const [op, setOp] = useState(null);
   const [res, setRes] = useState(null);
@@ -12704,6 +12849,22 @@ function Motor() {
     setGuardado(null);
     setAviso("");
   };
+
+  /* Escape cierra la seccion abierta. El guardarraíl de window es por el
+     arnes de pruebas, que monta un window falso sin addEventListener. */
+  useEffect(() => {
+    if (!tab) return;
+    if (typeof window === "undefined" || typeof window.addEventListener !== "function") return;
+    const alPulsar = e => {
+      if (e.key === "Escape" && !carteraPend) setTab(null);
+    };
+    window.addEventListener("keydown", alPulsar);
+    return () => {
+      try {
+        window.removeEventListener("keydown", alPulsar);
+      } catch (err) {/* nada */}
+    };
+  }, [tab, carteraPend]);
   const tope = TOPE_DE(s.seguir);
   const nacion = NACIONES.find(x => x.id === s.pais) || NACIONES[0];
   const estudio = CARRERAS.find(x => x.id === s.estudio) || CARRERAS[0];
@@ -13183,7 +13344,10 @@ function Motor() {
     };
     const cambios = [];
     if (o && o.ramaId) st.rama = o.ramaId;
-    if (o && o.abre) st.abiertos = unicos((Array.isArray(st.abiertos) ? st.abiertos : []).concat(o.abre));
+    if (o && o.abre) {
+      st.abiertos = unicos((Array.isArray(st.abiertos) ? st.abiertos : []).concat(o.abre));
+      setNuevoSistema(o.abre);
+    }
     if (o && o.mudar) st.pais = o.mudar;
 
     /* --- la vida --- */
@@ -14560,13 +14724,28 @@ function Motor() {
     className: "ea-guiaB ea-dis",
     onClick: () => cerrarAviso(avisoGuia.id)
   }, "Entendido")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-grid" + (tab ? "" : " solo")
-  }, tab && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-panel ea-panelAb",
-    style: {
-      maxHeight: 470,
-      overflowY: "auto"
+    className: "ea-grid solo"
+  }, tab && /*#__PURE__*/React.createElement("div", {
+    className: "ea-modalFondo",
+    onClick: () => {
+      if (!carteraPend) setTab(null);
     }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-modal ea-panelAb",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-modalCab"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-modalT ea-dis"
+  }, (TABS.find(p => p[0] === tab) || ["", ""])[1]), /*#__PURE__*/React.createElement("button", {
+    className: "ea-modalX ea-dis",
+    disabled: carteraPend,
+    "aria-label": "Cerrar la secci\xF3n",
+    onClick: () => {
+      if (!carteraPend) setTab(null);
+    }
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-modalCuerpo"
   }, /*#__PURE__*/React.createElement("button", {
     className: "ea-cerrar ea-dis",
     disabled: carteraPend,
@@ -15442,7 +15621,7 @@ function Motor() {
     key: i
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-titQ ea-mono"
-  }, t.q), /*#__PURE__*/React.createElement("span", null, t.t)))))), /*#__PURE__*/React.createElement("div", null, fase === "evento" && ev && /*#__PURE__*/React.createElement("div", {
+  }, t.q), /*#__PURE__*/React.createElement("span", null, t.t))))))), /*#__PURE__*/React.createElement("div", null, fase === "evento" && ev && /*#__PURE__*/React.createElement("div", {
     className: "ea-memo"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-memoHead ea-dis" + (ev.clave ? " clave" : "")
@@ -15450,11 +15629,7 @@ function Motor() {
     className: "ea-memoTit ea-dis"
   }, ev.t), /*#__PURE__*/React.createElement("p", {
     className: "ea-memoTxt"
-  }, ev.x), carteraPend && /*#__PURE__*/React.createElement("div", {
-    className: "ea-pend"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-pendK ea-dis"
-  }, "DECISI\xD3N EN ESPERA"), "Tienes un cambio de cartera sin aplicar. Vuelve a Cartera y confirma o descarta; el a\xF1o no avanza mientras tanto."), /*#__PURE__*/React.createElement("div", {
+  }, ev.x), /*#__PURE__*/React.createElement("div", {
     className: "ea-ops"
   }, opcionesDe(ev).map((o, i) => /*#__PURE__*/React.createElement("button", {
     className: "ea-op",
@@ -15472,7 +15647,16 @@ function Motor() {
     className: "ea-opTag"
   }, JUEGO(o.juego || o.j).n, " \xB7 ", JUEGO(o.juego || o.j).tema, " \xB7 te ayuda ", ETIQ[o.stat] || "Criterio", " ", Math.round(ayudaDe(o))), o.ramaId && /*#__PURE__*/React.createElement("span", {
     className: "ea-opTag"
-  }, (RAMAS.find(r => r.id === o.ramaId) || {}).d))), opcionesDe(ev).length === 0 && /*#__PURE__*/React.createElement("button", {
+  }, (RAMAS.find(r => r.id === o.ramaId) || {}).d), (() => {
+    const ef = efectoDe(o);
+    if (!ef) return null;
+    const partes = [];
+    if (ef.sube.length) partes.push("sube " + ef.sube.join(", "));
+    if (ef.cuesta.length) partes.push("cuesta " + ef.cuesta.join(", "));
+    return /*#__PURE__*/React.createElement("span", {
+      className: "ea-opTag"
+    }, partes.join(" · "));
+  })())), opcionesDe(ev).length === 0 && /*#__PURE__*/React.createElement("button", {
     className: "ea-op",
     onClick: () => resolverEscena({
       msg: "El asunto se resolvió sin que te tocara decidir."
@@ -15491,7 +15675,9 @@ function Motor() {
     nivel: nivelDe(s.turno, s.estudia),
     statN: ETIQ[op.stat] || "Criterio",
     onFin: finJuego,
-    modo: s.modo
+    modo: s.modo,
+    temas: s.temas,
+    onTema: apuntarTema
   })), fase === "resultado" && res && /*#__PURE__*/React.createElement("div", {
     className: "ea-memo"
   }, /*#__PURE__*/React.createElement("div", {
@@ -15825,7 +16011,56 @@ function Motor() {
       background: "var(--cobre)"
     },
     onClick: seguirCinco
-  }, "Seguir cinco a\xF1os m\xE1s")))))), fase === "fin" && /*#__PURE__*/React.createElement("div", {
+  }, "Seguir cinco a\xF1os m\xE1s")))))), nuevoSistema && (() => {
+    const ap = APERTURAS.find(a => a.id === nuevoSistema);
+    const g = ap && ap.guia;
+    if (!g) return null;
+    const par = TABS.find(p => p[2] === nuevoSistema);
+    const destino = par ? par[0] : nuevoSistema === "banco" ? "ficha" : null;
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-modalFondo",
+      onClick: () => setNuevoSistema(null)
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-modal ea-panelAb",
+      onClick: e => e.stopPropagation()
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-modalCab"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-modalT ea-dis"
+    }, "SECCI\xD3N NUEVA"), /*#__PURE__*/React.createElement("button", {
+      className: "ea-modalX ea-dis",
+      "aria-label": "Cerrar",
+      onClick: () => setNuevoSistema(null)
+    }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+      className: "ea-modalCuerpo"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-nuevoK ea-dis"
+    }, "ACABAS DE ABRIR"), /*#__PURE__*/React.createElement("div", {
+      className: "ea-nuevoT ea-dis"
+    }, g.t), /*#__PURE__*/React.createElement("div", {
+      className: "ea-nuevoX"
+    }, g.x), /*#__PURE__*/React.createElement("ul", {
+      className: "ea-nuevoP"
+    }, g.puntos.map((p, i) => /*#__PURE__*/React.createElement("li", {
+      key: i
+    }, p))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 8,
+        flexWrap: "wrap",
+        marginTop: 6
+      }
+    }, destino && /*#__PURE__*/React.createElement("button", {
+      className: "ea-aplicar ea-dis",
+      onClick: () => {
+        setTab(destino);
+        setNuevoSistema(null);
+      }
+    }, "Ver la secci\xF3n"), /*#__PURE__*/React.createElement("button", {
+      className: "ea-descartar ea-dis",
+      onClick: () => setNuevoSistema(null)
+    }, "Despu\xE9s")))));
+  })(), fase === "fin" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap ea-portada"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-dis",

@@ -99,6 +99,11 @@ const MARCAS = {
   /* compras y carril */
   "inmuebles: ya es tuyo": "Vale hoy USD",
   "mejoras: ya la tienes": "Ya la tienes",
+  /* la ficha emergente que explica un sistema recien abierto */
+  "ficha de sección nueva": "ACABAS DE ABRIR",
+  /* que se entienda: escala del anclaje y la frase del gasto */
+  "anclaje: escala rotulada": "0 · lo regalas",
+  "gasto: frase explicada": "el nivel de vida lo persigue",
 };
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });
