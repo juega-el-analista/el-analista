@@ -20,16 +20,16 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
 
 ## Lote 2 — Cartera y compras
 
-- [ ] **7.** **Discrepancia**: el encabezado dice «efectivo 0 · cartera 32.000» pero el
+- [x] **7.** **Discrepancia**: el encabezado dice «efectivo 0 · cartera 32.000» pero el
   menú de Cartera dice 80% invertido / 20% efectivo. Los dos números tienen que
   coincidir o quedar clarísimo que uno es objetivo y otro es real.
-- [ ] **8.** Botón **Aplicar** mucho más visible, y que no deje avanzar sin confirmar
+- [x] **8.** Botón **Aplicar** mucho más visible, y que no deje avanzar sin confirmar
   el cambio dentro de la cartera.
-- [ ] **9.** Botones de **comprar** más visuales, con color distinto al fondo, que
+- [x] **9.** Botones de **comprar** más visuales, con color distinto al fondo, que
   provoquen pulsarlos.
-- [ ] **10.** Lo ya comprado se ve **más oscuro**, para identificar rápido lo que aún
+- [x] **10.** Lo ya comprado se ve **más oscuro**, para identificar rápido lo que aún
   no tienes.
-- [ ] **11.** En «El carril», **barra deslizable** en vez de botones (bono, cripto,
+- [x] **11.** En «El carril», **barra deslizable** en vez de botones (bono, cripto,
   acciones).
 
 ## Lote 3 — Menús emergentes
@@ -89,3 +89,25 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
   deja una carpeta encima de tu teclado» pierde si dice «11 de la noche». Los ~20 «treinta
   años» restantes son contenido financiero real (interés compuesto, regla del 4%) y no se
   tocan.
+
+### Lote 2 — cartera y compras (28-ago-2026)
+
+- **7 (la discrepancia): no era un bug.** El reparto sí se aplica al cerrar el año
+  (`st.cartera = líquido × objetivo`), pero **después** se pagan los gastos del año y esos
+  salen del efectivo. De ahí «efectivo 0 · cartera 32.000» con un objetivo de 80/20: el
+  objetivo se cumplió y luego la vida se comió la parte líquida. El panel ahora abre con
+  **dos barras**: «Cómo está repartido ahora mismo» (lo real, con sus cifras) y «Tu
+  objetivo». Cuando se separan más de 3 puntos aparece una nota explicando por qué.
+- **8 (Aplicar):** clase `.ea-aplicar` en cobre, del doble de peso visual. Y el bloqueo es
+  real: `PanelCartera` avisa hacia arriba con `onPendiente`, y mientras haya cambios sin
+  aplicar quedan deshabilitados las opciones de la escena, el avance de escena, el cierre
+  de año, el cambio de sección y el propio botón de cerrar el panel.
+  **Verificado que no puede quedar bloqueado para siempre:** `invertidoDe()` ignora la
+  clave `efectivo` y `rotacion()` compara las mismas claves en los dos lados, así que al
+  aplicar la rotación vuelve a 0 y la bandera se apaga. Los `setTab(null)` de reinicio
+  desmontan el panel, y el cleanup del efecto apaga la bandera.
+- **10 (lo comprado, apagado):** sin `opacity` en el contenedor, porque eso apagaría
+  también la etiqueta verde de «ya lo tienes». Se oscurece con fondo, borde verde a la
+  izquierda y colores atenuados por elemento.
+- **11 (El carril):** barra de 3 posiciones; los nombres de carril quedan debajo como
+  etiquetas alineadas, y el activo se resalta en cobre. Reglas `.ea-carrilB` eliminadas.

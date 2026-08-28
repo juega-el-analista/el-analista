@@ -92,6 +92,13 @@ const MARCAS = {
   "apertura: inmuebles": "Un ladrillo con tu nombre",
   "apertura: mejoras": "Dónde gastar el poco tiempo que queda",
   "apertura: fondo": "Del otro lado de la mesa",
+
+  /* cartera: lo real y el objetivo, que antes se confundian */
+  "cartera: reparto real": "Cómo está repartido ahora mismo",
+  "cartera: objetivo": "Tu objetivo: cuánto de tu dinero trabaja",
+  /* compras y carril */
+  "inmuebles: ya es tuyo": "Vale hoy USD",
+  "mejoras: ya la tienes": "Ya la tienes",
 };
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });

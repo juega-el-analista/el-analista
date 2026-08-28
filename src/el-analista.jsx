@@ -65,7 +65,23 @@ const CSS = `
 .ea-slider::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;background:var(--cobre);cursor:pointer;border-radius:0}
 .ea-slider::-moz-range-thumb{width:13px;height:13px;background:var(--cobre);cursor:pointer;border:none;border-radius:0}
 
+/* Comprar es la accion que mueve dinero: no puede tener el mismo peso
+   visual que un boton cualquiera. */
+.ea-comprar{background:var(--cobre);color:#101C1F;border:1px solid var(--cobre);padding:9px 18px;
+  font:inherit;font-size:12.5px;letter-spacing:.12em;cursor:pointer;margin-top:8px;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+.ea-comprar:hover:not(:disabled){background:#D8873F;border-color:#D8873F}
+
 .ea-item{border-bottom:1px dotted var(--borde);padding:11px 0}
+/* Lo que ya es tuyo se apaga, para que la vista encuentre sola lo que
+   todavia no tienes. Sin opacity en el contenedor: asi la etiqueta de
+   «ya lo tienes» sigue legible en verde. */
+.ea-item.tuyo{background:rgba(8,20,24,.5);padding-left:9px;padding-right:9px;
+  border-left:2px solid rgba(95,143,92,.45)}
+.ea-item.tuyo .ea-itemN{color:var(--tenue)}
+.ea-item.tuyo .ea-itemD{color:#4E5D5F}
+.ea-item.tuyo .ea-etq{opacity:.45}
+.ea-item.tuyo .ea-mono{color:var(--tenue)}
 .ea-item:last-child{border-bottom:none}
 .ea-itemTop{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
 .ea-itemN{font-size:13.5px;color:var(--papel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
@@ -853,11 +869,13 @@ const CSS3 = `
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700;text-transform:uppercase}
 .ea-obj.bueno{background:rgba(95,143,92,.55);color:#1B2426}
 .ea-obj.malo{background:rgba(190,75,59,.6);color:var(--papel)}
+.ea-carrilS{height:7px;margin:12px 0 3px}
+.ea-carrilS::-webkit-slider-thumb{width:26px;height:20px}
+.ea-carrilS::-moz-range-thumb{width:26px;height:20px}
 .ea-carrilN{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}
-.ea-carrilB{border:1px solid rgba(26,37,40,.28);background:transparent;color:var(--tintaPapel);padding:9px 4px;
-  font:inherit;font-size:12px;cursor:pointer;font-family:'Archivo Narrow','Arial Narrow',sans-serif;
-  text-transform:uppercase;font-weight:700;letter-spacing:.08em}
-.ea-carrilB.on{background:var(--cobre);color:var(--papel);border-color:var(--cobre)}
+.ea-carrilE{text-align:center;font-size:11.5px;letter-spacing:.08em;color:var(--gris);
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+.ea-carrilE.on{color:var(--cobre)}
 
 .ea-postor{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:6px 0;
   border-bottom:1px dotted rgba(26,37,40,.3);font-size:13px}
@@ -868,6 +886,20 @@ const CSS3 = `
 
 const CSS4 = `
 /* reparto entre cartera y efectivo */
+/* El boton que confirma un cambio de cartera no puede parecerse a los
+   demas: es el unico que mueve dinero de verdad. */
+.ea-aplicar{background:var(--cobre);color:#101C1F;border:2px solid var(--cobre);padding:13px 22px;
+  font:inherit;font-size:14px;letter-spacing:.14em;cursor:pointer;flex:1;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+.ea-aplicar:hover{background:#D8873F;border-color:#D8873F}
+.ea-descartar{background:transparent;color:var(--tenue);border:1px solid var(--borde);padding:13px 16px;
+  font:inherit;font-size:12px;letter-spacing:.12em;cursor:pointer;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+.ea-descartar:hover{border-color:var(--cobre);color:var(--papel)}
+.ea-pend{border:1px solid var(--cobre);border-left-width:4px;background:rgba(192,118,58,.13);
+  padding:10px 13px;font-size:12.5px;color:var(--papel);margin-bottom:12px}
+.ea-pendK{font-size:10px;letter-spacing:.18em;color:var(--cobre);margin-bottom:4px}
+
 .ea-mix{display:flex;height:23px;border:1px solid var(--borde);overflow:hidden;margin:4px 0 2px}
 .ea-mixSeg{display:flex;align-items:center;justify-content:center;font-size:10.5px;letter-spacing:.1em;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;
@@ -5204,9 +5236,15 @@ function JuegoCarril({ ayuda, onFin }) {
         ))}
         <div className="ea-cap" style={{ left: carril * 33.3 + 3.6 + "%" }}>Tu capital</div>
       </div>
+      {/* Una barra en vez de tres botones: mover el capital con el dedo o
+          con las flechas es mucho mas rapido que apuntar a un boton
+          mientras las cosas siguen cayendo. */}
+      <input className="ea-slider ea-carrilS" type="range" min="0" max="2" step="1" value={carril}
+        disabled={fin} aria-label="Carril de tu capital"
+        onChange={(e) => setCarril(entero(e.target.value, 1, 0, 2))} />
       <div className="ea-carrilN">
         {CARRILES.map((c, i) => (
-          <button key={i} className={"ea-carrilB" + (carril === i ? " on" : "")} disabled={fin} onClick={() => setCarril(i)}>{c.n}</button>
+          <span key={i} className={"ea-carrilE ea-dis" + (carril === i ? " on" : "")}>{c.n}</span>
         ))}
       </div>
       {fin && (
@@ -5802,7 +5840,7 @@ function Flujo({ titulo, lista, tope, neg }) {
    perfiles quedan como punto de partida de un toque. Nada se aplica
    hasta que confirmas, y se te dice lo que cuesta el cambio.
    ============================================================ */
-function PanelCartera({ st, onAplicar }) {
+function PanelCartera({ st, onAplicar, onPendiente }) {
   const actual = st.pesos || PERFILES[0].w;
   const objAct = st.objetivo == null ? 0.7 : st.objetivo;
   const [w, setW] = useState(() => ({ ...actual }));
@@ -5835,9 +5873,45 @@ function PanelCartera({ st, onAplicar }) {
   const sharpe = est.sd > 0 ? (est.mu - EFECTIVO_MU) / est.sd : 0;
   const preset = PERFILES.find((x) => rotacion(x.w, mezcla) < 0.02);
 
+  /* Lo que se ve AHORA MISMO, que no es lo mismo que el objetivo: el
+     reparto se aplica al cerrar el año y después los gastos salen del
+     efectivo, así que durante el año la parte invertida queda por encima
+     de la que pediste. Esa diferencia confundía y ahora se explica. */
+  const invReal = liq > 0 ? clamp(st.cartera / liq, 0, 1) : 0;
+  const desvia = Math.abs(invReal - objAct) > 0.03;
+
+  /* El motor necesita saber que hay cambios a medias para no dejar
+     avanzar el año y perderlos por el camino. */
+  const avisar = useRef(onPendiente);
+  avisar.current = onPendiente;
+  useEffect(() => {
+    if (avisar.current) avisar.current(cambio);
+  }, [cambio]);
+  useEffect(() => () => { if (avisar.current) avisar.current(false); }, []);
+
   return (
     <div>
-      <div className="ea-rot ea-dis">Cuánto de tu dinero trabaja</div>
+      <div className="ea-rot ea-dis">Cómo está repartido ahora mismo</div>
+      <div className="ea-mix">
+        <div className="ea-mixSeg cart" style={{ width: (invReal * 100).toFixed(1) + "%" }}>
+          {invReal >= 0.16 ? "cartera " + Math.round(invReal * 100) + "%" : ""}
+        </div>
+        <div className="ea-mixSeg efe" style={{ width: ((1 - invReal) * 100).toFixed(1) + "%" }}>
+          {1 - invReal >= 0.16 ? "efectivo " + Math.round((1 - invReal) * 100) + "%" : ""}
+        </div>
+      </div>
+      <div className="ea-fila"><span style={{ fontSize: 12.5 }}>En la cartera</span><span className="ea-mono">USD {fmt(st.cartera)}</span></div>
+      <div className="ea-fila"><span style={{ fontSize: 12.5 }}>En efectivo</span><span className="ea-mono">USD {fmt(st.cash)}</span></div>
+      {desvia && (
+        <div className="ea-itemD">
+          No cuadra con tu objetivo de abajo, y es normal: el reparto se aplica al cerrar el año y
+          después los gastos del año salen del efectivo. Por eso a mitad de camino la parte invertida
+          queda {invReal > objAct ? "por encima" : "por debajo"} de la que pediste. Al cerrar el año se
+          vuelve a acomodar.
+        </div>
+      )}
+
+      <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Tu objetivo: cuánto de tu dinero trabaja</div>
       <div className="ea-mix">
         <div className="ea-mixSeg cart" style={{ width: (obj * 100).toFixed(1) + "%" }}>
           {obj >= 0.16 ? "cartera " + Math.round(obj * 100) + "%" : ""}
@@ -5923,13 +5997,18 @@ function PanelCartera({ st, onAplicar }) {
 
       {cambio ? (
         <div>
-          <div className="ea-itemD" style={{ marginTop: 12 }}>
+          <div className="ea-pend" style={{ marginTop: 14 }}>
+            <div className="ea-pendK ea-dis">SIN APLICAR</div>
+            Has movido la cartera pero todavía no has confirmado. Nada se mueve, y el año no avanza,
+            hasta que decidas.
+          </div>
+          <div className="ea-itemD" style={{ marginTop: 0 }}>
             Rotarías {Math.round(rot * 100)}% de la cartera{movObj > 1 ? " y moverías USD " + fmt(movObj) + " entre efectivo e inversión" : ""}.
             Comisión estimada USD {fmt(costo)}.
           </div>
-          <div style={{ display: "flex", gap: 7, marginTop: 8 }}>
-            <button className="ea-mini" onClick={() => onAplicar(w, obj)}>Aplicar</button>
-            <button className="ea-mini" onClick={() => { setW({ ...actual }); setObj(objAct); }}>Dejarlo como está</button>
+          <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+            <button className="ea-aplicar ea-dis" onClick={() => onAplicar(w, obj)}>Aplicar el cambio</button>
+            <button className="ea-descartar ea-dis" onClick={() => { setW({ ...actual }); setObj(objAct); }}>Dejarlo como está</button>
           </div>
         </div>
       ) : (
@@ -6051,6 +6130,10 @@ function Motor() {
   const hitosAno = useRef([]);
   const [tab, setTab] = useState(null);
   const [cola, setCola] = useState([]);
+  /* Mientras la cartera tenga cambios a medias no se deja avanzar: antes
+     se podía mover los pesos, seguir jugando y perder el cambio sin que
+     nada lo dijera. */
+  const [carteraPend, setCarteraPend] = useState(false);
   const [ev, setEv] = useState(null);
   const [op, setOp] = useState(null);
   const [res, setRes] = useState(null);
@@ -7321,8 +7404,8 @@ function Motor() {
           <div className="ea-tabs">
             {TABS.map((par) => (
               <button key={par[0]} className={"ea-tab" + (tab === par[0] ? " on" : "")}
-                aria-expanded={tab === par[0] ? "true" : "false"}
-                onClick={() => setTab(tab === par[0] ? null : par[0])}>{par[1]}</button>
+                aria-expanded={tab === par[0] ? "true" : "false"} disabled={carteraPend && tab !== par[0]}
+                onClick={() => { if (carteraPend) return; setTab(tab === par[0] ? null : par[0]); }}>{par[1]}</button>
             ))}
           </div>
 
@@ -7339,7 +7422,9 @@ function Motor() {
             {tab && (
             <div>
               <div className="ea-panel ea-panelAb" style={{ maxHeight: 470, overflowY: "auto" }}>
-                <button className="ea-cerrar ea-dis" onClick={() => setTab(null)}>Cerrar y volver a la decisión</button>
+                <button className="ea-cerrar ea-dis" disabled={carteraPend} onClick={() => { if (!carteraPend) setTab(null); }}>
+                  {carteraPend ? "Aplica o descarta el cambio para volver" : "Cerrar y volver a la decisión"}
+                </button>
                 {tab === "ficha" && (
                   <div>
                     <div className="ea-titular" style={{ marginBottom: 4 }}>
@@ -7514,7 +7599,7 @@ function Motor() {
                 )}
 
                 {tab === "portafolio" && (
-                  <PanelCartera st={s} onAplicar={aplicarCartera} />
+                  <PanelCartera st={s} onAplicar={aplicarCartera} onPendiente={setCarteraPend} />
                 )}
 
                 {tab === "terminos" && (
@@ -7543,7 +7628,7 @@ function Motor() {
                     {PROPIEDADES.map((c) => {
                       const ya = s.bienes.indexOf(c.id) >= 0;
                       return (
-                        <div className="ea-item" key={c.id}>
+                        <div className={"ea-item" + (ya ? " tuyo" : "")} key={c.id}>
                           <div className="ea-itemTop">
                             <span className="ea-itemN">{c.n}</span>
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(c.c)}</span>
@@ -7562,7 +7647,8 @@ function Motor() {
                           <div className="ea-itemD">{c.d}</div>
                           {ya
                             ? <span className="ea-tengo ea-dis">Vale hoy USD {fmt(s.valores[c.id] || 0)}</span>
-                            : <button className="ea-mini" disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
+                            : <button className={s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis"}
+                                disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
                                 {s.cash + s.cartera < c.c ? "No te alcanza" : "Comprar"}
                               </button>}
                         </div>
@@ -7574,14 +7660,15 @@ function Motor() {
                 {tab === "mejoras" && (
                   <div>
                     {PERKS.map((p) => (
-                      <div className="ea-item" key={p.id}>
+                      <div className={"ea-item" + (tiene(s, p.id) ? " tuyo" : "")} key={p.id}>
                         <div className="ea-itemTop">
                           <span className="ea-itemN">{p.n}</span>
                           <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(p.c)}</span>
                         </div>
                         <div className="ea-itemD">{p.d}</div>
                         {tiene(s, p.id) ? <span className="ea-tengo ea-dis">Ya la tienes</span>
-                          : <button className="ea-mini" disabled={s.cash + s.cartera < p.c} onClick={() => comprarPerk(p)}>Comprar</button>}
+                          : <button className={s.cash + s.cartera < p.c ? "ea-mini" : "ea-comprar ea-dis"}
+                            disabled={s.cash + s.cartera < p.c} onClick={() => comprarPerk(p)}>Comprar</button>}
                       </div>
                     ))}
                   </div>
@@ -7801,7 +7888,7 @@ function Motor() {
                     {CAPRICHOS.map((c) => {
                       const ya = s.bienes.indexOf(c.id) >= 0;
                       return (
-                        <div className="ea-item" key={c.id}>
+                        <div className={"ea-item" + (ya ? " tuyo" : "")} key={c.id}>
                           <div className="ea-itemTop">
                             <span className="ea-itemN">{c.n}</span>
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(c.c)}</span>
@@ -7820,7 +7907,8 @@ function Motor() {
                           <div className="ea-itemD">{c.d}</div>
                           {ya
                             ? <span className="ea-tengo ea-dis">{c.tipo === "activo" ? "Vale hoy USD " + fmt(s.valores[c.id] || 0) : "Ya lo tienes"}</span>
-                            : <button className="ea-mini" disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
+                            : <button className={s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis"}
+                                disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
                                 {s.cash + s.cartera < c.c ? "No te alcanza" : "Comprar"}
                               </button>}
                         </div>
@@ -7847,9 +7935,16 @@ function Motor() {
                   </div>
                   <h2 className="ea-memoTit ea-dis">{ev.t}</h2>
                   <p className="ea-memoTxt">{ev.x}</p>
+                  {carteraPend && (
+                    <div className="ea-pend">
+                      <div className="ea-pendK ea-dis">DECISIÓN EN ESPERA</div>
+                      Tienes un cambio de cartera sin aplicar. Vuelve a Cartera y confirma o descarta;
+                      el año no avanza mientras tanto.
+                    </div>
+                  )}
                   <div className="ea-ops">
                     {opcionesDe(ev).map((o, i) => (
-                      <button className="ea-op" key={i} onClick={() => elegir(o)}>
+                      <button className="ea-op" key={i} disabled={carteraPend} onClick={() => elegir(o)}>
                         <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
                         {o.req && <span className="ea-opTag" style={{ color: "var(--cobre)" }}>Solo tú puedes tomar esta</span>}
                         {(o.juego || o.j) && <span className="ea-opTag">{JUEGO(o.juego || o.j).n} · {JUEGO(o.juego || o.j).tema} · te ayuda {ETIQ[o.stat] || "Criterio"} {Math.round(ayudaDe(o))}</span>}
@@ -7889,7 +7984,7 @@ function Motor() {
                       ))}
                     </div>
                   )}
-                  <button className="ea-btn" onClick={siguienteEscena}>
+                  <button className="ea-btn" disabled={carteraPend} onClick={siguienteEscena}>
                     {cola.length > 0 ? "Lo siguiente que pasó" : "Cerrar el año"}
                   </button>
                 </div>
@@ -8058,7 +8153,7 @@ function Motor() {
 
                   </div>
 
-                  <button className="ea-btn" onClick={siguienteAno}>
+                  <button className="ea-btn" disabled={carteraPend} onClick={siguienteAno}>
                     {fin ? "Ver el balance final" : s.turno >= tope ? "Sentarte a hacer cuentas" : "Empezar " + (cierre.ano + 1)}
                   </button>
                   {!fin && <div className="ea-td" style={{ fontSize: 11.5, marginTop: 7, textAlign: "center" }}>
