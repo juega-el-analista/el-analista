@@ -189,8 +189,6 @@ const CSS5 = `
 .ea-celdaC{aspect-ratio:1/1;border:2px solid;cursor:pointer;transition:background .12s,transform .1s,border-color .12s;
   display:flex;align-items:flex-end;justify-content:center;padding:6px 3px;font:inherit}
 .ea-celdaC:disabled{cursor:default}
-.ea-celdaN{font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;
-  font-size:10.5px;letter-spacing:.06em;line-height:1}
 
 /* --- vidas / intentos restantes --- */
 .ea-vidas{display:flex;gap:6px;margin-top:11px}
@@ -919,6 +917,8 @@ const CSS4 = `
 .ea-pasos{margin:6px 0 0;padding:0;list-style:none}
 .ea-paso{display:flex;gap:10px;font-size:13.5px;color:#3A4649;padding:4px 0;line-height:1.45}
 .ea-pasoN{font-size:11px;color:var(--cobre);flex-shrink:0;margin-top:3px;font-family:'IBM Plex Mono',ui-monospace,monospace}
+.ea-jnombre{font-size:26px;line-height:1.05;color:var(--tintaPapel);margin-bottom:9px}
+.ea-jnombre span{display:block;font-size:10.5px;letter-spacing:.2em;color:var(--gris);margin-bottom:5px}
 .ea-jmeta{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0}
 .ea-jtag{font-size:10.5px;letter-spacing:.12em;border:1px solid rgba(26,37,40,.3);color:var(--gris);padding:3px 8px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
@@ -948,7 +948,7 @@ const PERKS = [
    El índice de vida era un número suelto en una esquina y no significaba
    nada para quien lo leía. Estos son sus tramos, con nombre y con la
    consecuencia dicha en voz alta: vivir mejor sube la meta de
-   independencia, porque la meta son veinticinco veces tu gasto. */
+   independencia, porque la meta son 25 veces tu gasto. */
 const NIVELES_VIDA = [
   { min: 0, n: "Austero", d: "Vives con lo justo y ahorras casi todo lo que puedes. Es el tren de vida que más rápido acumula." },
   { min: 1, n: "Sencillo", d: "Algún gusto, nada que te ate ni que pida mantenimiento serio." },
@@ -1043,7 +1043,7 @@ const BANCO = [
   { q: "En un earn out, parte del precio se paga", o: ["contra resultados futuros del negocio", "por adelantado en efectivo", "siempre en acciones del comprador"], c: 0, e: "Sirve para cerrar la brecha entre lo que el vendedor cree que vale y lo que el comprador paga hoy." },
   { q: "El costo del capital propio comparado con el costo de la deuda de la misma empresa", o: ["es mayor", "es menor", "es igual"], c: 0, e: "El accionista cobra último, así que exige más." },
   { q: "Una empresa con flujo de caja libre negativo y utilidad contable positiva probablemente", o: ["está financiando capital de trabajo o inversión", "está inflando ingresos siempre", "no tiene deuda"], c: 0, e: "No es fraude por definición, pero es la primera pregunta que hay que hacer." },
-  { q: "Regla del 4%: para retirar cuarenta mil al año necesitas un patrimonio de", o: ["un millón", "cuatrocientos mil", "cuatro millones"], c: 0, e: "Es una regla gruesa, pero sirve para saber cuánto te falta.", pista: "Al revés de como suena: si puedes retirar el 4% al año, el patrimonio que necesitas es veinticinco veces lo que quieres retirar." },
+  { q: "Regla del 4%: para retirar cuarenta mil al año necesitas un patrimonio de", o: ["un millón", "cuatrocientos mil", "cuatro millones"], c: 0, e: "Es una regla gruesa, pero sirve para saber cuánto te falta.", pista: "Al revés de como suena: si puedes retirar el 4% al año, el patrimonio que necesitas es 25 veces lo que quieres retirar." },
   { q: "Si tu portafolio cae 50%, para volver al punto de partida necesitas", o: ["subir 100%", "subir 50%", "subir 75%"], c: 0, e: "La asimetría de las pérdidas es la razón por la que se cuida la caída máxima." },
 ];
 
@@ -1059,7 +1059,7 @@ const BANCO = [
 /* ---------- nivel 1: la base que nadie te enseña ---------- */
 const BANCO0 = [
   { q: "Inviertes mil dólares al 10% anual. A los dos años tienes", o: ["1.210", "1.200", "1.100"], c: 0, e: "El segundo año la tasa se aplica también sobre los cien que ganaste. Eso es interés compuesto.", pista: "El interés se aplica sobre el saldo, no sobre lo que pusiste al principio: el segundo año ganas sobre mil cien, no sobre mil." },
-  { q: "Un fondo de emergencia razonable equivale a", o: ["tres a seis meses de tus gastos en algo líquido", "un año de tu sueldo bruto invertido en acciones", "lo que sobre a fin de mes"], c: 0, e: "Su función no es rendir, es evitar que vendas tus inversiones en el peor momento." },
+  { q: "Un fondo de emergencia razonable equivale a", o: ["3 a 6 meses de tus gastos en algo líquido", "un año de tu sueldo bruto invertido en acciones", "lo que sobre a fin de mes"], c: 0, e: "Su función no es rendir, es evitar que vendas tus inversiones en el peor momento." },
   { q: "Tienes deuda de tarjeta al 40% anual y una inversión que rinde ocho. Lo primero es", o: ["pagar la tarjeta", "invertir y pagar el mínimo", "repartir mitad y mitad"], c: 0, e: "Cancelar deuda al cuarenta es un retorno garantizado del cuarenta. No existe inversión que compita con eso.", pista: "Pagar una deuda equivale a una inversión con rendimiento garantizado igual a su tasa. Compara ese número con lo que rinde la inversión." },
   { q: "La inflación del año fue 30% y tu sueldo subió diez. En términos reales", o: ["perdiste poder de compra", "ganaste 10%", "quedaste igual"], c: 0, e: "El sueldo nominal sube y el real baja. Es la trampa más común en economías con inflación alta." },
   { q: "Guardar el ahorro en efectivo bajo el colchón durante diez años de inflación alta", o: ["destruye casi todo su valor real", "es la opción más segura", "solo pierde si hay devaluación"], c: 0, e: "El efectivo parece no tener riesgo porque el número no cambia. El poder de compra sí." },
@@ -1288,7 +1288,7 @@ const GLOSARIO = {
   rendimiento: { n: "Rendimiento o retorno", x: "Lo que ganaste, en porcentaje de lo que pusiste. Si pusiste 100 y ahora tienes 107, tu rendimiento fue 7%." },
   comision: { n: "Comisión", x: "Lo que cobra el intermediario por moverte el dinero. Parece pequeña porque se expresa en porcentajes chiquitos, pero se cobra todos los años y sobre todo tu dinero." },
   fondoIndexado: { n: "Fondo indexado", x: "Una canasta que compra un poco de todas las empresas de un mercado. No intenta escoger las buenas: se las lleva todas. Cobra muy poco y por eso, a treinta años, le gana a la mayoría de los que sí intentan escoger." },
-  fondoEmergencia: { n: "Fondo de emergencia", x: "Dinero aburrido, en efectivo, para cubrir entre tres y seis meses de tus gastos. No es una inversión, es un seguro: existe para que un imprevisto no te obligue a vender tus inversiones en el peor momento." },
+  fondoEmergencia: { n: "Fondo de emergencia", x: "Dinero aburrido, en efectivo, para cubrir entre 3 y 6 meses de tus gastos. No es una inversión, es un seguro: existe para que un imprevisto no te obligue a vender tus inversiones en el peor momento." },
   patrimonio: { n: "Patrimonio", x: "Todo lo que tienes menos todo lo que debes. Es el número que de verdad importa, y no tiene nada que ver con cuánto ganas al mes." },
   apalancamiento: { n: "Apalancamiento", x: "Invertir con dinero prestado. Multiplica lo que ganas y multiplica igual lo que pierdes. Es la herramienta que más fortunas ha hecho y más ha deshecho." },
   ebitda: { n: "EBITDA", x: "Lo que gana una empresa por operar, antes de intereses, impuestos y depreciación. Sirve para comparar empresas entre sí sin que estorbe cómo están financiadas." },
@@ -1313,7 +1313,7 @@ const GLOSARIO = {
   devaluacion: { n: "Devaluación", x: "Que tu moneda valga menos frente a otra. Todo lo importado sube y tus ahorros locales compran menos, aunque el número de tu cuenta no se haya movido. Para quien cobra en local, es un recorte de sueldo que nadie anuncia." },
   tasaEfectiva: { n: "Tasa efectiva", x: "Lo que de verdad te cuesta un préstamo contando comisiones, seguros y el efecto de componer. Siempre es mayor que la tasa nominal que anuncian, y es la única comparable entre dos ofertas." },
   intermediacion: { n: "Margen de intermediación", x: "La diferencia entre lo que un banco te paga por tus ahorros y lo que cobra por prestar ese mismo dinero. Es su negocio principal y la razón por la que la cuenta de ahorro rinde tan poco." },
-  regla4: { n: "La regla del 4%", x: "Una referencia: si retiras cada año el 4% de tu patrimonio, históricamente el dinero aguanta unos treinta años. Por eso se dice que necesitas veinticinco veces tu gasto anual." },
+  regla4: { n: "La regla del 4%", x: "Una referencia: si retiras cada año el 4% de tu patrimonio, históricamente el dinero aguanta unos treinta años. Por eso se dice que necesitas 25 veces tu gasto anual." },
 };
 
 /* ============================================================
@@ -1358,7 +1358,7 @@ const TEMAS = [
   },
   {
     id: "emergencia", nv: 1, n: "El fondo de emergencia",
-    x: "Antes de invertir un solo peso hay que tener dinero aburrido y disponible: entre tres y seis meses de tus gastos, en efectivo o en algo que se convierta en efectivo mañana. No está ahí para rendir. Está ahí para que cuando se dañe el carro, se caiga un cliente o te enfermes, no tengas que vender tus inversiones justo cuando están abajo.",
+    x: "Antes de invertir un solo peso hay que tener dinero aburrido y disponible: entre 3 y 6 meses de tus gastos, en efectivo o en algo que se convierta en efectivo mañana. No está ahí para rendir. Está ahí para que cuando se dañe el carro, se caiga un cliente o te enfermes, no tengas que vender tus inversiones justo cuando están abajo.",
     ej: "Gastas 1.200 al mes. Tu fondo de emergencia son entre 3.600 y 7.200. Rinde poco y eso está bien: su trabajo es estar, no crecer.",
     q: [
       { q: "¿Cuál es la función real del fondo de emergencia?", ops: ["Evitar que vendas tus inversiones en el peor momento", "Maximizar el rendimiento de tu efectivo", "Sustituir a un seguro", "Aprovechar caídas del mercado"], correcta: "Evitar que vendas tus inversiones en el peor momento", e: "Es un instrumento de comportamiento, no de rentabilidad. Su valor aparece exactamente el año en que todo lo demás está en rojo." },
@@ -1390,7 +1390,7 @@ const TEMAS = [
     ej: "Ganas 5.000 y gastas 4.800: ahorras 4% y necesitas décadas. Ganas 3.000 y gastas 2.100: ahorras 30% y llegas antes que el primero.",
     q: [
       { q: "¿Qué predice mejor tu patrimonio a veinte años?", ops: ["Tu tasa de ahorro", "Tu sueldo bruto", "El sector en el que trabajas", "El país donde vives"], correcta: "Tu tasa de ahorro", e: "El sueldo abre la posibilidad; la tasa de ahorro la ejecuta. Es la razón por la que hay médicos quebrados y maestros con patrimonio." },
-      { q: "Te suben el sueldo 30% y subes tu tren de vida 30%. ¿Qué pasó con tu independencia financiera?", ops: ["Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", "Se acercó, porque ganas más", "No cambió", "Se acercó solo si invertiste el aumento"], correcta: "Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", e: "Se llama inflación del estilo de vida. Como la meta es veinticinco veces tu gasto anual, subir el gasto mueve la meta hacia adelante más rápido de lo que ahorras." },
+      { q: "Te suben el sueldo 30% y subes tu tren de vida 30%. ¿Qué pasó con tu independencia financiera?", ops: ["Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", "Se acercó, porque ganas más", "No cambió", "Se acercó solo si invertiste el aumento"], correcta: "Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", e: "Se llama inflación del estilo de vida. Como la meta es 25 veces tu gasto anual, subir el gasto mueve la meta hacia adelante más rápido de lo que ahorras." },
     ],
   },
   {
@@ -1529,7 +1529,7 @@ const TEMAS = [
   },
   {
     id: "regla4", nv: 2, n: "Cuánto necesitas para no depender del sueldo",
-    x: "La referencia más usada es la regla del 4%: si cada año retiras el 4% de tu patrimonio inicial ajustado por inflación, históricamente el dinero aguantó unos treinta años. Dicho al revés, necesitas alrededor de veinticinco veces tu gasto anual. Fíjate que la meta la fija tu gasto, no tu sueldo.",
+    x: "La referencia más usada es la regla del 4%: si cada año retiras el 4% de tu patrimonio inicial ajustado por inflación, históricamente el dinero aguantó unos treinta años. Dicho al revés, necesitas alrededor de 25 veces tu gasto anual. Fíjate que la meta la fija tu gasto, no tu sueldo.",
     ej: "Gastas 30.000 al año. Tu número es 750.000. Si reduces tu gasto a 24.000, tu número baja a 600.000: recortar gasto acerca la meta por los dos lados a la vez.",
     q: [
       { q: "Tu meta de independencia financiera la determina...", ops: ["Tu gasto anual", "Tu sueldo", "Tu edad", "El país donde vives"], correcta: "Tu gasto anual", e: "Por eso dos personas con el mismo sueldo pueden tener metas que difieren en cientos de miles: lo que cuenta es el tren de vida que hay que sostener." },
@@ -1644,7 +1644,7 @@ const TEMAS = [
   {
     id: "correlacion", nv: 5, n: "Correlación en crisis y riesgo de cola",
     x: "Las correlaciones que se calculan en tiempos normales dejan de servir en las crisis, cuando casi todo cae a la vez porque todos venden lo que pueden vender. Además, las distribuciones reales tienen colas más gordas que la campana de Gauss: los eventos extremos ocurren mucho más de lo que el modelo predice.",
-    ej: "Un modelo dice que una caída así ocurre una vez cada diez mil años. En treinta años ocurrieron tres. El problema no fue la mala suerte, fue la distribución elegida.",
+    ej: "Un modelo dice que una caída así ocurre una vez cada 10.000 años. En treinta años ocurrieron tres. El problema no fue la mala suerte, fue la distribución elegida.",
     q: [
       { q: "¿Qué implica que las distribuciones de rendimientos tengan colas gordas?", ops: ["Que los eventos extremos son bastante más frecuentes de lo que predice la campana de Gauss", "Que la volatilidad es mayor todos los días", "Que el rendimiento medio es más alto", "Que no se puede invertir"], correcta: "Que los eventos extremos son bastante más frecuentes de lo que predice la campana de Gauss", e: "Los modelos que asumen normalidad subestiman sistemáticamente la probabilidad del desastre, y por eso las carteras diseñadas con ellos rompen más de lo previsto." },
       { q: "Una cartera muy diversificada cae fuerte en una crisis. ¿Falló la diversificación?", ops: ["No necesariamente: en crisis las correlaciones suben y la protección se reduce, aunque siga siendo mejor que no diversificar", "Sí, la diversificación no sirve", "Sí, había que estar todo en efectivo", "No, es imposible que caiga"], correcta: "No necesariamente: en crisis las correlaciones suben y la protección se reduce, aunque siga siendo mejor que no diversificar", e: "Diversificar reduce el daño, no lo elimina. Confundir 'menos daño' con 'ningún daño' es lo que hace que la gente abandone la estrategia en el peor momento." },
@@ -1750,7 +1750,7 @@ const EMPRESAS = [
   { n: "Clínica ambulatoria con tres sedes", s: "Salud", riesgo: 1, crec: 13, mar: 24, conc: 15, deuda: 1.9, foso: 2,
     d: "Convenios con aseguradoras y una lista de espera de seis semanas." },
   { n: "Planta de tratamiento de agua municipal", s: "Infraestructura", riesgo: 1, crec: 5, mar: 38, conc: 30, deuda: 2.4, foso: 3,
-    d: "Concesión de veinticinco años. Un solo cliente, pero es el municipio." },
+    d: "Concesión de 25 años. Un solo cliente, pero es el municipio." },
   { n: "Fabricante de envases para farmacéutica", s: "Industrial", riesgo: 2, crec: 11, mar: 22, conc: 24, deuda: 1.7, foso: 3,
     d: "Homologado por sus clientes: cambiar de proveedor les exige revalidar todo." },
 
@@ -3626,7 +3626,7 @@ const GUIA = [
     x: "Lo que entró, lo que salió y cómo se movió tu cartera. Al final hay una lección sacada de tus propios números: es la parte que enseña." },
   { id: "vida", cuando: (c) => c.tab === "expediente",
     t: "Cómo vives",
-    x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas veinticinco veces tu gasto anual para no depender del sueldo." },
+    x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo." },
 ];
 
 /* Términos del glosario que se pueden reconocer dentro del enunciado
@@ -3886,7 +3886,7 @@ function JuegoMemoria({ ayuda, onFin }) {
         <span>{paso} de {seq.length} · intentos {vidas} de {VIDAS_MEM}</span>
       </div>
       <div className="ea-pista">
-        Cada casilla tiene su color y su nombre. Se van a encender {seq.length} en orden;
+        Cada casilla tiene su color. Se van a encender {seq.length} en orden;
         tú las tocas después en el mismo orden. Si te equivocas, pierdes un intento y te la muestran de nuevo.
       </div>
       <div className="ea-celdas">
@@ -3901,7 +3901,9 @@ function JuegoMemoria({ ayuda, onFin }) {
                 borderColor: encendida || fallada ? "#12201F" : col.c + "77",
                 transform: encendida ? "scale(0.94)" : "none",
               }}>
-              <span className="ea-celdaN" style={{ color: encendida || fallada ? "#F3EFE4" : "#2A3639" }}>{col.n}</span>
+              {/* Sin el nombre escrito: si se lee la palabra se memoriza la
+                  palabra, y el juego deja de ser de colores. El nombre sigue
+                  en aria-label para quien use lector de pantalla. */}
             </button>
           );
         })}
@@ -4587,6 +4589,9 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo }) {
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
   return (
     <div className="ea-jw">
+      {/* Antes solo se veían tema y duración, así que «Tres en raya» aparecía
+          como texto suelto y no se entendía que ibas a jugar algo. */}
+      <div className="ea-jnombre ea-dis"><span>VAS A JUGAR</span>{j.n}</div>
       <div className="ea-jmeta">
         <span className="ea-jtag">{j.tema}</span>
         <span className="ea-jtag">{j.dur}</span>
@@ -7284,14 +7289,21 @@ function Motor() {
               <div className="ea-sub ea-dis">{s.nombre ? RANGO(s.rango).n + " · " : ""}{estudio.n} · {nacion.ban}{ramaN ? " · " + ramaN : ""}</div>
             </div>
             <div className="ea-reloj">
-              <div className="ea-dis">{ano} · {edad(s.turno, s.edadIni)} años · año {Math.min(s.turno + 1, tope)} de {tope}</div>
+              {/* Sin «año X de Y»: saber cuándo se acaba la partida le quita
+                  peso a cada decisión, porque el jugador empieza a contar
+                  turnos en vez de vivir el año que tiene delante. */}
+              <div className="ea-dis">{ano} · {edad(s.turno, s.edadIni)} años</div>
               <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")}>USD {fmt(patrimonio)}</div>
               {abierto(s, "cartera") && (
                 <div className="ea-mono" style={{ fontSize: 11.5, marginTop: 2 }}>efectivo {fmt(s.cash)} · cartera {fmt(s.cartera)}</div>
               )}
+              {/* El sueldo es el número que el jugador usa para decidir; energía y
+                  reputación solo salen cuando están en zona de aviso, que es el
+                  único momento en que cambian una decisión. */}
               <div className="ea-mono ea-signos">
-                <span className={s.ene < 30 ? "mal" : s.ene < 50 ? "ojo" : ""}>energía {Math.round(s.ene)}</span>
-                <span className={s.rep < 20 ? "mal" : s.rep < 30 ? "ojo" : ""}>reputación {Math.round(s.rep)}</span>
+                <span>sueldo {fmt(salarioAnual(s))} al año</span>
+                {s.ene < 50 && <span className={s.ene < 30 ? "mal" : "ojo"}>energía {Math.round(s.ene)}</span>}
+                {s.rep < 30 && <span className={s.rep < 20 ? "mal" : "ojo"}>reputación {Math.round(s.rep)}</span>}
                 {s.deuda > 0 && <span className="mal">debes {fmt(s.deuda)}</span>}
               </div>
             </div>
@@ -7385,7 +7397,7 @@ function Motor() {
                     <Plegable titulo="Cómo vas a vivir este año"
                       resumen={RITMO(s.ritmo).n.toLowerCase() + " · " + NIVEL_GASTO(s.nivelGasto).n.toLowerCase()}>
                     <div className="ea-itemD" style={{ marginBottom: 9 }}>
-                      Las dos palancas que más pesan en treinta años, y las únicas que decides tú
+                      Las dos palancas que más pesan a lo largo de una carrera entera, y las únicas que decides tú
                       todos los años. Cambian al cerrar el año.
                     </div>
                     <div className="ea-campoK ea-dis">Ritmo de trabajo</div>
@@ -7702,7 +7714,15 @@ function Motor() {
                         <div className="ea-vidaN ea-dis">{nivelVida.n}</div>
                         <div className="ea-vidaD">{nivelVida.d}</div>
                       </div>
-                      <div className="ea-vidaCifra ea-mono">{indiceVida}</div>
+                      {/* el índice a solas no dice nada: va con su tope y su nombre */}
+                      <div style={{ textAlign: "right", flexShrink: 0 }}>
+                        <div className="ea-vidaCifra ea-mono">
+                          {indiceVida}<span style={{ fontSize: 15, color: "var(--tenue)" }}> de {TOPE_VIDA}</span>
+                        </div>
+                        <div className="ea-dis" style={{ fontSize: 10, letterSpacing: ".14em", color: "var(--tenue)", marginTop: 5 }}>
+                          ÍNDICE DE TREN DE VIDA
+                        </div>
+                      </div>
                     </div>
 
                     {/* el medidor, con las marcas de cada escalón para que se vea
@@ -7753,7 +7773,7 @@ function Motor() {
                           : "Tienes margen real para ahorrar. Es exactamente el momento en que la mayoría lo gasta."}
                     </div>
                     <div className="ea-itemD" style={{ marginTop: 6 }}>
-                      Cada punto de índice sube tu meta de independencia: necesitas veinticinco veces tu gasto anual,
+                      Cada punto de índice sube tu meta de independencia: necesitas 25 veces tu gasto anual,
                       o sea USD {fmt(gastosAnuales * 25)}. Vivir mejor es legítimo; solo conviene saber lo que mueve la meta.
                     </div>
 
@@ -8024,7 +8044,7 @@ function Motor() {
                       <div className="ea-indM" style={{ left: "71.4%" }} />
                     </div>
                     <div className="ea-td" style={{ marginTop: 3, fontSize: 11.5 }}>
-                      La marca es veinticinco veces tu gasto anual, USD {fmt(cierre.gastos * 25)}.
+                      La marca es 25 veces tu gasto anual, USD {fmt(cierre.gastos * 25)}.
                     </div>
                   </div>
 

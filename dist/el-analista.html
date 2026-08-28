@@ -534,8 +534,6 @@ const CSS5 = `
 .ea-celdaC{aspect-ratio:1/1;border:2px solid;cursor:pointer;transition:background .12s,transform .1s,border-color .12s;
   display:flex;align-items:flex-end;justify-content:center;padding:6px 3px;font:inherit}
 .ea-celdaC:disabled{cursor:default}
-.ea-celdaN{font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;
-  font-size:10.5px;letter-spacing:.06em;line-height:1}
 
 /* --- vidas / intentos restantes --- */
 .ea-vidas{display:flex;gap:6px;margin-top:11px}
@@ -1301,6 +1299,8 @@ const CSS4 = `
 .ea-pasos{margin:6px 0 0;padding:0;list-style:none}
 .ea-paso{display:flex;gap:10px;font-size:13.5px;color:#3A4649;padding:4px 0;line-height:1.45}
 .ea-pasoN{font-size:11px;color:var(--cobre);flex-shrink:0;margin-top:3px;font-family:'IBM Plex Mono',ui-monospace,monospace}
+.ea-jnombre{font-size:26px;line-height:1.05;color:var(--tintaPapel);margin-bottom:9px}
+.ea-jnombre span{display:block;font-size:10.5px;letter-spacing:.2em;color:var(--gris);margin-bottom:5px}
 .ea-jmeta{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0}
 .ea-jtag{font-size:10.5px;letter-spacing:.12em;border:1px solid rgba(26,37,40,.3);color:var(--gris);padding:3px 8px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
@@ -1377,7 +1377,7 @@ const PERKS = [{
    El índice de vida era un número suelto en una esquina y no significaba
    nada para quien lo leía. Estos son sus tramos, con nombre y con la
    consecuencia dicha en voz alta: vivir mejor sube la meta de
-   independencia, porque la meta son veinticinco veces tu gasto. */
+   independencia, porque la meta son 25 veces tu gasto. */
 const NIVELES_VIDA = [{
   min: 0,
   n: "Austero",
@@ -1901,7 +1901,7 @@ const BANCO = [{
   o: ["un millón", "cuatrocientos mil", "cuatro millones"],
   c: 0,
   e: "Es una regla gruesa, pero sirve para saber cuánto te falta.",
-  pista: "Al revés de como suena: si puedes retirar el 4% al año, el patrimonio que necesitas es veinticinco veces lo que quieres retirar."
+  pista: "Al revés de como suena: si puedes retirar el 4% al año, el patrimonio que necesitas es 25 veces lo que quieres retirar."
 }, {
   q: "Si tu portafolio cae 50%, para volver al punto de partida necesitas",
   o: ["subir 100%", "subir 50%", "subir 75%"],
@@ -1926,7 +1926,7 @@ const BANCO0 = [{
   pista: "El interés se aplica sobre el saldo, no sobre lo que pusiste al principio: el segundo año ganas sobre mil cien, no sobre mil."
 }, {
   q: "Un fondo de emergencia razonable equivale a",
-  o: ["tres a seis meses de tus gastos en algo líquido", "un año de tu sueldo bruto invertido en acciones", "lo que sobre a fin de mes"],
+  o: ["3 a 6 meses de tus gastos en algo líquido", "un año de tu sueldo bruto invertido en acciones", "lo que sobre a fin de mes"],
   c: 0,
   e: "Su función no es rendir, es evitar que vendas tus inversiones en el peor momento."
 }, {
@@ -2966,7 +2966,7 @@ const GLOSARIO = {
   },
   fondoEmergencia: {
     n: "Fondo de emergencia",
-    x: "Dinero aburrido, en efectivo, para cubrir entre tres y seis meses de tus gastos. No es una inversión, es un seguro: existe para que un imprevisto no te obligue a vender tus inversiones en el peor momento."
+    x: "Dinero aburrido, en efectivo, para cubrir entre 3 y 6 meses de tus gastos. No es una inversión, es un seguro: existe para que un imprevisto no te obligue a vender tus inversiones en el peor momento."
   },
   patrimonio: {
     n: "Patrimonio",
@@ -3066,7 +3066,7 @@ const GLOSARIO = {
   },
   regla4: {
     n: "La regla del 4%",
-    x: "Una referencia: si retiras cada año el 4% de tu patrimonio, históricamente el dinero aguanta unos treinta años. Por eso se dice que necesitas veinticinco veces tu gasto anual."
+    x: "Una referencia: si retiras cada año el 4% de tu patrimonio, históricamente el dinero aguanta unos treinta años. Por eso se dice que necesitas 25 veces tu gasto anual."
   }
 };
 
@@ -3149,7 +3149,7 @@ const TEMAS = [/* ---------------- nivel 1 · fundamentos ---------------- */
   id: "emergencia",
   nv: 1,
   n: "El fondo de emergencia",
-  x: "Antes de invertir un solo peso hay que tener dinero aburrido y disponible: entre tres y seis meses de tus gastos, en efectivo o en algo que se convierta en efectivo mañana. No está ahí para rendir. Está ahí para que cuando se dañe el carro, se caiga un cliente o te enfermes, no tengas que vender tus inversiones justo cuando están abajo.",
+  x: "Antes de invertir un solo peso hay que tener dinero aburrido y disponible: entre 3 y 6 meses de tus gastos, en efectivo o en algo que se convierta en efectivo mañana. No está ahí para rendir. Está ahí para que cuando se dañe el carro, se caiga un cliente o te enfermes, no tengas que vender tus inversiones justo cuando están abajo.",
   ej: "Gastas 1.200 al mes. Tu fondo de emergencia son entre 3.600 y 7.200. Rinde poco y eso está bien: su trabajo es estar, no crecer.",
   q: [{
     q: "¿Cuál es la función real del fondo de emergencia?",
@@ -3216,7 +3216,7 @@ const TEMAS = [/* ---------------- nivel 1 · fundamentos ---------------- */
     q: "Te suben el sueldo 30% y subes tu tren de vida 30%. ¿Qué pasó con tu independencia financiera?",
     ops: ["Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", "Se acercó, porque ganas más", "No cambió", "Se acercó solo si invertiste el aumento"],
     correcta: "Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida",
-    e: "Se llama inflación del estilo de vida. Como la meta es veinticinco veces tu gasto anual, subir el gasto mueve la meta hacia adelante más rápido de lo que ahorras."
+    e: "Se llama inflación del estilo de vida. Como la meta es 25 veces tu gasto anual, subir el gasto mueve la meta hacia adelante más rápido de lo que ahorras."
   }]
 }, {
   id: "deuda",
@@ -3482,7 +3482,7 @@ const TEMAS = [/* ---------------- nivel 1 · fundamentos ---------------- */
   id: "regla4",
   nv: 2,
   n: "Cuánto necesitas para no depender del sueldo",
-  x: "La referencia más usada es la regla del 4%: si cada año retiras el 4% de tu patrimonio inicial ajustado por inflación, históricamente el dinero aguantó unos treinta años. Dicho al revés, necesitas alrededor de veinticinco veces tu gasto anual. Fíjate que la meta la fija tu gasto, no tu sueldo.",
+  x: "La referencia más usada es la regla del 4%: si cada año retiras el 4% de tu patrimonio inicial ajustado por inflación, históricamente el dinero aguantó unos treinta años. Dicho al revés, necesitas alrededor de 25 veces tu gasto anual. Fíjate que la meta la fija tu gasto, no tu sueldo.",
   ej: "Gastas 30.000 al año. Tu número es 750.000. Si reduces tu gasto a 24.000, tu número baja a 600.000: recortar gasto acerca la meta por los dos lados a la vez.",
   q: [{
     q: "Tu meta de independencia financiera la determina...",
@@ -3690,7 +3690,7 @@ const TEMAS = [/* ---------------- nivel 1 · fundamentos ---------------- */
   nv: 5,
   n: "Correlación en crisis y riesgo de cola",
   x: "Las correlaciones que se calculan en tiempos normales dejan de servir en las crisis, cuando casi todo cae a la vez porque todos venden lo que pueden vender. Además, las distribuciones reales tienen colas más gordas que la campana de Gauss: los eventos extremos ocurren mucho más de lo que el modelo predice.",
-  ej: "Un modelo dice que una caída así ocurre una vez cada diez mil años. En treinta años ocurrieron tres. El problema no fue la mala suerte, fue la distribución elegida.",
+  ej: "Un modelo dice que una caída así ocurre una vez cada 10.000 años. En treinta años ocurrieron tres. El problema no fue la mala suerte, fue la distribución elegida.",
   q: [{
     q: "¿Qué implica que las distribuciones de rendimientos tengan colas gordas?",
     ops: ["Que los eventos extremos son bastante más frecuentes de lo que predice la campana de Gauss", "Que la volatilidad es mayor todos los días", "Que el rendimiento medio es más alto", "Que no se puede invertir"],
@@ -3927,7 +3927,7 @@ const EMPRESAS = [/* --- buenos de verdad --- */
   conc: 30,
   deuda: 2.4,
   foso: 3,
-  d: "Concesión de veinticinco años. Un solo cliente, pero es el municipio."
+  d: "Concesión de 25 años. Un solo cliente, pero es el municipio."
 }, {
   n: "Fabricante de envases para farmacéutica",
   s: "Industrial",
@@ -9286,7 +9286,7 @@ const GUIA = [{
   id: "vida",
   cuando: c => c.tab === "expediente",
   t: "Cómo vives",
-  x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas veinticinco veces tu gasto anual para no depender del sueldo."
+  x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo."
 }];
 
 /* Términos del glosario que se pueden reconocer dentro del enunciado
@@ -9567,7 +9567,7 @@ function JuegoMemoria({
     className: "ea-jinfo ea-dis"
   }, /*#__PURE__*/React.createElement("span", null, rotuloModo), /*#__PURE__*/React.createElement("span", null, paso, " de ", seq.length, " \xB7 intentos ", vidas, " de ", VIDAS_MEM)), /*#__PURE__*/React.createElement("div", {
     className: "ea-pista"
-  }, "Cada casilla tiene su color y su nombre. Se van a encender ", seq.length, " en orden; t\xFA las tocas despu\xE9s en el mismo orden. Si te equivocas, pierdes un intento y te la muestran de nuevo."), /*#__PURE__*/React.createElement("div", {
+  }, "Cada casilla tiene su color. Se van a encender ", seq.length, " en orden; t\xFA las tocas despu\xE9s en el mismo orden. Si te equivocas, pierdes un intento y te la muestran de nuevo."), /*#__PURE__*/React.createElement("div", {
     className: "ea-celdas"
   }, COLORES_MEM.map((col, i) => {
     const encendida = on === i;
@@ -9584,12 +9584,7 @@ function JuegoMemoria({
         borderColor: encendida || fallada ? "#12201F" : col.c + "77",
         transform: encendida ? "scale(0.94)" : "none"
       }
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-celdaN",
-      style: {
-        color: encendida || fallada ? "#F3EFE4" : "#2A3639"
-      }
-    }, col.n));
+    });
   })), /*#__PURE__*/React.createElement("div", {
     className: "ea-vidas"
   }, Array.from({
@@ -10634,6 +10629,8 @@ function TarjetaJuego({
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-jnombre ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, "VAS A JUGAR"), j.n), /*#__PURE__*/React.createElement("div", {
     className: "ea-jmeta"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-jtag"
@@ -14409,7 +14406,7 @@ function Motor() {
     className: "ea-reloj"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-dis"
-  }, ano, " \xB7 ", edad(s.turno, s.edadIni), " a\xF1os \xB7 a\xF1o ", Math.min(s.turno + 1, tope), " de ", tope), /*#__PURE__*/React.createElement("div", {
+  }, ano, " \xB7 ", edad(s.turno, s.edadIni), " a\xF1os"), /*#__PURE__*/React.createElement("div", {
     className: "ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")
   }, "USD ", fmt(patrimonio)), abierto(s, "cartera") && /*#__PURE__*/React.createElement("div", {
     className: "ea-mono",
@@ -14419,10 +14416,10 @@ function Motor() {
     }
   }, "efectivo ", fmt(s.cash), " \xB7 cartera ", fmt(s.cartera)), /*#__PURE__*/React.createElement("div", {
     className: "ea-mono ea-signos"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: s.ene < 30 ? "mal" : s.ene < 50 ? "ojo" : ""
-  }, "energ\xEDa ", Math.round(s.ene)), /*#__PURE__*/React.createElement("span", {
-    className: s.rep < 20 ? "mal" : s.rep < 30 ? "ojo" : ""
+  }, /*#__PURE__*/React.createElement("span", null, "sueldo ", fmt(salarioAnual(s)), " al a\xF1o"), s.ene < 50 && /*#__PURE__*/React.createElement("span", {
+    className: s.ene < 30 ? "mal" : "ojo"
+  }, "energ\xEDa ", Math.round(s.ene)), s.rep < 30 && /*#__PURE__*/React.createElement("span", {
+    className: s.rep < 20 ? "mal" : "ojo"
   }, "reputaci\xF3n ", Math.round(s.rep)), s.deuda > 0 && /*#__PURE__*/React.createElement("span", {
     className: "mal"
   }, "debes ", fmt(s.deuda))))), fase !== "cierre" && (fase === "evento" || fase === "minijuego" || fase === "resultado") && /*#__PURE__*/React.createElement("div", {
@@ -14671,7 +14668,7 @@ function Motor() {
     style: {
       marginBottom: 9
     }
-  }, "Las dos palancas que m\xE1s pesan en treinta a\xF1os, y las \xFAnicas que decides t\xFA todos los a\xF1os. Cambian al cerrar el a\xF1o."), /*#__PURE__*/React.createElement("div", {
+  }, "Las dos palancas que m\xE1s pesan a lo largo de una carrera entera, y las \xFAnicas que decides t\xFA todos los a\xF1os. Cambian al cerrar el a\xF1o."), /*#__PURE__*/React.createElement("div", {
     className: "ea-campoK ea-dis"
   }, "Ritmo de trabajo"), /*#__PURE__*/React.createElement("div", {
     className: "ea-generos"
@@ -15148,8 +15145,26 @@ function Motor() {
   }, nivelVida.n), /*#__PURE__*/React.createElement("div", {
     className: "ea-vidaD"
   }, nivelVida.d)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "right",
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
     className: "ea-vidaCifra ea-mono"
-  }, indiceVida)), /*#__PURE__*/React.createElement("div", {
+  }, indiceVida, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 15,
+      color: "var(--tenue)"
+    }
+  }, " de ", TOPE_VIDA)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-dis",
+    style: {
+      fontSize: 10,
+      letterSpacing: ".14em",
+      color: "var(--tenue)",
+      marginTop: 5
+    }
+  }, "\xCDNDICE DE TREN DE VIDA"))), /*#__PURE__*/React.createElement("div", {
     className: "ea-medidor"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-medidorF",
@@ -15226,7 +15241,7 @@ function Motor() {
     style: {
       marginTop: 6
     }
-  }, "Cada punto de \xEDndice sube tu meta de independencia: necesitas veinticinco veces tu gasto anual, o sea USD ", fmt(gastosAnuales * 25), ". Vivir mejor es leg\xEDtimo; solo conviene saber lo que mueve la meta."), /*#__PURE__*/React.createElement("div", {
+  }, "Cada punto de \xEDndice sube tu meta de independencia: necesitas 25 veces tu gasto anual, o sea USD ", fmt(gastosAnuales * 25), ". Vivir mejor es leg\xEDtimo; solo conviene saber lo que mueve la meta."), /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis",
     style: {
       marginTop: 20
@@ -15614,7 +15629,7 @@ function Motor() {
       marginTop: 3,
       fontSize: 11.5
     }
-  }, "La marca es veinticinco veces tu gasto anual, USD ", fmt(cierre.gastos * 25), "."))), cierre.notas.length > 0 && /*#__PURE__*/React.createElement(Plegable, {
+  }, "La marca es 25 veces tu gasto anual, USD ", fmt(cierre.gastos * 25), "."))), cierre.notas.length > 0 && /*#__PURE__*/React.createElement(Plegable, {
     titulo: "Lo que pas\xF3 por el camino",
     resumen: cierre.notas.length + (cierre.notas.length === 1 ? " nota" : " notas"),
     abierto: true
