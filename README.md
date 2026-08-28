@@ -31,11 +31,13 @@ Lee **[CONTRIBUIR.md](CONTRIBUIR.md)** primero. Son tres reglas y las cosas que 
 
 ```bash
 npm install          # solo la primera vez
-npm run build        # src/el-analista.jsx  ->  dist/el-analista.html
+npm run build        # src/el-analista.jsx  ->  index.html
 npm run servir       # sirve el juego en http://localhost:5173
 ```
 
-El archivo `dist/el-analista.html` se abre con doble clic, sin más.
+El archivo `index.html` se abre con doble clic, sin más. Es también lo que sirve
+GitHub Pages, así que el juego está en vivo en
+**https://aleferrara1807.github.io/el-analista/**
 
 ## Cómo se verifica
 
@@ -62,7 +64,7 @@ nunca responde y `Math.random` secuestrado.
 
 ```
 src/       el juego, un único .jsx
-dist/      el HTML autónomo que se publica
+index.html el HTML autónomo que se publica, generado — no se edita a mano
 historia/  la versión original, para comparar
 pruebas/   la batería de verificación
 ```

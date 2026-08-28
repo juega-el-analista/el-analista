@@ -75,8 +75,8 @@ Están explicadas donde toca, pero conviene saber que existen:
   tiene que **sumar** al objetivo, no ocupar el sitio de un evento normal. Pero
   el conteo va antes de la vida, la bifurcación y la clave: esas tres siempre
   entraron en el presupuesto normal.
-- **`src/el-analista.jsx` es el original.** `dist/el-analista.html` se genera. No
-  se edita a mano nunca.
+- **`src/el-analista.jsx` es el original.** `index.html` se genera con `npm run build`
+  y es lo que sirve GitHub Pages. No se edita a mano nunca.
 
 ## Dónde está escrito el porqué
 

@@ -2,7 +2,7 @@
 const path = require("path");
 const RAIZ = path.join(__dirname, "..");
 const RUTA_FUENTE = path.join(RAIZ, "src", "el-analista.jsx");
-const RUTA_BUILD = path.join(RAIZ, "dist", "el-analista.html");
+const RUTA_BUILD = path.join(RAIZ, "index.html");
 const RUTA_ORIGINAL = path.join(RAIZ, "historia", "el-analista.v5-original.jsx");
 
 const p = require("@babel/parser");

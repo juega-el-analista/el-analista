@@ -1,7 +1,7 @@
 /* rutas del repo, para que los scripts funcionen desde cualquier sitio */
 const path = require("path");
 const RAIZ = path.join(__dirname, "..");
-const RUTA_BUILD = path.join(RAIZ, "dist", "el-analista.html");
+const RUTA_BUILD = path.join(RAIZ, "index.html");
 
 /* Comprueba que el documento construido sabe reconstruirse a sí mismo.
  *
