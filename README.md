@@ -23,6 +23,10 @@ autónomo**: React va dentro, no pide red y no necesita servidor.
 Modos: **Aprendiz** (cada término se explica antes de usarse) y **Analista**.
 Puedes empezar a los 20, 30, 40 o 50.
 
+## Si vas a tocar el código
+
+Lee **[CONTRIBUIR.md](CONTRIBUIR.md)** primero. Son tres reglas y las cosas que muerden.
+
 ## Cómo se usa
 
 ```bash
