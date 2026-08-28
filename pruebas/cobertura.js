@@ -127,6 +127,9 @@ const MARCAS = {
   "expediente: años que se recuerdan": "Los años que se recuerdan",
   "final: lo que venía después": "Lo que venía después",
   "final: fondo en el suelo": "tenía todavía en el suelo",
+  /* la espera de cortesia del juego de memoria */
+  "memoria: mira el tablero": "Mira el tablero",
+  "memoria: empezar antes": "Ya lo miré, empezar",
 };
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });

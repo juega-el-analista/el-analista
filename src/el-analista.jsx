@@ -4364,16 +4364,32 @@ const COLORES_MEM = [
 
 const VIDAS_MEM = 3;
 
+/* Segundos para mirar el tablero antes de que empiece a encenderse.
+   Sin esta espera el juego arrancaba disparando la secuencia en el mismo
+   instante en que aparecía en pantalla: no daba tiempo ni a leer las
+   reglas ni a ver de qué colores eran las casillas. */
+const ESPERA_MEM = 8;
+
 function JuegoMemoria({ ayuda, onFin }) {
   const largo = clamp(7 - Math.floor(ayuda / 25), 4, 7);
   const [seq] = useState(() => Array.from({ length: largo }, () => indiceAzar(9)));
   const [idx, setIdx] = useState(0);
   const [on, setOn] = useState(null);
-  const [modo, setModo] = useState("ver");
+  const [modo, setModo] = useState("listo");
+  const [cuenta, setCuenta] = useState(ESPERA_MEM);
   const [paso, setPaso] = useState(0);
   const [err, setErr] = useState(null);
   const [vidas, setVidas] = useState(VIDAS_MEM);
   const [aviso, setAviso] = useState(null);
+
+  /* la espera de cortesía, antes de nada. Solo la primera vez: si fallas
+     y te la vuelven a mostrar, el tablero ya lo conoces. */
+  useEffect(() => {
+    if (modo !== "listo") return;
+    if (cuenta <= 0) { setModo("ver"); return; }
+    const t = setTimeout(() => setCuenta((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [modo, cuenta]);
 
   /* muestra la secuencia, casilla por casilla */
   useEffect(() => {
@@ -4417,7 +4433,8 @@ function JuegoMemoria({ ayuda, onFin }) {
     }, 950);
   };
 
-  const rotuloModo = modo === "ver" ? "Memoriza la secuencia"
+  const rotuloModo = modo === "listo" ? "Mira el tablero"
+    : modo === "ver" ? "Memoriza la secuencia"
     : modo === "jugar" ? "Repítela en el mismo orden"
     : modo === "pausa" ? "Atento" : "Listo";
 
@@ -4425,7 +4442,11 @@ function JuegoMemoria({ ayuda, onFin }) {
     <div className="ea-jw">
       <div className="ea-jinfo ea-dis">
         <span>{rotuloModo}</span>
-        <span>{paso} de {seq.length} · intentos {vidas} de {VIDAS_MEM}</span>
+        <span>
+          {modo === "listo"
+            ? "empieza en " + cuenta + (cuenta === 1 ? " segundo" : " segundos")
+            : paso + " de " + seq.length + " · intentos " + vidas + " de " + VIDAS_MEM}
+        </span>
       </div>
       <div className="ea-pista">
         Cada casilla tiene su color. Se van a encender {seq.length} en orden;
@@ -4439,8 +4460,10 @@ function JuegoMemoria({ ayuda, onFin }) {
             <button key={i} type="button" className="ea-celdaC" onClick={() => tocar(i)}
               disabled={modo !== "jugar"} aria-label={col.n}
               style={{
-                background: fallada ? "var(--rojo)" : encendida ? col.c : col.c + "2E",
-                borderColor: encendida || fallada ? "#12201F" : col.c + "77",
+                /* Durante la espera las casillas van a color pleno: la idea
+                   es justamente que se vea el tablero antes de empezar. */
+                background: fallada ? "var(--rojo)" : (encendida || modo === "listo") ? col.c : col.c + "2E",
+                borderColor: (encendida || fallada || modo === "listo") ? "#12201F" : col.c + "77",
                 transform: encendida ? "scale(0.94)" : "none",
               }}>
               {/* Sin el nombre escrito: si se lee la palabra se memoriza la
@@ -4450,6 +4473,12 @@ function JuegoMemoria({ ayuda, onFin }) {
           );
         })}
       </div>
+      {modo === "listo" && (
+        <button className="ea-mini" style={{ marginTop: 10 }}
+          onClick={() => { setCuenta(0); setModo("ver"); }}>
+          Ya lo miré, empezar
+        </button>
+      )}
       <div className="ea-vidas">
         {Array.from({ length: VIDAS_MEM }, (_, k) => (
           <span key={k} className={"ea-vida" + (k < vidas ? " viva" : "")} />
