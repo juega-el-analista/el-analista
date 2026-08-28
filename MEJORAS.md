@@ -50,21 +50,21 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
 
 ## Lote 5 — Contenido y sistemas nuevos
 
-- [ ] **18.** Decisiones importantes de la vida con **influencia grande**.
-- [ ] **19.** **Decisiones legendarias**: suben más de lo normal, poco frecuentes pero
+- [x] **18.** Decisiones importantes de la vida con **influencia grande**.
+- [x] **19.** **Decisiones legendarias**: suben más de lo normal, poco frecuentes pero
   que aparezcan de vez en cuando.
-- [ ] **20.** **Negociaciones de contrato**, con años de contrato incluidos.
-- [ ] **21.** Mostrar el **país y la empresa** donde trabajas (ligado al contrato).
-- [ ] **22.** **Nombres de empresas** acordes a la carrera elegida.
-- [ ] **23.** Opción de **renunciar e independizarse**, creando firma propia **según la
+- [x] **20.** **Negociaciones de contrato**, con años de contrato incluidos.
+- [x] **21.** Mostrar el **país y la empresa** donde trabajas (ligado al contrato).
+- [x] **22.** **Nombres de empresas** acordes a la carrera elegida.
+- [x] **23.** Opción de **renunciar e independizarse**, creando firma propia **según la
   carrera**: constructora para ingeniería civil, bufete para derecho, algo de IA para
   ingeniería de sistemas. Hoy solo ofrece boutique / gestión de patrimonios / private
   equity, que no le encaja a todas las carreras.
-- [ ] **24.** Lo que compras puede traer **eventos inesperados**, buenos o malos, según
+- [x] **24.** Lo que compras puede traer **eventos inesperados**, buenos o malos, según
   la suerte.
-- [ ] **25.** Decisiones de vida (pareja, boda, hijos) **más frecuentes**: en la partida
+- [x] **25.** Decisiones de vida (pareja, boda, hijos) **más frecuentes**: en la partida
   salió novia a los 21, ruptura a los 24, y nada más en el resto de la vida.
-- [ ] **26.** **Coherencia temporal**: no puede aparecer «conseguir novia» a los 36 si a
+- [x] **26.** **Coherencia temporal**: no puede aparecer «conseguir novia» a los 36 si a
   los 32 ya compraste la boda soñada.
 
 ## Lote 6 — el cierre de la partida
@@ -80,6 +80,8 @@ Estado: `[ ]` pendiente · `[x]` hecho · `[~]` hecho con matices (explicados ab
 - [x] **30.** A partir de los 30 poder **declarar si tienes pareja e hijos**. Interpretado
   como paso del setup cuando se elige empezar a los 30, 40 o 50: hoy empezabas a los 50
   soltero y sin hijos siempre.
+- [x] **31.** El recorrido **no debe ser 30 años fijos**: que lo decida el jugador. Botón de
+  retirarse en cuanto el patrimonio cubra lo suficiente para su familia.
 
 ---
 
@@ -218,3 +220,83 @@ Arreglado en `arrancarPartida()`, justo después de poner el cargo al día:
 Verificado en el juego: un Asociado de 40 arranca ahora con Ficha, Cartera, Términos,
 Inmuebles, Mejoras y Vida, y solo le queda Fondo (rango 4), que sí llega como escena. Un
 recién graduado de 20 (rango 0) sigue arrancando con dos secciones, como debe.
+
+### Lote 5, primera mitad (28-ago-2026)
+
+**25 · la vida no se apaga a los 24.** La causa exacta: la escena de noviazgo (9001) es
+`una: true` y su ventana acaba a los 34; la siguiente para alguien solo empezaba a los 36.
+Entre los 24 y los 36 no existía ninguna. Se añaden dos escenas **repetibles**: «No es la
+primera vez que empiezas esto» (solo, 25-39) y «La conversación de los planes» (en pareja,
+27-44). Y la probabilidad anual de escena de vida sube de 0,62 a 0,78.
+
+Medido en 20 partidas: pareja pasó de 2 (original) a **10**, y las dos nuevas salen 6 veces
+cada una.
+
+**26 · coherencia.** El capricho `boda` y el `fondo de educación para tus hijos` se podían
+comprar sin pareja y sin hijos. Ahora llevan `requiere` + `porQue`, se consultan por
+`puedeComprar()` (con try/catch, para que un predicado mal escrito no tumbe la pantalla), y
+en vez del botón sale el motivo. Pagar la boda estando de novios **te casa**, que era la
+otra mitad de la incoherencia.
+
+**Error propio en el camino:** puse el guardarraíl en la lista de `PROPIEDADES` en vez de
+`CAPRICHOS`, que es donde viven boda y fondo. La compra sí estaba bloqueada en
+`comprarBien()`, pero el botón se mostraba y no hacía nada — peor que un mensaje claro. Lo
+detectó la prueba: los dos marcadores de coherencia salían NUNCA. Corregido en las dos
+listas.
+
+**20, 21 y 22 · dónde trabajas y con qué contrato.** Tabla `PATRONES` con tres firmas
+inventadas por carrera; al empezar te toca una según lo que estudiaste, y sale en el
+encabezado junto al país. El contrato (`st.contrato`) tiene años y, al vencer, dispara una
+escena de renegociación que se empuja a mano desde `generarAno` para que pueda repetirse
+toda la partida.
+
+- Se firma por 2, 4 o 6 años: más años, más sueldo y menos margen para moverte.
+- La cuarta opción es **negociar con la competencia**, y pasa por el minijuego de anclaje.
+  Eso le da por fin una consecuencia real a ese minijuego.
+- El sueldo deja de depender solo del rango: `st.sueldoMult` se acumula por renovación,
+  acotado a 2,2x. Si negocias mal **no hay subida y tampoco te mudas de firma**: firmar
+  bien y firmar mal no pueden pagar igual.
+
+### Lote 5, segunda mitad (28-ago-2026)
+
+**23 · independizarse según tu título.** Tabla `FIRMAS`, una por carrera: consultora macro
+(eco), firma de auditoría (con), constructora (ing), bufete (der), firma de asesoría (adm)
+y casa de IA aplicada a finanzas (sis). Cada una con su coste de montarla, su multiplicador
+de sueldo y sus atributos: la constructora es la más cara y la más rentable, la auditoría
+la más aburrida y la más segura.
+
+La escena «Renunciar y montar lo tuyo» se ofrece **dos veces** (al llegar a Asociado y otra
+más arriba), porque decir «no ahora» no puede ser decir «no nunca». Pasa por el minijuego
+de estructura: si sale mal montas la firma igual pero arrancas tocado — renunciar ya es
+irreversible cuando entregas la carta.
+
+Y la rama «Tu propia boutique», que decía lo mismo a todo el mundo, ahora se llama según tu
+título vía `nombreRama()`. Era justo la incoherencia que se señaló.
+
+**19 · legendarias.** Cuatro escenas (`LEGENDARIAS`) con cifras que ninguna escena normal
+mueve: el mandato de la década, un asiento en un fondo soberano, el activo que nadie quiere
+y la silla de la mesa. Una sola tirada al año, 11%, solo pasado el año 4 y cada una una vez
+en la partida. Cabecera propia en cobre: se ve que es distinta antes de leerla.
+
+**18 · las de vida que parten la vida en dos.** Casarse, el primer hijo y la crisis del
+matrimonio pasan a `clave: true`. **No toqué sus números a ciegas:** el peso económico de
+esas decisiones ya es grande y es continuo, porque la pareja y los hijos entran en
+`gastoAnual()` todos los años. Lo que faltaba era que se vieran importantes, y eso es lo
+que se arregló. Las cifras grandes de golpe viven en las legendarias.
+
+**24 · lo que compras trae cola.** 22% de que salga bien, 22% de que salga mal, 56% de
+nada. Mueve el valor del bien, el efectivo o un atributo, y queda anotado en el expediente.
+Hubo que partir `comprarBien()` en dos: los guardarraíles y la tirada fuera del reductor
+(para poder avisar), y `aplicarCompra()` dentro, que los vuelve a comprobar.
+
+**Repetí un error mío y lo generalicé al arreglarlo.** La escena de contrato ocupaba un
+hueco del año sin sumar al objetivo, igual que hacían las aperturas antes. Ahora
+`const forzadas = lista.length` y `objetivo = min(forzadas + 2 + azar, 6)`: **todo** lo que
+se empuja a mano suma en vez de desplazar. Así no vuelve a pasar con lo próximo que se
+empuje.
+
+**31 · la duración la decides tú.** `TOPES` pasa de [30,35,40] a [30,35,40,45,50,55], y el
+juego deja de jubilarte por decreto a la segunda prórroga: solo termina solo cuando ya no
+queda tabla. Y en el cierre de cada año, **en cuanto `cobertura >= 1`**, aparece un botón
+de «Retirarme ya» que dice qué porcentaje de tu vida cubre tu patrimonio y de cuánto
+dispondrías retirando el 4%. Retirarse deja de ser algo que el juego te impone.

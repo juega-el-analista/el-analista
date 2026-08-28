@@ -104,6 +104,22 @@ const MARCAS = {
   /* que se entienda: escala del anclaje y la frase del gasto */
   "anclaje: escala rotulada": "0 · lo regalas",
   "gasto: frase explicada": "el nivel de vida lo persigue",
+  /* la vida no se apaga a los 24, y no se compra lo que no cuadra */
+  "vida: volver a intentarlo": "No es la primera vez que empiezas esto",
+  "vida: la conversación de los planes": "La conversación de los planes",
+  "coherencia: boda sin pareja": "Necesitas alguien con quien casarte",
+  "coherencia: fondo sin hijos": "Necesitas tener al menos un hijo",
+  /* dónde trabajas y con qué contrato */
+  "contrato: se vence": "Se te vence el contrato",
+  "contrato: en la ficha": "Trabajas en",
+  "contrato: te vas de firma": "Te vas de",
+  /* legendarias, firma propia, sorpresas y retiro voluntario */
+  "legendaria: cabecera": "Decisión legendaria",
+  "legendaria: el mandato": "El mandato de tu vida",
+  "firma propia: la oferta": "Renunciar y montar lo tuyo",
+  "compra: vicios ocultos": "Aparecen vicios ocultos",
+  "compra: tasan por encima": "Lo tasan bastante por encima",
+  "retiro voluntario": "Retirarme ya",
 };
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });

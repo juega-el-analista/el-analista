@@ -1314,6 +1314,10 @@ const CSS4 = `
   font:inherit;font-size:12px;letter-spacing:.12em;cursor:pointer;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 .ea-descartar:hover{border-color:var(--cobre);color:var(--papel)}
+/* Una legendaria tiene que verse distinta antes de leerla. */
+.ea-memoHead.legend{background:linear-gradient(90deg,rgba(192,118,58,.22),transparent);
+  border-color:var(--cobre);color:var(--cobre)}
+
 .ea-pend{border:1px solid var(--cobre);border-left-width:4px;background:rgba(192,118,58,.13);
   padding:10px 13px;font-size:12.5px;color:var(--papel);margin-bottom:12px}
 .ea-pendK{font-size:10px;letter-spacing:.18em;color:var(--cobre);margin-bottom:4px}
@@ -1549,6 +1553,8 @@ const CAPRICHOS = [{
   up: 0,
   vida: 3,
   ene: 18,
+  requiere: st => st.pareja === "noviazgo" || st.pareja === "casado",
+  porQue: "Necesitas alguien con quien casarte",
   d: "Un día entero sin pensar en el trabajo. No tiene precio de reventa."
 }, {
   id: "apto",
@@ -1600,6 +1606,8 @@ const CAPRICHOS = [{
   up: 0,
   vida: 5,
   rep: 3,
+  requiere: st => st.hijos >= 1,
+  porQue: "Necesitas tener al menos un hijo",
   d: "El único de esta lista que probablemente no vas a lamentar."
 }];
 
@@ -6866,6 +6874,8 @@ const DECISION_RAMA = {
       msg: r.d
     }
   }))
+  /* la etiqueta de «boutique» se reescribe al pintarla, según el título:
+     ver nombreRama() y FIRMA_DE() */
 };
 
 /* ---------- eventos con opciones condicionadas ---------- */
@@ -7716,6 +7726,7 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
   eMin: 26,
   eMax: 42,
   una: true,
+  clave: true,
   cuando: st => st.pareja === "noviazgo",
   t: "La conversación",
   clave: true,
@@ -7781,6 +7792,7 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
   eMin: 27,
   eMax: 44,
   una: true,
+  clave: true,
   cuando: st => st.pareja === "casado" && st.hijos === 0,
   t: "Un hijo",
   clave: true,
@@ -7897,6 +7909,7 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
   pri: 1,
   eMin: 33,
   eMax: 55,
+  clave: true,
   cuando: st => st.pareja === "casado",
   t: "El desgaste",
   clave: true,
@@ -7983,6 +7996,84 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
       car: 8,
       rep: 2,
       msg: "Trabajas más que nunca. Los números del año salen bien y el duelo te va a pasar factura más tarde."
+    }
+  }]
+},
+/* El hueco que reportó el jugador: la escena de noviazgo (9001) es
+   «una: true» y su ventana acaba a los 34, y la siguiente para alguien
+   solo empezaba a los 36. Entre los 24 y los 36 la vida se apagaba.
+   Estas dos son repetibles a propósito: estar solo no es un estado
+   terminal, y volver a intentarlo es lo normal. */
+{
+  id: 9007,
+  eMin: 25,
+  eMax: 39,
+  pri: 2,
+  cuando: st => st.pareja === "solo",
+  t: "No es la primera vez que empiezas esto",
+  clave: false,
+  x: "Aparece alguien otra vez. Ya sabes cómo va: los primeros meses no cuestan nada y los siguientes se te van en fines de semana, en vuelos y en dejar de decir que sí a todo en la oficina.",
+  o: [{
+    t: "Intentarlo en serio",
+    d: {
+      pareja: "noviazgo",
+      ene: 9,
+      rep: 2,
+      cash: -800,
+      msg: "Lo intentas otra vez. Duermes mejor y trabajas menos horas, que en este juego es a la vez bueno y caro."
+    }
+  }, {
+    t: "Verse sin prometer nada",
+    d: {
+      ene: 5,
+      red: 3,
+      cash: -400,
+      msg: "Se ven sin poner nombre a nada. Funciona un tiempo, y un tiempo también es algo."
+    }
+  }, {
+    t: "No ahora, tienes el año partido en dos",
+    d: {
+      car: 5,
+      ene: -5,
+      cri: 2,
+      msg: "Lo dejas pasar por trabajo. Vuelve a pasar, y la próxima vez no da tanta pereza decir que no."
+    }
+  }]
+}, {
+  id: 9008,
+  eMin: 27,
+  eMax: 44,
+  pri: 2,
+  cuando: st => st.pareja === "noviazgo",
+  t: "La conversación de los planes",
+  clave: false,
+  x: "Llevan tiempo. Aparece la conversación de siempre: dónde van a vivir, si hay hijos en el plan, y quién de los dos va a bajar el pie del acelerador para que eso pase.",
+  o: [{
+    t: "Poner tú el pie en el freno",
+    d: {
+      car: -3,
+      ene: 12,
+      rep: 2,
+      msg: "Reduces el ritmo tú. La relación va mejor y tu carrera avanza más lento: es el intercambio y lo estás eligiendo."
+    }
+  }, {
+    t: "Que sea el otro quien lo baje",
+    d: {
+      car: 4,
+      ene: -6,
+      rep: -2,
+      msg: "Sigues a tope y el ajuste lo hace la otra persona. Funciona ahora y se cobra después."
+    }
+  }, {
+    t: "Buscar la manera de que quepan las dos cosas",
+    j: "orden",
+    stat: "cri",
+    d: {
+      ene: 7,
+      cri: 5,
+      red: 3,
+      cash: -1500,
+      msg: "Reorganizan la vida entera para que quepan las dos cosas. Cuesta plata y coordinación."
     }
   }]
 }, {
@@ -8762,6 +8853,12 @@ const BASE = {
   /* temas del temario que ya se dieron en clase, para no examinar de
      algo que el juego nunca explicó */
   temas: [],
+  /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
+  patron: "",
+  contrato: null,
+  sueldoMult: 1,
+  /* si te independizaste y la firma es tuya */
+  propia: false,
   ritmo: "normal",
   nivelGasto: "normal",
   /* lo que debes y su historia */
@@ -8966,7 +9063,13 @@ const EDADES = [{
   }
 }];
 const EDAD_DE = e => EDADES.find(x => x.e === e) || EDADES[0];
-const TOPES = [30, 35, 40]; // 50, 55 y 60 años
+
+/* Cuanto dura la partida lo decide el jugador, no la tabla. Estos son
+   los puntos donde el juego se para a preguntar «¿te retiras?»; puedes
+   seguir diciendo que no hasta el ultimo. Empezando a los 20 eso llega
+   a los 75, y el retiro voluntario esta disponible mucho antes: en
+   cuanto tu patrimonio cubra lo que cuesta tu vida. */
+const TOPES = [30, 35, 40, 45, 50, 55]; // de los 50 a los 75 si empiezas a los 20
 const semestre = t => String(2026 + t);
 const edad = (t, ini) => entero(ini, 20, 20, 50) + entero(t, 0, 0, 60);
 const esClave = t => t % 2 === 1;
@@ -8982,6 +9085,361 @@ const escalar = (d, nivel) => {
     out[k] = Math.round(out[k] > 0 ? out[k] * f : out[k] * g);
   });
   return out;
+};
+
+/* ============================================================
+   DECISIONES LEGENDARIAS
+   Una carrera entera tiene tres o cuatro momentos que la parten en dos.
+   Estas escenas son raras a proposito (una tirada al anio, y cada una
+   solo puede salir una vez) y mueven cifras que ninguna escena normal
+   mueve. Si salieran a menudo dejarian de significar nada.
+   ============================================================ */
+const LEGENDARIAS = [{
+  id: 9801,
+  min: 2,
+  max: 6,
+  legendaria: true,
+  clave: true,
+  t: "El mandato de tu vida",
+  x: "Llega a la firma el mandato del que se va a hablar durante diez años. Alguien tiene que llevarlo y todos miran hacia la misma silla. Si sale bien, tu nombre queda pegado a la operación para siempre. Si sale mal, también.",
+  o: [{
+    t: "Pedirlo y llevarlo tú",
+    j: "estructura",
+    stat: "mod",
+    res: {
+      exito: {
+        cash: 180000,
+        car: 22,
+        rep: 18,
+        red: 12,
+        ene: -22,
+        msg: "Cierra. Tu nombre queda pegado a la operación de la década y el bono lo dice todo."
+      },
+      parcial: {
+        cash: 55000,
+        car: 10,
+        rep: 4,
+        ene: -20,
+        msg: "Cierra a duras penas y con concesiones. Cuenta, pero no como contaba en tu cabeza."
+      },
+      fallo: {
+        cash: -12000,
+        car: -6,
+        rep: -12,
+        ene: -24,
+        msg: "Se cae en la recta final. El mercado sabe quién lo llevaba."
+      }
+    }
+  }, {
+    t: "Apoyar desde atrás sin firmar nada",
+    d: {
+      car: 5,
+      red: 6,
+      ene: -6,
+      msg: "Ayudas sin exponerte. Sales entero y sin historia que contar."
+    }
+  }]
+}, {
+  id: 9802,
+  min: 3,
+  max: 6,
+  legendaria: true,
+  clave: true,
+  t: "Te llama un fondo soberano",
+  x: "Un fondo soberano busca a alguien de fuera para sentarlo en su comité de inversiones. No es un trabajo: es un asiento. Pagan poco y abren todas las puertas del continente.",
+  o: [{
+    t: "Aceptar el asiento",
+    d: {
+      red: 24,
+      rep: 20,
+      cri: 10,
+      ene: -10,
+      cash: 12000,
+      msg: "Te sientas en ese comité. A partir de aquí te devuelven las llamadas el mismo día."
+    }
+  }, {
+    t: "Declinar, no tienes las horas",
+    d: {
+      ene: 10,
+      car: 3,
+      msg: "Dices que no. Es defendible y te vas a acordar de esta conversación más de una vez."
+    }
+  }]
+}, {
+  id: 9803,
+  min: 3,
+  max: 6,
+  legendaria: true,
+  clave: true,
+  t: "Lo que nadie quiere comprar",
+  x: "Un vendedor forzado necesita salir de un activo bueno esta semana. El precio es una fracción de lo que vale y el problema es exactamente ese: nadie regala nada y tú tienes tres días para entender por qué.",
+  o: [{
+    t: "Entrar fuerte",
+    j: "banderas",
+    stat: "cri",
+    res: {
+      exito: {
+        cash: 140000,
+        cri: 12,
+        rep: 8,
+        msg: "Estaba barato de verdad y tú viste por qué. Esto no pasa dos veces."
+      },
+      parcial: {
+        cash: 25000,
+        cri: 6,
+        msg: "Estaba barato y algo tenía. Sales bien, no espectacular."
+      },
+      fallo: {
+        cash: -70000,
+        cri: 8,
+        rep: -6,
+        msg: "Estaba barato por una razón que no viste. La lección sale carísima y no se olvida."
+      }
+    }
+  }, {
+    t: "Mirarlo y dejarlo pasar",
+    d: {
+      cri: 6,
+      ene: 4,
+      msg: "Lo estudias, no te cuadra y lo dejas. La mitad de las veces eso es la decisión correcta."
+    }
+  }]
+}, {
+  id: 9804,
+  min: 4,
+  max: 6,
+  legendaria: true,
+  clave: true,
+  t: "Te ofrecen la silla",
+  x: "El comité te propone dirigir toda la mesa. Es el techo de lo que se puede llegar a ser trabajando para alguien, y viene con todo: el número, las horas y la responsabilidad de los errores de otros.",
+  o: [{
+    t: "Aceptar y dirigir la mesa",
+    d: {
+      car: 26,
+      rep: 14,
+      red: 8,
+      ene: -18,
+      cash: 40000,
+      msg: "Te sientas en la cabecera. El sueldo cambia de categoría y tu tiempo deja de ser tuyo."
+    }
+  }, {
+    t: "Proponer a otra persona y quedarte donde estás",
+    d: {
+      rep: 10,
+      red: 10,
+      ene: 8,
+      msg: "Propones a alguien de tu equipo. Ganas un aliado para toda la vida y dejas pasar el techo."
+    }
+  }]
+}];
+
+/* ============================================================
+   TU PROPIA FIRMA
+   Independizarse no puede significar lo mismo para todo el mundo: a un
+   ingeniero de sistemas no le interesa montar una boutique de banca de
+   inversion, le interesa montar algo que escale sin pedirle mas horas.
+   Cada titulo tiene su salida, con su coste de montarla y su forma de
+   pagar. El multiplicador se acumula sobre el sueldo que ya tenias.
+   ============================================================ */
+const FIRMAS = {
+  eco: {
+    n: "Tu propia consultora macro",
+    corto: "Consultora macro",
+    costo: 22000,
+    mult: 1.26,
+    mods: {
+      cri: 7,
+      rep: 4,
+      ene: -4
+    },
+    d: "Vendes lectura de ciclo a fondos y a empresas. Ingresos irregulares y un nombre que empieza a circular solo."
+  },
+  con: {
+    n: "Tu propia firma de auditoría",
+    corto: "Firma de auditoría",
+    costo: 16000,
+    mult: 1.17,
+    mods: {
+      mod: 7,
+      rep: 4,
+      ene: -2
+    },
+    d: "Aburrida, recurrente y difícil de matar: los clientes vuelven en cada cierre porque cambiar de auditor cuesta más que pagarte."
+  },
+  ing: {
+    n: "Tu propia constructora",
+    corto: "Constructora",
+    costo: 62000,
+    mult: 1.46,
+    mods: {
+      car: 9,
+      mod: 4,
+      ene: -9
+    },
+    d: "Obras, márgenes finos y un balance lleno de maquinaria. Cuando una obra sale bien, sale muy bien; cuando sale mal, te la llevas puesta."
+  },
+  der: {
+    n: "Tu propio bufete",
+    corto: "Bufete",
+    costo: 26000,
+    mult: 1.31,
+    mods: {
+      rep: 9,
+      red: 5,
+      ene: -5
+    },
+    d: "Horas facturables y un socio que eres tú. Aquí la reputación vale más que el capital, y tú ya la traes."
+  },
+  adm: {
+    n: "Tu propia firma de asesoría",
+    corto: "Firma de asesoría",
+    costo: 30000,
+    mult: 1.32,
+    mods: {
+      red: 9,
+      rep: 4,
+      ene: -5
+    },
+    d: "Vives de la red que llevas veinte años armando. Es tu activo principal y también tu único riesgo real."
+  },
+  sis: {
+    n: "Tu propia casa de IA aplicada a finanzas",
+    corto: "Casa de IA",
+    costo: 36000,
+    mult: 1.52,
+    mods: {
+      mod: 9,
+      cri: 4,
+      ene: 3
+    },
+    d: "Poca gente, mucho código y un producto que escala sin pedirte más horas. Es el único de la lista que puede crecer mientras duermes."
+  }
+};
+const FIRMA_DE = st => FIRMAS[st && st.estudio] || FIRMAS.eco;
+
+/* La rama «tu propia boutique» decia lo mismo a todo el mundo. Ahora la
+   etiqueta se adapta al titulo, que es lo que la hacia chirriar. */
+const nombreRama = (st, id) => {
+  if (id === "boutique") return FIRMA_DE(st).n;
+  const r = RAMAS.find(x => x.id === id);
+  return r ? r.n : null;
+};
+
+/* Renunciar y montar lo tuyo. Se ofrece dos veces en toda la partida,
+   una al llegar a Asociado y otra mas arriba, para que decir «no ahora»
+   no sea decir «no nunca». */
+const escenaFirma = (st, id) => {
+  const f = FIRMA_DE(st);
+  return {
+    id,
+    min: 0,
+    max: 6,
+    clave: true,
+    firma: true,
+    t: "Renunciar y montar lo tuyo",
+    x: "Llevas años haciendo rentable el nombre de otro. Tienes la red, tienes el criterio y por primera vez tienes el dinero para montar " + f.n.toLowerCase() + ". Montarla cuesta USD " + fmt(f.costo) + " y el sueldo fijo se acaba el día que firmas la renuncia.",
+    o: [{
+      t: "Renunciar y montarla",
+      firmaPropia: true,
+      j: "estructura",
+      stat: "cri",
+      d: {
+        car: 6,
+        rep: 5,
+        msg: "Presentas la renuncia y montas " + f.n.toLowerCase() + ". " + f.d
+      }
+    }, {
+      t: "Quedarte donde estás, por ahora",
+      d: {
+        ene: 6,
+        cri: 3,
+        msg: "Te quedas. Es la decisión que toma casi todo el mundo, y casi siempre por buenas razones: el sueldo fijo del mes que viene."
+      }
+    }]
+  };
+};
+
+/* ============================================================
+   DONDE TRABAJAS Y CON QUE CONTRATO
+   El juego siempre es finanzas, pero cada formacion entra por una
+   puerta distinta, y hasta ahora no se veia por cual. El patron sale
+   del titulo que estudiaste; el contrato es lo que se renegocia.
+   Todas las firmas son inventadas.
+   ============================================================ */
+const PATRONES = {
+  eco: ["Andes Macro Partners", "Consultora Cardinal", "Meridiano Estudios Económicos"],
+  con: ["Vargas & Prieto Auditores", "Contable Atlántico", "Revisoría Solano"],
+  ing: ["Cordillera Project Finance", "Proyecta Capital", "Infraestructura del Sur"],
+  der: ["Larrea Structuring", "Salazar Mendoza Abogados", "Estudio Fondevila"],
+  adm: ["Grupo Corporativo Ávila", "Nexo Asesores", "Mercantil Praga"],
+  sis: ["Quantum Datos Financieros", "Nodo Capital Tech", "Delta Sistemas Bursátiles"]
+};
+const PATRONES_TODOS = Object.keys(PATRONES).reduce((a, k) => a.concat(PATRONES[k]), []);
+
+/* Una firma distinta a la tuya, para cuando te vas a la competencia. */
+const otroPatron = st => {
+  const lista = PATRONES[st && st.estudio] || PATRONES_TODOS;
+  const fuera = lista.filter(n => n !== (st && st.patron));
+  return elegirAzar(fuera.length ? fuera : lista) || lista[0];
+};
+
+/* Duraciones que se pueden firmar. Mas años, mas sueldo y menos margen
+   para moverte: es el intercambio y esta a la vista. */
+const CONTRATOS = [{
+  anos: 2,
+  n: "Dos años",
+  mult: 1.00,
+  d: "Corto. Te vuelves a sentar pronto, y eso corta en los dos sentidos."
+}, {
+  anos: 4,
+  n: "Cuatro años",
+  mult: 1.09,
+  d: "El punto medio: algo más de sueldo por algo menos de libertad."
+}, {
+  anos: 6,
+  n: "Seis años",
+  mult: 1.20,
+  d: "Largo. Pagan mejor porque no te vayas, y no te vas."
+}];
+const TOPE_MULT = 2.2;
+
+/* La escena que se dispara cuando el contrato llega a su fin. Se empuja
+   a mano desde generarAno, asi que puede repetirse toda la partida. */
+const ESCENA_CONTRATO = {
+  id: 9710,
+  min: 0,
+  max: 6,
+  contrato: true,
+  clave: true,
+  t: "Se te vence el contrato",
+  x: "Termina el plazo que firmaste. Te ponen un papel nuevo sobre la mesa y, por una vez, el número no está decidido: depende de lo que digas en la próxima media hora.",
+  o: CONTRATOS.map(c => ({
+    t: "Renovar por " + c.n.toLowerCase(),
+    contrato: {
+      anos: c.anos,
+      mult: c.mult
+    },
+    d: {
+      rep: 2,
+      cri: 1,
+      msg: "Firmas por " + c.anos + " años en la misma firma. " + c.d
+    }
+  })).concat([{
+    t: "Escuchar a la competencia y negociar",
+    contrato: {
+      anos: 3,
+      mult: 1.16
+    },
+    cambiaPatron: true,
+    j: "anclaje",
+    stat: "red",
+    d: {
+      car: 4,
+      red: 3,
+      rep: -2,
+      msg: "Te sientas con otra firma y pones tu número sobre la mesa."
+    }
+  }])
 };
 
 /* ============================================================
@@ -9194,6 +9652,37 @@ const APERTURAS = [{
     }]
   }
 }];
+
+/* Lo que compras a veces trae cola. No es premio ni castigo garantizado:
+   es que un bien real puede salirte bueno o salirte rana, y eso no se
+   sabe al firmar. pct mueve el valor del bien; cash es fraccion de lo
+   que pagaste. */
+const SORPRESAS_BUENAS = [{
+  pct: 0.18,
+  msg: "Lo tasan bastante por encima de lo que pagaste: compraste barato sin saberlo."
+}, {
+  red: 7,
+  msg: "Por ahí conoces a alguien que te va a servir durante años."
+}, {
+  cash: 0.06,
+  msg: "Traía valor dentro que nadie se había parado a mirar."
+}, {
+  rep: 6,
+  msg: "Se comenta, y se comenta bien. Tu nombre gana algo con esto."
+}];
+const SORPRESAS_MALAS = [{
+  pct: -0.16,
+  msg: "Aparecen vicios ocultos que nadie declaró. Vale menos de lo que pagaste."
+}, {
+  cash: -0.09,
+  msg: "Lo que parecía un detalle era estructural. Se arregla y se paga."
+}, {
+  ene: -9,
+  msg: "Entre papeleo, permisos y llamadas te come medio año."
+}, {
+  rep: -5,
+  msg: "Alguien opina en voz alta que te vieron las intenciones. Cuesta un poco de nombre."
+}];
 const IDS_APERTURA = APERTURAS.map(a => a.id);
 
 /* si a un sistema ya le toca, por rango alcanzado o por año cumplido */
@@ -9345,6 +9834,15 @@ const sanear = bruto => {
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
   st.temas = unicos(listaDe(r.temas, x => TEMAS.some(t => t.id === x), 60));
+  /* El patrón puede ser una firma de la tabla o una firma tuya, así que
+     se acota por longitud en vez de por lista cerrada. */
+  st.patron = texto(r.patron, "", 48);
+  st.propia = r.propia === true;
+  st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
+  st.contrato = r.contrato && typeof r.contrato === "object" ? {
+    anos: entero(r.contrato.anos, 3, 1, 10),
+    desde: entero(r.contrato.desde, 0, 0, 60)
+  } : null;
   st.abiertos = Array.isArray(r.abiertos) ? unicos(listaDe(r.abiertos, x => IDS_APERTURA.indexOf(x) >= 0, 20)) : APERTURAS.filter(a => tocaAbrir(st, a)).map(a => a.id);
   st.edadIni = EDADES.some(x => x.e === entero(r.edadIni, 20, 20, 50)) ? entero(r.edadIni, 20, 20, 50) : 20;
   st.estudia = clamp(numero(r.estudia, 0), 0, 500);
@@ -9402,6 +9900,19 @@ const GUIA = [{
   t: "Cómo vives",
   x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo."
 }];
+
+/* Algunos bienes solo tienen sentido en cierta vida: una boda sin pareja
+   o un fondo de educación sin hijos era comprable, y era la incoherencia
+   que mas chirriaba. El requisito se consulta siempre por aqui, para que
+   un requiere() mal escrito no tumbe la pantalla entera. */
+const puedeComprar = (c, st) => {
+  if (!c || typeof c.requiere !== "function") return true;
+  try {
+    return !!c.requiere(st);
+  } catch (e) {
+    return true;
+  }
+};
 
 /* Qué atributos mueve una opción, para poder decirlo ANTES de elegir en
    vez de después. A propósito sin cifras: saber que algo cuesta energía
@@ -12884,7 +13395,7 @@ function Motor() {
   }, 0);
   const vidaTotal = st => st.bienes.reduce((a, id) => a + ((bienDe(id) || {}).vida || 0), 0);
   const paisDe = st => NACIONES.find(x => x.id === st.pais) || NACIONES[0];
-  const salarioAnual = st => RANGO(st.rango).salario * 12 * paisDe(st).sal;
+  const salarioAnual = st => RANGO(st.rango).salario * 12 * paisDe(st).sal * clamp(numero(st.sueldoMult, 1), 0.6, TOPE_MULT);
   const impuestoDe = st => paisDe(st).tax;
   const netoAnual = st => salarioAnual(st) * (1 - impuestoDe(st));
   const gastoAnual = st => {
@@ -12942,9 +13453,53 @@ function Motor() {
       lista.push(nueva.escena);
       usados.push(nueva.escena.id);
     }
+    /* Y si el contrato llegó a su fin, eso manda sobre cualquier otra
+       cosa del año: es la escena que decide tu sueldo. Se empuja a mano
+       para que pueda repetirse toda la partida. */
+    const con = st.contrato;
+    if (con && st.turno >= numero(con.desde, 0) + numero(con.anos, 3)) {
+      lista.push(ESCENA_CONTRATO);
+      usados.push(ESCENA_CONTRATO.id);
+    }
+    /* Una sola tirada al año, y solo pasados los primeros años: una
+       legendaria en el año uno no significaría nada porque todavía no hay
+       carrera que partir en dos. */
+    if (st.turno >= 4 && Math.random() < 0.11) {
+      const posibles = LEGENDARIAS.filter(e => st.rango >= e.min && st.rango <= e.max && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0);
+      const leg = elegirAzar(posibles);
+      if (leg) {
+        lista.push(leg);
+        usados.push(leg.id);
+      }
+    }
+
+    /* Montar lo tuyo se ofrece al llegar a Asociado y otra vez más
+       arriba: decir «no ahora» no puede ser decir «no nunca». */
+    if (!st.propia) {
+      const ofertas = [[3, 9720], [5, 9721]];
+      for (let k = 0; k < ofertas.length; k++) {
+        const rangoMin = ofertas[k][0],
+          idEsc = ofertas[k][1];
+        if (st.rango >= rangoMin && st.vistos.indexOf(idEsc) < 0 && usados.indexOf(idEsc) < 0) {
+          lista.push(escenaFirma(st, idEsc));
+          usados.push(idEsc);
+          break;
+        }
+      }
+    }
+    /* Cuántas escenas se empujaron a mano (apertura, contrato, legendaria,
+       firma propia). Se cuenta AQUÍ, antes de la vida, la bifurcación y la
+       decisión clave: esas tres siempre entraron dentro del presupuesto
+       normal del año, así que contarlas también duplicaba la duración del
+       año. Solo lo empujado a mano tiene que sumar. */
+    const forzadas = lista.length;
+
     /* la vida no espera a que te asciendan: casi todos los años pasa algo */
     const vidas = vidaDisponible(st).filter(v => usados.indexOf(v.id) < 0 && st.vistos.indexOf(v.id) < 0);
-    if (vidas.length && Math.random() < 0.62) {
+    /* Subida de 0,62 a 0,78: con 0,62 y las escenas de pareja limitadas,
+       una vida entera podía pasar sin una sola decisión personal después
+       de los veinte. */
+    if (vidas.length && Math.random() < 0.78) {
       /* Las escenas con condición de estado (tienes pareja, tienes hijos)
          solo existen mientras dure ese estado, así que si están sobre la
          mesa tienen prioridad. Si no, la cadena noviazgo-matrimonio-hijos
@@ -12975,7 +13530,11 @@ function Motor() {
     /* La escena de apertura se SUMA al anio, no ocupa el sitio de un
        evento: si no, el anio en que se abre algo pierde variedad y se
        dejan de ver minijuegos que solo cuelgan de escenas aleatorias. */
-    const objetivo = 2 + (Math.random() < 0.45 ? 1 : 0) + (nueva ? 1 : 0);
+    /* Todo lo que se empujó a mano hasta aquí (apertura, contrato, firma
+       propia, legendaria) se SUMA al año en vez de ocupar el sitio de un
+       evento normal. Ya me costó una vez: descontar la apertura hacía que
+       se dejara de ver el minijuego de trading. */
+    const objetivo = Math.min(forzadas + 2 + (Math.random() < 0.45 ? 1 : 0), 5);
     while (lista.length < objetivo) {
       const e = sacar(E, st, usados);
       if (!e) break;
@@ -13085,6 +13644,16 @@ function Motor() {
        cartera es rango 1 y tú ya entras en rango 3. Lo que queda por
        encima de tu rango sí llega como escena, que es lo que se buscaba. */
     st.abiertos = APERTURAS.filter(a => st.rango >= a.rango).map(a => a.id);
+
+    /* La firma por la que entraste, según lo que estudiaste, y el primer
+       contrato: corto, para que la primera renegociación llegue pronto y
+       el jugador entienda el mecanismo mientras aún importa poco. */
+    st.patron = elegirAzar(PATRONES[ca.id] || PATRONES_TODOS) || "";
+    st.contrato = {
+      anos: ed.e <= 20 ? 3 : 2,
+      desde: 0
+    };
+    st.sueldoMult = 1;
     st.titulares = [{
       q: "2026",
       t: ed.e <= 20 ? "Te gradúas de " + ca.n + " en " + na.ban : "Entras al sector a los " + ed.e + ", con tu título de " + ca.n + " en " + na.ban
@@ -13239,8 +13808,20 @@ function Motor() {
     });
     return n;
   });
-  const comprarBien = c => setS(st => {
+  const comprarBien = c => {
+    /* Los mismos guardarraíles que el reductor, pero aquí fuera, para
+       poder decidir la sorpresa y avisar de ella sin meter efectos en el
+       reductor. El reductor los vuelve a comprobar de todas formas. */
+    if (s.cash + s.cartera < c.c || s.bienes.indexOf(c.id) >= 0) return;
+    if (!puedeComprar(c, s)) return;
+    const dado = Math.random();
+    const sor = dado < 0.22 ? elegirAzar(SORPRESAS_BUENAS) : dado < 0.44 ? elegirAzar(SORPRESAS_MALAS) : null;
+    aplicarCompra(c, sor);
+    if (sor) setAviso(sor.msg);
+  };
+  const aplicarCompra = (c, sor) => setS(st => {
     if (st.cash + st.cartera < c.c || st.bienes.indexOf(c.id) >= 0) return st;
+    if (!puedeComprar(c, st)) return st;
     const r = cobrar(st, c.c);
     const n = {
       ...st,
@@ -13255,6 +13836,30 @@ function Motor() {
     if (c.ene) n.ene = clamp(n.ene + c.ene, 0, 100);
     if (c.red) n.red = clamp(n.red + c.red, 0, 100);
     if (c.rep) n.rep = clamp(n.rep + c.rep, 0, 100);
+    /* Si pagas la boda estando de novios, te casas: no tendria sentido
+       pagarla y seguir figurando como pareja sin mas. */
+    if (c.id === "boda" && st.pareja === "noviazgo") n.pareja = "casado";
+    if (sor) {
+      if (sor.pct) n.valores = {
+        ...n.valores,
+        [c.id]: clamp(numero(n.valores[c.id], 0) * (1 + sor.pct), 0, TOPE_PLATA)
+      };
+      if (sor.cash) {
+        const monto = c.c * sor.cash;
+        if (monto >= 0) n.cash = clamp(n.cash + monto, -TOPE_PLATA, TOPE_PLATA);else {
+          const r2 = cobrar(n, -monto);
+          n.cash = r2.cash;
+          n.cartera = r2.cartera;
+        }
+      }
+      ["red", "rep", "ene", "cri", "mod"].forEach(k => {
+        if (sor[k]) n[k] = clamp(numero(n[k], 0) + sor[k], 0, 100);
+      });
+      n.titulares = n.titulares.concat({
+        q: String(2026 + st.turno),
+        t: sor.msg
+      });
+    }
     n.titulares = st.titulares.concat({
       q: String(2026 + st.turno),
       t: "Compras " + c.n.toLowerCase()
@@ -13362,6 +13967,50 @@ function Motor() {
     };
     const cambios = [];
     if (o && o.ramaId) st.rama = o.ramaId;
+    if (o && o.firmaPropia && !st.propia) {
+      const f = FIRMA_DE(st);
+      /* Si el minijuego sale mal montas la firma igual, pero arrancas
+         tocado: renunciar ya es irreversible cuando entregas la carta. */
+      const bien = nivel === "exito" ? 1 : nivel === "parcial" ? 0.6 : 0.25;
+      const r2 = cobrar(st, f.costo);
+      st.cash = r2.cash;
+      st.cartera = r2.cartera;
+      st.propia = true;
+      st.patron = f.n;
+      st.rama = st.rama || "boutique";
+      st.contrato = null; /* ya no hay quien te renueve nada */
+      st.sueldoMult = clamp(numero(st.sueldoMult, 1) * (1 + (f.mult - 1) * bien), 0.6, TOPE_MULT);
+      Object.keys(f.mods).forEach(k => {
+        st[k] = clamp(numero(st[k], 0) + f.mods[k] * bien, 0, 100);
+      });
+      st.titulares = st.titulares.concat({
+        q: String(2026 + st.turno),
+        t: "Montas " + f.n.toLowerCase()
+      });
+    }
+    if (o && o.contrato) {
+      st.contrato = {
+        anos: entero(o.contrato.anos, 3, 1, 10),
+        desde: st.turno
+      };
+      /* Si la opción pasaba por negociar, el aumento depende de cómo te
+         fue negociando: firmar bien y firmar mal no pueden pagar igual.
+         Las opciones sin minijuego dan lo que prometen. */
+      const negociada = !!(o.j || o.juego);
+      const parte = !negociada ? 1 : nivel === "exito" ? 1 : nivel === "parcial" ? 0.55 : 0;
+      const mult = 1 + (numero(o.contrato.mult, 1) - 1) * parte;
+      st.sueldoMult = clamp(numero(st.sueldoMult, 1) * mult, 0.6, TOPE_MULT);
+      /* Y si la negociación se cayó del todo, tampoco te mudas de firma:
+         te quedas donde estabas, con el plazo nuevo y sin subida. */
+      if (o.cambiaPatron && parte > 0) {
+        const antes = st.patron;
+        st.patron = otroPatron(st);
+        st.titulares = st.titulares.concat({
+          q: String(2026 + st.turno),
+          t: "Te vas de " + (antes || "tu firma") + " a " + st.patron
+        });
+      }
+    }
     if (o && o.abre) {
       st.abiertos = unicos((Array.isArray(st.abiertos) ? st.abiertos : []).concat(o.abre));
       setNuevoSistema(o.abre);
@@ -14037,7 +14686,9 @@ function Motor() {
       return;
     }
     if (s.turno >= tope) {
-      if (s.seguir >= 2) {
+      /* Antes el juego te jubilaba por decreto a la segunda prórroga.
+         Ahora solo se acaba solo cuando ya no queda tabla que estirar. */
+      if (s.seguir >= TOPES.length - 1) {
         tirarPartida();
         setFin("completo");
         irA("fin");
@@ -14058,7 +14709,7 @@ function Motor() {
   const seguirCinco = () => {
     const st = {
       ...s,
-      seguir: s.seguir + 1
+      seguir: Math.min(s.seguir + 1, TOPES.length - 1)
     };
     setS(st);
     persistir(st);
@@ -14208,7 +14859,7 @@ function Motor() {
     viudo: "viudo"
   };
   const parejaTxt = PAREJA_TXT(s);
-  const ramaN = s.rama ? (RAMAS.find(r => r.id === s.rama) || {}).n : null;
+  const ramaN = s.rama ? nombreRama(s, s.rama) : null;
   const ano = 2026 + s.turno;
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-root"
@@ -14755,7 +15406,7 @@ function Motor() {
     className: "ea-nombre ea-dis"
   }, s.nombre ? s.nombre : RANGO(s.rango).n), /*#__PURE__*/React.createElement("div", {
     className: "ea-sub ea-dis"
-  }, s.nombre ? RANGO(s.rango).n + " · " : "", estudio.n, " \xB7 ", nacion.ban, ramaN ? " · " + ramaN : "")), /*#__PURE__*/React.createElement("div", {
+  }, s.nombre ? RANGO(s.rango).n + " · " : "", s.patron || estudio.n, " \xB7 ", nacion.n, ramaN ? " · " + ramaN : "")), /*#__PURE__*/React.createElement("div", {
     className: "ea-reloj"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-dis"
@@ -14894,6 +15545,27 @@ function Motor() {
   }, "Carrera"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
   }, s.carrera, " / ", RANGO(s.rango).umbral === Infinity ? "máx" : RANGO(s.rango).umbral)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-fila"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-dis",
+    style: {
+      fontSize: 12
+    }
+  }, "Trabajas en"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-mono"
+  }, s.patron || "—")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-fila"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-dis",
+    style: {
+      fontSize: 12
+    }
+  }, "Contrato"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-mono"
+  }, s.propia ? "es tuya, no hay contrato" : s.contrato ? (() => {
+    const quedan = numero(s.contrato.desde, 0) + numero(s.contrato.anos, 3) - s.turno;
+    return numero(s.contrato.anos, 3) + " años · " + (quedan <= 0 ? "vencido" : "quedan " + quedan);
+  })() : "sin contrato")), /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-dis",
@@ -15289,7 +15961,14 @@ function Motor() {
       className: "ea-itemD"
     }, c.d), ya ? /*#__PURE__*/React.createElement("span", {
       className: "ea-tengo ea-dis"
-    }, "Vale hoy USD ", fmt(s.valores[c.id] || 0)) : /*#__PURE__*/React.createElement("button", {
+    }, "Vale hoy USD ", fmt(s.valores[c.id] || 0)) : !puedeComprar(c, s) ? /*#__PURE__*/React.createElement("span", {
+      className: "ea-dis",
+      style: {
+        fontSize: 11,
+        letterSpacing: ".1em",
+        color: "var(--tenue)"
+      }
+    }, c.porQue || "Todavía no te toca") : /*#__PURE__*/React.createElement("button", {
       className: s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis",
       disabled: s.cash + s.cartera < c.c,
       onClick: () => comprarBien(c)
@@ -15688,7 +16367,14 @@ function Motor() {
       className: "ea-itemD"
     }, c.d), ya ? /*#__PURE__*/React.createElement("span", {
       className: "ea-tengo ea-dis"
-    }, c.tipo === "activo" ? "Vale hoy USD " + fmt(s.valores[c.id] || 0) : "Ya lo tienes") : /*#__PURE__*/React.createElement("button", {
+    }, c.tipo === "activo" ? "Vale hoy USD " + fmt(s.valores[c.id] || 0) : "Ya lo tienes") : !puedeComprar(c, s) ? /*#__PURE__*/React.createElement("span", {
+      className: "ea-dis",
+      style: {
+        fontSize: 11,
+        letterSpacing: ".1em",
+        color: "var(--tenue)"
+      }
+    }, c.porQue || "Todavía no te toca") : /*#__PURE__*/React.createElement("button", {
       className: s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis",
       disabled: s.cash + s.cartera < c.c,
       onClick: () => comprarBien(c)
@@ -15708,8 +16394,8 @@ function Motor() {
   }, t.q), /*#__PURE__*/React.createElement("span", null, t.t))))))), /*#__PURE__*/React.createElement("div", null, fase === "evento" && ev && /*#__PURE__*/React.createElement("div", {
     className: "ea-memo"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-memoHead ea-dis" + (ev.clave ? " clave" : "")
-  }, /*#__PURE__*/React.createElement("span", null, ev.rama ? "Bifurcación" : ev.clave ? "Decisión clave" : "Memorando interno"), /*#__PURE__*/React.createElement("span", null, ano)), /*#__PURE__*/React.createElement("h2", {
+    className: "ea-memoHead ea-dis" + (ev.legendaria ? " clave legend" : ev.clave ? " clave" : "")
+  }, /*#__PURE__*/React.createElement("span", null, ev.legendaria ? "Decisión legendaria" : ev.rama ? "Bifurcación" : ev.clave ? "Decisión clave" : "Memorando interno"), /*#__PURE__*/React.createElement("span", null, ano)), /*#__PURE__*/React.createElement("h2", {
     className: "ea-memoTit ea-dis"
   }, ev.t), /*#__PURE__*/React.createElement("p", {
     className: "ea-memoTxt"
@@ -15731,7 +16417,7 @@ function Motor() {
     className: "ea-opTag"
   }, JUEGO(o.juego || o.j).n, " \xB7 ", JUEGO(o.juego || o.j).tema, " \xB7 te ayuda ", ETIQ[o.stat] || "Criterio", " ", Math.round(ayudaDe(o))), o.ramaId && /*#__PURE__*/React.createElement("span", {
     className: "ea-opTag"
-  }, (RAMAS.find(r => r.id === o.ramaId) || {}).d), (() => {
+  }, o.ramaId === "boutique" ? FIRMA_DE(s).d : (RAMAS.find(r => r.id === o.ramaId) || {}).d), (() => {
     const ef = efectoDe(o);
     if (!ef) return null;
     const partes = [];
@@ -16033,7 +16719,26 @@ function Motor() {
     className: "ea-btn",
     disabled: carteraPend,
     onClick: siguienteAno
-  }, fin ? "Ver el balance final" : s.turno >= tope ? "Sentarte a hacer cuentas" : "Empezar " + (cierre.ano + 1)), !fin && /*#__PURE__*/React.createElement("div", {
+  }, fin ? "Ver el balance final" : s.turno >= tope ? "Sentarte a hacer cuentas" : "Empezar " + (cierre.ano + 1)), !fin && cobertura >= 1 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "ea-descartar ea-dis",
+    style: {
+      width: "100%",
+      padding: "12px 18px"
+    },
+    disabled: carteraPend,
+    onClick: retirarse
+  }, "Retirarme ya \xB7 tu patrimonio cubre ", Math.round(cobertura * 100), "% de tu vida"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-td",
+    style: {
+      fontSize: 11.5,
+      marginTop: 6,
+      textAlign: "center"
+    }
+  }, "Retirando 4% al a\xF1o dispondr\xEDas de USD ", fmt(retiroAnual), s.hijos > 0 ? " para ti, tu pareja y " + s.hijos + (s.hijos === 1 ? " hijo" : " hijos") : "", ". Nadie te obliga a seguir jugando.")), !fin && /*#__PURE__*/React.createElement("div", {
     className: "ea-td",
     style: {
       fontSize: 11.5,
