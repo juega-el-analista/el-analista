@@ -16,7 +16,7 @@ const RUTA_ORIGINAL = path.join(RAIZ, "historia", "el-analista.v5-original.jsx")
  * Así la isla de plantilla guarda solo la cáscara (unos pocos KB) y al
  * publicar se vuelven a inyectar los motores leyéndolos de la página.
  *
- * Las tres trampas del quine, que ya costaron una vez (ver salon/README.md):
+ * Las tres trampas del quine, que ya costaron una vez (ver PLAN-REGISTRO.md):
  *   1 · ninguna secuencia de cierre de script literal en el JavaScript de
  *       la cáscara, ni dentro de un comentario: el parser corta el bloque
  *       igual y la página deja de arrancar. Se comprueba abajo.

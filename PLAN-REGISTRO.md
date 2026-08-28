@@ -75,7 +75,7 @@ página. El documento publicado se queda en ~820 KB, no en 1,6 MB.
 **Forma del documento:** el visor **siempre** envuelve lo que se guarda en su propio
 `<!doctype html><html><head>…<body>`. Comprobado leyendo el artifact publicado. La
 semilla y cada republicación tienen que tener **la misma forma** o el quine se
-desalinea. Ver `salon/README.md` para las tres trampas del quine, que aplican igual.
+desalinea. Las tres trampas del quine están al final de este documento.
 
 ### 3 · Registro dentro del juego  ✅ HECHO
 
@@ -90,10 +90,10 @@ desalinea. Ver `salon/README.md` para las tres trampas del quine, que aplican ig
 
 ## Lo que ya está hecho y sirve de base
 
-- `salon/` — la versión separada, funcionando, con el quine resuelto y verificado.
-  Su `plantilla.html` es el punto de partida del diseño de la tabla.
-- Artifact del salón: https://claude.ai/code/artifact/0b41d201-50b9-496e-837d-ea6cbd508749
-  (queda obsoleto cuando el registro viva dentro del juego).
+- El salón separado, que sirvió para resolver el quine antes de meterlo en el juego, se
+  **retiró el 28-ago-2026**. Su código ya no está en el repo y su artifact
+  (`0b41d201-50b9-496e-837d-ea6cbd508749`) quedó como un aviso que lleva al juego, sin
+  capacidades. Borrarlo del todo se hace desde la galería de artifacts, a mano.
 
 ## Límite que no cambia
 
@@ -141,5 +141,4 @@ Publicar el juego con `capabilities: {artifact: {}}`. Hasta que no se publique a
 botón de anotar detecta que no puede publicar y muestra el aviso de solo lectura, que es
 el comportamiento correcto.
 
-Y **el salón separado (`salon/`) queda obsoleto** en cuanto el registro viva dentro del
-juego. Su artifact sigue publicado; decidir si se retira.
+El salón separado ya se retiró: su artifact es ahora un aviso que lleva al juego.
