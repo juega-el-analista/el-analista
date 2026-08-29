@@ -12,10 +12,10 @@ const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 .ea-root{
-  --tinta:#0C191D; --fieltro:#13252A; --borde:#20393E;
-  --papel:#E9E3D5; --papel2:#DCD4C2; --tintaPapel:#1A2528;
-  --cobre:#C0763A; --verde:#5F8F5C; --rojo:#BE4B3B; --gris:#6C6255;
-  --hueso:#CFC9BA; --tenue:#7B8D8F;
+  --tinta:#06170D; --fieltro:#0B3A1F; --borde:#1F6B3E;
+  --papel:#F7F7F5; --papel2:#E9EEF5; --tintaPapel:#3D3D3D;
+  --cobre:#B9532A; --verde:#4FA05C; --rojo:#B23B27; --gris:#6B6B6B;
+  --hueso:#EDEDE8; --tenue:#9FB8A8;
   background:var(--tinta); color:var(--hueso); min-height:100%;
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
   font-size:15px; line-height:1.55; padding:16px;
@@ -27,21 +27,21 @@ const CSS = `
 
 .ea-wrap{max-width:1100px;margin:0 auto}
 .ea-placa{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;
-  border:1px solid var(--borde);background:var(--fieltro);padding:13px 16px}
+  border:1px solid var(--borde);background:var(--fieltro);padding:15px 20px;border-radius:3px 3px 0 0}
 .ea-nombre{font-size:25px;line-height:1;color:var(--papel)}
 .ea-sub{font-size:11.5px;color:var(--tenue);letter-spacing:.14em;margin-top:5px}
 .ea-reloj{text-align:right;font-size:11.5px;color:var(--tenue);letter-spacing:.1em}
 .ea-plata{font-size:23px;color:var(--papel)}
 .ea-plata.neg{color:var(--rojo)}
 
-.ea-cinta{border:1px solid var(--borde);border-top:none;background:#0F1F23;padding:7px 16px;
-  font-size:12px;color:var(--tenue);display:flex;gap:10px;align-items:baseline}
+.ea-cinta{border:1px solid var(--borde);border-top:none;background:#04220F;padding:8px 20px;
+  font-size:12px;color:var(--tenue);display:flex;gap:10px;align-items:baseline;border-radius:0 0 3px 3px}
 .ea-cintaK{color:var(--cobre);flex-shrink:0;font-size:11px;letter-spacing:.14em}
 
-.ea-grid{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:16px;align-items:start}
+.ea-grid{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:18px;align-items:start}
 @media(max-width:880px){.ea-grid{grid-template-columns:1fr}}
 
-.ea-panel{border:1px solid var(--borde);background:var(--fieltro);padding:14px 16px}
+.ea-panel{border:1px solid var(--borde);background:var(--fieltro);padding:16px 18px;border-radius:3px}
 .ea-rot{font-size:11px;letter-spacing:.2em;color:var(--tenue);margin-bottom:12px}
 
 .ea-tabs{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--borde);border-bottom:none;background:var(--fieltro)}
@@ -53,7 +53,7 @@ const CSS = `
 
 .ea-stat{margin-bottom:10px}
 .ea-statTop{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.08em;margin-bottom:4px}
-.ea-bar{height:5px;background:#0A171B;position:relative;overflow:hidden}
+.ea-bar{height:5px;background:#041F0E;position:relative;overflow:hidden}
 .ea-fill{height:100%;background:var(--cobre);transition:width .5s ease}
 .ea-fill.ene{background:var(--verde)}
 .ea-fill.baja{background:var(--rojo)}
@@ -61,25 +61,27 @@ const CSS = `
 .ea-fila{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:5px 0;border-bottom:1px dotted var(--borde)}
 .ea-fila:last-child{border-bottom:none}
 
-.ea-slider{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:#0A171B;outline:none;margin:7px 0 2px}
+.ea-slider{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:#041F0E;outline:none;margin:7px 0 2px}
 .ea-slider::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;background:var(--cobre);cursor:pointer;border-radius:0}
 .ea-slider::-moz-range-thumb{width:13px;height:13px;background:var(--cobre);cursor:pointer;border:none;border-radius:0}
 
 /* Comprar es la accion que mueve dinero: no puede tener el mismo peso
    visual que un boton cualquiera. */
-.ea-comprar{background:var(--cobre);color:#101C1F;border:1px solid var(--cobre);padding:9px 18px;
-  font:inherit;font-size:12.5px;letter-spacing:.12em;cursor:pointer;margin-top:8px;
+.ea-comprar{background:var(--cobre);color:#20120A;border:1px solid var(--cobre);padding:9px 18px;
+  font:inherit;font-size:12.5px;letter-spacing:.12em;cursor:pointer;margin-top:8px;border-radius:2px;
+  transition:background .15s,border-color .15s,transform .12s;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-comprar:hover:not(:disabled){background:#D8873F;border-color:#D8873F}
+.ea-comprar:hover:not(:disabled){background:#C86A3E;border-color:#C86A3E}
+.ea-comprar:active:not(:disabled){transform:translateY(1px)}
 
 .ea-item{border-bottom:1px dotted var(--borde);padding:11px 0}
 /* Lo que ya es tuyo se apaga, para que la vista encuentre sola lo que
    todavia no tienes. Sin opacity en el contenedor: asi la etiqueta de
    «ya lo tienes» sigue legible en verde. */
-.ea-item.tuyo{background:rgba(8,20,24,.5);padding-left:9px;padding-right:9px;
-  border-left:2px solid rgba(95,143,92,.45)}
+.ea-item.tuyo{background:rgba(8,20,24,.5);padding-left:9px;padding-right:9px;border-radius:2px;
+  border-left:2px solid rgba(79,160,92,.45)}
 .ea-item.tuyo .ea-itemN{color:var(--tenue)}
-.ea-item.tuyo .ea-itemD{color:#4E5D5F}
+.ea-item.tuyo .ea-itemD{color:#6E7E76}
 .ea-item.tuyo .ea-etq{opacity:.45}
 .ea-item.tuyo .ea-mono{color:var(--tenue)}
 .ea-item:last-child{border-bottom:none}
@@ -94,25 +96,26 @@ const CSS = `
 .ea-mini:disabled{opacity:.35;cursor:not-allowed}
 .ea-tengo{color:var(--verde);font-size:11px;letter-spacing:.12em;margin-top:8px;display:inline-block}
 
-.ea-memo{background:var(--papel);color:var(--tintaPapel);padding:24px 24px 20px;position:relative;
-  box-shadow:0 18px 40px rgba(0,0,0,.45), 0 2px 0 var(--papel2);
+.ea-memo{background:var(--papel);color:var(--tintaPapel);padding:26px 26px 22px;position:relative;
+  border-radius:4px;
+  box-shadow:0 18px 40px rgba(0,51,24,.28), 0 2px 0 var(--papel2);
   animation:ea-in .4s cubic-bezier(.2,.7,.3,1)}
 @keyframes ea-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .ea-memoHead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
   border-bottom:2px solid var(--tintaPapel);padding-bottom:8px;margin-bottom:15px;font-size:11px;letter-spacing:.18em}
 .ea-memoHead.clave{border-bottom:4px double var(--tintaPapel)}
-.ea-memoTit{font-size:26px;line-height:1.08;margin:0 0 10px;color:#111B1D}
-.ea-memoTxt{font-size:15.5px;margin:0;color:#2A3639}
+.ea-memoTit{font-size:26px;line-height:1.08;margin:0 0 10px;color:#262626}
+.ea-memoTxt{font-size:15.5px;margin:0;color:#3D3D3D}
 
 .ea-ops{margin-top:18px;display:flex;flex-direction:column;gap:8px}
 .ea-op{display:block;width:100%;text-align:left;background:transparent;color:var(--tintaPapel);
-  border:1px solid rgba(26,37,40,.32);padding:11px 13px;font:inherit;font-size:14.5px;cursor:pointer;
+  border:1px solid rgba(61,61,61,.32);padding:11px 13px;font:inherit;font-size:14.5px;cursor:pointer;
   transition:background .15s,border-color .15s,transform .12s}
-.ea-op:hover:not(:disabled){background:rgba(192,118,58,.14);border-color:var(--cobre);transform:translateX(3px)}
+.ea-op:hover:not(:disabled){background:rgba(185,83,42,.14);border-color:var(--cobre);transform:translateX(3px)}
 .ea-op:focus-visible{outline:2px solid var(--cobre);outline-offset:2px}
 .ea-op:disabled{cursor:default;transform:none}
-.ea-op.ok{border-color:#3E6B3C;background:rgba(62,107,60,.15)}
-.ea-op.no{border-color:var(--rojo);background:rgba(190,75,59,.13)}
+.ea-op.ok{border-color:#3D8A49;background:rgba(62,107,60,.15)}
+.ea-op.no{border-color:var(--rojo);background:rgba(178,59,39,.13)}
 .ea-opN{font-size:11px;letter-spacing:.16em;color:var(--gris);margin-right:9px}
 .ea-opTag{display:block;font-size:11px;letter-spacing:.14em;color:var(--gris);margin-top:5px}
 
@@ -123,24 +126,27 @@ const CSS = `
 .ea-sello.mal{border-color:var(--rojo);color:var(--rojo)}
 @keyframes ea-stamp{from{transform:rotate(-11deg) scale(1.7);opacity:0}to{transform:rotate(-11deg) scale(1);opacity:.85}}
 
-.ea-res{border-top:1px dashed rgba(26,37,40,.4);margin-top:16px;padding-top:13px}
+.ea-res{border-top:1px dashed rgba(61,61,61,.4);margin-top:16px;padding-top:13px}
 .ea-cambios{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
-.ea-chip{font-size:12px;padding:3px 9px;border:1px solid rgba(26,37,40,.3)}
-.ea-chip.pos{color:#3E6B3C;border-color:#3E6B3C}
-.ea-chip.neg{color:#9C3A2C;border-color:#9C3A2C}
+.ea-chip{font-size:12px;padding:3px 9px;border:1px solid rgba(61,61,61,.3)}
+.ea-chip.pos{color:#3D8A49;border-color:#3D8A49}
+.ea-chip.neg{color:#8A2E1E;border-color:#8A2E1E}
 
-.ea-noti{background:rgba(26,37,40,.07);border-left:3px solid var(--tintaPapel);padding:10px 12px;margin-top:14px}
+.ea-noti{background:rgba(61,61,61,.07);border-left:3px solid var(--tintaPapel);padding:10px 12px;margin-top:14px}
 .ea-notiK{font-size:10.5px;letter-spacing:.2em;color:var(--gris)}
-.ea-notiT{font-size:14.5px;color:#1F2B2E;margin-top:3px;
+.ea-notiT{font-size:14.5px;color:#3D3D3D;margin-top:3px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;letter-spacing:.02em}
 
 .ea-btn{background:var(--tintaPapel);color:var(--papel);border:none;padding:11px 20px;font:inherit;
-  font-size:13px;letter-spacing:.14em;cursor:pointer;margin-top:16px;
+  font-size:13px;letter-spacing:.14em;cursor:pointer;margin-top:16px;border-radius:2px;
+  transition:background .15s,transform .12s;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 .ea-btn:hover:not(:disabled){background:var(--cobre)}
+.ea-btn:active:not(:disabled){transform:translateY(1px)}
 .ea-btn:disabled{opacity:.4;cursor:not-allowed}
 .ea-btnO{background:transparent;color:var(--hueso);border:1px solid var(--borde);padding:11px 20px;
-  font:inherit;font-size:13px;letter-spacing:.14em;cursor:pointer;
+  font:inherit;font-size:13px;letter-spacing:.14em;cursor:pointer;border-radius:2px;
+  transition:border-color .15s,color .15s;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 .ea-btnO:hover{border-color:var(--cobre);color:var(--papel)}
 
@@ -150,43 +156,43 @@ const CSS = `
 /* ---- minijuegos ---- */
 .ea-jw{margin-top:16px}
 .ea-jinfo{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;letter-spacing:.14em;color:var(--gris);margin-bottom:11px}
-.ea-pista{background:rgba(26,37,40,.06);border-left:3px solid var(--cobre);padding:9px 12px;font-size:13.5px;color:#2A3639;margin-bottom:15px}
+.ea-pista{background:rgba(61,61,61,.06);border-left:3px solid var(--cobre);padding:9px 12px;font-size:13.5px;color:#3D3D3D;margin-bottom:15px}
 
-.ea-pbar{position:relative;height:42px;background:rgba(26,37,40,.08);border:1px solid rgba(26,37,40,.25);overflow:hidden}
-.ea-pzona{position:absolute;top:0;bottom:0;background:rgba(95,143,92,.35);border-left:1px solid #3E6B3C;border-right:1px solid #3E6B3C}
+.ea-pbar{position:relative;height:42px;background:rgba(61,61,61,.08);border:1px solid rgba(61,61,61,.25);overflow:hidden}
+.ea-pzona{position:absolute;top:0;bottom:0;background:rgba(79,160,92,.35);border-left:1px solid #3D8A49;border-right:1px solid #3D8A49}
 .ea-pcursor{position:absolute;top:-3px;bottom:-3px;width:3px;background:var(--tintaPapel)}
 
 .ea-celdas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:260px}
-.ea-celda{aspect-ratio:1/1;background:rgba(26,37,40,.08);border:1px solid rgba(26,37,40,.25);cursor:pointer;
+.ea-celda{aspect-ratio:1/1;background:rgba(61,61,61,.08);border:1px solid rgba(61,61,61,.25);cursor:pointer;
   transition:background .12s;display:flex;align-items:center;justify-content:center;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-size:36px;color:var(--tintaPapel);line-height:1}
 .ea-celda.on{background:var(--cobre)}
 .ea-celda.mal{background:var(--rojo)}
-.ea-celda.gana{background:rgba(95,143,92,.4)}
+.ea-celda.gana{background:rgba(79,160,92,.4)}
 
 .ea-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.ea-num{background:rgba(26,37,40,.07);border:1px solid rgba(26,37,40,.22);padding:10px 3px;cursor:pointer;
+.ea-num{background:rgba(61,61,61,.07);border:1px solid rgba(61,61,61,.22);padding:10px 3px;cursor:pointer;
   font-size:13.5px;text-align:center;color:var(--tintaPapel)}
 .ea-num:hover{border-color:var(--cobre)}
 
 .ea-mult{font-size:50px;line-height:1;color:var(--tintaPapel)}
 .ea-fila2{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
-.ea-qtxt{font-size:16.5px;color:#2A3639;margin:0 0 13px}
+.ea-qtxt{font-size:16.5px;color:#3D3D3D;margin:0 0 13px}
 .ea-expl{font-size:13.5px;color:var(--gris);margin-top:11px;border-left:2px solid var(--cobre);padding-left:10px}
 
-.ea-luz{height:120px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(26,37,40,.25);
-  background:rgba(26,37,40,.06);font-size:22px;text-align:center;padding:14px;line-height:1.2;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;color:#1F2B2E}
-.ea-luz.lista{background:rgba(95,143,92,.35);border-color:#3E6B3C}
-.ea-luz.roja{background:rgba(190,75,59,.28);border-color:var(--rojo)}
+.ea-luz{height:120px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(61,61,61,.25);
+  background:rgba(61,61,61,.06);font-size:22px;text-align:center;padding:14px;line-height:1.2;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;color:#3D3D3D}
+.ea-luz.lista{background:rgba(79,160,92,.35);border-color:#3D8A49}
+.ea-luz.roja{background:rgba(178,59,39,.28);border-color:var(--rojo)}
 
 .ea-ordenL{display:flex;flex-direction:column;gap:7px}
-.ea-ordenI{border:1px solid rgba(26,37,40,.28);padding:10px 12px;cursor:pointer;font-size:14px;
+.ea-ordenI{border:1px solid rgba(61,61,61,.28);padding:10px 12px;cursor:pointer;font-size:14px;
   display:flex;justify-content:space-between;gap:10px;align-items:center;background:transparent;color:var(--tintaPapel);
   text-align:left;font:inherit;width:100%}
 .ea-ordenI:hover:not(:disabled){border-color:var(--cobre)}
-.ea-ordenI.hecho{background:rgba(62,107,60,.16);border-color:#3E6B3C;cursor:default}
-.ea-ordenI.err{background:rgba(190,75,59,.16);border-color:var(--rojo)}
+.ea-ordenI.hecho{background:rgba(62,107,60,.16);border-color:#3D8A49;cursor:default}
+.ea-ordenI.err{background:rgba(178,59,39,.16);border-color:var(--rojo)}
 .ea-ordenN{font-size:11px;letter-spacing:.14em;color:var(--gris)}
 
 .ea-portada{max-width:680px;margin:5vh auto;text-align:left}
@@ -208,41 +214,41 @@ const CSS5 = `
 
 /* --- vidas / intentos restantes --- */
 .ea-vidas{display:flex;gap:6px;margin-top:11px}
-.ea-vida{width:26px;height:5px;background:rgba(26,37,40,.18)}
+.ea-vida{width:26px;height:5px;background:rgba(61,61,61,.18)}
 .ea-vida.viva{background:var(--cobre)}
 
 /* --- la clase de la cátedra --- */
-.ea-claseT{font-size:23px;line-height:1.1;margin:4px 0 10px;color:#111B1D;
+.ea-claseT{font-size:23px;line-height:1.1;margin:4px 0 10px;color:#262626;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;letter-spacing:.02em;font-weight:700}
-.ea-ej{background:rgba(192,118,58,.1);border-left:3px solid var(--cobre);padding:10px 13px;margin-top:14px}
-.ea-ejX{font-size:14px;color:#2A3639;margin-top:3px;font-family:'IBM Plex Mono',ui-monospace,monospace;line-height:1.5}
+.ea-ej{background:rgba(185,83,42,.1);border-left:3px solid var(--cobre);padding:10px 13px;margin-top:14px}
+.ea-ejX{font-size:14px;color:#3D3D3D;margin-top:3px;font-family:'IBM Plex Mono',ui-monospace,monospace;line-height:1.5}
 
 /* --- la sesión de trading --- */
 .ea-estado{margin-top:12px;padding:11px;text-align:center;font-size:15px;letter-spacing:.16em;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;border:2px solid}
-.ea-estado.dentro{background:rgba(95,143,92,.28);border-color:#3E6B3C;color:#25451F}
-.ea-estado.fuera{background:rgba(26,37,40,.07);border-color:rgba(26,37,40,.3);color:#3A4649}
+.ea-estado.dentro{background:rgba(79,160,92,.28);border-color:#3D8A49;color:#1F5A2E}
+.ea-estado.fuera{background:rgba(61,61,61,.07);border-color:rgba(61,61,61,.3);color:#6B6B6B}
 .ea-leyenda{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:11.5px;color:var(--gris)}
 .ea-leyenda span{display:flex;align-items:center;gap:6px}
-.ea-lineaL{display:inline-block;width:20px;height:0;border-top:2px solid #1A2528}
+.ea-lineaL{display:inline-block;width:20px;height:0;border-top:2px solid #3D3D3D}
 .ea-lineaD{display:inline-block;width:20px;height:0;border-top:2px dashed var(--cobre)}
 .ea-marcador{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:11px;margin-top:13px;
-  border-top:1px dashed rgba(26,37,40,.35);padding-top:11px}
+  border-top:1px dashed rgba(61,61,61,.35);padding-top:11px}
 .ea-marcaV{font-size:19px;line-height:1.1;margin-top:2px}
 
 /* --- los dos escenarios de la estructura --- */
 .ea-escen{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:14px}
-.ea-escenC{border:1px solid rgba(26,37,40,.28);padding:11px 13px}
-.ea-escenC.bien{border-color:#3E6B3C;background:rgba(95,143,92,.1)}
-.ea-escenC.mal{border-color:var(--rojo);background:rgba(190,75,59,.08)}
-.ea-escenX{font-size:12.5px;color:#3A4649;margin-top:4px;line-height:1.45}
-.ea-escenV{font-size:27px;line-height:1;margin:7px 0 2px;color:#1F2B2E}
+.ea-escenC{border:1px solid rgba(61,61,61,.28);padding:11px 13px}
+.ea-escenC.bien{border-color:#3D8A49;background:rgba(79,160,92,.1)}
+.ea-escenC.mal{border-color:var(--rojo);background:rgba(178,59,39,.08)}
+.ea-escenX{font-size:12.5px;color:#6B6B6B;margin-top:4px;line-height:1.45}
+.ea-escenV{font-size:27px;line-height:1;margin:7px 0 2px;color:#3D3D3D}
 
 /* --- pantallas de configuración --- */
 .ea-opcion{border:1px solid var(--borde);background:var(--fieltro);padding:14px 16px;margin-bottom:10px;
   cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--hueso);transition:border-color .15s}
 .ea-opcion:hover{border-color:var(--cobre)}
-.ea-opcion.on{border-color:var(--cobre);background:#16292E}
+.ea-opcion.on{border-color:var(--cobre);background:#0E4527}
 .ea-opcionN{font-size:19px;color:var(--papel);
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
 .ea-opcionD{font-size:13.5px;color:var(--tenue);margin-top:6px;line-height:1.5}
@@ -253,9 +259,9 @@ const CSS5 = `
 .ea-vidaN{font-size:21px;color:var(--papel);line-height:1.05}
 .ea-vidaD{font-size:12.5px;color:var(--tenue);margin-top:5px;line-height:1.5}
 .ea-vidaCifra{font-size:30px;color:var(--cobre);line-height:1;flex-shrink:0}
-.ea-medidor{position:relative;height:8px;background:#0A171B;margin-top:12px;overflow:hidden}
+.ea-medidor{position:relative;height:8px;background:#041F0E;margin-top:12px;overflow:hidden}
 .ea-medidorF{height:100%;background:var(--cobre);transition:width .5s ease}
-.ea-medidorT{position:absolute;top:0;bottom:0;width:1px;background:rgba(207,201,186,.35)}
+.ea-medidorT{position:absolute;top:0;bottom:0;width:1px;background:rgba(237,237,232,.35)}
 .ea-medidorE{display:flex;justify-content:space-between;gap:4px;margin-top:5px;font-size:9.5px;
   letter-spacing:.06em;color:var(--tenue);text-transform:uppercase;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
@@ -266,30 +272,30 @@ const CSS5 = `
 .ea-etq{font-size:10.5px;letter-spacing:.06em;padding:2px 7px;border:1px solid var(--borde);
   color:var(--tenue);white-space:nowrap}
 .ea-etq.vida{border-color:var(--cobre);color:var(--cobre)}
-.ea-etq.act{border-color:#3E6B3C;color:var(--verde)}
-.ea-etq.con{border-color:#6B3A32;color:#C4756A}
-.ea-etq.cost{border-color:#6C6255;color:#A99C86}
+.ea-etq.act{border-color:#3D8A49;color:var(--verde)}
+.ea-etq.con{border-color:#7A392E;color:#C4756A}
+.ea-etq.cost{border-color:#6B6B6B;color:#A99C86}
 
 /* --- el camino del año --- */
 .ea-curvaWrap{position:relative;margin:12px 0 4px;touch-action:pan-y}
 /* sin overflow visible: era lo que dejaba salir las cifras del eje
    fuera del lienzo por la izquierda */
 .ea-curva{width:100%;height:auto;display:block}
-.ea-cHitoT{stroke:rgba(26,37,40,.30);stroke-width:1;stroke-dasharray:2 2}
+.ea-cHitoT{stroke:rgba(61,61,61,.30);stroke-width:1;stroke-dasharray:2 2}
 .ea-cHitoN{font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-size:9px;font-weight:700;
   letter-spacing:.06em;text-transform:uppercase;fill:var(--gris)}
 .ea-hitosL{display:flex;flex-direction:column;gap:3px;margin-top:9px;
-  border-top:1px dotted rgba(26,37,40,.3);padding-top:8px}
-.ea-hitoF{display:flex;align-items:baseline;gap:7px;font-size:12px;color:#3A4649}
+  border-top:1px dotted rgba(61,61,61,.3);padding-top:8px}
+.ea-hitoF{display:flex;align-items:baseline;gap:7px;font-size:12px;color:#6B6B6B}
 .ea-hitoD{width:7px;height:7px;flex-shrink:0;transform:rotate(45deg);align-self:center}
 .ea-hitoM{font-size:10.5px;color:var(--gris);text-transform:uppercase;letter-spacing:.08em;
   flex-shrink:0;width:24px}
 .ea-hitoT{flex:1;line-height:1.35}
 .ea-hitoC{font-size:11.5px;flex-shrink:0;font-variant-numeric:tabular-nums}
-.ea-cRejilla{stroke:rgba(26,37,40,.10);stroke-width:1}
-.ea-cPartida{stroke:rgba(26,37,40,.45);stroke-width:1;stroke-dasharray:3 3}
-.ea-cCaida{fill:rgba(156,58,44,.09)}
-.ea-cCruz{stroke:rgba(26,37,40,.35);stroke-width:1}
+.ea-cRejilla{stroke:rgba(61,61,61,.10);stroke-width:1}
+.ea-cPartida{stroke:rgba(61,61,61,.45);stroke-width:1;stroke-dasharray:3 3}
+.ea-cCaida{fill:rgba(160,53,36,.09)}
+.ea-cCruz{stroke:rgba(61,61,61,.35);stroke-width:1}
 /* Los ejes viven fuera del SVG, así que su tamaño no depende de cuánto
    se escale el gráfico: se leen igual en un móvil y en un monitor. */
 .ea-ejeY{position:absolute;left:0;text-align:right;transform:translateY(-50%);
@@ -299,11 +305,11 @@ const CSS5 = `
   pointer-events:none;line-height:1;white-space:nowrap;text-transform:uppercase}
 .ea-ejeX.ea-der{text-align:right}
 .ea-curvaTip{position:absolute;top:-2px;transform:translateX(-50%);pointer-events:none;
-  background:#1A2528;color:#E9E3D5;font-size:11.5px;padding:4px 8px;white-space:nowrap;
+  background:#3D3D3D;color:#F7F7F5;font-size:11.5px;padding:4px 8px;white-space:nowrap;
   font-variant-numeric:tabular-nums;display:flex;gap:7px;align-items:baseline;z-index:2}
-.ea-curvaTipM{color:#9AA8A3;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.ea-curvaTipM{color:#A9C2B0;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
 .ea-curvaTipD{font-size:11px}
-.ea-curvaPie{font-size:12.5px;color:#3A4649;line-height:1.5;margin-top:2px}
+.ea-curvaPie{font-size:12.5px;color:#6B6B6B;line-height:1.5;margin-top:2px}
 
 /* --- las dos constantes vitales, siempre a la vista --- */
 .ea-signos{font-size:11.5px;margin-top:3px;display:flex;gap:12px;justify-content:flex-end;color:var(--tenue)}
@@ -313,23 +319,23 @@ const CSS5 = `
 /* --- las señales de un negocio --- */
 .ea-dealS{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 6px}
 .ea-sen{display:flex;flex-direction:column;gap:1px;border:1px solid var(--borde);padding:3px 8px;min-width:66px}
-.ea-sen.bien{border-color:#3E6B3C}
-.ea-sen.mal{border-color:#7A3A30}
+.ea-sen.bien{border-color:#3D8A49}
+.ea-sen.mal{border-color:#7A392E}
 .ea-senK{font-size:9px;letter-spacing:.1em;color:var(--tenue);text-transform:uppercase;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-senV{font-size:12.5px;color:var(--hueso)}
 .ea-sen.bien .ea-senV{color:var(--verde)}
 .ea-sen.mal .ea-senV{color:#C4756A}
-.ea-deal{border:1px solid rgba(26,37,40,.28);padding:11px 13px;margin-bottom:9px;background:rgba(26,37,40,.03)}
-.ea-deal.sel{border-color:var(--cobre);background:rgba(192,118,58,.09)}
-.ea-deal.gana{border-color:#3E6B3C;background:rgba(95,143,92,.11)}
-.ea-deal .ea-sen{border-color:rgba(26,37,40,.25)}
+.ea-deal{border:1px solid rgba(61,61,61,.28);padding:11px 13px;margin-bottom:9px;background:rgba(61,61,61,.03)}
+.ea-deal.sel{border-color:var(--cobre);background:rgba(185,83,42,.09)}
+.ea-deal.gana{border-color:#3D8A49;background:rgba(79,160,92,.11)}
+.ea-deal .ea-sen{border-color:rgba(61,61,61,.25)}
 .ea-deal .ea-senK{color:var(--gris)}
-.ea-deal .ea-senV{color:#2A3639}
-.ea-deal .ea-sen.bien{border-color:#3E6B3C}
-.ea-deal .ea-sen.bien .ea-senV{color:#2F5A2E}
+.ea-deal .ea-senV{color:#3D3D3D}
+.ea-deal .ea-sen.bien{border-color:#3D8A49}
+.ea-deal .ea-sen.bien .ea-senV{color:#2E7A3D}
 .ea-deal .ea-sen.mal{border-color:var(--rojo)}
-.ea-deal .ea-sen.mal .ea-senV{color:#9C3A2C}
+.ea-deal .ea-sen.mal .ea-senV{color:#8A2E1E}
 .ea-dealR{font-size:12px;color:var(--gris);margin-top:6px;letter-spacing:.04em}
 
 /* --- el inventario del balance final --- */
@@ -355,12 +361,12 @@ const CSS5 = `
 .ea-avisoB strong{color:var(--papel)}
 
 /* --- botones secundarios sobre papel ---
-   .ea-mini nació para el panel oscuro: texto hueso #CFC9BA sobre
+   .ea-mini nació para el panel oscuro: texto hueso #EDEDE8 sobre
    fieltro da 9,6:1. Dentro del memorando el fondo es papel y ese mismo
    color cae a 1,29:1, o sea invisible. Se corrige por contexto y no
    botón por botón, para que ningún minijuego futuro herede el problema. */
-.ea-memo .ea-mini{border-color:rgba(26,37,40,.42);color:var(--tintaPapel)}
-.ea-memo .ea-mini:hover:not(:disabled){border-color:var(--cobre);color:#111B1D;background:rgba(192,118,58,.13)}
+.ea-memo .ea-mini{border-color:rgba(61,61,61,.42);color:var(--tintaPapel)}
+.ea-memo .ea-mini:hover:not(:disabled){border-color:var(--cobre);color:#262626;background:rgba(185,83,42,.13)}
 .ea-memo .ea-mini:disabled{opacity:.45}
 
 /* el de "explícame" es una invitación, no un control secundario:
@@ -368,40 +374,40 @@ const CSS5 = `
 .ea-explicame{font-size:12.5px;letter-spacing:.06em;text-transform:none;padding:8px 14px}
 
 /* --- el titular: lo único que se lee sin abrir nada --- */
-.ea-titular{border-top:2px solid var(--tintaPapel);border-bottom:1px dashed rgba(26,37,40,.35);
+.ea-titular{border-top:2px solid var(--tintaPapel);border-bottom:1px dashed rgba(61,61,61,.35);
   padding:12px 0 13px;margin-top:14px}
 .ea-panel .ea-titular,.ea-modal .ea-titular{border-top-color:var(--borde);border-bottom-color:var(--borde)}
 .ea-titularK{font-size:10.5px;letter-spacing:.2em;color:var(--gris)}
 .ea-panel .ea-titularK,.ea-modal .ea-titularK{color:var(--tenue)}
-.ea-titularV{font-size:31px;line-height:1.05;color:#111B1D;margin:3px 0 6px}
+.ea-titularV{font-size:31px;line-height:1.05;color:#262626;margin:3px 0 6px}
 .ea-panel .ea-titularV,.ea-modal .ea-titularV{color:var(--papel)}
 .ea-titularL{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px}
 .ea-panel .ea-titularL,.ea-modal .ea-titularL{color:var(--tenue)}
 .ea-titularA{font-size:15px;color:var(--cobre);margin-top:8px}
 
 /* --- secciones plegables: cerradas enseñan su cifra --- */
-.ea-plegs{margin-top:14px;border-top:1px dotted rgba(26,37,40,.32)}
+.ea-plegs{margin-top:14px;border-top:1px dotted rgba(61,61,61,.32)}
 .ea-panel .ea-plegs,.ea-modal .ea-plegs{border-top-color:var(--borde)}
-.ea-pleg{border-bottom:1px dotted rgba(26,37,40,.32)}
+.ea-pleg{border-bottom:1px dotted rgba(61,61,61,.32)}
 .ea-panel .ea-pleg,.ea-modal .ea-pleg{border-bottom-color:var(--borde)}
 .ea-plegB{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:10px;width:100%;
   background:transparent;border:none;padding:11px 2px;cursor:pointer;text-align:left;font:inherit}
 .ea-plegB:hover .ea-plegT{color:var(--cobre)}
 .ea-plegF{font-size:15px;color:var(--gris);line-height:1;width:12px}
 .ea-panel .ea-plegF,.ea-modal .ea-plegF{color:var(--tenue)}
-.ea-plegT{font-size:12.5px;letter-spacing:.08em;color:#2A3639}
+.ea-plegT{font-size:12.5px;letter-spacing:.08em;color:#3D3D3D}
 .ea-panel .ea-plegT,.ea-modal .ea-plegT{color:var(--hueso)}
 .ea-plegR{font-size:13px;color:var(--gris);white-space:nowrap;font-variant-numeric:tabular-nums}
 .ea-panel .ea-plegR,.ea-modal .ea-plegR{color:var(--tenue)}
 .ea-plegC{padding:2px 0 15px;animation:ea-abre .16s ease-out}
 
 /* --- los avisos de la guía --- */
-.ea-guia{border:1px solid var(--cobre);background:rgba(192,118,58,.09);padding:12px 15px;margin-top:16px;
+.ea-guia{border:1px solid var(--cobre);background:rgba(185,83,42,.09);padding:12px 15px;margin-top:16px;
   display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;animation:ea-abre .2s ease-out}
 .ea-guiaK{grid-column:1;font-size:10px;letter-spacing:.22em;color:var(--cobre)}
 .ea-guiaT{grid-column:1;font-size:16px;color:var(--papel);line-height:1.15}
 .ea-guiaX{grid-column:1;font-size:13.5px;color:var(--hueso);line-height:1.5;max-width:70ch}
-.ea-guiaB{grid-column:2;grid-row:1 / span 3;align-self:center;background:var(--cobre);border:none;color:#12201F;
+.ea-guiaB{grid-column:2;grid-row:1 / span 3;align-self:center;background:var(--cobre);border:none;color:#20120A;
   font:inherit;font-size:11px;letter-spacing:.14em;padding:9px 15px;cursor:pointer;text-transform:uppercase;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700;white-space:nowrap}
 .ea-guiaB:hover{background:var(--papel)}
@@ -419,7 +425,8 @@ const CSS5 = `
 .ea-modalFondo{position:fixed;inset:0;background:rgba(5,13,16,.84);z-index:60;
   display:flex;align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto}
 .ea-modal{background:var(--fieltro);border:1px solid var(--borde);width:100%;max-width:580px;
-  box-shadow:0 20px 64px rgba(0,0,0,.55)}
+  border-radius:4px;overflow:hidden;
+  box-shadow:0 20px 64px rgba(0,51,24,.45)}
 .ea-modalCab{display:flex;justify-content:space-between;align-items:center;gap:12px;
   padding:12px 15px;border-bottom:1px solid var(--borde);position:sticky;top:0;
   background:var(--fieltro);z-index:2}
@@ -456,7 +463,7 @@ const CSS5 = `
   white-space:nowrap;font-variant-numeric:tabular-nums}
 .ea-regM{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--cobre);
   text-align:right;white-space:nowrap;min-width:3ch}
-.ea-regFila.tuya{background:rgba(192,118,58,.11);border-left:2px solid var(--cobre);
+.ea-regFila.tuya{background:rgba(185,83,42,.11);border-left:2px solid var(--cobre);
   padding-left:8px;margin-left:-10px}
 .ea-regVacio{padding:22px 0;color:var(--tenue);font-size:13.5px}
 .ea-regNombre{width:100%;background:var(--tinta);border:1px solid var(--borde);color:var(--papel);
@@ -477,7 +484,7 @@ const CSS5 = `
 .ea-campo::placeholder{color:var(--tenue);opacity:.7;letter-spacing:.02em}
 .ea-campo:focus{outline:2px solid var(--cobre);outline-offset:2px;border-color:var(--cobre)}
 .ea-generos{display:flex;gap:8px;flex-wrap:wrap}
-.ea-generos .ea-mini.on{border-color:var(--cobre);color:var(--papel);background:#16292E}
+.ea-generos .ea-mini.on{border-color:var(--cobre);color:var(--papel);background:#0E4527}
 
 /* --- volver atrás en la configuración --- */
 .ea-atras{background:transparent;border:none;color:var(--tenue);font:inherit;font-size:11.5px;
@@ -487,20 +494,20 @@ const CSS5 = `
 .ea-rastro{font-size:12px;color:var(--cobre);margin:6px 0 14px;letter-spacing:.04em}
 
 /* --- glosario del modo aprendiz --- */
-.ea-glos{background:rgba(62,107,60,.1);border-left:3px solid #3E6B3C;padding:10px 13px;margin-top:12px}
+.ea-glos{background:rgba(62,107,60,.1);border-left:3px solid #3D8A49;padding:10px 13px;margin-top:12px}
 .ea-glosK{font-size:10.5px;letter-spacing:.2em;color:var(--gris);
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-glosT{font-size:14.5px;color:#1F2B2E;margin-top:3px;
+.ea-glosT{font-size:14.5px;color:#3D3D3D;margin-top:3px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;letter-spacing:.02em}
-.ea-glosX{font-size:13.5px;color:#2A3639;margin-top:4px;line-height:1.5}
+.ea-glosX{font-size:13.5px;color:#3D3D3D;margin-top:4px;line-height:1.5}
 
 /* --- banderas rojas con explicación --- */
 .ea-docK{font-size:10.5px;letter-spacing:.18em;color:var(--gris);
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-checkX{display:block;font-size:12.5px;line-height:1.5;color:#3A4649;margin-top:6px;
-  border-top:1px dotted rgba(26,37,40,.3);padding-top:6px}
+.ea-checkX{display:block;font-size:12.5px;line-height:1.5;color:#6B6B6B;margin-top:6px;
+  border-top:1px dotted rgba(61,61,61,.3);padding-top:6px}
 .ea-checkR{display:block;font-size:10.5px;letter-spacing:.14em;color:var(--gris);margin-bottom:3px}
-.ea-checkR.roja{color:#9C3A2C}
+.ea-checkR.roja{color:#8A2E1E}
 
 /* --- la ficha de familia --- */
 .ea-fam{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
@@ -859,26 +866,26 @@ const indiceAzar = (largo) => {
 const elegirAzar = (arr) => (Array.isArray(arr) && arr.length ? arr[indiceAzar(arr.length)] : null);
 
 const CSS2 = `
-.ea-graf{width:100%;height:150px;border:1px solid rgba(26,37,40,.25);background:rgba(26,37,40,.05);display:block}
+.ea-graf{width:100%;height:150px;border:1px solid rgba(61,61,61,.25);background:rgba(61,61,61,.05);display:block}
 .ea-grafL{fill:none;stroke:var(--tintaPapel);stroke-width:2}
 .ea-grafD{fill:none;stroke:var(--cobre);stroke-width:2}
-.ea-marca{display:inline-block;padding:3px 10px;border:1px solid rgba(26,37,40,.3);font-size:11.5px;letter-spacing:.12em;
+.ea-marca{display:inline-block;padding:3px 10px;border:1px solid rgba(61,61,61,.3);font-size:11.5px;letter-spacing:.12em;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-marca.dentro{border-color:#3E6B3C;color:#3E6B3C}
+.ea-marca.dentro{border-color:#3D8A49;color:#3D8A49}
 .ea-marca.fuera{border-color:var(--gris);color:var(--gris)}
 
 .ea-est{margin:12px 0}
 .ea-estL{display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px}
-.ea-alerta{font-size:13px;padding:8px 11px;border-left:3px solid var(--cobre);background:rgba(192,118,58,.1);margin-top:11px;color:#2A3639}
-.ea-alerta.mal{border-color:var(--rojo);background:rgba(190,75,59,.12)}
-.ea-alerta.bien{border-color:#3E6B3C;background:rgba(62,107,60,.12)}
+.ea-alerta{font-size:13px;padding:8px 11px;border-left:3px solid var(--cobre);background:rgba(185,83,42,.1);margin-top:11px;color:#3D3D3D}
+.ea-alerta.mal{border-color:var(--rojo);background:rgba(178,59,39,.12)}
+.ea-alerta.bien{border-color:#3D8A49;background:rgba(62,107,60,.12)}
 
-.ea-check{border:1px solid rgba(26,37,40,.28);padding:10px 12px;font-size:14px;cursor:pointer;background:transparent;
+.ea-check{border:1px solid rgba(61,61,61,.28);padding:10px 12px;font-size:14px;cursor:pointer;background:transparent;
   color:var(--tintaPapel);text-align:left;width:100%;font:inherit;display:flex;gap:10px;align-items:flex-start}
 .ea-check:hover:not(:disabled){border-color:var(--cobre)}
-.ea-check.sel{background:rgba(192,118,58,.16);border-color:var(--cobre)}
-.ea-check.bien{background:rgba(62,107,60,.16);border-color:#3E6B3C}
-.ea-check.mal{background:rgba(190,75,59,.16);border-color:var(--rojo)}
+.ea-check.sel{background:rgba(185,83,42,.16);border-color:var(--cobre)}
+.ea-check.bien{background:rgba(62,107,60,.16);border-color:#3D8A49}
+.ea-check.mal{background:rgba(178,59,39,.16);border-color:var(--rojo)}
 .ea-checkB{font-size:11px;letter-spacing:.14em;color:var(--gris);flex-shrink:0;margin-top:2px}
 
 .ea-fondoC{border:1px solid var(--borde);padding:11px 12px;margin-bottom:10px}
@@ -891,34 +898,34 @@ const CSS2 = `
 
 const CSS3 = `
 .ea-tab4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.ea-fichaP{aspect-ratio:1/1.25;border:1px solid rgba(26,37,40,.3);background:rgba(26,37,40,.09);cursor:pointer;
+.ea-fichaP{aspect-ratio:1/1.25;border:1px solid rgba(61,61,61,.3);background:rgba(61,61,61,.09);cursor:pointer;
   display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;font-size:11.5px;
   line-height:1.2;color:var(--tintaPapel);transition:background .15s,border-color .15s}
 .ea-fichaP.tapada{background:var(--tintaPapel);color:transparent}
 .ea-fichaP.tapada::after{content:"?";color:var(--papel);font-size:20px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
-.ea-fichaP.abierta{background:rgba(192,118,58,.2);border-color:var(--cobre)}
-.ea-fichaP.hecha{background:rgba(62,107,60,.18);border-color:#3E6B3C;cursor:default}
+.ea-fichaP.abierta{background:rgba(185,83,42,.2);border-color:var(--cobre)}
+.ea-fichaP.hecha{background:rgba(62,107,60,.18);border-color:#3D8A49;cursor:default}
 
-.ea-pista4{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:rgba(26,37,40,.12);padding:5px;
-  border:1px solid rgba(26,37,40,.25)}
+.ea-pista4{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:rgba(61,61,61,.12);padding:5px;
+  border:1px solid rgba(61,61,61,.25)}
 .ea-col4{display:flex;flex-direction:column-reverse;gap:4px;cursor:pointer}
-.ea-hueco{aspect-ratio:1/1;border-radius:50%;background:var(--papel);border:1px solid rgba(26,37,40,.18)}
+.ea-hueco{aspect-ratio:1/1;border-radius:50%;background:var(--papel);border:1px solid rgba(61,61,61,.18)}
 .ea-hueco.mia{background:var(--cobre)}
 .ea-hueco.suya{background:var(--tintaPapel)}
-.ea-hueco.gana{box-shadow:0 0 0 3px #3E6B3C inset}
+.ea-hueco.gana{box-shadow:0 0 0 3px #3D8A49 inset}
 .ea-col4:hover .ea-hueco{border-color:var(--cobre)}
 
-.ea-pistaC{position:relative;height:220px;border:1px solid rgba(26,37,40,.25);background:rgba(26,37,40,.05);overflow:hidden}
-.ea-lineaC{position:absolute;top:0;bottom:0;width:1px;background:rgba(26,37,40,.18)}
+.ea-pistaC{position:relative;height:220px;border:1px solid rgba(61,61,61,.25);background:rgba(61,61,61,.05);overflow:hidden}
+.ea-lineaC{position:absolute;top:0;bottom:0;width:1px;background:rgba(61,61,61,.18)}
 .ea-cap{position:absolute;bottom:8px;width:26%;height:26px;background:var(--cobre);
   transition:left .12s ease;display:flex;align-items:center;justify-content:center;color:var(--papel);
   font-size:10px;letter-spacing:.1em;font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-obj{position:absolute;width:26%;height:24px;display:flex;align-items:center;justify-content:center;
   font-size:9.5px;letter-spacing:.06em;text-align:center;line-height:1;padding:2px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700;text-transform:uppercase}
-.ea-obj.bueno{background:rgba(95,143,92,.55);color:#1B2426}
-.ea-obj.malo{background:rgba(190,75,59,.6);color:var(--papel)}
+.ea-obj.bueno{background:rgba(79,160,92,.55);color:#0B3A1F}
+.ea-obj.malo{background:rgba(178,59,39,.6);color:var(--papel)}
 /* El numero del anclaje no tenia unidad ni referencia: se veia un
    slider de 0 a 100 y nada mas. Ahora la cifra manda en pantalla y la
    escala esta rotulada en los dos extremos. */
@@ -937,7 +944,7 @@ const CSS3 = `
 .ea-carrilE.on{color:var(--cobre)}
 
 .ea-postor{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:6px 0;
-  border-bottom:1px dotted rgba(26,37,40,.3);font-size:13px}
+  border-bottom:1px dotted rgba(61,61,61,.3);font-size:13px}
 .ea-postor.fuera{opacity:.4;text-decoration:line-through}
 .ea-precio{font-size:44px;line-height:1;color:var(--tintaPapel)}
 `;
@@ -947,19 +954,19 @@ const CSS4 = `
 /* reparto entre cartera y efectivo */
 /* El boton que confirma un cambio de cartera no puede parecerse a los
    demas: es el unico que mueve dinero de verdad. */
-.ea-aplicar{background:var(--cobre);color:#101C1F;border:2px solid var(--cobre);padding:13px 22px;
+.ea-aplicar{background:var(--cobre);color:#20120A;border:2px solid var(--cobre);padding:13px 22px;
   font:inherit;font-size:14px;letter-spacing:.14em;cursor:pointer;flex:1;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-aplicar:hover{background:#D8873F;border-color:#D8873F}
+.ea-aplicar:hover{background:#C86A3E;border-color:#C86A3E}
 .ea-descartar{background:transparent;color:var(--tenue);border:1px solid var(--borde);padding:13px 16px;
   font:inherit;font-size:12px;letter-spacing:.12em;cursor:pointer;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 .ea-descartar:hover{border-color:var(--cobre);color:var(--papel)}
 /* Una legendaria tiene que verse distinta antes de leerla. */
-.ea-memoHead.legend{background:linear-gradient(90deg,rgba(192,118,58,.22),transparent);
+.ea-memoHead.legend{background:linear-gradient(90deg,rgba(185,83,42,.22),transparent);
   border-color:var(--cobre);color:var(--cobre)}
 
-.ea-pend{border:1px solid var(--cobre);border-left-width:4px;background:rgba(192,118,58,.13);
+.ea-pend{border:1px solid var(--cobre);border-left-width:4px;background:rgba(185,83,42,.13);
   padding:10px 13px;font-size:12.5px;color:var(--papel);margin-bottom:12px}
 .ea-pendK{font-size:10px;letter-spacing:.18em;color:var(--cobre);margin-bottom:4px}
 
@@ -967,8 +974,8 @@ const CSS4 = `
 .ea-mixSeg{display:flex;align-items:center;justify-content:center;font-size:10.5px;letter-spacing:.1em;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;
   overflow:hidden;white-space:nowrap;transition:width .25s ease}
-.ea-mixSeg.cart{background:var(--cobre);color:#101C1F}
-.ea-mixSeg.efe{background:#0A171B;color:var(--tenue)}
+.ea-mixSeg.cart{background:var(--cobre);color:#20120A}
+.ea-mixSeg.efe{background:#041F0E;color:var(--tenue)}
 
 .ea-wrow{margin:11px 0}
 .ea-wtop{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;align-items:baseline}
@@ -978,44 +985,44 @@ const CSS4 = `
 .ea-wsub{font-size:11px;color:var(--tenue);margin-top:1px;line-height:1.35}
 .ea-caja{border:1px solid var(--borde);padding:8px 11px;margin-top:14px}
 .ea-preset{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}
-.ea-mini.on{border-color:var(--cobre);color:var(--papel);background:rgba(192,118,58,.15)}
+.ea-mini.on{border-color:var(--cobre);color:var(--papel);background:rgba(185,83,42,.15)}
 .ea-avis{font-size:11.5px;color:#D08677;border-left:2px solid var(--rojo);padding-left:9px;margin-top:9px;line-height:1.45}
 .ea-ok2{font-size:11.5px;color:#8FBA8B;border-left:2px solid var(--verde);padding-left:9px;margin-top:9px;line-height:1.45}
 
 /* informe de cierre, sobre papel */
 .ea-flujo{display:flex;flex-direction:column;gap:6px;margin-top:6px}
-.ea-flin{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:12.5px;color:#3A4649}
-.ea-flbar{height:8px;background:rgba(26,37,40,.1);margin-top:3px;overflow:hidden}
-.ea-flfill{height:100%;background:#3E6B3C;transition:width .4s ease}
+.ea-flin{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:12.5px;color:#6B6B6B}
+.ea-flbar{height:8px;background:rgba(61,61,61,.1);margin-top:3px;overflow:hidden}
+.ea-flfill{height:100%;background:#3D8A49;transition:width .4s ease}
 .ea-flfill.neg{background:var(--rojo)}
 .ea-spark{width:100%;height:auto;display:block;margin:10px 0 4px}
 .ea-sparkL{fill:none;stroke:var(--cobre);stroke-width:2}
-.ea-sparkA{fill:rgba(192,118,58,.16);stroke:none}
+.ea-sparkA{fill:rgba(185,83,42,.16);stroke:none}
 .ea-hitos{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.ea-hito{font-size:10.5px;letter-spacing:.1em;border:1px solid #3E6B3C;color:#2F5A2E;padding:3px 9px;
+.ea-hito{font-size:10.5px;letter-spacing:.1em;border:1px solid #3D8A49;color:#2E7A3D;padding:3px 9px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-lec{border:1px solid rgba(26,37,40,.22);border-left:3px solid var(--cobre);padding:11px 13px;margin-top:14px;
-  background:rgba(192,118,58,.07)}
+.ea-lec{border:1px solid rgba(61,61,61,.22);border-left:3px solid var(--cobre);padding:11px 13px;margin-top:14px;
+  background:rgba(185,83,42,.07)}
 .ea-lecK{font-size:10.5px;letter-spacing:.18em;color:var(--gris);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
   text-transform:uppercase;font-weight:700}
-.ea-lecT{font-size:16px;color:#1F2B2E;margin:3px 0 5px;font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+.ea-lecT{font-size:16px;color:#3D3D3D;margin:3px 0 5px;font-family:'Archivo Narrow','Arial Narrow',sans-serif;
   text-transform:uppercase;letter-spacing:.04em;font-weight:700}
-.ea-lecX{font-size:13.5px;color:#3A4649;line-height:1.5}
-.ea-ind{height:12px;background:rgba(26,37,40,.12);margin-top:6px;position:relative}
+.ea-lecX{font-size:13.5px;color:#6B6B6B;line-height:1.5}
+.ea-ind{height:12px;background:rgba(61,61,61,.12);margin-top:6px;position:relative}
 .ea-indF{height:100%;background:var(--cobre);transition:width .5s ease}
-.ea-indM{position:absolute;top:-3px;bottom:-3px;width:1px;background:#1F2B2E}
+.ea-indM{position:absolute;top:-3px;bottom:-3px;width:1px;background:#3D3D3D}
 .ea-tabla{display:grid;grid-template-columns:1fr auto;gap:2px 12px}
-.ea-td{font-size:12.5px;color:#3A4649;line-height:1.45}
-.ea-tdn{font-size:12.5px;color:#1F2B2E;text-align:right}
+.ea-td{font-size:12.5px;color:#6B6B6B;line-height:1.45}
+.ea-tdn{font-size:12.5px;color:#3D3D3D;text-align:right}
 
 /* instrucciones antes de jugar */
 .ea-pasos{margin:6px 0 0;padding:0;list-style:none}
-.ea-paso{display:flex;gap:10px;font-size:13.5px;color:#3A4649;padding:4px 0;line-height:1.45}
+.ea-paso{display:flex;gap:10px;font-size:13.5px;color:#6B6B6B;padding:4px 0;line-height:1.45}
 .ea-pasoN{font-size:11px;color:var(--cobre);flex-shrink:0;margin-top:3px;font-family:'IBM Plex Mono',ui-monospace,monospace}
 .ea-jnombre{font-size:26px;line-height:1.05;color:var(--tintaPapel);margin-bottom:9px}
 .ea-jnombre span{display:block;font-size:10.5px;letter-spacing:.2em;color:var(--gris);margin-bottom:5px}
 .ea-jmeta{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0}
-.ea-jtag{font-size:10.5px;letter-spacing:.12em;border:1px solid rgba(26,37,40,.3);color:var(--gris);padding:3px 8px;
+.ea-jtag{font-size:10.5px;letter-spacing:.12em;border:1px solid rgba(61,61,61,.3);color:var(--gris);padding:3px 8px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 
 /* partida guardada */
@@ -4338,7 +4345,7 @@ function JuegoPrecision({ ayuda, onFin }) {
         <div className="ea-pzona" style={{ left: (zona - anchoR / 2) + "%", width: anchoR + "%" }} />
         <div className="ea-pcursor" style={{ left: pos + "%" }} />
       </div>
-      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#3A4649" }}>{aviso}</div>
+      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{aviso}</div>
       <button className="ea-btn" onClick={fijar} disabled={pausa}>Fijar</button>
     </div>
   );
@@ -4351,9 +4358,9 @@ function JuegoPrecision({ ayuda, onFin }) {
    vez ya no termina la partida, te repiten la secuencia y sigues. */
 
 const COLORES_MEM = [
-  { c: "#C0763A", n: "Cobre" },
-  { c: "#5F8F5C", n: "Verde" },
-  { c: "#BE4B3B", n: "Rojo" },
+  { c: "#B9532A", n: "Cobre" },
+  { c: "#4FA05C", n: "Verde" },
+  { c: "#B23B27", n: "Rojo" },
   { c: "#3E6B8C", n: "Azul" },
   { c: "#8C6BA8", n: "Morado" },
   { c: "#C9A227", n: "Mostaza" },
@@ -4463,7 +4470,7 @@ function JuegoMemoria({ ayuda, onFin }) {
                 /* Durante la espera las casillas van a color pleno: la idea
                    es justamente que se vea el tablero antes de empezar. */
                 background: fallada ? "var(--rojo)" : (encendida || modo === "listo") ? col.c : col.c + "2E",
-                borderColor: (encendida || fallada || modo === "listo") ? "#12201F" : col.c + "77",
+                borderColor: (encendida || fallada || modo === "listo") ? "#20120A" : col.c + "77",
                 transform: encendida ? "scale(0.94)" : "none",
               }}>
               {/* Sin el nombre escrito: si se lee la palabra se memoriza la
@@ -4484,7 +4491,7 @@ function JuegoMemoria({ ayuda, onFin }) {
           <span key={k} className={"ea-vida" + (k < vidas ? " viva" : "")} />
         ))}
       </div>
-      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#3A4649" }}>{aviso}</div>
+      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{aviso}</div>
     </div>
   );
 }
@@ -4537,7 +4544,7 @@ function JuegoOjo({ ayuda, onFin }) {
           <div className="ea-num ea-mono" key={i} {...pulsable(() => resolver(i === tab.pos), "Cifra " + n)}>{n}</div>
         ))}
       </div>
-      <div style={{ minHeight: 22, marginTop: 10, fontSize: 13.5, color: "#3A4649" }}>{aviso}</div>
+      <div style={{ minHeight: 22, marginTop: 10, fontSize: 13.5, color: "#6B6B6B" }}>{aviso}</div>
     </div>
   );
 }
@@ -4581,7 +4588,7 @@ function JuegoAnclaje({ ayuda, onFin }) {
       </div>
       <div style={{ marginTop: 10 }}>
         {hist.map((h, i) => (
-          <div key={i} style={{ fontSize: 13.5, color: h.dentro ? "#3E6B3C" : "#3A4649" }}>
+          <div key={i} style={{ fontSize: 13.5, color: h.dentro ? "#3D8A49" : "#6B6B6B" }}>
             <span className="ea-mono">{h.v}</span> · {h.msg}
           </div>
         ))}
@@ -4610,7 +4617,7 @@ function JuegoSuerte({ ayuda, onFin }) {
     <div className="ea-jw">
       <div className="ea-jinfo ea-dis"><span>Múltiplo acumulado</span><span>Riesgo de vuelta {(riesgo * 100).toFixed(0)}%</span></div>
       <div className="ea-mult ea-mono">{mult.toFixed(2)}x</div>
-      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#3A4649" }}>{estado}</div>
+      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{estado}</div>
       <div className="ea-fila2">
         <button className="ea-btn" style={{ marginTop: 0 }} onClick={aguantar} disabled={!!estado}>Aguantar</button>
         <button className="ea-btn" style={{ marginTop: 0, background: "var(--cobre)" }} onClick={cerrar} disabled={!!estado}>Cerrar posición</button>
@@ -4672,7 +4679,7 @@ function JuegoTresRaya({ ayuda, onFin }) {
             {...pulsable(() => tocar(i), "Casilla " + (i + 1) + (v ? ", ocupada por " + v : ", libre"), !!v)}>{v}</div>
         ))}
       </div>
-      <div style={{ minHeight: 22, marginTop: 12, fontSize: 14, color: "#3A4649" }}>{estado ? txt[estado] : ""}</div>
+      <div style={{ minHeight: 22, marginTop: 12, fontSize: 14, color: "#6B6B6B" }}>{estado ? txt[estado] : ""}</div>
     </div>
   );
 }
@@ -5072,7 +5079,7 @@ function JuegoOrden({ ayuda, onFin }) {
           <span key={k} className={"ea-vida" + (k < vidas ? " viva" : "")} />
         ))}
       </div>
-      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#3A4649" }}>{aviso}</div>
+      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{aviso}</div>
     </div>
   );
 }
@@ -5385,19 +5392,19 @@ function JuegoTrading({ ayuda, onFin }) {
       <div className="ea-marcador">
         <div>
           <div className="ea-lecK">Tu cuenta</div>
-          <div className="ea-mono ea-marcaV" style={{ color: mio >= 0 ? "#3E6B3C" : "var(--rojo)" }}>
+          <div className="ea-mono ea-marcaV" style={{ color: mio >= 0 ? "#3D8A49" : "var(--rojo)" }}>
             {mio >= 0 ? "+" : ""}{mio.toFixed(1)}%
           </div>
         </div>
         <div>
           <div className="ea-lecK">El que compró y no tocó nada</div>
-          <div className="ea-mono ea-marcaV" style={{ color: suyo >= 0 ? "#3E6B3C" : "var(--rojo)" }}>
+          <div className="ea-mono ea-marcaV" style={{ color: suyo >= 0 ? "#3D8A49" : "var(--rojo)" }}>
             {suyo >= 0 ? "+" : ""}{suyo.toFixed(1)}%
           </div>
         </div>
         <div>
           <div className="ea-lecK">Le llevas</div>
-          <div className="ea-mono ea-marcaV" style={{ color: dif >= 0 ? "#3E6B3C" : "var(--rojo)" }}>
+          <div className="ea-mono ea-marcaV" style={{ color: dif >= 0 ? "#3D8A49" : "var(--rojo)" }}>
             {dif >= 0 ? "+" : ""}{dif.toFixed(1)}
           </div>
         </div>
@@ -5727,7 +5734,7 @@ function JuegoPares({ ayuda, onFin }) {
           );
         })}
       </div>
-      <div style={{ minHeight: 20, marginTop: 9, fontSize: 13, color: "#3A4649" }}>
+      <div style={{ minHeight: 20, marginTop: 9, fontSize: 13, color: "#6B6B6B" }}>
         {fin ? (hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos") : ""}
       </div>
     </div>
@@ -5903,7 +5910,7 @@ function JuegoCuatro({ ayuda, onFin }) {
           </div>
         ))}
       </div>
-      <div style={{ minHeight: 22, marginTop: 11, fontSize: 14, color: "#3A4649" }}>{estado ? txt[estado] : "Toca una columna para soltar tu ficha."}</div>
+      <div style={{ minHeight: 22, marginTop: 11, fontSize: 14, color: "#6B6B6B" }}>{estado ? txt[estado] : "Toca una columna para soltar tu ficha."}</div>
     </div>
   );
 }
@@ -6159,7 +6166,7 @@ function Curva({ camino, ret, hitos }) {
 
   const n = camino.length - 1;
   const arriba = numero(ret, 0) >= 0;
-  const tono = arriba ? "#2F5A2E" : "#9C3A2C";
+  const tono = arriba ? "#2E7A3D" : "#8A2E1E";
 
   const bajo = Math.min.apply(null, camino);
   const alto = Math.max.apply(null, camino);
@@ -6180,7 +6187,7 @@ function Curva({ camino, ret, hitos }) {
   const marcas = (Array.isArray(hitos) ? hitos : [])
     .filter((x) => x && typeof x === "object" && esNumero(x.mes))
     .map((x) => ({ ...x, i: clamp(numero(x.mes, 0), 0, n) }));
-  const colorHito = (nv) => (nv === "exito" ? "#2F5A2E" : nv === "fallo" ? "#9C3A2C" : "#6C6255");
+  const colorHito = (nv) => (nv === "exito" ? "#2E7A3D" : nv === "fallo" ? "#8A2E1E" : "#6B6B6B");
 
   const idx = sobre == null ? null : Math.max(0, Math.min(n, sobre));
   const mesDe = (i) => MESES[Math.min(MESES.length - 1, Math.round((i / n) * (MESES.length - 1)))];
@@ -6237,23 +6244,23 @@ function Curva({ camino, ret, hitos }) {
             <line className="ea-cHitoT" x1={px(m.i)} x2={px(m.i)} y1={py(camino[Math.round(m.i)])} y2={MT + h + 5} />
             <rect x={px(m.i) - 3.5} y={MT + h + 2} width="7" height="7"
               transform={"rotate(45 " + px(m.i).toFixed(1) + " " + (MT + h + 5.5) + ")"}
-              fill={colorHito(m.nivel)} stroke="#E9E3D5" strokeWidth="1.2" />
+              fill={colorHito(m.nivel)} stroke="#F7F7F5" strokeWidth="1.2" />
           </g>
         ))}
 
         {/* el cierre, con anillo de superficie */}
-        <circle cx={px(n)} cy={py(camino[n])} r="5.5" fill={tono} stroke="#E9E3D5" strokeWidth="2" />
+        <circle cx={px(n)} cy={py(camino[n])} r="5.5" fill={tono} stroke="#F7F7F5" strokeWidth="2" />
 
         {/* el fondo de la caída */}
         {hayCaida && (
-          <circle cx={px(dd.fondo)} cy={py(camino[dd.fondo])} r="3.2" fill="#9C3A2C" stroke="#E9E3D5" strokeWidth="1.5" />
+          <circle cx={px(dd.fondo)} cy={py(camino[dd.fondo])} r="3.2" fill="#8A2E1E" stroke="#F7F7F5" strokeWidth="1.5" />
         )}
 
         {/* cruceta del hover */}
         {idx != null && (
           <g>
             <line className="ea-cCruz" x1={px(idx)} x2={px(idx)} y1={MT} y2={MT + h} />
-            <circle cx={px(idx)} cy={py(camino[idx])} r="4" fill={tono} stroke="#E9E3D5" strokeWidth="1.5" />
+            <circle cx={px(idx)} cy={py(camino[idx])} r="4" fill={tono} stroke="#F7F7F5" strokeWidth="1.5" />
           </g>
         )}
 
@@ -6282,7 +6289,7 @@ function Curva({ camino, ret, hitos }) {
         <div className="ea-curvaTip ea-mono" style={{ left: ((px(idx) / AN) * 100).toFixed(2) + "%" }}>
           <span className="ea-curvaTipM">{mesDe(idx)}</span>
           {fmt(camino[idx])}
-          <span className="ea-curvaTipD" style={{ color: camino[idx] >= partida ? "#2F5A2E" : "#9C3A2C" }}>
+          <span className="ea-curvaTipD" style={{ color: camino[idx] >= partida ? "#2E7A3D" : "#8A2E1E" }}>
             {camino[idx] >= partida ? "+" : ""}{partida > 0 ? ((camino[idx] / partida - 1) * 100).toFixed(1) : "0.0"}%
           </span>
         </div>
@@ -6297,7 +6304,7 @@ function Curva({ camino, ret, hitos }) {
               <span className="ea-hitoM ea-mono">{MESES[Math.min(11, Math.max(0, Math.round(m.mes) - 1))]}</span>
               <span className="ea-hitoT">{m.t}</span>
               {m.cash ? (
-                <span className="ea-hitoC ea-mono" style={{ color: m.cash > 0 ? "#2F5A2E" : "#9C3A2C" }}>
+                <span className="ea-hitoC ea-mono" style={{ color: m.cash > 0 ? "#2E7A3D" : "#8A2E1E" }}>
                   {m.cash > 0 ? "+" : "−"}{fmt(Math.abs(m.cash))}
                 </span>
               ) : <span className="ea-hitoC ea-mono">sin efecto en caja</span>}
@@ -6339,7 +6346,7 @@ function Chispa({ datos, desde }) {
   const linea = serie.map((v, i) => (i === 0 ? "M" : "L") + px(i).toFixed(1) + " " + py(v).toFixed(1)).join(" ");
   const area = linea + " L" + px(n).toFixed(1) + " " + (MT + h) + " L" + px(0).toFixed(1) + " " + (MT + h) + " Z";
   const sube = serie[n] >= serie[0];
-  const tono = sube ? "#2F5A2E" : "#9C3A2C";
+  const tono = sube ? "#2E7A3D" : "#8A2E1E";
   const ano0 = entero(desde, 2026, 1900, 3000);
 
   return (
@@ -6353,7 +6360,7 @@ function Chispa({ datos, desde }) {
       <path d={linea} fill="none" stroke={tono} strokeWidth="2" strokeLinejoin="round" />
       {/* un punto por año, discreto, para que se vea que la serie es anual */}
       {serie.map((v, i) => (i === n ? null : <circle key={i} cx={px(i)} cy={py(v)} r="1.8" fill={tono} fillOpacity="0.5" />))}
-      <circle cx={px(n)} cy={py(serie[n])} r="5" fill={tono} stroke="#E9E3D5" strokeWidth="2" />
+      <circle cx={px(n)} cy={py(serie[n])} r="5" fill={tono} stroke="#F7F7F5" strokeWidth="2" />
     </svg>
 
     {[0, 0.5, 1].map((f) => (
@@ -8505,7 +8512,7 @@ function Motor() {
                       return (
                         <Plegable titulo="Cómo vas para tu edad"
                           resumen={objetivo > 0 ? Math.round(razon * 100) + "% de la referencia" : "—"}
-                          tono={razon >= 1 ? "#5F8F5C" : razon >= 0.5 ? "#C0763A" : "#BE4B3B"}>
+                          tono={razon >= 1 ? "#4FA05C" : razon >= 0.5 ? "#B9532A" : "#B23B27"}>
                           <div className="ea-itemD" style={{ marginBottom: 7 }}>
                             La referencia habitual dice que a los {meta.e} conviene tener {meta.x} {meta.x === 1 ? "vez" : "veces"} tu
                             sueldo anual invertido. No es una ley: es una vara para saber si vas o no vas.
@@ -8537,7 +8544,7 @@ function Motor() {
                     {(abierto(s, "banco") || s.deuda > 0) && (
                     <Plegable titulo="El banco"
                       resumen={s.deuda > 0 ? "debes " + fmtCorto(s.deuda) : "sin deuda"}
-                      tono={s.deuda > 0 ? "#BE4B3B" : "#5F8F5C"}>
+                      tono={s.deuda > 0 ? "#B23B27" : "#4FA05C"}>
                     {s.quiebras > 0 && (
                       <div className="ea-itemD" style={{ marginBottom: 8, color: "var(--rojo)" }}>
                         Has quebrado {s.quiebras === 1 ? "una vez" : s.quiebras + " veces"}. Eso encarece cada dólar que pidas
@@ -8968,7 +8975,7 @@ function Motor() {
                           {mejor && mejor.dif > 0 && (
                             <div className="ea-fila">
                               <span className="ea-dis" style={{ fontSize: 12 }}>Tu mejor año</span>
-                              <span className="ea-mono" style={{ color: "#5F8F5C" }}>{mejor.ano} · +USD {fmt(mejor.dif)}</span>
+                              <span className="ea-mono" style={{ color: "#4FA05C" }}>{mejor.ano} · +USD {fmt(mejor.dif)}</span>
                             </div>
                           )}
                           {peor && peor.dif < 0 && (
@@ -9073,10 +9080,10 @@ function Motor() {
                     <div className="ea-titularK ea-dis">Tu patrimonio</div>
                     <div className="ea-titularV ea-mono">USD {fmt(cierre.patrimonio)}</div>
                     <div className="ea-titularL">
-                      <span className="ea-mono" style={{ color: cierre.patrimonio >= cierre.patAntes ? "#2F5A2E" : "#9C3A2C" }}>
+                      <span className="ea-mono" style={{ color: cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E" }}>
                         {cierre.patrimonio >= cierre.patAntes ? "+" : "−"}{fmt(Math.abs(cierre.patrimonio - cierre.patAntes))} en el año
                       </span>
-                      <span className="ea-mono" style={{ color: cierre.ahorro >= 0 ? "#2F5A2E" : "#9C3A2C" }}>
+                      <span className="ea-mono" style={{ color: cierre.ahorro >= 0 ? "#2E7A3D" : "#8A2E1E" }}>
                         ahorraste {Math.round(cierre.ahorro * 100)}% de lo que entró
                       </span>
                     </div>
@@ -9111,13 +9118,13 @@ function Motor() {
 
                   <Plegable titulo="De dónde salió tu patrimonio"
                     resumen={(cierre.patAntes > 0 ? ((cierre.patrimonio / cierre.patAntes - 1) * 100).toFixed(1) + "%" : "primer año")}
-                    tono={cierre.patrimonio >= cierre.patAntes ? "#2F5A2E" : "#9C3A2C"}>
+                    tono={cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E"}>
                   <div>
                     <div className="ea-lecK">Patrimonio</div>
-                    <div className="ea-mono" style={{ fontSize: 26, color: "#1F2B2E", margin: "3px 0" }}>
+                    <div className="ea-mono" style={{ fontSize: 26, color: "#3D3D3D", margin: "3px 0" }}>
                       USD {fmt(cierre.patrimonio)}
                     </div>
-                    <div className="ea-dis" style={{ fontSize: 14, color: cierre.patrimonio >= cierre.patAntes ? "#3E6B3C" : "var(--rojo)" }}>
+                    <div className="ea-dis" style={{ fontSize: 14, color: cierre.patrimonio >= cierre.patAntes ? "#3D8A49" : "var(--rojo)" }}>
                       {cierre.patrimonio >= cierre.patAntes ? "+" : ""}{fmt(cierre.patrimonio - cierre.patAntes)} en el año
                       {cierre.patAntes > 0 ? " · " + ((cierre.patrimonio / cierre.patAntes - 1) * 100).toFixed(1) + "%" : ""}
                     </div>
@@ -9133,15 +9140,15 @@ function Motor() {
 
                   {/* el año en plata */}
                   <Plegable titulo="El año en plata" resumen={(cierre.neto >= 0 ? "+" : "−") + fmt(Math.abs(cierre.neto))}
-                    tono={cierre.neto >= 0 ? "#2F5A2E" : "#9C3A2C"}>
+                    tono={cierre.neto >= 0 ? "#2E7A3D" : "#8A2E1E"}>
                   <div>
                     <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
                       <Flujo titulo={"Entró USD " + fmt(cierre.ingreso)} lista={cierre.ing} tope={cierre.ingreso} />
                       <Flujo titulo={"Salió USD " + fmt(cierre.egreso)} lista={cierre.egr} tope={cierre.ingreso} neg />
                     </div>
-                    <div className="ea-flin" style={{ marginTop: 12, fontSize: 13.5, color: "#1F2B2E" }}>
+                    <div className="ea-flin" style={{ marginTop: 12, fontSize: 13.5, color: "#3D3D3D" }}>
                       <span className="ea-dis">Te quedaste con</span>
-                      <span className="ea-mono" style={{ textAlign: "right", color: cierre.neto >= 0 ? "#3E6B3C" : "var(--rojo)" }}>{fmt(cierre.neto)}</span>
+                      <span className="ea-mono" style={{ textAlign: "right", color: cierre.neto >= 0 ? "#3D8A49" : "var(--rojo)" }}>{fmt(cierre.neto)}</span>
                     </div>
                     <div className="ea-flbar" style={{ height: 12 }}>
                       <div className={"ea-flfill" + (cierre.ahorro < 0 ? " neg" : "")}
@@ -9164,13 +9171,13 @@ function Motor() {
                   {cierre.cartera && (
                     <Plegable titulo="Tu cartera, mes a mes"
                       resumen={(cierre.cartera.ret >= 0 ? "+" : "") + (cierre.cartera.ret * 100).toFixed(1) + "%"}
-                      tono={cierre.cartera.ret >= 0 ? "#2F5A2E" : "#9C3A2C"}>
+                      tono={cierre.cartera.ret >= 0 ? "#2E7A3D" : "#8A2E1E"}>
                     <div className={"ea-alerta " + (cierre.cartera.ret >= 0.02 ? "bien" : cierre.cartera.ret < -0.02 ? "mal" : "")} style={{ marginTop: 0 }}>
                       <div className="ea-lecK">Tu cartera {perfilN.toLowerCase()} · {Math.round(cierre.cartera.obj * 100)}% invertido</div>
-                      <div className="ea-mono" style={{ fontSize: 23, color: "#1F2B2E", margin: "4px 0" }}>
+                      <div className="ea-mono" style={{ fontSize: 23, color: "#3D3D3D", margin: "4px 0" }}>
                         {fmt(cierre.cartera.antes)} → {fmt(cierre.cartera.despues)}
                       </div>
-                      <div className="ea-dis" style={{ fontSize: 16, color: cierre.cartera.ret >= 0 ? "#3E6B3C" : "var(--rojo)" }}>
+                      <div className="ea-dis" style={{ fontSize: 16, color: cierre.cartera.ret >= 0 ? "#3D8A49" : "var(--rojo)" }}>
                         {cierre.cartera.ret >= 0 ? "+" : ""}{(cierre.cartera.ret * 100).toFixed(1)}% · {cierre.cartera.ret >= 0 ? "ganaste" : "perdiste"} USD {fmt(Math.abs(cierre.cartera.despues - cierre.cartera.antes))}
                       </div>
                       {cierre.cartera.camino && <Curva camino={cierre.cartera.camino} ret={cierre.cartera.ret} hitos={cierre.hitosDec} />}
@@ -9184,7 +9191,7 @@ function Motor() {
                           <div key={i} style={{ marginBottom: 4 }}>
                             <div className="ea-flin">
                               <span>{d.n} · {Math.round(d.w * 100)}%</span>
-                              <span className="ea-mono" style={{ textAlign: "right", color: d.r >= 0 ? "#3E6B3C" : "var(--rojo)" }}>
+                              <span className="ea-mono" style={{ textAlign: "right", color: d.r >= 0 ? "#3D8A49" : "var(--rojo)" }}>
                                 {d.r >= 0 ? "+" : ""}{(d.r * 100).toFixed(1)}
                               </span>
                             </div>
@@ -9260,11 +9267,11 @@ function Motor() {
                     más y ver hasta dónde llega. Los números son estos.
                   </p>
                   <div className="ea-res" style={{ marginTop: 14 }}>
-                    <div style={{ fontSize: 13.5, color: "#3A4649" }}>Patrimonio total USD {fmt(patrimonio)}, de los cuales USD {fmt(bienesVal)} están en bienes.</div>
-                    <div style={{ fontSize: 13.5, color: "#3A4649" }}>Retirando 4% al año dispondrías de USD {fmt(retiroAnual)}.</div>
-                    {rentaProps > 0 && <div style={{ fontSize: 13.5, color: "#3A4649" }}>Tus propiedades rentan USD {fmt(rentaProps)} al año.</div>}
-                    <div style={{ fontSize: 13.5, color: "#3A4649" }}>Tu forma de vivir cuesta USD {fmt(gastosAnuales)} al año.</div>
-                    <div className="ea-dis" style={{ marginTop: 11, fontSize: 17, color: cobertura >= 1 ? "#3E6B3C" : "var(--rojo)" }}>
+                    <div style={{ fontSize: 13.5, color: "#6B6B6B" }}>Patrimonio total USD {fmt(patrimonio)}, de los cuales USD {fmt(bienesVal)} están en bienes.</div>
+                    <div style={{ fontSize: 13.5, color: "#6B6B6B" }}>Retirando 4% al año dispondrías de USD {fmt(retiroAnual)}.</div>
+                    {rentaProps > 0 && <div style={{ fontSize: 13.5, color: "#6B6B6B" }}>Tus propiedades rentan USD {fmt(rentaProps)} al año.</div>}
+                    <div style={{ fontSize: 13.5, color: "#6B6B6B" }}>Tu forma de vivir cuesta USD {fmt(gastosAnuales)} al año.</div>
+                    <div className="ea-dis" style={{ marginTop: 11, fontSize: 17, color: cobertura >= 1 ? "#3D8A49" : "var(--rojo)" }}>
                       {cobertura >= 1 ? "Te alcanza y sobra" : cobertura >= 0.7 ? "Te queda corto por poco" : "No te alcanza"} · cubres el {Math.round(cobertura * 100)}%
                     </div>
                   </div>
@@ -9421,7 +9428,7 @@ function Motor() {
                 ))}
                 <div className="ea-fila" style={{ marginTop: 8 }}><span style={{ fontSize: 13 }}>Capital metido</span><span className="ea-mono">USD {fmt(capital)}</span></div>
                 <div className="ea-fila"><span style={{ fontSize: 13 }}>Valor esperado</span><span className="ea-mono">USD {fmt(valor)}</span></div>
-                <div className="ea-fila"><span style={{ fontSize: 13 }}>Lo que te habría tocado a ti</span><span className="ea-mono" style={{ color: "#5F8F5C" }}>USD {fmt(tuParte)}</span></div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Lo que te habría tocado a ti</span><span className="ea-mono" style={{ color: "#4FA05C" }}>USD {fmt(tuParte)}</span></div>
                 <div className="ea-itemD" style={{ marginTop: 9 }}>
                   Un fondo se juzga cuando ha salido de todo, y tú cerraste antes. Esta es la parte
                   que no llegaste a ver: sumando lo realizado, tu gestora iba camino de un múltiplo
@@ -9446,7 +9453,7 @@ function Motor() {
                     <span className="ea-invN">{c.n}</span>
                     <span className="ea-mono">{fmt(pagado)}</span>
                     <span className="ea-mono">{fmt(hoy)}</span>
-                    <span className="ea-mono" style={{ color: dif >= 0 ? "#5F8F5C" : "var(--rojo)" }}>
+                    <span className="ea-mono" style={{ color: dif >= 0 ? "#4FA05C" : "var(--rojo)" }}>
                       {dif >= 0 ? "+" : "−"}{fmt(Math.abs(dif))}
                       <span className="ea-invP">{dif >= 0 ? "+" : ""}{pct.toFixed(0)}%</span>
                     </span>
@@ -9457,7 +9464,7 @@ function Motor() {
                 <span className="ea-dis">Total</span>
                 <span className="ea-mono">{fmt(totalPagado)}</span>
                 <span className="ea-mono">{fmt(totalHoy)}</span>
-                <span className="ea-mono" style={{ color: totalHoy >= totalPagado ? "#5F8F5C" : "var(--rojo)" }}>
+                <span className="ea-mono" style={{ color: totalHoy >= totalPagado ? "#4FA05C" : "var(--rojo)" }}>
                   {totalHoy >= totalPagado ? "+" : "−"}{fmt(Math.abs(totalHoy - totalPagado))}
                 </span>
               </div>
