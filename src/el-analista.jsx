@@ -16,7 +16,7 @@ const CSS = `
   --papel:#F7F7F5; --papel2:#E9EEF5; --tintaPapel:#3D3D3D;
   --cobre:#B9532A; --verde:#4FA05C; --rojo:#B23B27; --gris:#6B6B6B;
   --hueso:#EDEDE8; --tenue:#9FB8A8;
-  background:var(--tinta); color:var(--hueso); min-height:100%;
+  background:var(--papel); color:var(--tintaPapel); min-height:100vh;
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
   font-size:15px; line-height:1.55; padding:16px;
 }
@@ -41,15 +41,15 @@ const CSS = `
 .ea-grid{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:18px;align-items:start}
 @media(max-width:880px){.ea-grid{grid-template-columns:1fr}}
 
-.ea-panel{border:1px solid var(--borde);background:var(--fieltro);padding:16px 18px;border-radius:3px}
-.ea-rot{font-size:11px;letter-spacing:.2em;color:var(--tenue);margin-bottom:12px}
+.ea-panel{border:1px solid var(--borde);background:var(--papel);padding:16px 18px;border-radius:3px}
+.ea-rot{font-size:11px;letter-spacing:.2em;color:var(--gris);margin-bottom:12px}
 
-.ea-tabs{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--borde);border-bottom:none;background:var(--fieltro)}
-.ea-tab{flex:1;min-width:70px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--tenue);
+.ea-tabs{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--borde);border-bottom:none;background:var(--papel)}
+.ea-tab{flex:1;min-width:70px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--gris);
   padding:9px 4px;font:inherit;font-size:11px;letter-spacing:.12em;cursor:pointer;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-tab.on{color:var(--papel);border-bottom-color:var(--cobre)}
-.ea-tab:hover{color:var(--hueso)}
+.ea-tab.on{color:var(--tintaPapel);border-bottom-color:var(--cobre)}
+.ea-tab:hover{color:#262626}
 
 .ea-stat{margin-bottom:10px}
 .ea-statTop{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.08em;margin-bottom:4px}
@@ -78,21 +78,21 @@ const CSS = `
 /* Lo que ya es tuyo se apaga, para que la vista encuentre sola lo que
    todavia no tienes. Sin opacity en el contenedor: asi la etiqueta de
    «ya lo tienes» sigue legible en verde. */
-.ea-item.tuyo{background:rgba(8,20,24,.5);padding-left:9px;padding-right:9px;border-radius:2px;
+.ea-item.tuyo{background:rgba(61,61,61,.05);padding-left:9px;padding-right:9px;border-radius:2px;
   border-left:2px solid rgba(79,160,92,.45)}
-.ea-item.tuyo .ea-itemN{color:var(--tenue)}
-.ea-item.tuyo .ea-itemD{color:#6E7E76}
+.ea-item.tuyo .ea-itemN{color:rgba(61,61,61,.62)}
+.ea-item.tuyo .ea-itemD{color:rgba(61,61,61,.5)}
 .ea-item.tuyo .ea-etq{opacity:.45}
-.ea-item.tuyo .ea-mono{color:var(--tenue)}
+.ea-item.tuyo .ea-mono{color:rgba(61,61,61,.55)}
 .ea-item:last-child{border-bottom:none}
 .ea-itemTop{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.ea-itemN{font-size:13.5px;color:var(--papel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+.ea-itemN{font-size:13.5px;color:var(--tintaPapel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
   text-transform:uppercase;letter-spacing:.05em;font-weight:700}
-.ea-itemD{font-size:12px;color:var(--tenue);margin-top:4px}
-.ea-mini{background:transparent;border:1px solid var(--borde);color:var(--hueso);font:inherit;font-size:11px;
+.ea-itemD{font-size:12px;color:var(--gris);margin-top:4px}
+.ea-mini{background:transparent;border:1px solid var(--borde);color:var(--tintaPapel);font:inherit;font-size:11px;
   letter-spacing:.1em;padding:5px 10px;cursor:pointer;margin-top:8px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-mini:hover:not(:disabled){border-color:var(--cobre);color:var(--papel)}
+.ea-mini:hover:not(:disabled){border-color:var(--cobre);color:#262626}
 .ea-mini:disabled{opacity:.35;cursor:not-allowed}
 .ea-tengo{color:var(--verde);font-size:11px;letter-spacing:.12em;margin-top:8px;display:inline-block}
 
@@ -144,11 +144,11 @@ const CSS = `
 .ea-btn:hover:not(:disabled){background:var(--cobre)}
 .ea-btn:active:not(:disabled){transform:translateY(1px)}
 .ea-btn:disabled{opacity:.4;cursor:not-allowed}
-.ea-btnO{background:transparent;color:var(--hueso);border:1px solid var(--borde);padding:11px 20px;
+.ea-btnO{background:transparent;color:var(--tintaPapel);border:1px solid var(--borde);padding:11px 20px;
   font:inherit;font-size:13px;letter-spacing:.14em;cursor:pointer;border-radius:2px;
   transition:border-color .15s,color .15s;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-btnO:hover{border-color:var(--cobre);color:var(--papel)}
+.ea-btnO:hover{border-color:var(--cobre);color:var(--cobre)}
 
 .ea-tit{font-size:13px;padding:6px 0;border-bottom:1px dotted var(--borde);display:flex;gap:9px}
 .ea-titQ{color:var(--cobre);flex-shrink:0;font-size:11.5px}
@@ -196,14 +196,14 @@ const CSS = `
 .ea-ordenN{font-size:11px;letter-spacing:.14em;color:var(--gris)}
 
 .ea-portada{max-width:680px;margin:5vh auto;text-align:left}
-.ea-h1{font-size:clamp(44px,11vw,84px);line-height:.9;color:var(--papel);margin:0}
-.ea-lede{color:var(--tenue);margin:18px 0 26px;font-size:16px;max-width:56ch}
+.ea-h1{font-size:clamp(44px,11vw,84px);line-height:.9;color:var(--tintaPapel);margin:0}
+.ea-lede{color:var(--gris);margin:18px 0 26px;font-size:16px;max-width:56ch}
 .ea-regla{height:1px;background:var(--borde);margin:24px 0}
-.ea-final{font-size:33px;color:var(--papel);line-height:1.1;margin:0 0 12px}
+.ea-final{font-size:33px;color:var(--tintaPapel);line-height:1.1;margin:0 0 12px}
 .ea-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:15px}
-.ea-cifraK{font-size:11px;color:var(--tenue);letter-spacing:.18em;
+.ea-cifraK{font-size:11px;color:var(--gris);letter-spacing:.18em;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-cifraV{font-size:20px;color:var(--papel)}
+.ea-cifraV{font-size:20px;color:var(--tintaPapel)}
 `;
 
 const CSS5 = `
@@ -245,32 +245,32 @@ const CSS5 = `
 .ea-escenV{font-size:27px;line-height:1;margin:7px 0 2px;color:#3D3D3D}
 
 /* --- pantallas de configuración --- */
-.ea-opcion{border:1px solid var(--borde);background:var(--fieltro);padding:14px 16px;margin-bottom:10px;
-  cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--hueso);transition:border-color .15s}
+.ea-opcion{border:1px solid var(--borde);background:var(--papel);padding:14px 16px;margin-bottom:10px;
+  cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--tintaPapel);transition:border-color .15s,background .15s}
 .ea-opcion:hover{border-color:var(--cobre)}
-.ea-opcion.on{border-color:var(--cobre);background:#0E4527}
-.ea-opcionN{font-size:19px;color:var(--papel);
+.ea-opcion.on{border-color:var(--cobre);background:rgba(185,83,42,.09)}
+.ea-opcionN{font-size:19px;color:var(--tintaPapel);
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
-.ea-opcionD{font-size:13.5px;color:var(--tenue);margin-top:6px;line-height:1.5}
+.ea-opcionD{font-size:13.5px;color:var(--gris);margin-top:6px;line-height:1.5}
 .ea-opcionM{font-size:12px;color:var(--cobre);margin-top:6px}
 
 /* --- cómo vives: el medidor del tren de vida --- */
 .ea-vidaCab{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.ea-vidaN{font-size:21px;color:var(--papel);line-height:1.05}
-.ea-vidaD{font-size:12.5px;color:var(--tenue);margin-top:5px;line-height:1.5}
+.ea-vidaN{font-size:21px;color:var(--tintaPapel);line-height:1.05}
+.ea-vidaD{font-size:12.5px;color:var(--gris);margin-top:5px;line-height:1.5}
 .ea-vidaCifra{font-size:30px;color:var(--cobre);line-height:1;flex-shrink:0}
 .ea-medidor{position:relative;height:8px;background:#041F0E;margin-top:12px;overflow:hidden}
 .ea-medidorF{height:100%;background:var(--cobre);transition:width .5s ease}
 .ea-medidorT{position:absolute;top:0;bottom:0;width:1px;background:rgba(237,237,232,.35)}
 .ea-medidorE{display:flex;justify-content:space-between;gap:4px;margin-top:5px;font-size:9.5px;
-  letter-spacing:.06em;color:var(--tenue);text-transform:uppercase;
+  letter-spacing:.06em;color:var(--gris);text-transform:uppercase;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-medidorE span.on{color:var(--cobre)}
 
 /* --- etiquetas de consecuencia en cada compra --- */
 .ea-etqs{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
 .ea-etq{font-size:10.5px;letter-spacing:.06em;padding:2px 7px;border:1px solid var(--borde);
-  color:var(--tenue);white-space:nowrap}
+  color:var(--gris);white-space:nowrap}
 .ea-etq.vida{border-color:var(--cobre);color:var(--cobre)}
 .ea-etq.act{border-color:#3D8A49;color:var(--verde)}
 .ea-etq.con{border-color:#7A392E;color:#C4756A}
@@ -323,7 +323,7 @@ const CSS5 = `
 .ea-sen.mal{border-color:#7A392E}
 .ea-senK{font-size:9px;letter-spacing:.1em;color:var(--tenue);text-transform:uppercase;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
-.ea-senV{font-size:12.5px;color:var(--hueso)}
+.ea-senV{font-size:12.5px;color:var(--tintaPapel)}
 .ea-sen.bien .ea-senV{color:var(--verde)}
 .ea-sen.mal .ea-senV{color:#C4756A}
 .ea-deal{border:1px solid rgba(61,61,61,.28);padding:11px 13px;margin-bottom:9px;background:rgba(61,61,61,.03)}
@@ -340,12 +340,12 @@ const CSS5 = `
 
 /* --- el inventario del balance final --- */
 .ea-invCab,.ea-invF,.ea-invT{display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:baseline}
-.ea-invCab{font-size:10px;letter-spacing:.14em;color:var(--tenue);padding-bottom:6px;
+.ea-invCab{font-size:10px;letter-spacing:.14em;color:var(--gris);padding-bottom:6px;
   border-bottom:1px solid var(--borde);margin-bottom:4px}
-.ea-invF{font-size:13px;padding:6px 0;border-bottom:1px dotted var(--borde);color:var(--hueso)}
+.ea-invF{font-size:13px;padding:6px 0;border-bottom:1px dotted var(--borde);color:var(--tintaPapel)}
 .ea-invN{line-height:1.35}
-.ea-invP{display:block;font-size:10.5px;color:var(--tenue);text-align:right}
-.ea-invT{font-size:13px;padding-top:9px;margin-top:4px;border-top:1px solid var(--borde);color:var(--papel)}
+.ea-invP{display:block;font-size:10.5px;color:var(--gris);text-align:right}
+.ea-invT{font-size:13px;padding-top:9px;margin-top:4px;border-top:1px solid var(--borde);color:var(--tintaPapel)}
 @media(max-width:520px){
   .ea-invCab{display:none}
   .ea-invF,.ea-invT{grid-template-columns:1fr auto;row-gap:2px}
@@ -357,8 +357,8 @@ const CSS5 = `
 .ea-avisoB{padding:11px 0;border-bottom:1px dotted var(--borde)}
 .ea-avisoB:last-child{border-bottom:none}
 .ea-avisoK{font-size:11.5px;letter-spacing:.16em;color:var(--cobre);margin-bottom:5px}
-.ea-avisoB p{margin:0;font-size:14.5px;color:var(--hueso);line-height:1.6;max-width:62ch}
-.ea-avisoB strong{color:var(--papel)}
+.ea-avisoB p{margin:0;font-size:14.5px;color:var(--tintaPapel);line-height:1.6;max-width:62ch}
+.ea-avisoB strong{color:#262626}
 
 /* --- botones secundarios sobre papel ---
    .ea-mini nació para el panel oscuro: texto hueso #EDEDE8 sobre
@@ -378,11 +378,8 @@ const CSS5 = `
   padding:12px 0 13px;margin-top:14px}
 .ea-panel .ea-titular,.ea-modal .ea-titular{border-top-color:var(--borde);border-bottom-color:var(--borde)}
 .ea-titularK{font-size:10.5px;letter-spacing:.2em;color:var(--gris)}
-.ea-panel .ea-titularK,.ea-modal .ea-titularK{color:var(--tenue)}
 .ea-titularV{font-size:31px;line-height:1.05;color:#262626;margin:3px 0 6px}
-.ea-panel .ea-titularV,.ea-modal .ea-titularV{color:var(--papel)}
-.ea-titularL{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px}
-.ea-panel .ea-titularL,.ea-modal .ea-titularL{color:var(--tenue)}
+.ea-titularL{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--gris)}
 .ea-titularA{font-size:15px;color:var(--cobre);margin-top:8px}
 
 /* --- secciones plegables: cerradas enseñan su cifra --- */
@@ -394,19 +391,16 @@ const CSS5 = `
   background:transparent;border:none;padding:11px 2px;cursor:pointer;text-align:left;font:inherit}
 .ea-plegB:hover .ea-plegT{color:var(--cobre)}
 .ea-plegF{font-size:15px;color:var(--gris);line-height:1;width:12px}
-.ea-panel .ea-plegF,.ea-modal .ea-plegF{color:var(--tenue)}
 .ea-plegT{font-size:12.5px;letter-spacing:.08em;color:#3D3D3D}
-.ea-panel .ea-plegT,.ea-modal .ea-plegT{color:var(--hueso)}
 .ea-plegR{font-size:13px;color:var(--gris);white-space:nowrap;font-variant-numeric:tabular-nums}
-.ea-panel .ea-plegR,.ea-modal .ea-plegR{color:var(--tenue)}
 .ea-plegC{padding:2px 0 15px;animation:ea-abre .16s ease-out}
 
 /* --- los avisos de la guía --- */
 .ea-guia{border:1px solid var(--cobre);background:rgba(185,83,42,.09);padding:12px 15px;margin-top:16px;
   display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;animation:ea-abre .2s ease-out}
 .ea-guiaK{grid-column:1;font-size:10px;letter-spacing:.22em;color:var(--cobre)}
-.ea-guiaT{grid-column:1;font-size:16px;color:var(--papel);line-height:1.15}
-.ea-guiaX{grid-column:1;font-size:13.5px;color:var(--hueso);line-height:1.5;max-width:70ch}
+.ea-guiaT{grid-column:1;font-size:16px;color:#262626;line-height:1.15}
+.ea-guiaX{grid-column:1;font-size:13.5px;color:var(--tintaPapel);line-height:1.5;max-width:70ch}
 .ea-guiaB{grid-column:2;grid-row:1 / span 3;align-self:center;background:var(--cobre);border:none;color:#20120A;
   font:inherit;font-size:11px;letter-spacing:.14em;padding:9px 15px;cursor:pointer;text-transform:uppercase;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700;white-space:nowrap}
@@ -424,70 +418,70 @@ const CSS5 = `
    estaba. La decision es lo principal y ahora se ve asi. */
 .ea-modalFondo{position:fixed;inset:0;background:rgba(5,13,16,.84);z-index:60;
   display:flex;align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto}
-.ea-modal{background:var(--fieltro);border:1px solid var(--borde);width:100%;max-width:580px;
+.ea-modal{background:var(--papel);border:1px solid var(--borde);width:100%;max-width:580px;
   border-radius:4px;overflow:hidden;
   box-shadow:0 20px 64px rgba(0,51,24,.45)}
 .ea-modalCab{display:flex;justify-content:space-between;align-items:center;gap:12px;
   padding:12px 15px;border-bottom:1px solid var(--borde);position:sticky;top:0;
-  background:var(--fieltro);z-index:2}
+  background:var(--papel);z-index:2}
 .ea-modalT{font-size:12px;letter-spacing:.2em;color:var(--cobre)}
-.ea-modalX{background:transparent;border:1px solid var(--borde);color:var(--tenue);
+.ea-modalX{background:transparent;border:1px solid var(--borde);color:var(--gris);
   width:31px;height:31px;cursor:pointer;font:inherit;font-size:14px;line-height:1;flex-shrink:0}
-.ea-modalX:hover:not(:disabled){border-color:var(--cobre);color:var(--papel)}
+.ea-modalX:hover:not(:disabled){border-color:var(--cobre);color:var(--cobre)}
 .ea-modalX:disabled{opacity:.35;cursor:default}
 .ea-modalCuerpo{padding:14px 15px 18px}
 
 /* la ficha que explica un sistema recien abierto */
 .ea-nuevoK{font-size:10.5px;letter-spacing:.22em;color:var(--cobre);margin-bottom:7px}
-.ea-nuevoT{font-size:27px;line-height:1.08;color:var(--papel);margin-bottom:9px}
-.ea-nuevoX{font-size:14px;line-height:1.6;color:var(--hueso);margin-bottom:14px}
+.ea-nuevoT{font-size:27px;line-height:1.08;color:#262626;margin-bottom:9px}
+.ea-nuevoX{font-size:14px;line-height:1.6;color:var(--tintaPapel);margin-bottom:14px}
 .ea-nuevoP{list-style:none;padding:0;margin:0 0 4px}
 .ea-nuevoP li{position:relative;padding-left:19px;margin-bottom:10px;font-size:13px;
-  line-height:1.55;color:var(--tenue)}
+  line-height:1.55;color:var(--gris)}
 .ea-nuevoP li:before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;
   background:var(--cobre)}
 
 /* --- el registro compartido de carreras cerradas --- */
 .ea-regCab{display:grid;grid-template-columns:24px 1fr auto auto;gap:10px;
   padding:0 0 7px;border-bottom:1px solid var(--borde);
-  font-size:10px;letter-spacing:.14em;color:var(--tenue)}
+  font-size:10px;letter-spacing:.14em;color:var(--gris)}
 .ea-regFila{display:grid;grid-template-columns:24px 1fr auto auto;gap:10px;align-items:baseline;
   padding:9px 0;border-bottom:1px dotted var(--borde);font-size:13.5px}
 .ea-regFila:last-child{border-bottom:none}
-.ea-regP{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--tenue);
+.ea-regP{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gris);
   font-variant-numeric:tabular-nums}
 .ea-regFila.podio .ea-regP{color:var(--cobre)}
-.ea-regN{color:var(--papel);line-height:1.3}
-.ea-regC{display:block;font-size:11.5px;color:var(--tenue)}
-.ea-regV{font-family:'IBM Plex Mono',monospace;color:var(--papel);text-align:right;
+.ea-regN{color:var(--tintaPapel);line-height:1.3}
+.ea-regC{display:block;font-size:11.5px;color:var(--gris)}
+.ea-regV{font-family:'IBM Plex Mono',monospace;color:var(--tintaPapel);text-align:right;
   white-space:nowrap;font-variant-numeric:tabular-nums}
 .ea-regM{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--cobre);
   text-align:right;white-space:nowrap;min-width:3ch}
 .ea-regFila.tuya{background:rgba(185,83,42,.11);border-left:2px solid var(--cobre);
   padding-left:8px;margin-left:-10px}
-.ea-regVacio{padding:22px 0;color:var(--tenue);font-size:13.5px}
-.ea-regNombre{width:100%;background:var(--tinta);border:1px solid var(--borde);color:var(--papel);
+.ea-regVacio{padding:22px 0;color:var(--gris);font-size:13.5px}
+.ea-regNombre{width:100%;background:var(--papel2);border:1px solid var(--borde);color:var(--tintaPapel);
   font-family:'IBM Plex Mono',monospace;font-size:14px;padding:9px 11px;border-radius:0;margin-top:6px}
 
 .ea-panelAb{animation:ea-abre .18s ease-out}
 @keyframes ea-abre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .ea-cerrar{display:block;width:100%;background:transparent;border:1px solid var(--borde);
-  color:var(--tenue);font:inherit;font-size:10.5px;letter-spacing:.14em;padding:7px;margin-bottom:14px;
+  color:var(--gris);font:inherit;font-size:10.5px;letter-spacing:.14em;padding:7px;margin-bottom:14px;
   cursor:pointer;text-transform:uppercase;font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
-.ea-cerrar:hover{border-color:var(--cobre);color:var(--papel)}
+.ea-cerrar:hover{border-color:var(--cobre);color:var(--cobre)}
 .ea-tabs{margin-top:16px}
 
 /* --- quién eres --- */
-.ea-campoK{font-size:11px;letter-spacing:.2em;color:var(--tenue);display:block;margin-bottom:7px}
-.ea-campo{width:100%;max-width:420px;background:var(--fieltro);border:1px solid var(--borde);
-  color:var(--papel);font-size:19px;padding:11px 13px;letter-spacing:.04em}
-.ea-campo::placeholder{color:var(--tenue);opacity:.7;letter-spacing:.02em}
+.ea-campoK{font-size:11px;letter-spacing:.2em;color:var(--gris);display:block;margin-bottom:7px}
+.ea-campo{width:100%;max-width:420px;background:var(--papel2);border:1px solid var(--borde);
+  color:var(--tintaPapel);font-size:19px;padding:11px 13px;letter-spacing:.04em}
+.ea-campo::placeholder{color:var(--gris);opacity:.7;letter-spacing:.02em}
 .ea-campo:focus{outline:2px solid var(--cobre);outline-offset:2px;border-color:var(--cobre)}
 .ea-generos{display:flex;gap:8px;flex-wrap:wrap}
-.ea-generos .ea-mini.on{border-color:var(--cobre);color:var(--papel);background:#0E4527}
+.ea-generos .ea-mini.on{border-color:var(--cobre);color:var(--tintaPapel);background:rgba(185,83,42,.15)}
 
 /* --- volver atrás en la configuración --- */
-.ea-atras{background:transparent;border:none;color:var(--tenue);font:inherit;font-size:11.5px;
+.ea-atras{background:transparent;border:none;color:var(--gris);font:inherit;font-size:11.5px;
   letter-spacing:.14em;padding:6px 0;margin-bottom:10px;cursor:pointer;text-transform:uppercase;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-atras:hover{color:var(--cobre)}
@@ -511,7 +505,7 @@ const CSS5 = `
 
 /* --- la ficha de familia --- */
 .ea-fam{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
-.ea-famC{border:1px solid var(--borde);padding:4px 9px;font-size:11.5px;color:var(--tenue)}
+.ea-famC{border:1px solid var(--borde);padding:4px 9px;font-size:11.5px;color:var(--gris)}
 `;
 
 /* ---------- escala de la carrera ---------- */
@@ -890,7 +884,7 @@ const CSS2 = `
 
 .ea-fondoC{border:1px solid var(--borde);padding:11px 12px;margin-bottom:10px}
 .ea-fondoT{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:3px}
-.ea-fondoN{font-size:13px;color:var(--papel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+.ea-fondoN{font-size:13px;color:var(--tintaPapel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
   text-transform:uppercase;letter-spacing:.05em;font-weight:700}
 .ea-badge{font-size:10.5px;letter-spacing:.14em;color:var(--cobre);border:1px solid var(--cobre);padding:2px 7px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
@@ -958,16 +952,16 @@ const CSS4 = `
   font:inherit;font-size:14px;letter-spacing:.14em;cursor:pointer;flex:1;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 .ea-aplicar:hover{background:#C86A3E;border-color:#C86A3E}
-.ea-descartar{background:transparent;color:var(--tenue);border:1px solid var(--borde);padding:13px 16px;
+.ea-descartar{background:transparent;color:var(--gris);border:1px solid var(--borde);padding:13px 16px;
   font:inherit;font-size:12px;letter-spacing:.12em;cursor:pointer;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
-.ea-descartar:hover{border-color:var(--cobre);color:var(--papel)}
+.ea-descartar:hover{border-color:var(--cobre);color:var(--cobre)}
 /* Una legendaria tiene que verse distinta antes de leerla. */
 .ea-memoHead.legend{background:linear-gradient(90deg,rgba(185,83,42,.22),transparent);
   border-color:var(--cobre);color:var(--cobre)}
 
 .ea-pend{border:1px solid var(--cobre);border-left-width:4px;background:rgba(185,83,42,.13);
-  padding:10px 13px;font-size:12.5px;color:var(--papel);margin-bottom:12px}
+  padding:10px 13px;font-size:12.5px;color:var(--tintaPapel);margin-bottom:12px}
 .ea-pendK{font-size:10px;letter-spacing:.18em;color:var(--cobre);margin-bottom:4px}
 
 .ea-mix{display:flex;height:23px;border:1px solid var(--borde);overflow:hidden;margin:4px 0 2px}
@@ -979,13 +973,13 @@ const CSS4 = `
 
 .ea-wrow{margin:11px 0}
 .ea-wtop{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;align-items:baseline}
-.ea-wname{color:var(--papel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;
+.ea-wname{color:var(--tintaPapel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;
   letter-spacing:.05em;font-weight:700;font-size:12.5px}
 .ea-wnum{color:var(--cobre)}
-.ea-wsub{font-size:11px;color:var(--tenue);margin-top:1px;line-height:1.35}
+.ea-wsub{font-size:11px;color:var(--gris);margin-top:1px;line-height:1.35}
 .ea-caja{border:1px solid var(--borde);padding:8px 11px;margin-top:14px}
 .ea-preset{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}
-.ea-mini.on{border-color:var(--cobre);color:var(--papel);background:rgba(185,83,42,.15)}
+.ea-mini.on{border-color:var(--cobre);color:var(--tintaPapel);background:rgba(185,83,42,.15)}
 .ea-avis{font-size:11.5px;color:#D08677;border-left:2px solid var(--rojo);padding-left:9px;margin-top:9px;line-height:1.45}
 .ea-ok2{font-size:11.5px;color:#8FBA8B;border-left:2px solid var(--verde);padding-left:9px;margin-top:9px;line-height:1.45}
 
@@ -1026,7 +1020,7 @@ const CSS4 = `
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 
 /* partida guardada */
-.ea-guarda{border:1px solid var(--borde);border-left:3px solid var(--cobre);background:var(--fieltro);
+.ea-guarda{border:1px solid var(--borde);border-left:3px solid var(--cobre);background:rgba(185,83,42,.08);
   padding:13px 16px;margin-top:4px}
 `;
 
@@ -6714,7 +6708,7 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
       ) : (
         <div className="ea-tengo ea-dis" style={{ marginTop: 12 }}>Así está invertido tu dinero ahora</div>
       )}
-      <div style={{ fontSize: 11.5, color: "var(--tenue)", marginTop: 12 }}>
+      <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 12 }}>
         Cada movimiento cuesta 0,5% de lo que rotas. Rebalancear una vez al año es sano; perseguir al
         activo que rindió el año pasado es la forma más común y más cara de perder dinero.
       </div>
@@ -8069,7 +8063,7 @@ function Motor() {
 
           <div className="ea-regla" />
           <button className="ea-btnO" onClick={aceptarAviso}>Entendido, acepto y quiero jugar</button>
-          <div style={{ fontSize: 11.5, color: "var(--tenue)", marginTop: 10 }}>
+          <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 10 }}>
             Al entrar aceptas que esto es un ejercicio de ficción con fines educativos y que no
             sustituye el consejo de un profesional.
           </div>
@@ -8099,20 +8093,20 @@ function Motor() {
           {guardado ? (
             <div>
               <div className="ea-guarda">
-                <div className="ea-lecK" style={{ color: "var(--tenue)" }}>Tienes una vida a medio camino</div>
-                <div className="ea-dis" style={{ fontSize: 19, color: "var(--papel)", marginTop: 5 }}>
+                <div className="ea-lecK" style={{ color: "var(--gris)" }}>Tienes una vida a medio camino</div>
+                <div className="ea-dis" style={{ fontSize: 19, color: "var(--tintaPapel)", marginTop: 5 }}>
                   {2026 + guardado.s.turno} · {edad(guardado.s.turno, guardado.s.edadIni)} años · {RANGO(guardado.s.rango).n}
                 </div>
-                <div className="ea-mono" style={{ fontSize: 13, color: "var(--tenue)", marginTop: 3 }}>
+                <div className="ea-mono" style={{ fontSize: 13, color: "var(--gris)", marginTop: 3 }}>
                   patrimonio USD {fmt(guardado.s.cash + guardado.s.cartera)} · año {guardado.s.turno + 1} de {TOPE_DE(guardado.s.seguir)}
                 </div>
               </div>
               <div className="ea-fila2" style={{ marginTop: 14 }}>
                 <button className="ea-btnO" style={{ marginTop: 0 }} onClick={retomar}>Retomar</button>
-                <button className="ea-btn" style={{ marginTop: 0, background: "transparent", border: "1px solid var(--borde)", color: "var(--hueso)" }}
+                <button className="ea-btn" style={{ marginTop: 0, background: "transparent", border: "1px solid var(--borde)", color: "var(--tintaPapel)" }}
                   onClick={empezar}>Empezar otra vida</button>
               </div>
-              <div style={{ fontSize: 11.5, color: "var(--tenue)", marginTop: 8 }}>
+              <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 8 }}>
                 Empezar otra vida borra la partida guardada.
               </div>
             </div>
@@ -8124,7 +8118,7 @@ function Motor() {
               hasta dónde llegó otra gente con las mismas reglas. */}
           <div className="ea-panel" style={{ marginTop: 30, textAlign: "left" }}>
             <PanelRegistro tope={8} titulo="Hasta dónde han llegado otros" />
-            <div style={{ fontSize: 11.5, color: "var(--tenue)", marginTop: 12 }}>
+            <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 12 }}>
               Se anota al terminar una carrera. Nadie verifica nada: es un registro por confianza.
             </div>
           </div>
@@ -8260,13 +8254,13 @@ function Motor() {
             <div className="ea-panel" key={p.id} style={{ marginBottom: 10 }}>
               <div className="ea-itemTop">
                 <span className="ea-nombre ea-dis" style={{ fontSize: 19 }}>{p.n}</span>
-                <span className="ea-mono" style={{ fontSize: 12.5, color: "var(--tenue)" }}>{p.ban}</span>
+                <span className="ea-mono" style={{ fontSize: 12.5, color: "var(--gris)" }}>{p.ban}</span>
               </div>
-              <div style={{ fontSize: 13.5, color: "var(--tenue)", margin: "8px 0" }}>{p.d}</div>
+              <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "8px 0" }}>{p.d}</div>
               <div style={{ fontSize: 12, color: "var(--cobre)" }}>
                 Sueldos {Math.round(p.sal * 100)} · costo de vida {Math.round(p.gas * 100)} · impuesto {Math.round(p.tax * 100)}% · empiezas con USD {fmt(p.cash)}
               </div>
-              <div style={{ fontSize: 12, color: "var(--tenue)", marginTop: 3 }}>{p.nota}</div>
+              <div style={{ fontSize: 12, color: "var(--gris)", marginTop: 3 }}>{p.nota}</div>
               <button className="ea-mini" onClick={() => { if (enFase("pais")) elige("pais", p.id, "estudio"); }}>
                 {elec.pais === p.id ? "Elegido" : "Elegir"}
               </button>
@@ -8290,7 +8284,7 @@ function Motor() {
           {CARRERAS.map((c) => (
             <div className="ea-panel" key={c.id} style={{ marginBottom: 10 }}>
               <div className="ea-nombre ea-dis" style={{ fontSize: 19 }}>{c.n}</div>
-              <div style={{ fontSize: 13.5, color: "var(--tenue)", margin: "7px 0" }}>{c.d}</div>
+              <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "7px 0" }}>{c.d}</div>
               <div style={{ fontSize: 12, color: "var(--cobre)" }}>
                 {Object.keys(c.mods).map((k) => ETIQ[k] + " +" + c.mods[k]).join(" · ")} · mejor en {c.juegos.map((j) => JUEGO(j).n.toLowerCase()).join(" y ")}
               </div>
@@ -8643,7 +8637,7 @@ function Motor() {
                           {ya
                             ? <span className="ea-tengo ea-dis">Vale hoy USD {fmt(s.valores[c.id] || 0)}</span>
                             : !puedeComprar(c, s)
-                            ? <span className="ea-dis" style={{ fontSize: 11, letterSpacing: ".1em", color: "var(--tenue)" }}>{c.porQue || "Todavía no te toca"}</span>
+                            ? <span className="ea-dis" style={{ fontSize: 11, letterSpacing: ".1em", color: "var(--gris)" }}>{c.porQue || "Todavía no te toca"}</span>
                             : <button className={s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis"}
                                 disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
                                 {s.cash + s.cartera < c.c ? "No te alcanza" : "Comprar"}
@@ -8801,9 +8795,9 @@ function Motor() {
                       {/* el índice a solas no dice nada: va con su tope y su nombre */}
                       <div style={{ textAlign: "right", flexShrink: 0 }}>
                         <div className="ea-vidaCifra ea-mono">
-                          {indiceVida}<span style={{ fontSize: 15, color: "var(--tenue)" }}> de {TOPE_VIDA}</span>
+                          {indiceVida}<span style={{ fontSize: 15, color: "var(--gris)" }}> de {TOPE_VIDA}</span>
                         </div>
-                        <div className="ea-dis" style={{ fontSize: 10, letterSpacing: ".14em", color: "var(--tenue)", marginTop: 5 }}>
+                        <div className="ea-dis" style={{ fontSize: 10, letterSpacing: ".14em", color: "var(--gris)", marginTop: 5 }}>
                           ÍNDICE DE TREN DE VIDA
                         </div>
                       </div>
@@ -8905,7 +8899,7 @@ function Motor() {
                           {ya
                             ? <span className="ea-tengo ea-dis">{c.tipo === "activo" ? "Vale hoy USD " + fmt(s.valores[c.id] || 0) : "Ya lo tienes"}</span>
                             : !puedeComprar(c, s)
-                            ? <span className="ea-dis" style={{ fontSize: 11, letterSpacing: ".1em", color: "var(--tenue)" }}>{c.porQue || "Todavía no te toca"}</span>
+                            ? <span className="ea-dis" style={{ fontSize: 11, letterSpacing: ".1em", color: "var(--gris)" }}>{c.porQue || "Todavía no te toca"}</span>
                             : <button className={s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis"}
                                 disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
                                 {s.cash + s.cartera < c.c ? "No te alcanza" : "Comprar"}
@@ -9473,7 +9467,7 @@ function Motor() {
           {gastadoEnConsumo > 0 && (
             <div className="ea-panel" style={{ marginTop: 16 }}>
               <div className="ea-rot ea-dis">Lo que se disfrutó y no volvió</div>
-              <div className="ea-mono" style={{ fontSize: 23, color: "var(--papel)" }}>USD {fmt(gastadoEnConsumo)}</div>
+              <div className="ea-mono" style={{ fontSize: 23, color: "var(--tintaPapel)" }}>USD {fmt(gastadoEnConsumo)}</div>
               <div className="ea-itemD" style={{ marginTop: 6 }}>
                 {consumoN} {consumoN === 1 ? "compra" : "compras"} sin valor de reventa: viajes, carros, fiestas.
                 No es dinero mal gastado por definición; es dinero que se cambió por vida en vez de por patrimonio.
@@ -9549,7 +9543,7 @@ class Blindaje extends React.Component {
             guardaste sigue ahí. Puedes reintentar desde el guardado o empezar una vida nueva.
           </p>
           <div className="ea-regla" />
-          <div className="ea-mono" style={{ fontSize: 12, color: "var(--tenue)", marginBottom: 20, wordBreak: "break-word" }}>
+          <div className="ea-mono" style={{ fontSize: 12, color: "var(--gris)", marginBottom: 20, wordBreak: "break-word" }}>
             {detalle.slice(0, 300)}
           </div>
           <div className="ea-fila2">
