@@ -8111,17 +8111,18 @@ function Motor() {
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Simulador de carrera e inversión</div>
           <h1 className="ea-h1 ea-dis">El Analista</h1>
           <p className="ea-lede">
-            Treinta años de carrera y de dinero, y tú eliges desde dónde los empiezas: recién graduado a los
-            veinte, o a los cincuenta con media vida hecha y bastante más criterio. De dónde vienes y qué
-            estudiaste te van a abrir unas puertas y cerrarte otras. Cada año trae decisiones, noticias que
-            sacuden el mercado, una cartera que repartes tú y un examen que se pone más difícil a medida que
-            estudias. Al final decides si te retiras o sigues cinco años más.
+            Nadie nace sabiendo qué hacer con su dinero, y casi nadie tiene dónde practicar sin perderlo.
+            Aquí sí: cada término se explica antes de usarse y puedes arruinarte tranquilo. Eliges desde
+            dónde empiezas —recién graduado a los veinte, o a los cincuenta con media vida hecha y bastante
+            más criterio—, y de dónde vienes y qué estudiaste te van a abrir unas puertas y cerrarte otras.
+            Cada año trae decisiones, noticias que sacuden el mercado, una cartera que repartes tú y un
+            examen que se pone más difícil a medida que estudias.
           </p>
           <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
             onClick={() => { if (enFase("portada")) irA("aviso"); }}>Volver a leer el aviso</button>
           <div className="ea-regla" />
           <div className="ea-cifras" style={{ marginBottom: 26 }}>
-            <div><div className="ea-cifraK">Recorrido</div><div className="ea-cifraV ea-mono">30 años</div></div>
+            <div><div className="ea-cifraK">Para empezar</div><div className="ea-cifraV ea-dis">No hace falta saber nada</div></div>
             <div><div className="ea-cifraK">Edad</div><div className="ea-cifraV ea-dis">Elige tu edad</div></div>
             <div><div className="ea-cifraK">La meta</div><div className="ea-cifraV ea-dis">Ser millonario</div></div>
             <div><div className="ea-cifraK">Por el camino</div><div className="ea-cifraV ea-dis">Bodas, hijos, estafas</div></div>
