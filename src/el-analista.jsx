@@ -3418,6 +3418,21 @@ const GENEROS = [
   { id: "m", n: "Masculino" },
   { id: "x", n: "Prefiero no decirlo" },
 ];
+/* Cuánto descansas al cerrar el año, en proporción a lo que te falta para
+   estar entero. Antes esto era un suelo plano de +6 por debajo de 50, y ese
+   suelo tenía dos efectos que nadie quería: clavaba la energía en 6 exactos
+   para todos desde el año 12, y como se aplicaba antes de comprobar el
+   agotamiento, hacía imposible quebrarse. Proporcional, en cambio, se
+   estabiliza en 100 − desgaste·2,846: el nivel al que vives lo eliges tú. */
+const RECUPERA = 0.26;
+
+/* Lo que el cansancio te quita —o te da— al resolver algo. La energía no
+   mueve tu sueldo ni tus atributos: mueve lo bien que rindes, que es lo que
+   se puede ver ANTES de decidir, en el propio botón del minijuego.
+   Centrado en 54 porque ése es el equilibrio de quien juega a ritmo normal:
+   jugar normal es neutro, cuidarte es ventaja, apretar tiene precio. */
+const ajusteEne = (ene) => clamp(Math.round((numero(ene, 54) - 54) / 3), -14, 10);
+
 /* Cuánto te dejas en la oficina. Sube la carrera y baja la energía,
    que es el intercambio de verdad y el que nadie hace consciente. */
 const RITMOS = [
@@ -4036,6 +4051,11 @@ const sanear = (bruto) => {
   st.rango = entero(r.rango, 0, 0, RANGOS.length - 1);
   st.carrera = clamp(numero(r.carrera, 0), 0, 100000);
   ["mod", "cri", "red", "rep", "ene"].forEach((k) => { st[k] = clamp(numero(r[k], BASE[k]), 0, 100); });
+  /* el año en que se avisó del cansancio, para no repetir el aviso dos
+     años seguidos. sanear() reconstruye el estado desde cero, así que sin
+     esta línea la clave se perdería en cada cierre y el aviso volvería a
+     salir siempre. -9 para que nunca coincida con turno-1 al empezar. */
+  st.avisoEne = entero(r.avisoEne, -9, -9, 60);
   st.cash = clamp(numero(r.cash, 0), -TOPE_PLATA, TOPE_PLATA);
   st.cartera = clamp(numero(r.cartera, 0), 0, TOPE_PLATA);
   st.pais = IDS_PAIS.indexOf(r.pais) >= 0 ? r.pais : null;
@@ -7753,20 +7773,32 @@ function Motor() {
     desgaste += -(rt.ene) - gv.ene;   /* el ritmo cansa, vivir bien descansa */
     if (st.pareja === "casado" || st.pareja === "noviazgo") desgaste -= 3;   /* alguien con quien contar */
     desgaste += Math.min(6, entero(st.hijos, 0, 0, 8) * 2);                  /* y alguien a quien cuidar */
-    st.ene = clamp(st.ene - desgaste, 0, 100);
-    /* Por debajo de la mitad el cuerpo se impone: duermes, cancelas, bajas
-       el ritmo. No te devuelve a ochenta, pero rompe la caída libre que
-       hacía imposible pasar del año diez. */
-    if (st.ene < 50) {
-      st.ene = clamp(st.ene + 6, 0, 100);
-      if (st.ene < 35) notas.push("Estás funcionando a media máquina. El cuerpo te está cobrando las horas.");
-    }
+    /* El desgaste se resta ANTES de recuperar y sin acotar por abajo: el
+       valor crudo es el que dice si te quiebras. El suelo plano que había
+       aquí (+6 por debajo de 50) se aplicaba antes de esa comprobación, así
+       que la energía nunca podía llegar a cero y el burnout entero era
+       código muerto. Peor: el suelo la clavaba en 6 exactamente, la misma
+       cifra para todo el mundo desde el año 12 en adelante. */
+    const eneCruda = st.ene - desgaste;
     let terminar = null;
-    if (st.ene <= 0) {
+    if (eneCruda <= 0) {
       st.burnouts += 1;
-      st.ene = 55; st.rep = clamp(st.rep - 8, 0, 100); st.cash -= 3000;
+      st.ene = 45; st.rep = clamp(st.rep - 8, 0, 100); st.cash -= 3000;
       notas.push("Te quiebras. Meses fuera y un regreso más lento de lo que admites.");
       if (st.burnouts >= 4) terminar = "burnout";
+    } else {
+      /* Recuperación proporcional: descansas más cuanto peor estás, pero
+         nunca lo bastante para ignorarlo. El sistema se estabiliza solo en
+         100 − desgaste·2,846, así que el nivel al que vives lo eliges tú con
+         el ritmo y el tren de vida, en vez de ser una constante. */
+      st.ene = clamp(eneCruda + Math.round((100 - eneCruda) * RECUPERA), 0, 100);
+    }
+    /* El aviso, solo cuando el cansancio ya te está costando trabajo de
+       verdad y no dos años seguidos: antes salía todos los años desde el
+       quinto, y una frase que sale veinticinco veces enseña a no leerla. */
+    if (!terminar && ajusteEne(st.ene) <= -6 && st.avisoEne !== st.turno - 1) {
+      st.avisoEne = st.turno;
+      notas.push("Estás funcionando a media máquina. El cuerpo te cobra las horas, y se nota en todo lo que intentas.");
     }
     if (st.rep <= 6) {
       st.despidos = entero(numero(st.despidos, 0) + 1, 1, 0, 9);
@@ -7865,6 +7897,7 @@ function Motor() {
     if (s.rama === "pe" && ["estructura", "banderas"].indexOf(tipo) >= 0) a += 15;
     if (s.rama === "mercados" && ["trading", "calculo"].indexOf(tipo) >= 0) a += 15;
     a += MODO(s.modo).ayuda;   /* el modo aprendiz perdona más */
+    a += ajusteEne(s.ene);     /* y el cansancio no perdona nada */
     return clamp(a, 0, 100);
   };
 
@@ -7873,7 +7906,10 @@ function Motor() {
     setOp(o);
     if (o.juego || o.j) { irA("minijuego"); return; }
     if (o.chk) {
-      const p = clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5, 0.12, 0.9);
+      /* El cansancio también pesa aquí, salvo en la única tirada que ya mide
+         la energía directamente: sumárselo ahí sería contarla dos veces. */
+      const base = s[o.chk.s] + (o.chk.s === "ene" ? 0 : ajusteEne(s.ene));
+      const p = clamp((base - o.chk.dif) / 55 + 0.5, 0.12, 0.9);
       const ok = Math.random() < p;
       resolverEscena(ok ? o.chk.ok : o.chk.no, ok ? "exito" : "fallo", o);
     } else resolverEscena(o.d, "exito", o);
@@ -8346,7 +8382,11 @@ function Motor() {
                   único momento en que cambian una decisión. */}
               <div className="ea-mono ea-signos">
                 <span>sueldo {fmt(salarioAnual(s))} al año</span>
-                {s.ene < 50 && <span className={s.ene < 30 ? "mal" : "ojo"}>energía {Math.round(s.ene)}</span>}
+                {ajusteEne(s.ene) < 0 && (
+                  <span className={ajusteEne(s.ene) <= -6 ? "mal" : "ojo"}>
+                    energía {Math.round(s.ene)} · rindes {ajusteEne(s.ene)}
+                  </span>
+                )}
                 {s.rep < 30 && <span className={s.rep < 20 ? "mal" : "ojo"}>reputación {Math.round(s.rep)}</span>}
                 {s.deuda > 0 && <span className="mal">debes {fmt(s.deuda)}</span>}
               </div>
@@ -8405,6 +8445,19 @@ function Motor() {
                     <div className="ea-plegs">
                     <Plegable titulo="Tus atributos" resumen={"criterio " + Math.round(s.cri)}>
                     <Stat k="mod" v={s.mod} /><Stat k="cri" v={s.cri} /><Stat k="red" v={s.red} /><Stat k="rep" v={s.rep} /><Stat k="ene" v={s.ene} ene />
+                    {/* Un atributo que no dice qué hace es un número decorativo. */}
+                    <div className="ea-itemD" style={{ marginTop: 9 }}>
+                      {(() => {
+                        const aj = ajusteEne(s.ene);
+                        if (aj > 0) return "Llegas descansado a todo: +" + aj + " de ayuda en cada minijuego y en cada tirada. Se paga viviendo bien y sin apretar el ritmo.";
+                        if (aj < 0) return "El cansancio te resta " + Math.abs(aj) + " de ayuda en cada minijuego y en cada tirada. Bajar el ritmo, vivir más holgado o el gimnasio lo recuperan.";
+                        return "Tu energía está en su punto neutro: ni te ayuda ni te estorba en lo que intentas.";
+                      })()}
+                    </div>
+                    <div className="ea-itemD" style={{ marginTop: 6 }}>
+                      Reputación multiplica tu bono y abarata tus préstamos. Criterio amortigua las
+                      caídas de la cartera por encima de 55. Red te abre el fondo a partir de 55.
+                    </div>
                     </Plegable>
                     <Plegable titulo="Quién eres" resumen={RANGO(s.rango).n}>
                     <div className="ea-fila" style={{ marginTop: 0 }}>
@@ -9012,7 +9065,18 @@ function Motor() {
                       <button className="ea-op" key={i} disabled={carteraPend} onClick={() => elegir(o)}>
                         <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
                         {o.req && <span className="ea-opTag" style={{ color: "var(--cobre)" }}>Solo tú puedes tomar esta</span>}
-                        {(o.juego || o.j) && <span className="ea-opTag">{JUEGO(o.juego || o.j).n} · {JUEGO(o.juego || o.j).tema} · te ayuda {ETIQ[o.stat] || "Criterio"} {Math.round(ayudaDe(o))}</span>}
+                        {/* La ayuda ya venía aquí; lo que faltaba era decir cuánto de
+                            ella te la está comiendo el cansancio. Verlo ANTES de elegir
+                            es lo que convierte la energía en una decisión. */}
+                        {(o.juego || o.j) && (() => {
+                          const aj = ajusteEne(s.ene);
+                          return (
+                            <span className="ea-opTag">
+                              {JUEGO(o.juego || o.j).n} · {JUEGO(o.juego || o.j).tema} · te ayuda {ETIQ[o.stat] || "Criterio"} {Math.round(ayudaDe(o))}
+                              {aj !== 0 && (aj < 0 ? " · cansado " + aj : " · descansado +" + aj)}
+                            </span>
+                          );
+                        })()}
                         {o.ramaId && <span className="ea-opTag">{o.ramaId === "boutique" ? FIRMA_DE(s).d : (RAMAS.find((r) => r.id === o.ramaId) || {}).d}</span>}
                         {(() => {
                           const ef = efectoDe(o);
