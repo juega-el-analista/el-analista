@@ -61,6 +61,10 @@ jobs:
         run: |
           mkdir -p sitio
           cp index.html sitio/index.html
+          # La portada de la tarjeta al compartir. El documento es autónomo,
+          # pero esta imagen tiene que existir como archivo suelto junto a él:
+          # WhatsApp y X la piden por su URL, no la sacan del HTML.
+          cp portada.png sitio/portada.png
 
       - name: Configurar Pages
         uses: actions/configure-pages@v5

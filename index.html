@@ -3,13 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>El Analista</title>
+<title>El Analista — simulador de carrera e inversión</title>
+<meta name="description" content="Las finanzas no son un club cerrado. Decides cada año qué haces con tu tiempo y tu dinero, y aquí cada término se explica antes de usarse. Veinte minijuegos y un temario que sube contigo.">
+<!-- La barra del navegador en móvil, del color de lo que toca el borde de
+     arriba. Por encima de la cabecera verde hay margen, y ese margen es
+     papel: si aquí pusiéramos el verde quedaría una costura. -->
+<meta name="theme-color" content="#F7F7F5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='11' fill='%230B3A1F'/%3E%3Crect x='14' y='38' width='9' height='13' fill='%23B9532A'/%3E%3Crect x='27' y='29' width='9' height='22' fill='%23B9532A'/%3E%3Crect x='40' y='17' width='9' height='34' fill='%234FA05C'/%3E%3C/svg%3E">
+
+<!-- Cómo se ve el enlace cuando alguien lo pega en WhatsApp, X o LinkedIn,
+     que es como se reparte esto de verdad. Sin estas etiquetas sale un
+     enlace pelado. La imagen la sirve Pages junto al documento; hay que
+     copiarla en el workflow o esto apunta a un 404. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://juega-el-analista.github.io/el-analista/">
+<meta property="og:title" content="El Analista — simulador de carrera e inversión">
+<meta property="og:description" content="Las finanzas no son un club cerrado. Decides cada año qué haces con tu tiempo y tu dinero, y aquí cada término se explica antes de usarse.">
+<meta property="og:image" content="https://juega-el-analista.github.io/el-analista/portada.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
 <style>
-  html, body { margin: 0; padding: 0; background: #0C191D; }
+  /* El envoltorio se quedó en la paleta de antes del rediseño de colores:
+     casi negro por fuera y casi blanco por dentro. Eso daba un destello
+     oscuro antes de que React pintara, una franja negra sobre la cabecera
+     y rebote de scroll en negro contra una página clara. Estos tres
+     colores son los del juego: --papel, --tintaPapel y --cobre. */
+  html, body { margin: 0; padding: 0; background: #F7F7F5; }
   #raiz { min-height: 100vh; }
   /* mientras carga, algo que no sea una pantalla en blanco */
-  #cargando { color: #7B8D8F; font-family: system-ui, sans-serif; padding: 40px 24px; font-size: 14px; letter-spacing: .06em; }
-  #tronado { color: #CFC9BA; background: #13252A; border: 1px solid #20393E; margin: 24px;
+  #cargando { color: #3D3D3D; font-family: system-ui, sans-serif; padding: 40px 24px; font-size: 14px; letter-spacing: .06em; }
+  #tronado { color: #3D3D3D; background: #EDEDE8; border: 1px solid #B9532A; margin: 24px;
              padding: 20px; font-family: ui-monospace, Menlo, monospace; font-size: 13px;
              white-space: pre-wrap; word-break: break-word; display: none; }
 
@@ -45,13 +70,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>El Analista</title>
+<title>El Analista — simulador de carrera e inversión</title>
+<meta name="description" content="Las finanzas no son un club cerrado. Decides cada año qué haces con tu tiempo y tu dinero, y aquí cada término se explica antes de usarse. Veinte minijuegos y un temario que sube contigo.">
+<!-- La barra del navegador en móvil, del color de lo que toca el borde de
+     arriba. Por encima de la cabecera verde hay margen, y ese margen es
+     papel: si aquí pusiéramos el verde quedaría una costura. -->
+<meta name="theme-color" content="#F7F7F5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='11' fill='%230B3A1F'/%3E%3Crect x='14' y='38' width='9' height='13' fill='%23B9532A'/%3E%3Crect x='27' y='29' width='9' height='22' fill='%23B9532A'/%3E%3Crect x='40' y='17' width='9' height='34' fill='%234FA05C'/%3E%3C/svg%3E">
+
+<!-- Cómo se ve el enlace cuando alguien lo pega en WhatsApp, X o LinkedIn,
+     que es como se reparte esto de verdad. Sin estas etiquetas sale un
+     enlace pelado. La imagen la sirve Pages junto al documento; hay que
+     copiarla en el workflow o esto apunta a un 404. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://juega-el-analista.github.io/el-analista/">
+<meta property="og:title" content="El Analista — simulador de carrera e inversión">
+<meta property="og:description" content="Las finanzas no son un club cerrado. Decides cada año qué haces con tu tiempo y tu dinero, y aquí cada término se explica antes de usarse.">
+<meta property="og:image" content="https://juega-el-analista.github.io/el-analista/portada.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
 <style>
-  html, body { margin: 0; padding: 0; background: #0C191D; }
+  /* El envoltorio se quedó en la paleta de antes del rediseño de colores:
+     casi negro por fuera y casi blanco por dentro. Eso daba un destello
+     oscuro antes de que React pintara, una franja negra sobre la cabecera
+     y rebote de scroll en negro contra una página clara. Estos tres
+     colores son los del juego: --papel, --tintaPapel y --cobre. */
+  html, body { margin: 0; padding: 0; background: #F7F7F5; }
   #raiz { min-height: 100vh; }
   /* mientras carga, algo que no sea una pantalla en blanco */
-  #cargando { color: #7B8D8F; font-family: system-ui, sans-serif; padding: 40px 24px; font-size: 14px; letter-spacing: .06em; }
-  #tronado { color: #CFC9BA; background: #13252A; border: 1px solid #20393E; margin: 24px;
+  #cargando { color: #3D3D3D; font-family: system-ui, sans-serif; padding: 40px 24px; font-size: 14px; letter-spacing: .06em; }
+  #tronado { color: #3D3D3D; background: #EDEDE8; border: 1px solid #B9532A; margin: 24px;
              padding: 20px; font-family: ui-monospace, Menlo, monospace; font-size: 13px;
              white-space: pre-wrap; word-break: break-word; display: none; }
 
