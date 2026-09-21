@@ -58,20 +58,30 @@ async function unaVida(semilla) {
 
   await act(async () => { reloj(400); await micro(); });
   await pulsa(porRot(/acepto y quiero jugar/i));
-  await pulsa(porRot(/^Empezar$/));
-  /* La pantalla de identidad: genero y nombre. Esta prueba era anterior
-     a ella y se quedaba clavada justo aqui, con las 20 partidas en
-     duracion 0 y sin llegar nunca a una pantalla final. */
-  await pulsa(porRot(/^(Femenino|Masculino|Prefiero no decirlo)$/));
-  await pulsa(porRot(/^Seguir sin nombre$/));
-  await pulsa(porRot(/^Analista/));
-  await pulsa(porRot(/^Empezar a los 20/));
-  const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
-  await pulsa(p[semilla % Math.max(1, p.length)] || p[0]);
-  const c = bs().filter((b) => /^(Graduarte de esto|Empezar con esto)$/.test(rot(b)));
-  await pulsa(c[semilla % Math.max(1, c.length)] || c[0]);
-  /* y el ultimo paso: guia si o no */
-  await pulsa(porRot(/^(Sé lo que hago|Guíame por el camino)$/));
+
+  /* Hay dos formas de entrar y las dos tienen que funcionar: «Jugar ya»,
+     que es de un clic y por donde va a entrar casi todo el mundo, y el
+     setup completo para quien quiera elegirlo todo. Se alternan por
+     semilla para que ninguna de las dos se quede sin probar. */
+  if (semilla % 2 === 0) {
+    await pulsa(porRot(/^Jugar ya$/));
+  } else {
+    await pulsa(porRot(/^Prefiero elegirlo todo/));
+    /* La pantalla de identidad: genero y nombre. Esta prueba era anterior
+       a ella y se quedaba clavada justo aqui, con las 20 partidas en
+       duracion 0 y sin llegar nunca a una pantalla final. */
+    await pulsa(porRot(/^(Femenino|Masculino|Prefiero no decirlo)$/));
+    await pulsa(porRot(/^Seguir sin nombre$/));
+    await pulsa(porRot(/^Analista/));
+    /* la duracion vive en esta misma pantalla; por defecto es la decada */
+    await pulsa(porRot(/^Empezar a los 20/));
+    const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
+    await pulsa(p[semilla % Math.max(1, p.length)] || p[0]);
+    const c = bs().filter((b) => /^(Graduarte de esto|Empezar con esto)$/.test(rot(b)));
+    await pulsa(c[semilla % Math.max(1, c.length)] || c[0]);
+    /* y el ultimo paso: guia si o no */
+    await pulsa(porRot(/^(Sé lo que hago|Guíame por el camino)$/));
+  }
 
   let ano = 0, pasos = 0, cargo = "Pasante", burnouts = 0, ultimaEne = null;
   while (pasos++ < 1600) {
@@ -123,11 +133,18 @@ async function unaVida(semilla) {
   const res = [];
   for (let i = 0; i < N; i++) { res.push(await unaVida(1000003 * (i + 1))); process.stdout.write("."); }
   console.log("\n");
-  const llegan = res.filter((x) => x.ano >= 30).length;
+  /* La meta por defecto es la decada, asi que lo que se mide es cuantas
+     partidas llegan a cerrarse. Antes, con treinta anios fijos, solo 6 de
+     20 llegaban al final y la pantalla final quedaba practicamente sin
+     probar. */
+  const META = 10;
+  const llegan = res.filter((x) => x.ano >= META).length;
+  const acaban = res.filter((x) => x.fin !== "se quedó colgada" && x.fin !== "error").length;
   const media = (res.reduce((a, x) => a + x.ano, 0) / res.length).toFixed(1);
   console.log("  vidas jugadas: " + res.length);
-  console.log("  años cerrados de media: " + media + " de 30");
-  console.log("  llegan a los 30 años: " + llegan + " de " + res.length + "  (" + Math.round(llegan / res.length * 100) + "%)");
+  console.log("  años cerrados de media: " + media + " de " + META);
+  console.log("  llegan a los " + META + " años: " + llegan + " de " + res.length + "  (" + Math.round(llegan / res.length * 100) + "%)");
+  console.log("  alcanzan un balance final: " + acaban + " de " + res.length + "  (" + Math.round(acaban / res.length * 100) + "%)");
   console.log("");
   const porFin = {};
   res.forEach((x) => { porFin[x.fin] = (porFin[x.fin] || 0) + 1; });

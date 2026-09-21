@@ -1693,6 +1693,27 @@ const CSS4 = `
 /* partida guardada */
 .ea-guarda{border:1px solid var(--borde);border-left:3px solid var(--cobre);background:rgba(185,83,42,.08);
   padding:13px 16px;margin-top:4px}
+
+/* La puerta de entrada. Es el unico boton de la portada que tiene que
+   verse desde la otra punta de la habitacion: todo lo demas es opcional. */
+.ea-jugarYa{background:var(--cobre);color:#20120A;border:2px solid var(--cobre);
+  padding:17px 38px;font:inherit;font-size:19px;letter-spacing:.14em;cursor:pointer;border-radius:2px;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;
+  transition:background .15s,transform .12s}
+.ea-jugarYa:hover{background:#C86A3E;border-color:#C86A3E}
+.ea-jugarYa:active{transform:translateY(1px)}
+
+/* los cinco perfiles de cartera, como tarjetas que se pueden comparar de
+   un vistazo en vez de cinco botones sin cifras */
+.ea-perfiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:8px;margin-top:4px}
+.ea-perfil{text-align:left;background:transparent;border:1px solid var(--borde);color:var(--tintaPapel);
+  font:inherit;padding:11px 13px;cursor:pointer;border-radius:2px;
+  transition:border-color .15s,background .15s}
+.ea-perfil:hover{border-color:var(--cobre)}
+.ea-perfil.on{border-color:var(--cobre);background:rgba(185,83,42,.1)}
+.ea-perfilT{font-size:14px;letter-spacing:.05em;color:var(--tintaPapel)}
+.ea-perfilD{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.45}
+.ea-perfilN{font-size:11.5px;color:var(--cobre);margin-top:6px}
 `;
 
 /* ---------- mejoras que se compran una sola vez ---------- */
@@ -9157,6 +9178,8 @@ const BASE = {
   modo: "normal",
   edadIni: 20,
   estudia: 0,
+  /* cuántos años piensas jugar antes de que te pregunten si te retiras */
+  meta: 30,
   nombre: "",
   genero: null,
   guia: false,
@@ -9382,12 +9405,37 @@ const EDADES = [{
 }];
 const EDAD_DE = e => EDADES.find(x => x.e === e) || EDADES[0];
 
-/* Cuanto dura la partida lo decide el jugador, no la tabla. Estos son
-   los puntos donde el juego se para a preguntar «¿te retiras?»; puedes
-   seguir diciendo que no hasta el ultimo. Empezando a los 20 eso llega
-   a los 75, y el retiro voluntario esta disponible mucho antes: en
-   cuanto tu patrimonio cubra lo que cuesta tu vida. */
-const TOPES = [30, 35, 40, 45, 50, 55]; // de los 50 a los 75 si empiezas a los 20
+/* Cuanto dura la partida lo decide el jugador, no la tabla. La partida
+   se para a preguntar «¿te retiras?» al llegar a tu meta, y cada vez que
+   dices que no se estira cinco anios mas, hasta el tope absoluto. El
+   retiro voluntario esta disponible mucho antes: en cuanto tu patrimonio
+   cubra lo que cuesta tu vida.
+
+   La meta la eliges al empezar. Antes eran treinta anios fijos para todo
+   el mundo, y eso son mas de cien decisiones: la propia prueba finales.js
+   solo cerraba 6 de 20 partidas, y la pantalla final —donde vive el
+   registro— casi nadie la veia. Una decada se termina de una sentada, y
+   quien se enganche sigue con el mismo boton de siempre. */
+const META_MIN = 8;
+const META_MAX = 30;
+const TOPE_ABSOLUTO = 55; /* empezando a los 20, eso son los 75 */
+const DURACIONES = [{
+  id: "decada",
+  meta: 10,
+  n: "Una década",
+  d: "Diez años, de una sentada. Llegas al balance final y ves en qué quedó todo. Si te enganchas, al llegar puedes seguir."
+}, {
+  id: "carrera",
+  meta: 30,
+  n: "La carrera entera",
+  d: "Treinta años. El recorrido completo: el fondo propio, los reconocimientos y el temario hasta arriba. Es largo de verdad."
+}];
+const DURACION = id => DURACIONES.find(x => x.id === id) || DURACIONES[0];
+
+/* la meta de esta partida y el anio en que toca preguntar, con los
+   guardados viejos cayendo en 30 por defecto: para ellos no cambia nada */
+const metaDe = st => entero(st && st.meta, 30, META_MIN, META_MAX);
+const topeDe = st => Math.min(TOPE_ABSOLUTO, metaDe(st) + entero(st && st.seguir, 0, 0, 20) * 5);
 const semestre = t => String(2026 + t);
 const edad = (t, ini) => entero(ini, 20, 20, 50) + entero(t, 0, 0, 60);
 const esClave = t => t % 2 === 1;
@@ -10280,7 +10328,10 @@ const sanear = bruto => {
   st.quiebras = entero(r.quiebras, 0, 0, 9);
   st.embargos = entero(r.embargos, 0, 0, 99);
   st.vetoCredito = entero(r.vetoCredito, 0, 0, 9);
-  st.seguir = entero(r.seguir, 0, 0, TOPES.length - 1);
+  st.seguir = entero(r.seguir, 0, 0, 20);
+  /* sin meta guardada son los treinta de siempre, para no cambiarle la
+     partida por debajo a quien la empezo antes de que esto existiera */
+  st.meta = entero(r.meta, 30, META_MIN, META_MAX);
   st.fondo = saneaFondo(r.fondo);
   st.shock = clamp(numero(r.shock, 0), -2, 2);
   st.pareja = PAREJAS.indexOf(r.pareja) >= 0 ? r.pareja : "solo";
@@ -10322,7 +10373,6 @@ const partidaJugable = st => !!(st && st.pais && st.estudio);
 /* consultas a las tablas que nunca devuelven undefined */
 const RANGO = i => RANGOS[entero(i, 0, 0, RANGOS.length - 1)] || RANGOS[0];
 const JUEGO = k => JUEGOS[k] || JUEGOS.suerte;
-const TOPE_DE = i => TOPES[entero(i, 0, 0, TOPES.length - 1)];
 const GUIA = [{
   id: "decidir",
   cuando: c => c.fase === "evento",
@@ -13502,6 +13552,8 @@ function PanelCartera({
     ...actual
   }));
   const [obj, setObj] = useState(objAct);
+  /* el reparto activo por activo, plegado salvo que lo pidas */
+  const [avanzado, setAvanzado] = useState(false);
   /* si la cartera cambia por otra via (un evento, retomar partida), los
      controles se ponen al dia solos en vez de quedar mostrando lo viejo */
   const huella = JSON.stringify(actual) + "|" + objAct;
@@ -13637,28 +13689,42 @@ function PanelCartera({
     style: {
       marginTop: 20
     }
-  }, "Puntos de partida"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-preset"
-  }, PERFILES.map(pf => /*#__PURE__*/React.createElement("button", {
-    key: pf.id,
-    className: "ea-mini" + (preset && preset.id === pf.id ? " on" : ""),
-    style: {
-      marginTop: 0
-    },
-    onClick: () => setW({
-      ...pf.w
-    })
-  }, pf.n))), /*#__PURE__*/React.createElement("div", {
+  }, "C\xF3mo quieres invertirlo"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-perfiles"
+  }, PERFILES.map(pf => {
+    const est2 = statsPesos({
+      ...pf.w,
+      efectivo: Math.max(0, 1 - invertidoDe(pf.w))
+    });
+    const on = preset && preset.id === pf.id;
+    return /*#__PURE__*/React.createElement("button", {
+      key: pf.id,
+      className: "ea-perfil" + (on ? " on" : ""),
+      onClick: () => setW({
+        ...pf.w
+      })
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-perfilT ea-dis"
+    }, pf.n, on ? " ·" : ""), /*#__PURE__*/React.createElement("div", {
+      className: "ea-perfilD"
+    }, pf.d), /*#__PURE__*/React.createElement("div", {
+      className: "ea-perfilN ea-mono"
+    }, "esperado ", (est2.mu * 100).toFixed(1), "% \xB7 un a\xF1o malo ", ((est2.mu - 2 * est2.sd) * 100).toFixed(0), "%"));
+  })), !preset && /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD",
     style: {
-      marginTop: -4
+      marginTop: 8
     }
-  }, preset ? preset.d : "Combinación tuya. Ningún perfil de la lista se parece a esto."), /*#__PURE__*/React.createElement("div", {
-    className: "ea-rot ea-dis",
+  }, "Ahora mismo tienes una combinaci\xF3n tuya, que no se parece a ninguno de los cinco. Perfecto: toca un perfil solo si quieres volver a un punto conocido."), /*#__PURE__*/React.createElement("button", {
+    className: "ea-atras ea-dis",
     style: {
-      marginTop: 20
-    }
-  }, "Y c\xF3mo se reparte por dentro"), ACTIVOS.map(a => {
+      marginTop: 14,
+      marginBottom: 0
+    },
+    onClick: () => setAvanzado(v => !v)
+  }, avanzado ? "↑ Ocultar el reparto activo por activo" : "↓ Repartir activo por activo"), avanzado && /*#__PURE__*/React.createElement("div", {
+    className: "ea-panelAb"
+  }, ACTIVOS.map(a => {
     const x = Math.round((w[a.k] || 0) * 100);
     return /*#__PURE__*/React.createElement("div", {
       className: "ea-wrow",
@@ -13693,7 +13759,7 @@ function PanelCartera({
     }
   }, "Efectivo dentro de la cartera"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
-  }, Math.round(ef * 100), "%")), /*#__PURE__*/React.createElement("div", {
+  }, Math.round(ef * 100), "%"))), /*#__PURE__*/React.createElement("div", {
     className: "ea-caja"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
@@ -13957,20 +14023,27 @@ function Motor() {
   const [fin, setFin] = useState(null);
   const [guardado, setGuardado] = useState(null);
   const [aviso, setAviso] = useState("");
+  /* el aviso legal entero, plegado por defecto */
+  const [avisoLargo, setAvisoLargo] = useState(false);
   /* Las cuatro decisiones de partida viven aquí y NO tocan el estado del
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
      duplica sus bonos: no hay nada acumulado que duplicar. */
+  /* El modo arranca en Aprendiz a proposito: es el que explica cada
+     termino antes de usarlo, y quien ya sabe de esto lo cambia en un
+     clic. Al reves —empezar en Analista— el que no sabe no se entera de
+     que existia la ayuda hasta que ya se perdio. */
   const SETUP0 = {
     nombre: "",
     genero: null,
-    modo: "normal",
+    modo: "aprendiz",
     edad: 20,
     pais: null,
     estudio: null,
     guia: null,
     pareja: "solo",
-    hijos: 0
+    hijos: 0,
+    duracion: "decada"
   };
   const [elec, setElec] = useState(SETUP0);
   const aceptarAviso = () => {
@@ -14055,7 +14128,7 @@ function Motor() {
       } catch (err) {/* nada */}
     };
   }, [tab, carteraPend]);
-  const tope = TOPE_DE(s.seguir);
+  const tope = topeDe(s);
   const nacion = NACIONES.find(x => x.id === s.pais) || NACIONES[0];
   const estudio = CARRERAS.find(x => x.id === s.estudio) || CARRERAS[0];
   const pesosAct = s.pesos || PERFILES[0].w;
@@ -14300,6 +14373,9 @@ function Motor() {
     st.guia = sel.guia === true;
     st.guiaVistas = [];
 
+    /* cuánto va a durar esto antes de que se le pregunte si se retira */
+    st.meta = DURACION(sel.duracion).meta;
+
     /* la edad: años de trayectoria, ahorro y desgaste */
     st.edadIni = ed.e;
     st.carrera = numero(st.carrera, 0) + numero(ed.car, 0);
@@ -14379,6 +14455,35 @@ function Motor() {
     setCierre(null);
     setTab(null);
     irA("identidad");
+  };
+
+  /* Entrar de un clic. Hasta ahora, para ver la primera decision habia que
+     pasar por seis pantallas de configuracion y decidir cosas que todavia
+     no significaban nada: no sabes si quieres empezar a los 40 hasta que
+     has jugado una vez. Aqui se eligen valores sensatos, se entra, y lo
+     que el jugador quiera cambiar lo cambia en la siguiente vida.
+      El pais sale al azar menos Estados Unidos, que arranca debiendo
+     dieciseis mil de universidad: como primer contacto es un castigo que
+     nadie eligio. */
+  const jugarYa = () => {
+    if (!enFase("portada")) return;
+    const na = elegirAzar(NACIONES.filter(x => x.id !== "us")) || NACIONES[0];
+    const ca = elegirAzar(CARRERAS) || CARRERAS[0];
+    tirarPartida();
+    setElec(SETUP0);
+    setFin(null);
+    setRes(null);
+    setCierre(null);
+    setTab(null);
+    arrancarPartida({
+      ...SETUP0,
+      modo: "aprendiz",
+      edad: 20,
+      duracion: "decada",
+      pais: na.id,
+      estudio: ca.id,
+      guia: true
+    });
   };
 
   /* el rastro de lo ya elegido, para que se vea qué hay detrás del Atrás */
@@ -15409,7 +15514,7 @@ function Motor() {
     if (s.turno >= tope) {
       /* Antes el juego te jubilaba por decreto a la segunda prórroga.
          Ahora solo se acaba solo cuando ya no queda tabla que estirar. */
-      if (s.seguir >= TOPES.length - 1) {
+      if (topeDe(s) >= TOPE_ABSOLUTO) {
         tirarPartida();
         setFin("completo");
         irA("fin");
@@ -15430,7 +15535,7 @@ function Motor() {
   const seguirCinco = () => {
     const st = {
       ...s,
-      seguir: Math.min(s.seguir + 1, TOPES.length - 1)
+      seguir: entero(s.seguir + 1, 1, 0, 20)
     };
     setS(st);
     persistir(st);
@@ -15466,6 +15571,14 @@ function Motor() {
   const costoHijos = s.hijos * COSTO_HIJO * nacion.gas;
   const netoDelAno = netoAnual(s);
   const pesoTren = netoDelAno > 0 ? gastosAnuales / netoDelAno : 1;
+
+  /* Una partida corta no se puede juzgar con la vara de una carrera
+     entera. En diez anios la cobertura no llega a uno ni jugando
+     perfecto, asi que con la escalera larga TODA partida corta caia en
+     el veredicto mas duro —y encima le decia al jugador que habia
+     trabajado tres decadas. Por debajo de veinte anios se mide lo unico
+     que de verdad se puede medir en ese plazo: cuantos anios de sueldo
+     neto llevas guardados. */
   const veredicto = useMemo(() => {
     if (fin === "despido") return {
       t: "Salida por la puerta de atrás",
@@ -15487,6 +15600,32 @@ function Motor() {
       t: "Libertad financiera",
       x: "Tu patrimonio cubre tu forma de vivir sin que tengas que volver a la oficina. Ya no trabajas porque necesites."
     };
+    const anos = entero(s.turno, 0, 0, 60);
+    if (anos < 20) {
+      const neto = netoAnual(s);
+      const veces = neto > 0 ? patrimonio / neto : 0;
+      const cuantos = anos + (anos === 1 ? " año" : " años");
+      if (patrimonio < 0) return {
+        t: "Cerraste debiendo",
+        x: "Después de " + cuantos + " sales con el patrimonio en negativo. Pasa, y se sale: lo que no se puede es no mirarlo. La deuda cara se paga antes que cualquier inversión."
+      };
+      if (veces >= 5) return {
+        t: "Arrancaste muy por delante",
+        x: "En " + cuantos + " guardaste " + veces.toFixed(1) + " años de tu sueldo neto. A este ritmo el interés compuesto hace el resto del trabajo: mira abajo lo que traían los años que no jugaste."
+      };
+      if (veces >= 2.5) return {
+        t: "Vas bien encaminado",
+        x: "Llevas " + veces.toFixed(1) + " años de sueldo guardados en " + cuantos + ". Es una base de verdad, y la parte difícil —empezar— ya está hecha."
+      };
+      if (veces >= 1) return {
+        t: "Empezaste, que es lo que casi nadie hace",
+        x: "Un año entero de sueldo guardado en " + cuantos + ". No suena a mucho y es exactamente donde se separa el que acumula del que no."
+      };
+      return {
+        t: "Todo se fue en vivir",
+        x: "Después de " + cuantos + " no queda casi nada guardado. No es raro: el gasto persigue al sueldo solo, y la única forma de romperlo es apartar el ahorro el día que cobras, no a fin de mes."
+      };
+    }
     if (cobertura >= 0.6) return {
       t: "Casi, pero todavía no",
       x: "Tienes un patrimonio serio y aun así te falta para cubrir tu tren de vida. O trabajas unos años más, o el tren de vida se ajusta."
@@ -15497,9 +15636,9 @@ function Motor() {
     };
     return {
       t: "El sueldo era el plan",
-      x: "Trabajaste tres décadas y sigues dependiendo del próximo pago. La carrera no fue mala, la acumulación sí."
+      x: "Trabajaste " + anos + " años y sigues dependiendo del próximo pago. La carrera no fue mala, la acumulación sí."
     };
-  }, [fin, cobertura, s.rango, s.fondo]);
+  }, [fin, cobertura, s.rango, s.fondo, s.turno, patrimonio]);
 
   /* Si los requisitos dejaran una escena sin ninguna opcion visible, el
      jugador quedaria encerrado. Antes que eso, se le muestran todas. */
@@ -15602,6 +15741,24 @@ function Motor() {
     className: "ea-aviso"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-avisoB"
+  }, /*#__PURE__*/React.createElement("p", null, "Todo lo que vas a ver est\xE1 ", /*#__PURE__*/React.createElement("strong", null, "inventado"), ": las empresas, los fondos, las noticias y los n\xFAmeros. No hay dinero de verdad en juego.")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-avisoB"
+  }, /*#__PURE__*/React.createElement("p", null, "Ense\xF1a conceptos \u2014inter\xE9s compuesto, riesgo, deuda\u2014 y esos s\xED sirven fuera. Las cifras concretas no: ", /*#__PURE__*/React.createElement("strong", null, "esto no es asesor\xEDa financiera"), ".")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-avisoB"
+  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Hay vida adulta dentro"), ": parejas, rupturas, hijos, divorcios, enfermedad, la muerte de alguien cercano y estafas. Nada expl\xEDcito ni gr\xE1fico, pero conviene saberlo."))), /*#__PURE__*/React.createElement("button", {
+    className: "ea-atras ea-dis",
+    style: {
+      marginTop: 14,
+      marginBottom: 0
+    },
+    onClick: () => setAvisoLargo(v => !v)
+  }, avisoLargo ? "↑ Cerrar el aviso completo" : "↓ Leer el aviso completo"), avisoLargo && /*#__PURE__*/React.createElement("div", {
+    className: "ea-aviso ea-panelAb",
+    style: {
+      marginTop: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-avisoB"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-avisoK ea-dis"
   }, "Nada de aqu\xED es real"), /*#__PURE__*/React.createElement("p", null, "Las empresas, los fondos, las noticias y los n\xFAmeros est\xE1n inventados. No existe ninguna de las oportunidades que vas a ver, no hay dinero de verdad en juego y nada de lo que decidas aqu\xED tiene la menor consecuencia fuera de esta pantalla. Puedes arruinarte tranquilo: es el mejor sitio para hacerlo.")), /*#__PURE__*/React.createElement("div", {
@@ -15644,7 +15801,7 @@ function Motor() {
     className: "ea-h1 ea-dis"
   }, "El Analista"), /*#__PURE__*/React.createElement("p", {
     className: "ea-lede"
-  }, "Treinta a\xF1os de carrera y de dinero, y t\xFA eliges desde d\xF3nde los empiezas: reci\xE9n graduado a los veinte, o a los cincuenta con media vida hecha y bastante m\xE1s criterio. De d\xF3nde vienes y qu\xE9 estudiaste te van a abrir unas puertas y cerrarte otras. Cada a\xF1o trae decisiones, noticias que sacuden el mercado, una cartera que repartes t\xFA y un examen que se pone m\xE1s dif\xEDcil a medida que estudias. Al final decides si te retiras o sigues cinco a\xF1os m\xE1s."), /*#__PURE__*/React.createElement("button", {
+  }, "Una carrera y un patrimonio, un a\xF1o por turno. Cada a\xF1o trae decisiones, noticias que sacuden el mercado y una cartera que repartes t\xFA. Empiezas con una d\xE9cada: se juega de una sentada y termina en un balance que te dice en qu\xE9 qued\xF3 todo. Si te engancha, sigues."), /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
       marginBottom: 0,
@@ -15664,15 +15821,15 @@ function Motor() {
     className: "ea-cifraK"
   }, "Recorrido"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-mono"
-  }, "30 a\xF1os")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "T\xFA eliges")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraK"
   }, "Edad"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
-  }, "Elige tu edad")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "Desde los 20 o los 50")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraK"
   }, "La meta"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
-  }, "Ser millonario")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "No depender del sueldo")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraK"
   }, "Por el camino"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
@@ -15697,7 +15854,7 @@ function Motor() {
       color: "var(--gris)",
       marginTop: 3
     }
-  }, "patrimonio USD ", fmt(guardado.s.cash + guardado.s.cartera), " \xB7 a\xF1o ", guardado.s.turno + 1, " de ", TOPE_DE(guardado.s.seguir))), /*#__PURE__*/React.createElement("div", {
+  }, "patrimonio USD ", fmt(guardado.s.cash + guardado.s.cartera), " \xB7 a\xF1o ", guardado.s.turno + 1, " de ", topeDe(guardado.s))), /*#__PURE__*/React.createElement("div", {
     className: "ea-fila2",
     style: {
       marginTop: 14
@@ -15723,10 +15880,24 @@ function Motor() {
       color: "var(--gris)",
       marginTop: 8
     }
-  }, "Empezar otra vida borra la partida guardada.")) : /*#__PURE__*/React.createElement("button", {
-    className: "ea-btnO",
+  }, "Empezar otra vida borra la partida guardada.")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    className: "ea-jugarYa ea-dis",
+    onClick: jugarYa
+  }, "Jugar ya"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      color: "var(--gris)",
+      marginTop: 8,
+      maxWidth: "52ch"
+    }
+  }, "Una d\xE9cada, empezando a los 20, con las explicaciones puestas. Te tocan un pa\xEDs y una carrera al azar y entras directo. No hay nada que configurar."), /*#__PURE__*/React.createElement("button", {
+    className: "ea-atras ea-dis",
+    style: {
+      marginTop: 14,
+      marginBottom: 0
+    },
     onClick: empezar
-  }, "Empezar"), /*#__PURE__*/React.createElement("div", {
+  }, "Prefiero elegirlo todo \u2192")), /*#__PURE__*/React.createElement("div", {
     className: "ea-panel",
     style: {
       marginTop: 30,
@@ -15877,7 +16048,29 @@ function Motor() {
     style: {
       marginBottom: 18
     }
-  }, "Nadie est\xE1 fuera de tiempo. Empezar a los cincuenta no es empezar perdiendo: es empezar con menos a\xF1os por delante y bastante m\xE1s criterio, red y dinero que a los veinte. En todos los casos juegas treinta a\xF1os."), EDADES.map(e => /*#__PURE__*/React.createElement("button", {
+  }, "Nadie est\xE1 fuera de tiempo. Empezar a los cincuenta no es empezar perdiendo: es empezar con menos a\xF1os por delante y bastante m\xE1s criterio, red y dinero que a los veinte."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-campoK ea-dis"
+  }, "Cu\xE1nto quieres jugar"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-generos",
+    style: {
+      marginBottom: 6
+    }
+  }, DURACIONES.map(d => /*#__PURE__*/React.createElement("button", {
+    key: d.id,
+    className: "ea-mini" + (elec.duracion === d.id ? " on" : ""),
+    style: {
+      marginTop: 0
+    },
+    onClick: () => setElec(x => ({
+      ...x,
+      duracion: d.id
+    }))
+  }, d.n))), /*#__PURE__*/React.createElement("div", {
+    className: "ea-itemD",
+    style: {
+      marginBottom: 20
+    }
+  }, DURACION(elec.duracion).d), EDADES.map(e => /*#__PURE__*/React.createElement("button", {
     className: "ea-opcion" + (elec.edad === e.e ? " on" : ""),
     key: e.e,
     onClick: () => {
@@ -15889,7 +16082,7 @@ function Motor() {
     className: "ea-opcionD"
   }, e.d), /*#__PURE__*/React.createElement("div", {
     className: "ea-opcionM"
-  }, "Terminas a los ", e.e + 30, e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado", Object.keys(e.mods || {}).length ? " · " + Object.keys(e.mods).map(k => ETIQ[k] + " " + (e.mods[k] > 0 ? "+" : "") + e.mods[k]).join(" · ") : "")))), fase === "familia" && /*#__PURE__*/React.createElement("div", {
+  }, "Te preguntan si te retiras a los ", e.e + DURACION(elec.duracion).meta, ", y ah\xED decides si sigues", e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado", Object.keys(e.mods || {}).length ? " · " + Object.keys(e.mods).map(k => ETIQ[k] + " " + (e.mods[k] > 0 ? "+" : "") + e.mods[k]).join(" · ") : "")))), fase === "familia" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
