@@ -1764,13 +1764,49 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* ---- el rodillo del cierre ---- */
+.ea-rodillos{display:inline-flex;align-items:center;gap:1px;line-height:1}
+.ea-rodillo{display:inline-block;height:1em;overflow:hidden;vertical-align:bottom;
+  width:.62em;position:relative}
+.ea-rodCol{display:flex;flex-direction:column;transition-property:transform;will-change:transform}
+.ea-rodD{height:1em;line-height:1;display:flex;align-items:center;justify-content:center}
+/* El punto de los miles se apoya abajo, donde va un punto. Centrado
+   entre las ruedas quedaba flotando a media altura. */
+.ea-rodSep{display:inline-block;opacity:.5;width:.3em;text-align:center;
+  align-self:flex-end;line-height:1}
+
+/* La pantalla del anuncio: el cierre del anio pasa por aqui antes de
+   ensenar el informe. Es el unico momento del juego que no pide leer. */
+.ea-anuncio{position:fixed;inset:0;z-index:80;background:var(--fieltro);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;text-align:center;animation:ea-entra .3s ease-out;cursor:pointer}
+@keyframes ea-entra{from{opacity:0}to{opacity:1}}
+.ea-anuncioK{font-size:12px;letter-spacing:.3em;color:var(--tenue);margin-bottom:10px}
+.ea-anuncioN{font-size:clamp(38px,12vw,86px);color:var(--papel);line-height:1;
+  display:flex;align-items:center;gap:.12em}
+.ea-anuncioU{font-size:.42em;color:var(--tenue);letter-spacing:.1em}
+.ea-anuncioD{margin-top:20px;font-size:clamp(17px,4.5vw,25px);letter-spacing:.04em;
+  animation:ea-pop .4s cubic-bezier(.2,1.5,.4,1) backwards}
+.ea-anuncioD.sube{color:#7FD08C}
+.ea-anuncioD.baja{color:#E0897B}
+.ea-anuncioL{margin-top:8px;font-size:13px;color:var(--tenue);
+  animation:ea-flash .4s ease-out backwards}
+.ea-anuncioB{margin-top:30px;animation:ea-flash .4s ease-out backwards}
+
 /* Hay gente que marea. Si su sistema lo pide, nada se mueve: el juego
    sigue funcionando igual porque ninguna animacion cambia una regla. */
 @media (prefers-reduced-motion: reduce){
-  .ea-root *,.ea-root *::before,.ea-root *::after{
+  .ea-root *,.ea-root *::before,.ea-root *::after,.ea-anuncio *{
     animation-duration:.001ms !important;
     animation-iteration-count:1 !important;
     transition-duration:.001ms !important;
+    /* El retardo hay que matarlo tambien, no solo la duracion. Varias
+       cosas entran escalonadas con animation-delay y relleno backwards,
+       o sea invisibles hasta que les toca: sin esto, quien pide menos
+       movimiento se quedaba mirando el anuncio del año DOS SEGUNDOS
+       sin boton para salir. */
+    animation-delay:0ms !important;
+    transition-delay:0ms !important;
   }
 }
 `;
@@ -13025,6 +13061,86 @@ function Cifra({
   }, [fin]);
   return fmt(x);
 }
+
+/* ============================================================
+   EL RODILLO
+   La cifra del cierre contaba, pero contaba en una esquina y con letra
+   de informe. El momento en que se sabe como fue el anio merece la
+   pantalla entera: cada digito es un tambor que gira y se para, de
+   izquierda a derecha, como el marcador de una maquina.
+
+   Cada rueda lleva los diez digitos repetidos tres veces y aterriza en
+   la tercera vuelta, asi que gira de verdad en vez de deslizarse al
+   sitio. Los separadores de miles no giran: se quedan fijos, que es lo
+   que hace que se lea el numero mientras se mueve.
+   ============================================================ */
+const RUEDA = [];
+for (let v = 0; v < 3; v++) for (let d = 0; d <= 9; d++) RUEDA.push(d);
+function Rodillo({
+  v
+}) {
+  const txt = fmt(numero(v, 0));
+  const [rodando, setRodando] = useState(true);
+  let quieto = false;
+  try {
+    quieto = typeof window !== "undefined" && typeof window.matchMedia === "function" && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (e) {
+    quieto = false;
+  }
+  useEffect(() => {
+    if (quieto) {
+      setRodando(false);
+      return;
+    }
+    setRodando(true);
+    if (typeof setTimeout !== "function") {
+      setRodando(false);
+      return;
+    }
+    /* un respiro antes de soltar los frenos: sin esto el navegador pinta
+       ya el estado final y no hay transicion que ver */
+    const t = setTimeout(() => setRodando(false), 60);
+    return () => {
+      try {
+        clearTimeout(t);
+      } catch (e) {}
+    };
+  }, [txt, quieto]);
+  if (quieto) return /*#__PURE__*/React.createElement("span", {
+    className: "ea-rodillos ea-mono"
+  }, txt);
+  const cifras = txt.split("");
+  /* la rueda n tarda mas que la n-1, asi que el numero cuaja de
+     izquierda a derecha y la ultima en pararse es la de las unidades */
+  let idx = -1;
+  return /*#__PURE__*/React.createElement("span", {
+    className: "ea-rodillos ea-mono",
+    "aria-label": "USD " + txt
+  }, cifras.map((c, i) => {
+    if (!/[0-9]/.test(c)) return /*#__PURE__*/React.createElement("span", {
+      className: "ea-rodSep",
+      key: i
+    }, c);
+    idx += 1;
+    const destino = 20 + Number(c); /* tercera vuelta */
+    const dur = 900 + idx * 260;
+    return /*#__PURE__*/React.createElement("span", {
+      className: "ea-rodillo",
+      key: i,
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-rodCol",
+      style: {
+        transform: "translateY(" + (rodando ? 0 : -destino * 100 / RUEDA.length) + "%)",
+        transitionDuration: (rodando ? 0 : dur) + "ms",
+        transitionTimingFunction: "cubic-bezier(.16,.84,.26,1)"
+      }
+    }, RUEDA.map((d, k) => /*#__PURE__*/React.createElement("span", {
+      className: "ea-rodD",
+      key: k
+    }, d))));
+  }));
+}
 function Plegable({
   titulo,
   resumen,
@@ -14144,6 +14260,9 @@ function Motor() {
   const [aviso, setAviso] = useState("");
   /* el aviso legal entero, plegado por defecto */
   const [avisoLargo, setAvisoLargo] = useState(false);
+  /* la pantalla del rodillo, que tapa el informe hasta que el jugador
+     ha visto cuanto tiene ahora */
+  const [anuncio, setAnuncio] = useState(false);
   /* Las cuatro decisiones de partida viven aquí y NO tocan el estado del
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
@@ -15580,6 +15699,7 @@ function Motor() {
       indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0
     });
     if (terminar) setFin(terminar);
+    setAnuncio(true); /* primero el rodillo, y despues el informe */
     irA("cierre");
   };
   const ayudaDe = o => {
@@ -17658,12 +17778,11 @@ function Motor() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-titularK ea-dis"
   }, "Tu patrimonio"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-titularV ea-mono"
-  }, "USD ", /*#__PURE__*/React.createElement(Cifra, {
-    v: cierre.patrimonio,
-    desde: cierre.patAntes,
-    ms: 1100
-  })), /*#__PURE__*/React.createElement("div", {
+    className: "ea-titularV ea-mono",
+    style: {
+      fontSize: 26
+    }
+  }, "USD ", fmt(cierre.patrimonio)), /*#__PURE__*/React.createElement("div", {
     className: "ea-titularL"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-mono",
@@ -17675,9 +17794,26 @@ function Motor() {
     style: {
       color: cierre.ahorro >= 0 ? "#2E7A3D" : "#8A2E1E"
     }
-  }, "ahorraste ", Math.round(cierre.ahorro * 100), "% de lo que entr\xF3")), cierre.ascenso && /*#__PURE__*/React.createElement("div", {
+  }, "ahorraste ", Math.round(cierre.ahorro * 100), "%"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-mono"
+  }, "cubres ", Math.round(cierre.cobertura * 100), "% de tu vida")), cierre.ascenso && /*#__PURE__*/React.createElement("div", {
     className: "ea-titularA ea-dis"
-  }, "Ascenso a ", cierre.ascenso)), cierre.leccion && /*#__PURE__*/React.createElement("div", {
+  }, "Ascenso a ", cierre.ascenso), /*#__PURE__*/React.createElement("div", {
+    className: "ea-ind",
+    style: {
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-indF",
+    style: {
+      width: Math.min(100, cierre.indep * 100) + "%"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "ea-indM",
+    style: {
+      left: "71.4%"
+    }
+  }))), cierre.leccion && /*#__PURE__*/React.createElement("div", {
     className: "ea-lec",
     style: {
       marginTop: 14
@@ -17692,68 +17828,28 @@ function Motor() {
     className: "ea-hitos"
   }, cierre.hitos.map((h, i) => /*#__PURE__*/React.createElement("span", {
     className: "ea-hito",
-    key: i
-  }, h))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-plegs"
-  }, /*#__PURE__*/React.createElement(Plegable, {
-    titulo: "Las noticias del a\xF1o",
-    resumen: cierre.notis.length ? cierre.notis.length + (cierre.notis.length === 1 ? " noticia" : " noticias") : "sin novedades"
-  }, cierre.notis.map((n, i) => /*#__PURE__*/React.createElement("div", {
-    className: "ea-noti",
     key: i,
     style: {
-      marginTop: i === 0 ? 0 : 8
+      animationDelay: i * 100 + "ms"
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-notiK"
-  }, n.k), /*#__PURE__*/React.createElement("div", {
-    className: "ea-notiT"
-  }, n.t))), cierre.notis.length === 0 && /*#__PURE__*/React.createElement("div", {
-    className: "ea-td"
-  }, "Un a\xF1o sin sobresaltos en los mercados.")), /*#__PURE__*/React.createElement(Plegable, {
-    titulo: "De d\xF3nde sali\xF3 tu patrimonio",
-    resumen: cierre.patAntes > 0 ? ((cierre.patrimonio / cierre.patAntes - 1) * 100).toFixed(1) + "%" : "primer año",
-    tono: cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "Patrimonio"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mono",
+  }, h))), cierre.notas.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 26,
-      color: "#3D3D3D",
-      margin: "3px 0"
+      marginTop: 14
     }
-  }, "USD ", fmt(cierre.patrimonio)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-dis",
+  }, cierre.notas.map((n, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "ea-td",
     style: {
-      fontSize: 14,
-      color: cierre.patrimonio >= cierre.patAntes ? "#3D8A49" : "var(--rojo)"
+      fontSize: 13.5,
+      marginBottom: 6
     }
-  }, cierre.patrimonio >= cierre.patAntes ? "+" : "", fmt(cierre.patrimonio - cierre.patAntes), " en el a\xF1o", cierre.patAntes > 0 ? " · " + ((cierre.patrimonio / cierre.patAntes - 1) * 100).toFixed(1) + "%" : ""), /*#__PURE__*/React.createElement(Chispa, {
-    datos: cierre.histo,
-    desde: 2026
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-tabla",
-    style: {
-      marginTop: 4
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Efectivo"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, fmt(s.cash)), /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Cartera invertida"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, fmt(s.cartera)), /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Bienes"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, fmt(cierre.bienesV))))), /*#__PURE__*/React.createElement(Plegable, {
+  }, n))), /*#__PURE__*/React.createElement("div", {
+    className: "ea-plegs"
+  }, /*#__PURE__*/React.createElement(Plegable, {
     titulo: "El a\xF1o en plata",
     resumen: (cierre.neto >= 0 ? "+" : "−") + fmt(Math.abs(cierre.neto)),
     tono: cierre.neto >= 0 ? "#2E7A3D" : "#8A2E1E"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 18,
@@ -17793,35 +17889,42 @@ function Motor() {
     style: {
       width: Math.min(100, Math.abs(cierre.ahorro) * 100) + "%"
     }
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "ea-td",
-    style: {
-      marginTop: 4
-    }
-  }, "Tasa de ahorro ", Math.round(cierre.ahorro * 100), "% de todo lo que entr\xF3."), cierre.deuda && /*#__PURE__*/React.createElement("div", {
+  })), cierre.deuda && /*#__PURE__*/React.createElement("div", {
     className: "ea-alerta mal"
-  }, "Cerraste el a\xF1o en rojo por USD ", fmt(-s.cash), ": gastas m\xE1s de lo que entra y la diferencia se financia.", cierre.patAntes > 1000 ? " Te comiste la cartera y seguiste." : " A este cargo es normal, y también es la razón por la que el primer objetivo es que la resta dé positivo."))), cierre.cartera && /*#__PURE__*/React.createElement(Plegable, {
+  }, "Cerraste el a\xF1o en rojo por USD ", fmt(-s.cash), ": gastas m\xE1s de lo que entra y la diferencia se financia."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-tabla",
+    style: {
+      marginTop: 14
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-td"
+  }, "Efectivo"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-tdn ea-mono"
+  }, fmt(s.cash)), /*#__PURE__*/React.createElement("span", {
+    className: "ea-td"
+  }, "Cartera invertida"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-tdn ea-mono"
+  }, fmt(s.cartera)), /*#__PURE__*/React.createElement("span", {
+    className: "ea-td"
+  }, "Bienes"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-tdn ea-mono"
+  }, fmt(cierre.bienesV))), /*#__PURE__*/React.createElement(Chispa, {
+    datos: cierre.histo,
+    desde: 2026
+  })), cierre.cartera && /*#__PURE__*/React.createElement(Plegable, {
     titulo: "Tu cartera, mes a mes",
     resumen: (cierre.cartera.ret >= 0 ? "+" : "") + (cierre.cartera.ret * 100).toFixed(1) + "%",
     tono: cierre.cartera.ret >= 0 ? "#2E7A3D" : "#8A2E1E"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta " + (cierre.cartera.ret >= 0.02 ? "bien" : cierre.cartera.ret < -0.02 ? "mal" : ""),
-    style: {
-      marginTop: 0
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "Tu cartera ", perfilN.toLowerCase(), " \xB7 ", Math.round(cierre.cartera.obj * 100), "% invertido"), /*#__PURE__*/React.createElement("div", {
     className: "ea-mono",
     style: {
-      fontSize: 23,
-      color: "#3D3D3D",
-      margin: "4px 0"
+      fontSize: 21,
+      color: "#3D3D3D"
     }
   }, fmt(cierre.cartera.antes), " \u2192 ", fmt(cierre.cartera.despues)), /*#__PURE__*/React.createElement("div", {
     className: "ea-dis",
     style: {
-      fontSize: 16,
+      fontSize: 15,
       color: cierre.cartera.ret >= 0 ? "#3D8A49" : "var(--rojo)"
     }
   }, cierre.cartera.ret >= 0 ? "+" : "", (cierre.cartera.ret * 100).toFixed(1), "% \xB7 ", cierre.cartera.ret >= 0 ? "ganaste" : "perdiste", " USD ", fmt(Math.abs(cierre.cartera.despues - cierre.cartera.antes))), cierre.cartera.camino && /*#__PURE__*/React.createElement(Curva, {
@@ -17833,9 +17936,9 @@ function Motor() {
     style: {
       marginTop: 3
     }
-  }, "Esperabas ", (cierre.cartera.mu * 100).toFixed(1), " con una desviaci\xF3n de ", (cierre.cartera.sd * 100).toFixed(1), " puntos, as\xED que", " ", Math.abs(cierre.cartera.ret - cierre.cartera.mu) < cierre.cartera.sd ? "este año entra dentro de lo normal" : "este año fue de los raros, para bien o para mal", ".", cierre.cartera.aporte > 100 ? " Metiste USD " + fmt(cierre.cartera.aporte) + " de aporte nuevo." : cierre.cartera.aporte < -100 ? " Sacaste USD " + fmt(-cierre.cartera.aporte) + " de la cartera." : ""), /*#__PURE__*/React.createElement("div", {
+  }, "Esperabas ", (cierre.cartera.mu * 100).toFixed(1), " con una desviaci\xF3n de ", (cierre.cartera.sd * 100).toFixed(1), " puntos.", cierre.cartera.aporte > 100 ? " Metiste USD " + fmt(cierre.cartera.aporte) + " de aporte nuevo." : cierre.cartera.aporte < -100 ? " Sacaste USD " + fmt(-cierre.cartera.aporte) + " de la cartera." : ""), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 8
+      marginTop: 10
     }
   }, cierre.cartera.detalle.map((d, i) => /*#__PURE__*/React.createElement("div", {
     key: i,
@@ -17860,46 +17963,22 @@ function Motor() {
     style: {
       width: Math.min(100, Math.abs(d.r) * 260) + "%"
     }
-  })))))), ")}"), /*#__PURE__*/React.createElement(Plegable, {
-    titulo: "Camino a no depender del sueldo",
-    resumen: Math.round(cierre.cobertura * 100) + "% cubierto"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "Camino a no depender del sueldo"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-td",
-    style: {
-      marginTop: 2
-    }
-  }, "Tu patrimonio cubre ", Math.round(cierre.cobertura * 100), "% de tus gastos de USD ", fmt(cierre.gastos), " retirando el 4%."), /*#__PURE__*/React.createElement("div", {
-    className: "ea-ind"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-indF",
-    style: {
-      width: Math.min(100, cierre.indep * 100) + "%"
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-indM",
-    style: {
-      left: "71.4%"
-    }
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "ea-td",
-    style: {
-      marginTop: 3,
-      fontSize: 11.5
-    }
-  }, "La marca es 25 veces tu gasto anual, USD ", fmt(cierre.gastos * 25), "."))), cierre.notas.length > 0 && /*#__PURE__*/React.createElement(Plegable, {
-    titulo: "Lo que pas\xF3 por el camino",
-    resumen: cierre.notas.length + (cierre.notas.length === 1 ? " nota" : " notas"),
-    abierto: true
-  }, cierre.notas.map((n, i) => /*#__PURE__*/React.createElement("div", {
+  })))))), /*#__PURE__*/React.createElement(Plegable, {
+    titulo: "Las noticias del a\xF1o",
+    resumen: cierre.notis.length ? cierre.notis.length + (cierre.notis.length === 1 ? " noticia" : " noticias") : "sin novedades"
+  }, cierre.notis.map((n, i) => /*#__PURE__*/React.createElement("div", {
+    className: "ea-noti",
     key: i,
-    className: "ea-td",
     style: {
-      fontSize: 13.5,
-      marginBottom: 5
+      marginTop: i === 0 ? 0 : 8
     }
-  }, n)))), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-notiK"
+  }, n.k), /*#__PURE__*/React.createElement("div", {
+    className: "ea-notiT"
+  }, n.t))), cierre.notis.length === 0 && /*#__PURE__*/React.createElement("div", {
+    className: "ea-td"
+  }, "Un a\xF1o sin sobresaltos en los mercados."))), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
     disabled: carteraPend,
     onClick: siguienteAno
@@ -17984,7 +18063,54 @@ function Motor() {
       background: "var(--cobre)"
     },
     onClick: seguirCinco
-  }, "Seguir cinco a\xF1os m\xE1s")))))), nuevoSistema && (() => {
+  }, "Seguir cinco a\xF1os m\xE1s")))))), fase === "cierre" && cierre && anuncio && (() => {
+    const sube = cierre.patrimonio >= cierre.patAntes;
+    const dif = Math.abs(cierre.patrimonio - cierre.patAntes);
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncio",
+      onClick: () => setAnuncio(false)
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncioK ea-dis"
+    }, "Cierre de ", cierre.ano), /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncioN ea-mono"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-anuncioU ea-dis"
+    }, "USD"), /*#__PURE__*/React.createElement(Rodillo, {
+      v: cierre.patrimonio
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncioD ea-mono " + (sube ? "sube" : "baja"),
+      style: {
+        animationDelay: "1.5s"
+      }
+    }, sube ? "+" : "−", fmt(dif), " en el a\xF1o"), cierre.ascenso && /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncioL ea-dis",
+      style: {
+        animationDelay: "1.8s",
+        color: "var(--cobre)",
+        fontSize: 16
+      }
+    }, "Ascenso a ", cierre.ascenso), cierre.hitos.length > 0 && /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncioL",
+      style: {
+        animationDelay: "2s"
+      }
+    }, cierre.hitos.join(" · ")), /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncioB",
+      style: {
+        animationDelay: "2.2s"
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "ea-jugarYa ea-dis",
+      style: {
+        fontSize: 15,
+        padding: "13px 30px"
+      },
+      onClick: e => {
+        e.stopPropagation();
+        setAnuncio(false);
+      }
+    }, "Ver el a\xF1o")));
+  })(), nuevoSistema && (() => {
     const ap = APERTURAS.find(a => a.id === nuevoSistema);
     const g = ap && ap.guia;
     if (!g) return null;

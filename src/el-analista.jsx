@@ -1093,13 +1093,49 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* ---- el rodillo del cierre ---- */
+.ea-rodillos{display:inline-flex;align-items:center;gap:1px;line-height:1}
+.ea-rodillo{display:inline-block;height:1em;overflow:hidden;vertical-align:bottom;
+  width:.62em;position:relative}
+.ea-rodCol{display:flex;flex-direction:column;transition-property:transform;will-change:transform}
+.ea-rodD{height:1em;line-height:1;display:flex;align-items:center;justify-content:center}
+/* El punto de los miles se apoya abajo, donde va un punto. Centrado
+   entre las ruedas quedaba flotando a media altura. */
+.ea-rodSep{display:inline-block;opacity:.5;width:.3em;text-align:center;
+  align-self:flex-end;line-height:1}
+
+/* La pantalla del anuncio: el cierre del anio pasa por aqui antes de
+   ensenar el informe. Es el unico momento del juego que no pide leer. */
+.ea-anuncio{position:fixed;inset:0;z-index:80;background:var(--fieltro);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;text-align:center;animation:ea-entra .3s ease-out;cursor:pointer}
+@keyframes ea-entra{from{opacity:0}to{opacity:1}}
+.ea-anuncioK{font-size:12px;letter-spacing:.3em;color:var(--tenue);margin-bottom:10px}
+.ea-anuncioN{font-size:clamp(38px,12vw,86px);color:var(--papel);line-height:1;
+  display:flex;align-items:center;gap:.12em}
+.ea-anuncioU{font-size:.42em;color:var(--tenue);letter-spacing:.1em}
+.ea-anuncioD{margin-top:20px;font-size:clamp(17px,4.5vw,25px);letter-spacing:.04em;
+  animation:ea-pop .4s cubic-bezier(.2,1.5,.4,1) backwards}
+.ea-anuncioD.sube{color:#7FD08C}
+.ea-anuncioD.baja{color:#E0897B}
+.ea-anuncioL{margin-top:8px;font-size:13px;color:var(--tenue);
+  animation:ea-flash .4s ease-out backwards}
+.ea-anuncioB{margin-top:30px;animation:ea-flash .4s ease-out backwards}
+
 /* Hay gente que marea. Si su sistema lo pide, nada se mueve: el juego
    sigue funcionando igual porque ninguna animacion cambia una regla. */
 @media (prefers-reduced-motion: reduce){
-  .ea-root *,.ea-root *::before,.ea-root *::after{
+  .ea-root *,.ea-root *::before,.ea-root *::after,.ea-anuncio *{
     animation-duration:.001ms !important;
     animation-iteration-count:1 !important;
     transition-duration:.001ms !important;
+    /* El retardo hay que matarlo tambien, no solo la duracion. Varias
+       cosas entran escalonadas con animation-delay y relleno backwards,
+       o sea invisibles hasta que les toca: sin esto, quien pide menos
+       movimiento se quedaba mirando el anuncio del año DOS SEGUNDOS
+       sin boton para salir. */
+    animation-delay:0ms !important;
+    transition-delay:0ms !important;
   }
 }
 `;
@@ -6202,6 +6238,70 @@ function Cifra({ v, ms, desde: arranque }) {
   return fmt(x);
 }
 
+/* ============================================================
+   EL RODILLO
+   La cifra del cierre contaba, pero contaba en una esquina y con letra
+   de informe. El momento en que se sabe como fue el anio merece la
+   pantalla entera: cada digito es un tambor que gira y se para, de
+   izquierda a derecha, como el marcador de una maquina.
+
+   Cada rueda lleva los diez digitos repetidos tres veces y aterriza en
+   la tercera vuelta, asi que gira de verdad en vez de deslizarse al
+   sitio. Los separadores de miles no giran: se quedan fijos, que es lo
+   que hace que se lea el numero mientras se mueve.
+   ============================================================ */
+const RUEDA = [];
+for (let v = 0; v < 3; v++) for (let d = 0; d <= 9; d++) RUEDA.push(d);
+
+function Rodillo({ v }) {
+  const txt = fmt(numero(v, 0));
+  const [rodando, setRodando] = useState(true);
+  let quieto = false;
+  try {
+    quieto = typeof window !== "undefined" && typeof window.matchMedia === "function"
+      && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (e) { quieto = false; }
+
+  useEffect(() => {
+    if (quieto) { setRodando(false); return; }
+    setRodando(true);
+    if (typeof setTimeout !== "function") { setRodando(false); return; }
+    /* un respiro antes de soltar los frenos: sin esto el navegador pinta
+       ya el estado final y no hay transicion que ver */
+    const t = setTimeout(() => setRodando(false), 60);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [txt, quieto]);
+
+  if (quieto) return <span className="ea-rodillos ea-mono">{txt}</span>;
+
+  const cifras = txt.split("");
+  /* la rueda n tarda mas que la n-1, asi que el numero cuaja de
+     izquierda a derecha y la ultima en pararse es la de las unidades */
+  let idx = -1;
+  return (
+    <span className="ea-rodillos ea-mono" aria-label={"USD " + txt}>
+      {cifras.map((c, i) => {
+        if (!/[0-9]/.test(c)) return <span className="ea-rodSep" key={i}>{c}</span>;
+        idx += 1;
+        const destino = 20 + Number(c);   /* tercera vuelta */
+        const dur = 900 + idx * 260;
+        return (
+          <span className="ea-rodillo" key={i} aria-hidden="true">
+            <span className="ea-rodCol"
+              style={{
+                transform: "translateY(" + (rodando ? 0 : -destino * 100 / RUEDA.length) + "%)",
+                transitionDuration: (rodando ? 0 : dur) + "ms",
+                transitionTimingFunction: "cubic-bezier(.16,.84,.26,1)",
+              }}>
+              {RUEDA.map((d, k) => <span className="ea-rodD" key={k}>{d}</span>)}
+            </span>
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
 function Plegable({ titulo, resumen, abierto, tono, children }) {
   const [ab, setAb] = useState(!!abierto);
   return (
@@ -7026,6 +7126,9 @@ function Motor() {
   const [aviso, setAviso] = useState("");
   /* el aviso legal entero, plegado por defecto */
   const [avisoLargo, setAvisoLargo] = useState(false);
+  /* la pantalla del rodillo, que tapa el informe hasta que el jugador
+     ha visto cuanto tiene ahora */
+  const [anuncio, setAnuncio] = useState(false);
   /* Las cuatro decisiones de partida viven aquí y NO tocan el estado del
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
@@ -8062,6 +8165,7 @@ function Motor() {
       cobertura, gastos, indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0,
     });
     if (terminar) setFin(terminar);
+    setAnuncio(true);   /* primero el rodillo, y despues el informe */
     irA("cierre");
   };
 
@@ -9333,22 +9437,29 @@ function Motor() {
                   <div className="ea-memoHead ea-dis clave"><span>Cierre del año</span><span>{cierre.ano}</span></div>
                   <h2 className="ea-memoTit ea-dis">Así terminó {cierre.ano}</h2>
 
-                  {/* lo primero y casi lo único: tres cifras */}
+                  {/* El numero grande ya se vio a pantalla completa en el
+                      rodillo, asi que aqui la cabecera es una linea: como
+                      quedaste, cuanto se movio, cuanto ahorraste y cuanto
+                      cubres. El resto vive en tres cajones, no en seis. */}
                   <div className="ea-titular">
                     <div className="ea-titularK ea-dis">Tu patrimonio</div>
-                    {/* cuenta desde el patrimonio con el que empezaste el
-                        año: el numero sube delante de ti y esa es la
-                        recompensa de haber jugado el año entero */}
-                    <div className="ea-titularV ea-mono">USD <Cifra v={cierre.patrimonio} desde={cierre.patAntes} ms={1100} /></div>
+                    <div className="ea-titularV ea-mono" style={{ fontSize: 26 }}>USD {fmt(cierre.patrimonio)}</div>
                     <div className="ea-titularL">
                       <span className="ea-mono" style={{ color: cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E" }}>
                         {cierre.patrimonio >= cierre.patAntes ? "+" : "−"}{fmt(Math.abs(cierre.patrimonio - cierre.patAntes))} en el año
                       </span>
                       <span className="ea-mono" style={{ color: cierre.ahorro >= 0 ? "#2E7A3D" : "#8A2E1E" }}>
-                        ahorraste {Math.round(cierre.ahorro * 100)}% de lo que entró
+                        ahorraste {Math.round(cierre.ahorro * 100)}%
                       </span>
+                      <span className="ea-mono">cubres {Math.round(cierre.cobertura * 100)}% de tu vida</span>
                     </div>
                     {cierre.ascenso && <div className="ea-titularA ea-dis">Ascenso a {cierre.ascenso}</div>}
+                    {/* la barra de independencia deja de ser un cajon propio:
+                        era un numero y una barra, y ya estan aqui */}
+                    <div className="ea-ind" style={{ marginTop: 10 }}>
+                      <div className="ea-indF" style={{ width: Math.min(100, cierre.indep * 100) + "%" }} />
+                      <div className="ea-indM" style={{ left: "71.4%" }} />
+                    </div>
                   </div>
 
                   {cierre.leccion && (
@@ -9361,48 +9472,29 @@ function Motor() {
 
                   {cierre.hitos.length > 0 && (
                     <div className="ea-hitos">
-                      {cierre.hitos.map((h, i) => (<span className="ea-hito" key={i}>{h}</span>))}
+                      {cierre.hitos.map((h, i) => (
+                        <span className="ea-hito" key={i} style={{ animationDelay: (i * 100) + "ms" }}>{h}</span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Lo que paso sale a la vista: es lo unico del informe que
+                      cuenta algo en vez de dar un dato, y estaba plegado. */}
+                  {cierre.notas.length > 0 && (
+                    <div style={{ marginTop: 14 }}>
+                      {cierre.notas.map((n, i) => (
+                        <div key={i} className="ea-td" style={{ fontSize: 13.5, marginBottom: 6 }}>{n}</div>
+                      ))}
                     </div>
                   )}
 
                   <div className="ea-plegs">
 
-                  <Plegable titulo="Las noticias del año" resumen={cierre.notis.length ? cierre.notis.length + (cierre.notis.length === 1 ? " noticia" : " noticias") : "sin novedades"}>
-                    {cierre.notis.map((n, i) => (
-                      <div className="ea-noti" key={i} style={{ marginTop: i === 0 ? 0 : 8 }}>
-                        <div className="ea-notiK">{n.k}</div>
-                        <div className="ea-notiT">{n.t}</div>
-                      </div>
-                    ))}
-                    {cierre.notis.length === 0 && <div className="ea-td">Un año sin sobresaltos en los mercados.</div>}
-                  </Plegable>
-
-                  <Plegable titulo="De dónde salió tu patrimonio"
-                    resumen={(cierre.patAntes > 0 ? ((cierre.patrimonio / cierre.patAntes - 1) * 100).toFixed(1) + "%" : "primer año")}
-                    tono={cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E"}>
-                  <div>
-                    <div className="ea-lecK">Patrimonio</div>
-                    <div className="ea-mono" style={{ fontSize: 26, color: "#3D3D3D", margin: "3px 0" }}>
-                      USD {fmt(cierre.patrimonio)}
-                    </div>
-                    <div className="ea-dis" style={{ fontSize: 14, color: cierre.patrimonio >= cierre.patAntes ? "#3D8A49" : "var(--rojo)" }}>
-                      {cierre.patrimonio >= cierre.patAntes ? "+" : ""}{fmt(cierre.patrimonio - cierre.patAntes)} en el año
-                      {cierre.patAntes > 0 ? " · " + ((cierre.patrimonio / cierre.patAntes - 1) * 100).toFixed(1) + "%" : ""}
-                    </div>
-                    <Chispa datos={cierre.histo} desde={2026} />
-                    <div className="ea-tabla" style={{ marginTop: 4 }}>
-                      <span className="ea-td">Efectivo</span><span className="ea-tdn ea-mono">{fmt(s.cash)}</span>
-                      <span className="ea-td">Cartera invertida</span><span className="ea-tdn ea-mono">{fmt(s.cartera)}</span>
-                      <span className="ea-td">Bienes</span><span className="ea-tdn ea-mono">{fmt(cierre.bienesV)}</span>
-                    </div>
-                  </div>
-
-                  </Plegable>
-
-                  {/* el año en plata */}
+                  {/* CAJON 1 · el dinero del año, con el reparto del
+                      patrimonio dentro: antes eran dos cajones que decian
+                      medio lo mismo. */}
                   <Plegable titulo="El año en plata" resumen={(cierre.neto >= 0 ? "+" : "−") + fmt(Math.abs(cierre.neto))}
                     tono={cierre.neto >= 0 ? "#2E7A3D" : "#8A2E1E"}>
-                  <div>
                     <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
                       <Flujo titulo={"Entró USD " + fmt(cierre.ingreso)} lista={cierre.ing} tope={cierre.ingreso} />
                       <Flujo titulo={"Salió USD " + fmt(cierre.egreso)} lista={cierre.egr} tope={cierre.ingreso} neg />
@@ -9415,39 +9507,36 @@ function Motor() {
                       <div className={"ea-flfill" + (cierre.ahorro < 0 ? " neg" : "")}
                         style={{ width: Math.min(100, Math.abs(cierre.ahorro) * 100) + "%" }} />
                     </div>
-                    <div className="ea-td" style={{ marginTop: 4 }}>
-                      Tasa de ahorro {Math.round(cierre.ahorro * 100)}% de todo lo que entró.
-                    </div>
                     {cierre.deuda && (
                       <div className="ea-alerta mal">
                         Cerraste el año en rojo por USD {fmt(-s.cash)}: gastas más de lo que entra y la diferencia se financia.
-                        {cierre.patAntes > 1000 ? " Te comiste la cartera y seguiste." : " A este cargo es normal, y también es la razón por la que el primer objetivo es que la resta dé positivo."}
                       </div>
                     )}
-                  </div>
-
+                    <div className="ea-tabla" style={{ marginTop: 14 }}>
+                      <span className="ea-td">Efectivo</span><span className="ea-tdn ea-mono">{fmt(s.cash)}</span>
+                      <span className="ea-td">Cartera invertida</span><span className="ea-tdn ea-mono">{fmt(s.cartera)}</span>
+                      <span className="ea-td">Bienes</span><span className="ea-tdn ea-mono">{fmt(cierre.bienesV)}</span>
+                    </div>
+                    <Chispa datos={cierre.histo} desde={2026} />
                   </Plegable>
 
-                  {/* la cartera */}
+                  {/* CAJON 2 · la cartera */}
                   {cierre.cartera && (
                     <Plegable titulo="Tu cartera, mes a mes"
                       resumen={(cierre.cartera.ret >= 0 ? "+" : "") + (cierre.cartera.ret * 100).toFixed(1) + "%"}
                       tono={cierre.cartera.ret >= 0 ? "#2E7A3D" : "#8A2E1E"}>
-                    <div className={"ea-alerta " + (cierre.cartera.ret >= 0.02 ? "bien" : cierre.cartera.ret < -0.02 ? "mal" : "")} style={{ marginTop: 0 }}>
-                      <div className="ea-lecK">Tu cartera {perfilN.toLowerCase()} · {Math.round(cierre.cartera.obj * 100)}% invertido</div>
-                      <div className="ea-mono" style={{ fontSize: 23, color: "#3D3D3D", margin: "4px 0" }}>
+                      <div className="ea-mono" style={{ fontSize: 21, color: "#3D3D3D" }}>
                         {fmt(cierre.cartera.antes)} → {fmt(cierre.cartera.despues)}
                       </div>
-                      <div className="ea-dis" style={{ fontSize: 16, color: cierre.cartera.ret >= 0 ? "#3D8A49" : "var(--rojo)" }}>
+                      <div className="ea-dis" style={{ fontSize: 15, color: cierre.cartera.ret >= 0 ? "#3D8A49" : "var(--rojo)" }}>
                         {cierre.cartera.ret >= 0 ? "+" : ""}{(cierre.cartera.ret * 100).toFixed(1)}% · {cierre.cartera.ret >= 0 ? "ganaste" : "perdiste"} USD {fmt(Math.abs(cierre.cartera.despues - cierre.cartera.antes))}
                       </div>
                       {cierre.cartera.camino && <Curva camino={cierre.cartera.camino} ret={cierre.cartera.ret} hitos={cierre.hitosDec} />}
                       <div className="ea-td" style={{ marginTop: 3 }}>
-                        Esperabas {(cierre.cartera.mu * 100).toFixed(1)} con una desviación de {(cierre.cartera.sd * 100).toFixed(1)} puntos, así que
-                        {" "}{Math.abs(cierre.cartera.ret - cierre.cartera.mu) < cierre.cartera.sd ? "este año entra dentro de lo normal" : "este año fue de los raros, para bien o para mal"}.
+                        Esperabas {(cierre.cartera.mu * 100).toFixed(1)} con una desviación de {(cierre.cartera.sd * 100).toFixed(1)} puntos.
                         {cierre.cartera.aporte > 100 ? " Metiste USD " + fmt(cierre.cartera.aporte) + " de aporte nuevo." : cierre.cartera.aporte < -100 ? " Sacaste USD " + fmt(-cierre.cartera.aporte) + " de la cartera." : ""}
                       </div>
-                      <div style={{ marginTop: 8 }}>
+                      <div style={{ marginTop: 10 }}>
                         {cierre.cartera.detalle.map((d, i) => (
                           <div key={i} style={{ marginBottom: 4 }}>
                             <div className="ea-flin">
@@ -9462,35 +9551,20 @@ function Motor() {
                           </div>
                         ))}
                       </div>
-                    </div>
-                  )}
-
                     </Plegable>
                   )}
 
-                  {/* qué tan cerca estás de no necesitar el sueldo */}
-                  <Plegable titulo="Camino a no depender del sueldo" resumen={Math.round(cierre.cobertura * 100) + "% cubierto"}>
-                  <div>
-                    <div className="ea-lecK">Camino a no depender del sueldo</div>
-                    <div className="ea-td" style={{ marginTop: 2 }}>
-                      Tu patrimonio cubre {Math.round(cierre.cobertura * 100)}% de tus gastos de USD {fmt(cierre.gastos)} retirando el 4%.
-                    </div>
-                    <div className="ea-ind">
-                      <div className="ea-indF" style={{ width: Math.min(100, cierre.indep * 100) + "%" }} />
-                      <div className="ea-indM" style={{ left: "71.4%" }} />
-                    </div>
-                    <div className="ea-td" style={{ marginTop: 3, fontSize: 11.5 }}>
-                      La marca es 25 veces tu gasto anual, USD {fmt(cierre.gastos * 25)}.
-                    </div>
-                  </div>
-
+                  {/* CAJON 3 · lo que hizo el mercado */}
+                  <Plegable titulo="Las noticias del año"
+                    resumen={cierre.notis.length ? cierre.notis.length + (cierre.notis.length === 1 ? " noticia" : " noticias") : "sin novedades"}>
+                    {cierre.notis.map((n, i) => (
+                      <div className="ea-noti" key={i} style={{ marginTop: i === 0 ? 0 : 8 }}>
+                        <div className="ea-notiK">{n.k}</div>
+                        <div className="ea-notiT">{n.t}</div>
+                      </div>
+                    ))}
+                    {cierre.notis.length === 0 && <div className="ea-td">Un año sin sobresaltos en los mercados.</div>}
                   </Plegable>
-
-                  {cierre.notas.length > 0 && (
-                    <Plegable titulo="Lo que pasó por el camino" resumen={cierre.notas.length + (cierre.notas.length === 1 ? " nota" : " notas")} abierto>
-                      {cierre.notas.map((n, i) => (<div key={i} className="ea-td" style={{ fontSize: 13.5, marginBottom: 5 }}>{n}</div>))}
-                    </Plegable>
-                  )}
 
                   </div>
 
@@ -9546,6 +9620,48 @@ function Motor() {
           </div>
         </div>
       )}
+
+      {/* ============================================================
+          EL ANUNCIO DEL AÑO
+          Tapa el informe hasta que el jugador ha visto cuanto tiene. Es
+          el unico momento del juego que no pide leer nada: un numero
+          grande girando y cuanto se movio. El informe espera debajo.
+          ============================================================ */}
+      {fase === "cierre" && cierre && anuncio && (() => {
+        const sube = cierre.patrimonio >= cierre.patAntes;
+        const dif = Math.abs(cierre.patrimonio - cierre.patAntes);
+        return (
+          <div className="ea-anuncio" onClick={() => setAnuncio(false)}>
+            {/* Ojo al tocar esta linea: «Asi terminó» es lo que cuenta
+                finales.js para saber cuantos años se jugaron, y esta en
+                la cabecera del informe. Repetirla aqui hacia que cada
+                año se contara dos veces. */}
+            <div className="ea-anuncioK ea-dis">Cierre de {cierre.ano}</div>
+            <div className="ea-anuncioN ea-mono">
+              <span className="ea-anuncioU ea-dis">USD</span>
+              <Rodillo v={cierre.patrimonio} />
+            </div>
+            <div className={"ea-anuncioD ea-mono " + (sube ? "sube" : "baja")}
+              style={{ animationDelay: "1.5s" }}>
+              {sube ? "+" : "−"}{fmt(dif)} en el año
+            </div>
+            {cierre.ascenso && (
+              <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.8s", color: "var(--cobre)", fontSize: 16 }}>
+                Ascenso a {cierre.ascenso}
+              </div>
+            )}
+            {cierre.hitos.length > 0 && (
+              <div className="ea-anuncioL" style={{ animationDelay: "2s" }}>{cierre.hitos.join(" · ")}</div>
+            )}
+            <div className="ea-anuncioB" style={{ animationDelay: "2.2s" }}>
+              <button className="ea-jugarYa ea-dis" style={{ fontSize: 15, padding: "13px 30px" }}
+                onClick={(e) => { e.stopPropagation(); setAnuncio(false); }}>
+                Ver el año
+              </button>
+            </div>
+          </div>
+        );
+      })()}
 
       {nuevoSistema && (() => {
         const ap = APERTURAS.find((a) => a.id === nuevoSistema);

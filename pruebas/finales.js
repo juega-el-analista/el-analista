@@ -83,7 +83,7 @@ async function unaVida(semilla) {
     await pulsa(porRot(/^(Sé lo que hago|Guíame por el camino)$/));
   }
 
-  let ano = 0, pasos = 0, cargo = "Pasante", burnouts = 0, ultimaEne = null;
+  let ano = 0, pasos = 0, cargo = "Pasante", burnouts = 0, ultimaEne = null, ultimoAno = null;
   while (pasos++ < 1600) {
     await act(async () => { reloj(2500); await micro(); });
     const j = r.toJSON();
@@ -99,7 +99,13 @@ async function unaVida(semilla) {
     const mC = t.match(/^([A-ZÁÉÍÓÚÑ][a-záéíóúñ ]+?) [A-ZÁÉÍÓÚÑ]/);
     if (mC) cargo = mC[1];
     if (/Te quiebras/.test(t)) burnouts++;
-    if (/Así terminó/.test(t)) ano++;
+    /* Contar años por «se ve la pantalla de cierre» contaba iteraciones,
+       no años: mientras el informe siga en pantalla, cada vuelta del
+       bucle sumaba uno. Con el anuncio delante son dos vueltas por año y
+       el promedio salia al doble. Se cuenta el año concreto, y solo
+       cuando cambia. */
+    const mA = t.match(/Así terminó (\d{4})/);
+    if (mA && mA[1] !== ultimoAno) { ultimoAno = mA[1]; ano++; }
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
     if (ops.length) { await pulsa(ops[Math.floor(Math.random() * ops.length) % ops.length]); continue; }
@@ -107,6 +113,10 @@ async function unaVida(semilla) {
        hay que poder cerrarlos, o la prueba se queda dentro de uno y la
        partida no avanza nunca. Van primero, justo por eso. */
     if (await pulsa(porRot(/^(Entendido|Después|Ver la sección|Cerrar y volver|Aplica o descarta|✕)$/))) continue;
+    /* «Ver el año» cierra el anuncio del rodillo. Va PRIMERO porque el
+       informe sigue montado debajo: sin esto la prueba pulsaba el boton
+       de abajo y se saltaba el anuncio entero sin llegar a probarlo. */
+    if (await pulsa(porRot(/^Ver el año$/))) continue;
     if (await pulsa(porRot(/^(Lo siguiente|Cerrar el año|Continuar|Entendido, empezar|Ya lo tengo|Terminar|Siguiente|Entregar el informe|Cerrar el trato|Fijar|Poner el número|Cerrar posición|Aguantar|Comprar|Empezar 20|Poner el capital|Sentarte a hacer|Ver el balance)/))) continue;
     let z = null;
     try { z = r.root.findAll((x) => x.props && x.props.role === "button" && typeof x.props.onClick === "function")[0]; } catch (e) {}
