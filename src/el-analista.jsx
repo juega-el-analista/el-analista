@@ -118,6 +118,8 @@ const CSS = `
 .ea-op.no{border-color:var(--rojo);background:rgba(178,59,39,.13)}
 .ea-opN{font-size:11px;letter-spacing:.16em;color:var(--gris);margin-right:9px}
 .ea-opTag{display:block;font-size:11px;letter-spacing:.14em;color:var(--gris);margin-top:5px}
+.ea-opSolo{display:inline-block;font-size:9.5px;letter-spacing:.14em;color:var(--cobre);
+  border:1px solid var(--cobre);padding:1px 6px;margin-left:8px;vertical-align:middle}
 
 .ea-sello{position:absolute;top:14px;right:18px;transform:rotate(-11deg);
   border:3px solid var(--cobre);color:var(--cobre);padding:4px 11px;font-size:14px;
@@ -1043,6 +1045,63 @@ const CSS4 = `
 .ea-perfilT{font-size:14px;letter-spacing:.05em;color:var(--tintaPapel)}
 .ea-perfilD{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.45}
 .ea-perfilN{font-size:11.5px;color:var(--cobre);margin-top:6px}
+
+/* ============================================================
+   QUE SE SIENTA VIVO
+   El juego se veia bien y no se movia: todo aparecia de golpe y ya. Lo
+   que sigue no cambia ninguna regla, solo hace que las cosas entren, se
+   asienten y respondan al dedo.
+   ============================================================ */
+
+/* Las opciones entran una detras de otra, no las tres a la vez. El
+   escalonado lo pone el JSX con animationDelay. */
+.ea-op{animation:ea-sube .32s cubic-bezier(.2,.8,.3,1) backwards}
+@keyframes ea-sube{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.ea-op:active:not(:disabled){transform:translateX(3px) scale(.995)}
+
+/* Los chips del resultado dan un saltito al entrar: es el momento en que
+   el juego te dice que ganaste o perdiste algo. */
+.ea-chip{animation:ea-pop .34s cubic-bezier(.2,1.5,.4,1) backwards}
+@keyframes ea-pop{0%{opacity:0;transform:scale(.72)}60%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+
+/* El sello cae con peso en vez de aparecer. */
+@keyframes ea-stamp{
+  0%{transform:rotate(-11deg) scale(2.1);opacity:0}
+  55%{transform:rotate(-11deg) scale(.92);opacity:.95}
+  75%{transform:rotate(-11deg) scale(1.04)}
+  100%{transform:rotate(-11deg) scale(1);opacity:.85}
+}
+.ea-sello{animation:ea-stamp .42s cubic-bezier(.2,.9,.3,1)}
+
+/* El año como puntos: llenos los que quedan, apagados los ya jugados. */
+.ea-puntos{display:inline-flex;gap:5px;align-items:center}
+.ea-punto{width:7px;height:7px;border-radius:50%;background:var(--cobre);
+  transition:background .3s ease,transform .3s ease}
+.ea-punto.ido{background:rgba(159,184,168,.34);transform:scale(.75)}
+
+/* El aviso de la cinta entra y se queda, sin parpadeo brusco. */
+.ea-avisoFlash{color:var(--verde);animation:ea-flash .5s ease-out}
+@keyframes ea-flash{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* Botones con algo de peso al pulsarlos. */
+.ea-btn,.ea-btnO,.ea-mini,.ea-comprar,.ea-aplicar,.ea-jugarYa{transition:background .15s,border-color .15s,color .15s,transform .1s}
+.ea-mini:active:not(:disabled),.ea-btnO:active,.ea-aplicar:active{transform:translateY(1px)}
+.ea-opcion{animation:ea-sube .3s cubic-bezier(.2,.8,.3,1) backwards}
+.ea-opcion:active{transform:translateY(1px)}
+.ea-perfil:active{transform:translateY(1px)}
+
+/* La placa de arriba reacciona cuando el patrimonio se mueve. */
+.ea-plata{transition:color .35s ease}
+
+/* Hay gente que marea. Si su sistema lo pide, nada se mueve: el juego
+   sigue funcionando igual porque ninguna animacion cambia una regla. */
+@media (prefers-reduced-motion: reduce){
+  .ea-root *,.ea-root *::before,.ea-root *::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+}
 `;
 
 /* ---------- mejoras que se compran una sola vez ---------- */
@@ -6095,6 +6154,54 @@ function JuegoSubasta({ ayuda, onFin }) {
 
 /* ---- piezas del informe de cierre ---- */
 
+/* ============================================================
+   UNA CIFRA QUE CUENTA EN VEZ DE SALTAR
+   El patrimonio es EL numero del juego y cambiaba de golpe: de 12.000 a
+   19.400 sin que nada dijera que habias ganado. Verlo subir convierte un
+   dato en una recompensa, que es de lo que vive un juego.
+
+   Tres guardarraíles, porque esto corre tambien dentro del arnes de
+   pruebas, que monta un window falso: sin requestAnimationFrame se pone
+   el valor final y ya, y quien haya pedido menos movimiento en su
+   sistema no ve ninguna animacion.
+   ============================================================ */
+function Cifra({ v, ms, desde: arranque }) {
+  const fin = numero(v, 0);
+  /* Donde no hay valor anterior que recordar —porque el componente se
+     monta de cero, como en el cierre de anio— hay que decirle de donde
+     viene, o se pinta ya en su destino y no cuenta nada. Justo lo que me
+     paso: la cifra del cierre no animaba y parecia que si. */
+  const inicial = esNumero(arranque) ? numero(arranque, 0) : fin;
+  const [x, setX] = useState(inicial);
+  const desde = useRef(inicial);
+  useEffect(() => {
+    const ini = numero(desde.current, 0);
+    if (ini === fin) return;
+    let quieto = false;
+    try {
+      quieto = typeof window !== "undefined" && typeof window.matchMedia === "function"
+        && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch (e) { quieto = false; }
+    if (quieto || typeof requestAnimationFrame !== "function" || typeof cancelAnimationFrame !== "function") {
+      desde.current = fin; setX(fin); return;
+    }
+    const dura = numero(ms, 650);
+    const t0 = Date.now();
+    let id = 0, vivo = true;
+    const paso = () => {
+      if (!vivo) return;
+      const p = clamp((Date.now() - t0) / dura, 0, 1);
+      const e = 1 - Math.pow(1 - p, 3);   /* frena al llegar */
+      setX(ini + (fin - ini) * e);
+      if (p < 1) id = requestAnimationFrame(paso);
+      else desde.current = fin;
+    };
+    id = requestAnimationFrame(paso);
+    return () => { vivo = false; desde.current = fin; try { cancelAnimationFrame(id); } catch (e) {} };
+  }, [fin]);
+  return fmt(x);
+}
+
 function Plegable({ titulo, resumen, abierto, tono, children }) {
   const [ab, setAb] = useState(!!abierto);
   return (
@@ -8140,24 +8247,9 @@ function Motor() {
               lineas —es ficcion, no es asesoria, y hay vida adulta dentro—
               y el texto completo sigue entero, a un clic. */}
           <div className="ea-aviso">
-            <div className="ea-avisoB">
-              <p>
-                Todo lo que vas a ver está <strong>inventado</strong>: las empresas, los fondos, las
-                noticias y los números. No hay dinero de verdad en juego.
-              </p>
-            </div>
-            <div className="ea-avisoB">
-              <p>
-                Enseña conceptos —interés compuesto, riesgo, deuda— y esos sí sirven fuera. Las cifras
-                concretas no: <strong>esto no es asesoría financiera</strong>.
-              </p>
-            </div>
-            <div className="ea-avisoB">
-              <p>
-                <strong>Hay vida adulta dentro</strong>: parejas, rupturas, hijos, divorcios, enfermedad,
-                la muerte de alguien cercano y estafas. Nada explícito ni gráfico, pero conviene saberlo.
-              </p>
-            </div>
+            <div className="ea-avisoB"><p>Todo está <strong>inventado</strong>. No hay dinero de verdad en juego.</p></div>
+            <div className="ea-avisoB"><p><strong>Esto no es asesoría financiera.</strong></p></div>
+            <div className="ea-avisoB"><p><strong>Hay vida adulta dentro</strong>: parejas, hijos, divorcios, enfermedad, muerte y estafas.</p></div>
           </div>
 
           <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }}
@@ -8231,9 +8323,7 @@ function Motor() {
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Simulador de carrera e inversión</div>
           <h1 className="ea-h1 ea-dis">El Analista</h1>
           <p className="ea-lede">
-            Una carrera y un patrimonio, un año por turno. Cada año trae decisiones, noticias que sacuden
-            el mercado y una cartera que repartes tú. Empiezas con una década: se juega de una sentada y
-            termina en un balance que te dice en qué quedó todo. Si te engancha, sigues.
+            Un año por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
           </p>
           <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
             onClick={() => { if (enFase("portada")) irA("aviso"); }}>Volver a leer el aviso</button>
@@ -8267,9 +8357,8 @@ function Motor() {
           ) : (
             <div>
               <button className="ea-jugarYa ea-dis" onClick={jugarYa}>Jugar ya</button>
-              <div style={{ fontSize: 12.5, color: "var(--gris)", marginTop: 8, maxWidth: "52ch" }}>
-                Una década, empezando a los 20, con las explicaciones puestas. Te tocan un país y una
-                carrera al azar y entras directo. No hay nada que configurar.
+              <div style={{ fontSize: 12.5, color: "var(--gris)", marginTop: 8 }}>
+                Una década. Sin configurar nada.
               </div>
               <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }} onClick={empezar}>
                 Prefiero elegirlo todo →
@@ -8294,8 +8383,7 @@ function Motor() {
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso uno de cinco</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Quién eres?</h2>
           <p className="ea-lede" style={{ marginBottom: 20 }}>
-            Nada de esto sale de tu navegador ni cambia tus números: el nombre es para que el juego
-            te hable a ti, y el género solo para concordar las palabras.
+            Solo para que el juego te hable a ti. No cambia ningún número.
           </p>
 
           <label className="ea-campoK ea-dis" htmlFor="ea-nombre">Tu nombre</label>
@@ -8325,8 +8413,7 @@ function Motor() {
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso dos de cinco</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Cuánto sabes de esto?</h2>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            No hay respuesta mala. El juego trata de enseñar finanzas, así que lo lógico es que se ajuste
-            a de dónde partes. Puedes cambiar de opinión empezando otra vida cuando quieras.
+            No hay respuesta mala.
           </p>
           {MODOS.map((m) => (
             <button className={"ea-opcion" + (elec.modo === m.id ? " on" : "")} key={m.id}
@@ -8346,8 +8433,7 @@ function Motor() {
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿A qué edad empiezas?</h2>
           <div className="ea-rastro ea-mono">Modo {MODO(elec.modo).n.toLowerCase()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            Nadie está fuera de tiempo. Empezar a los cincuenta no es empezar perdiendo: es empezar con
-            menos años por delante y bastante más criterio, red y dinero que a los veinte.
+            Nadie está fuera de tiempo. Más tarde es menos años y más criterio, red y dinero.
           </p>
 
           <div className="ea-campoK ea-dis">Cuánto quieres jugar</div>
@@ -8381,9 +8467,7 @@ function Motor() {
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Cómo llegas a los {EDAD_DE(elec.edad).e}?</h2>
           <div className="ea-rastro ea-mono">Empiezas a los {EDAD_DE(elec.edad).e}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            A esta edad casi nadie llega sin nadie y sin cuentas que pagar. Lo que digas aquí cambia lo que
-            te cuesta vivir desde el primer año, y también qué te va a ofrecer el juego: no tiene sentido
-            que te pregunte si quieres pareja cuando llegas casado.
+            Cambia lo que te cuesta vivir desde el primer año.
           </p>
 
           <div className="ea-campoK ea-dis">Con quién llegas</div>
@@ -8420,7 +8504,7 @@ function Motor() {
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿De dónde vienes?</h2>
           <div className="ea-rastro ea-mono">{rastro()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            El país define tu sueldo, tu costo de vida, qué noticias te tocan más de cerca y con qué instintos empiezas.
+            Define tu sueldo, tu costo de vida y con qué instintos empiezas.
           </p>
           {NACIONES.map((p) => (
             <div className="ea-panel" key={p.id} style={{ marginBottom: 10 }}>
@@ -8450,8 +8534,7 @@ function Motor() {
           </h2>
           <div className="ea-rastro ea-mono">{rastro()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            Tu carrera te da atributos de entrada y, sobre todo, opciones que solo tú vas a poder tomar cuando aparezcan.
-            Al elegir aquí empieza la partida: hasta este momento nada está decidido.
+            Te da atributos y opciones que solo tú vas a poder tomar. Al elegir, empieza la partida.
           </p>
           {CARRERAS.map((c) => (
             <div className="ea-panel" key={c.id} style={{ marginBottom: 10 }}>
@@ -8475,20 +8558,13 @@ function Motor() {
           <Atras a="estudio" texto="Cambiar la carrera" />
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Última cosa</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Te vas guiando o vas solo?</h2>
-          <p className="ea-lede" style={{ marginBottom: 22 }}>
-            No es un tutorial de diez pantallas. Si dices que sí, te van saliendo avisos de tres líneas
-            en el momento en que cada cosa aparece por primera vez, y se cierran con un clic. Nada más.
-          </p>
           <button className="ea-opcion" onClick={() => { if (enFase("guia")) arrancarPartida({ ...elec, guia: true }); }}>
             <div className="ea-opcionN">Guíame por el camino</div>
-            <div className="ea-opcionD">
-              Ocho avisos cortos repartidos por la partida: la primera decisión, las secciones de arriba,
-              la cartera, el informe del año. Salen una vez y no vuelven.
-            </div>
+            <div className="ea-opcionD">Ocho avisos de tres líneas. Salen una vez y no vuelven.</div>
           </button>
           <button className="ea-opcion" onClick={() => { if (enFase("guia")) arrancarPartida({ ...elec, guia: false }); }}>
             <div className="ea-opcionN">Sé lo que hago</div>
-            <div className="ea-opcionD">Directo a jugar, sin avisos. Puedes activarlos después empezando otra vida.</div>
+            <div className="ea-opcionD">Directo a jugar, sin avisos.</div>
           </button>
         </div>
       )}
@@ -8509,7 +8585,7 @@ function Motor() {
                   peso a cada decisión, porque el jugador empieza a contar
                   turnos en vez de vivir el año que tiene delante. */}
               <div className="ea-dis">{ano} · {edad(s.turno, s.edadIni)} años</div>
-              <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")}>USD {fmt(patrimonio)}</div>
+              <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")}>USD <Cifra v={patrimonio} /></div>
               {abierto(s, "cartera") && (
                 <div className="ea-mono" style={{ fontSize: 11.5, marginTop: 2 }}>efectivo {fmt(s.cash)} · cartera {fmt(s.cartera)}</div>
               )}
@@ -8527,8 +8603,19 @@ function Motor() {
           {fase !== "cierre" && (fase === "evento" || fase === "minijuego" || fase === "resultado") && (
             <div className="ea-cinta">
               <span className="ea-cintaK ea-dis">{ano}</span>
-              <span>Quedan {cola.length + (fase === "evento" ? 1 : fase === "minijuego" ? 1 : 0)} situaciones este año{abierto(s, "cartera") ? " · cartera " + perfilN.toLowerCase() : ""}</span>
-              {aviso && <span style={{ marginLeft: "auto", color: "var(--verde)", flexShrink: 0 }}>{aviso}</span>}
+              {/* El año como puntos: se ve de un vistazo cuánto queda sin
+                  tener que leer «quedan tres situaciones este año». */}
+              {(() => {
+                const quedan = cola.length + (fase === "evento" || fase === "minijuego" ? 1 : 0);
+                const total = Math.max(quedan, hitosAno.current.length + quedan);
+                const puntos = [];
+                for (let i = 0; i < Math.min(total, 8); i++) {
+                  puntos.push(<span key={i} className={"ea-punto" + (i < total - quedan ? " ido" : "")} />);
+                }
+                return <span className="ea-puntos" aria-label={"Quedan " + quedan + " situaciones este año"}>{puntos}</span>;
+              })()}
+              {abierto(s, "cartera") && <span>cartera {perfilN.toLowerCase()}</span>}
+              {aviso && <span className="ea-avisoFlash" style={{ marginLeft: "auto", flexShrink: 0 }}>{aviso}</span>}
             </div>
           )}
 
@@ -9180,22 +9267,26 @@ function Motor() {
                   <h2 className="ea-memoTit ea-dis">{ev.t}</h2>
                   <p className="ea-memoTxt">{ev.x}</p>
                   <div className="ea-ops">
-                    {opcionesDe(ev).map((o, i) => (
-                      <button className="ea-op" key={i} disabled={carteraPend} onClick={() => elegir(o)}>
-                        <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
-                        {o.req && <span className="ea-opTag" style={{ color: "var(--cobre)" }}>Solo tú puedes tomar esta</span>}
-                        {(o.juego || o.j) && <span className="ea-opTag">{JUEGO(o.juego || o.j).n} · {JUEGO(o.juego || o.j).tema} · te ayuda {ETIQ[o.stat] || "Criterio"} {Math.round(ayudaDe(o))}</span>}
-                        {o.ramaId && <span className="ea-opTag">{o.ramaId === "boutique" ? FIRMA_DE(s).d : (RAMAS.find((r) => r.id === o.ramaId) || {}).d}</span>}
-                        {(() => {
-                          const ef = efectoDe(o);
-                          if (!ef) return null;
-                          const partes = [];
-                          if (ef.sube.length) partes.push("sube " + ef.sube.join(", "));
-                          if (ef.cuesta.length) partes.push("cuesta " + ef.cuesta.join(", "));
-                          return <span className="ea-opTag">{partes.join(" · ")}</span>;
-                        })()}
-                      </button>
-                    ))}
+                    {/* Una sola linea de letra chica por opcion. Antes cada
+                        opcion podia arrastrar cuatro: el minijuego con su tema,
+                        la ayuda, la rama y el efecto. Debajo de una frase de
+                        una linea, eso es mas metadato que decision. */}
+                    {opcionesDe(ev).map((o, i) => {
+                      const tipo = o.juego || o.j;
+                      const ef = efectoDe(o);
+                      const bits = [];
+                      if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
+                      if (ef && ef.sube.length) bits.push("sube " + ef.sube.join(", "));
+                      if (ef && ef.cuesta.length) bits.push("cuesta " + ef.cuesta.join(", "));
+                      return (
+                        <button className="ea-op" key={i} style={{ animationDelay: (i * 70) + "ms" }}
+                          disabled={carteraPend} onClick={() => elegir(o)}>
+                          <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
+                          {o.req && <span className="ea-opSolo ea-dis">solo tú</span>}
+                          {bits.length > 0 && <span className="ea-opTag">{bits.join(" · ")}</span>}
+                        </button>
+                      );
+                    })}
                     {opcionesDe(ev).length === 0 && (
                       <button className="ea-op" onClick={() => resolverEscena({ msg: "El asunto se resolvió sin que te tocara decidir." }, "parcial", null)}>
                         <span className="ea-opN ea-mono">A</span>Dejar que siga su curso
@@ -9224,7 +9315,8 @@ function Motor() {
                   {res.cambios.filter((c) => c.nota || c.v).length > 0 && (
                     <div className="ea-cambios">
                       {res.cambios.filter((c) => c.nota || c.v).map((c, i) => (
-                        <span className={"ea-chip ea-mono " + (c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}>
+                        <span className={"ea-chip ea-mono " + (c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}
+                          style={{ animationDelay: (120 + i * 90) + "ms" }}>
                           {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + (c.k === "cash" ? fmt(c.v) : c.v))}
                         </span>
                       ))}
@@ -9244,7 +9336,10 @@ function Motor() {
                   {/* lo primero y casi lo único: tres cifras */}
                   <div className="ea-titular">
                     <div className="ea-titularK ea-dis">Tu patrimonio</div>
-                    <div className="ea-titularV ea-mono">USD {fmt(cierre.patrimonio)}</div>
+                    {/* cuenta desde el patrimonio con el que empezaste el
+                        año: el numero sube delante de ti y esa es la
+                        recompensa de haber jugado el año entero */}
+                    <div className="ea-titularV ea-mono">USD <Cifra v={cierre.patrimonio} desde={cierre.patAntes} ms={1100} /></div>
                     <div className="ea-titularL">
                       <span className="ea-mono" style={{ color: cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E" }}>
                         {cierre.patrimonio >= cierre.patAntes ? "+" : "−"}{fmt(Math.abs(cierre.patrimonio - cierre.patAntes))} en el año

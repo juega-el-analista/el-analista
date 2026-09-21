@@ -753,6 +753,8 @@ const CSS = `
 .ea-op.no{border-color:var(--rojo);background:rgba(178,59,39,.13)}
 .ea-opN{font-size:11px;letter-spacing:.16em;color:var(--gris);margin-right:9px}
 .ea-opTag{display:block;font-size:11px;letter-spacing:.14em;color:var(--gris);margin-top:5px}
+.ea-opSolo{display:inline-block;font-size:9.5px;letter-spacing:.14em;color:var(--cobre);
+  border:1px solid var(--cobre);padding:1px 6px;margin-left:8px;vertical-align:middle}
 
 .ea-sello{position:absolute;top:14px;right:18px;transform:rotate(-11deg);
   border:3px solid var(--cobre);color:var(--cobre);padding:4px 11px;font-size:14px;
@@ -1714,6 +1716,63 @@ const CSS4 = `
 .ea-perfilT{font-size:14px;letter-spacing:.05em;color:var(--tintaPapel)}
 .ea-perfilD{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.45}
 .ea-perfilN{font-size:11.5px;color:var(--cobre);margin-top:6px}
+
+/* ============================================================
+   QUE SE SIENTA VIVO
+   El juego se veia bien y no se movia: todo aparecia de golpe y ya. Lo
+   que sigue no cambia ninguna regla, solo hace que las cosas entren, se
+   asienten y respondan al dedo.
+   ============================================================ */
+
+/* Las opciones entran una detras de otra, no las tres a la vez. El
+   escalonado lo pone el JSX con animationDelay. */
+.ea-op{animation:ea-sube .32s cubic-bezier(.2,.8,.3,1) backwards}
+@keyframes ea-sube{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.ea-op:active:not(:disabled){transform:translateX(3px) scale(.995)}
+
+/* Los chips del resultado dan un saltito al entrar: es el momento en que
+   el juego te dice que ganaste o perdiste algo. */
+.ea-chip{animation:ea-pop .34s cubic-bezier(.2,1.5,.4,1) backwards}
+@keyframes ea-pop{0%{opacity:0;transform:scale(.72)}60%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+
+/* El sello cae con peso en vez de aparecer. */
+@keyframes ea-stamp{
+  0%{transform:rotate(-11deg) scale(2.1);opacity:0}
+  55%{transform:rotate(-11deg) scale(.92);opacity:.95}
+  75%{transform:rotate(-11deg) scale(1.04)}
+  100%{transform:rotate(-11deg) scale(1);opacity:.85}
+}
+.ea-sello{animation:ea-stamp .42s cubic-bezier(.2,.9,.3,1)}
+
+/* El año como puntos: llenos los que quedan, apagados los ya jugados. */
+.ea-puntos{display:inline-flex;gap:5px;align-items:center}
+.ea-punto{width:7px;height:7px;border-radius:50%;background:var(--cobre);
+  transition:background .3s ease,transform .3s ease}
+.ea-punto.ido{background:rgba(159,184,168,.34);transform:scale(.75)}
+
+/* El aviso de la cinta entra y se queda, sin parpadeo brusco. */
+.ea-avisoFlash{color:var(--verde);animation:ea-flash .5s ease-out}
+@keyframes ea-flash{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* Botones con algo de peso al pulsarlos. */
+.ea-btn,.ea-btnO,.ea-mini,.ea-comprar,.ea-aplicar,.ea-jugarYa{transition:background .15s,border-color .15s,color .15s,transform .1s}
+.ea-mini:active:not(:disabled),.ea-btnO:active,.ea-aplicar:active{transform:translateY(1px)}
+.ea-opcion{animation:ea-sube .3s cubic-bezier(.2,.8,.3,1) backwards}
+.ea-opcion:active{transform:translateY(1px)}
+.ea-perfil:active{transform:translateY(1px)}
+
+/* La placa de arriba reacciona cuando el patrimonio se mueve. */
+.ea-plata{transition:color .35s ease}
+
+/* Hay gente que marea. Si su sistema lo pide, nada se mueve: el juego
+   sigue funcionando igual porque ninguna animacion cambia una regla. */
+@media (prefers-reduced-motion: reduce){
+  .ea-root *,.ea-root *::before,.ea-root *::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+}
 `;
 
 /* ---------- mejoras que se compran una sola vez ---------- */
@@ -12906,6 +12965,66 @@ function JuegoSubasta({
 
 /* ---- piezas del informe de cierre ---- */
 
+/* ============================================================
+   UNA CIFRA QUE CUENTA EN VEZ DE SALTAR
+   El patrimonio es EL numero del juego y cambiaba de golpe: de 12.000 a
+   19.400 sin que nada dijera que habias ganado. Verlo subir convierte un
+   dato en una recompensa, que es de lo que vive un juego.
+
+   Tres guardarraíles, porque esto corre tambien dentro del arnes de
+   pruebas, que monta un window falso: sin requestAnimationFrame se pone
+   el valor final y ya, y quien haya pedido menos movimiento en su
+   sistema no ve ninguna animacion.
+   ============================================================ */
+function Cifra({
+  v,
+  ms,
+  desde: arranque
+}) {
+  const fin = numero(v, 0);
+  /* Donde no hay valor anterior que recordar —porque el componente se
+     monta de cero, como en el cierre de anio— hay que decirle de donde
+     viene, o se pinta ya en su destino y no cuenta nada. Justo lo que me
+     paso: la cifra del cierre no animaba y parecia que si. */
+  const inicial = esNumero(arranque) ? numero(arranque, 0) : fin;
+  const [x, setX] = useState(inicial);
+  const desde = useRef(inicial);
+  useEffect(() => {
+    const ini = numero(desde.current, 0);
+    if (ini === fin) return;
+    let quieto = false;
+    try {
+      quieto = typeof window !== "undefined" && typeof window.matchMedia === "function" && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch (e) {
+      quieto = false;
+    }
+    if (quieto || typeof requestAnimationFrame !== "function" || typeof cancelAnimationFrame !== "function") {
+      desde.current = fin;
+      setX(fin);
+      return;
+    }
+    const dura = numero(ms, 650);
+    const t0 = Date.now();
+    let id = 0,
+      vivo = true;
+    const paso = () => {
+      if (!vivo) return;
+      const p = clamp((Date.now() - t0) / dura, 0, 1);
+      const e = 1 - Math.pow(1 - p, 3); /* frena al llegar */
+      setX(ini + (fin - ini) * e);
+      if (p < 1) id = requestAnimationFrame(paso);else desde.current = fin;
+    };
+    id = requestAnimationFrame(paso);
+    return () => {
+      vivo = false;
+      desde.current = fin;
+      try {
+        cancelAnimationFrame(id);
+      } catch (e) {}
+    };
+  }, [fin]);
+  return fmt(x);
+}
 function Plegable({
   titulo,
   resumen,
@@ -15741,11 +15860,11 @@ function Motor() {
     className: "ea-aviso"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-avisoB"
-  }, /*#__PURE__*/React.createElement("p", null, "Todo lo que vas a ver est\xE1 ", /*#__PURE__*/React.createElement("strong", null, "inventado"), ": las empresas, los fondos, las noticias y los n\xFAmeros. No hay dinero de verdad en juego.")), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("p", null, "Todo est\xE1 ", /*#__PURE__*/React.createElement("strong", null, "inventado"), ". No hay dinero de verdad en juego.")), /*#__PURE__*/React.createElement("div", {
     className: "ea-avisoB"
-  }, /*#__PURE__*/React.createElement("p", null, "Ense\xF1a conceptos \u2014inter\xE9s compuesto, riesgo, deuda\u2014 y esos s\xED sirven fuera. Las cifras concretas no: ", /*#__PURE__*/React.createElement("strong", null, "esto no es asesor\xEDa financiera"), ".")), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Esto no es asesor\xEDa financiera."))), /*#__PURE__*/React.createElement("div", {
     className: "ea-avisoB"
-  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Hay vida adulta dentro"), ": parejas, rupturas, hijos, divorcios, enfermedad, la muerte de alguien cercano y estafas. Nada expl\xEDcito ni gr\xE1fico, pero conviene saberlo."))), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Hay vida adulta dentro"), ": parejas, hijos, divorcios, enfermedad, muerte y estafas."))), /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
       marginTop: 14,
@@ -15801,7 +15920,7 @@ function Motor() {
     className: "ea-h1 ea-dis"
   }, "El Analista"), /*#__PURE__*/React.createElement("p", {
     className: "ea-lede"
-  }, "Una carrera y un patrimonio, un a\xF1o por turno. Cada a\xF1o trae decisiones, noticias que sacuden el mercado y una cartera que repartes t\xFA. Empiezas con una d\xE9cada: se juega de una sentada y termina en un balance que te dice en qu\xE9 qued\xF3 todo. Si te engancha, sigues."), /*#__PURE__*/React.createElement("button", {
+  }, "Un a\xF1o por turno. Decides, el mercado se mueve, y al final ves en qu\xE9 qued\xF3 todo."), /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
       marginBottom: 0,
@@ -15887,10 +16006,9 @@ function Motor() {
     style: {
       fontSize: 12.5,
       color: "var(--gris)",
-      marginTop: 8,
-      maxWidth: "52ch"
+      marginTop: 8
     }
-  }, "Una d\xE9cada, empezando a los 20, con las explicaciones puestas. Te tocan un pa\xEDs y una carrera al azar y entras directo. No hay nada que configurar."), /*#__PURE__*/React.createElement("button", {
+  }, "Una d\xE9cada. Sin configurar nada."), /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
       marginTop: 14,
@@ -15938,7 +16056,7 @@ function Motor() {
     style: {
       marginBottom: 20
     }
-  }, "Nada de esto sale de tu navegador ni cambia tus n\xFAmeros: el nombre es para que el juego te hable a ti, y el g\xE9nero solo para concordar las palabras."), /*#__PURE__*/React.createElement("label", {
+  }, "Solo para que el juego te hable a ti. No cambia ning\xFAn n\xFAmero."), /*#__PURE__*/React.createElement("label", {
     className: "ea-campoK ea-dis",
     htmlFor: "ea-nombre"
   }, "Tu nombre"), /*#__PURE__*/React.createElement("input", {
@@ -16008,7 +16126,7 @@ function Motor() {
     style: {
       marginBottom: 18
     }
-  }, "No hay respuesta mala. El juego trata de ense\xF1ar finanzas, as\xED que lo l\xF3gico es que se ajuste a de d\xF3nde partes. Puedes cambiar de opini\xF3n empezando otra vida cuando quieras."), MODOS.map(m => /*#__PURE__*/React.createElement("button", {
+  }, "No hay respuesta mala."), MODOS.map(m => /*#__PURE__*/React.createElement("button", {
     className: "ea-opcion" + (elec.modo === m.id ? " on" : ""),
     key: m.id,
     onClick: () => {
@@ -16048,7 +16166,7 @@ function Motor() {
     style: {
       marginBottom: 18
     }
-  }, "Nadie est\xE1 fuera de tiempo. Empezar a los cincuenta no es empezar perdiendo: es empezar con menos a\xF1os por delante y bastante m\xE1s criterio, red y dinero que a los veinte."), /*#__PURE__*/React.createElement("div", {
+  }, "Nadie est\xE1 fuera de tiempo. M\xE1s tarde es menos a\xF1os y m\xE1s criterio, red y dinero."), /*#__PURE__*/React.createElement("div", {
     className: "ea-campoK ea-dis"
   }, "Cu\xE1nto quieres jugar"), /*#__PURE__*/React.createElement("div", {
     className: "ea-generos",
@@ -16110,7 +16228,7 @@ function Motor() {
     style: {
       marginBottom: 18
     }
-  }, "A esta edad casi nadie llega sin nadie y sin cuentas que pagar. Lo que digas aqu\xED cambia lo que te cuesta vivir desde el primer a\xF1o, y tambi\xE9n qu\xE9 te va a ofrecer el juego: no tiene sentido que te pregunte si quieres pareja cuando llegas casado."), /*#__PURE__*/React.createElement("div", {
+  }, "Cambia lo que te cuesta vivir desde el primer a\xF1o."), /*#__PURE__*/React.createElement("div", {
     className: "ea-campoK ea-dis"
   }, "Con qui\xE9n llegas"), /*#__PURE__*/React.createElement("div", {
     className: "ea-generos"
@@ -16176,7 +16294,7 @@ function Motor() {
     style: {
       marginBottom: 18
     }
-  }, "El pa\xEDs define tu sueldo, tu costo de vida, qu\xE9 noticias te tocan m\xE1s de cerca y con qu\xE9 instintos empiezas."), NACIONES.map(p => /*#__PURE__*/React.createElement("div", {
+  }, "Define tu sueldo, tu costo de vida y con qu\xE9 instintos empiezas."), NACIONES.map(p => /*#__PURE__*/React.createElement("div", {
     className: "ea-panel",
     key: p.id,
     style: {
@@ -16245,7 +16363,7 @@ function Motor() {
     style: {
       marginBottom: 18
     }
-  }, "Tu carrera te da atributos de entrada y, sobre todo, opciones que solo t\xFA vas a poder tomar cuando aparezcan. Al elegir aqu\xED empieza la partida: hasta este momento nada est\xE1 decidido."), CARRERAS.map(c => /*#__PURE__*/React.createElement("div", {
+  }, "Te da atributos y opciones que solo t\xFA vas a poder tomar. Al elegir, empieza la partida."), CARRERAS.map(c => /*#__PURE__*/React.createElement("div", {
     className: "ea-panel",
     key: c.id,
     style: {
@@ -16298,12 +16416,7 @@ function Motor() {
     style: {
       marginTop: 8
     }
-  }, "\xBFTe vas guiando o vas solo?"), /*#__PURE__*/React.createElement("p", {
-    className: "ea-lede",
-    style: {
-      marginBottom: 22
-    }
-  }, "No es un tutorial de diez pantallas. Si dices que s\xED, te van saliendo avisos de tres l\xEDneas en el momento en que cada cosa aparece por primera vez, y se cierran con un clic. Nada m\xE1s."), /*#__PURE__*/React.createElement("button", {
+  }, "\xBFTe vas guiando o vas solo?"), /*#__PURE__*/React.createElement("button", {
     className: "ea-opcion",
     onClick: () => {
       if (enFase("guia")) arrancarPartida({
@@ -16315,7 +16428,7 @@ function Motor() {
     className: "ea-opcionN"
   }, "Gu\xEDame por el camino"), /*#__PURE__*/React.createElement("div", {
     className: "ea-opcionD"
-  }, "Ocho avisos cortos repartidos por la partida: la primera decisi\xF3n, las secciones de arriba, la cartera, el informe del a\xF1o. Salen una vez y no vuelven.")), /*#__PURE__*/React.createElement("button", {
+  }, "Ocho avisos de tres l\xEDneas. Salen una vez y no vuelven.")), /*#__PURE__*/React.createElement("button", {
     className: "ea-opcion",
     onClick: () => {
       if (enFase("guia")) arrancarPartida({
@@ -16327,7 +16440,7 @@ function Motor() {
     className: "ea-opcionN"
   }, "S\xE9 lo que hago"), /*#__PURE__*/React.createElement("div", {
     className: "ea-opcionD"
-  }, "Directo a jugar, sin avisos. Puedes activarlos despu\xE9s empezando otra vida."))), (fase === "evento" || fase === "minijuego" || fase === "resultado" || fase === "cierre" || fase === "retiro") && /*#__PURE__*/React.createElement("div", {
+  }, "Directo a jugar, sin avisos."))), (fase === "evento" || fase === "minijuego" || fase === "resultado" || fase === "cierre" || fase === "retiro") && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-placa"
@@ -16341,7 +16454,9 @@ function Motor() {
     className: "ea-dis"
   }, ano, " \xB7 ", edad(s.turno, s.edadIni), " a\xF1os"), /*#__PURE__*/React.createElement("div", {
     className: "ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")
-  }, "USD ", fmt(patrimonio)), abierto(s, "cartera") && /*#__PURE__*/React.createElement("div", {
+  }, "USD ", /*#__PURE__*/React.createElement(Cifra, {
+    v: patrimonio
+  })), abierto(s, "cartera") && /*#__PURE__*/React.createElement("div", {
     className: "ea-mono",
     style: {
       fontSize: 11.5,
@@ -16359,10 +16474,24 @@ function Motor() {
     className: "ea-cinta"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-cintaK ea-dis"
-  }, ano), /*#__PURE__*/React.createElement("span", null, "Quedan ", cola.length + (fase === "evento" ? 1 : fase === "minijuego" ? 1 : 0), " situaciones este a\xF1o", abierto(s, "cartera") ? " · cartera " + perfilN.toLowerCase() : ""), aviso && /*#__PURE__*/React.createElement("span", {
+  }, ano), (() => {
+    const quedan = cola.length + (fase === "evento" || fase === "minijuego" ? 1 : 0);
+    const total = Math.max(quedan, hitosAno.current.length + quedan);
+    const puntos = [];
+    for (let i = 0; i < Math.min(total, 8); i++) {
+      puntos.push(/*#__PURE__*/React.createElement("span", {
+        key: i,
+        className: "ea-punto" + (i < total - quedan ? " ido" : "")
+      }));
+    }
+    return /*#__PURE__*/React.createElement("span", {
+      className: "ea-puntos",
+      "aria-label": "Quedan " + quedan + " situaciones este año"
+    }, puntos);
+  })(), abierto(s, "cartera") && /*#__PURE__*/React.createElement("span", null, "cartera ", perfilN.toLowerCase()), aviso && /*#__PURE__*/React.createElement("span", {
+    className: "ea-avisoFlash",
     style: {
       marginLeft: "auto",
-      color: "var(--verde)",
       flexShrink: 0
     }
   }, aviso)), /*#__PURE__*/React.createElement("div", {
@@ -17452,32 +17581,29 @@ function Motor() {
     className: "ea-memoTxt"
   }, ev.x), /*#__PURE__*/React.createElement("div", {
     className: "ea-ops"
-  }, opcionesDe(ev).map((o, i) => /*#__PURE__*/React.createElement("button", {
-    className: "ea-op",
-    key: i,
-    disabled: carteraPend,
-    onClick: () => elegir(o)
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-opN ea-mono"
-  }, String.fromCharCode(65 + i % 26)), o.t, o.req && /*#__PURE__*/React.createElement("span", {
-    className: "ea-opTag",
-    style: {
-      color: "var(--cobre)"
-    }
-  }, "Solo t\xFA puedes tomar esta"), (o.juego || o.j) && /*#__PURE__*/React.createElement("span", {
-    className: "ea-opTag"
-  }, JUEGO(o.juego || o.j).n, " \xB7 ", JUEGO(o.juego || o.j).tema, " \xB7 te ayuda ", ETIQ[o.stat] || "Criterio", " ", Math.round(ayudaDe(o))), o.ramaId && /*#__PURE__*/React.createElement("span", {
-    className: "ea-opTag"
-  }, o.ramaId === "boutique" ? FIRMA_DE(s).d : (RAMAS.find(r => r.id === o.ramaId) || {}).d), (() => {
+  }, opcionesDe(ev).map((o, i) => {
+    const tipo = o.juego || o.j;
     const ef = efectoDe(o);
-    if (!ef) return null;
-    const partes = [];
-    if (ef.sube.length) partes.push("sube " + ef.sube.join(", "));
-    if (ef.cuesta.length) partes.push("cuesta " + ef.cuesta.join(", "));
-    return /*#__PURE__*/React.createElement("span", {
+    const bits = [];
+    if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
+    if (ef && ef.sube.length) bits.push("sube " + ef.sube.join(", "));
+    if (ef && ef.cuesta.length) bits.push("cuesta " + ef.cuesta.join(", "));
+    return /*#__PURE__*/React.createElement("button", {
+      className: "ea-op",
+      key: i,
+      style: {
+        animationDelay: i * 70 + "ms"
+      },
+      disabled: carteraPend,
+      onClick: () => elegir(o)
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-opN ea-mono"
+    }, String.fromCharCode(65 + i % 26)), o.t, o.req && /*#__PURE__*/React.createElement("span", {
+      className: "ea-opSolo ea-dis"
+    }, "solo t\xFA"), bits.length > 0 && /*#__PURE__*/React.createElement("span", {
       className: "ea-opTag"
-    }, partes.join(" · "));
-  })())), opcionesDe(ev).length === 0 && /*#__PURE__*/React.createElement("button", {
+    }, bits.join(" · ")));
+  }), opcionesDe(ev).length === 0 && /*#__PURE__*/React.createElement("button", {
     className: "ea-op",
     onClick: () => resolverEscena({
       msg: "El asunto se resolvió sin que te tocara decidir."
@@ -17513,7 +17639,10 @@ function Motor() {
     className: "ea-cambios"
   }, res.cambios.filter(c => c.nota || c.v).map((c, i) => /*#__PURE__*/React.createElement("span", {
     className: "ea-chip ea-mono " + (c.nota ? "pos" : c.v > 0 ? "pos" : "neg"),
-    key: i
+    key: i,
+    style: {
+      animationDelay: 120 + i * 90 + "ms"
+    }
   }, c.nota ? c.nota : ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + (c.k === "cash" ? fmt(c.v) : c.v)))), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
     disabled: carteraPend,
@@ -17530,7 +17659,11 @@ function Motor() {
     className: "ea-titularK ea-dis"
   }, "Tu patrimonio"), /*#__PURE__*/React.createElement("div", {
     className: "ea-titularV ea-mono"
-  }, "USD ", fmt(cierre.patrimonio)), /*#__PURE__*/React.createElement("div", {
+  }, "USD ", /*#__PURE__*/React.createElement(Cifra, {
+    v: cierre.patrimonio,
+    desde: cierre.patAntes,
+    ms: 1100
+  })), /*#__PURE__*/React.createElement("div", {
     className: "ea-titularL"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-mono",
