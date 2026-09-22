@@ -1788,6 +1788,14 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* ---- iconos ---- */
+.ea-ico{display:inline-block;vertical-align:-.16em;flex-shrink:0}
+.ea-quien{display:flex;flex-wrap:wrap;gap:3px 13px;align-items:center}
+.ea-quien span{display:inline-flex;align-items:center;gap:5px}
+.ea-quienRama{color:var(--cobre)}
+/* las constantes: icono y cifra, sin la palabra delante */
+.ea-signos span{display:inline-flex;align-items:center;gap:4px}
+
 /* una linea, no un bloque: el termino a mano y la explicacion a un toque */
 .ea-recuerda{background:transparent;border:none;color:var(--cobre);font:inherit;
   font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
@@ -10901,9 +10909,7 @@ function JuegoMemoria({
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, rotuloModo), /*#__PURE__*/React.createElement("span", null, modo === "listo" ? "empieza en " + cuenta + (cuenta === 1 ? " segundo" : " segundos") : paso + " de " + seq.length + " · intentos " + vidas + " de " + VIDAS_MEM)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-pista"
-  }, "Cada casilla tiene su color. Se van a encender ", seq.length, " en orden; t\xFA las tocas despu\xE9s en el mismo orden. Si te equivocas, pierdes un intento y te la muestran de nuevo."), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, rotuloModo), /*#__PURE__*/React.createElement("span", null, modo === "listo" ? "empieza en " + cuenta + (cuenta === 1 ? " segundo" : " segundos") : paso + " de " + seq.length + " · intentos " + vidas + " de " + VIDAS_MEM)), /*#__PURE__*/React.createElement(Pista, null, "Cada casilla tiene su color. Se van a encender ", seq.length, " en orden; t\xFA las tocas despu\xE9s en el mismo orden. Si te equivocas, pierdes un intento y te la muestran de nuevo."), /*#__PURE__*/React.createElement("div", {
     className: "ea-celdas"
   }, COLORES_MEM.map((col, i) => {
     const encendida = on === i;
@@ -11733,9 +11739,7 @@ function JuegoOrden({
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Colocados ", paso, " de ", total), /*#__PURE__*/React.createElement("span", null, "Intentos ", vidas, " de ", VIDAS_ORDEN)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-pista"
-  }, "Toca los elementos en el orden que pide el enunciado, del primero al \xFAltimo. Equivocarte cuesta un intento, no la partida."), /*#__PURE__*/React.createElement("p", {
+  }, /*#__PURE__*/React.createElement("span", null, "Colocados ", paso, " de ", total), /*#__PURE__*/React.createElement("span", null, "Intentos ", vidas, " de ", VIDAS_ORDEN)), /*#__PURE__*/React.createElement(Pista, null, "Toca los elementos en el orden que pide el enunciado, del primero al \xFAltimo. Equivocarte cuesta un intento, no la partida."), /*#__PURE__*/React.createElement("p", {
     className: "ea-qtxt"
   }, set.t), /*#__PURE__*/React.createElement("div", {
     className: "ea-ordenL"
@@ -12166,13 +12170,7 @@ function JuegoCatedra({
       className: "ea-lecK"
     }, "Con n\xFAmeros"), /*#__PURE__*/React.createElement("div", {
       className: "ea-ejX"
-    }, tema.ej)), /*#__PURE__*/React.createElement("div", {
-      className: "ea-pista",
-      style: {
-        marginTop: 14,
-        marginBottom: 0
-      }
-    }, "L\xE9elo con calma. Cuando pases de aqu\xED ya no vuelves a ver la explicaci\xF3n."), /*#__PURE__*/React.createElement("button", {
+    }, tema.ej)), /*#__PURE__*/React.createElement(Pista, null, "L\xE9elo con calma. Cuando pases de aqu\xED ya no vuelves a ver la explicaci\xF3n."), /*#__PURE__*/React.createElement("button", {
       className: "ea-btn",
       onClick: () => setFase("quiz")
     }, "Ya lo tengo, preg\xFAntame"));
@@ -12284,9 +12282,7 @@ function JuegoTrading({
     min = Math.min.apply(null, todos);
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-pista"
-  }, "Una acci\xF3n va a moverse durante ", TICKS, " momentos. Con ", /*#__PURE__*/React.createElement("strong", null, "Comprar"), " la tienes y su subida o bajada te toca entera; con ", /*#__PURE__*/React.createElement("strong", null, "Vender"), " te sales a efectivo y dejas de moverte. Compites contra alguien que compr\xF3 al principio y no volvi\xF3 a tocar nada. Ganas si terminas por encima de \xE9l."), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Pista, null, "Una acci\xF3n va a moverse durante ", TICKS, " momentos. Con ", /*#__PURE__*/React.createElement("strong", null, "Comprar"), " la tienes y su subida o bajada te toca entera; con ", /*#__PURE__*/React.createElement("strong", null, "Vender"), " te sales a efectivo y dejas de moverte. Compites contra alguien que compr\xF3 al principio y no volvi\xF3 a tocar nada. Ganas si terminas por encima de \xE9l."), /*#__PURE__*/React.createElement("div", {
     className: "ea-estado " + (dentro ? "dentro" : "fuera")
   }, dentro ? "TIENES LA ACCIÓN" : "ESTÁS EN EFECTIVO"), /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis",
@@ -12422,9 +12418,7 @@ function JuegoEstructura({
   const pctDeuda = caso.precio > 0 ? deuda / caso.precio * 100 : 0;
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-pista"
-  }, "Vas a comprar ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), ". Gana ", /*#__PURE__*/React.createElement("strong", null, caso.eb, " millones"), " al a\xF1o operando y te la venden en ", /*#__PURE__*/React.createElement("strong", null, caso.precio, " millones"), ". Puedes pagarla con tu dinero, con dinero prestado, o con una mezcla. Mueve el deslizador y mira c\xF3mo cambian los dos escenarios de abajo."), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Pista, null, "Vas a comprar ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), ". Gana ", /*#__PURE__*/React.createElement("strong", null, caso.eb, " millones"), " al a\xF1o operando y te la venden en ", /*#__PURE__*/React.createElement("strong", null, caso.precio, " millones"), ". Puedes pagarla con tu dinero, con dinero prestado, o con una mezcla. Mueve el deslizador y mira c\xF3mo cambian los dos escenarios de abajo."), /*#__PURE__*/React.createElement("div", {
     className: "ea-est"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-estL"
@@ -12993,9 +12987,7 @@ function JuegoComite({
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Tres negocios \xB7 capital para uno"), /*#__PURE__*/React.createElement("span", null, ayuda >= 60 ? "Tu criterio ya descarta lo obvio" : "Sin pistas")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-pista"
-  }, "Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman; depender de un solo cliente y arrastrar deuda restan casi lo mismo. Elige uno."), mesa.map((e, i) => {
+  }, /*#__PURE__*/React.createElement("span", null, "Tres negocios \xB7 capital para uno"), /*#__PURE__*/React.createElement("span", null, ayuda >= 60 ? "Tu criterio ya descarta lo obvio" : "Sin pistas")), /*#__PURE__*/React.createElement(Pista, null, "Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman; depender de un solo cliente y arrastrar deuda restan casi lo mismo. Elige uno."), mesa.map((e, i) => {
     const marcado = sel === i;
     const esMejor = sel != null && e.n === mejor.n;
     return /*#__PURE__*/React.createElement("div", {
@@ -13271,6 +13263,110 @@ function Rodillo({
       key: k
     }, d))));
   }));
+}
+
+/* ============================================================
+   ICONOS
+   Dibujados aqui, no traidos de fuera: el juego tiene que abrirse sin
+   red. Trazo del mismo grosor en todos, para que la fila de arriba se
+   lea como una sola cosa y no como cinco simbolos sueltos.
+   ============================================================ */
+const TRAZOS = {
+  rayo: "M13.5 2 L5 13.5 h5.2 l-1.2 8.5 L18 10.5 h-5.3 z",
+  edificio: "M3 21.5V7.2l6.5-3.7 6.5 3.7v14.3 M9.6 21.5v-4.6h3.6v4.6 M6.2 10.4h1.9 M6.2 14h1.9 M14.6 10.4h1.9 M14.6 14h1.9",
+  pin: "M12 22s6.6-6.3 6.6-10.6a6.6 6.6 0 1 0-13.2 0C5.4 15.7 12 22 12 22z M12 13.2a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4z",
+  escalera: "M3 21h5.4v-5.4H3zM9.3 21h5.4V10.2H9.3zM15.6 21H21V4.6h-5.4z",
+  estrella: "M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z",
+  moneda: "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8v10.4 M14.9 9.3c0-1.3-1.3-2-2.9-2s-2.9.7-2.9 2 1.3 1.9 2.9 2.2 2.9.9 2.9 2.2-1.3 2-2.9 2-2.9-.7-2.9-2",
+  aviso: "M12 2.4 1.6 20.6h20.8z M12 9.2v5.2 M12 17.4h.02"
+};
+
+/* un icono de trazo, para lo que solo necesita identificarse */
+function Icono({
+  k,
+  tam,
+  tono
+}) {
+  const d = TRAZOS[k];
+  if (!d) return null;
+  const n = numero(tam, 14);
+  return /*#__PURE__*/React.createElement("svg", {
+    className: "ea-ico",
+    width: n,
+    height: n,
+    viewBox: "0 0 24 24",
+    "aria-hidden": "true",
+    focusable: "false",
+    fill: "none",
+    stroke: tono || "currentColor",
+    strokeWidth: "1.9",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: d
+  }));
+}
+
+/* ---- y el que se llena ----
+   Un numero del 0 al 100 no dice nada de un vistazo. Un rayo que se
+   llena hasta donde llega tu energia, si. El vaso vacio queda detras en
+   tenue, y lo lleno se recorta con un rectangulo que sube. */
+let SELLO_ID = 0;
+function IconoLleno({
+  k,
+  pct,
+  tam,
+  tono
+}) {
+  const d = TRAZOS[k];
+  const idRef = useRef(null);
+  if (idRef.current === null) {
+    SELLO_ID += 1;
+    idRef.current = "eaLl" + SELLO_ID;
+  }
+  if (!d) return null;
+  const n = numero(tam, 16);
+  const p = clamp(numero(pct, 0) / 100, 0, 1);
+  const alto = 24 * p;
+  return /*#__PURE__*/React.createElement("svg", {
+    className: "ea-ico",
+    width: n,
+    height: n,
+    viewBox: "0 0 24 24",
+    "aria-hidden": "true",
+    focusable: "false"
+  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("clipPath", {
+    id: idRef.current
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "0",
+    y: 24 - alto,
+    width: "24",
+    height: alto
+  }))), /*#__PURE__*/React.createElement("path", {
+    d: d,
+    fill: "currentColor",
+    opacity: ".24"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: d,
+    fill: tono || "currentColor",
+    clipPath: "url(#" + idRef.current + ")"
+  }));
+}
+
+/* ---- las reglas dentro del minijuego ----
+   Se quedaban puestas mientras juegas, ocupando un tercio de la pantalla
+   con lo mismo que acababas de leer en la ficha de antes. Ahora se
+   pliegan: quien las necesite las abre, y no estorban al que ya sabe. */
+function Pista({
+  children
+}) {
+  const [abierta, setAbierta] = useState(false);
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    className: "ea-recuerda ea-dis",
+    onClick: () => setAbierta(!abierta)
+  }, abierta ? "↑ Ocultar las reglas" : "↓ Las reglas"), abierta && /*#__PURE__*/React.createElement("div", {
+    className: "ea-pista ea-panelAb"
+  }, children));
 }
 function Plegable({
   titulo,
@@ -14403,6 +14499,8 @@ function Motor() {
   /* la pantalla del rodillo, que tapa el informe hasta que el jugador
      ha visto cuanto tiene ahora */
   const [anuncio, setAnuncio] = useState(false);
+  /* la segunda mitad de la leccion del año, la de las cifras propias */
+  const [verLeccion, setVerLeccion] = useState(false);
   /* Las cuatro decisiones de partida viven aquí y NO tocan el estado del
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
@@ -15840,6 +15938,7 @@ function Motor() {
     });
     if (terminar) setFin(terminar);
     setAnuncio(true); /* primero el rodillo, y despues el informe */
+    setVerLeccion(false); /* la leccion del año nuevo vuelve a su titular */
     irA("cierre");
   };
   const ayudaDe = o => {
@@ -16722,8 +16821,19 @@ function Motor() {
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-nombre ea-dis"
   }, s.nombre ? s.nombre : RANGO(s.rango).n), /*#__PURE__*/React.createElement("div", {
-    className: "ea-sub ea-dis"
-  }, s.nombre ? RANGO(s.rango).n + " · " : "", s.patron || estudio.n, " \xB7 ", nacion.n, ramaN ? " · " + ramaN : "")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-sub ea-dis ea-quien"
+  }, s.nombre && /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
+    k: "escalera",
+    tam: 12
+  }), RANGO(s.rango).n), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
+    k: "edificio",
+    tam: 12
+  }), s.patron || estudio.n), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
+    k: "pin",
+    tam: 12
+  }), nacion.n), ramaN && /*#__PURE__*/React.createElement("span", {
+    className: "ea-quienRama"
+  }, ramaN))), /*#__PURE__*/React.createElement("div", {
     className: "ea-reloj"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-dis"
@@ -16739,13 +16849,34 @@ function Motor() {
     }
   }, "efectivo ", fmt(s.cash), " \xB7 cartera ", fmt(s.cartera)), /*#__PURE__*/React.createElement("div", {
     className: "ea-mono ea-signos"
-  }, /*#__PURE__*/React.createElement("span", null, "sueldo ", fmt(salarioAnual(s)), " al a\xF1o"), s.ene < 50 && /*#__PURE__*/React.createElement("span", {
-    className: s.ene < 30 ? "mal" : "ojo"
-  }, "energ\xEDa ", Math.round(s.ene)), s.rep < 30 && /*#__PURE__*/React.createElement("span", {
-    className: s.rep < 20 ? "mal" : "ojo"
-  }, "reputaci\xF3n ", Math.round(s.rep)), s.deuda > 0 && /*#__PURE__*/React.createElement("span", {
-    className: "mal"
-  }, "debes ", fmt(s.deuda))))), fase !== "cierre" && (fase === "evento" || fase === "minijuego" || fase === "resultado") && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", {
+    title: "Sueldo " + fmt(salarioAnual(s)) + " al año"
+  }, /*#__PURE__*/React.createElement(Icono, {
+    k: "moneda",
+    tam: 13
+  }), fmtCorto(salarioAnual(s))), /*#__PURE__*/React.createElement("span", {
+    className: s.ene < 30 ? "mal" : s.ene < 50 ? "ojo" : "",
+    title: "Energía " + Math.round(s.ene) + " de 100"
+  }, /*#__PURE__*/React.createElement(IconoLleno, {
+    k: "rayo",
+    pct: s.ene,
+    tam: 15,
+    tono: s.ene < 30 ? "var(--rojo)" : s.ene < 50 ? "var(--cobre)" : "var(--verde)"
+  }), Math.round(s.ene)), /*#__PURE__*/React.createElement("span", {
+    className: s.rep < 20 ? "mal" : s.rep < 30 ? "ojo" : "",
+    title: "Reputación " + Math.round(s.rep) + " de 100"
+  }, /*#__PURE__*/React.createElement(IconoLleno, {
+    k: "estrella",
+    pct: s.rep,
+    tam: 15,
+    tono: s.rep < 20 ? "var(--rojo)" : s.rep < 30 ? "var(--cobre)" : "var(--verde)"
+  }), Math.round(s.rep)), s.deuda > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "mal",
+    title: "Debes " + fmt(s.deuda)
+  }, /*#__PURE__*/React.createElement(Icono, {
+    k: "aviso",
+    tam: 13
+  }), fmtCorto(s.deuda))))), fase !== "cierre" && (fase === "evento" || fase === "minijuego" || fase === "resultado") && /*#__PURE__*/React.createElement("div", {
     className: "ea-cinta"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-cintaK ea-dis"
@@ -18008,18 +18139,36 @@ function Motor() {
     style: {
       left: "71.4%"
     }
-  }))), cierre.leccion && /*#__PURE__*/React.createElement("div", {
-    className: "ea-lec",
-    style: {
-      marginTop: 14
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "Lo que ense\xF1a este a\xF1o"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecT"
-  }, cierre.leccion.t), /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecX"
-  }, cierre.leccion.x)), cierre.hitos.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }))), cierre.leccion && (() => {
+    const x = texto(cierre.leccion.x, "", 1200);
+    const corte = x.search(/\.\s/);
+    const primera = corte > 0 ? x.slice(0, corte + 1) : x;
+    const resto = corte > 0 ? x.slice(corte + 2) : "";
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-lec",
+      style: {
+        marginTop: 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-lecK"
+    }, "Lo que ense\xF1a este a\xF1o"), /*#__PURE__*/React.createElement("div", {
+      className: "ea-lecT"
+    }, cierre.leccion.t), /*#__PURE__*/React.createElement("div", {
+      className: "ea-lecX"
+    }, primera), resto && !verLeccion && /*#__PURE__*/React.createElement("button", {
+      className: "ea-atras ea-dis",
+      style: {
+        marginTop: 6,
+        marginBottom: 0
+      },
+      onClick: () => setVerLeccion(true)
+    }, "\u2193 Con tus n\xFAmeros"), resto && verLeccion && /*#__PURE__*/React.createElement("div", {
+      className: "ea-lecX ea-panelAb",
+      style: {
+        marginTop: 6
+      }
+    }, resto));
+  })(), cierre.hitos.length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "ea-hitos"
   }, cierre.hitos.map((h, i) => /*#__PURE__*/React.createElement("span", {
     className: "ea-hito",

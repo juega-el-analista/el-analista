@@ -1093,6 +1093,14 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* ---- iconos ---- */
+.ea-ico{display:inline-block;vertical-align:-.16em;flex-shrink:0}
+.ea-quien{display:flex;flex-wrap:wrap;gap:3px 13px;align-items:center}
+.ea-quien span{display:inline-flex;align-items:center;gap:5px}
+.ea-quienRama{color:var(--cobre)}
+/* las constantes: icono y cifra, sin la palabra delante */
+.ea-signos span{display:inline-flex;align-items:center;gap:4px}
+
 /* una linea, no un bloque: el termino a mano y la explicacion a un toque */
 .ea-recuerda{background:transparent;border:none;color:var(--cobre);font:inherit;
   font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
@@ -4626,10 +4634,10 @@ function JuegoMemoria({ ayuda, onFin }) {
             : paso + " de " + seq.length + " · intentos " + vidas + " de " + VIDAS_MEM}
         </span>
       </div>
-      <div className="ea-pista">
+      <Pista>
         Cada casilla tiene su color. Se van a encender {seq.length} en orden;
         tú las tocas después en el mismo orden. Si te equivocas, pierdes un intento y te la muestran de nuevo.
-      </div>
+      </Pista>
       <div className="ea-celdas">
         {COLORES_MEM.map((col, i) => {
           const encendida = on === i;
@@ -5226,10 +5234,10 @@ function JuegoOrden({ ayuda, onFin }) {
         <span>Colocados {paso} de {total}</span>
         <span>Intentos {vidas} de {VIDAS_ORDEN}</span>
       </div>
-      <div className="ea-pista">
+      <Pista>
         Toca los elementos en el orden que pide el enunciado, del primero al último.
         Equivocarte cuesta un intento, no la partida.
-      </div>
+      </Pista>
       <p className="ea-qtxt">{set.t}</p>
       <div className="ea-ordenL">
         {lista.map((item, k) => (
@@ -5474,9 +5482,9 @@ function JuegoCatedra({ ayuda, nivel, onFin, onTema }) {
           <div className="ea-lecK">Con números</div>
           <div className="ea-ejX">{tema.ej}</div>
         </div>
-        <div className="ea-pista" style={{ marginTop: 14, marginBottom: 0 }}>
+        <Pista>
           Léelo con calma. Cuando pases de aquí ya no vuelves a ver la explicación.
-        </div>
+        </Pista>
         <button className="ea-btn" onClick={() => setFase("quiz")}>Ya lo tengo, pregúntame</button>
       </div>
     );
@@ -5582,11 +5590,11 @@ function JuegoTrading({ ayuda, onFin }) {
 
   return (
     <div className="ea-jw">
-      <div className="ea-pista">
+      <Pista>
         Una acción va a moverse durante {TICKS} momentos. Con <strong>Comprar</strong> la tienes y su subida o bajada
         te toca entera; con <strong>Vender</strong> te sales a efectivo y dejas de moverte. Compites contra alguien
         que compró al principio y no volvió a tocar nada. Ganas si terminas por encima de él.
-      </div>
+      </Pista>
 
       <div className={"ea-estado " + (dentro ? "dentro" : "fuera")}>
         {dentro ? "TIENES LA ACCIÓN" : "ESTÁS EN EFECTIVO"}
@@ -5711,11 +5719,11 @@ function JuegoEstructura({ ayuda, onFin }) {
 
   return (
     <div className="ea-jw">
-      <div className="ea-pista">
+      <Pista>
         Vas a comprar <strong>{caso.nombre}</strong>. Gana <strong>{caso.eb} millones</strong> al año operando
         y te la venden en <strong>{caso.precio} millones</strong>. Puedes pagarla con tu dinero, con dinero
         prestado, o con una mezcla. Mueve el deslizador y mira cómo cambian los dos escenarios de abajo.
-      </div>
+      </Pista>
 
       <div className="ea-est">
         <div className="ea-estL">
@@ -6165,10 +6173,10 @@ function JuegoComite({ ayuda, onFin }) {
         <span>Tres negocios · capital para uno</span>
         <span>{ayuda >= 60 ? "Tu criterio ya descarta lo obvio" : "Sin pistas"}</span>
       </div>
-      <div className="ea-pista">
+      <Pista>
         Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman;
         depender de un solo cliente y arrastrar deuda restan casi lo mismo. Elige uno.
-      </div>
+      </Pista>
 
       {mesa.map((e, i) => {
         const marcado = sel === i;
@@ -6393,6 +6401,78 @@ function Rodillo({ v }) {
         );
       })}
     </span>
+  );
+}
+
+/* ============================================================
+   ICONOS
+   Dibujados aqui, no traidos de fuera: el juego tiene que abrirse sin
+   red. Trazo del mismo grosor en todos, para que la fila de arriba se
+   lea como una sola cosa y no como cinco simbolos sueltos.
+   ============================================================ */
+const TRAZOS = {
+  rayo:      "M13.5 2 L5 13.5 h5.2 l-1.2 8.5 L18 10.5 h-5.3 z",
+  edificio:  "M3 21.5V7.2l6.5-3.7 6.5 3.7v14.3 M9.6 21.5v-4.6h3.6v4.6 M6.2 10.4h1.9 M6.2 14h1.9 M14.6 10.4h1.9 M14.6 14h1.9",
+  pin:       "M12 22s6.6-6.3 6.6-10.6a6.6 6.6 0 1 0-13.2 0C5.4 15.7 12 22 12 22z M12 13.2a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4z",
+  escalera:  "M3 21h5.4v-5.4H3zM9.3 21h5.4V10.2H9.3zM15.6 21H21V4.6h-5.4z",
+  estrella:  "M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z",
+  moneda:    "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8v10.4 M14.9 9.3c0-1.3-1.3-2-2.9-2s-2.9.7-2.9 2 1.3 1.9 2.9 2.2 2.9.9 2.9 2.2-1.3 2-2.9 2-2.9-.7-2.9-2",
+  aviso:     "M12 2.4 1.6 20.6h20.8z M12 9.2v5.2 M12 17.4h.02",
+};
+
+/* un icono de trazo, para lo que solo necesita identificarse */
+function Icono({ k, tam, tono }) {
+  const d = TRAZOS[k];
+  if (!d) return null;
+  const n = numero(tam, 14);
+  return (
+    <svg className="ea-ico" width={n} height={n} viewBox="0 0 24 24" aria-hidden="true" focusable="false"
+      fill="none" stroke={tono || "currentColor"} strokeWidth="1.9"
+      strokeLinecap="round" strokeLinejoin="round">
+      <path d={d} />
+    </svg>
+  );
+}
+
+/* ---- y el que se llena ----
+   Un numero del 0 al 100 no dice nada de un vistazo. Un rayo que se
+   llena hasta donde llega tu energia, si. El vaso vacio queda detras en
+   tenue, y lo lleno se recorta con un rectangulo que sube. */
+let SELLO_ID = 0;
+function IconoLleno({ k, pct, tam, tono }) {
+  const d = TRAZOS[k];
+  const idRef = useRef(null);
+  if (idRef.current === null) { SELLO_ID += 1; idRef.current = "eaLl" + SELLO_ID; }
+  if (!d) return null;
+  const n = numero(tam, 16);
+  const p = clamp(numero(pct, 0) / 100, 0, 1);
+  const alto = 24 * p;
+  return (
+    <svg className="ea-ico" width={n} height={n} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id={idRef.current}>
+          <rect x="0" y={24 - alto} width="24" height={alto} />
+        </clipPath>
+      </defs>
+      <path d={d} fill="currentColor" opacity=".24" />
+      <path d={d} fill={tono || "currentColor"} clipPath={"url(#" + idRef.current + ")"} />
+    </svg>
+  );
+}
+
+/* ---- las reglas dentro del minijuego ----
+   Se quedaban puestas mientras juegas, ocupando un tercio de la pantalla
+   con lo mismo que acababas de leer en la ficha de antes. Ahora se
+   pliegan: quien las necesite las abre, y no estorban al que ya sabe. */
+function Pista({ children }) {
+  const [abierta, setAbierta] = useState(false);
+  return (
+    <div>
+      <button className="ea-recuerda ea-dis" onClick={() => setAbierta(!abierta)}>
+        {abierta ? "↑ Ocultar las reglas" : "↓ Las reglas"}
+      </button>
+      {abierta && <div className="ea-pista ea-panelAb">{children}</div>}
+    </div>
   );
 }
 
@@ -7229,6 +7309,8 @@ function Motor() {
   /* la pantalla del rodillo, que tapa el informe hasta que el jugador
      ha visto cuanto tiene ahora */
   const [anuncio, setAnuncio] = useState(false);
+  /* la segunda mitad de la leccion del año, la de las cifras propias */
+  const [verLeccion, setVerLeccion] = useState(false);
   /* Las cuatro decisiones de partida viven aquí y NO tocan el estado del
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
@@ -8265,7 +8347,8 @@ function Motor() {
       cobertura, gastos, indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0,
     });
     if (terminar) setFin(terminar);
-    setAnuncio(true);   /* primero el rodillo, y despues el informe */
+    setAnuncio(true);       /* primero el rodillo, y despues el informe */
+    setVerLeccion(false);   /* la leccion del año nuevo vuelve a su titular */
     irA("cierre");
   };
 
@@ -8796,8 +8879,15 @@ function Motor() {
               <div className="ea-nombre ea-dis">{s.nombre ? s.nombre : RANGO(s.rango).n}</div>
               {/* Antes solo se veía la formación y la bandera. Dónde trabajas
                   era invisible, y es lo primero que define tu año. */}
-              <div className="ea-sub ea-dis">
-                {s.nombre ? RANGO(s.rango).n + " · " : ""}{s.patron || estudio.n} · {nacion.n}{ramaN ? " · " + ramaN : ""}
+              {/* Era una linea de texto con puntos: «Analista · Mercantil
+                  Praga · Venezuela». Ahora cada cosa lleva su icono, asi
+                  que se distingue de un vistazo donde trabajas de donde
+                  vives sin tener que leerlo. */}
+              <div className="ea-sub ea-dis ea-quien">
+                {s.nombre && <span><Icono k="escalera" tam={12} />{RANGO(s.rango).n}</span>}
+                <span><Icono k="edificio" tam={12} />{s.patron || estudio.n}</span>
+                <span><Icono k="pin" tam={12} />{nacion.n}</span>
+                {ramaN && <span className="ea-quienRama">{ramaN}</span>}
               </div>
             </div>
             <div className="ea-reloj">
@@ -8812,11 +8902,29 @@ function Motor() {
               {/* El sueldo es el número que el jugador usa para decidir; energía y
                   reputación solo salen cuando están en zona de aviso, que es el
                   único momento en que cambian una decisión. */}
+              {/* La energia era un numero del 0 al 100 escondido en una
+                  linea de texto, y solo cuando ya ibas mal. Ahora es un
+                  rayo que se llena hasta donde llegas, siempre a la
+                  vista: se lee sin leer. Igual la reputacion. */}
               <div className="ea-mono ea-signos">
-                <span>sueldo {fmt(salarioAnual(s))} al año</span>
-                {s.ene < 50 && <span className={s.ene < 30 ? "mal" : "ojo"}>energía {Math.round(s.ene)}</span>}
-                {s.rep < 30 && <span className={s.rep < 20 ? "mal" : "ojo"}>reputación {Math.round(s.rep)}</span>}
-                {s.deuda > 0 && <span className="mal">debes {fmt(s.deuda)}</span>}
+                <span title={"Sueldo " + fmt(salarioAnual(s)) + " al año"}>
+                  <Icono k="moneda" tam={13} />{fmtCorto(salarioAnual(s))}
+                </span>
+                <span className={s.ene < 30 ? "mal" : s.ene < 50 ? "ojo" : ""} title={"Energía " + Math.round(s.ene) + " de 100"}>
+                  <IconoLleno k="rayo" pct={s.ene} tam={15}
+                    tono={s.ene < 30 ? "var(--rojo)" : s.ene < 50 ? "var(--cobre)" : "var(--verde)"} />
+                  {Math.round(s.ene)}
+                </span>
+                <span className={s.rep < 20 ? "mal" : s.rep < 30 ? "ojo" : ""} title={"Reputación " + Math.round(s.rep) + " de 100"}>
+                  <IconoLleno k="estrella" pct={s.rep} tam={15}
+                    tono={s.rep < 20 ? "var(--rojo)" : s.rep < 30 ? "var(--cobre)" : "var(--verde)"} />
+                  {Math.round(s.rep)}
+                </span>
+                {s.deuda > 0 && (
+                  <span className="mal" title={"Debes " + fmt(s.deuda)}>
+                    <Icono k="aviso" tam={13} />{fmtCorto(s.deuda)}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -9615,13 +9723,28 @@ function Motor() {
                     </div>
                   </div>
 
-                  {cierre.leccion && (
-                    <div className="ea-lec" style={{ marginTop: 14 }}>
-                      <div className="ea-lecK">Lo que enseña este año</div>
-                      <div className="ea-lecT">{cierre.leccion.t}</div>
-                      <div className="ea-lecX">{cierre.leccion.x}</div>
-                    </div>
-                  )}
+                  {/* La leccion era un parrafo de siete lineas, y es lo
+                      primero que se ve al cerrar el año. Ahora se lee el
+                      titular y la primera frase; el resto, que es donde
+                      van tus cifras concretas, espera a que lo pidas. */}
+                  {cierre.leccion && (() => {
+                    const x = texto(cierre.leccion.x, "", 1200);
+                    const corte = x.search(/\.\s/);
+                    const primera = corte > 0 ? x.slice(0, corte + 1) : x;
+                    const resto = corte > 0 ? x.slice(corte + 2) : "";
+                    return (
+                      <div className="ea-lec" style={{ marginTop: 14 }}>
+                        <div className="ea-lecK">Lo que enseña este año</div>
+                        <div className="ea-lecT">{cierre.leccion.t}</div>
+                        <div className="ea-lecX">{primera}</div>
+                        {resto && !verLeccion && (
+                          <button className="ea-atras ea-dis" style={{ marginTop: 6, marginBottom: 0 }}
+                            onClick={() => setVerLeccion(true)}>↓ Con tus números</button>
+                        )}
+                        {resto && verLeccion && <div className="ea-lecX ea-panelAb" style={{ marginTop: 6 }}>{resto}</div>}
+                      </div>
+                    );
+                  })()}
 
                   {cierre.hitos.length > 0 && (
                     <div className="ea-hitos">
