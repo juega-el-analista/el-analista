@@ -199,6 +199,23 @@ const CSS = `
 .ea-h1{font-size:clamp(44px,11vw,84px);line-height:.9;color:var(--tintaPapel);margin:0}
 .ea-lede{color:var(--gris);margin:18px 0 26px;font-size:16px;max-width:56ch}
 .ea-regla{height:1px;background:var(--borde);margin:24px 0}
+/* La portada se alinea con la tarjeta con la que se comparte el juego.
+   Antes la entrada era toda papel y el verde aparecia de golpe al empezar;
+   ahora lo primero que ves ya se parece a lo que viene despues. */
+.ea-cintaPortada{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  background:var(--fieltro);border-bottom:4px solid #04220F;padding:13px 19px;
+  border-radius:3px 3px 0 0;margin-bottom:34px}
+.ea-cintaPortada .ea-dis{color:var(--hueso);font-size:13px;letter-spacing:.15em}
+.ea-cintaPortada .ea-mono{color:var(--verde);font-size:12px}
+/* ea-emblema y no ea-marca: ese nombre ya lo usa un distintivo con borde
+   del trading viejo, mas abajo, y colisionar le habria impuesto altura fija. */
+.ea-emblema{display:block;height:46px;width:auto;margin-bottom:14px}
+/* mas oscuro que el resto del texto: es el unico sitio donde el nombre
+   tiene que pesar, y --tintaPapel lo dejaba a media voz */
+.ea-h1Portada{color:var(--tinta)}
+.ea-reglaGorda{width:150px;height:7px;background:var(--cobre);margin:18px 0 0}
+.ea-subPortada{font-size:14px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--tintaPapel);margin-top:19px}
 .ea-final{font-size:33px;color:var(--tintaPapel);line-height:1.1;margin:0 0 12px}
 .ea-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:15px}
 .ea-cifraK{font-size:11px;color:var(--gris);letter-spacing:.18em;
@@ -8108,8 +8125,20 @@ function Motor() {
 
       {fase === "portada" && (
         <div className="ea-wrap ea-portada">
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Simulador de carrera e inversión</div>
-          <h1 className="ea-h1 ea-dis">El Analista</h1>
+          <div className="ea-cintaPortada">
+            <span className="ea-dis">No hace falta saber de finanzas</span>
+            <span className="ea-mono">modo aprendiz</span>
+          </div>
+          {/* Tres barras que suben. Es el mismo distintivo del favicon y el
+              de la tarjeta al compartir: el juego no tenía ninguno. */}
+          <svg className="ea-emblema" viewBox="0 0 72 85" aria-hidden="true" focusable="false">
+            <rect x="0" y="40" width="18" height="45" fill="var(--cobre)" />
+            <rect x="27" y="20" width="18" height="65" fill="var(--cobre)" />
+            <rect x="54" y="0" width="18" height="85" fill="var(--verde)" />
+          </svg>
+          <h1 className="ea-h1 ea-dis ea-h1Portada">El Analista</h1>
+          <div className="ea-reglaGorda" />
+          <div className="ea-mono ea-subPortada">Simulador de carrera e inversión</div>
           <p className="ea-lede">
             Nadie nace sabiendo qué hacer con su dinero, y casi nadie tiene dónde practicar sin perderlo.
             Aquí sí: cada término se explica antes de usarse y puedes arruinarte tranquilo. Eliges desde
