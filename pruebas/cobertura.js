@@ -163,6 +163,13 @@ async function partida(Juego, semilla, aprendiz, vueltas) {
          si no, el jugador se queda alternando casillas para siempre */
       if (!b) { const cierra = bs.filter((q) => ['Entregar el informe','Ya lo tengo','Cerrar el trato','Continuar','Terminar'].some((g) => texto(q.props.children).trim().indexOf(g) === 0));
         if (cierra.length) b = cierra[0]; }
+      /* Los pliegues se abren. Cada vez hay mas cosas guardadas detras de
+         un «↓ …» para que no haya que leerlas siempre —el recordatorio
+         del examen, el para-que-sirve del minijuego, las palabras del
+         glosario— y si esta prueba no los abre nunca, da por no visto un
+         contenido que esta a un toque. */
+      if (!b) { const pliegues = bs.filter((q) => texto(q.props.children).trim().indexOf("↓") === 0);
+        if (pliegues.length && rnd() < 0.5) b = pliegues[Math.floor(rnd() * pliegues.length) % pliegues.length]; }
       /* las opciones del memorando son las que hacen avanzar la partida;
          las pestañas laterales solo pasean, así que van al final */
       if (!b) { const ops = bs.filter((q) => String(q.props.className || '').indexOf('ea-op') === 0 || String(q.props.className || '').indexOf('ea-check') === 0);

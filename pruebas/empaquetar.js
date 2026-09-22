@@ -92,13 +92,25 @@ const CASCARA = `<!doctype html>
     outline-offset: 2px;
   }
 
-  /* quien haya pedido menos movimiento en su sistema no debería recibir
-     los sellos que rebotan ni los memorandos que entran deslizándose */
+  /* Quien haya pedido menos movimiento en su sistema no debería recibir
+     los sellos que rebotan ni los memorandos que entran deslizándose.
+
+     Pero esto llevaba !important y ganaba SIEMPRE, asi que apagaba el
+     juego entero sin forma de encenderlo: Windows con los efectos de
+     animacion apagados le dice a Chrome «reduced-motion», y con eso el
+     rodillo del cierre y las cifras que cuentan no se veian nunca, ni
+     sabiendo que existian.
+
+     Ahora la regla se retira si el juego pone .ea-mov en #raiz, que es
+     lo que hace cuando el jugador enciende el movimiento a mano desde su
+     Ficha. Por defecto, sin tocar nada, sigue mandando el sistema. */
   @media (prefers-reduced-motion: reduce) {
-    #raiz *, #raiz *::before, #raiz *::after {
+    #raiz:not(.ea-mov) *, #raiz:not(.ea-mov) *::before, #raiz:not(.ea-mov) *::after {
       animation-duration: 1ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 1ms !important;
+      animation-delay: 0ms !important;
+      transition-delay: 0ms !important;
     }
   }
 </style>

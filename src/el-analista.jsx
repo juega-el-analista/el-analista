@@ -1093,6 +1093,13 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* una linea, no un bloque: el termino a mano y la explicacion a un toque */
+.ea-recuerda{background:transparent;border:none;color:var(--cobre);font:inherit;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+  padding:4px 0;margin:0 0 6px;cursor:pointer;text-align:left}
+.ea-recuerda:hover{color:#C86A3E}
+
 /* ---- el golpe de dinero de una decision ----
    Lo que se gana o se pierde al decidir tiene que verse desde la otra
    punta de la mesa. Antes era un chip de doce pixeles igual que los
@@ -1142,19 +1149,24 @@ const CSS4 = `
 
 /* Hay gente que marea. Si su sistema lo pide, nada se mueve: el juego
    sigue funcionando igual porque ninguna animacion cambia una regla. */
-@media (prefers-reduced-motion: reduce){
-  .ea-root *,.ea-root *::before,.ea-root *::after,.ea-anuncio *{
-    animation-duration:.001ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.001ms !important;
-    /* El retardo hay que matarlo tambien, no solo la duracion. Varias
-       cosas entran escalonadas con animation-delay y relleno backwards,
-       o sea invisibles hasta que les toca: sin esto, quien pide menos
-       movimiento se quedaba mirando el anuncio del año DOS SEGUNDOS
-       sin boton para salir. */
-    animation-delay:0ms !important;
-    transition-delay:0ms !important;
-  }
+/* Hay gente que marea, y hay sistemas que piden menos movimiento sin que
+   su dueño se acuerde de haberlo pedido: Windows con los efectos de
+   animacion apagados le dice a Chrome «reduced-motion», y con una media
+   query pura eso apagaba el juego entero sin forma de encenderlo.
+
+   Por eso el freno no es una media query sino una clase que pone el
+   propio juego: por defecto sigue al sistema, y el jugador puede
+   encender el movimiento desde su Ficha. El retardo hay que matarlo
+   igual que la duracion, no solo la duracion: varias cosas entran
+   escalonadas con animation-delay y relleno backwards, o sea invisibles
+   hasta que les toca, y sin esto el anuncio del año se quedaba DOS
+   SEGUNDOS sin boton para salir. */
+.ea-quieto *,.ea-quieto *::before,.ea-quieto *::after{
+  animation-duration:.001ms !important;
+  animation-iteration-count:1 !important;
+  transition-duration:.001ms !important;
+  animation-delay:0ms !important;
+  transition-delay:0ms !important;
 }
 `;
 
@@ -3530,6 +3542,8 @@ const BASE = {
   /* minijuegos cuyas reglas ya se leyeron: la segunda vez no se vuelven
      a explicar enteras */
   jugados: [],
+  /* movimiento: null sigue al sistema, true encendido, false apagado */
+  animar: null,
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
   patron: "", contrato: null, sueldoMult: 1,
   /* si te independizaste y la firma es tuya */
@@ -4248,6 +4262,7 @@ const sanear = (bruto) => {
      de lo que ya tenía en pantalla. */
   st.temas = unicos(listaDe(r.temas, (x) => TEMAS.some((t) => t.id === x), 60));
   st.jugados = unicos(listaDe(r.jugados, (x) => !!JUEGOS[x], 30));
+  st.animar = r.animar === true ? true : r.animar === false ? false : null;
   /* El patrón puede ser una firma de la tabla o una firma tuya, así que
      se acota por longitud en vez de por lista cerrada. */
   st.patron = texto(r.patron, "", 48);
@@ -4906,11 +4921,18 @@ function JuegoQuiz({ ayuda, nivel, onFin, modo, temas }) {
         <span>Pregunta {i + 1} de {cuantas} · {(NIVEL_N[nv] || "").toLowerCase()}</span>
         <span>{"Aciertos " + ok + (ayudas > 0 ? " · " + ayudas + (ayudas === 1 ? " explicación" : " explicaciones") : "")}</span>
       </div>
-      {/* en aprendiz el recordatorio sale solo; en analista hay que pedirlo */}
-      {ctx && (modo === "aprendiz" || verContexto) && (
-        <div className="ea-glos">
-          <div className="ea-glosK">{modo === "aprendiz" ? "Antes de responder, el recordatorio" : "Lo que necesitas saber"}</div>
-          <div className="ea-glosT">{ctx.t}</div>
+      {/* El recordatorio era un bloque de cuatro lineas delante de CADA
+          pregunta en modo aprendiz. Ahora es una linea con el termino, y
+          se abre quien lo necesite: la ayuda sigue estando, pero deja de
+          leerse cuatro veces por examen sin que nadie la pidiera. */}
+      {ctx && (
+        <button className="ea-recuerda ea-dis"
+          onClick={() => { if (!verContexto) setAyudas(ayudas + 1); setVerContexto(!verContexto); }}>
+          {verContexto ? "↑" : "↓"} Recordatorio · {ctx.t}
+        </button>
+      )}
+      {ctx && verContexto && (
+        <div className="ea-glos ea-panelAb">
           <div className="ea-glosX">{ctx.x}</div>
           {ctx.ej && <div className="ea-glosX" style={{ marginTop: 6, fontStyle: "italic" }}>{ctx.ej}</div>}
         </div>
@@ -4928,17 +4950,6 @@ function JuegoQuiz({ ayuda, nivel, onFin, modo, temas }) {
           );
         })}
       </div>
-      {sel === null && ctx && modo !== "aprendiz" && !verContexto && (
-        <button className="ea-mini ea-explicame" style={{ marginTop: 12 }}
-          onClick={() => { setVerContexto(true); setAyudas(ayudas + 1); }}>
-          No lo sé · explícame
-        </button>
-      )}
-      {sel === null && !ctx && modo !== "aprendiz" && (
-        <div className="ea-td" style={{ marginTop: 10, fontSize: 11.5 }}>
-          Si no la sabes, responde igual: la explicación viene después y por eso está el examen.
-        </div>
-      )}
       {sel !== null && (
         <div>
           <div className="ea-expl">{p.e}</div>
@@ -5317,6 +5328,8 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
   const [listo, setListo] = useState(false);
   /* las reglas, para quien ya jugó esto antes y quiere repasarlas */
   const [recordar, setRecordar] = useState(false);
+  /* y el «para qué sirve», que no hace falta antes de jugar */
+  const [porQue, setPorQue] = useState(false);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
      setTimeout viejo dispara tarde o si el componente ya se desmonto.
@@ -5390,17 +5403,27 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
         <span className="ea-td">Cuenta como éxito</span><span className="ea-tdn">{j.gana}</span>
         <span className="ea-td">Te ayuda</span><span className="ea-tdn">{statN} {Math.round(ayuda)} de 100</span>
       </div>
-      <div className="ea-lec">
-        <div className="ea-lecK">Para qué sirve esto</div>
-        <div className="ea-lecX">{j.ensena}</div>
-      </div>
-      {modo === "aprendiz" && (GLOS_JUEGO[tipo] || []).map((k) => GLOSARIO[k]).filter(Boolean).map((g, i) => (
-        <div className="ea-glos" key={i}>
-          <div className="ea-glosK">{i === 0 ? "Palabras que vas a ver" : ""}</div>
-          <div className="ea-glosT">{g.n}</div>
-          <div className="ea-glosX">{g.x}</div>
+      {/* «Para qué sirve» y las palabras del glosario se pliegan: son
+          buenas y no hacen falta ANTES de jugar. Desplegadas eran otras
+          doscientas y pico de caracteres delante del boton. */}
+      <button className="ea-atras ea-dis" style={{ marginTop: 12, marginBottom: 0 }}
+        onClick={() => setPorQue((v) => !v)}>
+        {porQue ? "↑ Cerrar" : "↓ Para qué sirve esto"}
+      </button>
+      {porQue && (
+        <div className="ea-panelAb">
+          <div className="ea-lec" style={{ marginTop: 8 }}>
+            <div className="ea-lecX">{j.ensena}</div>
+          </div>
+          {modo === "aprendiz" && (GLOS_JUEGO[tipo] || []).map((k) => GLOSARIO[k]).filter(Boolean).map((g, i) => (
+            <div className="ea-glos" key={i}>
+              {i === 0 && <div className="ea-glosK">Palabras que vas a ver</div>}
+              <div className="ea-glosT">{g.n}</div>
+              <div className="ea-glosX">{g.x}</div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
       <button className="ea-btn" onClick={empezar}>Entendido, empezar</button>
     </div>
   );
@@ -6251,6 +6274,26 @@ function JuegoSubasta({ ayuda, onFin }) {
 /* ---- piezas del informe de cierre ---- */
 
 /* ============================================================
+   EL INTERRUPTOR DEL MOVIMIENTO
+   null = lo que diga el sistema · true = encendido · false = apagado.
+   Vive fuera de React porque lo consultan componentes sueltos (la cifra
+   que cuenta, el rodillo) que no tienen el estado de la partida a mano.
+   El Motor lo pone al dia en cada render desde st.animar.
+   ============================================================ */
+let MOVIMIENTO = null;
+const sistemaPideQuieto = () => {
+  try {
+    return typeof window !== "undefined" && typeof window.matchMedia === "function"
+      && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (e) { return false; }
+};
+const sinMovimiento = () => {
+  if (MOVIMIENTO === true) return false;
+  if (MOVIMIENTO === false) return true;
+  return sistemaPideQuieto();
+};
+
+/* ============================================================
    UNA CIFRA QUE CUENTA EN VEZ DE SALTAR
    El patrimonio es EL numero del juego y cambiaba de golpe: de 12.000 a
    19.400 sin que nada dijera que habias ganado. Verlo subir convierte un
@@ -6273,12 +6316,7 @@ function Cifra({ v, ms, desde: arranque }) {
   useEffect(() => {
     const ini = numero(desde.current, 0);
     if (ini === fin) return;
-    let quieto = false;
-    try {
-      quieto = typeof window !== "undefined" && typeof window.matchMedia === "function"
-        && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    } catch (e) { quieto = false; }
-    if (quieto || typeof requestAnimationFrame !== "function" || typeof cancelAnimationFrame !== "function") {
+    if (sinMovimiento() || typeof requestAnimationFrame !== "function" || typeof cancelAnimationFrame !== "function") {
       desde.current = fin; setX(fin); return;
     }
     const dura = numero(ms, 650);
@@ -6316,11 +6354,7 @@ for (let v = 0; v < 3; v++) for (let d = 0; d <= 9; d++) RUEDA.push(d);
 function Rodillo({ v }) {
   const txt = fmt(numero(v, 0));
   const [rodando, setRodando] = useState(true);
-  let quieto = false;
-  try {
-    quieto = typeof window !== "undefined" && typeof window.matchMedia === "function"
-      && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  } catch (e) { quieto = false; }
+  const quieto = sinMovimiento();
 
   useEffect(() => {
     if (quieto) { setRodando(false); return; }
@@ -8402,8 +8436,24 @@ function Motor() {
   const ramaN = s.rama ? nombreRama(s, s.rama) : null;
   const ano = 2026 + s.turno;
 
+  /* el interruptor global, al dia en cada render */
+  MOVIMIENTO = s.animar === true ? true : s.animar === false ? false : null;
+  const quietoAhora = sinMovimiento();
+
+  /* La cascara del documento trae su propio freno con !important dentro
+     de una media query, y ese gana siempre: hay que retirarlo desde
+     fuera marcando #raiz. Sin esto, encender el movimiento en la Ficha
+     no servia de nada y el rodillo seguia sin girar. */
+  useEffect(() => {
+    if (typeof document === "undefined" || !document.getElementById) return;
+    var r = document.getElementById("raiz");
+    if (!r || !r.classList) return;
+    if (quietoAhora) r.classList.remove("ea-mov");
+    else r.classList.add("ea-mov");
+  }, [quietoAhora]);
+
   return (
-    <div className="ea-root">
+    <div className={"ea-root" + (quietoAhora ? " ea-quieto" : "")}>
       <style>{CSS}{CSS2}{CSS3}{CSS4}{CSS5}</style>
 
       {fase === "aviso" && (
@@ -8959,7 +9009,27 @@ function Motor() {
                     {/* Con el retomar automático el jugador ya no pasa por la
                         portada, así que hace falta una puerta de vuelta. No
                         borra nada: la partida queda guardada. */}
-                    <button className="ea-cerrar ea-dis" style={{ marginBottom: 14 }}
+                    {/* El movimiento, encendible a mano. Windows con los
+                        efectos de animacion apagados le dice a Chrome que
+                        quiere menos movimiento, y eso apagaba el rodillo
+                        del cierre y las cifras que cuentan sin que hubiera
+                        forma de encenderlos. */}
+                    <Plegable titulo="Movimiento"
+                      resumen={s.animar === true ? "encendido" : s.animar === false ? "apagado" : (sistemaPideQuieto() ? "lo apaga tu sistema" : "sigue a tu sistema")}>
+                      <div className="ea-itemD" style={{ marginBottom: 8 }}>
+                        Las cifras que cuentan y el rodillo del cierre de año. Por defecto el juego hace lo
+                        que pida tu sistema{sistemaPideQuieto() ? ", y el tuyo los está apagando" : ""}.
+                      </div>
+                      <div className="ea-generos">
+                        {[[null, "Como mi sistema"], [true, "Encendido"], [false, "Apagado"]].map((par) => (
+                          <button key={String(par[0])} style={{ marginTop: 0 }}
+                            className={"ea-mini" + (s.animar === par[0] ? " on" : "")}
+                            onClick={() => setS((st) => ({ ...st, animar: par[0] }))}>{par[1]}</button>
+                        ))}
+                      </div>
+                    </Plegable>
+
+                    <button className="ea-cerrar ea-dis" style={{ marginBottom: 14, marginTop: 14 }}
                       onClick={() => { persistir(s, true); setTab(null); irA("portada"); }}>
                       Guardar y volver a la portada
                     </button>
