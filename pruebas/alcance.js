@@ -101,7 +101,10 @@ async function unaVida(semilla, vistos, hitos) {
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
     if (ops.length) { await pulsa(ops[Math.floor(Math.random() * ops.length) % ops.length]); continue; }
-    if (await pulsa(porRot(/^(Lo siguiente|Cerrar el año|Continuar|Entendido|Ya lo tengo|Terminar|Siguiente|Entregar el informe|Cerrar el trato|Fijar|Poner el|Cerrar posición|Aguantar|Comprar|Empezar 20|Sentarte a hacer|Ver el balance)/))) continue;
+    /* «Empezar» a secas es la ficha corta del minijuego, la que sale
+       cuando ya leiste las reglas de ese juego una vez. Sin reconocerla
+       el bot se iba al comodin y perdia turnos en cada minijuego. */
+    if (await pulsa(porRot(/^(Ver el año|Empezar$|Lo siguiente|Cerrar el año|Continuar|Entendido|Ya lo tengo|Terminar|Siguiente|Entregar el informe|Cerrar el trato|Fijar|Poner el|Cerrar posición|Aguantar|Comprar|Empezar 20|Sentarte a hacer|Ver el balance)/))) continue;
     const libres = bs().filter((b) => /^ea-check/.test(cls(b)) && !/^X\b/.test(rot(b)));
     if (libres.length) { await pulsa(libres[0]); continue; }
     let z = null;
@@ -127,6 +130,11 @@ async function unaVida(semilla, vistos, hitos) {
   console.log("  ESCENAS DE VIDA vistas al menos una vez:    " + hitos.size + " de " + TITULOS_V.size
     + "   (" + Math.round(hitos.size / TITULOS_V.size * 100) + "%)");
   console.log("");
+  /* Las de carrera tambien se nombran. Decir «74 de 75» y no cual falta
+     obliga a adivinar justo cuando una escena se vuelve inalcanzable,
+     que es el unico momento en que este numero importa. */
+  const faltanE = Array.from(TITULOS_E).filter((x) => !vistos.has(x));
+  if (faltanE.length) { console.log("  escenas de carrera que nunca salieron:"); faltanE.forEach((x) => console.log("    · " + x)); console.log(""); }
   const faltanV = Array.from(TITULOS_V).filter((x) => !hitos.has(x));
   if (faltanV.length) { console.log("  escenas de vida que nunca salieron:"); faltanV.forEach((x) => console.log("    · " + x)); }
 })();

@@ -121,6 +121,16 @@ const CSS = `
 .ea-opSolo{display:inline-block;font-size:9.5px;letter-spacing:.14em;color:var(--cobre);
   border:1px solid var(--cobre);padding:1px 6px;margin-left:8px;vertical-align:middle}
 
+/* Una opcion que no te alcanza se ve, y se ve POR QUE no te alcanza. No
+   se esconde: enterarte de lo que te estas perdiendo es justo lo que
+   hace que quieras tener mas energia o mas criterio la proxima vez. */
+.ea-op.sinfuerza{opacity:.52;cursor:not-allowed;border-style:dashed;
+  border-color:rgba(61,61,61,.3);background:rgba(61,61,61,.03)}
+.ea-op.sinfuerza:hover{transform:none;background:rgba(61,61,61,.03)}
+.ea-opCandado{display:inline-block;font-size:9.5px;letter-spacing:.12em;color:var(--rojo);
+  border:1px solid var(--rojo);padding:1px 6px;margin-left:8px;vertical-align:middle;
+  white-space:nowrap}
+
 .ea-sello{position:absolute;top:14px;right:18px;transform:rotate(-11deg);
   border:3px solid var(--cobre);color:var(--cobre);padding:4px 11px;font-size:14px;
   letter-spacing:.14em;opacity:.85;animation:ea-stamp .3s ease-out}
@@ -483,9 +493,11 @@ const CSS5 = `
 .ea-generos .ea-mini.on{border-color:var(--cobre);color:var(--tintaPapel);background:rgba(185,83,42,.15)}
 
 /* --- volver atrás en la configuración --- */
-.ea-atras{background:transparent;border:none;color:var(--gris);font:inherit;font-size:11.5px;
+/* display:block porque es un <button>, o sea inline: sin esto el boton
+   que venga detras se le pega al lado en la misma linea. */
+.ea-atras{display:block;background:transparent;border:none;color:var(--gris);font:inherit;font-size:11.5px;
   letter-spacing:.14em;padding:6px 0;margin-bottom:10px;cursor:pointer;text-transform:uppercase;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
+  text-align:left;font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-atras:hover{color:var(--cobre)}
 .ea-rastro{font-size:12px;color:var(--cobre);margin:6px 0 14px;letter-spacing:.04em}
 
@@ -2418,7 +2430,7 @@ const E = [
     ] },
   { id: 4, min: 0, max: 4, t: "Certificación de por medio", x: "Se abre la inscripción. Cuesta plata, quita fines de semana y no garantiza nada.",
     o: [
-      { t: "Inscribirte y estudiar en serio", j: "quiz", stat: "cri", d: { cash: -1600, mod: 7, cri: 5, ene: -10, car: 3, msg: "Seis meses de sábados perdidos y el examen encima." } },
+      { t: "Inscribirte y estudiar en serio", min: { cri: 18 }, j: "quiz", stat: "cri", d: { cash: -1600, mod: 7, cri: 5, ene: -10, car: 3, msg: "Seis meses de sábados perdidos y el examen encima." } },
       { t: "Saltarlo, tu escuela es la mesa", d: { ene: 4, msg: "Decides que el aprendizaje viene de los mandatos. Tampoco es mala tesis." } },
     ] },
   { id: 5, min: 0, max: 3, t: "Cierre de operación, fiesta en el bar", x: "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
@@ -2429,13 +2441,13 @@ const E = [
     ] },
   { id: 6, min: 0, max: 2, t: "El data room es un desastre", x: "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
     o: [
-      { t: "Armar un índice maestro que sirva a todos", j: "orden", stat: "cri", d: { mod: 5, rep: 5, ene: -10, car: 3, msg: "Ordenas el desastre siguiendo la lógica del proceso." } },
+      { t: "Armar un índice maestro que sirva a todos", min: { mod: 28 }, j: "orden", stat: "cri", d: { mod: 5, rep: 5, ene: -10, car: 3, msg: "Ordenas el desastre siguiendo la lógica del proceso." } },
       { t: "Revisar solo lo que te pidieron", d: { ene: -3, car: 1, msg: "Cumples. Nada más y nada menos." } },
     ] },
   { id: 7, min: 1, max: 4, t: "Te llama un headhunter", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
     o: [
       { t: "Aceptar y mudarte de firma", d: { cash: 4000, ene: -10, rep: -4, car: 6, red: 5, msg: "Nueva placa en la puerta, mismo Excel. Tu antigua red se enfría un poco." } },
-      { t: "Usarla para negociar donde estás", j: "anclaje", stat: "red", d: { cash: 3000, rep: 3, car: 3, msg: "Entras a la oficina del socio con una oferta en la mano y un número en la cabeza." } },
+      { t: "Usarla para negociar donde estás", min: { red: 20 }, j: "anclaje", stat: "red", d: { cash: 3000, rep: 3, car: 3, msg: "Entras a la oficina del socio con una oferta en la mano y un número en la cabeza." } },
       { t: "Decir que no y contarlo abiertamente", d: { rep: 7, red: 3, msg: "La lealtad se cotiza distinto en las firmas pequeñas. Aquí sube." } },
     ] },
   { id: 8, min: 0, max: 4, t: "Un rumor que vale plata", x: "Escuchas en un pasillo que una empresa listada recibirá una oferta el mes que viene. Tu cuenta personal está a un clic.",
@@ -3433,6 +3445,27 @@ const anotarAviso = () => {
   try { if (typeof window !== "undefined" && window.localStorage) window.localStorage.setItem(CLAVE_AVISO, "1"); }
   catch (e) { /* si no se puede guardar, el aviso volverá a salir. No es grave. */ }
 };
+
+/* El movimiento es un ajuste de pantalla, no parte de la partida. Vivia
+   dentro del estado guardado y eso significaba que se perdia al empezar
+   otra vida: encendias las animaciones, arrancabas una partida nueva y
+   volvian a apagarse sin que nada lo dijera. Ahora vive en el navegador,
+   como la aceptacion del aviso, y sobrevive a todas las vidas. */
+const CLAVE_MOV = "el-analista-movimiento";
+const leerMovimiento = () => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return null;
+    const v = window.localStorage.getItem(CLAVE_MOV);
+    return v === "1" ? true : v === "0" ? false : null;
+  } catch (e) { return null; }
+};
+const anotarMovimiento = (v) => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return;
+    if (v === null) window.localStorage.removeItem(CLAVE_MOV);
+    else window.localStorage.setItem(CLAVE_MOV, v ? "1" : "0");
+  } catch (e) { /* sin almacen, el ajuste dura lo que dure la pestaña */ }
+};
 const VERSION = 5;
 
 const SAL = "el-analista-v5-firma";
@@ -4355,6 +4388,49 @@ const efectoDe = (o) => {
   });
   if (!sube.length && !cuesta.length) return null;
   return { sube, cuesta };
+};
+
+/* ============================================================
+   LO QUE UNA OPCION TE PIDE
+   Hasta ahora podias amanecerte trabajando con la energia a 3, y el
+   juego te dejaba: la energia bajaba a cero y ya. Eso quita el sentido
+   de tener un atributo, porque nunca te cierra una puerta.
+
+   El requisito sale de dos sitios. Uno declarado a mano (o.min), para
+   las puertas que son de criterio, de red o de reputacion. Y otro
+   automatico: si una opcion te va a costar 18 de energia, hace falta
+   que tengas 18. Asi la regla es la misma en las 286 escenas sin haber
+   anotado ninguna, y no hay forma de que se olvide en las que vengan.
+   ============================================================ */
+const CLAVES_REQ = ["ene", "cri", "mod", "red", "rep"];
+const faltaDe = (o, st) => {
+  if (!o || typeof o !== "object" || !st) return null;
+  const pide = {};
+  if (o.min && typeof o.min === "object") {
+    CLAVES_REQ.forEach((k) => {
+      const v = numero(o.min[k], 0);
+      if (v > 0) pide[k] = v;
+    });
+  }
+  /* lo que va a costar, tomado del mejor caso declarado */
+  const d = o.d
+    || (o.res && (o.res.exito || o.res.parcial || o.res.fallo))
+    || (o.chk && o.chk.ok)
+    || null;
+  if (d && typeof d === "object") {
+    const cuesta = -numero(d.ene, 0);
+    if (cuesta > 0) pide.ene = Math.max(numero(pide.ene, 0), cuesta);
+  }
+  /* se avisa del que mas lejos queda: un solo motivo, no una lista */
+  let peor = null;
+  Object.keys(pide).forEach((k) => {
+    const tengo = numero(st[k], 0);
+    const hace = pide[k];
+    if (tengo < hace && (!peor || hace - tengo > peor.falta)) {
+      peor = { k, hace: Math.round(hace), tengo: Math.round(tengo), falta: hace - tengo };
+    }
+  });
+  return peor;
 };
 
 /* Términos del glosario que se pueden reconocer dentro del enunciado
@@ -7311,6 +7387,9 @@ function Motor() {
   const [anuncio, setAnuncio] = useState(false);
   /* la segunda mitad de la leccion del año, la de las cifras propias */
   const [verLeccion, setVerLeccion] = useState(false);
+  /* el movimiento: del navegador, no de la partida */
+  const [animar, setAnimarBruto] = useState(leerMovimiento);
+  const setAnimar = (v) => { anotarMovimiento(v); setAnimarBruto(v); };
   /* Las cuatro decisiones de partida viven aquí y NO tocan el estado del
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
@@ -8367,6 +8446,15 @@ function Motor() {
 
   const elegir = (o) => {
     if (!enFase("evento") || !o) return;
+    /* El boton ya sale apagado, pero el guardarrail va tambien aqui: un
+       disabled solo detiene al raton. Con la salvedad de siempre, que si
+       no queda ninguna disponible se puede tomar cualquiera. */
+    try {
+      const ops = opcionesDe(ev);
+      const faltas = ops.map((x) => faltaDe(x, s));
+      const todasFuera = faltas.length > 0 && faltas.every(Boolean);
+      if (!todasFuera && faltaDe(o, s)) return;
+    } catch (e) { /* ante la duda, se deja decidir */ }
     setOp(o);
     if (o.juego || o.j) { irA("minijuego"); return; }
     if (o.chk) {
@@ -8520,7 +8608,7 @@ function Motor() {
   const ano = 2026 + s.turno;
 
   /* el interruptor global, al dia en cada render */
-  MOVIMIENTO = s.animar === true ? true : s.animar === false ? false : null;
+  MOVIMIENTO = animar;
   const quietoAhora = sinMovimiento();
 
   /* La cascara del documento trae su propio freno con !important dentro
@@ -9123,16 +9211,17 @@ function Motor() {
                         del cierre y las cifras que cuentan sin que hubiera
                         forma de encenderlos. */}
                     <Plegable titulo="Movimiento"
-                      resumen={s.animar === true ? "encendido" : s.animar === false ? "apagado" : (sistemaPideQuieto() ? "lo apaga tu sistema" : "sigue a tu sistema")}>
+                      resumen={animar === true ? "encendido" : animar === false ? "apagado" : (sistemaPideQuieto() ? "lo apaga tu sistema" : "sigue a tu sistema")}>
                       <div className="ea-itemD" style={{ marginBottom: 8 }}>
                         Las cifras que cuentan y el rodillo del cierre de año. Por defecto el juego hace lo
                         que pida tu sistema{sistemaPideQuieto() ? ", y el tuyo los está apagando" : ""}.
+                        Se queda puesto para todas tus partidas.
                       </div>
                       <div className="ea-generos">
                         {[[null, "Como mi sistema"], [true, "Encendido"], [false, "Apagado"]].map((par) => (
                           <button key={String(par[0])} style={{ marginTop: 0 }}
-                            className={"ea-mini" + (s.animar === par[0] ? " on" : "")}
-                            onClick={() => setS((st) => ({ ...st, animar: par[0] }))}>{par[1]}</button>
+                            className={"ea-mini" + (animar === par[0] ? " on" : "")}
+                            onClick={() => setAnimar(par[0])}>{par[1]}</button>
                         ))}
                       </div>
                     </Plegable>
@@ -9619,22 +9708,40 @@ function Motor() {
                         opcion podia arrastrar cuatro: el minijuego con su tema,
                         la ayuda, la rama y el efecto. Debajo de una frase de
                         una linea, eso es mas metadato que decision. */}
-                    {opcionesDe(ev).map((o, i) => {
-                      const tipo = o.juego || o.j;
-                      const ef = efectoDe(o);
-                      const bits = [];
-                      if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
-                      if (ef && ef.sube.length) bits.push("sube " + ef.sube.join(", "));
-                      if (ef && ef.cuesta.length) bits.push("cuesta " + ef.cuesta.join(", "));
-                      return (
-                        <button className="ea-op" key={i} style={{ animationDelay: (i * 70) + "ms" }}
-                          disabled={carteraPend} onClick={() => elegir(o)}>
-                          <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
-                          {o.req && <span className="ea-opSolo ea-dis">solo tú</span>}
-                          {bits.length > 0 && <span className="ea-opTag">{bits.join(" · ")}</span>}
-                        </button>
-                      );
-                    })}
+                    {(() => {
+                      const ops = opcionesDe(ev);
+                      let faltas = ops.map((o) => { try { return faltaDe(o, s); } catch (e) { return null; } });
+                      /* El guardarrail. Si TODAS quedaran bloqueadas el
+                         jugador se queda encerrado en la escena, asi que
+                         en ese caso se abren todas: quedarse sin energia
+                         encarece la vida, no la termina. */
+                      if (faltas.length && faltas.every(Boolean)) faltas = faltas.map(() => null);
+                      return ops.map((o, i) => {
+                        const tipo = o.juego || o.j;
+                        const ef = efectoDe(o);
+                        const falta = faltas[i];
+                        const bits = [];
+                        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
+                        if (ef && ef.sube.length) bits.push("sube " + ef.sube.join(", "));
+                        if (ef && ef.cuesta.length) bits.push("cuesta " + ef.cuesta.join(", "));
+                        return (
+                          <button className={"ea-op" + (falta ? " sinfuerza" : "")} key={i}
+                            style={{ animationDelay: (i * 70) + "ms" }}
+                            disabled={carteraPend || !!falta}
+                            title={falta ? "Te falta " + (ETIQ[falta.k] || falta.k).toLowerCase() : undefined}
+                            onClick={() => elegir(o)}>
+                            <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
+                            {o.req && !falta && <span className="ea-opSolo ea-dis">solo tú</span>}
+                            {falta && (
+                              <span className="ea-opCandado ea-dis">
+                                {(ETIQ[falta.k] || falta.k)} {falta.hace} · tienes {falta.tengo}
+                              </span>
+                            )}
+                            {bits.length > 0 && <span className="ea-opTag">{bits.join(" · ")}</span>}
+                          </button>
+                        );
+                      });
+                    })()}
                     {opcionesDe(ev).length === 0 && (
                       <button className="ea-op" onClick={() => resolverEscena({ msg: "El asunto se resolvió sin que te tocara decidir." }, "parcial", null)}>
                         <span className="ea-opN ea-mono">A</span>Dejar que siga su curso
