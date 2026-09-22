@@ -1093,6 +1093,24 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* ---- el golpe de dinero de una decision ----
+   Lo que se gana o se pierde al decidir tiene que verse desde la otra
+   punta de la mesa. Antes era un chip de doce pixeles igual que los
+   demas, y es lo unico que el jugador estaba esperando. */
+.ea-golpe{display:flex; align-items:baseline; gap:.1em; margin-top:16px;
+  font-family:'IBM Plex Mono',ui-monospace,monospace; line-height:1;
+  animation:ea-golpeIn .5s cubic-bezier(.2,1.4,.4,1) backwards; animation-delay:.12s}
+.ea-golpe.sube{color:#2E7A3D}
+.ea-golpe.baja{color:#8A2E1E}
+.ea-golpeS{font-size:30px; opacity:.75}
+.ea-golpeV{font-size:clamp(34px,10vw,46px); font-weight:600}
+.ea-golpeU{font-size:13px; letter-spacing:.14em; opacity:.6; margin-left:.25em}
+@keyframes ea-golpeIn{
+  0%{opacity:0; transform:translateY(10px) scale(.86)}
+  60%{transform:translateY(0) scale(1.04)}
+  100%{opacity:1; transform:none}
+}
+
 /* ---- el rodillo del cierre ---- */
 .ea-rodillos{display:inline-flex;align-items:center;gap:1px;line-height:1}
 .ea-rodillo{display:inline-block;height:1em;overflow:hidden;vertical-align:bottom;
@@ -3509,6 +3527,9 @@ const BASE = {
   /* temas del temario que ya se dieron en clase, para no examinar de
      algo que el juego nunca explicó */
   temas: [],
+  /* minijuegos cuyas reglas ya se leyeron: la segunda vez no se vuelven
+     a explicar enteras */
+  jugados: [],
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
   patron: "", contrato: null, sueldoMult: 1,
   /* si te independizaste y la firma es tuya */
@@ -4226,6 +4247,7 @@ const sanear = (bruto) => {
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
   st.temas = unicos(listaDe(r.temas, (x) => TEMAS.some((t) => t.id === x), 60));
+  st.jugados = unicos(listaDe(r.jugados, (x) => !!JUEGOS[x], 30));
   /* El patrón puede ser una firma de la tabla o una firma tuya, así que
      se acota por longitud en vez de por lista cerrada. */
   st.patron = texto(r.patron, "", 48);
@@ -5291,8 +5313,10 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
-function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema }) {
+function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, visto, onVisto }) {
   const [listo, setListo] = useState(false);
+  /* las reglas, para quien ya jugó esto antes y quiere repasarlas */
+  const [recordar, setRecordar] = useState(false);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
      setTimeout viejo dispara tarde o si el componente ya se desmonto.
@@ -5309,6 +5333,42 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema })
   if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
   if (listo) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
+  const empezar = () => { if (onVisto) onVisto(tipo); setListo(true); };
+
+  /* ---- la segunda vez y las siguientes ----
+     Las reglas enteras son medio millar de caracteres: el nombre, la
+     descripcion, tres pasos, que cuenta como exito y para que sirve.
+     Leerlas una vez esta bien. Leerlas otra vez en la quinta partida de
+     tres en raya es lo que convierte un juego en un manual. */
+  if (visto) {
+    return (
+      <div className="ea-jw">
+        <div className="ea-jnombre ea-dis" style={{ marginBottom: 6 }}><span>VAS A JUGAR</span>{j.n}</div>
+        <div className="ea-jmeta">
+          <span className="ea-jtag">{j.dur}</span>
+          {nivelJuego && <span className="ea-jtag">Nivel {nivel} · {NIVEL_N[nivel]}</span>}
+          <span className="ea-jtag">{statN} {Math.round(ayuda)}</span>
+        </div>
+        <button className="ea-btn" onClick={empezar}>Empezar</button>
+        <button className="ea-atras ea-dis" style={{ marginTop: 10, marginBottom: 0 }}
+          onClick={() => setRecordar((v) => !v)}>
+          {recordar ? "↑ Ya me acuerdo" : "↓ Recordarme las reglas"}
+        </button>
+        {recordar && (
+          <div className="ea-panelAb">
+            <p className="ea-memoTxt" style={{ marginTop: 8 }}>{j.i}</p>
+            <ul className="ea-pasos">
+              {j.pasos.map((t, i) => (
+                <li className="ea-paso" key={i}><span className="ea-pasoN">{i + 1}</span><span>{t}</span></li>
+              ))}
+            </ul>
+            <div className="ea-td" style={{ marginTop: 8 }}>{j.gana}</div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="ea-jw">
       {/* Antes solo se veían tema y duración, así que «Tres en raya» aparecía
@@ -5341,7 +5401,7 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema })
           <div className="ea-glosX">{g.x}</div>
         </div>
       ))}
-      <button className="ea-btn" onClick={() => setListo(true)}>Entendido, empezar</button>
+      <button className="ea-btn" onClick={empezar}>Entendido, empezar</button>
     </div>
   );
 }
@@ -7116,6 +7176,12 @@ function Motor() {
     const ya = Array.isArray(st.temas) ? st.temas : [];
     if (!id || ya.indexOf(id) >= 0) return st;
     return { ...st, temas: ya.concat(id).slice(-60) };
+  });
+  /* queda anotado que ya leiste las reglas de este minijuego */
+  const apuntarJuego = (k) => setS((st) => {
+    const ya = Array.isArray(st.jugados) ? st.jugados : [];
+    if (!k || ya.indexOf(k) >= 0) return st;
+    return { ...st, jugados: ya.concat(k).slice(-30) };
   });
   const [ev, setEv] = useState(null);
   const [op, setOp] = useState(null);
@@ -9406,7 +9472,9 @@ function Motor() {
                   <h2 className="ea-memoTit ea-dis">{op.t}</h2>
                   <TarjetaJuego tipo={op.juego || op.j} ayuda={ayudaDe(op)} nivel={nivelDe(s.turno, s.estudia)}
                     statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo}
-                    temas={s.temas} onTema={apuntarTema} />
+                    temas={s.temas} onTema={apuntarTema}
+                    visto={(Array.isArray(s.jugados) ? s.jugados : []).indexOf(op.juego || op.j) >= 0}
+                    onVisto={apuntarJuego} />
                 </div>
               )}
 
@@ -9416,12 +9484,27 @@ function Motor() {
                   <div className={"ea-sello ea-dis" + selloCls[res.nivel]}>{selloTxt[res.nivel]}</div>
                   <h2 className="ea-memoTit ea-dis">{(ev && ev.t) || "Resolución"}</h2>
                   <p className="ea-memoTxt">{res.msg}</p>
-                  {res.cambios.filter((c) => c.nota || c.v).length > 0 && (
+                  {/* El dinero deja de ser un chip entre seis. Es lo que el
+                      jugador vino a ver, asi que sale solo, grande y
+                      contando; los atributos quedan detras, en pequeño. */}
+                  {(() => {
+                    const plata = res.cambios.find((c) => c.k === "cash" && c.v);
+                    if (!plata) return null;
+                    const sube = plata.v > 0;
+                    return (
+                      <div className={"ea-golpe " + (sube ? "sube" : "baja")}>
+                        <span className="ea-golpeS">{sube ? "+" : "−"}</span>
+                        <span className="ea-golpeV ea-mono"><Cifra v={Math.abs(plata.v)} desde={0} ms={800} /></span>
+                        <span className="ea-golpeU ea-dis">USD</span>
+                      </div>
+                    );
+                  })()}
+                  {res.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").length > 0 && (
                     <div className="ea-cambios">
-                      {res.cambios.filter((c) => c.nota || c.v).map((c, i) => (
+                      {res.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").map((c, i) => (
                         <span className={"ea-chip ea-mono " + (c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}
-                          style={{ animationDelay: (120 + i * 90) + "ms" }}>
-                          {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + (c.k === "cash" ? fmt(c.v) : c.v))}
+                          style={{ animationDelay: (260 + i * 90) + "ms" }}>
+                          {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v)}
                         </span>
                       ))}
                     </div>

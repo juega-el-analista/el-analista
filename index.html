@@ -1764,6 +1764,24 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* ---- el golpe de dinero de una decision ----
+   Lo que se gana o se pierde al decidir tiene que verse desde la otra
+   punta de la mesa. Antes era un chip de doce pixeles igual que los
+   demas, y es lo unico que el jugador estaba esperando. */
+.ea-golpe{display:flex; align-items:baseline; gap:.1em; margin-top:16px;
+  font-family:'IBM Plex Mono',ui-monospace,monospace; line-height:1;
+  animation:ea-golpeIn .5s cubic-bezier(.2,1.4,.4,1) backwards; animation-delay:.12s}
+.ea-golpe.sube{color:#2E7A3D}
+.ea-golpe.baja{color:#8A2E1E}
+.ea-golpeS{font-size:30px; opacity:.75}
+.ea-golpeV{font-size:clamp(34px,10vw,46px); font-weight:600}
+.ea-golpeU{font-size:13px; letter-spacing:.14em; opacity:.6; margin-left:.25em}
+@keyframes ea-golpeIn{
+  0%{opacity:0; transform:translateY(10px) scale(.86)}
+  60%{transform:translateY(0) scale(1.04)}
+  100%{opacity:1; transform:none}
+}
+
 /* ---- el rodillo del cierre ---- */
 .ea-rodillos{display:inline-flex;align-items:center;gap:1px;line-height:1}
 .ea-rodillo{display:inline-block;height:1em;overflow:hidden;vertical-align:bottom;
@@ -9284,6 +9302,9 @@ const BASE = {
   /* temas del temario que ya se dieron en clase, para no examinar de
      algo que el juego nunca explicó */
   temas: [],
+  /* minijuegos cuyas reglas ya se leyeron: la segunda vez no se vuelven
+     a explicar enteras */
+  jugados: [],
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
   patron: "",
   contrato: null,
@@ -10442,6 +10463,7 @@ const sanear = bruto => {
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
   st.temas = unicos(listaDe(r.temas, x => TEMAS.some(t => t.id === x), 60));
+  st.jugados = unicos(listaDe(r.jugados, x => !!JUEGOS[x], 30));
   /* El patrón puede ser una firma de la tabla o una firma tuya, así que
      se acota por longitud en vez de por lista cerrada. */
   st.patron = texto(r.patron, "", 48);
@@ -11889,9 +11911,13 @@ function TarjetaJuego({
   onFin,
   modo,
   temas,
-  onTema
+  onTema,
+  visto,
+  onVisto
 }) {
   const [listo, setListo] = useState(false);
+  /* las reglas, para quien ya jugó esto antes y quiere repasarlas */
+  const [recordar, setRecordar] = useState(false);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
      setTimeout viejo dispara tarde o si el componente ya se desmonto.
@@ -11932,6 +11958,63 @@ function TarjetaJuego({
     onTema: onTema
   });
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
+  const empezar = () => {
+    if (onVisto) onVisto(tipo);
+    setListo(true);
+  };
+
+  /* ---- la segunda vez y las siguientes ----
+     Las reglas enteras son medio millar de caracteres: el nombre, la
+     descripcion, tres pasos, que cuenta como exito y para que sirve.
+     Leerlas una vez esta bien. Leerlas otra vez en la quinta partida de
+     tres en raya es lo que convierte un juego en un manual. */
+  if (visto) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-jw"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-jnombre ea-dis",
+      style: {
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", null, "VAS A JUGAR"), j.n), /*#__PURE__*/React.createElement("div", {
+      className: "ea-jmeta"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-jtag"
+    }, j.dur), nivelJuego && /*#__PURE__*/React.createElement("span", {
+      className: "ea-jtag"
+    }, "Nivel ", nivel, " \xB7 ", NIVEL_N[nivel]), /*#__PURE__*/React.createElement("span", {
+      className: "ea-jtag"
+    }, statN, " ", Math.round(ayuda))), /*#__PURE__*/React.createElement("button", {
+      className: "ea-btn",
+      onClick: empezar
+    }, "Empezar"), /*#__PURE__*/React.createElement("button", {
+      className: "ea-atras ea-dis",
+      style: {
+        marginTop: 10,
+        marginBottom: 0
+      },
+      onClick: () => setRecordar(v => !v)
+    }, recordar ? "↑ Ya me acuerdo" : "↓ Recordarme las reglas"), recordar && /*#__PURE__*/React.createElement("div", {
+      className: "ea-panelAb"
+    }, /*#__PURE__*/React.createElement("p", {
+      className: "ea-memoTxt",
+      style: {
+        marginTop: 8
+      }
+    }, j.i), /*#__PURE__*/React.createElement("ul", {
+      className: "ea-pasos"
+    }, j.pasos.map((t, i) => /*#__PURE__*/React.createElement("li", {
+      className: "ea-paso",
+      key: i
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-pasoN"
+    }, i + 1), /*#__PURE__*/React.createElement("span", null, t)))), /*#__PURE__*/React.createElement("div", {
+      className: "ea-td",
+      style: {
+        marginTop: 8
+      }
+    }, j.gana)));
+  }
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
@@ -11988,7 +12071,7 @@ function TarjetaJuego({
     className: "ea-glosX"
   }, g.x))), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
-    onClick: () => setListo(true)
+    onClick: empezar
   }, "Entendido, empezar"));
 }
 
@@ -14249,6 +14332,15 @@ function Motor() {
     return {
       ...st,
       temas: ya.concat(id).slice(-60)
+    };
+  });
+  /* queda anotado que ya leiste las reglas de este minijuego */
+  const apuntarJuego = k => setS(st => {
+    const ya = Array.isArray(st.jugados) ? st.jugados : [];
+    if (!k || ya.indexOf(k) >= 0) return st;
+    return {
+      ...st,
+      jugados: ya.concat(k).slice(-30)
     };
   });
   const [ev, setEv] = useState(null);
@@ -17744,7 +17836,9 @@ function Motor() {
     onFin: finJuego,
     modo: s.modo,
     temas: s.temas,
-    onTema: apuntarTema
+    onTema: apuntarTema,
+    visto: (Array.isArray(s.jugados) ? s.jugados : []).indexOf(op.juego || op.j) >= 0,
+    onVisto: apuntarJuego
   })), fase === "resultado" && res && /*#__PURE__*/React.createElement("div", {
     className: "ea-memo"
   }, /*#__PURE__*/React.createElement("div", {
@@ -17755,15 +17849,32 @@ function Motor() {
     className: "ea-memoTit ea-dis"
   }, ev && ev.t || "Resolución"), /*#__PURE__*/React.createElement("p", {
     className: "ea-memoTxt"
-  }, res.msg), res.cambios.filter(c => c.nota || c.v).length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, res.msg), (() => {
+    const plata = res.cambios.find(c => c.k === "cash" && c.v);
+    if (!plata) return null;
+    const sube = plata.v > 0;
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-golpe " + (sube ? "sube" : "baja")
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-golpeS"
+    }, sube ? "+" : "−"), /*#__PURE__*/React.createElement("span", {
+      className: "ea-golpeV ea-mono"
+    }, /*#__PURE__*/React.createElement(Cifra, {
+      v: Math.abs(plata.v),
+      desde: 0,
+      ms: 800
+    })), /*#__PURE__*/React.createElement("span", {
+      className: "ea-golpeU ea-dis"
+    }, "USD"));
+  })(), res.cambios.filter(c => (c.nota || c.v) && c.k !== "cash").length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "ea-cambios"
-  }, res.cambios.filter(c => c.nota || c.v).map((c, i) => /*#__PURE__*/React.createElement("span", {
+  }, res.cambios.filter(c => (c.nota || c.v) && c.k !== "cash").map((c, i) => /*#__PURE__*/React.createElement("span", {
     className: "ea-chip ea-mono " + (c.nota ? "pos" : c.v > 0 ? "pos" : "neg"),
     key: i,
     style: {
-      animationDelay: 120 + i * 90 + "ms"
+      animationDelay: 260 + i * 90 + "ms"
     }
-  }, c.nota ? c.nota : ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + (c.k === "cash" ? fmt(c.v) : c.v)))), /*#__PURE__*/React.createElement("button", {
+  }, c.nota ? c.nota : ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v))), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
     disabled: carteraPend,
     onClick: siguienteEscena
