@@ -1802,7 +1802,9 @@ const nivelDe = (turno, estudia) => clamp(
   1, 5
 );
 /* cuántas preguntas trae el examen según el nivel */
-const largoExamen = (nv) => (nv <= 1 ? 3 : nv <= 3 ? 4 : 5);
+/* Antes subía a 5 en los niveles altos, justo cuando el juego debería
+   sentirse más rápido hacia el final, no más lento. */
+const largoExamen = (nv) => (nv <= 1 ? 3 : 4);
 
 /* mayoría del nivel que te toca, una de repaso y una del nivel siguiente */
 const armarExamen = (nv, cuantas, temasVistos) => {
@@ -3403,6 +3405,10 @@ const BASE = {
   modo: "normal", edadIni: 20, estudia: 0,
   nombre: "", genero: null,
   guia: false, guiaVistas: [],
+  /* qué minijuegos ya mostraron su tarjeta de reglas completa en esta
+     partida: la segunda vez que sale "tres en raya" no hace falta leer
+     otra vez cómo se juega tres en raya. */
+  juegosVistos: [],
   /* qué sistemas del juego ya se abrieron */
   abiertos: [],
   /* temas del temario que ya se dieron en clase, para no examinar de
@@ -4118,6 +4124,7 @@ const sanear = (bruto) => {
   st.nivelGasto = GASTOS.some((x) => x.id === r.nivelGasto) ? r.nivelGasto : "normal";
   st.guia = r.guia === true;
   st.guiaVistas = unicos(listaDe(r.guiaVistas, (x) => GUIA.some((g) => g.id === x), 20));
+  st.juegosVistos = unicos(listaDe(r.juegosVistos, (x) => typeof x === "string" && !!JUEGOS[x], 20));
   /* Una partida guardada antes de la apertura escalonada no trae la
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
@@ -5188,8 +5195,16 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
-function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema }) {
+function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, visto, onVista }) {
   const [listo, setListo] = useState(false);
+  /* La primera vez se lee entera. Después, un resumen con la opción de
+     volver a desplegarla: lo que sobra es leer "cómo se juega tres en
+     raya" por décima vez, no poder repasarlo si hace falta. */
+  const [completa, setCompleta] = useState(!visto);
+  const empezar = () => {
+    if (!visto && onVista) onVista(tipo);
+    setListo(true);
+  };
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
      setTimeout viejo dispara tarde o si el componente ya se desmonto.
@@ -5206,6 +5221,24 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema })
   if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
   if (listo) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
+  if (visto && !completa) {
+    return (
+      <div className="ea-jw">
+        <div className="ea-jnombre ea-dis"><span>VAS A JUGAR</span>{j.n}</div>
+        <div className="ea-jmeta">
+          <span className="ea-jtag">{j.tema}</span>
+          <span className="ea-jtag">{j.dur}</span>
+          {nivelJuego && <span className="ea-jtag">Nivel {nivel} · {NIVEL_N[nivel]}</span>}
+        </div>
+        <div className="ea-tabla" style={{ marginTop: 12 }}>
+          <span className="ea-td">Cuenta como éxito</span><span className="ea-tdn">{j.gana}</span>
+          <span className="ea-td">Te ayuda</span><span className="ea-tdn">{statN} {Math.round(ayuda)} de 100</span>
+        </div>
+        <button className="ea-btn" onClick={empezar}>Jugar</button>
+        <button className="ea-mini" style={{ marginTop: 10 }} onClick={() => setCompleta(true)}>Ver las reglas otra vez</button>
+      </div>
+    );
+  }
   return (
     <div className="ea-jw">
       {/* Antes solo se veían tema y duración, así que «Tres en raya» aparecía
@@ -5238,7 +5271,7 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema })
           <div className="ea-glosX">{g.x}</div>
         </div>
       ))}
-      <button className="ea-btn" onClick={() => setListo(true)}>Entendido, empezar</button>
+      <button className="ea-btn" onClick={empezar}>Entendido, empezar</button>
     </div>
   );
 }
@@ -9133,7 +9166,9 @@ function Motor() {
                   <h2 className="ea-memoTit ea-dis">{op.t}</h2>
                   <TarjetaJuego tipo={op.juego || op.j} ayuda={ayudaDe(op)} nivel={nivelDe(s.turno, s.estudia)}
                     statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo}
-                    temas={s.temas} onTema={apuntarTema} />
+                    temas={s.temas} onTema={apuntarTema}
+                    visto={(Array.isArray(s.juegosVistos) ? s.juegosVistos : []).indexOf(op.juego || op.j) >= 0}
+                    onVista={(t) => setS((st) => ({ ...st, juegosVistos: unicos((Array.isArray(st.juegosVistos) ? st.juegosVistos : []).concat(t)) }))} />
                 </div>
               )}
 

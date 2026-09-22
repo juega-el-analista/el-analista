@@ -4193,7 +4193,9 @@ const NIVEL_N = ["", "Fundamentos", "Intermedio", "Avanzado", "Profesional", "Me
    deja pasar los años, que es exactamente como funciona fuera. */
 const nivelDe = (turno, estudia) => clamp(1 + Math.floor(entero(turno, 0, 0, 60) / 7) + Math.floor(clamp(numero(estudia, 0), 0, 500) / 55), 1, 5);
 /* cuántas preguntas trae el examen según el nivel */
-const largoExamen = nv => nv <= 1 ? 3 : nv <= 3 ? 4 : 5;
+/* Antes subía a 5 en los niveles altos, justo cuando el juego debería
+   sentirse más rápido hacia el final, no más lento. */
+const largoExamen = nv => nv <= 1 ? 3 : 4;
 
 /* mayoría del nivel que te toca, una de repaso y una del nivel siguiente */
 const armarExamen = (nv, cuantas, temasVistos) => {
@@ -9228,6 +9230,10 @@ const BASE = {
   genero: null,
   guia: false,
   guiaVistas: [],
+  /* qué minijuegos ya mostraron su tarjeta de reglas completa en esta
+     partida: la segunda vez que sale "tres en raya" no hace falta leer
+     otra vez cómo se juega tres en raya. */
+  juegosVistos: [],
   /* qué sistemas del juego ya se abrieron */
   abiertos: [],
   /* temas del temario que ya se dieron en clase, para no examinar de
@@ -10379,6 +10385,7 @@ const sanear = bruto => {
   st.nivelGasto = GASTOS.some(x => x.id === r.nivelGasto) ? r.nivelGasto : "normal";
   st.guia = r.guia === true;
   st.guiaVistas = unicos(listaDe(r.guiaVistas, x => GUIA.some(g => g.id === x), 20));
+  st.juegosVistos = unicos(listaDe(r.juegosVistos, x => typeof x === "string" && !!JUEGOS[x], 20));
   /* Una partida guardada antes de la apertura escalonada no trae la
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
@@ -11831,9 +11838,19 @@ function TarjetaJuego({
   onFin,
   modo,
   temas,
-  onTema
+  onTema,
+  visto,
+  onVista
 }) {
   const [listo, setListo] = useState(false);
+  /* La primera vez se lee entera. Después, un resumen con la opción de
+     volver a desplegarla: lo que sobra es leer "cómo se juega tres en
+     raya" por décima vez, no poder repasarlo si hace falta. */
+  const [completa, setCompleta] = useState(!visto);
+  const empezar = () => {
+    if (!visto && onVista) onVista(tipo);
+    setListo(true);
+  };
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
      setTimeout viejo dispara tarde o si el componente ya se desmonto.
@@ -11874,6 +11891,43 @@ function TarjetaJuego({
     onTema: onTema
   });
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
+  if (visto && !completa) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-jw"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-jnombre ea-dis"
+    }, /*#__PURE__*/React.createElement("span", null, "VAS A JUGAR"), j.n), /*#__PURE__*/React.createElement("div", {
+      className: "ea-jmeta"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-jtag"
+    }, j.tema), /*#__PURE__*/React.createElement("span", {
+      className: "ea-jtag"
+    }, j.dur), nivelJuego && /*#__PURE__*/React.createElement("span", {
+      className: "ea-jtag"
+    }, "Nivel ", nivel, " \xB7 ", NIVEL_N[nivel])), /*#__PURE__*/React.createElement("div", {
+      className: "ea-tabla",
+      style: {
+        marginTop: 12
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-td"
+    }, "Cuenta como \xE9xito"), /*#__PURE__*/React.createElement("span", {
+      className: "ea-tdn"
+    }, j.gana), /*#__PURE__*/React.createElement("span", {
+      className: "ea-td"
+    }, "Te ayuda"), /*#__PURE__*/React.createElement("span", {
+      className: "ea-tdn"
+    }, statN, " ", Math.round(ayuda), " de 100")), /*#__PURE__*/React.createElement("button", {
+      className: "ea-btn",
+      onClick: empezar
+    }, "Jugar"), /*#__PURE__*/React.createElement("button", {
+      className: "ea-mini",
+      style: {
+        marginTop: 10
+      },
+      onClick: () => setCompleta(true)
+    }, "Ver las reglas otra vez"));
+  }
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
@@ -11930,7 +11984,7 @@ function TarjetaJuego({
     className: "ea-glosX"
   }, g.x))), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
-    onClick: () => setListo(true)
+    onClick: empezar
   }, "Entendido, empezar"));
 }
 
@@ -17452,7 +17506,12 @@ function Motor() {
     onFin: finJuego,
     modo: s.modo,
     temas: s.temas,
-    onTema: apuntarTema
+    onTema: apuntarTema,
+    visto: (Array.isArray(s.juegosVistos) ? s.juegosVistos : []).indexOf(op.juego || op.j) >= 0,
+    onVista: t => setS(st => ({
+      ...st,
+      juegosVistos: unicos((Array.isArray(st.juegosVistos) ? st.juegosVistos : []).concat(t))
+    }))
   })), fase === "resultado" && res && /*#__PURE__*/React.createElement("div", {
     className: "ea-memo"
   }, /*#__PURE__*/React.createElement("div", {
