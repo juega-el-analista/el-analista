@@ -1812,6 +1812,62 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* ============================================================
+   QUE CADA ESCENA SE VEA DISTINTA
+   El mismo memorando gris servia para un martes en la oficina, para que
+   se case tu hermano y para la decision que parte la carrera en dos.
+   Ahora cada clase trae su sello, su color y su borde.
+   ============================================================ */
+.ea-selloClase{position:absolute;top:44px;right:22px;opacity:.9;
+  animation:ea-sellar .5s cubic-bezier(.2,1.5,.4,1) backwards;animation-delay:.14s}
+@keyframes ea-sellar{
+  0%{opacity:0;transform:rotate(-26deg) scale(.4)}
+  55%{opacity:.95;transform:rotate(6deg) scale(1.14)}
+  100%{opacity:.9;transform:rotate(0) scale(1)}
+}
+/* el borde izquierdo dice de que va antes de leer una palabra */
+.ea-memo{border-left:4px solid transparent;transition:border-color .3s ease}
+.ea-memo-documento{border-left-color:rgba(61,61,61,.16)}
+.ea-memo-corazon{border-left-color:rgba(185,83,42,.75)}
+.ea-memo-corona{border-left-color:var(--cobre);
+  box-shadow:0 18px 40px rgba(0,51,24,.28), 0 2px 0 var(--papel2), inset 0 0 0 1px rgba(185,83,42,.22)}
+.ea-memo-bifurca{border-left-color:var(--cobre)}
+.ea-memo-sello{border-left-color:var(--tintaPapel)}
+/* el titulo deja sitio al sello para no chocar con el */
+.ea-memo .ea-memoTit{padding-right:52px}
+
+/* Un fondo que no es un folio en blanco: dos manchas muy suaves que dan
+   profundidad sin ensuciar nada de lo que hay encima. */
+.ea-root{background-image:
+  radial-gradient(60vw 40vw at 88% -8%, rgba(31,107,62,.055), transparent 60%),
+  radial-gradient(52vw 36vw at 2% 104%, rgba(185,83,42,.05), transparent 62%)}
+
+/* La cifra del patrimonio da un latido cuando se mueve, para que el
+   cambio se note aunque no estuvieras mirando ese rincon. */
+@keyframes ea-latido{
+  0%{transform:scale(1)} 38%{transform:scale(1.055)} 100%{transform:scale(1)}
+}
+.ea-plata.late{animation:ea-latido .5s cubic-bezier(.2,.9,.3,1)}
+.ea-plata{display:inline-block;transform-origin:right center}
+
+/* la pestaña activa se subraya deslizando, no parpadeando */
+.ea-tab{position:relative}
+.ea-tab:after{content:"";position:absolute;left:12%;right:12%;bottom:-2px;height:2px;
+  background:var(--cobre);transform:scaleX(0);transform-origin:center;
+  transition:transform .26s cubic-bezier(.2,.8,.3,1)}
+.ea-tab.on:after{transform:scaleX(1)}
+.ea-tab.on{border-bottom-color:transparent}
+
+/* ---- la curva de la portada ---- */
+.ea-portadaArte{width:100%;max-width:420px;height:auto;display:block;margin:18px 0 6px;overflow:visible}
+.ea-paBase{stroke:var(--borde);stroke-width:1}
+.ea-paTick{stroke:var(--borde);stroke-width:1;opacity:.55}
+.ea-paCurva{fill:none;stroke:var(--cobre);stroke-width:2.6;stroke-linecap:round;
+  stroke-dasharray:420;stroke-dashoffset:420;animation:ea-trazar 1.5s cubic-bezier(.3,.7,.3,1) .25s forwards}
+@keyframes ea-trazar{to{stroke-dashoffset:0}}
+.ea-paPunto{fill:var(--cobre);opacity:0;animation:ea-brotar .45s cubic-bezier(.2,1.6,.4,1) 1.6s forwards}
+@keyframes ea-brotar{0%{opacity:0;r:0}60%{opacity:1;r:8}100%{opacity:1;r:5.5}}
+
 /* ---- iconos ---- */
 .ea-ico{display:inline-block;vertical-align:-.16em;flex-shrink:0}
 .ea-quien{display:flex;flex-wrap:wrap;gap:3px 13px;align-items:center}
@@ -13552,7 +13608,51 @@ const TRAZOS = {
   pluma: "M20.4 3.6 9.6 14.4l-1.2 4.6 4.6-1.2L23.8 7 20.4 3.6z M8.4 19 3.6 20.4l1.4-4.8 M14.6 8.6l4 4",
   escudo: "M12 21.6s7.6-3.4 7.6-9.6V5.4L12 2.6 4.4 5.4V12c0 6.2 7.6 9.6 7.6 9.6z M8.8 12l2.2 2.2 4.4-4.4",
   grafico: "M3.4 20.4h17.2 M6.6 20.4v-6.6 M11 20.4V7.6 M15.4 20.4v-9.4 M19.8 20.4V4.4",
-  micro: "M12 14.4a3.4 3.4 0 0 0 3.4-3.4V6a3.4 3.4 0 1 0-6.8 0v5a3.4 3.4 0 0 0 3.4 3.4z M6 10.6v.6a6 6 0 0 0 12 0v-.6 M12 17.4v3.2 M9 20.6h6"
+  micro: "M12 14.4a3.4 3.4 0 0 0 3.4-3.4V6a3.4 3.4 0 1 0-6.8 0v5a3.4 3.4 0 0 0 3.4 3.4z M6 10.6v.6a6 6 0 0 0 12 0v-.6 M12 17.4v3.2 M9 20.6h6",
+  /* ---- que clase de cosa te esta pasando ----
+     Un simbolo por tipo de escena. Antes todas se veian igual: el mismo
+     memorando gris para un dia de oficina, para que se case tu hermano y
+     para la decision que parte la carrera en dos. */
+  documento: "M14 2.6H6.4a2 2 0 0 0-2 2v14.8a2 2 0 0 0 2 2h11.2a2 2 0 0 0 2-2V8.2z M14 2.6v5.6h5.6 M8.4 13h7.2 M8.4 17h4.8",
+  corona: "M2.8 7.6 6.6 13l5.4-7.6L17.4 13l3.8-5.4v10.2a1.6 1.6 0 0 1-1.6 1.6H4.4a1.6 1.6 0 0 1-1.6-1.6z M2.8 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M21.2 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M12 5.4a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z",
+  bifurca: "M12 21.4v-6.6 M12 14.8 5.6 8.4V3.2 M12 14.8l6.4-6.4V3.2 M5.6 3.2H3.2 M5.6 3.2h2.4 M18.4 3.2H16 M18.4 3.2h2.4",
+  corazon: "M12 20.8 4.4 13.2a4.8 4.8 0 0 1 0-6.8 4.8 4.8 0 0 1 6.8 0l.8.8.8-.8a4.8 4.8 0 0 1 6.8 0 4.8 4.8 0 0 1 0 6.8z",
+  sello: "M12 2.6a4 4 0 0 0-4 4c0 1.6 1.2 2.6 1.2 4.2H6.4a2.4 2.4 0 0 0-2.4 2.4v1.4h16v-1.4a2.4 2.4 0 0 0-2.4-2.4h-2.8c0-1.6 1.2-2.6 1.2-4.2a4 4 0 0 0-4-4z M4.4 18.2h15.2v3.2H4.4z"
+};
+
+/* El simbolo, el rotulo y el color de cada clase de escena. */
+const CLASE_ESCENA = ev => {
+  if (!ev) return {
+    k: "documento",
+    n: "Memorando interno",
+    c: "var(--gris)"
+  };
+  if (ev.legendaria) return {
+    k: "corona",
+    n: "Decisión legendaria",
+    c: "var(--cobre)"
+  };
+  if (ev.rama) return {
+    k: "bifurca",
+    n: "Bifurcación",
+    c: "var(--cobre)"
+  };
+  /* las de vida traen ventana de edad; las de oficina, de rango */
+  if (ev.eMin != null || ev.eMax != null) return {
+    k: "corazon",
+    n: "Tu vida",
+    c: "#B9532A"
+  };
+  if (ev.clave) return {
+    k: "sello",
+    n: "Decisión clave",
+    c: "var(--tintaPapel)"
+  };
+  return {
+    k: "documento",
+    n: "Memorando interno",
+    c: "var(--gris)"
+  };
 };
 
 /* Que simbolo lleva cada cosa que se compra. Varias comparten el mismo:
@@ -16600,6 +16700,24 @@ function Motor() {
   MOVIMIENTO = animar;
   const quietoAhora = sinMovimiento();
 
+  /* El latido de la cifra de arriba cuando el patrimonio se mueve. Se
+     apaga solo, porque una animacion que se queda puesta deja de ser un
+     aviso y pasa a ser ruido. */
+  const [late, setLate] = useState(false);
+  const patAnt = useRef(patrimonio);
+  useEffect(() => {
+    if (Math.round(patAnt.current) === Math.round(patrimonio)) return;
+    patAnt.current = patrimonio;
+    if (quietoAhora || typeof setTimeout !== "function") return;
+    setLate(true);
+    const t = setTimeout(() => setLate(false), 560);
+    return () => {
+      try {
+        clearTimeout(t);
+      } catch (e) {}
+    };
+  }, [patrimonio, quietoAhora]);
+
   /* La cascara del documento trae su propio freno con !important dentro
      de una media query, y ese gana siempre: hay que retirarlo desde
      fuera marcando #raiz. Sin esto, encender el movimiento en la Ficha
@@ -16688,7 +16806,33 @@ function Motor() {
     }
   }, "Simulador de carrera e inversi\xF3n"), /*#__PURE__*/React.createElement("h1", {
     className: "ea-h1 ea-dis"
-  }, "El Analista"), /*#__PURE__*/React.createElement("p", {
+  }, "El Analista"), /*#__PURE__*/React.createElement("svg", {
+    className: "ea-portadaArte",
+    viewBox: "0 0 320 96",
+    "aria-hidden": "true",
+    focusable: "false"
+  }, /*#__PURE__*/React.createElement("line", {
+    className: "ea-paBase",
+    x1: "6",
+    y1: "88",
+    x2: "314",
+    y2: "88"
+  }), [68, 140, 212, 284].map((x, i) => /*#__PURE__*/React.createElement("line", {
+    key: i,
+    className: "ea-paTick",
+    x1: x,
+    y1: "88",
+    x2: x,
+    y2: "82"
+  })), /*#__PURE__*/React.createElement("path", {
+    className: "ea-paCurva",
+    d: "M10 82 C 52 80, 68 66, 96 62 S 130 72, 152 54 S 188 30, 214 34 S 252 20, 276 12 L 300 8"
+  }), /*#__PURE__*/React.createElement("circle", {
+    className: "ea-paPunto",
+    cx: "300",
+    cy: "8",
+    r: "5.5"
+  })), /*#__PURE__*/React.createElement("p", {
     className: "ea-lede"
   }, "Un a\xF1o por turno. Decides, el mercado se mueve, y al final ves en qu\xE9 qued\xF3 todo."), /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
@@ -17234,7 +17378,7 @@ function Motor() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-dis"
   }, ano, " \xB7 ", edad(s.turno, s.edadIni), " a\xF1os"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")
+    className: "ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "") + (late ? " late" : "")
   }, "USD ", /*#__PURE__*/React.createElement(Cifra, {
     v: patrimonio
   })), abierto(s, "cartera") && /*#__PURE__*/React.createElement("div", {
@@ -18342,79 +18486,91 @@ function Motor() {
     key: i
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-titQ ea-mono"
-  }, t.q), /*#__PURE__*/React.createElement("span", null, t.t))))))), /*#__PURE__*/React.createElement("div", null, fase === "evento" && ev && /*#__PURE__*/React.createElement("div", {
-    className: "ea-memo"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-memoHead ea-dis" + (ev.legendaria ? " clave legend" : ev.clave ? " clave" : "")
-  }, /*#__PURE__*/React.createElement("span", null, ev.legendaria ? "Decisión legendaria" : ev.rama ? "Bifurcación" : ev.clave ? "Decisión clave" : "Memorando interno"), /*#__PURE__*/React.createElement("span", null, ano)), /*#__PURE__*/React.createElement("h2", {
-    className: "ea-memoTit ea-dis"
-  }, ev.t), /*#__PURE__*/React.createElement("p", {
-    className: "ea-memoTxt"
-  }, ev.x), /*#__PURE__*/React.createElement("div", {
-    className: "ea-ops"
-  }, (() => {
-    const ops = opcionesDe(ev);
-    let faltas = ops.map(o => {
-      try {
-        return faltaDe(o, s);
-      } catch (e) {
-        return null;
+  }, t.q), /*#__PURE__*/React.createElement("span", null, t.t))))))), /*#__PURE__*/React.createElement("div", null, fase === "evento" && ev && (() => {
+    const cl = CLASE_ESCENA(ev);
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-memo ea-memo-" + cl.k,
+      key: ev.id
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-memoHead ea-dis" + (ev.legendaria ? " clave legend" : ev.clave ? " clave" : "")
+    }, /*#__PURE__*/React.createElement("span", null, cl.n), /*#__PURE__*/React.createElement("span", null, ano)), /*#__PURE__*/React.createElement("div", {
+      className: "ea-selloClase",
+      style: {
+        color: cl.c
       }
-    });
-    /* El guardarrail. Si TODAS quedaran bloqueadas el
-       jugador se queda encerrado en la escena, asi que
-       en ese caso se abren todas: quedarse sin energia
-       encarece la vida, no la termina. */
-    if (faltas.length && faltas.every(Boolean)) faltas = faltas.map(() => null);
-    return ops.map((o, i) => {
-      const tipo = o.juego || o.j;
-      const efs = efectosDe(o);
-      const falta = faltas[i];
-      const bits = [];
-      if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
-      return /*#__PURE__*/React.createElement("button", {
-        className: "ea-op" + (falta ? " sinfuerza" : ""),
-        key: i,
-        style: {
-          animationDelay: i * 70 + "ms"
-        },
-        disabled: carteraPend || !!falta,
-        title: falta ? "Te falta " + (ETIQ[falta.k] || falta.k).toLowerCase() : undefined,
-        onClick: () => elegir(o)
-      }, /*#__PURE__*/React.createElement("span", {
-        className: "ea-opN ea-mono"
-      }, String.fromCharCode(65 + i % 26)), o.t, o.req && !falta && /*#__PURE__*/React.createElement("span", {
-        className: "ea-opSolo ea-dis"
-      }, "solo t\xFA"), falta && /*#__PURE__*/React.createElement("span", {
-        className: "ea-opCandado ea-dis"
-      }, ETIQ[falta.k] || falta.k, " ", falta.hace, " \xB7 tienes ", falta.tengo), efs.length > 0 && /*#__PURE__*/React.createElement("span", {
-        className: "ea-efs"
-      }, efs.map((e, n) => {
-        const fuerza = fuerzaDe(e.k, e.v);
-        const signo = (e.v > 0 ? "+" : "−").repeat(fuerza);
-        return /*#__PURE__*/React.createElement("span", {
-          key: n,
-          className: "ea-ef " + (e.v > 0 ? "pos" : "neg"),
-          title: (ETIQ[e.k] || e.k) + ", " + (e.v > 0 ? "sube" : "baja") + " " + (fuerza === 3 ? "mucho" : fuerza === 2 ? "bastante" : "un poco")
+    }, /*#__PURE__*/React.createElement(Icono, {
+      k: cl.k,
+      tam: 30
+    })), /*#__PURE__*/React.createElement("h2", {
+      className: "ea-memoTit ea-dis"
+    }, ev.t), /*#__PURE__*/React.createElement("p", {
+      className: "ea-memoTxt"
+    }, ev.x), /*#__PURE__*/React.createElement("div", {
+      className: "ea-ops"
+    }, (() => {
+      const ops = opcionesDe(ev);
+      let faltas = ops.map(o => {
+        try {
+          return faltaDe(o, s);
+        } catch (e) {
+          return null;
+        }
+      });
+      /* El guardarrail. Si TODAS quedaran bloqueadas el
+         jugador se queda encerrado en la escena, asi que
+         en ese caso se abren todas: quedarse sin energia
+         encarece la vida, no la termina. */
+      if (faltas.length && faltas.every(Boolean)) faltas = faltas.map(() => null);
+      return ops.map((o, i) => {
+        const tipo = o.juego || o.j;
+        const efs = efectosDe(o);
+        const falta = faltas[i];
+        const bits = [];
+        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
+        return /*#__PURE__*/React.createElement("button", {
+          className: "ea-op" + (falta ? " sinfuerza" : ""),
+          key: i,
+          style: {
+            animationDelay: i * 70 + "ms"
+          },
+          disabled: carteraPend || !!falta,
+          title: falta ? "Te falta " + (ETIQ[falta.k] || falta.k).toLowerCase() : undefined,
+          onClick: () => elegir(o)
         }, /*#__PURE__*/React.createElement("span", {
-          className: "ea-efS ea-mono",
-          "aria-hidden": "true"
-        }, signo), /*#__PURE__*/React.createElement(Icono, {
-          k: ICONO_ATRIB[e.k],
-          tam: 13
-        }));
-      })), bits.length > 0 && /*#__PURE__*/React.createElement("span", {
-        className: "ea-opTag"
-      }, bits.join(" · ")));
-    });
-  })(), opcionesDe(ev).length === 0 && /*#__PURE__*/React.createElement("button", {
-    className: "ea-op",
-    onClick: () => resolverEscena({
-      msg: "El asunto se resolvió sin que te tocara decidir."
-    }, "parcial", null)
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-opN ea-mono"
-  }, "A"), "Dejar que siga su curso"))), fase === "minijuego" && op && /*#__PURE__*/React.createElement(TarjetaJuego, {
+          className: "ea-opN ea-mono"
+        }, String.fromCharCode(65 + i % 26)), o.t, o.req && !falta && /*#__PURE__*/React.createElement("span", {
+          className: "ea-opSolo ea-dis"
+        }, "solo t\xFA"), falta && /*#__PURE__*/React.createElement("span", {
+          className: "ea-opCandado ea-dis"
+        }, ETIQ[falta.k] || falta.k, " ", falta.hace, " \xB7 tienes ", falta.tengo), efs.length > 0 && /*#__PURE__*/React.createElement("span", {
+          className: "ea-efs"
+        }, efs.map((e, n) => {
+          const fuerza = fuerzaDe(e.k, e.v);
+          const signo = (e.v > 0 ? "+" : "−").repeat(fuerza);
+          return /*#__PURE__*/React.createElement("span", {
+            key: n,
+            className: "ea-ef " + (e.v > 0 ? "pos" : "neg"),
+            title: (ETIQ[e.k] || e.k) + ", " + (e.v > 0 ? "sube" : "baja") + " " + (fuerza === 3 ? "mucho" : fuerza === 2 ? "bastante" : "un poco")
+          }, /*#__PURE__*/React.createElement("span", {
+            className: "ea-efS ea-mono",
+            "aria-hidden": "true"
+          }, signo), /*#__PURE__*/React.createElement(Icono, {
+            k: ICONO_ATRIB[e.k],
+            tam: 13
+          }));
+        })), bits.length > 0 && /*#__PURE__*/React.createElement("span", {
+          className: "ea-opTag"
+        }, bits.join(" · ")));
+      });
+    })(), opcionesDe(ev).length === 0 && /*#__PURE__*/React.createElement("button", {
+      className: "ea-op",
+      onClick: () => resolverEscena({
+        msg: "El asunto se resolvió sin que te tocara decidir."
+      }, "parcial", null)
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-opN ea-mono"
+    }, "A"), "Dejar que siga su curso")));
+  })(), fase === "minijuego" && op && /*#__PURE__*/React.createElement(TarjetaJuego, {
     tipo: op.juego || op.j,
     ayuda: ayudaDe(op),
     nivel: nivelDe(s.turno, s.estudia),

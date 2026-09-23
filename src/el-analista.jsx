@@ -1117,6 +1117,62 @@ const CSS4 = `
 /* La placa de arriba reacciona cuando el patrimonio se mueve. */
 .ea-plata{transition:color .35s ease}
 
+/* ============================================================
+   QUE CADA ESCENA SE VEA DISTINTA
+   El mismo memorando gris servia para un martes en la oficina, para que
+   se case tu hermano y para la decision que parte la carrera en dos.
+   Ahora cada clase trae su sello, su color y su borde.
+   ============================================================ */
+.ea-selloClase{position:absolute;top:44px;right:22px;opacity:.9;
+  animation:ea-sellar .5s cubic-bezier(.2,1.5,.4,1) backwards;animation-delay:.14s}
+@keyframes ea-sellar{
+  0%{opacity:0;transform:rotate(-26deg) scale(.4)}
+  55%{opacity:.95;transform:rotate(6deg) scale(1.14)}
+  100%{opacity:.9;transform:rotate(0) scale(1)}
+}
+/* el borde izquierdo dice de que va antes de leer una palabra */
+.ea-memo{border-left:4px solid transparent;transition:border-color .3s ease}
+.ea-memo-documento{border-left-color:rgba(61,61,61,.16)}
+.ea-memo-corazon{border-left-color:rgba(185,83,42,.75)}
+.ea-memo-corona{border-left-color:var(--cobre);
+  box-shadow:0 18px 40px rgba(0,51,24,.28), 0 2px 0 var(--papel2), inset 0 0 0 1px rgba(185,83,42,.22)}
+.ea-memo-bifurca{border-left-color:var(--cobre)}
+.ea-memo-sello{border-left-color:var(--tintaPapel)}
+/* el titulo deja sitio al sello para no chocar con el */
+.ea-memo .ea-memoTit{padding-right:52px}
+
+/* Un fondo que no es un folio en blanco: dos manchas muy suaves que dan
+   profundidad sin ensuciar nada de lo que hay encima. */
+.ea-root{background-image:
+  radial-gradient(60vw 40vw at 88% -8%, rgba(31,107,62,.055), transparent 60%),
+  radial-gradient(52vw 36vw at 2% 104%, rgba(185,83,42,.05), transparent 62%)}
+
+/* La cifra del patrimonio da un latido cuando se mueve, para que el
+   cambio se note aunque no estuvieras mirando ese rincon. */
+@keyframes ea-latido{
+  0%{transform:scale(1)} 38%{transform:scale(1.055)} 100%{transform:scale(1)}
+}
+.ea-plata.late{animation:ea-latido .5s cubic-bezier(.2,.9,.3,1)}
+.ea-plata{display:inline-block;transform-origin:right center}
+
+/* la pestaña activa se subraya deslizando, no parpadeando */
+.ea-tab{position:relative}
+.ea-tab:after{content:"";position:absolute;left:12%;right:12%;bottom:-2px;height:2px;
+  background:var(--cobre);transform:scaleX(0);transform-origin:center;
+  transition:transform .26s cubic-bezier(.2,.8,.3,1)}
+.ea-tab.on:after{transform:scaleX(1)}
+.ea-tab.on{border-bottom-color:transparent}
+
+/* ---- la curva de la portada ---- */
+.ea-portadaArte{width:100%;max-width:420px;height:auto;display:block;margin:18px 0 6px;overflow:visible}
+.ea-paBase{stroke:var(--borde);stroke-width:1}
+.ea-paTick{stroke:var(--borde);stroke-width:1;opacity:.55}
+.ea-paCurva{fill:none;stroke:var(--cobre);stroke-width:2.6;stroke-linecap:round;
+  stroke-dasharray:420;stroke-dashoffset:420;animation:ea-trazar 1.5s cubic-bezier(.3,.7,.3,1) .25s forwards}
+@keyframes ea-trazar{to{stroke-dashoffset:0}}
+.ea-paPunto{fill:var(--cobre);opacity:0;animation:ea-brotar .45s cubic-bezier(.2,1.6,.4,1) 1.6s forwards}
+@keyframes ea-brotar{0%{opacity:0;r:0}60%{opacity:1;r:8}100%{opacity:1;r:5.5}}
+
 /* ---- iconos ---- */
 .ea-ico{display:inline-block;vertical-align:-.16em;flex-shrink:0}
 .ea-quien{display:flex;flex-wrap:wrap;gap:3px 13px;align-items:center}
@@ -6664,6 +6720,27 @@ const TRAZOS = {
   escudo:    "M12 21.6s7.6-3.4 7.6-9.6V5.4L12 2.6 4.4 5.4V12c0 6.2 7.6 9.6 7.6 9.6z M8.8 12l2.2 2.2 4.4-4.4",
   grafico:   "M3.4 20.4h17.2 M6.6 20.4v-6.6 M11 20.4V7.6 M15.4 20.4v-9.4 M19.8 20.4V4.4",
   micro:     "M12 14.4a3.4 3.4 0 0 0 3.4-3.4V6a3.4 3.4 0 1 0-6.8 0v5a3.4 3.4 0 0 0 3.4 3.4z M6 10.6v.6a6 6 0 0 0 12 0v-.6 M12 17.4v3.2 M9 20.6h6",
+
+  /* ---- que clase de cosa te esta pasando ----
+     Un simbolo por tipo de escena. Antes todas se veian igual: el mismo
+     memorando gris para un dia de oficina, para que se case tu hermano y
+     para la decision que parte la carrera en dos. */
+  documento: "M14 2.6H6.4a2 2 0 0 0-2 2v14.8a2 2 0 0 0 2 2h11.2a2 2 0 0 0 2-2V8.2z M14 2.6v5.6h5.6 M8.4 13h7.2 M8.4 17h4.8",
+  corona:    "M2.8 7.6 6.6 13l5.4-7.6L17.4 13l3.8-5.4v10.2a1.6 1.6 0 0 1-1.6 1.6H4.4a1.6 1.6 0 0 1-1.6-1.6z M2.8 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M21.2 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M12 5.4a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z",
+  bifurca:   "M12 21.4v-6.6 M12 14.8 5.6 8.4V3.2 M12 14.8l6.4-6.4V3.2 M5.6 3.2H3.2 M5.6 3.2h2.4 M18.4 3.2H16 M18.4 3.2h2.4",
+  corazon:   "M12 20.8 4.4 13.2a4.8 4.8 0 0 1 0-6.8 4.8 4.8 0 0 1 6.8 0l.8.8.8-.8a4.8 4.8 0 0 1 6.8 0 4.8 4.8 0 0 1 0 6.8z",
+  sello:     "M12 2.6a4 4 0 0 0-4 4c0 1.6 1.2 2.6 1.2 4.2H6.4a2.4 2.4 0 0 0-2.4 2.4v1.4h16v-1.4a2.4 2.4 0 0 0-2.4-2.4h-2.8c0-1.6 1.2-2.6 1.2-4.2a4 4 0 0 0-4-4z M4.4 18.2h15.2v3.2H4.4z",
+};
+
+/* El simbolo, el rotulo y el color de cada clase de escena. */
+const CLASE_ESCENA = (ev) => {
+  if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
+  if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "var(--cobre)" };
+  if (ev.rama) return { k: "bifurca", n: "Bifurcación", c: "var(--cobre)" };
+  /* las de vida traen ventana de edad; las de oficina, de rango */
+  if (ev.eMin != null || ev.eMax != null) return { k: "corazon", n: "Tu vida", c: "#B9532A" };
+  if (ev.clave) return { k: "sello", n: "Decisión clave", c: "var(--tintaPapel)" };
+  return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
 };
 
 /* Que simbolo lleva cada cosa que se compra. Varias comparten el mismo:
@@ -8840,6 +8917,20 @@ function Motor() {
   MOVIMIENTO = animar;
   const quietoAhora = sinMovimiento();
 
+  /* El latido de la cifra de arriba cuando el patrimonio se mueve. Se
+     apaga solo, porque una animacion que se queda puesta deja de ser un
+     aviso y pasa a ser ruido. */
+  const [late, setLate] = useState(false);
+  const patAnt = useRef(patrimonio);
+  useEffect(() => {
+    if (Math.round(patAnt.current) === Math.round(patrimonio)) return;
+    patAnt.current = patrimonio;
+    if (quietoAhora || typeof setTimeout !== "function") return;
+    setLate(true);
+    const t = setTimeout(() => setLate(false), 560);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [patrimonio, quietoAhora]);
+
   /* La cascara del documento trae su propio freno con !important dentro
      de una media query, y ese gana siempre: hay que retirarlo desde
      fuera marcando #raiz. Sin esto, encender el movimiento en la Ficha
@@ -8942,6 +9033,18 @@ function Motor() {
         <div className="ea-wrap ea-portada">
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Simulador de carrera e inversión</div>
           <h1 className="ea-h1 ea-dis">El Analista</h1>
+          {/* La curva que sube, dibujandose. Es de lo que va el juego, y
+              la portada era texto sobre blanco. Se dibuja con
+              stroke-dashoffset, asi que no hay imagen que cargar. */}
+          <svg className="ea-portadaArte" viewBox="0 0 320 96" aria-hidden="true" focusable="false">
+            <line className="ea-paBase" x1="6" y1="88" x2="314" y2="88" />
+            {[68, 140, 212, 284].map((x, i) => (
+              <line key={i} className="ea-paTick" x1={x} y1="88" x2={x} y2="82" />
+            ))}
+            <path className="ea-paCurva"
+              d="M10 82 C 52 80, 68 66, 96 62 S 130 72, 152 54 S 188 30, 214 34 S 252 20, 276 12 L 300 8" />
+            <circle className="ea-paPunto" cx="300" cy="8" r="5.5" />
+          </svg>
           <p className="ea-lede">
             Un año por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
           </p>
@@ -9212,7 +9315,9 @@ function Motor() {
                   peso a cada decisión, porque el jugador empieza a contar
                   turnos en vez de vivir el año que tiene delante. */}
               <div className="ea-dis">{ano} · {edad(s.turno, s.edadIni)} años</div>
-              <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")}>USD <Cifra v={patrimonio} /></div>
+              <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "") + (late ? " late" : "")}>
+                USD <Cifra v={patrimonio} />
+              </div>
               {abierto(s, "cartera") && (
                 <div className="ea-mono" style={{ fontSize: 11.5, marginTop: 2 }}>efectivo {fmt(s.cash)} · cartera {fmt(s.cartera)}</div>
               )}
@@ -9902,10 +10007,18 @@ function Motor() {
             )}
 
             <div>
-              {fase === "evento" && ev && (
-                <div className="ea-memo">
+              {fase === "evento" && ev && (() => {
+                const cl = CLASE_ESCENA(ev);
+                return (
+                <div className={"ea-memo ea-memo-" + cl.k} key={ev.id}>
                   <div className={"ea-memoHead ea-dis" + (ev.legendaria ? " clave legend" : ev.clave ? " clave" : "")}>
-                    <span>{ev.legendaria ? "Decisión legendaria" : ev.rama ? "Bifurcación" : ev.clave ? "Decisión clave" : "Memorando interno"}</span><span>{ano}</span>
+                    <span>{cl.n}</span><span>{ano}</span>
+                  </div>
+                  {/* El sello de la clase de escena: entra girando y se
+                      asienta. Es lo que hace que un dia de oficina y la
+                      decision que parte tu carrera no se vean igual. */}
+                  <div className="ea-selloClase" style={{ color: cl.c }}>
+                    <Icono k={cl.k} tam={30} />
                   </div>
                   <h2 className="ea-memoTit ea-dis">{ev.t}</h2>
                   <p className="ea-memoTxt">{ev.x}</p>
@@ -9972,7 +10085,8 @@ function Motor() {
                     )}
                   </div>
                 </div>
-              )}
+                );
+              })()}
 
               {/* Sin memorando alrededor: la tarjeta se lleva la pantalla
                   entera ella sola, en sus tres pasos. */}
