@@ -131,9 +131,10 @@ const CSS = `
    rojo lo que cuesta. Antes era una linea de texto gris donde ganar red
    y perder energia pesaban visualmente lo mismo. */
 .ea-efs{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-.ea-ef{display:inline-flex;align-items:center;gap:4px;font-size:12px;
-  padding:2px 8px;border-radius:11px;border:1px solid;line-height:1.5;
-  font-variant-numeric:tabular-nums}
+.ea-ef{display:inline-flex;align-items:center;gap:3px;font-size:12px;
+  padding:3px 9px;border-radius:11px;border:1px solid;line-height:1.5}
+/* los signos mandan sobre el icono: son los que dicen cuanto */
+.ea-efS{font-size:13.5px;font-weight:700;letter-spacing:-.06em}
 .ea-ef.pos{color:#2E7A3D;border-color:rgba(62,138,73,.45);background:rgba(79,160,92,.1)}
 .ea-ef.neg{color:#9B3826;border-color:rgba(178,59,39,.4);background:rgba(178,59,39,.08)}
 .ea-op:disabled .ea-ef{filter:grayscale(.55)}
@@ -1123,6 +1124,7 @@ const CSS4 = `
 .ea-quienRama{color:var(--cobre)}
 /* las constantes: icono y cifra, sin la palabra delante */
 .ea-signos span{display:inline-flex;align-items:center;gap:4px}
+.ea-statN{display:inline-flex;align-items:center;gap:6px}
 
 /* una linea, no un bloque: el termino a mano y la explicacion a un toque */
 .ea-recuerda{background:transparent;border:none;color:var(--cobre);font:inherit;
@@ -2487,7 +2489,7 @@ const E = [
   { id: 3, min: 0, max: 2, t: "Café con el socio", x: "El socio director te encuentra en la cafetería y se sienta contigo. Tienes doce minutos de su atención completa.",
     o: [
       { t: "Preguntarle por el negocio y escuchar", d: { red: 7, cri: 4, msg: "Te cuenta cómo levantó su primer mandato. Aprendes más que en dos meses de Excel." } },
-      { t: "Soltarle una idea de originación tuya", j: "reaccion", stat: "red", d: { red: 5, rep: 5, car: 4, msg: "Tienes una ventana de segundos para meter la idea sin que suene forzado." } },
+      { t: "Soltarle una idea de originación tuya", min: { red: 24 }, j: "reaccion", stat: "red", d: { red: 5, rep: 5, car: 4, msg: "Tienes una ventana de segundos para meter la idea sin que suene forzado." } },
     ] },
   { id: 4, min: 0, max: 4, t: "Certificación de por medio", x: "Se abre la inscripción. Cuesta plata, quita fines de semana y no garantiza nada.",
     o: [
@@ -2519,12 +2521,12 @@ const E = [
   { id: 9, min: 1, max: 4, t: "Cien mensajes en frío", x: "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
     o: [
       { t: "Armar la base y escribir todos los días", d: { red: 11, car: 5, ene: -11, msg: "De cien mensajes contestan siete. De esos siete sale una reunión que en dos años será un mandato." } },
-      { t: "Enfocarte en diez contactos bien elegidos", j: "reaccion", stat: "red", d: { red: 7, cri: 4, ene: -4, msg: "Menos volumen y mejor timing. Escribes justo cuando conviene escribir." } },
+      { t: "Enfocarte en diez contactos bien elegidos", min: { red: 20 }, j: "reaccion", stat: "red", d: { red: 7, cri: 4, ene: -4, msg: "Menos volumen y mejor timing. Escribes justo cuando conviene escribir." } },
     ] },
   { id: 10, min: 0, max: 3, t: "El teaser que vuelve marcado", x: "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
     o: [
       { t: "Rehacerlo entero y aprender el formato", d: { mod: 6, rep: 4, ene: -8, car: 2, msg: "La siguiente versión vuelve con cuatro comentarios. Progreso medible." } },
-      { t: "Defender los puntos que no compartes", j: "quiz", stat: "cri", d: { rep: 5, cri: 5, car: 2, msg: "Discutir un comentario técnico te obliga a tener razón de verdad." } },
+      { t: "Defender los puntos que no compartes", min: { cri: 30 }, j: "quiz", stat: "cri", d: { rep: 5, cri: 5, car: 2, msg: "Discutir un comentario técnico te obliga a tener razón de verdad." } },
     ] },
   { id: 11, min: 0, max: 6, t: "Media hora antes del cierre", x: "El mercado cierra en treinta minutos y tienes una orden a medio ejecutar en tu cuenta personal.",
     o: [
@@ -2545,7 +2547,7 @@ const E = [
   { id: 14, min: 3, max: 6, t: "Tu mejor analista renuncia", x: "Se va a un fondo. Te lo dice con dos semanas de aviso y cara de culpa.",
     o: [
       { t: "Desearle bien y mantener el puente", d: { red: 8, rep: 5, ene: -5, msg: "A los dos años ese fondo entra como comprador en un proceso tuyo." } },
-      { t: "Contraofertar y retenerlo", j: "anclaje", stat: "red", d: { car: 4, ene: -5, cash: -2000, msg: "Tienes que encontrar el número que lo convence sin romper la escala del equipo." } },
+      { t: "Contraofertar y retenerlo", min: { red: 34 }, j: "anclaje", stat: "red", d: { car: 4, ene: -5, cash: -2000, msg: "Tienes que encontrar el número que lo convence sin romper la escala del equipo." } },
     ] },
   { id: 15, min: 4, max: 6, t: "Te ofrecen una silla en el board", x: "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
     o: [
@@ -2570,7 +2572,7 @@ const E = [
   { id: 19, min: 1, max: 5, t: "Prensa al teléfono", x: "Un periodista quiere una cita tuya sobre el sector. Tu firma no tiene política clara al respecto.",
     o: [
       { t: "Hablar solo de datos públicos", d: { rep: 6, red: 4, cri: 3, msg: "Sales citado con prudencia. Dos fondos te escriben esa semana." } },
-      { t: "Aceptar la entrevista técnica en vivo", j: "quiz", stat: "cri", d: { rep: 7, red: 6, msg: "En vivo no hay forma de consultar nada." } },
+      { t: "Aceptar la entrevista técnica en vivo", min: { cri: 34 }, j: "quiz", stat: "cri", d: { rep: 7, red: 6, msg: "En vivo no hay forma de consultar nada." } },
       { t: "Declinar y pasarlo al socio", d: { rep: 2, red: 2, msg: "Correcto y aburrido. A veces es exactamente lo que toca." } },
     ] },
   { id: 20, min: 1, max: 4, t: "Alguien se cuelga de tu trabajo", x: "Un colega presenta al comité el análisis que armaste tú, sin mencionarte.",
@@ -2602,22 +2604,22 @@ const E = [
   { id: 25, min: 0, max: 6, t: "Un amigo levanta capital", x: "Su startup necesita cierre y te ofrece entrar en la ronda como ángel.",
     o: [
       { t: "Invertir un ticket que puedas perder", d: { cash: -3000, red: 4, msg: "Entras por un monto que no te cambia la vida si se pierde. Papeles en orden." } },
-      { t: "Revisarle el modelo antes de decidir", j: "ojo", stat: "mod", d: { red: 6, cri: 4, cash: -1500, msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
+      { t: "Revisarle el modelo antes de decidir", min: { mod: 34 }, j: "ojo", stat: "mod", d: { red: 6, cri: 4, cash: -1500, msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
     ] },
   { id: 26, min: 2, max: 6, t: "Comité de crédito difícil", x: "Defiendes una estructura de factoring sobre un sector volátil. Dos miembros vienen buscando sangre.",
     o: [
-      { t: "Responder con los números en la cabeza", j: "calculo", stat: "mod", d: { car: 6, rep: 7, cri: 4, msg: "Te preguntan tasas y coberturas y no hay tiempo de abrir el archivo." } },
+      { t: "Responder con los números en la cabeza", min: { mod: 30 }, j: "calculo", stat: "mod", d: { car: 6, rep: 7, cri: 4, msg: "Te preguntan tasas y coberturas y no hay tiempo de abrir el archivo." } },
       { t: "Retirar el caso y volver el mes que viene", d: { cri: 6, rep: 2, ene: -3, msg: "Preferible retirarse que perder. Vuelves mejor armado." } },
     ] },
   { id: 27, min: 1, max: 6, t: "Reunión con la familia dueña", x: "Tres hermanos, una empresa y ninguna intención de estar de acuerdo entre ellos.",
     o: [
-      { t: "Aguantar el pulso y buscar el punto medio", j: "tresraya", stat: "red", d: { red: 7, car: 5, rep: 4, msg: "La reunión se vuelve un juego de posiciones antes de hablar de precio." } },
+      { t: "Aguantar el pulso y buscar el punto medio", min: { red: 30 }, j: "tresraya", stat: "red", d: { red: 7, car: 5, rep: 4, msg: "La reunión se vuelve un juego de posiciones antes de hablar de precio." } },
       { t: "Mandar una propuesta por escrito y esperar", d: { car: 2, ene: 3, msg: "Ordenado y sin desgaste. También sin conexión personal." } },
     ] },
   { id: 28, min: 3, max: 6, t: "Un cliente grande aprieta", x: "Amenaza con llevarse la cuenta si no aceptas un fee contingente que castiga a tu equipo.",
     o: [
       { t: "Sostener el esquema de honorarios", sigue: 602, d: { rep: 9, cash: -9000, cri: 6, msg: "Pierdes la cuenta este año y la recuperas en dos, con mejores términos." } },
-      { t: "Negociar un esquema mixto", j: "anclaje", stat: "red", d: { cash: 7000, rep: 4, car: 4, msg: "Retainer bajo y éxito alto. Hay que encontrar el punto exacto." } },
+      { t: "Negociar un esquema mixto", min: { red: 38 }, j: "anclaje", stat: "red", d: { cash: 7000, rep: 4, car: 4, msg: "Retainer bajo y éxito alto. Hay que encontrar el punto exacto." } },
       { t: "Ceder para proteger la facturación", d: { cash: 9000, rep: -7, ene: -7, msg: "El equipo trabaja igual por menos. Alguien renuncia en tres meses." } },
     ] },
   { id: 29, min: 2, max: 6, t: "Auditoría interna sobre tus expedientes", x: "Revisan al azar cinco mandatos tuyos, papel por papel.",
@@ -2643,7 +2645,7 @@ const E = [
     ] },
   { id: 33, min: 2, max: 6, t: "Dos ofertas sobre la mesa", x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
     o: [
-      { t: "Ordenar los criterios y decidir con método", j: "orden", stat: "cri", d: { cri: 7, car: 5, rep: 5, msg: "Pones los criterios en orden de importancia antes de mirar los precios." } },
+      { t: "Ordenar los criterios y decidir con método", min: { cri: 38 }, j: "orden", stat: "cri", d: { cri: 7, car: 5, rep: 5, msg: "Pones los criterios en orden de importancia antes de mirar los precios." } },
       { t: "Ir por el precio más alto y punto", chk: { s: "cri", dif: 55, ok: { cash: 6000, car: 4, msg: "El precio alto además cerró sin problemas. Suerte y criterio en la misma jugada." }, no: { rep: -8, ene: -6, msg: "El comprador no consigue el financiamiento y el proceso se cae en la recta final." } } },
     ] },
   { id: 34, min: 0, max: 6, t: "Alguien de la mesa te pregunta qué harías", x: "Sin contexto, sin archivo, sin tiempo. Solo la pregunta y seis pares de ojos esperando.",
@@ -2866,17 +2868,17 @@ const D = [
 const E2 = [
   { id: 40, min: 0, max: 6, t: "Una sesión larga frente a la pantalla", x: "Tienes el día libre y una cuenta propia. El mercado abre en cinco minutos y la tentación es operarlo todo.",
     o: [
-      { t: "Operar la sesión completa", j: "trading", stat: "cri", d: { cash: 3000, cri: 4, ene: -6, msg: "Te sientas a operar de apertura a cierre." } },
+      { t: "Operar la sesión completa", min: { cri: 48 }, j: "trading", stat: "cri", d: { cash: 3000, cri: 4, ene: -6, msg: "Te sientas a operar de apertura a cierre." } },
       { t: "Comprar y apagar la pantalla", d: { cri: 4, ene: 5, cash: 900, msg: "Compras, cierras la laptop y te vas a hacer otra cosa. Suele funcionar mejor de lo que uno acepta." } },
     ] },
   { id: 41, min: 2, max: 6, t: "Un cliente quiere comprar apalancado", x: "El comprador tiene el activo identificado y quiere saber cuánta deuda le puede meter sin ahorcarse.",
     o: [
-      { t: "Armarle la estructura tú mismo", j: "estructura", stat: "mod", d: { car: 6, rep: 6, cash: 5000, mod: 5, msg: "Te sientas a repartir el precio entre deuda y capital." } },
+      { t: "Armarle la estructura tú mismo", min: { mod: 46 }, j: "estructura", stat: "mod", d: { car: 6, rep: 6, cash: 5000, mod: 5, msg: "Te sientas a repartir el precio entre deuda y capital." } },
       { t: "Mandarlo con el banco y quedarte fuera", d: { rep: -2, ene: 3, msg: "El banco arma la estructura y se queda con la relación. Tú te quedas con el fee de asesoría y nada más." } },
     ] },
   { id: 42, min: 1, max: 6, t: "Ocho hallazgos sobre la mesa", x: "El equipo junior te deja una lista de hallazgos de la revisión. Tienes que decidir cuáles suben al comité y cuáles son ruido.",
     o: [
-      { t: "Filtrar tú los hallazgos", j: "banderas", stat: "cri", d: { cri: 7, rep: 6, car: 4, msg: "Te sientas a separar lo que importa de lo que solo hace ruido." } },
+      { t: "Filtrar tú los hallazgos", min: { cri: 44 }, j: "banderas", stat: "cri", d: { cri: 7, rep: 6, car: 4, msg: "Te sientas a separar lo que importa de lo que solo hace ruido." } },
       { t: "Subirlos todos al comité", d: { rep: -4, ene: -3, cri: 2, msg: "El comité se pierde en detalles operativos y el caso pierde fuerza. Filtrar también es tu trabajo." } },
     ] },
   { id: 43, min: 3, max: 6, t: "Te ofrecen invertir junto a un fondo", x: "Un fondo amigo te deja entrar en coinversión con un ticket pequeño. Hay que revisar la compañía rápido.",
@@ -4438,12 +4440,20 @@ const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
 const ICONO_ATRIB = { mod: "tabla", cri: "ojo", red: "nodos", rep: "estrella",
   car: "escalera", ene: "rayo", cash: "moneda" };
 
-/* Lo que mueve una opcion, con su signo y su cifra.
-   NOTA para quien revise: MEJORAS punto 17 decidio a proposito NO dar
-   las cifras, para que la decision no se volviera aritmetica. Saul pide
-   lo contrario —ver «-12 energia, +5 criterio» de un vistazo— y es lo
-   que esta puesto. Si se quiere volver atras, basta con pintar solo el
-   icono y el signo, sin el numero. */
+/* Cuanto pesa un cambio, medido en signos y no en cifras.
+   MEJORAS punto 17 tenia razon: el numero exacto convierte la decision
+   en aritmetica y le quita la apuesta. Pero «cuesta energia» tampoco
+   distingue perder tres de perder dieciocho, y esa diferencia si
+   importa al decidir. Tres tramos: uno, dos o tres signos. Sabes si es
+   poco, bastante o mucho, y no te pones a sumar.
+   El efectivo lleva su propia escala porque se mueve en miles. */
+const fuerzaDe = (k, v) => {
+  const x = Math.abs(numero(v, 0));
+  if (k === "cash") return x >= 20000 ? 3 : x >= 5000 ? 2 : 1;
+  return x >= 9 ? 3 : x >= 4 ? 2 : 1;
+};
+
+/* Lo que mueve una opcion: la clave y cuanto, para pintarlo en signos */
 const efectosDe = (o) => {
   if (!o || typeof o !== "object") return [];
   const d = o.d
@@ -7162,6 +7172,8 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
   const [obj, setObj] = useState(objAct);
   /* el reparto activo por activo, plegado salvo que lo pidas */
   const [avanzado, setAvanzado] = useState(false);
+  /* y las cinco medidas de riesgo que no se miran para decidir */
+  const [detalle, setDetalle] = useState(false);
   /* si la cartera cambia por otra via (un evento, retomar partida), los
      controles se ponen al dia solos en vez de quedar mostrando lo viejo */
   const huella = JSON.stringify(actual) + "|" + objAct;
@@ -7221,10 +7233,8 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
       <div className="ea-fila"><span style={{ fontSize: 12.5 }}>En efectivo</span><span className="ea-mono">USD {fmt(st.cash)}</span></div>
       {desvia && (
         <div className="ea-itemD">
-          No cuadra con tu objetivo de abajo, y es normal: el reparto se aplica al cerrar el año y
-          después los gastos del año salen del efectivo. Por eso a mitad de camino la parte invertida
-          queda {invReal > objAct ? "por encima" : "por debajo"} de la que pediste. Al cerrar el año se
-          vuelve a acomodar.
+          Va {invReal > objAct ? "por encima" : "por debajo"} de tu objetivo. Es normal: los gastos del año
+          salen del efectivo. Al cerrar el año se acomoda solo.
         </div>
       )}
 
@@ -7243,8 +7253,7 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
       <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Iría a la cartera</span><span className="ea-mono">USD {fmt(liq * obj)}</span></div>
       <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Quedaría en efectivo</span><span className="ea-mono">USD {fmt(liq * (1 - obj))}</span></div>
       <div className="ea-itemD">
-        Este reparto también manda al cerrar el año: lo que te quede después de gastos se acomoda solo a este
-        porcentaje. Tener algo en efectivo no es cobardía, es lo que evita vender la cartera en el peor momento.
+        Tener algo en efectivo no es cobardía: es lo que evita vender la cartera en el peor momento.
       </div>
 
       {/* Elegir un perfil es la decision de verdad; repartir siete activos
@@ -7269,10 +7278,7 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
         })}
       </div>
       {!preset && (
-        <div className="ea-itemD" style={{ marginTop: 8 }}>
-          Ahora mismo tienes una combinación tuya, que no se parece a ninguno de los cinco. Perfecto:
-          toca un perfil solo si quieres volver a un punto conocido.
-        </div>
+        <div className="ea-itemD" style={{ marginTop: 8 }}>Combinación tuya. No se parece a ninguno de los cinco.</div>
       )}
 
       <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }}
@@ -7305,36 +7311,49 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
         </div>
       )}
 
+      {/* Las dos cifras que se usan para decidir, arriba. Las otras cinco
+          —beta, sharpe, ahorro por diversificar— son buenas y no las mira
+          nadie antes de mover un slider: se pliegan. */}
       <div className="ea-caja">
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Retorno esperado</span><span className="ea-mono">{(est.mu * 100).toFixed(1)}%</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Volatilidad</span><span className="ea-mono">{(est.sd * 100).toFixed(1)} puntos</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Año normal, entre</span><span className="ea-mono">{((est.mu - est.sd) * 100).toFixed(0)} y {((est.mu + est.sd) * 100).toFixed(0)}</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Un año malo de verdad</span><span className="ea-mono">{((est.mu - 2 * est.sd) * 100).toFixed(0)}%</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Retorno por unidad de riesgo</span><span className="ea-mono">{sharpe.toFixed(2)}</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Sensibilidad al mercado</span><span className="ea-mono">beta {beta.toFixed(2)}</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Ahorro por diversificar</span><span className="ea-mono">{(ahorra * 100).toFixed(0)}%</span></div>
+        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Esperas ganar</span><span className="ea-mono">{(est.mu * 100).toFixed(1)}% al año</span></div>
+        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Un año malo de verdad</span><span className="ea-mono" style={{ color: "var(--rojo)" }}>{((est.mu - 2 * est.sd) * 100).toFixed(0)}%</span></div>
       </div>
-
-      {ahorra > 0.14 && (
-        <div className="ea-ok2">
-          Sumados por separado tus activos darían {(sdSuma * 100).toFixed(0)} puntos de volatilidad y juntos dan
-          {" "}{(est.sd * 100).toFixed(0)}. Esa diferencia es lo único gratis que hay en finanzas.
+      <button className="ea-atras ea-dis" style={{ marginTop: 10, marginBottom: 0 }}
+        onClick={() => setDetalle((v) => !v)}>
+        {detalle ? "↑ Cerrar" : "↓ El detalle del riesgo"}
+      </button>
+      {detalle && (
+        <div className="ea-caja ea-panelAb" style={{ marginTop: 8 }}>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Volatilidad</span><span className="ea-mono">{(est.sd * 100).toFixed(1)} puntos</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Año normal, entre</span><span className="ea-mono">{((est.mu - est.sd) * 100).toFixed(0)} y {((est.mu + est.sd) * 100).toFixed(0)}</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Retorno por unidad de riesgo</span><span className="ea-mono">{sharpe.toFixed(2)}</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Sensibilidad al mercado</span><span className="ea-mono">beta {beta.toFixed(2)}</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Ahorro por diversificar</span><span className="ea-mono">{(ahorra * 100).toFixed(0)}%</span></div>
+          {ahorra > 0.14 && (
+            <div className="ea-ok2">
+              Por separado darían {(sdSuma * 100).toFixed(0)} puntos de volatilidad; juntos, {(est.sd * 100).toFixed(0)}.
+              Esa diferencia es lo único gratis que hay en finanzas.
+            </div>
+          )}
         </div>
       )}
+
+      {/* Los avisos se quedan: son los que enseñan, y solo salen cuando
+          de verdad hay algo que avisar. */}
       {conc.max >= 0.5 && (
         <div className="ea-avis">
-          {Math.round(conc.max * 100)}% en {conc.activo.n.toLowerCase()}. Si eso cae la mitad, tu cartera
-          se lleva {Math.round(conc.max * 50)}% del golpe.
+          {Math.round(conc.max * 100)}% en {conc.activo.n.toLowerCase()}. Si eso cae la mitad, pierdes
+          {" "}{Math.round(conc.max * 50)}%.
         </div>
       )}
       {(w.cripto || 0) >= 0.25 && (
-        <div className="ea-avis">Con esta dosis de cripto un año malo se te puede llevar un tercio de todo. Que sea porque quieres, no por descuido.</div>
+        <div className="ea-avis">Con esta cripto, un año malo se lleva un tercio de todo.</div>
       )}
       {beta >= 0.95 && (
-        <div className="ea-avis">Beta cerca de uno: tienes varias líneas, pero todas responden al mismo mercado. Eso no es diversificar.</div>
+        <div className="ea-avis">Beta cerca de uno: varias líneas, un solo mercado. Eso no es diversificar.</div>
       )}
       {ef >= 0.4 && (
-        <div className="ea-avis">Casi la mitad de la cartera en efectivo, rindiendo {(EFECTIVO_MU * 100).toFixed(1)}%. Si es un colchón, ya lo tienes arriba en la barra.</div>
+        <div className="ea-avis">Media cartera en efectivo, rindiendo {(EFECTIVO_MU * 100).toFixed(1)}%.</div>
       )}
 
       {cambio ? (
@@ -7357,8 +7376,8 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
         <div className="ea-tengo ea-dis" style={{ marginTop: 12 }}>Así está invertido tu dinero ahora</div>
       )}
       <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 12 }}>
-        Cada movimiento cuesta 0,5% de lo que rotas. Rebalancear una vez al año es sano; perseguir al
-        activo que rindió el año pasado es la forma más común y más cara de perder dinero.
+        Cada movimiento cuesta 0,5% de lo que rotas. Perseguir al activo que rindió el año pasado es la
+        forma más cara de perder dinero.
       </div>
     </div>
   );
@@ -8701,9 +8720,15 @@ function Motor() {
     return vis.length ? vis : todas;
   };
 
+  /* El icono va junto al nombre del atributo: es el unico sitio donde se
+     ven los dos juntos, y con eso se aprende que el rayo es energia sin
+     que nadie tenga que explicarlo. */
   const Stat = ({ k, v, ene }) => (
     <div className="ea-stat">
-      <div className="ea-statTop"><span className="ea-dis">{ETIQ[k]}</span><span className="ea-mono">{Math.round(v)}</span></div>
+      <div className="ea-statTop">
+        <span className="ea-dis ea-statN"><Icono k={ICONO_ATRIB[k]} tam={13} />{ETIQ[k]}</span>
+        <span className="ea-mono">{Math.round(v)}</span>
+      </div>
       <div className="ea-bar"><div className={"ea-fill" + (ene ? " ene" : "") + (v < 25 ? " baja" : "")} style={{ width: v + "%" }} /></div>
     </div>
   );
@@ -9859,13 +9884,18 @@ function Motor() {
                                 y «cuesta energía» hay que leerlo. */}
                             {efs.length > 0 && (
                               <span className="ea-efs">
-                                {efs.map((e, n) => (
-                                  <span key={n} className={"ea-ef ea-mono " + (e.v > 0 ? "pos" : "neg")}
-                                    title={(ETIQ[e.k] || e.k) + " " + (e.v > 0 ? "+" : "") + e.v}>
-                                    <Icono k={ICONO_ATRIB[e.k]} tam={12} />
-                                    {e.v > 0 ? "+" : "−"}{e.k === "cash" ? fmtCorto(Math.abs(e.v)) : Math.abs(e.v)}
-                                  </span>
-                                ))}
+                                {efs.map((e, n) => {
+                                  const fuerza = fuerzaDe(e.k, e.v);
+                                  const signo = (e.v > 0 ? "+" : "−").repeat(fuerza);
+                                  return (
+                                    <span key={n} className={"ea-ef " + (e.v > 0 ? "pos" : "neg")}
+                                      title={(ETIQ[e.k] || e.k) + ", " + (e.v > 0 ? "sube" : "baja")
+                                        + " " + (fuerza === 3 ? "mucho" : fuerza === 2 ? "bastante" : "un poco")}>
+                                      <span className="ea-efS ea-mono" aria-hidden="true">{signo}</span>
+                                      <Icono k={ICONO_ATRIB[e.k]} tam={13} />
+                                    </span>
+                                  );
+                                })}
                               </span>
                             )}
                             {bits.length > 0 && <span className="ea-opTag">{bits.join(" · ")}</span>}

@@ -790,9 +790,10 @@ const CSS = `
    rojo lo que cuesta. Antes era una linea de texto gris donde ganar red
    y perder energia pesaban visualmente lo mismo. */
 .ea-efs{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-.ea-ef{display:inline-flex;align-items:center;gap:4px;font-size:12px;
-  padding:2px 8px;border-radius:11px;border:1px solid;line-height:1.5;
-  font-variant-numeric:tabular-nums}
+.ea-ef{display:inline-flex;align-items:center;gap:3px;font-size:12px;
+  padding:3px 9px;border-radius:11px;border:1px solid;line-height:1.5}
+/* los signos mandan sobre el icono: son los que dicen cuanto */
+.ea-efS{font-size:13.5px;font-weight:700;letter-spacing:-.06em}
 .ea-ef.pos{color:#2E7A3D;border-color:rgba(62,138,73,.45);background:rgba(79,160,92,.1)}
 .ea-ef.neg{color:#9B3826;border-color:rgba(178,59,39,.4);background:rgba(178,59,39,.08)}
 .ea-op:disabled .ea-ef{filter:grayscale(.55)}
@@ -1818,6 +1819,7 @@ const CSS4 = `
 .ea-quienRama{color:var(--cobre)}
 /* las constantes: icono y cifra, sin la palabra delante */
 .ea-signos span{display:inline-flex;align-items:center;gap:4px}
+.ea-statN{display:inline-flex;align-items:center;gap:6px}
 
 /* una linea, no un bloque: el termino a mano y la explicacion a un toque */
 .ea-recuerda{background:transparent;border:none;color:var(--cobre);font:inherit;
@@ -5465,6 +5467,9 @@ const E = [{
     }
   }, {
     t: "Soltarle una idea de originación tuya",
+    min: {
+      red: 24
+    },
     j: "reaccion",
     stat: "red",
     d: {
@@ -5644,6 +5649,9 @@ const E = [{
     }
   }, {
     t: "Enfocarte en diez contactos bien elegidos",
+    min: {
+      red: 20
+    },
     j: "reaccion",
     stat: "red",
     d: {
@@ -5670,6 +5678,9 @@ const E = [{
     }
   }, {
     t: "Defender los puntos que no compartes",
+    min: {
+      cri: 30
+    },
     j: "quiz",
     stat: "cri",
     d: {
@@ -5776,6 +5787,9 @@ const E = [{
     }
   }, {
     t: "Contraofertar y retenerlo",
+    min: {
+      red: 34
+    },
     j: "anclaje",
     stat: "red",
     d: {
@@ -5896,6 +5910,9 @@ const E = [{
     }
   }, {
     t: "Aceptar la entrevista técnica en vivo",
+    min: {
+      cri: 34
+    },
     j: "quiz",
     stat: "cri",
     d: {
@@ -6058,6 +6075,9 @@ const E = [{
     }
   }, {
     t: "Revisarle el modelo antes de decidir",
+    min: {
+      mod: 34
+    },
     j: "ojo",
     stat: "mod",
     d: {
@@ -6075,6 +6095,9 @@ const E = [{
   x: "Defiendes una estructura de factoring sobre un sector volátil. Dos miembros vienen buscando sangre.",
   o: [{
     t: "Responder con los números en la cabeza",
+    min: {
+      mod: 30
+    },
     j: "calculo",
     stat: "mod",
     d: {
@@ -6100,6 +6123,9 @@ const E = [{
   x: "Tres hermanos, una empresa y ninguna intención de estar de acuerdo entre ellos.",
   o: [{
     t: "Aguantar el pulso y buscar el punto medio",
+    min: {
+      red: 30
+    },
     j: "tresraya",
     stat: "red",
     d: {
@@ -6133,6 +6159,9 @@ const E = [{
     }
   }, {
     t: "Negociar un esquema mixto",
+    min: {
+      red: 38
+    },
     j: "anclaje",
     stat: "red",
     d: {
@@ -6261,6 +6290,9 @@ const E = [{
   x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
   o: [{
     t: "Ordenar los criterios y decidir con método",
+    min: {
+      cri: 38
+    },
     j: "orden",
     stat: "cri",
     d: {
@@ -7326,6 +7358,9 @@ const E2 = [{
   x: "Tienes el día libre y una cuenta propia. El mercado abre en cinco minutos y la tentación es operarlo todo.",
   o: [{
     t: "Operar la sesión completa",
+    min: {
+      cri: 48
+    },
     j: "trading",
     stat: "cri",
     d: {
@@ -7351,6 +7386,9 @@ const E2 = [{
   x: "El comprador tiene el activo identificado y quiere saber cuánta deuda le puede meter sin ahorcarse.",
   o: [{
     t: "Armarle la estructura tú mismo",
+    min: {
+      mod: 46
+    },
     j: "estructura",
     stat: "mod",
     d: {
@@ -7376,6 +7414,9 @@ const E2 = [{
   x: "El equipo junior te deja una lista de hallazgos de la revisión. Tienes que decidir cuáles suben al comité y cuáles son ruido.",
   o: [{
     t: "Filtrar tú los hallazgos",
+    min: {
+      cri: 44
+    },
     j: "banderas",
     stat: "cri",
     d: {
@@ -10712,12 +10753,20 @@ const ICONO_ATRIB = {
   cash: "moneda"
 };
 
-/* Lo que mueve una opcion, con su signo y su cifra.
-   NOTA para quien revise: MEJORAS punto 17 decidio a proposito NO dar
-   las cifras, para que la decision no se volviera aritmetica. Saul pide
-   lo contrario —ver «-12 energia, +5 criterio» de un vistazo— y es lo
-   que esta puesto. Si se quiere volver atras, basta con pintar solo el
-   icono y el signo, sin el numero. */
+/* Cuanto pesa un cambio, medido en signos y no en cifras.
+   MEJORAS punto 17 tenia razon: el numero exacto convierte la decision
+   en aritmetica y le quita la apuesta. Pero «cuesta energia» tampoco
+   distingue perder tres de perder dieciocho, y esa diferencia si
+   importa al decidir. Tres tramos: uno, dos o tres signos. Sabes si es
+   poco, bastante o mucho, y no te pones a sumar.
+   El efectivo lleva su propia escala porque se mueve en miles. */
+const fuerzaDe = (k, v) => {
+  const x = Math.abs(numero(v, 0));
+  if (k === "cash") return x >= 20000 ? 3 : x >= 5000 ? 2 : 1;
+  return x >= 9 ? 3 : x >= 4 ? 2 : 1;
+};
+
+/* Lo que mueve una opcion: la clave y cuanto, para pintarlo en signos */
 const efectosDe = o => {
   if (!o || typeof o !== "object") return [];
   const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
@@ -14201,6 +14250,8 @@ function PanelCartera({
   const [obj, setObj] = useState(objAct);
   /* el reparto activo por activo, plegado salvo que lo pidas */
   const [avanzado, setAvanzado] = useState(false);
+  /* y las cinco medidas de riesgo que no se miran para decidir */
+  const [detalle, setDetalle] = useState(false);
   /* si la cartera cambia por otra via (un evento, retomar partida), los
      controles se ponen al dia solos en vez de quedar mostrando lo viejo */
   const huella = JSON.stringify(actual) + "|" + objAct;
@@ -14287,7 +14338,7 @@ function PanelCartera({
     className: "ea-mono"
   }, "USD ", fmt(st.cash))), desvia && /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD"
-  }, "No cuadra con tu objetivo de abajo, y es normal: el reparto se aplica al cerrar el a\xF1o y despu\xE9s los gastos del a\xF1o salen del efectivo. Por eso a mitad de camino la parte invertida queda ", invReal > objAct ? "por encima" : "por debajo", " de la que pediste. Al cerrar el a\xF1o se vuelve a acomodar."), /*#__PURE__*/React.createElement("div", {
+  }, "Va ", invReal > objAct ? "por encima" : "por debajo", " de tu objetivo. Es normal: los gastos del a\xF1o salen del efectivo. Al cerrar el a\xF1o se acomoda solo."), /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis",
     style: {
       marginTop: 20
@@ -14331,7 +14382,7 @@ function PanelCartera({
     className: "ea-mono"
   }, "USD ", fmt(liq * (1 - obj)))), /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD"
-  }, "Este reparto tambi\xE9n manda al cerrar el a\xF1o: lo que te quede despu\xE9s de gastos se acomoda solo a este porcentaje. Tener algo en efectivo no es cobard\xEDa, es lo que evita vender la cartera en el peor momento."), /*#__PURE__*/React.createElement("div", {
+  }, "Tener algo en efectivo no es cobard\xEDa: es lo que evita vender la cartera en el peor momento."), /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis",
     style: {
       marginTop: 20
@@ -14362,7 +14413,7 @@ function PanelCartera({
     style: {
       marginTop: 8
     }
-  }, "Ahora mismo tienes una combinaci\xF3n tuya, que no se parece a ninguno de los cinco. Perfecto: toca un perfil solo si quieres volver a un punto conocido."), /*#__PURE__*/React.createElement("button", {
+  }, "Combinaci\xF3n tuya. No se parece a ninguno de los cinco."), /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
       marginTop: 14,
@@ -14414,9 +14465,32 @@ function PanelCartera({
     style: {
       fontSize: 12.5
     }
-  }, "Retorno esperado"), /*#__PURE__*/React.createElement("span", {
+  }, "Esperas ganar"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
-  }, (est.mu * 100).toFixed(1), "%")), /*#__PURE__*/React.createElement("div", {
+  }, (est.mu * 100).toFixed(1), "% al a\xF1o")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-fila"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12.5
+    }
+  }, "Un a\xF1o malo de verdad"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-mono",
+    style: {
+      color: "var(--rojo)"
+    }
+  }, ((est.mu - 2 * est.sd) * 100).toFixed(0), "%"))), /*#__PURE__*/React.createElement("button", {
+    className: "ea-atras ea-dis",
+    style: {
+      marginTop: 10,
+      marginBottom: 0
+    },
+    onClick: () => setDetalle(v => !v)
+  }, detalle ? "↑ Cerrar" : "↓ El detalle del riesgo"), detalle && /*#__PURE__*/React.createElement("div", {
+    className: "ea-caja ea-panelAb",
+    style: {
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
   }, /*#__PURE__*/React.createElement("span", {
     style: {
@@ -14433,14 +14507,6 @@ function PanelCartera({
   }, "A\xF1o normal, entre"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
   }, ((est.mu - est.sd) * 100).toFixed(0), " y ", ((est.mu + est.sd) * 100).toFixed(0))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "Un a\xF1o malo de verdad"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, ((est.mu - 2 * est.sd) * 100).toFixed(0), "%")), /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
   }, /*#__PURE__*/React.createElement("span", {
     style: {
@@ -14464,17 +14530,17 @@ function PanelCartera({
     }
   }, "Ahorro por diversificar"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
-  }, (ahorra * 100).toFixed(0), "%"))), ahorra > 0.14 && /*#__PURE__*/React.createElement("div", {
+  }, (ahorra * 100).toFixed(0), "%")), ahorra > 0.14 && /*#__PURE__*/React.createElement("div", {
     className: "ea-ok2"
-  }, "Sumados por separado tus activos dar\xEDan ", (sdSuma * 100).toFixed(0), " puntos de volatilidad y juntos dan", " ", (est.sd * 100).toFixed(0), ". Esa diferencia es lo \xFAnico gratis que hay en finanzas."), conc.max >= 0.5 && /*#__PURE__*/React.createElement("div", {
+  }, "Por separado dar\xEDan ", (sdSuma * 100).toFixed(0), " puntos de volatilidad; juntos, ", (est.sd * 100).toFixed(0), ". Esa diferencia es lo \xFAnico gratis que hay en finanzas.")), conc.max >= 0.5 && /*#__PURE__*/React.createElement("div", {
     className: "ea-avis"
-  }, Math.round(conc.max * 100), "% en ", conc.activo.n.toLowerCase(), ". Si eso cae la mitad, tu cartera se lleva ", Math.round(conc.max * 50), "% del golpe."), (w.cripto || 0) >= 0.25 && /*#__PURE__*/React.createElement("div", {
+  }, Math.round(conc.max * 100), "% en ", conc.activo.n.toLowerCase(), ". Si eso cae la mitad, pierdes", " ", Math.round(conc.max * 50), "%."), (w.cripto || 0) >= 0.25 && /*#__PURE__*/React.createElement("div", {
     className: "ea-avis"
-  }, "Con esta dosis de cripto un a\xF1o malo se te puede llevar un tercio de todo. Que sea porque quieres, no por descuido."), beta >= 0.95 && /*#__PURE__*/React.createElement("div", {
+  }, "Con esta cripto, un a\xF1o malo se lleva un tercio de todo."), beta >= 0.95 && /*#__PURE__*/React.createElement("div", {
     className: "ea-avis"
-  }, "Beta cerca de uno: tienes varias l\xEDneas, pero todas responden al mismo mercado. Eso no es diversificar."), ef >= 0.4 && /*#__PURE__*/React.createElement("div", {
+  }, "Beta cerca de uno: varias l\xEDneas, un solo mercado. Eso no es diversificar."), ef >= 0.4 && /*#__PURE__*/React.createElement("div", {
     className: "ea-avis"
-  }, "Casi la mitad de la cartera en efectivo, rindiendo ", (EFECTIVO_MU * 100).toFixed(1), "%. Si es un colch\xF3n, ya lo tienes arriba en la barra."), cambio ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "Media cartera en efectivo, rindiendo ", (EFECTIVO_MU * 100).toFixed(1), "%."), cambio ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-pend",
     style: {
       marginTop: 14
@@ -14514,7 +14580,7 @@ function PanelCartera({
       color: "var(--gris)",
       marginTop: 12
     }
-  }, "Cada movimiento cuesta 0,5% de lo que rotas. Rebalancear una vez al a\xF1o es sano; perseguir al activo que rindi\xF3 el a\xF1o pasado es la forma m\xE1s com\xFAn y m\xE1s cara de perder dinero."));
+  }, "Cada movimiento cuesta 0,5% de lo que rotas. Perseguir al activo que rindi\xF3 el a\xF1o pasado es la forma m\xE1s cara de perder dinero."));
 }
 
 /* ============================ JUEGO ============================ */
@@ -16356,6 +16422,10 @@ function Motor() {
     });
     return vis.length ? vis : todas;
   };
+
+  /* El icono va junto al nombre del atributo: es el unico sitio donde se
+     ven los dos juntos, y con eso se aprende que el rayo es energia sin
+     que nadie tenga que explicarlo. */
   const Stat = ({
     k,
     v,
@@ -16365,8 +16435,11 @@ function Motor() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-statTop"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-dis"
-  }, ETIQ[k]), /*#__PURE__*/React.createElement("span", {
+    className: "ea-dis ea-statN"
+  }, /*#__PURE__*/React.createElement(Icono, {
+    k: ICONO_ATRIB[k],
+    tam: 13
+  }), ETIQ[k]), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
   }, Math.round(v))), /*#__PURE__*/React.createElement("div", {
     className: "ea-bar"
@@ -18242,14 +18315,21 @@ function Motor() {
         className: "ea-opCandado ea-dis"
       }, ETIQ[falta.k] || falta.k, " ", falta.hace, " \xB7 tienes ", falta.tengo), efs.length > 0 && /*#__PURE__*/React.createElement("span", {
         className: "ea-efs"
-      }, efs.map((e, n) => /*#__PURE__*/React.createElement("span", {
-        key: n,
-        className: "ea-ef ea-mono " + (e.v > 0 ? "pos" : "neg"),
-        title: (ETIQ[e.k] || e.k) + " " + (e.v > 0 ? "+" : "") + e.v
-      }, /*#__PURE__*/React.createElement(Icono, {
-        k: ICONO_ATRIB[e.k],
-        tam: 12
-      }), e.v > 0 ? "+" : "−", e.k === "cash" ? fmtCorto(Math.abs(e.v)) : Math.abs(e.v)))), bits.length > 0 && /*#__PURE__*/React.createElement("span", {
+      }, efs.map((e, n) => {
+        const fuerza = fuerzaDe(e.k, e.v);
+        const signo = (e.v > 0 ? "+" : "−").repeat(fuerza);
+        return /*#__PURE__*/React.createElement("span", {
+          key: n,
+          className: "ea-ef " + (e.v > 0 ? "pos" : "neg"),
+          title: (ETIQ[e.k] || e.k) + ", " + (e.v > 0 ? "sube" : "baja") + " " + (fuerza === 3 ? "mucho" : fuerza === 2 ? "bastante" : "un poco")
+        }, /*#__PURE__*/React.createElement("span", {
+          className: "ea-efS ea-mono",
+          "aria-hidden": "true"
+        }, signo), /*#__PURE__*/React.createElement(Icono, {
+          k: ICONO_ATRIB[e.k],
+          tam: 13
+        }));
+      })), bits.length > 0 && /*#__PURE__*/React.createElement("span", {
         className: "ea-opTag"
       }, bits.join(" · ")));
     });
