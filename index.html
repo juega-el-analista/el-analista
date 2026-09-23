@@ -786,6 +786,17 @@ const CSS = `
 .ea-op.sinfuerza{opacity:.52;cursor:not-allowed;border-style:dashed;
   border-color:rgba(61,61,61,.3);background:rgba(61,61,61,.03)}
 .ea-op.sinfuerza:hover{transform:none;background:rgba(61,61,61,.03)}
+/* Lo que mueve cada opcion, en simbolos y con color: verde lo que suma,
+   rojo lo que cuesta. Antes era una linea de texto gris donde ganar red
+   y perder energia pesaban visualmente lo mismo. */
+.ea-efs{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.ea-ef{display:inline-flex;align-items:center;gap:4px;font-size:12px;
+  padding:2px 8px;border-radius:11px;border:1px solid;line-height:1.5;
+  font-variant-numeric:tabular-nums}
+.ea-ef.pos{color:#2E7A3D;border-color:rgba(62,138,73,.45);background:rgba(79,160,92,.1)}
+.ea-ef.neg{color:#9B3826;border-color:rgba(178,59,39,.4);background:rgba(178,59,39,.08)}
+.ea-op:disabled .ea-ef{filter:grayscale(.55)}
+
 .ea-opCandado{display:inline-block;font-size:9.5px;letter-spacing:.12em;color:var(--rojo);
   border:1px solid var(--rojo);padding:1px 6px;margin-left:8px;vertical-align:middle;
   white-space:nowrap}
@@ -1832,6 +1843,56 @@ const CSS4 = `
   60%{transform:translateY(0) scale(1.04)}
   100%{opacity:1; transform:none}
 }
+
+/* ============================================================
+   EL MINIJUEGO, A PANTALLA ENTERA
+   Antes vivia dentro del memorando, con la ficha y las pestañas
+   alrededor: no se notaba que cambiabas de actividad y competia con la
+   contabilidad por la atencion. Ahora se lleva la pantalla.
+   ============================================================ */
+
+/* uno · el anuncio. Azul, que no es un color del juego: eso es lo que
+   hace que se lea como «esto es otra cosa» sin decirlo. */
+.ea-anuncioJuego{position:fixed;inset:0;z-index:70;background:#10324F;color:#EAF2F8;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;text-align:center;padding:24px;cursor:pointer;
+  animation:ea-entra .22s ease-out}
+.ea-anuncioJK{font-size:12.5px;letter-spacing:.34em;color:#7FA8C9}
+.ea-anuncioJN{font-size:clamp(34px,11vw,62px);line-height:1.02;max-width:14ch;
+  animation:ea-plantar .42s cubic-bezier(.2,1.3,.35,1) backwards;animation-delay:.1s}
+@keyframes ea-plantar{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+.ea-anuncioJT{font-size:12px;letter-spacing:.2em;color:#7FA8C9;
+  animation:ea-flash .4s ease-out backwards;animation-delay:.34s}
+
+/* dos · las instrucciones, grandes y sobre fondo oscurecido */
+.ea-reglasPleno{position:fixed;inset:0;z-index:70;background:rgba(6,23,13,.93);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:22px 16px;overflow-y:auto;animation:ea-entra .25s ease-out}
+.ea-reglasCaja{width:100%;max-width:560px;margin:auto;color:var(--hueso);
+  animation:ea-sube .32s cubic-bezier(.2,.8,.3,1) backwards;animation-delay:.06s}
+.ea-reglasCaja .ea-jnombre{font-size:clamp(28px,8vw,44px);color:var(--papel);margin-bottom:12px}
+.ea-reglasCaja .ea-jnombre span{color:var(--cobre);letter-spacing:.24em}
+.ea-reglasCaja .ea-jtag{border-color:var(--borde);color:var(--tenue)}
+.ea-reglasX{font-size:clamp(16px,4.4vw,19px);line-height:1.55;color:var(--papel);
+  margin:14px 0 4px;max-width:46ch}
+.ea-pasosG .ea-paso{font-size:clamp(15px,4vw,17px);color:var(--tenue);padding:7px 0;line-height:1.5}
+.ea-pasosG .ea-pasoN{font-size:13px;color:var(--cobre)}
+.ea-reglasGana{font-size:13.5px;color:var(--tenue);border-left:2px solid var(--cobre);
+  padding-left:11px;margin-top:12px;line-height:1.5}
+.ea-reglasCaja .ea-atras{color:var(--tenue)}
+.ea-reglasCaja .ea-atras:hover{color:var(--cobre)}
+.ea-reglasCaja .ea-lecX,.ea-reglasCaja .ea-glosX,.ea-reglasCaja .ea-glosT{color:var(--papel)}
+.ea-reglasCaja .ea-lec{background:rgba(185,83,42,.12);border-color:rgba(185,83,42,.4)}
+.ea-reglasCaja .ea-glos{background:rgba(62,107,60,.16)}
+.ea-btnJugar{width:100%;margin-top:22px;padding:17px 20px;font-size:15px;
+  background:var(--cobre);color:#20120A}
+.ea-btnJugar:hover:not(:disabled){background:#C86A3E}
+
+/* tres · el juego, sin nada alrededor */
+.ea-juegoPleno{position:fixed;inset:0;z-index:70;background:var(--papel);
+  overflow-y:auto;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));
+  animation:ea-entra .2s ease-out}
+.ea-juegoPleno .ea-jw{max-width:560px;margin:0 auto;padding-top:env(safe-area-inset-top,0px)}
 
 /* ---- el rodillo del cierre ---- */
 .ea-rodillos{display:inline-flex;align-items:center;gap:1px;line-height:1}
@@ -10640,6 +10701,37 @@ const puedeComprar = (c, st) => {
    es información útil; saber que cuesta exactamente 18 convierte la
    decisión en aritmética y le quita la apuesta. */
 const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
+/* que simbolo lleva cada atributo, para poder decirlo sin palabras */
+const ICONO_ATRIB = {
+  mod: "tabla",
+  cri: "ojo",
+  red: "nodos",
+  rep: "estrella",
+  car: "escalera",
+  ene: "rayo",
+  cash: "moneda"
+};
+
+/* Lo que mueve una opcion, con su signo y su cifra.
+   NOTA para quien revise: MEJORAS punto 17 decidio a proposito NO dar
+   las cifras, para que la decision no se volviera aritmetica. Saul pide
+   lo contrario —ver «-12 energia, +5 criterio» de un vistazo— y es lo
+   que esta puesto. Si se quiere volver atras, basta con pintar solo el
+   icono y el signo, sin el numero. */
+const efectosDe = o => {
+  if (!o || typeof o !== "object") return [];
+  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
+  if (!d || typeof d !== "object") return [];
+  const out = [];
+  CLAVES_ATRIB.forEach(k => {
+    const v = numero(d[k], 0);
+    if (v) out.push({
+      k,
+      v
+    });
+  });
+  return out;
+};
 const efectoDe = o => {
   if (!o || typeof o !== "object") return null;
   const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
@@ -12033,11 +12125,34 @@ function TarjetaJuego({
   visto,
   onVisto
 }) {
+  /* Tres pasos, no uno. Antes el minijuego aparecia dentro del
+     memorando, con la ficha y las pestañas alrededor, y no se notaba
+     que cambiabas de actividad. Ahora: el anuncio —una pantalla de
+     color que dice HORA DE JUGAR—, las instrucciones grandes sobre
+     fondo oscuro, y el juego a pantalla entera sin nada mas. */
+  const [paso, setPaso] = useState("anuncio");
   const [listo, setListo] = useState(false);
   /* las reglas, para quien ya jugó esto antes y quiere repasarlas */
   const [recordar, setRecordar] = useState(false);
   /* y el «para qué sirve», que no hace falta antes de jugar */
   const [porQue, setPorQue] = useState(false);
+
+  /* el anuncio se pasa solo, y tambien al toque: quien ya lo vio veinte
+     veces no tiene por que esperar */
+  useEffect(() => {
+    if (paso !== "anuncio") return;
+    if (typeof setTimeout !== "function") {
+      setPaso("reglas");
+      return;
+    }
+    const espera = sinMovimiento() ? 60 : 1150;
+    const t = setTimeout(() => setPaso("reglas"), espera);
+    return () => {
+      try {
+        clearTimeout(t);
+      } catch (e) {}
+    };
+  }, [paso]);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
      setTimeout viejo dispara tarde o si el componente ya se desmonto.
@@ -12068,116 +12183,98 @@ function TarjetaJuego({
     temas: temas,
     onTema: onTema
   });
-  if (listo) return /*#__PURE__*/React.createElement(MiniJuego, {
-    tipo: tipo,
-    ayuda: ayuda,
-    nivel: nivel,
-    onFin: cerrarUnaVez,
-    modo: modo,
-    temas: temas,
-    onTema: onTema
-  });
+  if (listo) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-juegoPleno"
+    }, /*#__PURE__*/React.createElement(MiniJuego, {
+      tipo: tipo,
+      ayuda: ayuda,
+      nivel: nivel,
+      onFin: cerrarUnaVez,
+      modo: modo,
+      temas: temas,
+      onTema: onTema
+    }));
+  }
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
   const empezar = () => {
     if (onVisto) onVisto(tipo);
     setListo(true);
   };
 
-  /* ---- la segunda vez y las siguientes ----
-     Las reglas enteras son medio millar de caracteres: el nombre, la
-     descripcion, tres pasos, que cuenta como exito y para que sirve.
-     Leerlas una vez esta bien. Leerlas otra vez en la quinta partida de
-     tres en raya es lo que convierte un juego en un manual. */
-  if (visto) {
+  /* ---- paso uno: el anuncio ----
+     Una pantalla de color que no pide leer nada. Solo avisa de que esto
+     ya no es una decision, es otra cosa. */
+  if (paso === "anuncio") {
     return /*#__PURE__*/React.createElement("div", {
-      className: "ea-jw"
+      className: "ea-anuncioJuego",
+      onClick: () => setPaso("reglas")
     }, /*#__PURE__*/React.createElement("div", {
-      className: "ea-jnombre ea-dis",
-      style: {
-        marginBottom: 6
-      }
-    }, /*#__PURE__*/React.createElement("span", null, "VAS A JUGAR"), j.n), /*#__PURE__*/React.createElement("div", {
-      className: "ea-jmeta"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-jtag"
-    }, j.dur), nivelJuego && /*#__PURE__*/React.createElement("span", {
-      className: "ea-jtag"
-    }, "Nivel ", nivel, " \xB7 ", NIVEL_N[nivel]), /*#__PURE__*/React.createElement("span", {
-      className: "ea-jtag"
-    }, statN, " ", Math.round(ayuda))), /*#__PURE__*/React.createElement("button", {
-      className: "ea-btn",
-      onClick: empezar
-    }, "Empezar"), /*#__PURE__*/React.createElement("button", {
-      className: "ea-atras ea-dis",
-      style: {
-        marginTop: 10,
-        marginBottom: 0
-      },
-      onClick: () => setRecordar(v => !v)
-    }, recordar ? "↑ Ya me acuerdo" : "↓ Recordarme las reglas"), recordar && /*#__PURE__*/React.createElement("div", {
-      className: "ea-panelAb"
-    }, /*#__PURE__*/React.createElement("p", {
-      className: "ea-memoTxt",
-      style: {
-        marginTop: 8
-      }
-    }, j.i), /*#__PURE__*/React.createElement("ul", {
-      className: "ea-pasos"
-    }, j.pasos.map((t, i) => /*#__PURE__*/React.createElement("li", {
-      className: "ea-paso",
-      key: i
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-pasoN"
-    }, i + 1), /*#__PURE__*/React.createElement("span", null, t)))), /*#__PURE__*/React.createElement("div", {
-      className: "ea-td",
-      style: {
-        marginTop: 8
-      }
-    }, j.gana)));
+      className: "ea-anuncioJK ea-dis"
+    }, "Hora de jugar"), /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncioJN ea-dis"
+    }, j.n), /*#__PURE__*/React.createElement("div", {
+      className: "ea-anuncioJT ea-dis"
+    }, j.tema, " \xB7 ", j.dur));
   }
+
+  /* ---- paso dos: las instrucciones, grandes y encima ----
+     Sobre un fondo oscurecido para que no compitan con nada. Quien ya
+     jugo esto se salta los pasos: le basta el nombre y el boton. */
   return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
+    className: "ea-reglasPleno"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-reglasCaja"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jnombre ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "VAS A JUGAR"), j.n), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, visto ? "Otra vez" : "Vas a jugar"), j.n), /*#__PURE__*/React.createElement("div", {
     className: "ea-jmeta"
-  }, /*#__PURE__*/React.createElement("span", {
+  }, !visto && /*#__PURE__*/React.createElement("span", {
     className: "ea-jtag"
   }, j.tema), /*#__PURE__*/React.createElement("span", {
     className: "ea-jtag"
   }, j.dur), nivelJuego && /*#__PURE__*/React.createElement("span", {
     className: "ea-jtag"
-  }, "Nivel ", nivel, " \xB7 ", NIVEL_N[nivel])), /*#__PURE__*/React.createElement("p", {
-    className: "ea-memoTxt",
-    style: {
-      marginTop: 8
-    }
-  }, j.i), /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "C\xF3mo se juega"), /*#__PURE__*/React.createElement("ul", {
-    className: "ea-pasos"
+  }, "Nivel ", nivel, " \xB7 ", NIVEL_N[nivel]), /*#__PURE__*/React.createElement("span", {
+    className: "ea-jtag"
+  }, statN, " ", Math.round(ayuda))), !visto && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
+    className: "ea-reglasX"
+  }, j.i), /*#__PURE__*/React.createElement("ul", {
+    className: "ea-pasos ea-pasosG"
   }, j.pasos.map((t, i) => /*#__PURE__*/React.createElement("li", {
     className: "ea-paso",
     key: i
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-pasoN"
   }, i + 1), /*#__PURE__*/React.createElement("span", null, t)))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-tabla",
-    style: {
-      marginTop: 12
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Cuenta como \xE9xito"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn"
-  }, j.gana), /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Te ayuda"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn"
-  }, statN, " ", Math.round(ayuda), " de 100")), /*#__PURE__*/React.createElement("button", {
+    className: "ea-reglasGana"
+  }, j.gana)), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn ea-btnJugar",
+    onClick: empezar
+  }, visto ? "Empezar" : "Entendido, empezar"), visto && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
       marginTop: 12,
+      marginBottom: 0
+    },
+    onClick: () => setRecordar(v => !v)
+  }, recordar ? "↑ Ya me acuerdo" : "↓ Recordarme las reglas"), recordar && /*#__PURE__*/React.createElement("div", {
+    className: "ea-panelAb"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "ea-reglasX"
+  }, j.i), /*#__PURE__*/React.createElement("ul", {
+    className: "ea-pasos ea-pasosG"
+  }, j.pasos.map((t, i) => /*#__PURE__*/React.createElement("li", {
+    className: "ea-paso",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-pasoN"
+  }, i + 1), /*#__PURE__*/React.createElement("span", null, t)))), /*#__PURE__*/React.createElement("div", {
+    className: "ea-reglasGana"
+  }, j.gana))), !visto && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    className: "ea-atras ea-dis",
+    style: {
+      marginTop: 14,
       marginBottom: 0
     },
     onClick: () => setPorQue(v => !v)
@@ -12199,10 +12296,7 @@ function TarjetaJuego({
     className: "ea-glosT"
   }, g.n), /*#__PURE__*/React.createElement("div", {
     className: "ea-glosX"
-  }, g.x)))), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: empezar
-  }, "Entendido, empezar"));
+  }, g.x)))))));
 }
 
 /* ---- juegos interactivos nuevos ---- */
@@ -13364,6 +13458,9 @@ const TRAZOS = {
   edificio: "M3 21.5V7.2l6.5-3.7 6.5 3.7v14.3 M9.6 21.5v-4.6h3.6v4.6 M6.2 10.4h1.9 M6.2 14h1.9 M14.6 10.4h1.9 M14.6 14h1.9",
   pin: "M12 22s6.6-6.3 6.6-10.6a6.6 6.6 0 1 0-13.2 0C5.4 15.7 12 22 12 22z M12 13.2a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4z",
   escalera: "M3 21h5.4v-5.4H3zM9.3 21h5.4V10.2H9.3zM15.6 21H21V4.6h-5.4z",
+  ojo: "M1.6 12S5.5 4.9 12 4.9 22.4 12 22.4 12 18.5 19.1 12 19.1 1.6 12 1.6 12z M12 15.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2z",
+  tabla: "M3.2 3.6h17.6v16.8H3.2z M3.2 9.2h17.6 M3.2 14.8h17.6 M9.6 3.6v16.8",
+  nodos: "M6 8.2a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M18 8.2a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M12 21.6a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M7.6 7.4l3 9 M16.4 7.4l-3 9 M8.9 5.3h6.2",
   estrella: "M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z",
   moneda: "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8v10.4 M14.9 9.3c0-1.3-1.3-2-2.9-2s-2.9.7-2.9 2 1.3 1.9 2.9 2.2 2.9.9 2.9 2.2-1.3 2-2.9 2-2.9-.7-2.9-2",
   aviso: "M12 2.4 1.6 20.6h20.8z M12 9.2v5.2 M12 17.4h.02"
@@ -18124,12 +18221,10 @@ function Motor() {
     if (faltas.length && faltas.every(Boolean)) faltas = faltas.map(() => null);
     return ops.map((o, i) => {
       const tipo = o.juego || o.j;
-      const ef = efectoDe(o);
+      const efs = efectosDe(o);
       const falta = faltas[i];
       const bits = [];
       if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
-      if (ef && ef.sube.length) bits.push("sube " + ef.sube.join(", "));
-      if (ef && ef.cuesta.length) bits.push("cuesta " + ef.cuesta.join(", "));
       return /*#__PURE__*/React.createElement("button", {
         className: "ea-op" + (falta ? " sinfuerza" : ""),
         key: i,
@@ -18145,7 +18240,16 @@ function Motor() {
         className: "ea-opSolo ea-dis"
       }, "solo t\xFA"), falta && /*#__PURE__*/React.createElement("span", {
         className: "ea-opCandado ea-dis"
-      }, ETIQ[falta.k] || falta.k, " ", falta.hace, " \xB7 tienes ", falta.tengo), bits.length > 0 && /*#__PURE__*/React.createElement("span", {
+      }, ETIQ[falta.k] || falta.k, " ", falta.hace, " \xB7 tienes ", falta.tengo), efs.length > 0 && /*#__PURE__*/React.createElement("span", {
+        className: "ea-efs"
+      }, efs.map((e, n) => /*#__PURE__*/React.createElement("span", {
+        key: n,
+        className: "ea-ef ea-mono " + (e.v > 0 ? "pos" : "neg"),
+        title: (ETIQ[e.k] || e.k) + " " + (e.v > 0 ? "+" : "") + e.v
+      }, /*#__PURE__*/React.createElement(Icono, {
+        k: ICONO_ATRIB[e.k],
+        tam: 12
+      }), e.v > 0 ? "+" : "−", e.k === "cash" ? fmtCorto(Math.abs(e.v)) : Math.abs(e.v)))), bits.length > 0 && /*#__PURE__*/React.createElement("span", {
         className: "ea-opTag"
       }, bits.join(" · ")));
     });
@@ -18156,13 +18260,7 @@ function Motor() {
     }, "parcial", null)
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-opN ea-mono"
-  }, "A"), "Dejar que siga su curso"))), fase === "minijuego" && op && /*#__PURE__*/React.createElement("div", {
-    className: "ea-memo"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-memoHead ea-dis clave"
-  }, /*#__PURE__*/React.createElement("span", null, JUEGO(op.juego || op.j).n, " \xB7 ", JUEGO(op.juego || op.j).dur), /*#__PURE__*/React.createElement("span", null, ano)), /*#__PURE__*/React.createElement("h2", {
-    className: "ea-memoTit ea-dis"
-  }, op.t), /*#__PURE__*/React.createElement(TarjetaJuego, {
+  }, "A"), "Dejar que siga su curso"))), fase === "minijuego" && op && /*#__PURE__*/React.createElement(TarjetaJuego, {
     tipo: op.juego || op.j,
     ayuda: ayudaDe(op),
     nivel: nivelDe(s.turno, s.estudia),
@@ -18173,7 +18271,7 @@ function Motor() {
     onTema: apuntarTema,
     visto: (Array.isArray(s.jugados) ? s.jugados : []).indexOf(op.juego || op.j) >= 0,
     onVisto: apuntarJuego
-  })), fase === "resultado" && res && /*#__PURE__*/React.createElement("div", {
+  }), fase === "resultado" && res && /*#__PURE__*/React.createElement("div", {
     className: "ea-memo"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-memoHead ea-dis"
