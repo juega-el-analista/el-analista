@@ -124,9 +124,14 @@ const CSS = `
 /* Una opcion que no te alcanza se ve, y se ve POR QUE no te alcanza. No
    se esconde: enterarte de lo que te estas perdiendo es justo lo que
    hace que quieras tener mas energia o mas criterio la proxima vez. */
-.ea-op.sinfuerza{opacity:.52;cursor:not-allowed;border-style:dashed;
-  border-color:rgba(61,61,61,.3);background:rgba(61,61,61,.03)}
-.ea-op.sinfuerza:hover{transform:none;background:rgba(61,61,61,.03)}
+/* Salia una cada tres años de juego y pasaba desapercibida: opacidad al
+   52% y un borde punteado gris sobre fondo gris. Ahora se ve que esta
+   cerrada, y por que, sin tener que buscarlo. */
+.ea-op.sinfuerza{opacity:1;cursor:not-allowed;border-style:dashed;
+  border-color:rgba(178,59,39,.42);background:rgba(178,59,39,.05);
+  color:rgba(61,61,61,.55)}
+.ea-op.sinfuerza:hover{transform:none;background:rgba(178,59,39,.05)}
+.ea-op.sinfuerza .ea-opN{color:rgba(155,56,38,.6)}
 /* Lo que mueve cada opcion, en simbolos y con color: verde lo que suma,
    rojo lo que cuesta. Antes era una linea de texto gris donde ganar red
    y perder energia pesaban visualmente lo mismo. */
@@ -139,8 +144,10 @@ const CSS = `
 .ea-ef.neg{color:#9B3826;border-color:rgba(178,59,39,.4);background:rgba(178,59,39,.08)}
 .ea-op:disabled .ea-ef{filter:grayscale(.55)}
 
-.ea-opCandado{display:inline-block;font-size:9.5px;letter-spacing:.12em;color:var(--rojo);
-  border:1px solid var(--rojo);padding:1px 6px;margin-left:8px;vertical-align:middle;
+.ea-opCandado{display:inline-flex;align-items:center;gap:5px;font-size:11px;
+  letter-spacing:.06em;border-radius:11px;background:rgba(178,59,39,.1);
+  font-variant-numeric:tabular-nums;color:#9B3826;
+  border:1px solid rgba(178,59,39,.45);padding:3px 9px;margin-left:9px;vertical-align:middle;
   white-space:nowrap}
 
 .ea-sello{position:absolute;top:14px;right:18px;transform:rotate(-11deg);
@@ -1162,6 +1169,40 @@ const CSS4 = `
   transition:transform .26s cubic-bezier(.2,.8,.3,1)}
 .ea-tab.on:after{transform:scaleX(1)}
 .ea-tab.on{border-bottom-color:transparent}
+
+/* ---- el anuncio de una decision que pesa ----
+   Una legendaria o una bifurcacion salian como una opcion mas dentro del
+   mismo memorando de siempre. Estas se llevan la pantalla. */
+.ea-anuncioEsc{position:fixed;inset:0;z-index:72;background:var(--fieltro);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;text-align:center;padding:26px;cursor:pointer;
+  animation:ea-entra .26s ease-out}
+.ea-anuncioEscIco{color:var(--tono,var(--cobre));
+  animation:ea-plantar .5s cubic-bezier(.2,1.4,.35,1) backwards;animation-delay:.08s}
+.ea-anuncioEscIco svg{filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
+.ea-anuncioEscK{font-size:11.5px;letter-spacing:.32em;color:var(--cobre);
+  animation:ea-flash .4s ease-out backwards;animation-delay:.3s}
+.ea-anuncioEscT{font-size:clamp(28px,8.5vw,50px);line-height:1.04;color:var(--papel);
+  max-width:17ch;text-wrap:balance;
+  animation:ea-sube .46s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:.38s}
+.ea-anuncioEscB{font-size:11px;letter-spacing:.24em;color:var(--tenue);margin-top:16px;
+  animation:ea-flash .5s ease-out backwards;animation-delay:.95s}
+
+/* ---- la cabecera del dinero ----
+   Era «USD 6.375» a secas y debajo «efectivo 9,6 k · cartera 12,1 k» en
+   una linea apretada que no decia ni que era ni por que habia dos
+   numeros. Ahora lleva rotulo y el reparto se VE. */
+.ea-patK{font-size:9.5px;letter-spacing:.26em;color:var(--tenue);margin-bottom:1px}
+.ea-reparto{margin-top:7px;min-width:172px}
+.ea-repartoBar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:#041F0E}
+.ea-repEf{background:var(--tenue);transition:width .5s cubic-bezier(.2,.8,.3,1)}
+.ea-repCa{background:var(--cobre);transition:width .5s cubic-bezier(.2,.8,.3,1)}
+.ea-repartoL{display:flex;gap:12px;justify-content:flex-end;font-size:10.5px;
+  color:var(--tenue);margin-top:5px}
+.ea-repartoL span{display:inline-flex;align-items:center;gap:5px}
+.ea-punto2{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0}
+.ea-punto2.ef{background:var(--tenue)}
+.ea-punto2.ca{background:var(--cobre)}
 
 /* ---- la curva de la portada ---- */
 .ea-portadaArte{width:100%;max-width:420px;height:auto;display:block;margin:18px 0 6px;overflow:visible}
@@ -6730,6 +6771,7 @@ const TRAZOS = {
   bifurca:   "M12 21.4v-6.6 M12 14.8 5.6 8.4V3.2 M12 14.8l6.4-6.4V3.2 M5.6 3.2H3.2 M5.6 3.2h2.4 M18.4 3.2H16 M18.4 3.2h2.4",
   corazon:   "M12 20.8 4.4 13.2a4.8 4.8 0 0 1 0-6.8 4.8 4.8 0 0 1 6.8 0l.8.8.8-.8a4.8 4.8 0 0 1 6.8 0 4.8 4.8 0 0 1 0 6.8z",
   sello:     "M12 2.6a4 4 0 0 0-4 4c0 1.6 1.2 2.6 1.2 4.2H6.4a2.4 2.4 0 0 0-2.4 2.4v1.4h16v-1.4a2.4 2.4 0 0 0-2.4-2.4h-2.8c0-1.6 1.2-2.6 1.2-4.2a4 4 0 0 0-4-4z M4.4 18.2h15.2v3.2H4.4z",
+  candado:   "M5.4 10.6h13.2a1.6 1.6 0 0 1 1.6 1.6v7.2a1.6 1.6 0 0 1-1.6 1.6H5.4a1.6 1.6 0 0 1-1.6-1.6v-7.2a1.6 1.6 0 0 1 1.6-1.6z M7.8 10.6V7a4.2 4.2 0 0 1 8.4 0v3.6",
 };
 
 /* El simbolo, el rotulo y el color de cada clase de escena. */
@@ -7661,6 +7703,17 @@ function Motor() {
   const [anuncio, setAnuncio] = useState(false);
   /* la segunda mitad de la leccion del año, la de las cifras propias */
   const [verLeccion, setVerLeccion] = useState(false);
+  /* el anuncio a pantalla completa de una decision que pesa */
+  const [dramatica, setDramatica] = useState(false);
+  /* Se pasa solo. Si esperara un toque, el jugador tendria que pulsar de
+     mas en cada decision importante y las pruebas se colgarian en la
+     primera: el anuncio es un golpe de efecto, no un tramite. */
+  useEffect(() => {
+    if (!dramatica) return;
+    if (typeof setTimeout !== "function") { setDramatica(false); return; }
+    const t = setTimeout(() => setDramatica(false), sinMovimiento() ? 60 : 2300);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [dramatica]);
   /* el movimiento: del navegador, no de la partida */
   const [animar, setAnimarBruto] = useState(leerMovimiento);
   const setAnimar = (v) => { anotarMovimiento(v); setAnimarBruto(v); };
@@ -7883,6 +7936,17 @@ function Motor() {
   /* una escena solo sirve si tiene opciones jugables */
   const escenaValida = (e) => !!(e && e.t && Array.isArray(e.o) && e.o.length);
 
+  /* Las que merecen pantalla propia antes de presentarse: las que
+     cambian la carrera o la vida, no un martes en la oficina. */
+  const pesada = (e) => !!(e && (e.legendaria || e.rama || e.clave));
+  /* presenta una escena, con anuncio si toca */
+  const ponerEscena = (e) => {
+    setEv(e);
+    setOp(null);
+    setDramatica(pesada(e));
+    irA("evento");
+  };
+
   const arrancarAno = (st) => {
     hitosAno.current = [];
     let lista = [];
@@ -7902,9 +7966,7 @@ function Motor() {
       return;
     }
     setCola(lista.slice(1));
-    setEv(lista[0]);
-    setOp(null);
-    irA("evento");
+    ponerEscena(lista[0]);
     /* El snapshot va aquí, con la escena todavía sin resolver: así una
        recarga devuelve a esta misma decisión y no hay nada que duplicar. */
     guardarEscena(st, lista);
@@ -8052,10 +8114,8 @@ function Motor() {
     if (aviso) setAviso(aviso);
     const pendientes = colaDeIds(st.cola, st);
     if (pendientes.length) {
-      setEv(pendientes[0]);
       setCola(pendientes.slice(1));
-      setOp(null);
-      irA("evento");
+      ponerEscena(pendientes[0]);
       return;
     }
     arrancarAno(st);
@@ -8748,7 +8808,7 @@ function Motor() {
     if (!enFase("resultado")) return;
     const resto = (Array.isArray(cola) ? cola : []).filter(escenaValida);
     if (resto.length > 0) {
-      setEv(resto[0]); setCola(resto.slice(1)); setOp(null); irA("evento");
+      setCola(resto.slice(1)); ponerEscena(resto[0]);
       guardarEscena(s, resto);
     } else cerrarAno();
   };
@@ -9315,12 +9375,30 @@ function Motor() {
                   peso a cada decisión, porque el jugador empieza a contar
                   turnos en vez de vivir el año que tiene delante. */}
               <div className="ea-dis">{ano} · {edad(s.turno, s.edadIni)} años</div>
+              {/* La cifra sin rotulo no se entendia: ponia «USD 6.375» y ya.
+                  Ahora dice que es, y el reparto entre lo que tienes a mano
+                  y lo que esta invertido se ve en una barra en vez de
+                  leerse en una linea de texto apretada. */}
+              <div className="ea-patK ea-dis">Tu patrimonio</div>
               <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "") + (late ? " late" : "")}>
                 USD <Cifra v={patrimonio} />
               </div>
-              {abierto(s, "cartera") && (
-                <div className="ea-mono" style={{ fontSize: 11.5, marginTop: 2 }}>efectivo {fmt(s.cash)} · cartera {fmt(s.cartera)}</div>
-              )}
+              {abierto(s, "cartera") && (() => {
+                const liq = Math.max(0, s.cash) + Math.max(0, s.cartera);
+                const pEf = liq > 0 ? (Math.max(0, s.cash) / liq) * 100 : 100;
+                return (
+                  <div className="ea-reparto">
+                    <div className="ea-repartoBar" aria-hidden="true">
+                      <span className="ea-repEf" style={{ width: pEf.toFixed(1) + "%" }} />
+                      <span className="ea-repCa" style={{ width: (100 - pEf).toFixed(1) + "%" }} />
+                    </div>
+                    <div className="ea-repartoL ea-mono">
+                      <span><i className="ea-punto2 ef" />a mano {fmtCorto(s.cash)}</span>
+                      <span><i className="ea-punto2 ca" />invertido {fmtCorto(s.cartera)}</span>
+                    </div>
+                  </div>
+                );
+              })()}
               {/* El sueldo es el número que el jugador usa para decidir; energía y
                   reputación solo salen cuando están en zona de aviso, que es el
                   único momento en que cambian una decisión. */}
@@ -10007,6 +10085,25 @@ function Motor() {
             )}
 
             <div>
+              {/* ---- el anuncio de las decisiones que pesan ----
+                  Una legendaria, una bifurcacion o una decision clave
+                  salian como una opcion cualquiera dentro del mismo
+                  memorando de siempre. Ahora se llevan la pantalla antes
+                  de presentarse: el titulo grande, su simbolo y nada mas.
+                  Se pasa sola o al toque. */}
+              {fase === "evento" && ev && dramatica && (() => {
+                const cl = CLASE_ESCENA(ev);
+                return (
+                  <div className="ea-anuncioEsc" onClick={() => setDramatica(false)}
+                    style={{ "--tono": cl.c }}>
+                    <div className="ea-anuncioEscIco"><Icono k={cl.k} tam={56} /></div>
+                    <div className="ea-anuncioEscK ea-dis">{cl.n}</div>
+                    <div className="ea-anuncioEscT ea-dis">{ev.t}</div>
+                    <div className="ea-anuncioEscB ea-dis">Toca para seguir</div>
+                  </div>
+                );
+              })()}
+
               {fase === "evento" && ev && (() => {
                 const cl = CLASE_ESCENA(ev);
                 return (
@@ -10049,9 +10146,13 @@ function Motor() {
                             onClick={() => elegir(o)}>
                             <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
                             {o.req && !falta && <span className="ea-opSolo ea-dis">solo tú</span>}
+                            {/* Con el nombre del atributo, no solo el icono:
+                                esto es un «por qué no puedo hacer esto» y
+                                ahí no se adivina. */}
                             {falta && (
                               <span className="ea-opCandado ea-dis">
-                                {(ETIQ[falta.k] || falta.k)} {falta.hace} · tienes {falta.tengo}
+                                <Icono k="candado" tam={12} />
+                                {(ETIQ[falta.k] || falta.k)} {falta.tengo} de {falta.hace}
                               </span>
                             )}
                             {/* Lo que gana y lo que cuesta, en simbolos:
