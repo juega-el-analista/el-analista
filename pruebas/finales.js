@@ -26,10 +26,17 @@ function reloj(ms) {
   }
 }
 const micro = async () => { for (let i = 0; i < 6; i++) await Promise.resolve(); };
-let src = fs.readFileSync(path.join(__dirname, "compilado.js"), "utf8");
-src = src.replace("module.exports = ElAnalista;", "module.exports = { ElAnalista };");
-fs.writeFileSync(path.join(__dirname, "probeFin.js"), src);
-const { ElAnalista } = require(path.join(__dirname, "probeFin.js"));
+/* ============================================================
+   COMPILAR AQUI, NO REAPROVECHAR
+   Esto leia pruebas/compilado.js sin generarlo, asi que medía lo que
+   hubiera dejado el ultimo script que SI compila (banco.js/cargar).
+   Corriendo esta prueba sola, o despues de editar el juego sin pasar
+   por otra, daba resultados de codigo viejo sin avisar de nada: una
+   prueba que mide una version antigua es peor que no tenerla.
+   ============================================================ */
+const { cargar } = require(path.join(__dirname, "banco.js"));
+const RUTA_JUEGO = process.argv[3] || path.join(__dirname, "..", "src", "el-analista.jsx");
+const ElAnalista = cargar(RUTA_JUEGO);
 
 function txtDe(j) {
   if (j == null || j === false || j === true) return "";

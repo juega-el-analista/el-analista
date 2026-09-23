@@ -1126,6 +1126,21 @@ const CSS4 = `
 .ea-signos span{display:inline-flex;align-items:center;gap:4px}
 .ea-statN{display:inline-flex;align-items:center;gap:6px}
 
+/* los tres grupos de Comprar */
+.ea-grupos{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.ea-grupo{display:inline-flex;align-items:center;gap:6px;background:transparent;
+  border:1px solid var(--borde);color:var(--gris);font:inherit;font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+  padding:8px 13px;border-radius:20px;cursor:pointer;transition:all .15s}
+.ea-grupo:hover{border-color:var(--cobre);color:var(--tintaPapel)}
+.ea-grupo.on{border-color:var(--cobre);background:rgba(185,83,42,.12);color:var(--tintaPapel)}
+/* cada cosa que compras lleva su simbolo: dice de que familia es antes
+   de que llegues a leer el nombre */
+.ea-itemConIco{display:inline-flex;align-items:center;gap:9px;color:var(--tintaPapel)}
+.ea-itemConIco svg{color:var(--cobre);flex-shrink:0}
+.ea-item.tuyo .ea-itemConIco svg{color:var(--verde);opacity:.8}
+
 /* una linea, no un bloque: el termino a mano y la explicacion a un toque */
 .ea-recuerda{background:transparent;border:none;color:var(--cobre);font:inherit;
   font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
@@ -4401,10 +4416,10 @@ const GUIA = [
     x: "Ninguna opción es la obviamente correcta: cada una te cuesta algo. Elige y sigue; el año avanza contigo." },
   { id: "secciones", cuando: (c) => c.fase === "evento" && c.vistas.indexOf("decidir") >= 0,
     t: "Arriba están tus secciones",
-    x: "Por ahora tienes dos: tu Ficha y el diccionario de Términos. El juego irá abriendo las demás a medida que avance tu carrera, y te avisará cuando pase. Se abren y se cierran cuando quieras: el juego te espera, no hay reloj." },
-  { id: "terminos", cuando: (c) => c.tab === "terminos",
-    t: "El diccionario",
-    x: "Cualquier palabra que no entiendas está aquí explicada sin jerga. Puedes consultarlo en medio de una decisión." },
+    x: "Por ahora solo tu Ficha. El juego irá abriendo las demás según avance tu carrera. No hay reloj: se abren y se cierran cuando quieras." },
+  { id: "comprar", cuando: (c) => c.tab === "comprar",
+    t: "Aquí se gasta",
+    x: "Cosas para ti, inmuebles que te rentan cada año y mejoras que trabajan solas. Las tres salen del mismo bolsillo." },
   { id: "cartera", cuando: (c) => c.tab === "portafolio",
     t: "Aquí decides qué hace tu dinero",
     x: "La barra de arriba dice cuánto está invertido y cuánto en efectivo. Debajo repartes entre tipos de activo. Nada se aplica hasta que confirmas." },
@@ -6623,6 +6638,48 @@ const TRAZOS = {
   estrella:  "M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z",
   moneda:    "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8v10.4 M14.9 9.3c0-1.3-1.3-2-2.9-2s-2.9.7-2.9 2 1.3 1.9 2.9 2.2 2.9.9 2.9 2.2-1.3 2-2.9 2-2.9-.7-2.9-2",
   aviso:     "M12 2.4 1.6 20.6h20.8z M12 9.2v5.2 M12 17.4h.02",
+
+  /* ---- lo que se compra ----
+     Veinte trazos para treinta y dos cosas: varias comparten simbolo a
+     proposito, porque lo que tiene que decir el icono es de que FAMILIA
+     es la compra, no cual exactamente. El nombre ya esta al lado. */
+  pesa:      "M2.6 9.4v5.2 M6 7.2v9.6 M18 7.2v9.6 M21.4 9.4v5.2 M6 12h12",
+  plato:     "M12 20.6a8.6 8.6 0 1 0 0-17.2 8.6 8.6 0 0 0 0 17.2z M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4z",
+  libro:     "M4 3.6h11a3 3 0 0 1 3 3v13.8a2.4 2.4 0 0 0-2.4-2.4H4z M4 3.6v14.4 M20 6.6v13.8",
+  reloj:     "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8V12l3.4 2",
+  maleta:    "M3 8.4h18v11.2H3z M8.4 8.4V5.6a1.6 1.6 0 0 1 1.6-1.6h4a1.6 1.6 0 0 1 1.6 1.6v2.8 M3 13.4h18",
+  coche:     "M4 16.6h16 M5.4 16.6l1.4-5.4a2 2 0 0 1 1.9-1.5h6.6a2 2 0 0 1 1.9 1.5l1.4 5.4 M4 16.6v2.4h2.6v-2.4 M17.4 16.6V19H20v-2.4 M7.6 13.4h8.8",
+  barco:     "M3 17.4h18l-2.4 3.2H5.4z M5.6 17.4V9.6h12.8v7.8 M12 9.6V4.2 M8.8 9.6h6.4",
+  casa:      "M3.4 10.6 12 3.6l8.6 7v9.8H3.4z M9.6 20.4v-6h4.8v6",
+  terreno:   "M2.6 18.6 9 15.4l6 3.2 6.4-3.2v-6L15 12.6l-6-3.2-6.4 3.2z M9 9.4v6 M15 12.6v6",
+  palmera:   "M12 21V11 M12 11c-3.4-2.6-7-1.6-8.4.6 2.4-1 4.8-.6 6.4 1 M12 11c3.4-2.6 7-1.6 8.4.6-2.4-1-4.8-.6-6.4 1 M12 11c0-3.6 2.2-6 5-6.4-1.6 1.8-2.2 3.8-2 6.4 M12 11c0-3.6-2.2-6-5-6.4 1.6 1.8 2.2 3.8 2 6.4",
+  anillo:    "M12 21.4a6.6 6.6 0 1 0 0-13.2 6.6 6.6 0 0 0 0 13.2z M8.6 8.8 6.4 3.4h11.2l-2.2 5.4 M12 3.4v5",
+  bebe:      "M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M9.4 11.6h.02 M14.6 11.6h.02 M9.6 15.4c1.4 1.2 3.4 1.2 4.8 0 M8 4.6c1.2-1.4 6.8-1.4 8 0",
+  cuadro:    "M3.6 4.4h16.8v13.2H3.6z M3.6 13.8l4.6-4.2 4.2 3.8 3-2.6 5 4.4 M12 20.8v.8",
+  copa:      "M7.4 3.6h9.2v4.2a4.6 4.6 0 0 1-9.2 0z M12 12.4v5.4 M8.4 20.4h7.2 M7.4 5.2H4.6v1.6a3 3 0 0 0 2.8 2.8 M16.6 5.2h2.8v1.6a3 3 0 0 1-2.8 2.8",
+  cafe:      "M4.4 7.6h12v6.6a5 5 0 0 1-10 0z M16.4 9.2h1.8a2.6 2.6 0 0 1 0 5.2h-1.8 M3.6 20.4h13.6 M8 4.6v-2 M12.8 4.6v-2",
+  balanza:   "M12 3.4v17.2 M7 20.6h10 M4 8.2h16 M4 8.2 1.6 14h4.8z M20 8.2 17.6 14h4.8z M12 3.4 8 8.2h8z",
+  persona:   "M12 12a4.2 4.2 0 1 0 0-8.4A4.2 4.2 0 0 0 12 12z M4.4 20.6c0-4.2 3.4-7 7.6-7s7.6 2.8 7.6 7",
+  pluma:     "M20.4 3.6 9.6 14.4l-1.2 4.6 4.6-1.2L23.8 7 20.4 3.6z M8.4 19 3.6 20.4l1.4-4.8 M14.6 8.6l4 4",
+  escudo:    "M12 21.6s7.6-3.4 7.6-9.6V5.4L12 2.6 4.4 5.4V12c0 6.2 7.6 9.6 7.6 9.6z M8.8 12l2.2 2.2 4.4-4.4",
+  grafico:   "M3.4 20.4h17.2 M6.6 20.4v-6.6 M11 20.4V7.6 M15.4 20.4v-9.4 M19.8 20.4V4.4",
+  micro:     "M12 14.4a3.4 3.4 0 0 0 3.4-3.4V6a3.4 3.4 0 1 0-6.8 0v5a3.4 3.4 0 0 0 3.4 3.4z M6 10.6v.6a6 6 0 0 0 12 0v-.6 M12 17.4v3.2 M9 20.6h6",
+};
+
+/* Que simbolo lleva cada cosa que se compra. Varias comparten el mismo:
+   el icono dice de que familia es la compra, y el nombre dice cual. */
+const ICONO_BIEN = {
+  /* mejoras */
+  research: "libro", gym: "pesa", fiscal: "balanza", coach: "persona",
+  asistente: "persona", prensa: "pluma", terminal: "grafico", abogado: "balanza",
+  broker: "grafico", club: "copa", colchon: "escudo", mba: "libro",
+  /* caprichos */
+  viaje: "maleta", moto: "coche", reloj: "reloj", palco: "copa",
+  carro: "coche", arte: "cuadro", boda: "anillo", apto: "casa",
+  finca: "cafe", playa: "palmera", barco: "barco", hijos: "bebe",
+  /* inmuebles */
+  local: "edificio", ofi: "edificio", galpon: "edificio", edificio: "edificio",
+  terreno: "terreno", hotel: "casa", centro: "edificio", isla: "palmera",
 };
 
 /* un icono de trazo, para lo que solo necesita identificarse */
@@ -7490,6 +7547,8 @@ function Motor() {
      no tiene sentido guardarlo en la partida. */
   const hitosAno = useRef([]);
   const [tab, setTab] = useState(null);
+  /* que grupo de Comprar se esta mirando */
+  const [grupo, setGrupo] = useState("caprichos");
   const [cola, setCola] = useState([]);
   /* Mientras la cartera tenga cambios a medias no se deja avanzar: antes
      se podía mover los pesos, seguir jugando y perder el cambio sin que
@@ -8737,15 +8796,41 @@ function Motor() {
   const selloCls = { exito: "", parcial: " med", fallo: " mal" };
   /* La barra solo muestra lo que ya está abierto: en el primer año son
      dos secciones, no siete. El tercer elemento de cada par es la llave. */
+  /* ============================================================
+     CUATRO SECCIONES, NO SIETE
+     Ficha, Cartera, Terminos, Inmuebles, Mejoras, Fondo y Vida era un
+     menu de contabilidad. Y eran siete porque cada sistema que se añadia
+     traia su pestaña, no porque hicieran falta siete sitios.
+
+     Ahora: Ficha (quien eres y tus numeros, con el diccionario dentro),
+     Cartera (tu dinero y, cuando llegue, tu fondo: las dos cosas son
+     invertir), Comprar (inmuebles, mejoras y caprichos: las tres son
+     gastar) y Vida (como vives, tu gente y tu expediente).
+     ============================================================ */
+  const hayCompras = abierto(s, "inmuebles") || abierto(s, "mejoras") || abierto(s, "vida");
+  /* los tres grupos de Comprar, con lo que cada uno hace en una linea */
+  const GRUPOS_COMPRA = [
+    { id: "caprichos", n: "Para ti", ico: "copa", lista: CAPRICHOS, abierto: abierto(s, "vida"),
+      d: "Sube tu tren de vida. Unos conservan valor y otros no; casi todos cobran mantenimiento." },
+    { id: "inmuebles", n: "Rentan", ico: "edificio", lista: PROPIEDADES, abierto: abierto(s, "inmuebles"),
+      d: "Existen para pagarte algo cada año. La renta y el mantenimiento salen en el cierre." },
+    { id: "mejoras", n: "Te mejoran", ico: "grafico", lista: PERKS, abierto: abierto(s, "mejoras"),
+      d: "Se compran una vez y trabajan para ti todos los años que queden." },
+  ];
+  const GRUPO_ACT = GRUPOS_COMPRA.filter((g) => g.abierto).find((g) => g.id === grupo)
+    || GRUPOS_COMPRA.filter((g) => g.abierto)[0]
+    || GRUPOS_COMPRA[0];
   const TABS = [
-    ["ficha", "Ficha", null],
-    ["portafolio", "Cartera", "cartera"],
-    ["terminos", "Términos", null],
-    ["props", "Inmuebles", "inmuebles"],
-    ["mejoras", "Mejoras", "mejoras"],
-    ["fondo", "Fondo", "fondo"],
-    ["expediente", "Vida", "vida"],
-  ].filter((p) => p[2] === null || abierto(s, p[2]));
+    ["ficha", "Ficha", true],
+    ["portafolio", "Cartera", abierto(s, "cartera")],
+    /* «Compras» y no «Comprar»: la seccion es un sustantivo y el boton
+       de dentro es el verbo. Con los dos llamados igual habia dos
+       «Comprar» en pantalla haciendo cosas distintas —y finales.js se
+       colgaba abriendo y cerrando el menu para siempre, que fue como
+       salio a la luz. */
+    ["comprar", "Compras", hayCompras],
+    ["expediente", "Vida", abierto(s, "vida")],
+  ].filter((p) => p[2]);
   const PAREJA_N = { solo: "sin pareja", noviazgo: "en pareja", casado: "casado", divorciado: "divorciado", viudo: "viudo" };
   const parejaTxt = PAREJA_TXT(s);
   const ramaN = s.rama ? nombreRama(s, s.rama) : null;
@@ -9370,6 +9455,21 @@ function Motor() {
                       </div>
                     </Plegable>
 
+                    {/* El diccionario era una pestaña fija. Es una
+                        consulta, no una accion: vive aqui dentro y se
+                        abre cuando hace falta. */}
+                    <Plegable titulo="El diccionario" resumen={Object.keys(GLOSARIO).length + " palabras"}>
+                      <div className="ea-itemD" style={{ marginBottom: 10 }}>
+                        Todas las palabras que usa el juego, sin jerga.
+                      </div>
+                      {Object.keys(GLOSARIO).map((k) => (
+                        <div className="ea-item" key={k}>
+                          <div className="ea-itemN">{GLOSARIO[k].n}</div>
+                          <div className="ea-itemD">{GLOSARIO[k].x}</div>
+                        </div>
+                      ))}
+                    </Plegable>
+
                     <button className="ea-cerrar ea-dis" style={{ marginBottom: 14, marginTop: 14 }}
                       onClick={() => { persistir(s, true); setTab(null); irA("portada"); }}>
                       Guardar y volver a la portada
@@ -9427,60 +9527,62 @@ function Motor() {
                   </div>
                 )}
 
+                {/* Tu dinero y tu fondo son la misma actividad —invertir—
+                    y eran dos pestañas. El fondo llega en rango 4, asi
+                    que hasta entonces esto es solo la cartera. */}
                 {tab === "portafolio" && (
                   <PanelCartera st={s} onAplicar={aplicarCartera} onPendiente={setCarteraPend} />
                 )}
 
-                {tab === "terminos" && (
+                {/* ---- COMPRAR: las tres listas en un solo sitio ----
+                     Inmuebles, mejoras y caprichos eran tres pestañas y
+                     son la misma accion: sacar dinero y cambiarlo por
+                     algo. Aqui se eligen por lo que hacen, no por en que
+                     menu vivian. */}
+                {tab === "comprar" && (
                   <div>
-                    <div className="ea-rot ea-dis">El diccionario</div>
-                    <div className="ea-itemD" style={{ marginBottom: 14 }}>
-                      Todas las palabras que el juego usa, explicadas sin jerga. Está aquí siempre, en
-                      cualquier modo, y puedes consultarlo en medio de una decisión.
+                    <div className="ea-grupos">
+                      {GRUPOS_COMPRA.filter((g) => g.abierto).map((g) => (
+                        <button key={g.id} className={"ea-grupo" + (grupo === g.id ? " on" : "")}
+                          onClick={() => setGrupo(g.id)}>
+                          <Icono k={g.ico} tam={15} />{g.n}
+                        </button>
+                      ))}
                     </div>
-                    {Object.keys(GLOSARIO).map((k) => (
-                      <div className="ea-item" key={k}>
-                        <div className="ea-itemN">{GLOSARIO[k].n}</div>
-                        <div className="ea-itemD">{GLOSARIO[k].x}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                    <div className="ea-itemD" style={{ margin: "4px 0 12px" }}>{GRUPO_ACT.d}</div>
 
-                {tab === "props" && (
-                  <div>
-                    <div className="ea-rot ea-dis">Inmuebles que rentan</div>
-                    <div className="ea-itemD" style={{ marginBottom: 10 }}>
-                      A diferencia de los caprichos, estos existen para pagarte algo cada año. La renta aparece
-                      en el informe de cierre y el mantenimiento también.
-                    </div>
-                    {PROPIEDADES.map((c) => {
-                      const ya = s.bienes.indexOf(c.id) >= 0;
+                    {GRUPO_ACT.lista.map((c) => {
+                      const esPerk = GRUPO_ACT.id === "mejoras";
+                      const ya = esPerk ? tiene(s, c.id) : s.bienes.indexOf(c.id) >= 0;
+                      const caro = s.cash + s.cartera < c.c;
+                      const puede = esPerk ? true : puedeComprar(c, s);
                       return (
                         <div className={"ea-item" + (ya ? " tuyo" : "")} key={c.id}>
                           <div className="ea-itemTop">
-                            <span className="ea-itemN">{c.n}</span>
+                            <span className="ea-itemN ea-itemConIco">
+                              <Icono k={ICONO_BIEN[c.id] || "moneda"} tam={19} />{c.n}
+                            </span>
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(c.c)}</span>
                           </div>
-                          <div className="ea-etqs">
-                            {c.renta
-                              ? <span className="ea-etq act">renta {fmt(c.renta * 2)} al año</span>
-                              : <span className="ea-etq">sin renta, solo aprecia</span>}
-                            <span className="ea-etq">aprecia {(c.ap * 200).toFixed(1)}%</span>
-                            {c.up ? <span className="ea-etq cost">mantener {fmt(c.up * 2)} al año</span> : null}
-                            {c.vida ? <span className="ea-etq vida">+{c.vida} de índice</span> : null}
-                            {c.renta && c.up ? (
-                              <span className="ea-etq act">neto {fmt(c.renta * 2 - c.up * 2)} · {(((c.renta * 2 - c.up * 2) / c.c) * 100).toFixed(1)}% del precio</span>
-                            ) : null}
-                          </div>
+                          {!esPerk && (
+                            <div className="ea-etqs">
+                              {c.renta ? <span className="ea-etq act">renta {fmt(c.renta * 2)} al año</span> : null}
+                              {c.ap ? <span className="ea-etq act">aprecia {(c.ap * 200).toFixed(1)}%</span> : null}
+                              {c.dep ? <span className="ea-etq con">pierde {(c.dep * 200).toFixed(1)}% al año</span> : null}
+                              {c.up ? <span className="ea-etq cost">mantener {fmt(c.up * 2)} al año</span> : null}
+                              {c.vida ? <span className="ea-etq vida">+{c.vida} de tren de vida</span> : null}
+                            </div>
+                          )}
                           <div className="ea-itemD">{c.d}</div>
                           {ya
-                            ? <span className="ea-tengo ea-dis">Vale hoy USD {fmt(s.valores[c.id] || 0)}</span>
-                            : !puedeComprar(c, s)
+                            ? <span className="ea-tengo ea-dis">
+                                {esPerk ? "Ya la tienes" : c.tipo === "consumo" ? "Ya lo tienes" : "Vale hoy USD " + fmt(s.valores[c.id] || 0)}
+                              </span>
+                            : !puede
                             ? <span className="ea-dis" style={{ fontSize: 11, letterSpacing: ".1em", color: "var(--gris)" }}>{c.porQue || "Todavía no te toca"}</span>
-                            : <button className={s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis"}
-                                disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
-                                {s.cash + s.cartera < c.c ? "No te alcanza" : "Comprar"}
+                            : <button className={caro ? "ea-mini" : "ea-comprar ea-dis"} disabled={caro}
+                                onClick={() => (esPerk ? comprarPerk(c) : comprarBien(c))}>
+                                {caro ? "No te alcanza" : "Comprar"}
                               </button>}
                         </div>
                       );
@@ -9488,25 +9590,13 @@ function Motor() {
                   </div>
                 )}
 
-                {tab === "mejoras" && (
-                  <div>
-                    {PERKS.map((p) => (
-                      <div className={"ea-item" + (tiene(s, p.id) ? " tuyo" : "")} key={p.id}>
-                        <div className="ea-itemTop">
-                          <span className="ea-itemN">{p.n}</span>
-                          <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(p.c)}</span>
-                        </div>
-                        <div className="ea-itemD">{p.d}</div>
-                        {tiene(s, p.id) ? <span className="ea-tengo ea-dis">Ya la tienes</span>
-                          : <button className={s.cash + s.cartera < p.c ? "ea-mini" : "ea-comprar ea-dis"}
-                            disabled={s.cash + s.cartera < p.c} onClick={() => comprarPerk(p)}>Comprar</button>}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {tab === "fondo" && (
-                  <div>
+                {/* El fondo vive dentro de Cartera: tu dinero y el dinero
+                    que administras son la misma actividad, y eran dos
+                    pestañas. Llega en rango 4, asi que hasta entonces
+                    Cartera es solo la cartera. */}
+                {tab === "portafolio" && abierto(s, "fondo") && (
+                  <div style={{ marginTop: 24, borderTop: "1px solid var(--borde)", paddingTop: 18 }}>
+                    <div className="ea-rot ea-dis">Tu fondo</div>
                     {!s.fondo && (
                       <div>
                         <div className="ea-itemD" style={{ marginBottom: 12 }}>
@@ -9710,43 +9800,15 @@ function Motor() {
                       Y sí cambia los números, para bien y para mal.
                     </div>
 
-                    {/* ---- caprichos: aquí sí se decide ---- */}
-                    <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Caprichos</div>
-                    <div className="ea-itemD" style={{ marginBottom: 10 }}>
-                      Ninguno de estos es un error. Solo tienen consecuencias: unos suben tu índice y se van a cero,
-                      otros lo suben y conservan valor, y casi todos cobran mantenimiento cada año.
-                    </div>
-                    {CAPRICHOS.map((c) => {
-                      const ya = s.bienes.indexOf(c.id) >= 0;
-                      return (
-                        <div className={"ea-item" + (ya ? " tuyo" : "")} key={c.id}>
-                          <div className="ea-itemTop">
-                            <span className="ea-itemN">{c.n}</span>
-                            <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(c.c)}</span>
-                          </div>
-                          <div className="ea-etqs">
-                            <span className="ea-etq vida">+{c.vida} de índice</span>
-                            <span className={"ea-etq" + (c.tipo === "activo" ? " act" : " con")}>
-                              {c.tipo === "activo" ? "conserva valor" : "no se recupera"}
-                            </span>
-                            {c.up ? <span className="ea-etq cost">mantener {fmt(c.up * 2)} al año</span> : null}
-                            {c.renta ? <span className="ea-etq act">renta {fmt(c.renta * 2)}</span> : null}
-                            {c.ene ? <span className="ea-etq">energía +{c.ene}</span> : null}
-                            {c.red ? <span className="ea-etq">red +{c.red}</span> : null}
-                            {c.rep ? <span className="ea-etq">reputación +{c.rep}</span> : null}
-                          </div>
-                          <div className="ea-itemD">{c.d}</div>
-                          {ya
-                            ? <span className="ea-tengo ea-dis">{c.tipo === "activo" ? "Vale hoy USD " + fmt(s.valores[c.id] || 0) : "Ya lo tienes"}</span>
-                            : !puedeComprar(c, s)
-                            ? <span className="ea-dis" style={{ fontSize: 11, letterSpacing: ".1em", color: "var(--gris)" }}>{c.porQue || "Todavía no te toca"}</span>
-                            : <button className={s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis"}
-                                disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
-                                {s.cash + s.cartera < c.c ? "No te alcanza" : "Comprar"}
-                              </button>}
-                        </div>
-                      );
-                    })}
+                    {/* Los caprichos se mudaron a Comprar, con los
+                        inmuebles y las mejoras: las tres eran la misma
+                        accion en tres pestañas distintas. Aqui queda el
+                        atajo, que es donde uno mira su tren de vida y
+                        piensa en subirlo. */}
+                    <button className="ea-comprar ea-dis" style={{ marginTop: 18 }}
+                      onClick={() => { setGrupo("caprichos"); setTab("comprar"); }}>
+                      Comprar algo para ti
+                    </button>
 
                     {/* ---- el legado: premios ---- */}
                     {(Array.isArray(s.premios) ? s.premios : []).length > 0 && (
@@ -10209,8 +10271,12 @@ function Motor() {
         const ap = APERTURAS.find((a) => a.id === nuevoSistema);
         const g = ap && ap.guia;
         if (!g) return null;
-        const par = TABS.find((p) => p[2] === nuevoSistema);
-        const destino = par ? par[0] : (nuevoSistema === "banco" ? "ficha" : null);
+        /* A donde lleva el boton «Ver la seccion». Con las pestañas
+           fusionadas ya no hay una por sistema: inmuebles y mejoras caen
+           en Comprar, el fondo en Cartera, y el banco en Ficha. */
+        const DESTINO = { cartera: "portafolio", fondo: "portafolio", vida: "expediente",
+          inmuebles: "comprar", mejoras: "comprar", banco: "ficha" };
+        const destino = DESTINO[nuevoSistema] || null;
         return (
           <div className="ea-modalFondo" onClick={() => setNuevoSistema(null)}>
             <div className="ea-modal ea-panelAb" onClick={(e) => e.stopPropagation()}>
