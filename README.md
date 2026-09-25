@@ -37,7 +37,7 @@ npm run servir       # sirve el juego en http://localhost:5173
 
 El archivo `index.html` se abre con doble clic, sin más.
 
-El juego está en vivo en **https://aleferrara1807.github.io/el-analista/**, y se
+El juego está en vivo en **https://juega-el-analista.github.io/el-analista/**, y se
 reconstruye y republica solo en cada push a `main` — pero solo si las pruebas
 pasan. Si fallan, el sitio se queda con la última versión buena.
 

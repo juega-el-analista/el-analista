@@ -43,6 +43,12 @@ textos— corre además:
 npm run cobertura    # juega 20 partidas y comprueba qué contenido aparece de verdad
 ```
 
+Y si tocaste el bucle de energía del cierre de año:
+
+```bash
+npm run energia      # mide en qué banda se vive de verdad, y si el burnout es alcanzable
+```
+
 **Esto no es burocracia.** Esta batería ha cazado bugs que nadie vio leyendo el
 código: una colisión de identificadores que mataba en silencio seis escenas de
 vida, un envoltorio que se habría anidado al republicar y habría roto el juego
@@ -52,10 +58,15 @@ equivocada. Ninguno se veía jugando.
 **Si añades contenido, añádele su marcador** en `pruebas/cobertura.js`. Sin
 marcador, la prueba da por bueno un contenido que quizá no aparece nunca.
 
+**Y si añades una regla de balance, añádele su medición.** El suelo de energía
+clavó la variable en 6 para todo el mundo durante meses y dejó el sistema de
+burnout entero inalcanzable, sin que ninguna prueba se quejara: no había
+ninguna que mirara el número. Ahora la hay.
+
 ## 3 · El sitio se publica solo; el artifact no
 
 En cuanto algo entra en `main`, GitHub reconstruye el juego y lo publica en
-**https://aleferrara1807.github.io/el-analista/**. No hay que acordarse de nada.
+**https://juega-el-analista.github.io/el-analista/**. No hay que acordarse de nada.
 
 Pero el despliegue **corre las pruebas primero**. Si fallan, no se publica y el
 sitio se queda con la última versión buena. Esa es la única barrera automática

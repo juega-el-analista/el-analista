@@ -199,6 +199,23 @@ const CSS = `
 .ea-h1{font-size:clamp(44px,11vw,84px);line-height:.9;color:var(--tintaPapel);margin:0}
 .ea-lede{color:var(--gris);margin:18px 0 26px;font-size:16px;max-width:56ch}
 .ea-regla{height:1px;background:var(--borde);margin:24px 0}
+/* La portada se alinea con la tarjeta con la que se comparte el juego.
+   Antes la entrada era toda papel y el verde aparecia de golpe al empezar;
+   ahora lo primero que ves ya se parece a lo que viene despues. */
+.ea-cintaPortada{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  background:var(--fieltro);border-bottom:4px solid #04220F;padding:13px 19px;
+  border-radius:3px 3px 0 0;margin-bottom:34px}
+.ea-cintaPortada .ea-dis{color:var(--hueso);font-size:13px;letter-spacing:.15em}
+.ea-cintaPortada .ea-mono{color:var(--verde);font-size:12px}
+/* ea-emblema y no ea-marca: ese nombre ya lo usa un distintivo con borde
+   del trading viejo, mas abajo, y colisionar le habria impuesto altura fija. */
+.ea-emblema{display:block;height:46px;width:auto;margin-bottom:14px}
+/* mas oscuro que el resto del texto: es el unico sitio donde el nombre
+   tiene que pesar, y --tintaPapel lo dejaba a media voz */
+.ea-h1Portada{color:var(--tinta)}
+.ea-reglaGorda{width:150px;height:7px;background:var(--cobre);margin:18px 0 0}
+.ea-subPortada{font-size:14px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--tintaPapel);margin-top:19px}
 .ea-final{font-size:33px;color:var(--tintaPapel);line-height:1.1;margin:0 0 12px}
 .ea-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:15px}
 .ea-cifraK{font-size:11px;color:var(--gris);letter-spacing:.18em;
@@ -1229,60 +1246,60 @@ const BANCO3 = [
 
   /* nivel 4 */
   { nv: 4, q: "El delta de una opción de compra mide", o: ["cuánto cambia su precio si el subyacente se mueve una unidad", "su valor temporal", "la volatilidad implícita"], c: 0, e: "Es la primera derivada y también la cobertura: delta 0,6 significa cubrir con seis décimos del subyacente." },
-  { nv: 4, q: "El theta de una opción comprada", o: ["juega en contra: pierde valor con el paso del tiempo", "juega a favor", "solo actúa al vencimiento"], c: 0, e: "El comprador de opciones paga alquiler por el tiempo. El vendedor lo cobra." },
+  { nv: 4, q: "El theta de una opción comprada", o: ["juega en contra: pierde valor con el paso del tiempo", "juega a favor", "solo actúa al vencimiento"], c: 0, e: "El comprador de opciones paga alquiler por el tiempo. El vendedor lo cobra.", pista: "Esto que compraste pierde un poco de valor cada día, aunque el precio no se mueva ni un centavo — nomás por el paso del tiempo. Como un boleto de cine para mañana: mientras más se acerca la función y no lo usas, menos te sirve." },
   { nv: 4, q: "Comprar una put sobre tu cartera equivale a", o: ["pagar una prima por un piso de pérdida", "eliminar el riesgo sin costo", "apalancar la posición"], c: 0, e: "Es un seguro con prima. Si lo compras todos los años, el costo acumulado se nota." },
-  { nv: 4, q: "Un collar sobre una posición consiste en", o: ["comprar una put y financiarla vendiendo una call", "vender put y call a la vez", "comprar dos calls"], c: 0, e: "Renuncias al upside por encima de un nivel para pagar el seguro. Es lo que hace un ejecutivo con acciones restringidas." },
-  { nv: 4, q: "En un swap de tasa, quien recibe fija y paga variable se beneficia si", o: ["las tasas suben menos de lo que descontaba la curva", "las tasas suben mucho", "la curva se empina"], c: 0, e: "El swap se valora contra la curva forward, no contra la tasa de hoy. Ahí se equivoca casi todo el mundo." },
-  { nv: 4, q: "Un credit default swap paga cuando", o: ["ocurre un evento de crédito del emisor de referencia", "el precio del bono cae", "sube el spread"], c: 0, e: "Es un seguro sobre el impago, y su prima cotiza como termómetro del riesgo de crédito." },
-  { nv: 4, q: "En una titulización, el tramo equity", o: ["absorbe las primeras pérdidas y paga más", "cobra antes que el senior", "tiene calificación más alta"], c: 0, e: "La estructura reparte el mismo riesgo en pedazos con distinta prelación. Nada desaparece, solo cambia de manos." },
-  { nv: 4, q: "Una operación de repo es económicamente", o: ["un préstamo con colateral de títulos", "una venta definitiva", "un derivado de crédito"], c: 0, e: "Vendes hoy y recompras mañana a precio pactado. Es la plomería del financiamiento de corto plazo." },
-  { nv: 4, q: "El VaR al 99% a un día te dice", o: ["la pérdida que solo se supera uno de cada cien días", "la pérdida máxima posible", "la volatilidad anual"], c: 0, e: "No dice nada sobre cuánto pierdes ese día que sí se supera, y ahí está el problema." },
-  { nv: 4, q: "El tracking error de un fondo mide", o: ["cuánto se desvía del índice que sigue", "su retorno absoluto", "su comisión"], c: 0, e: "Un fondo activo con tracking error mínimo cobra comisión activa por replicar el índice." },
+  { nv: 4, q: "Un collar sobre una posición consiste en", o: ["comprar una put y financiarla vendiendo una call", "vender put y call a la vez", "comprar dos calls"], c: 0, e: "Renuncias al upside por encima de un nivel para pagar el seguro. Es lo que hace un ejecutivo con acciones restringidas.", pista: "Es armar un seguro para tu inversión y pagarlo sin sacar dinero extra del bolsillo: para cubrir el seguro, renuncias de antemano a una parte de lo que podrías ganar si sube mucho." },
+  { nv: 4, q: "En un swap de tasa, quien recibe fija y paga variable se beneficia si", o: ["las tasas suben menos de lo que descontaba la curva", "las tasas suben mucho", "la curva se empina"], c: 0, e: "El swap se valora contra la curva forward, no contra la tasa de hoy. Ahí se equivoca casi todo el mundo.", pista: "Dos personas se intercambian lo que pagan de intereses: una cobra un monto fijo todos los meses y a cambio paga lo que digan las tasas del momento. A esa persona le conviene que esas tasas terminen más bajas de lo que todos esperaban cuando firmaron." },
+  { nv: 4, q: "Un credit default swap paga cuando", o: ["ocurre un evento de crédito del emisor de referencia", "el precio del bono cae", "sube el spread"], c: 0, e: "Es un seguro sobre el impago, y su prima cotiza como termómetro del riesgo de crédito.", pista: "Es un seguro, pero no sobre algo tuyo: sobre la deuda de alguien más. Pagas una cuotita cada cierto tiempo, y si esa persona o empresa deja de pagar lo que debe, a ti te toca cobrar." },
+  { nv: 4, q: "En una titulización, el tramo equity", o: ["absorbe las primeras pérdidas y paga más", "cobra antes que el senior", "tiene calificación más alta"], c: 0, e: "La estructura reparte el mismo riesgo en pedazos con distinta prelación. Nada desaparece, solo cambia de manos.", pista: "Un mismo paquete de deudas se corta en pedazos, y no todos son iguales: unos cobran primero y con más seguridad, y otros cobran después pero con mejor paga. Este pedazo es el que va de último en la fila." },
+  { nv: 4, q: "Una operación de repo es económicamente", o: ["un préstamo con colateral de títulos", "una venta definitiva", "un derivado de crédito"], c: 0, e: "Vendes hoy y recompras mañana a precio pactado. Es la plomería del financiamiento de corto plazo.", pista: "Alguien te vende algo hoy con la promesa de recomprártelo mañana a un precio ya acordado. Piensa para qué usarías esa plata mientras tanto, y qué papel juega lo que \"vendiste\" de garantía." },
+  { nv: 4, q: "El VaR al 99% a un día te dice", o: ["la pérdida que solo se supera uno de cada cien días", "la pérdida máxima posible", "la volatilidad anual"], c: 0, e: "No dice nada sobre cuánto pierdes ese día que sí se supera, y ahí está el problema.", pista: "Es un número que dice 'un mal día normal se ve más o menos así'. Fíjate en el 99%: eso deja afuera justo los días verdaderamente terribles, que son los que menos se repiten." },
+  { nv: 4, q: "El tracking error de un fondo mide", o: ["cuánto se desvía del índice que sigue", "su retorno absoluto", "su comisión"], c: 0, e: "Un fondo activo con tracking error mínimo cobra comisión activa por replicar el índice.", pista: "Un fondo que dice seguir a un índice no siempre lo copia exacto. Esto mide qué tan pegado o despegado anda de ese índice que se supone que sigue." },
   { nv: 4, q: "En una cascada de fondo, el catch-up del gestor sirve para", o: ["recuperar su 20% después del retorno preferente", "cobrar antes que los LP", "cubrir gastos operativos"], c: 0, e: "Sin catch-up, el preferente le regalaría al LP esa porción de las ganancias." },
   { nv: 4, q: "Un fondo con TIR alta y MOIC bajo probablemente", o: ["salió rápido de posiciones pequeñas", "generó mucho valor absoluto", "tuvo pérdidas realizadas"], c: 0, e: "La TIR premia la velocidad. El MOIC mide cuánto dinero de verdad devolviste." },
   { nv: 4, q: "La prima de iliquidez existe porque", o: ["el inversionista exige más por no poder salir cuando quiera", "los activos ilíquidos rinden más por definición", "no hay valoraciones diarias"], c: 0, e: "Parte de esa prima es real y parte es solo la ausencia de precio que te haga sentir la volatilidad." },
-  { nv: 4, q: "Cubrir una inversión en dólares a moneda local cuesta aproximadamente", o: ["el diferencial de tasas entre las dos monedas", "la comisión del banco", "la volatilidad del par"], c: 0, e: "Si la tasa local es mucho más alta, cubrirse te come casi todo el retorno esperado." },
-  { nv: 4, q: "Un forward no entregable se usa cuando", o: ["la moneda tiene controles de cambio y se liquida la diferencia en dólares", "no hay contraparte", "el plazo es muy corto"], c: 0, e: "Es la forma estándar de tomar riesgo cambiario en mercados cerrados." },
-  { nv: 4, q: "Retener impuesto en la fuente sobre dividendos de una inversión extranjera", o: ["reduce tu retorno neto y a veces se acredita en tu país", "no afecta al inversionista final", "solo aplica a fondos"], c: 0, e: "Dos carteras idénticas pueden rendir distinto solo por el tratado tributario que aplica." },
+  { nv: 4, q: "Cubrir una inversión en dólares a moneda local cuesta aproximadamente", o: ["el diferencial de tasas entre las dos monedas", "la comisión del banco", "la volatilidad del par"], c: 0, e: "Si la tasa local es mucho más alta, cubrirse te come casi todo el retorno esperado.", pista: "Cubrirse contra el tipo de cambio no es gratis. El costo tiene que ver con cuánto más (o menos) pagan de intereses una moneda y la otra, no con lo complicado del papeleo." },
+  { nv: 4, q: "Un forward no entregable se usa cuando", o: ["la moneda tiene controles de cambio y se liquida la diferencia en dólares", "no hay contraparte", "el plazo es muy corto"], c: 0, e: "Es la forma estándar de tomar riesgo cambiario en mercados cerrados.", pista: "Sirve para países donde no es fácil comprar y vender la moneda local libremente. Al final nadie entrega la moneda de verdad: solo se paga en dólares la diferencia entre el precio pactado y el precio real." },
+  { nv: 4, q: "Retener impuesto en la fuente sobre dividendos de una inversión extranjera", o: ["reduce tu retorno neto y a veces se acredita en tu país", "no afecta al inversionista final", "solo aplica a fondos"], c: 0, e: "Dos carteras idénticas pueden rendir distinto solo por el tratado tributario que aplica.", pista: "Cuando una empresa extranjera te paga un dividendo, su propio país suele quedarse con una parte antes de que el dinero te llegue a ti. Piensa en qué le pasa a lo que realmente terminas recibiendo." },
   { nv: 4, q: "El Sharpe de una estrategia sube al reducir su volatilidad. Eso es engañoso cuando", o: ["la estrategia tiene pérdidas raras y enormes", "el activo es líquido", "el período es largo"], c: 0, e: "Vender seguros contra terremotos tiene un Sharpe espectacular hasta el terremoto." },
-  { nv: 4, q: "Un factor de inversión como value o momentum es", o: ["una característica que históricamente explicó retornos por encima del mercado", "un indicador técnico", "un sector"], c: 0, e: "Los factores pasan por décadas malas. Abandonarlos justo entonces es cómo se pierde con ellos." },
+  { nv: 4, q: "Un factor de inversión como value o momentum es", o: ["una característica que históricamente explicó retornos por encima del mercado", "un indicador técnico", "un sector"], c: 0, e: "Los factores pasan por décadas malas. Abandonarlos justo entonces es cómo se pierde con ellos.", pista: "No es una empresa ni un sector: es una característica común a un grupo de acciones (por ejemplo, que estén baratas o que vengan subiendo fuerte) que a lo largo de los años ha tendido a rendir distinto al promedio del mercado." },
 
   /* nivel 5 */
-  { nv: 5, q: "Un título hipotecario con opción de prepago tiene convexidad negativa porque", o: ["si las tasas caen, los deudores prepagan y te quedas sin el bono bueno", "su duración es fija", "el cupón es variable"], c: 0, e: "Ganas menos cuando bajan las tasas y pierdes lo mismo cuando suben. Por eso paga más." },
+  { nv: 5, q: "Un título hipotecario con opción de prepago tiene convexidad negativa porque", o: ["si las tasas caen, los deudores prepagan y te quedas sin el bono bueno", "su duración es fija", "el cupón es variable"], c: 0, e: "Ganas menos cuando bajan las tasas y pierdes lo mismo cuando suben. Por eso paga más.", pista: "Quien te debe la hipoteca puede pagarte todo por adelantado cuando le conviene a él, no a ti. Piensa qué momento elige la gente para prepagar su deuda, y qué te deja eso a ti justo entonces." },
   { nv: 5, q: "Un bono contingente convertible de un banco puede", o: ["convertirse en acciones o amortizarse si el capital cae bajo un umbral", "prepagarse a voluntad del tenedor", "convertirse solo al vencimiento"], c: 0, e: "El inversionista absorbe pérdidas antes del contribuyente. Ese es todo el diseño." },
   { nv: 5, q: "El riesgo de secuencia de retornos afecta sobre todo a", o: ["quien empieza a retirar justo cuando el mercado cae", "quien está acumulando capital", "quien invierte solo en bonos"], c: 0, e: "El mismo retorno promedio en distinto orden puede dejarte sin capital. El orden importa cuando ya estás retirando." },
-  { nv: 5, q: "Una regla de retiro dinámica, que baja el gasto en años malos", o: ["permite sostener un retiro inicial mayor que la regla fija", "es más riesgosa que la regla fija", "solo aplica a carteras de bonos"], c: 0, e: "Flexibilizar el gasto es la palanca más potente y la menos usada en planificación de retiro." },
-  { nv: 5, q: "Una aseguradora de vida calza activos y pasivos principalmente para", o: ["que el flujo de sus inversiones llegue cuando toca pagar", "maximizar retorno", "reducir impuestos"], c: 0, e: "El descalce de duración es lo que quiebra aseguradoras, no la mala selección de activos." },
-  { nv: 5, q: "Un mercado de futuros en contango implica que", o: ["el precio futuro está por encima del spot y rolar cuesta", "el spot está por encima del futuro", "no hay costo de almacenamiento"], c: 0, e: "Un fondo que sigue un commodity en contango pierde en cada rolo aunque el spot no se mueva." },
+  { nv: 5, q: "Una regla de retiro dinámica, que baja el gasto en años malos", o: ["permite sostener un retiro inicial mayor que la regla fija", "es más riesgosa que la regla fija", "solo aplica a carteras de bonos"], c: 0, e: "Flexibilizar el gasto es la palanca más potente y la menos usada en planificación de retiro.", pista: "En vez de retirar siempre el mismo monto pase lo que pase, ajustas hacia abajo cuando el mercado viene mal. Piensa qué le hace eso a la plata que te queda para los años siguientes, comparado con no ajustar nunca." },
+  { nv: 5, q: "Una aseguradora de vida calza activos y pasivos principalmente para", o: ["que el flujo de sus inversiones llegue cuando toca pagar", "maximizar retorno", "reducir impuestos"], c: 0, e: "El descalce de duración es lo que quiebra aseguradoras, no la mala selección de activos.", pista: "Una aseguradora sabe más o menos cuándo le va a tocar pagar (cuando alguien se muere, se jubila, etc.). Intenta que el dinero de sus inversiones le llegue justo por esas fechas, no antes ni después." },
+  { nv: 5, q: "Un mercado de futuros en contango implica que", o: ["el precio futuro está por encima del spot y rolar cuesta", "el spot está por encima del futuro", "no hay costo de almacenamiento"], c: 0, e: "Un fondo que sigue un commodity en contango pierde en cada rolo aunque el spot no se mueva.", pista: "El precio para entregar algo en el futuro es más alto que el precio de comprarlo hoy mismo. Si tienes que ir renovando ese contrato una y otra vez, cada renovación te sale comprando caro y vendiendo barato." },
   { nv: 5, q: "La diferencia entre liquidez de mercado y liquidez de fondeo es que la segunda", o: ["es tu capacidad de financiar la posición mientras la mantienes", "depende del volumen del activo", "solo aplica a bancos"], c: 0, e: "Puedes tener razón en la tesis y quebrar igual porque no aguantaste el margen." },
   { nv: 5, q: "Las cláusulas de acción colectiva en un bono soberano permiten que", o: ["una mayoría de acreedores imponga la reestructuración a los demás", "el país reduzca el cupón a voluntad", "el acreedor exija pago anticipado"], c: 0, e: "Existen para evitar que un solo acreedor litigante bloquee un acuerdo con el resto." },
-  { nv: 5, q: "Un dividend recap consiste en", o: ["endeudar la empresa para pagarle un dividendo al fondo dueño", "reinvertir dividendos en la empresa", "convertir deuda en capital"], c: 0, e: "Devuelve capital al fondo antes de la venta y deja a la empresa más frágil. La TIR mejora, el negocio no." },
-  { nv: 5, q: "Una nota PIK toggle permite al emisor", o: ["pagar intereses con más deuda en vez de efectivo", "diferir el capital al final", "convertir a acciones"], c: 0, e: "Alivia la caja hoy y capitaliza el problema. Suele aparecer cuando la estructura ya viene apretada." },
-  { nv: 5, q: "Un fondo de continuación se usa cuando", o: ["el gestor mueve activos a un vehículo nuevo para dar liquidez a los LP viejos", "se liquida el fondo", "se levanta capital para el primer fondo"], c: 0, e: "El gestor está a los dos lados del precio. Ahí el comité independiente no es un formalismo." },
-  { nv: 5, q: "Un préstamo contra el valor neto de un fondo, en lugar de contra sus empresas", o: ["apalanca la cartera completa y adelanta distribuciones", "reduce el riesgo del fondo", "sustituye al capital comprometido"], c: 0, e: "Adelanta liquidez y añade un nivel de deuda que el LP muchas veces no estaba modelando." },
+  { nv: 5, q: "Un dividend recap consiste en", o: ["endeudar la empresa para pagarle un dividendo al fondo dueño", "reinvertir dividendos en la empresa", "convertir deuda en capital"], c: 0, e: "Devuelve capital al fondo antes de la venta y deja a la empresa más frágil. La TIR mejora, el negocio no.", pista: "El dueño actual de la empresa quiere sacarle dinero antes de venderla, sin vender nada todavía. La forma más directa: hacer que la empresa pida un préstamo y le entregue ese dinero a él." },
+  { nv: 5, q: "Una nota PIK toggle permite al emisor", o: ["pagar intereses con más deuda en vez de efectivo", "diferir el capital al final", "convertir a acciones"], c: 0, e: "Alivia la caja hoy y capitaliza el problema. Suele aparecer cuando la estructura ya viene apretada.", pista: "Quien debe este dinero tiene la opción de no pagar los intereses en efectivo este año. En vez de eso, ¿qué otra forma hay de pagar que no sea sacando plata de la caja?" },
+  { nv: 5, q: "Un fondo de continuación se usa cuando", o: ["el gestor mueve activos a un vehículo nuevo para dar liquidez a los LP viejos", "se liquida el fondo", "se levanta capital para el primer fondo"], c: 0, e: "El gestor está a los dos lados del precio. Ahí el comité independiente no es un formalismo.", pista: "El gestor del fondo quiere quedarse con una empresa más tiempo del que el fondo original permite, pero sus inversores originales ya quieren su dinero de vuelta. Piensa cómo resuelve eso sin vender la empresa a un extraño." },
+  { nv: 5, q: "Un préstamo contra el valor neto de un fondo, en lugar de contra sus empresas", o: ["apalanca la cartera completa y adelanta distribuciones", "reduce el riesgo del fondo", "sustituye al capital comprometido"], c: 0, e: "Adelanta liquidez y añade un nivel de deuda que el LP muchas veces no estaba modelando.", pista: "En vez de pedir un préstamo empresa por empresa, el fondo entero pide prestado contra el valor de todo lo que tiene junto. Piensa qué efecto tiene endeudar el conjunto completo, no una sola pieza." },
   { nv: 5, q: "Cubrir la cola de una cartera comprando puts muy fuera del dinero de forma permanente", o: ["tiene un costo esperado alto y solo compensa si el shock llega", "es gratis en promedio", "sustituye a la diversificación"], c: 0, e: "La cobertura de cola es un gasto, no una inversión. Se justifica por lo que te permite hacer el resto del tiempo." },
-  { nv: 5, q: "En dimensionamiento de posiciones, apostar demasiado incluso teniendo ventaja estadística", o: ["puede llevarte a la ruina antes de que la ventaja se manifieste", "maximiza el retorno de largo plazo", "es indiferente si la ventaja es real"], c: 0, e: "Tener razón no sirve si el tamaño te saca del juego en el camino." },
-  { nv: 5, q: "El efecto disposición describe la tendencia a", o: ["vender lo que ganó y aguantar lo que perdió", "comprar lo que sube", "operar demasiado"], c: 0, e: "Convierte una cartera en una colección de errores no reconocidos." },
-  { nv: 4, q: "El gamma de una posición corta en opciones implica que", o: ["tu cobertura se deteriora justo cuando el mercado se mueve fuerte", "el delta se mantiene estable", "el theta juega en contra"], c: 0, e: "Vender opciones es cobrar poco muchas veces y pagar mucho una vez. El gamma corto es esa factura." },
+  { nv: 5, q: "En dimensionamiento de posiciones, apostar demasiado incluso teniendo ventaja estadística", o: ["puede llevarte a la ruina antes de que la ventaja se manifieste", "maximiza el retorno de largo plazo", "es indiferente si la ventaja es real"], c: 0, e: "Tener razón no sirve si el tamaño te saca del juego en el camino.", pista: "Aunque el juego esté a tu favor en promedio, si apuestas demasiado grande cada vez, una mala racha (que sí va a pasar tarde o temprano) te puede sacar del juego antes de que el promedio se cumpla." },
+  { nv: 5, q: "El efecto disposición describe la tendencia a", o: ["vender lo que ganó y aguantar lo que perdió", "comprar lo que sube", "operar demasiado"], c: 0, e: "Convierte una cartera en una colección de errores no reconocidos.", pista: "Es un sesgo muy humano: te cuesta más reconocer una pérdida que dejar pasar una ganancia. Piensa qué hace la gente con lo que le está yendo bien y qué hace con lo que le está yendo mal." },
+  { nv: 4, q: "El gamma de una posición corta en opciones implica que", o: ["tu cobertura se deteriora justo cuando el mercado se mueve fuerte", "el delta se mantiene estable", "el theta juega en contra"], c: 0, e: "Vender opciones es cobrar poco muchas veces y pagar mucho una vez. El gamma corto es esa factura.", pista: "Cuando vendes una opción, la cantidad que necesitas cubrirte va cambiando a medida que el precio se mueve, y cambia más rápido justo cuando el mercado se mueve fuerte, que es cuando menos tiempo tienes para reaccionar." },
   { nv: 4, q: "La paridad put call dice que una call comprada más un bono equivale a", o: ["la acción más una put comprada", "una put vendida", "dos acciones"], c: 0, e: "Si la relación se rompe hay arbitraje, y por eso casi nunca se rompe." },
   { nv: 4, q: "La sonrisa de volatilidad muestra que el mercado", o: ["cobra más por las opciones muy fuera del dinero", "asume distribución normal", "ignora los eventos extremos"], c: 0, e: "El propio precio de las opciones admite que las colas son más gordas de lo que dice el modelo." },
-  { nv: 4, q: "Un swap de divisas cruzado sirve para", o: ["convertir deuda de una moneda a otra durante toda su vida", "especular con la tasa local", "cubrir solo el cupón"], c: 0, e: "Es cómo una empresa emite en dólares y termina pagando en su moneda sin quedarse expuesta." },
+  { nv: 4, q: "Un swap de divisas cruzado sirve para", o: ["convertir deuda de una moneda a otra durante toda su vida", "especular con la tasa local", "cubrir solo el cupón"], c: 0, e: "Es cómo una empresa emite en dólares y termina pagando en su moneda sin quedarse expuesta.", pista: "Una empresa pidió un préstamo en una moneda, pero gana su plata en otra. Este contrato le permite comportarse como si hubiera pedido el préstamo en su propia moneda desde el principio, y por todo el tiempo que dure la deuda." },
   { nv: 4, q: "Cuando el spread de crédito de un bono se amplía y las tasas bajan a la vez, el precio", o: ["puede caer si el crédito domina el movimiento", "sube siempre", "no se mueve"], c: 0, e: "El rendimiento tiene dos partes y pueden ir en direcciones opuestas. Solo importa la suma." },
-  { nv: 4, q: "Un fondo que reporta valoraciones trimestrales de activos ilíquidos muestra", o: ["volatilidad artificialmente baja", "el riesgo real de la estrategia", "más riesgo que el mercado listado"], c: 0, e: "No ver el precio no es no tener riesgo. Se llama suavizado de retornos y engaña a los ratios." },
+  { nv: 4, q: "Un fondo que reporta valoraciones trimestrales de activos ilíquidos muestra", o: ["volatilidad artificialmente baja", "el riesgo real de la estrategia", "más riesgo que el mercado listado"], c: 0, e: "No ver el precio no es no tener riesgo. Se llama suavizado de retornos y engaña a los ratios.", pista: "Si algo casi no se vende ni se compra en el mercado, su precio oficial solo se actualiza de vez en cuando. Que un número se mueva poco en el papel no siempre significa que el riesgo real detrás sea poco." },
   { nv: 4, q: "El apalancamiento de una posición con derivados se mide mejor por", o: ["la exposición nocional frente al capital", "el margen inicial exigido", "la prima pagada"], c: 0, e: "Con poco margen puedes mover una exposición enorme, y eso es lo que decide si sobrevives al movimiento." },
-  { nv: 4, q: "En un préstamo sindicado, el banco agente", o: ["organiza y administra el crédito entre varios prestamistas", "asume todo el riesgo", "garantiza el repago"], c: 0, e: "Reparte el riesgo entre varios y cobra por coordinar. El riesgo no desaparece, se distribuye." },
-  { nv: 4, q: "Una emisión con calificación en el límite del grado de inversión es sensible porque", o: ["si baja un escalón, muchos fondos están obligados a venderla", "paga menos cupón", "no tiene mercado secundario"], c: 0, e: "La venta forzada por mandato es la razón por la que ese escalón mueve tanto el precio." },
+  { nv: 4, q: "En un préstamo sindicado, el banco agente", o: ["organiza y administra el crédito entre varios prestamistas", "asume todo el riesgo", "garantiza el repago"], c: 0, e: "Reparte el riesgo entre varios y cobra por coordinar. El riesgo no desaparece, se distribuye.", pista: "Un préstamo muy grande casi nunca lo pone un solo banco: se reparte entre varios. Piensa qué trabajo hace falta para coordinar entre todos esos bancos, y quién lo cobra." },
+  { nv: 4, q: "Una emisión con calificación en el límite del grado de inversión es sensible porque", o: ["si baja un escalón, muchos fondos están obligados a venderla", "paga menos cupón", "no tiene mercado secundario"], c: 0, e: "La venta forzada por mandato es la razón por la que ese escalón mueve tanto el precio.", pista: "Muchos fondos grandes tienen una regla que les prohíbe quedarse con deuda por debajo de cierta calificación. Piensa qué pasa con el precio de un bono cuando de repente un montón de fondos están obligados a soltarlo a la vez." },
   { nv: 4, q: "Un inversionista que exige retornos en dólares en un país con inflación alta debe medir el desempeño", o: ["en moneda dura y después de inflación", "en moneda local nominal", "contra el índice local"], c: 0, e: "Ganarle a la inflación local en pesos puede ser perder la mitad medido en dólares." },
-  { nv: 5, q: "El descalce entre activos ilíquidos y pasivos rescatables a la vista es peligroso porque", o: ["una ola de rescates fuerza a vender lo bueno primero", "reduce el retorno esperado", "aumenta las comisiones"], c: 0, e: "El que sale primero cobra a valor de libro y el que se queda hereda lo ilíquido. De ahí las ventanas de rescate." },
-  { nv: 5, q: "En una reestructuración de deuda corporativa, un intercambio con quita del 40%", o: ["reconoce que el negocio no soporta la deuda original", "mejora la calificación de inmediato", "no afecta a los accionistas"], c: 0, e: "Si el equity sobrevive intacto a una quita, alguien negoció mal, y casi nunca es el acreedor garantizado." },
+  { nv: 5, q: "El descalce entre activos ilíquidos y pasivos rescatables a la vista es peligroso porque", o: ["una ola de rescates fuerza a vender lo bueno primero", "reduce el retorno esperado", "aumenta las comisiones"], c: 0, e: "El que sale primero cobra a valor de libro y el que se queda hereda lo ilíquido. De ahí las ventanas de rescate.", pista: "El fondo invirtió en cosas que no se pueden vender rápido, pero le prometió a sus inversores que podían pedir su dinero cuando quisieran. Piensa qué pasa si muchos piden su dinero de golpe, y qué le toca vender primero para poder pagarles." },
+  { nv: 5, q: "En una reestructuración de deuda corporativa, un intercambio con quita del 40%", o: ["reconoce que el negocio no soporta la deuda original", "mejora la calificación de inmediato", "no afecta a los accionistas"], c: 0, e: "Si el equity sobrevive intacto a una quita, alguien negoció mal, y casi nunca es el acreedor garantizado.", pista: "Quita significa que a los que prestaron dinero les van a pagar bastante menos de lo que originalmente les debían. Piensa qué dice eso sobre si la empresa alguna vez pudo pagar toda esa deuda tal como estaba." },
   { nv: 5, q: "El costo de capital de un proyecto en un país con riesgo soberano alto debería reflejar", o: ["riesgo país, moneda y riesgo específico del proyecto por separado", "solo la tasa local", "el mismo WACC de la matriz"], c: 0, e: "Sumar todo en un número redondo es lo que hace que proyectos malos parezcan aprobables." },
   { nv: 5, q: "Al valorar una empresa con opciones sobre acciones a empleados, el efecto correcto es", o: ["tratarlas como dilución futura y descontarla hoy", "ignorarlas hasta que se ejerzan", "sumarlas al efectivo"], c: 0, e: "Es una transferencia real de valor del accionista al empleado, y muchas veces la única forma de que el flujo se sostenga." },
   { nv: 5, q: "Un fondo que rinde 1% mensual con volatilidad casi nula durante años", o: ["merece revisar cómo valora y quién custodia los activos", "es un gestor excepcional", "está tomando poco riesgo"], c: 0, e: "La ausencia de volatilidad no existe en activos con riesgo. Cuando aparece, suele estar en la contabilidad." },
   { nv: 5, q: "En un mandato con comisión de éxito sin marca de agua, el gestor", o: ["puede cobrar por recuperar pérdidas que él mismo generó", "solo cobra sobre nuevos máximos", "no cobra si hay pérdidas"], c: 0, e: "La marca de agua existe justo para evitar cobrar dos veces la misma ganancia." },
   { nv: 5, q: "El principal argumento contra apalancar una cartera diversificada para subir el retorno es", o: ["que el margen te fuerza a vender en el peor momento", "que baja el retorno esperado", "que la diversificación desaparece"], c: 0, e: "La aritmética funciona; la secuencia de precios es la que te saca del juego antes del final." },
-  { nv: 5, q: "Un contrato con cláusula de cambio material adverso permite", o: ["al comprador retirarse si el negocio se deteriora antes del cierre", "renegociar el precio siempre", "extender el plazo indefinidamente"], c: 0, e: "Se litiga mucho y se gana poco: los tribunales exigen un deterioro duradero, no un mal trimestre." },
+  { nv: 5, q: "Un contrato con cláusula de cambio material adverso permite", o: ["al comprador retirarse si el negocio se deteriora antes del cierre", "renegociar el precio siempre", "extender el plazo indefinidamente"], c: 0, e: "Se litiga mucho y se gana poco: los tribunales exigen un deterioro duradero, no un mal trimestre.", pista: "Entre que se firma el acuerdo de compra y que de verdad se entrega el dinero, suele pasar tiempo. Esta cláusula protege a una de las dos partes por si, en ese tiempo, algo se rompe de verdad en el negocio que se está comprando." },
   { nv: 5, q: "Al medir el desempeño de una cartera contra un índice, el error más común es", o: ["comparar contra un índice que no refleja el riesgo asumido", "usar retornos netos", "medir en períodos largos"], c: 0, e: "Ganarle al índice equivocado es la forma más elegante de no rendir cuentas." },
-  { nv: 5, q: "La razón de fondo por la que casi ninguna estrategia mantiene su ventaja durante décadas es", o: ["que el capital que la persigue elimina el retorno que la justificaba", "que los mercados dejan de moverse", "que los modelos envejecen"], c: 0, e: "Toda ineficiencia se cierra cuando suficiente dinero la explota. Por eso el oficio nunca deja de exigir criterio nuevo." },
+  { nv: 5, q: "La razón de fondo por la que casi ninguna estrategia mantiene su ventaja durante décadas es", o: ["que el capital que la persigue elimina el retorno que la justificaba", "que los mercados dejan de moverse", "que los modelos envejecen"], c: 0, e: "Toda ineficiencia se cierra cuando suficiente dinero la explota. Por eso el oficio nunca deja de exigir criterio nuevo.", pista: "Si una forma de ganar dinero funciona de verdad, tarde o temprano mucha otra gente se da cuenta y empieza a hacer lo mismo. Piensa qué le pasa a una ganancia cuando de repente todo el mundo compite por la misma oportunidad." },
   { nv: 5, q: "En una reestructuración, el acreedor con garantía sobre el activo clave del negocio", o: ["tiene el poder real de negociación aunque sea minoritario", "cobra igual que los demás", "pierde su garantía en el proceso"], c: 0, e: "En una quiebra no manda quien tiene más deuda, manda quien controla el activo sin el cual no hay negocio." },
   { nv: 5, q: "Aplicar una tasa de descuento única a un negocio con divisiones de riesgo muy distinto", o: ["sobrevalora la división riesgosa y subvalora la estable", "es la práctica correcta", "solo afecta al valor terminal"], c: 0, e: "Por eso se valora por suma de partes cuando los negocios no se parecen." },
 ];
@@ -1785,7 +1802,9 @@ const nivelDe = (turno, estudia) => clamp(
   1, 5
 );
 /* cuántas preguntas trae el examen según el nivel */
-const largoExamen = (nv) => (nv <= 1 ? 3 : nv <= 3 ? 4 : 5);
+/* Antes subía a 5 en los niveles altos, justo cuando el juego debería
+   sentirse más rápido hacia el final, no más lento. */
+const largoExamen = (nv) => (nv <= 1 ? 3 : 4);
 
 /* mayoría del nivel que te toca, una de repaso y una del nivel siguiente */
 const armarExamen = (nv, cuantas, temasVistos) => {
@@ -3386,6 +3405,10 @@ const BASE = {
   modo: "normal", edadIni: 20, estudia: 0,
   nombre: "", genero: null,
   guia: false, guiaVistas: [],
+  /* qué minijuegos ya mostraron su tarjeta de reglas completa en esta
+     partida: la segunda vez que sale "tres en raya" no hace falta leer
+     otra vez cómo se juega tres en raya. */
+  juegosVistos: [],
   /* qué sistemas del juego ya se abrieron */
   abiertos: [],
   /* temas del temario que ya se dieron en clase, para no examinar de
@@ -3418,6 +3441,21 @@ const GENEROS = [
   { id: "m", n: "Masculino" },
   { id: "x", n: "Prefiero no decirlo" },
 ];
+/* Cuánto descansas al cerrar el año, en proporción a lo que te falta para
+   estar entero. Antes esto era un suelo plano de +6 por debajo de 50, y ese
+   suelo tenía dos efectos que nadie quería: clavaba la energía en 6 exactos
+   para todos desde el año 12, y como se aplicaba antes de comprobar el
+   agotamiento, hacía imposible quebrarse. Proporcional, en cambio, se
+   estabiliza en 100 − desgaste·2,846: el nivel al que vives lo eliges tú. */
+const RECUPERA = 0.26;
+
+/* Lo que el cansancio te quita —o te da— al resolver algo. La energía no
+   mueve tu sueldo ni tus atributos: mueve lo bien que rindes, que es lo que
+   se puede ver ANTES de decidir, en el propio botón del minijuego.
+   Centrado en 54 porque ése es el equilibrio de quien juega a ritmo normal:
+   jugar normal es neutro, cuidarte es ventaja, apretar tiene precio. */
+const ajusteEne = (ene) => clamp(Math.round((numero(ene, 54) - 54) / 3), -14, 10);
+
 /* Cuánto te dejas en la oficina. Sube la carrera y baja la energía,
    que es el intercambio de verdad y el que nadie hace consciente. */
 const RITMOS = [
@@ -4036,6 +4074,11 @@ const sanear = (bruto) => {
   st.rango = entero(r.rango, 0, 0, RANGOS.length - 1);
   st.carrera = clamp(numero(r.carrera, 0), 0, 100000);
   ["mod", "cri", "red", "rep", "ene"].forEach((k) => { st[k] = clamp(numero(r[k], BASE[k]), 0, 100); });
+  /* el año en que se avisó del cansancio, para no repetir el aviso dos
+     años seguidos. sanear() reconstruye el estado desde cero, así que sin
+     esta línea la clave se perdería en cada cierre y el aviso volvería a
+     salir siempre. -9 para que nunca coincida con turno-1 al empezar. */
+  st.avisoEne = entero(r.avisoEne, -9, -9, 60);
   st.cash = clamp(numero(r.cash, 0), -TOPE_PLATA, TOPE_PLATA);
   st.cartera = clamp(numero(r.cartera, 0), 0, TOPE_PLATA);
   st.pais = IDS_PAIS.indexOf(r.pais) >= 0 ? r.pais : null;
@@ -4081,6 +4124,7 @@ const sanear = (bruto) => {
   st.nivelGasto = GASTOS.some((x) => x.id === r.nivelGasto) ? r.nivelGasto : "normal";
   st.guia = r.guia === true;
   st.guiaVistas = unicos(listaDe(r.guiaVistas, (x) => GUIA.some((g) => g.id === x), 20));
+  st.juegosVistos = unicos(listaDe(r.juegosVistos, (x) => typeof x === "string" && !!JUEGOS[x], 20));
   /* Una partida guardada antes de la apertura escalonada no trae la
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
@@ -5151,8 +5195,16 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
-function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema }) {
+function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, visto, onVista }) {
   const [listo, setListo] = useState(false);
+  /* La primera vez se lee entera. Después, un resumen con la opción de
+     volver a desplegarla: lo que sobra es leer "cómo se juega tres en
+     raya" por décima vez, no poder repasarlo si hace falta. */
+  const [completa, setCompleta] = useState(!visto);
+  const empezar = () => {
+    if (!visto && onVista) onVista(tipo);
+    setListo(true);
+  };
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
      setTimeout viejo dispara tarde o si el componente ya se desmonto.
@@ -5169,6 +5221,24 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema })
   if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
   if (listo) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
+  if (visto && !completa) {
+    return (
+      <div className="ea-jw">
+        <div className="ea-jnombre ea-dis"><span>VAS A JUGAR</span>{j.n}</div>
+        <div className="ea-jmeta">
+          <span className="ea-jtag">{j.tema}</span>
+          <span className="ea-jtag">{j.dur}</span>
+          {nivelJuego && <span className="ea-jtag">Nivel {nivel} · {NIVEL_N[nivel]}</span>}
+        </div>
+        <div className="ea-tabla" style={{ marginTop: 12 }}>
+          <span className="ea-td">Cuenta como éxito</span><span className="ea-tdn">{j.gana}</span>
+          <span className="ea-td">Te ayuda</span><span className="ea-tdn">{statN} {Math.round(ayuda)} de 100</span>
+        </div>
+        <button className="ea-btn" onClick={empezar}>Jugar</button>
+        <button className="ea-mini" style={{ marginTop: 10 }} onClick={() => setCompleta(true)}>Ver las reglas otra vez</button>
+      </div>
+    );
+  }
   return (
     <div className="ea-jw">
       {/* Antes solo se veían tema y duración, así que «Tres en raya» aparecía
@@ -5201,7 +5271,7 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema })
           <div className="ea-glosX">{g.x}</div>
         </div>
       ))}
-      <button className="ea-btn" onClick={() => setListo(true)}>Entendido, empezar</button>
+      <button className="ea-btn" onClick={empezar}>Entendido, empezar</button>
     </div>
   );
 }
@@ -7753,20 +7823,32 @@ function Motor() {
     desgaste += -(rt.ene) - gv.ene;   /* el ritmo cansa, vivir bien descansa */
     if (st.pareja === "casado" || st.pareja === "noviazgo") desgaste -= 3;   /* alguien con quien contar */
     desgaste += Math.min(6, entero(st.hijos, 0, 0, 8) * 2);                  /* y alguien a quien cuidar */
-    st.ene = clamp(st.ene - desgaste, 0, 100);
-    /* Por debajo de la mitad el cuerpo se impone: duermes, cancelas, bajas
-       el ritmo. No te devuelve a ochenta, pero rompe la caída libre que
-       hacía imposible pasar del año diez. */
-    if (st.ene < 50) {
-      st.ene = clamp(st.ene + 6, 0, 100);
-      if (st.ene < 35) notas.push("Estás funcionando a media máquina. El cuerpo te está cobrando las horas.");
-    }
+    /* El desgaste se resta ANTES de recuperar y sin acotar por abajo: el
+       valor crudo es el que dice si te quiebras. El suelo plano que había
+       aquí (+6 por debajo de 50) se aplicaba antes de esa comprobación, así
+       que la energía nunca podía llegar a cero y el burnout entero era
+       código muerto. Peor: el suelo la clavaba en 6 exactamente, la misma
+       cifra para todo el mundo desde el año 12 en adelante. */
+    const eneCruda = st.ene - desgaste;
     let terminar = null;
-    if (st.ene <= 0) {
+    if (eneCruda <= 0) {
       st.burnouts += 1;
-      st.ene = 55; st.rep = clamp(st.rep - 8, 0, 100); st.cash -= 3000;
+      st.ene = 45; st.rep = clamp(st.rep - 8, 0, 100); st.cash -= 3000;
       notas.push("Te quiebras. Meses fuera y un regreso más lento de lo que admites.");
       if (st.burnouts >= 4) terminar = "burnout";
+    } else {
+      /* Recuperación proporcional: descansas más cuanto peor estás, pero
+         nunca lo bastante para ignorarlo. El sistema se estabiliza solo en
+         100 − desgaste·2,846, así que el nivel al que vives lo eliges tú con
+         el ritmo y el tren de vida, en vez de ser una constante. */
+      st.ene = clamp(eneCruda + Math.round((100 - eneCruda) * RECUPERA), 0, 100);
+    }
+    /* El aviso, solo cuando el cansancio ya te está costando trabajo de
+       verdad y no dos años seguidos: antes salía todos los años desde el
+       quinto, y una frase que sale veinticinco veces enseña a no leerla. */
+    if (!terminar && ajusteEne(st.ene) <= -6 && st.avisoEne !== st.turno - 1) {
+      st.avisoEne = st.turno;
+      notas.push("Estás funcionando a media máquina. El cuerpo te cobra las horas, y se nota en todo lo que intentas.");
     }
     if (st.rep <= 6) {
       st.despidos = entero(numero(st.despidos, 0) + 1, 1, 0, 9);
@@ -7865,6 +7947,7 @@ function Motor() {
     if (s.rama === "pe" && ["estructura", "banderas"].indexOf(tipo) >= 0) a += 15;
     if (s.rama === "mercados" && ["trading", "calculo"].indexOf(tipo) >= 0) a += 15;
     a += MODO(s.modo).ayuda;   /* el modo aprendiz perdona más */
+    a += ajusteEne(s.ene);     /* y el cansancio no perdona nada */
     return clamp(a, 0, 100);
   };
 
@@ -7873,7 +7956,10 @@ function Motor() {
     setOp(o);
     if (o.juego || o.j) { irA("minijuego"); return; }
     if (o.chk) {
-      const p = clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5, 0.12, 0.9);
+      /* El cansancio también pesa aquí, salvo en la única tirada que ya mide
+         la energía directamente: sumárselo ahí sería contarla dos veces. */
+      const base = s[o.chk.s] + (o.chk.s === "ene" ? 0 : ajusteEne(s.ene));
+      const p = clamp((base - o.chk.dif) / 55 + 0.5, 0.12, 0.9);
       const ok = Math.random() < p;
       resolverEscena(ok ? o.chk.ok : o.chk.no, ok ? "exito" : "fallo", o);
     } else resolverEscena(o.d, "exito", o);
@@ -8072,20 +8158,33 @@ function Motor() {
 
       {fase === "portada" && (
         <div className="ea-wrap ea-portada">
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Simulador de carrera e inversión</div>
-          <h1 className="ea-h1 ea-dis">El Analista</h1>
+          <div className="ea-cintaPortada">
+            <span className="ea-dis">No hace falta saber de finanzas</span>
+            <span className="ea-mono">modo aprendiz</span>
+          </div>
+          {/* Tres barras que suben. Es el mismo distintivo del favicon y el
+              de la tarjeta al compartir: el juego no tenía ninguno. */}
+          <svg className="ea-emblema" viewBox="0 0 72 85" aria-hidden="true" focusable="false">
+            <rect x="0" y="40" width="18" height="45" fill="var(--cobre)" />
+            <rect x="27" y="20" width="18" height="65" fill="var(--cobre)" />
+            <rect x="54" y="0" width="18" height="85" fill="var(--verde)" />
+          </svg>
+          <h1 className="ea-h1 ea-dis ea-h1Portada">El Analista</h1>
+          <div className="ea-reglaGorda" />
+          <div className="ea-mono ea-subPortada">Simulador de carrera e inversión</div>
           <p className="ea-lede">
-            Treinta años de carrera y de dinero, y tú eliges desde dónde los empiezas: recién graduado a los
-            veinte, o a los cincuenta con media vida hecha y bastante más criterio. De dónde vienes y qué
-            estudiaste te van a abrir unas puertas y cerrarte otras. Cada año trae decisiones, noticias que
-            sacuden el mercado, una cartera que repartes tú y un examen que se pone más difícil a medida que
-            estudias. Al final decides si te retiras o sigues cinco años más.
+            Nadie nace sabiendo qué hacer con su dinero, y casi nadie tiene dónde practicar sin perderlo.
+            Aquí sí: cada término se explica antes de usarse y puedes arruinarte tranquilo. Eliges desde
+            dónde empiezas —recién graduado a los veinte, o a los cincuenta con media vida hecha y bastante
+            más criterio—, y de dónde vienes y qué estudiaste te van a abrir unas puertas y cerrarte otras.
+            Cada año trae decisiones, noticias que sacuden el mercado, una cartera que repartes tú y un
+            examen que se pone más difícil a medida que estudias.
           </p>
           <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
             onClick={() => { if (enFase("portada")) irA("aviso"); }}>Volver a leer el aviso</button>
           <div className="ea-regla" />
           <div className="ea-cifras" style={{ marginBottom: 26 }}>
-            <div><div className="ea-cifraK">Recorrido</div><div className="ea-cifraV ea-mono">30 años</div></div>
+            <div><div className="ea-cifraK">Para empezar</div><div className="ea-cifraV ea-dis">No hace falta saber nada</div></div>
             <div><div className="ea-cifraK">Edad</div><div className="ea-cifraV ea-dis">Elige tu edad</div></div>
             <div><div className="ea-cifraK">La meta</div><div className="ea-cifraV ea-dis">Ser millonario</div></div>
             <div><div className="ea-cifraK">Por el camino</div><div className="ea-cifraV ea-dis">Bodas, hijos, estafas</div></div>
@@ -8346,7 +8445,11 @@ function Motor() {
                   único momento en que cambian una decisión. */}
               <div className="ea-mono ea-signos">
                 <span>sueldo {fmt(salarioAnual(s))} al año</span>
-                {s.ene < 50 && <span className={s.ene < 30 ? "mal" : "ojo"}>energía {Math.round(s.ene)}</span>}
+                {ajusteEne(s.ene) < 0 && (
+                  <span className={ajusteEne(s.ene) <= -6 ? "mal" : "ojo"}>
+                    energía {Math.round(s.ene)} · rindes {ajusteEne(s.ene)}
+                  </span>
+                )}
                 {s.rep < 30 && <span className={s.rep < 20 ? "mal" : "ojo"}>reputación {Math.round(s.rep)}</span>}
                 {s.deuda > 0 && <span className="mal">debes {fmt(s.deuda)}</span>}
               </div>
@@ -8405,6 +8508,19 @@ function Motor() {
                     <div className="ea-plegs">
                     <Plegable titulo="Tus atributos" resumen={"criterio " + Math.round(s.cri)}>
                     <Stat k="mod" v={s.mod} /><Stat k="cri" v={s.cri} /><Stat k="red" v={s.red} /><Stat k="rep" v={s.rep} /><Stat k="ene" v={s.ene} ene />
+                    {/* Un atributo que no dice qué hace es un número decorativo. */}
+                    <div className="ea-itemD" style={{ marginTop: 9 }}>
+                      {(() => {
+                        const aj = ajusteEne(s.ene);
+                        if (aj > 0) return "Llegas descansado a todo: +" + aj + " de ayuda en cada minijuego y en cada tirada. Se paga viviendo bien y sin apretar el ritmo.";
+                        if (aj < 0) return "El cansancio te resta " + Math.abs(aj) + " de ayuda en cada minijuego y en cada tirada. Bajar el ritmo, vivir más holgado o el gimnasio lo recuperan.";
+                        return "Tu energía está en su punto neutro: ni te ayuda ni te estorba en lo que intentas.";
+                      })()}
+                    </div>
+                    <div className="ea-itemD" style={{ marginTop: 6 }}>
+                      Reputación multiplica tu bono y abarata tus préstamos. Criterio amortigua las
+                      caídas de la cartera por encima de 55. Red te abre el fondo a partir de 55.
+                    </div>
                     </Plegable>
                     <Plegable titulo="Quién eres" resumen={RANGO(s.rango).n}>
                     <div className="ea-fila" style={{ marginTop: 0 }}>
@@ -9012,7 +9128,18 @@ function Motor() {
                       <button className="ea-op" key={i} disabled={carteraPend} onClick={() => elegir(o)}>
                         <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
                         {o.req && <span className="ea-opTag" style={{ color: "var(--cobre)" }}>Solo tú puedes tomar esta</span>}
-                        {(o.juego || o.j) && <span className="ea-opTag">{JUEGO(o.juego || o.j).n} · {JUEGO(o.juego || o.j).tema} · te ayuda {ETIQ[o.stat] || "Criterio"} {Math.round(ayudaDe(o))}</span>}
+                        {/* La ayuda ya venía aquí; lo que faltaba era decir cuánto de
+                            ella te la está comiendo el cansancio. Verlo ANTES de elegir
+                            es lo que convierte la energía en una decisión. */}
+                        {(o.juego || o.j) && (() => {
+                          const aj = ajusteEne(s.ene);
+                          return (
+                            <span className="ea-opTag">
+                              {JUEGO(o.juego || o.j).n} · {JUEGO(o.juego || o.j).tema} · te ayuda {ETIQ[o.stat] || "Criterio"} {Math.round(ayudaDe(o))}
+                              {aj !== 0 && (aj < 0 ? " · cansado " + aj : " · descansado +" + aj)}
+                            </span>
+                          );
+                        })()}
                         {o.ramaId && <span className="ea-opTag">{o.ramaId === "boutique" ? FIRMA_DE(s).d : (RAMAS.find((r) => r.id === o.ramaId) || {}).d}</span>}
                         {(() => {
                           const ef = efectoDe(o);
@@ -9039,7 +9166,9 @@ function Motor() {
                   <h2 className="ea-memoTit ea-dis">{op.t}</h2>
                   <TarjetaJuego tipo={op.juego || op.j} ayuda={ayudaDe(op)} nivel={nivelDe(s.turno, s.estudia)}
                     statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo}
-                    temas={s.temas} onTema={apuntarTema} />
+                    temas={s.temas} onTema={apuntarTema}
+                    visto={(Array.isArray(s.juegosVistos) ? s.juegosVistos : []).indexOf(op.juego || op.j) >= 0}
+                    onVista={(t) => setS((st) => ({ ...st, juegosVistos: unicos((Array.isArray(st.juegosVistos) ? st.juegosVistos : []).concat(t)) }))} />
                 </div>
               )}
 
