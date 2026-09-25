@@ -1086,7 +1086,11 @@ const CSS4 = `
 
 /* Las opciones entran una detras de otra, no las tres a la vez. El
    escalonado lo pone el JSX con animationDelay. */
-.ea-op{animation:ea-sube .32s cubic-bezier(.2,.8,.3,1) backwards}
+/* el escalonado sale de --i, que pone el JSX: asi el marco de las
+   decisiones que pesan puede retrasarlas todas sin pelearse con un
+   animationDelay en linea, que ganaria siempre */
+.ea-op{animation:ea-sube .32s cubic-bezier(.2,.8,.3,1) backwards;
+  animation-delay:calc(var(--i,0) * 70ms)}
 @keyframes ea-sube{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
 .ea-op:active:not(:disabled){transform:translateX(3px) scale(.995)}
 
@@ -1220,6 +1224,54 @@ const CSS4 = `
   .ea-anilloDisco svg{width:36px;height:36px}
   .ea-anilloK{font-size:7.5px;letter-spacing:.06em}
 }
+
+/* ============================================================
+   LA DECISION QUE PESA, A PANTALLA COMPLETA
+   Fondo de fieltro con un halo del color de su clase detras, el sello
+   grande que cae, el titulo en grande y las opciones entrando de una en
+   una cuando el titulo ya se asento. Todo con la misma escena de dentro.
+   ============================================================ */
+/* Dos fondos a proposito: si el navegador no entiende color-mix()
+   descarta la declaracion ENTERA, y sin la primera linea el marco
+   quedaria transparente sobre el juego. */
+.ea-escenaPlena{position:fixed;inset:0;z-index:72;overflow-y:auto;
+  background:var(--fieltro);
+  background:
+    radial-gradient(60vmax 50vmax at 50% 18%, color-mix(in srgb, var(--tono,#B9532A) 26%, transparent), transparent 62%),
+    var(--fieltro);
+  display:flex;justify-content:center;align-items:flex-start;
+  padding:calc(24px + env(safe-area-inset-top,0px)) 16px calc(28px + env(safe-area-inset-bottom,0px));
+  animation:ea-entra .32s ease-out}
+.ea-escenaPlenaCaja{width:100%;max-width:600px;margin:auto 0}
+
+.ea-dramaTop{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:18px}
+.ea-dramaIco{color:var(--tono,var(--cobre));
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.45));
+  animation:ea-caerSello .62s cubic-bezier(.2,1.35,.35,1) backwards;animation-delay:.08s}
+@keyframes ea-caerSello{
+  0%{opacity:0;transform:translateY(-40px) rotate(-24deg) scale(1.7)}
+  60%{opacity:1;transform:translateY(4px) rotate(5deg) scale(.94)}
+  100%{opacity:1;transform:none}
+}
+.ea-dramaK{font-size:11.5px;letter-spacing:.34em;color:var(--tono,var(--cobre));
+  animation:ea-flash .4s ease-out backwards;animation-delay:.42s}
+
+/* el memorando dentro del marco: mas grande, con mas aire y sin el sello
+   de la esquina, que ya esta arriba en grande */
+.ea-memoDrama{border-left:none;
+  box-shadow:0 28px 70px rgba(0,0,0,.5);
+  box-shadow:0 28px 70px rgba(0,0,0,.5), 0 0 0 1px color-mix(in srgb, var(--tono,#B9532A) 40%, transparent);
+  animation:ea-sube .5s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:.3s}
+.ea-memoDrama .ea-selloClase{display:none}
+.ea-memoDrama .ea-memoHead{display:none}
+.ea-memoDrama .ea-memoTit{font-size:clamp(28px,7.6vw,40px);line-height:1.05;padding-right:0;
+  text-align:center;text-wrap:balance;margin-bottom:14px}
+.ea-memoDrama .ea-memoTxt{font-size:clamp(16px,4.3vw,18px);text-align:center;
+  max-width:44ch;margin:0 auto}
+/* las opciones esperan a que el titulo se haya asentado */
+.ea-memoDrama .ea-op{padding:15px 16px;font-size:15.5px;animation-delay:calc(.75s + var(--i,0) * 110ms)}
+.ea-memoDrama .ea-op:hover:not(:disabled){transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(0,0,0,.14);border-color:var(--tono,var(--cobre))}
 
 /* ---- el anuncio de una decision que pesa ----
    Una legendaria o una bifurcacion salian como una opcion mas dentro del
@@ -2670,7 +2722,7 @@ const E = [
       { t: "Armar un índice maestro que sirva a todos", min: { mod: 28 }, j: "orden", stat: "cri", d: { mod: 5, rep: 5, ene: -10, car: 3, msg: "Ordenas el desastre siguiendo la lógica del proceso." } },
       { t: "Revisar solo lo que te pidieron", d: { ene: -3, car: 1, msg: "Cumples. Nada más y nada menos." } },
     ] },
-  { id: 7, min: 1, max: 4, t: "Te llama un headhunter", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
+  { id: 7, clave: true, min: 1, max: 4, t: "Te llama un headhunter", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
     o: [
       { t: "Aceptar y mudarte de firma", d: { cash: 4000, ene: -10, rep: -4, car: 6, red: 5, msg: "Nueva placa en la puerta, mismo Excel. Tu antigua red se enfría un poco." } },
       { t: "Usarla para negociar donde estás", min: { red: 20 }, j: "anclaje", stat: "red", d: { cash: 3000, rep: 3, car: 3, msg: "Entras a la oficina del socio con una oferta en la mano y un número en la cabeza." } },
@@ -2712,7 +2764,7 @@ const E = [
       { t: "Desearle bien y mantener el puente", d: { red: 8, rep: 5, ene: -5, msg: "A los dos años ese fondo entra como comprador en un proceso tuyo." } },
       { t: "Contraofertar y retenerlo", min: { red: 34 }, j: "anclaje", stat: "red", d: { car: 4, ene: -5, cash: -2000, msg: "Tienes que encontrar el número que lo convence sin romper la escala del equipo." } },
     ] },
-  { id: 15, min: 4, max: 6, t: "Te ofrecen una silla en el board", x: "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
+  { id: 15, clave: true, min: 4, max: 6, t: "Te ofrecen una silla en el board", x: "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
     o: [
       { t: "Aceptar y tomarlo en serio", d: { red: 10, rep: 8, cri: 6, ene: -9, cash: 8000, car: 4, msg: "Cuatro juntas al año, mucha lectura y una visión del negocio que desde afuera no tenías." } },
       { t: "Declinar por conflicto de interés", d: { rep: 6, cri: 6, msg: "El cliente entiende y confía más. Tu agenda respira." } },
@@ -2806,7 +2858,7 @@ const E = [
       { t: "Explicárselo paso por paso", j: "orden", stat: "cri", d: { red: 6, rep: 6, cri: 4, msg: "Le pides una hoja y le dibujas el orden completo." } },
       { t: "Mandarle el documento y que lo lea", d: { rep: -2, ene: 3, msg: "Técnicamente correcto. El LP se queda con la duda y con la sensación." } },
     ] },
-  { id: 33, min: 2, max: 6, t: "Dos ofertas sobre la mesa", x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
+  { id: 33, clave: true, min: 2, max: 6, t: "Dos ofertas sobre la mesa", x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
     o: [
       { t: "Ordenar los criterios y decidir con método", min: { cri: 38 }, j: "orden", stat: "cri", d: { cri: 7, car: 5, rep: 5, msg: "Pones los criterios en orden de importancia antes de mirar los precios." } },
       { t: "Ir por el precio más alto y punto", chk: { s: "cri", dif: 55, ok: { cash: 6000, car: 4, msg: "El precio alto además cerró sin problemas. Suerte y criterio en la misma jugada." }, no: { rep: -8, ene: -6, msg: "El comprador no consigue el financiamiento y el proceso se cae en la recta final." } } },
@@ -3044,7 +3096,7 @@ const E2 = [
       { t: "Filtrar tú los hallazgos", min: { cri: 44 }, j: "banderas", stat: "cri", d: { cri: 7, rep: 6, car: 4, msg: "Te sientas a separar lo que importa de lo que solo hace ruido." } },
       { t: "Subirlos todos al comité", d: { rep: -4, ene: -3, cri: 2, msg: "El comité se pierde en detalles operativos y el caso pierde fuerza. Filtrar también es tu trabajo." } },
     ] },
-  { id: 43, min: 3, max: 6, t: "Te ofrecen invertir junto a un fondo", x: "Un fondo amigo te deja entrar en coinversión con un ticket pequeño. Hay que revisar la compañía rápido.",
+  { id: 43, clave: true, min: 3, max: 6, t: "Te ofrecen invertir junto a un fondo", x: "Un fondo amigo te deja entrar en coinversión con un ticket pequeño. Hay que revisar la compañía rápido.",
     o: [
       { t: "Revisar y decidir tú", j: "banderas", stat: "cri", d: { cash: 6000, cri: 5, red: 4, msg: "Te dan tres días y un archivo comprimido." } },
       { t: "Entrar confiando en el fondo", chk: { s: "red", dif: 60, ok: { cash: 9000, red: 5, msg: "El fondo hizo bien su trabajo y tú te montaste gratis en su análisis." }, no: { cash: -7000, cri: 5, msg: "El fondo también se equivocó. Confiar en el análisis ajeno sale caro cuando sale mal." } } },
@@ -3094,7 +3146,7 @@ const E3 = [
       { t: "Esperar a que se aclare la norma", d: { cash: -3500, cri: 4, msg: "La norma se aclara dos semanas después y para entonces ya perdiste 30% del poder de compra." } },
       { t: "Consultarlo con un abogado", d: { cash: -1200, cri: 3, rep: 2, msg: "Legalmente impecable y financieramente tarde." } },
     ] },
-  { id: 55, min: 1, max: 6, t: "Te ofrecen una visa de trabajo", x: "Una firma de Nueva York quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
+  { id: 55, clave: true, min: 1, max: 6, t: "Te ofrecen una visa de trabajo", x: "Una firma de Nueva York quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
     o: [
       { t: "Aceptar y mudarte", req: { noPais: "us" }, d: { cash: 9000, mod: 7, red: -8, ene: -9, car: 7, msg: "Otra liga, otro idioma en la mesa y una red que hay que construir desde cero." }, mudar: "us" },
       { t: "Quedarte donde tu red vale algo", d: { red: 7, rep: 4, car: 2, msg: "Tu ventaja competitiva es local y decides no regalarla." } },
@@ -3240,7 +3292,7 @@ const VIDA = [
   /* ---------------- veinte y pico ---------------- */
   {
     id: 9001, eMin: 21, eMax: 34, una: true, cuando: (st) => st.pareja === "solo",
-    t: "Alguien que te importa", clave: false,
+    t: "Alguien que te importa", clave: true,
     x: "Llevas meses viendo a alguien. No es una decisión financiera y aun así lo es: el tiempo que dedicas, la ciudad en la que decides quedarte y la cantidad de fines de semana que no pasas trabajando salen todos del mismo presupuesto.",
     o: [
       { t: "Ir en serio con esta persona", d: { pareja: "noviazgo", ene: 8, rep: 2, cash: -600, msg: "Empiezas una relación seria. Ganas red de apoyo y pierdes fines de semana de oficina." } },
@@ -3292,7 +3344,7 @@ const VIDA = [
   },
   {
     id: 9011, pri: 1, eMin: 24, eMax: 45, cuando: (st) => st.pareja === "noviazgo",
-    t: "Se rompió", clave: false,
+    t: "Se rompió", clave: true,
     x: "No hubo un motivo grande. Hubo dos años de horarios imposibles, viajes que no cancelaste y una conversación pendiente que nunca tuvo un buen momento.",
     o: [
       { t: "Aceptarlo y seguir", d: { pareja: "solo", ene: -12, cash: -900, car: 5, msg: "Se termina. Trabajas más que nunca durante seis meses y tus números del año salen bien." } },
@@ -6825,6 +6877,26 @@ const TRAZOS = {
   candado:   "M5.4 10.6h13.2a1.6 1.6 0 0 1 1.6 1.6v7.2a1.6 1.6 0 0 1-1.6 1.6H5.4a1.6 1.6 0 0 1-1.6-1.6v-7.2a1.6 1.6 0 0 1 1.6-1.6z M7.8 10.6V7a4.2 4.2 0 0 1 8.4 0v3.6",
 };
 
+/* Los momentos que se juegan a pantalla completa, ademas de las
+   legendarias y las bifurcaciones, que entran solas. */
+const DRAMA_IDS = [
+  /* te ofrecen otro trabajo, otro pais u otra silla */
+  7,      /* te llama un headhunter */
+  15,     /* una silla en el board */
+  33,     /* dos ofertas sobre la mesa */
+  55,     /* una visa de trabajo */
+  119,    /* la silla del socio se decide en la mesa */
+  120,    /* dirigir la oficina de otro pais */
+  9720, 9721,   /* renunciar y montar lo tuyo */
+  /* la vida que se parte en dos */
+  9001,   /* alguien que te importa */
+  9010,   /* la conversacion: casarse */
+  9011,   /* se rompio */
+  9012,   /* un hijo */
+  9021,   /* tu padre ya no puede solo */
+  9022,   /* se murio */
+];
+
 /* El simbolo, el rotulo y el color de cada clase de escena. */
 const CLASE_ESCENA = (ev) => {
   if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
@@ -6966,6 +7038,27 @@ function Anillo({ k, v }) {
       </div>
       <span className="ea-anilloN ea-mono" style={{ color: tono }}>{Math.round(val)}</span>
       <span className="ea-anilloK ea-dis">{ETIQ[k]}</span>
+    </div>
+  );
+}
+
+/* ---- el marco de las decisiones que pesan ----
+   Sin drama devuelve la escena tal cual, en su sitio de siempre. Con
+   drama la saca a pantalla completa: fondo oscuro con un halo del color
+   de su clase, el sello grande en el centro y la escena debajo. La
+   escena de dentro es exactamente la misma: no hay un segundo camino
+   de pintado que se pueda desincronizar del primero. */
+function Marco({ drama, tono, ico, clase, ano, children }) {
+  if (!drama) return children;
+  return (
+    <div className="ea-escenaPlena" style={{ "--tono": tono }}>
+      <div className="ea-escenaPlenaCaja">
+        <div className="ea-dramaTop">
+          <div className="ea-dramaIco"><Icono k={ico || "sello"} tam={44} /></div>
+          <div className="ea-dramaK ea-dis">{clase} · {ano}</div>
+        </div>
+        {children}
+      </div>
     </div>
   );
 }
@@ -7816,17 +7909,6 @@ function Motor() {
   const [anuncio, setAnuncio] = useState(false);
   /* la segunda mitad de la leccion del año, la de las cifras propias */
   const [verLeccion, setVerLeccion] = useState(false);
-  /* el anuncio a pantalla completa de una decision que pesa */
-  const [dramatica, setDramatica] = useState(false);
-  /* Se pasa solo. Si esperara un toque, el jugador tendria que pulsar de
-     mas en cada decision importante y las pruebas se colgarian en la
-     primera: el anuncio es un golpe de efecto, no un tramite. */
-  useEffect(() => {
-    if (!dramatica) return;
-    if (typeof setTimeout !== "function") { setDramatica(false); return; }
-    const t = setTimeout(() => setDramatica(false), sinMovimiento() ? 60 : 2300);
-    return () => { try { clearTimeout(t); } catch (e) {} };
-  }, [dramatica]);
   /* el movimiento: del navegador, no de la partida */
   const [animar, setAnimarBruto] = useState(leerMovimiento);
   const setAnimar = (v) => { anotarMovimiento(v); setAnimarBruto(v); };
@@ -8049,14 +8131,17 @@ function Motor() {
   /* una escena solo sirve si tiene opciones jugables */
   const escenaValida = (e) => !!(e && e.t && Array.isArray(e.o) && e.o.length);
 
-  /* Las que merecen pantalla propia antes de presentarse: las que
-     cambian la carrera o la vida, no un martes en la oficina. */
-  const pesada = (e) => !!(e && (e.legendaria || e.rama || e.clave));
+  /* Las que se juegan a pantalla completa. Primero lo probe con todas las
+     «clave» y salian siete por partida, casi una por año: si todo es
+     dramatico, nada lo es. Las veinte decisiones clave del juego salen
+     cada dos años y muchas son rutina de oficina. Esto es mas estrecho:
+     las legendarias, las bifurcaciones y los momentos que parten una
+     vida en dos, que se nombran uno por uno. */
+  const pesada = (e) => !!(e && (e.legendaria || e.rama || DRAMA_IDS.indexOf(e.id) >= 0));
   /* presenta una escena, con anuncio si toca */
   const ponerEscena = (e) => {
     setEv(e);
     setOp(null);
-    setDramatica(pesada(e));
     irA("evento");
   };
 
@@ -10214,29 +10299,20 @@ function Motor() {
             )}
 
             <div>
-              {/* ---- el anuncio de las decisiones que pesan ----
-                  Una legendaria, una bifurcacion o una decision clave
-                  salian como una opcion cualquiera dentro del mismo
-                  memorando de siempre. Ahora se llevan la pantalla antes
-                  de presentarse: el titulo grande, su simbolo y nada mas.
-                  Se pasa sola o al toque. */}
-              {fase === "evento" && ev && dramatica && (() => {
-                const cl = CLASE_ESCENA(ev);
-                return (
-                  <div className="ea-anuncioEsc" onClick={() => setDramatica(false)}
-                    style={{ "--tono": cl.c }}>
-                    <div className="ea-anuncioEscIco"><Icono k={cl.k} tam={56} /></div>
-                    <div className="ea-anuncioEscK ea-dis">{cl.n}</div>
-                    <div className="ea-anuncioEscT ea-dis">{ev.t}</div>
-                    <div className="ea-anuncioEscB ea-dis">Toca para seguir</div>
-                  </div>
-                );
-              })()}
-
+              {/* ---- las decisiones que pesan, en el centro ----
+                  Antes habia una tarjeta de dos segundos que anunciaba la
+                  escena y despues la decision volvia a salir en el mismo
+                  memorando de siempre: la decision EN SI seguia viendose
+                  como una opcion cualquiera. Ahora una oferta de trabajo,
+                  casarse o una legendaria se juegan enteras a pantalla
+                  completa. Mismo memorando, mismas opciones y mismos
+                  candados —un solo camino de pintado—, solo que dentro de
+                  un marco que se lleva la pantalla. */}
               {fase === "evento" && ev && (() => {
                 const cl = CLASE_ESCENA(ev);
                 return (
-                <div className={"ea-memo ea-memo-" + cl.k} key={ev.id}>
+                <Marco drama={pesada(ev)} tono={cl.c} ico={cl.k} clase={cl.n} ano={ano}>
+                <div className={"ea-memo ea-memo-" + cl.k + (pesada(ev) ? " ea-memoDrama" : "")} key={ev.id}>
                   <div className={"ea-memoHead ea-dis" + (ev.legendaria ? " clave legend" : ev.clave ? " clave" : "")}>
                     <span>{cl.n}</span><span>{ano}</span>
                   </div>
@@ -10269,7 +10345,7 @@ function Motor() {
                         if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
                         return (
                           <button className={"ea-op" + (falta ? " sinfuerza" : "")} key={i}
-                            style={{ animationDelay: (i * 70) + "ms" }}
+                            style={{ "--i": i }}
                             disabled={carteraPend || !!falta}
                             title={falta ? "Te falta " + (ETIQ[falta.k] || falta.k).toLowerCase() : undefined}
                             onClick={() => elegir(o)}>
@@ -10315,6 +10391,7 @@ function Motor() {
                     )}
                   </div>
                 </div>
+                </Marco>
                 );
               })()}
 
