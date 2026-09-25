@@ -637,13 +637,13 @@ const JUEGOS = {
   },
   memoria: {
     n: "Peinar el legajo", tema: "Memoria de trabajo", dur: "30 s",
-    i: "Las casillas se encienden en un orden y tienes que repetirlo.",
+    i: "Tres rondas. Las casillas se encienden en un orden y tienes que repetirlo, y cada ronda alarga la anterior.",
     pasos: [
-      "Mira la secuencia en que se encienden las casillas.",
-      "Cuando se apaguen, tócalas en ese mismo orden.",
-      "Cada ronda agrega un paso más a la secuencia.",
+      "Ronda uno: se encienden 3 casillas. Tócalas en el mismo orden.",
+      "Ronda dos: las mismas 3 y una más al final.",
+      "Ronda tres: esas 4 y dos más al final.",
     ],
-    gana: "Repetir las tres secuencias sin equivocarte.",
+    gana: "Las tres rondas es éxito. Dos rondas, resultado parcial.",
     ensena: "Retener detalle sin apuntar nada: quién dijo qué, en qué cláusula y en qué página.",
   },
   ojo: {
@@ -1173,6 +1173,18 @@ const CSS4 = `
   transition:transform .26s cubic-bezier(.2,.8,.3,1)}
 .ea-tab.on:after{transform:scaleX(1)}
 .ea-tab.on{border-bottom-color:transparent}
+
+/* ---- las rondas del juego de memoria: 3 · 4 · 6 ---- */
+.ea-memRondas{display:flex;gap:7px;margin:0 0 12px}
+.ea-memRonda{min-width:32px;height:26px;padding:0 9px;border-radius:13px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12.5px;font-weight:600;
+  border:1px solid rgba(61,61,61,.25);color:var(--gris);background:transparent;
+  transition:all .3s cubic-bezier(.2,.8,.3,1)}
+.ea-memRonda.ahora{border-color:var(--cobre);color:var(--tintaPapel);
+  background:rgba(185,83,42,.12);transform:scale(1.08)}
+.ea-memRonda.hecha{border-color:#3D8A49;color:#2E7A3D;background:rgba(79,160,92,.14)}
+.ea-celdaC{transition:background .12s,transform .1s,border-color .12s,box-shadow .12s}
 
 /* ---- la fila de stats ---- */
 .ea-stats{flex-basis:100%;display:flex;flex-direction:column;gap:12px;
@@ -4934,28 +4946,58 @@ const COLORES_MEM = [
   { c: "#7A6A55", n: "Arena" },
 ];
 
-const VIDAS_MEM = 3;
+/* ============================================================
+   PEINAR EL LEGAJO, COMO SIMON
+   Antes era una sola secuencia de cuatro a siete casillas, disparada de
+   golpe desde el primer momento: dificil antes de haber entendido nada.
 
-/* Segundos para mirar el tablero antes de que empiece a encenderse.
-   Sin esta espera el juego arrancaba disparando la secuencia en el mismo
-   instante en que aparecía en pantalla: no daba tiempo ni a leer las
-   reglas ni a ver de qué colores eran las casillas. */
-const ESPERA_MEM = 8;
+   Ahora son tres rondas, y cada una repite la anterior ENTERA y añade al
+   final. Tres casillas, despues esas mismas tres y una mas, despues esas
+   cuatro y dos mas. Lo que ya memorizaste sirve en la ronda siguiente,
+   que es lo que hace que se aprenda jugando en vez de fallando.
+   ============================================================ */
+const RONDAS_MEM = [3, 4, 6];
+
+/* Con buen atributo se tiene una segunda oportunidad por ronda. La
+   longitud de cada ronda ya no cambia con la ayuda, asi que es la forma
+   de que «te ayuda Memoria 70» siga significando algo. */
+const vidasMemDe = (ayuda) => (numero(ayuda, 0) >= 55 ? 2 : 1);
+
+/* Segundos para mirar el tablero antes de que empiece a encenderse. Eran
+   ocho cuando la primera secuencia ya era larga; con tres casillas de
+   entrada bastan menos, y el boton de saltarla sigue ahi. */
+const ESPERA_MEM = 4;
 
 function JuegoMemoria({ ayuda, onFin }) {
-  const largo = clamp(7 - Math.floor(ayuda / 25), 4, 7);
-  const [seq] = useState(() => Array.from({ length: largo }, () => indiceAzar(9)));
+  /* La secuencia entera se decide al empezar y cada ronda enseña un trozo
+     mas largo de la MISMA: por eso lo memorizado no se tira.
+     Sin la misma casilla dos veces seguidas, que se lee como un parpadeo y
+     no como dos pasos. El reemplazo es aritmetico y no un bucle de
+     reintento: con un Math.random que devuelva siempre lo mismo —que es lo
+     que prueba robustez— un «vuelve a tirar» no terminaria nunca. */
+  const [seq] = useState(() => {
+    const total = RONDAS_MEM[RONDAS_MEM.length - 1];
+    const out = [];
+    for (let i = 0; i < total; i++) {
+      let c = indiceAzar(9);
+      if (i > 0 && c === out[i - 1]) c = (c + 1 + indiceAzar(8)) % 9;
+      out.push(c);
+    }
+    return out;
+  });
+  const VIDAS = vidasMemDe(ayuda);
+  const [ronda, setRonda] = useState(0);
   const [idx, setIdx] = useState(0);
   const [on, setOn] = useState(null);
   const [modo, setModo] = useState("listo");
   const [cuenta, setCuenta] = useState(ESPERA_MEM);
   const [paso, setPaso] = useState(0);
   const [err, setErr] = useState(null);
-  const [vidas, setVidas] = useState(VIDAS_MEM);
+  const [vidas, setVidas] = useState(VIDAS);
   const [aviso, setAviso] = useState(null);
+  const largo = RONDAS_MEM[ronda];
 
-  /* la espera de cortesía, antes de nada. Solo la primera vez: si fallas
-     y te la vuelven a mostrar, el tablero ya lo conoces. */
+  /* la espera de cortesia, solo al principio */
   useEffect(() => {
     if (modo !== "listo") return;
     if (cuenta <= 0) { setModo("ver"); return; }
@@ -4963,15 +5005,28 @@ function JuegoMemoria({ ayuda, onFin }) {
     return () => clearTimeout(t);
   }, [modo, cuenta]);
 
-  /* muestra la secuencia, casilla por casilla */
+  /* enseña la ronda, casilla por casilla */
   useEffect(() => {
     if (modo !== "ver") return;
-    if (idx >= seq.length) { const t = setTimeout(() => { setModo("jugar"); setAviso(null); }, 420); return () => clearTimeout(t); }
+    if (idx >= largo) {
+      const t = setTimeout(() => { setModo("jugar"); setAviso(null); }, 420);
+      return () => clearTimeout(t);
+    }
     setOn(seq[idx]);
     const a = setTimeout(() => setOn(null), 460);
     const b = setTimeout(() => setIdx(idx + 1), 700);
     return () => { clearTimeout(a); clearTimeout(b); };
-  }, [idx, modo, seq]);
+  }, [idx, modo, largo, seq]);
+
+  /* entre ronda y ronda, un respiro y a enseñar la siguiente */
+  useEffect(() => {
+    if (modo !== "entre") return;
+    const t = setTimeout(() => {
+      setRonda((r) => r + 1); setPaso(0); setIdx(0); setOn(null); setErr(null);
+      setVidas(VIDAS); setAviso(null); setModo("ver");
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [modo]);
 
   const tocar = (i) => {
     if (modo !== "jugar") return;
@@ -4979,27 +5034,32 @@ function JuegoMemoria({ ayuda, onFin }) {
       const p = paso + 1;
       setPaso(p); setOn(i);
       setTimeout(() => setOn(null), 160);
-      if (p >= seq.length) {
-        setModo("fin");
-        setAviso("Secuencia completa");
-        /* cuantas menos vidas gastaste, mejor cierra */
-        setTimeout(() => onFin(vidas === VIDAS_MEM ? "exito" : vidas === VIDAS_MEM - 1 ? "exito" : "parcial"), 600);
+      if (p >= largo) {
+        if (ronda >= RONDAS_MEM.length - 1) {
+          setModo("fin");
+          setAviso("Las tres rondas");
+          setTimeout(() => onFin("exito"), 600);
+        } else {
+          const extra = RONDAS_MEM[ronda + 1] - largo;
+          setModo("entre");
+          setAviso("Bien. Ahora " + (extra === 1 ? "una más" : extra + " más") + " al final.");
+        }
       }
       return;
     }
-    /* fallaste: gastas una vida y te la vuelven a mostrar */
+    /* fallaste: si queda oportunidad se repite ESTA ronda, si no se acaba */
     const quedan = vidas - 1;
     setErr(i);
     setVidas(quedan);
     if (quedan <= 0) {
       setModo("fin");
-      setAviso("Se acabaron los intentos");
-      const r = paso / seq.length;
-      setTimeout(() => onFin(r >= 0.6 ? "parcial" : "fallo"), 750);
+      setAviso("Se acabó en la ronda " + (ronda + 1));
+      /* dos rondas completas es un resultado a medias; menos, fallo */
+      setTimeout(() => onFin(ronda >= 2 ? "parcial" : "fallo"), 750);
       return;
     }
     setModo("pausa");
-    setAviso("Ahí no. Te la muestro otra vez.");
+    setAviso("Ahí no. Te repito esta ronda.");
     setTimeout(() => {
       setErr(null); setPaso(0); setIdx(0); setOn(null); setModo("ver");
     }, 950);
@@ -5008,6 +5068,7 @@ function JuegoMemoria({ ayuda, onFin }) {
   const rotuloModo = modo === "listo" ? "Mira el tablero"
     : modo === "ver" ? "Memoriza la secuencia"
     : modo === "jugar" ? "Repítela en el mismo orden"
+    : modo === "entre" ? "Ronda superada"
     : modo === "pausa" ? "Atento" : "Listo";
 
   return (
@@ -5017,13 +5078,25 @@ function JuegoMemoria({ ayuda, onFin }) {
         <span>
           {modo === "listo"
             ? "empieza en " + cuenta + (cuenta === 1 ? " segundo" : " segundos")
-            : paso + " de " + seq.length + " · intentos " + vidas + " de " + VIDAS_MEM}
+            : "ronda " + (ronda + 1) + " de " + RONDAS_MEM.length + " · " + paso + " de " + largo}
         </span>
       </div>
+
+      {/* las tres rondas como puntos, y cuantas casillas trae cada una */}
+      <div className="ea-memRondas">
+        {RONDAS_MEM.map((n, r) => (
+          <span key={r} className={"ea-memRonda" + (r < ronda ? " hecha" : r === ronda ? " ahora" : "")}>
+            {n}
+          </span>
+        ))}
+      </div>
+
       <Pista>
-        Cada casilla tiene su color. Se van a encender {seq.length} en orden;
-        tú las tocas después en el mismo orden. Si te equivocas, pierdes un intento y te la muestran de nuevo.
+        Cada casilla tiene su color. Tres rondas: se encienden 3, luego 4 y luego 6.
+        Cada ronda repite la anterior entera y añade al final, así que lo que ya
+        memorizaste te sirve.
       </Pista>
+
       <div className="ea-celdas">
         {COLORES_MEM.map((col, i) => {
           const encendida = on === i;
@@ -5032,34 +5105,35 @@ function JuegoMemoria({ ayuda, onFin }) {
             <button key={i} type="button" className="ea-celdaC" onClick={() => tocar(i)}
               disabled={modo !== "jugar"} aria-label={col.n}
               style={{
-                /* Durante la espera las casillas van a color pleno: la idea
-                   es justamente que se vea el tablero antes de empezar. */
                 background: fallada ? "var(--rojo)" : (encendida || modo === "listo") ? col.c : col.c + "2E",
                 borderColor: (encendida || fallada || modo === "listo") ? "#20120A" : col.c + "77",
                 transform: encendida ? "scale(0.94)" : "none",
+                boxShadow: encendida ? "0 0 18px " + col.c : "none",
               }}>
-              {/* Sin el nombre escrito: si se lee la palabra se memoriza la
-                  palabra, y el juego deja de ser de colores. El nombre sigue
-                  en aria-label para quien use lector de pantalla. */}
+              {/* sin el nombre escrito: se memoriza el color, no la palabra */}
             </button>
           );
         })}
       </div>
+
       {modo === "listo" && (
         <button className="ea-mini" style={{ marginTop: 10 }}
           onClick={() => { setCuenta(0); setModo("ver"); }}>
           Ya lo miré, empezar
         </button>
       )}
-      <div className="ea-vidas">
-        {Array.from({ length: VIDAS_MEM }, (_, k) => (
-          <span key={k} className={"ea-vida" + (k < vidas ? " viva" : "")} />
-        ))}
-      </div>
+      {VIDAS > 1 && (
+        <div className="ea-vidas">
+          {Array.from({ length: VIDAS }, (_, k) => (
+            <span key={k} className={"ea-vida" + (k < vidas ? " viva" : "")} />
+          ))}
+        </div>
+      )}
       <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{aviso}</div>
     </div>
   );
 }
+
 
 function JuegoOjo({ ayuda, onFin }) {
   const segs = clamp(3.5 + ayuda / 28, 3.5, 7.5);

@@ -13,7 +13,9 @@
     "finales": "node pruebas/finales.js 20",
     "alcance": "node pruebas/alcance.js 12",
     "deuda": "node pruebas/deuda.js",
-    "fondo": "node pruebas/fondo3.js"
+    "fondo": "node pruebas/fondo3.js",
+    "memoria": "node pruebas/memoria.js",
+    "puertas": "node pruebas/puertas.js 12"
   },
   "devDependencies": {
     "@babel/core": "^7",
