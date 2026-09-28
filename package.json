@@ -15,6 +15,12 @@
     "deuda": "node pruebas/deuda.js",
     "fondo": "node pruebas/fondo3.js",
     "memoria": "node pruebas/memoria.js",
+    "pizarra": "node pruebas/pizarra.js",
+    "suerte": "node pruebas/suerte.js",
+    "estructura": "node pruebas/estructura.js",
+    "subasta": "node pruebas/subasta.js",
+    "paises": "node pruebas/paises.js 6",
+    "catalogo": "node pruebas/catalogo.js",
     "puertas": "node pruebas/puertas.js 12"
   },
   "devDependencies": {

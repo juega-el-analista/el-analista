@@ -66,20 +66,14 @@ async function unaVida(semilla) {
   await act(async () => { reloj(400); await micro(); });
   await pulsa(porRot(/acepto y quiero jugar/i));
 
-  /* Hay dos formas de entrar y las dos tienen que funcionar: «Jugar ya»,
-     que es de un clic y por donde va a entrar casi todo el mundo, y el
-     setup completo para quien quiera elegirlo todo. Se alternan por
-     semilla para que ninguna de las dos se quede sin probar. */
-  if (semilla % 2 === 0) {
+  /* Una sola entrada: «Jugar ya» abre la configuración completa. */
+  {
     await pulsa(porRot(/^Jugar ya$/));
-  } else {
-    await pulsa(porRot(/^Prefiero elegirlo todo/));
     /* La pantalla de identidad: genero y nombre. Esta prueba era anterior
        a ella y se quedaba clavada justo aqui, con las 20 partidas en
        duracion 0 y sin llegar nunca a una pantalla final. */
     await pulsa(porRot(/^(Femenino|Masculino|Prefiero no decirlo)$/));
     await pulsa(porRot(/^Seguir sin nombre$/));
-    await pulsa(porRot(/^Analista/));
     /* la duracion vive en esta misma pantalla; por defecto es la decada */
     await pulsa(porRot(/^Empezar a los 20/));
     const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
@@ -87,7 +81,7 @@ async function unaVida(semilla) {
     const c = bs().filter((b) => /^(Graduarte de esto|Empezar con esto)$/.test(rot(b)));
     await pulsa(c[semilla % Math.max(1, c.length)] || c[0]);
     /* y el ultimo paso: guia si o no */
-    await pulsa(porRot(/^(Sé lo que hago|Guíame por el camino)$/));
+    await pulsa(porRot(/^(Sé lo que hago|Guíame por el camino)/));
   }
 
   let ano = 0, pasos = 0, cargo = "Pasante", burnouts = 0, ultimaEne = null, ultimoAno = null;

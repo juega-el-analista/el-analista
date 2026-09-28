@@ -45,7 +45,6 @@ function texto(j) {
 
 /* marcadores: qué buscamos que aparezca alguna vez */
 const MARCAS = {
-  "pantalla de modo": "¿Cuánto sabes de esto?",
   "pantalla de edad": "¿A qué edad empiezas?",
   "modo aprendiz elegido": "Palabras que vas a ver",
   "recordatorio en el quiz": "Antes de responder, el recordatorio",
@@ -53,8 +52,8 @@ const MARCAS = {
   "Cátedra: ejemplo numérico": "Con números",
   "trading reescrito": "ESTÁS EN EFECTIVO",
   "trading: leyenda": "precio de la acción",
-  "estructura reescrita": "Cuánto pides prestado",
-  "estructura: escenarios": "Si va mal",
+  "estructura reescrita": "El banco te presta",
+  "estructura: las dos metas": "Meta: conservar",
   "memoria con colores": "Cada casilla tiene su color",
   "orden con intentos": "Equivocarte cuesta un intento",
   "pestaña de términos": "El diccionario",
@@ -130,11 +129,14 @@ const MARCAS = {
   /* la espera de cortesia del juego de memoria */
   "memoria: mira el tablero": "Mira el tablero",
   "memoria: empezar antes": "Ya lo miré, empezar",
+  "pizarra: mira la pizarra": "Mira la pizarra",
+  "pizarra: un color por par": "Cada par tiene su color",
+  "aguantar: otro intento": "Otro intento",
 };
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });
 
-const GUIA = ["Entendido, acepto", "Retomar", "Aprendiz", "Empezar a los", "Elegir", "Graduarte de esto", "Empezar con esto", "Entendido, empezar",
+const GUIA = ["Entendido, acepto", "Retomar", "Jugar ya", "Seguir sin nombre", "Aprendiz", "Empezar a los", "Elegir", "Graduarte de esto", "Empezar con esto", "Entendido, empezar",
   "Ya lo tengo", "Siguiente", "Terminar", "Empezar", "Lo siguiente", "Cerrar el año", "Continuar",
   "Sentarte a hacer cuentas", "Seguir cinco años", "Retirarme ahora", "Ver el balance final",
   "Fijar", "Poner el número", "Cerrar posición", "Cerrar el trato"];

@@ -866,6 +866,13 @@ const CSS = `
 .ea-num:hover{border-color:var(--cobre)}
 
 .ea-mult{font-size:50px;line-height:1;color:var(--tintaPapel)}
+.ea-jwCentro{text-align:center}
+.ea-jwCentro .ea-mult{font-size:clamp(56px,16vw,92px);margin-top:10px}
+.ea-suerteMeta{font-size:11.5px;color:var(--gris);margin-top:6px}
+.ea-suerteHist{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px}
+.ea-suerteH{font-size:12px;padding:2px 8px;border:1px solid rgba(61,61,61,.25)}
+.ea-suerteH.ok{color:#2F7A3D;border-color:#2F7A3D}
+.ea-suerteH.mal{color:var(--rojo);border-color:var(--rojo)}
 .ea-fila2{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
 .ea-qtxt{font-size:16.5px;color:#3D3D3D;margin:0 0 13px}
 .ea-expl{font-size:13.5px;color:var(--gris);margin-top:11px;border-left:2px solid var(--cobre);padding-left:10px}
@@ -891,9 +898,15 @@ const CSS = `
 .ea-regla{height:1px;background:var(--borde);margin:24px 0}
 .ea-final{font-size:33px;color:var(--tintaPapel);line-height:1.1;margin:0 0 12px}
 .ea-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:15px}
+/* en la portada, dos por dos: con cuatro textos largos, auto-fit dejaba
+   tres arriba y uno huérfano abajo, o se montaban en pantallas estrechas */
+.ea-cifras.ea-cifrasPortada{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px}
+@media (max-width:460px){.ea-cifras.ea-cifrasPortada{grid-template-columns:1fr}}
+.ea-cifraV{overflow-wrap:break-word}
 .ea-cifraK{font-size:11px;color:var(--gris);letter-spacing:.18em;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 .ea-cifraV{font-size:20px;color:var(--tintaPapel)}
+.ea-cifraD{font-size:12.5px;line-height:1.45;color:var(--gris);margin-top:5px}
 `;
 const CSS5 = `
 /* --- memoria por colores --- */
@@ -1391,10 +1404,10 @@ const JUEGOS = {
   suerte: {
     n: "Aguantar la posición",
     tema: "Riesgo y disciplina",
-    dur: "20 s",
-    i: "Cada vez que aguantas sube el múltiplo y sube el riesgo de quedarte pegado.",
-    pasos: ["Empiezas con una posición ganadora y un múltiplo bajo.", "Cada vez que aguantas, el múltiplo sube y también la probabilidad de perderlo todo.", "Cierras cuando quieras. Si te pasas, te quedas sin nada."],
-    gana: "Cerrar con un múltiplo decente. Reventar la posición es fallo.",
+    dur: "30 s",
+    i: "El múltiplo sube solo y en algún momento se da vuelta. Tú decides cuándo cerrar.",
+    pasos: ["Al empezar, el múltiplo arranca en 1,00x y va subiendo poco a poco.", "Cierras cuando quieras y te quedas con ese número. Si se da vuelta antes, ese intento se pierde.", "Tienes tres intentos y cuenta el mejor. Nadie sabe dónde se da vuelta: cada vez es distinto."],
+    gana: "Cerrar en 3,00x o más es éxito. En 2,00x o más, resultado a medias.",
     ensena: "Toda posición ganadora te invita a esperar un poco más. La ruina casi siempre viene de no tener regla de salida escrita antes de entrar."
   },
   tresraya: {
@@ -1464,9 +1477,9 @@ const JUEGOS = {
     n: "Armar la estructura",
     tema: "Apalancamiento",
     dur: "40 s",
-    i: "Decides cuánta deuda y cuánto capital propio pone la compra.",
-    pasos: ["Tienes un EBITDA, un precio de compra y dos tipos de deuda con costos distintos.", "Mueves las barras de deuda senior y mezzanine; el resto lo pone tu capital.", "Ves el múltiplo estimado a cinco años antes de cerrar."],
-    gana: "Múltiplo de dos y media veces o más sin pasarte de apalancamiento.",
+    i: "Compras una empresa de 100 millones. Tú pones una parte y el banco te presta el resto.",
+    pasos: ["Con la barra decides cuánto te presta el banco. Lo que falta lo pones tú.", "Debajo ves qué pasa con tu dinero si a la empresa le va bien y si le va mal.", "Más préstamo: ganas más si va bien, pero pierdes más si va mal. Busca el punto medio."],
+    gana: "Cumplir las dos metas es éxito. Una sola, resultado a medias.",
     ensena: "La deuda multiplica el retorno del capital y también el riesgo de perderlo todo. Pasado cierto punto el banco manda, no tú."
   },
   banderas: {
@@ -1483,7 +1496,7 @@ const JUEGOS = {
     tema: "Conceptos",
     dur: "40 s",
     i: "Fichas boca abajo: une cada concepto con lo que significa.",
-    pasos: ["Todas las fichas empiezan tapadas.", "Destapas dos por turno buscando el concepto y su definición.", "Tienes un número limitado de fallos."],
+    pasos: ["Antes de empezar ves la pizarra destapada unos segundos: mira dónde queda cada cosa.", "Después se tapa y destapas dos por turno. Cada par tiene su color: el concepto y su definición se pintan igual.", "Tienes un número limitado de fallos."],
     gana: "Completar la pizarra con pocos fallos.",
     ensena: "Manejar el vocabulario sin dudar. En una mesa, dudar de qué es el WACC cuesta más que equivocarse en la cuenta."
   },
@@ -1509,9 +1522,9 @@ const JUEGOS = {
     n: "La subasta",
     tema: "Valoración y disciplina",
     dur: "40 s",
-    i: "Cuatro postores por el mismo activo y nadie sabe cuánto vale de verdad.",
-    pasos: ["Tienes tu propia estimación de valor, que puede estar equivocada.", "Subes la oferta o te retiras en cada ronda.", "Si todos se retiran, el activo es tuyo al precio que quedó."],
-    gana: "Ganar pagando por debajo del valor real. Retirarse a tiempo también cuenta.",
+    i: "Tú y tres rivales pujan por la misma empresa, y nadie sabe cuánto vale de verdad.",
+    pasos: ["Tienes tu propia estimación de lo que vale. Puede estar equivocada, por arriba o por abajo.", "En cada ronda subes la oferta o te retiras. Cada rival tiene su límite y se retira al pasarlo.", "Si se retiran todos, es tuya al precio que quedó. Si te retiras tú, la subasta sigue sin ti."],
+    gana: "Ganar pagando lo que vale o menos es éxito. Retirarte cuando el que gana acaba pagando de más, también.",
     ensena: "La maldición del ganador: en una subasta, el que más paga suele ser el que más se equivocó estimando."
   }
 };
@@ -1600,6 +1613,10 @@ const CSS2 = `
 .ea-marca.fuera{border-color:var(--gris);color:var(--gris)}
 
 .ea-est{margin:12px 0}
+.ea-estCaso{font-size:16px;line-height:1.45;color:#3D3D3D;margin:4px 0 2px}
+.ea-estMeta{font-size:12.5px;margin-top:8px;font-weight:600;color:#3D3D3D}
+.ea-escenC.bien .ea-estMeta{color:#2F7A3D}
+.ea-escenC.mal .ea-estMeta{color:var(--rojo)}
 .ea-estL{display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px}
 .ea-alerta{font-size:13px;padding:8px 11px;border-left:3px solid var(--cobre);background:rgba(185,83,42,.1);margin-top:11px;color:#3D3D3D}
 .ea-alerta.mal{border-color:var(--rojo);background:rgba(178,59,39,.12)}
@@ -1630,6 +1647,9 @@ const CSS3 = `
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-fichaP.abierta{background:rgba(185,83,42,.2);border-color:var(--cobre)}
 .ea-fichaP.hecha{background:rgba(62,107,60,.18);border-color:#3D8A49;cursor:default}
+.ea-fichaP.vista{cursor:default}
+.ea-fichaP.pintada{border-width:1px 1px 1px 5px}
+.ea-fichaP.hecha.pintada{opacity:.62}
 
 .ea-pista4{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:rgba(61,61,61,.12);padding:5px;
   border:1px solid rgba(61,61,61,.25)}
@@ -2120,8 +2140,12 @@ const CSS4 = `
 /* tres · el juego, sin nada alrededor */
 .ea-juegoPleno{position:fixed;inset:0;z-index:70;background:var(--papel);
   overflow-y:auto;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));
-  animation:ea-entra .2s ease-out}
-.ea-juegoPleno .ea-jw{max-width:560px;margin:0 auto;padding-top:env(safe-area-inset-top,0px)}
+  animation:ea-entra .2s ease-out;display:flex;flex-direction:column}
+/* En el centro de la pantalla, en los dos ejes. Con margin:auto dentro de
+   un flex y no con justify-content:center: si el juego es más alto que la
+   pantalla, justify-content cortaría la parte de arriba sin poder llegar a
+   ella con el scroll; margin:auto se queda en 0 y el scroll sigue normal. */
+.ea-juegoPleno .ea-jw{width:100%;max-width:560px;margin:auto;padding-top:env(safe-area-inset-top,0px)}
 
 /* ---- el rodillo del cierre ---- */
 .ea-rodillos{display:inline-flex;align-items:center;gap:1px;line-height:1}
@@ -5280,6 +5304,21 @@ const BANDERAS = [{
 }];
 
 /* ---------- de dónde vienes ---------- */
+/* Sueldo, costo de vida e impuesto, relativos a Madrid = 1. Recalibrados
+   el 28-sep-2026 con datos reales, suavizados a mitad de camino para no
+   romper el juego (npm run paises lo mide):
+     · sueldo: analista financiero junior. Real: Caracas 0,18 · Bogotá 0,34
+       · Buenos Aires 0,30 · CDMX 0,35 · Miami 1,73 (Glassdoor, Computrabajo,
+       Fedecámaras, ZipRecruiter). Aquí, a mitad entre eso y lo que había.
+     · costo de vida: una persona con alquiler (livingcost.org, jun-2026:
+       Caracas 0,59 · Bogotá 0,52 · Buenos Aires 0,59 · CDMX 0,70 · Miami
+       1,52). Bogotá, CDMX y Caracas van algo más caros que el dato: como el
+       sueldo se suavizó a mitad de camino y el costo no, con el costo real
+       México y Colombia vivían como en Madrid pagando menos impuestos, y
+       México acababa más rico que España. npm run paises lo mide.
+     · impuesto: renta + aportes del empleado, a mitad entre lo que paga un
+       junior y lo que paga una carrera avanzada, porque es una sola tasa
+       para toda la partida. Florida no cobra impuesto estatal. */
 const NACIONES = [{
   id: "ve",
   n: "Venezuela",
@@ -5290,9 +5329,9 @@ const NACIONES = [{
     cri: 7
   },
   cash: 1200,
-  sal: 0.7,
-  gas: 0.64,
-  tax: 0.2,
+  sal: 0.46,
+  gas: 0.62,
+  tax: 0.12,
   sesgo: "Emergentes",
   nota: "Sueldos bajos, costo de vida bajo, impuestos bajos, todo el mundo se conoce."
 }, {
@@ -5305,9 +5344,9 @@ const NACIONES = [{
     rep: 3
   },
   cash: 3000,
-  sal: 0.92,
-  gas: 0.86,
-  tax: 0.27,
+  sal: 0.6,
+  gas: 0.66,
+  tax: 0.17,
   sesgo: "Emergentes",
   nota: "Punto de equilibrio entre oportunidad y estabilidad."
 }, {
@@ -5320,9 +5359,9 @@ const NACIONES = [{
     mod: 2
   },
   cash: 1800,
-  sal: 0.78,
-  gas: 0.72,
-  tax: 0.3,
+  sal: 0.54,
+  gas: 0.59,
+  tax: 0.24,
   sesgo: "Tasas",
   nota: "Criterio macro altísimo, ingresos volátiles."
 }, {
@@ -5335,9 +5374,9 @@ const NACIONES = [{
     mod: 3
   },
   cash: 4500,
-  sal: 1.08,
-  gas: 1.0,
-  tax: 0.3,
+  sal: 0.72,
+  gas: 0.85,
+  tax: 0.21,
   sesgo: "Comercio",
   nota: "Volumen de operaciones alto y cercanía con el norte."
 }, {
@@ -5350,23 +5389,23 @@ const NACIONES = [{
     mod: 3
   },
   cash: 7000,
-  sal: 1.0,
-  gas: 0.95,
-  tax: 0.37,
+  sal: 1,
+  gas: 1,
+  tax: 0.31,
   sesgo: "Mercados",
   nota: "Estabilidad y la carga fiscal más alta de la lista."
 }, {
   id: "us",
   n: "Estados Unidos",
-  ban: "Nueva York",
-  d: "El centro del mundo financiero. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
+  ban: "Miami",
+  d: "La capital financiera de América Latina en Estados Unidos. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
   mods: {
     mod: 7
   },
   cash: -16000,
-  sal: 1.6,
-  gas: 1.5,
-  tax: 0.33,
+  sal: 1.7,
+  gas: 1.52,
+  tax: 0.22,
   sesgo: "Mercados",
   nota: "Empiezas debiendo dieciséis mil dólares de la universidad."
 }];
@@ -7923,7 +7962,7 @@ const E3 = [{
   min: 1,
   max: 6,
   t: "Te ofrecen una visa de trabajo",
-  x: "Una firma de Nueva York quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
+  x: "Una firma de Miami quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
   o: [{
     t: "Aceptar y mudarte",
     req: {
@@ -9352,7 +9391,7 @@ const LECCIONES = [{
 }, {
   id: "moneda",
   pri: 5,
-  cuando: c => c.tax >= 0.22 || c.pais === "ar" || c.pais === "ve",
+  cuando: c => ["ve", "ar", "co", "mx"].indexOf(c.pais) >= 0,
   t: "El riesgo que viene con el pasaporte",
   x: c => `Vives y cobras en un país donde la moneda y las reglas cambian. Buena parte de tu patrimonio debería estar en activos que no dependan de esa decisión, no por pesimismo sino por la misma razón por la que no se pone todo en una sola empresa.`
 }, {
@@ -9709,7 +9748,7 @@ const BASE = {
   /* el recorrido mensual acumulado de la cartera */
   curva: [],
   /* configuración de la partida */
-  modo: "normal",
+  modo: "aprendiz",
   edadIni: 20,
   estudia: 0,
   /* cuántos años piensas jugar antes de que te pregunten si te retiras */
@@ -9885,20 +9924,18 @@ const PAREJA_TXT = st => ({
   divorciado: gen(st, "divorciado", "divorciada", "con un divorcio detrás"),
   viudo: gen(st, "viudo", "viuda", "en duelo")
 })[st && st.pareja] || "sin pareja";
+/* Un solo modo. Hubo dos (Aprendiz y Analista) y se quitó la elección:
+   el juego es para quien nunca ha invertido, así que todo el mundo juega
+   con las explicaciones y la ventaja de aprendiz. Se conserva la tabla
+   para no tocar a quien la lee; MODO() devuelve siempre este. */
 const MODOS = [{
   id: "aprendiz",
   n: "Aprendiz",
   d: "Cada término se explica antes de usarse, los exámenes traen una clase previa y los minijuegos perdonan más. Pensado para quien nunca ha invertido nada.",
   ayuda: 22,
   indulgencia: 1
-}, {
-  id: "normal",
-  n: "Analista",
-  d: "El juego como está pensado: se explica lo justo y se espera que vayas atando cabos.",
-  ayuda: 0,
-  indulgencia: 0
 }];
-const MODO = id => MODOS.find(x => x.id === id) || MODOS[1];
+const MODO = () => MODOS[0];
 const EDADES = [{
   e: 20,
   n: "20 años",
@@ -10875,7 +10912,7 @@ const sanear = bruto => {
   st.shock = clamp(numero(r.shock, 0), -2, 2);
   st.pareja = PAREJAS.indexOf(r.pareja) >= 0 ? r.pareja : "solo";
   st.hijos = entero(r.hijos, 0, 0, 8);
-  st.modo = MODOS.some(m => m.id === r.modo) ? r.modo : "normal";
+  st.modo = "aprendiz"; /* un solo modo: los guardados en «normal» pasan a este */
   st.nombre = saneaNombre(r.nombre);
   st.genero = GENEROS.some(g => g.id === r.genero) ? r.genero : null;
   st.ritmo = RITMOS.some(x => x.id === r.ritmo) ? r.ritmo : "normal";
@@ -11609,58 +11646,147 @@ function JuegoAnclaje({
     disabled: cerrado
   }, "Poner el n\xFAmero sobre la mesa"));
 }
+
+/* ---- Aguantar la posición: el múltiplo sube solo hasta que se da vuelta ----
+   Antes era pulsar «aguantar» y tirar un dado cada vez. Ahora el número
+   sube poco a poco y el jugador decide cuándo cerrar, sin saber dónde se
+   va a dar vuelta: la regla de salida tiene que traerla él.
+
+   Dónde se da vuelta: P(llegar a m) = k / m, la forma clásica. Con k < 1
+   a veces se da vuelta nada más abrir, y cuanto más alto, más raro llegar.
+   El atributo mueve k: con mejor criterio aguanta un poco más en promedio.
+   Tope en 10x para que un intento no dure para siempre.
+
+   Tres intentos y cuenta el MEJOR: reventar uno no te saca del juego, que
+   es justo lo que da ganas de volver a intentarlo. Medido con 40.000
+   tiradas (k 0,94): salir siempre en 3x da éxito ~68%; salir en 5x, ~46%;
+   salir en 2x casi nunca falla pero nunca pasa de parcial. */
+const SUERTE_INTENTOS = 3;
+const SUERTE_EXITO = 3;
+const SUERTE_PARCIAL = 2;
+const SUERTE_TOPE = 10;
+const SUERTE_PASO = 1.02; /* por cada tick de 100 ms: 2x en ~3,5 s, 3x en ~5,5 s */
+const vueltaSuerte = ayuda => {
+  const k = clamp(0.8 + numero(ayuda, 0) / 500, 0.8, 0.97);
+  const u = clamp(numero(Math.random(), 0.5), 0, 0.999999);
+  return clamp(k / (1 - u), 1, SUERTE_TOPE);
+};
+const fmtX = m => m.toFixed(2).replace(".", ",") + "x";
 function JuegoSuerte({
   ayuda,
   onFin
 }) {
+  const [intento, setIntento] = useState(0);
   const [mult, setMult] = useState(1);
-  const [paso, setPaso] = useState(0);
-  const [estado, setEstado] = useState(null);
-  const riesgo = clamp(0.1 + paso * 0.075 - ayuda / 900, 0.05, 0.72);
-  const aguantar = () => {
-    if (Math.random() < riesgo) {
-      setEstado("Se te dio vuelta la posición");
-      setTimeout(() => onFin("fallo"), 850);
-    } else {
-      setMult(+(mult + 0.32 + paso * 0.11).toFixed(2));
-      setPaso(paso + 1);
+  const [fase, setFase] = useState("listo"); /* listo · subiendo · cerrado · vuelta · fin */
+  const [hist, setHist] = useState([]); /* { m, ok, vuelta } por intento */
+  const vuelta = useRef(1);
+  const actual = useRef(1); /* el múltiplo vivo, sin esperar al render */
+  const abierto = useRef(false); /* un intento solo se cierra una vez */
+
+  const mejor = hist.reduce((a, h) => h.ok && h.m > a ? h.m : a, 0);
+  const quedan = SUERTE_INTENTOS - hist.length;
+
+  /* el número sube solo mientras el intento está abierto */
+  useEffect(() => {
+    if (fase !== "subiendo") return;
+    const t = setInterval(() => {
+      if (!abierto.current) return;
+      const sig = +(actual.current * SUERTE_PASO).toFixed(4);
+      if (sig >= vuelta.current) {
+        abierto.current = false;
+        actual.current = vuelta.current;
+        setMult(vuelta.current);
+        setFase("vuelta");
+        setHist(h => h.concat({
+          m: vuelta.current,
+          ok: false,
+          vuelta: vuelta.current
+        }));
+        return;
+      }
+      actual.current = sig;
+      setMult(sig);
+    }, 100);
+    return () => clearInterval(t);
+  }, [fase]);
+
+  /* terminados los tres intentos, se cierra con el mejor */
+  useEffect(() => {
+    if (hist.length < SUERTE_INTENTOS || fase === "fin") return;
+    setFase("fin");
+    const nv = mejor >= SUERTE_EXITO ? "exito" : mejor >= SUERTE_PARCIAL ? "parcial" : "fallo";
+    const t = setTimeout(() => onFin(nv), 1300);
+    return () => clearTimeout(t);
+  }, [hist.length]);
+  const abrir = () => {
+    if (fase !== "listo" && fase !== "cerrado" && fase !== "vuelta") return;
+    if (hist.length >= SUERTE_INTENTOS) return;
+    vuelta.current = vueltaSuerte(ayuda);
+    setIntento(hist.length + 1);
+    actual.current = 1;
+    setMult(1);
+    /* a veces se da vuelta nada más abrir: también pasa en los mercados */
+    if (vuelta.current <= 1.0001) {
+      setFase("vuelta");
+      setHist(h => h.concat({
+        m: 1,
+        ok: false,
+        vuelta: 1
+      }));
+      return;
     }
+    abierto.current = true;
+    setFase("subiendo");
   };
   const cerrar = () => {
-    setEstado("Cerraste en " + mult.toFixed(2) + "x");
-    setTimeout(() => onFin(mult >= 2.4 ? "exito" : mult >= 1.6 ? "parcial" : "fallo"), 850);
+    if (fase !== "subiendo" || !abierto.current) return;
+    abierto.current = false;
+    const m = actual.current;
+    setMult(m);
+    setFase("cerrado");
+    setHist(h => h.concat({
+      m,
+      ok: true,
+      vuelta: vuelta.current
+    }));
   };
+  const ultimo = hist[hist.length - 1];
+  const color = fase === "vuelta" ? "var(--rojo)" : fase === "cerrado" ? "#2F7A3D" : undefined;
+  const aviso = fase === "listo" ? "Cuando abras, el múltiplo empieza a subir. Cierra antes de que se dé vuelta." : fase === "subiendo" ? "Subiendo… ¿cierras o aguantas?" : fase === "cerrado" ? "Cerraste en " + fmtX(ultimo.m) + ". Se iba a dar vuelta en " + fmtX(ultimo.vuelta) + "." : fase === "vuelta" ? ultimo && ultimo.vuelta <= 1.0001 ? "Se dio vuelta nada más abrir. Pasa." : "Se dio vuelta en " + fmtX(ultimo.vuelta) + ". Ese intento se pierde." : mejor >= SUERTE_EXITO ? "Te quedas con " + fmtX(mejor) + ". Éxito." : mejor >= SUERTE_PARCIAL ? "Te quedas con " + fmtX(mejor) + ". Resultado a medias." : mejor > 0 ? "Te quedas con " + fmtX(mejor) + ". Muy poco para lo que arriesgaste." : "Los tres se dieron vuelta.";
   return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
+    className: "ea-jw ea-jwCentro"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "M\xFAltiplo acumulado"), /*#__PURE__*/React.createElement("span", null, "Riesgo de vuelta ", (riesgo * 100).toFixed(0), "%")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mult ea-mono"
-  }, mult.toFixed(2), "x"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, intento ? "Intento " + intento + " de " + SUERTE_INTENTOS : "Tres intentos"), /*#__PURE__*/React.createElement("span", null, "Tu mejor ", mejor ? fmtX(mejor) : "—")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-mult ea-mono",
+    style: color ? {
+      color
+    } : undefined
+  }, fmtX(mult)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-suerteMeta ea-mono"
+  }, "\xE9xito desde ", fmtX(SUERTE_EXITO), " \xB7 a medias desde ", fmtX(SUERTE_PARCIAL)), /*#__PURE__*/React.createElement("div", {
     style: {
       minHeight: 22,
       marginTop: 8,
       fontSize: 13.5,
       color: "#6B6B6B"
     }
-  }, estado), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila2"
-  }, /*#__PURE__*/React.createElement("button", {
+  }, aviso), fase === "subiendo" ? /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
     style: {
-      marginTop: 0
-    },
-    onClick: aguantar,
-    disabled: !!estado
-  }, "Aguantar"), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    style: {
-      marginTop: 0,
       background: "var(--cobre)"
     },
-    onClick: cerrar,
-    disabled: !!estado
-  }, "Cerrar posici\xF3n")));
+    onClick: cerrar
+  }, "Cerrar en ", fmtX(mult)) : fase !== "fin" ? /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: abrir
+  }, fase === "listo" ? "Abrir la posición" : "Otro intento · quedan " + quedan) : null, hist.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "ea-suerteHist"
+  }, hist.map((h, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "ea-suerteH ea-mono" + (h.ok ? " ok" : " mal")
+  }, i + 1, " \xB7 ", h.ok ? "cerraste " + fmtX(h.m) : "vuelta " + fmtX(h.vuelta)))));
 }
 const LINEAS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 function JuegoTresRaya({
@@ -12881,76 +13007,89 @@ function JuegoTrading({
 }
 
 /* ---- Armar la estructura ----
-   Reescrito de arriba abajo. Antes eran dos deslizadores llamados
-   "senior" y "mezzanine" y un múltiplo que aparecía sin explicación.
-   Ahora hay una sola decisión —cuánto pides prestado— con la cuenta
-   completa a la vista y, sobre todo, los dos escenarios en números:
-   qué te llevas si va bien y qué pasa si va mal. Que es exactamente
-   lo que enseña el apalancamiento. */
+   Rehecho otra vez (28-sep-2026). La versión anterior no se podía ganar:
+   pedía multiplicar el capital por 2,4 si iba bien, y en todas las empresas
+   posibles la cobertura de intereses rompía antes de llegar ahí. Además
+   hablaba de EBITDA, cobertura y covenant, y la meta no se veía.
+
+   Ahora: una empresa de 100 millones, una barra (cuánto te presta el
+   banco) y dos metas que tiran en sentidos contrarios, con su ✓ en vivo.
+     · si le va bien, multiplicar tu dinero por 2 o más  → pide deuda
+     · si le va mal, conservar al menos el 30%           → pide poca deuda
+   Entre las dos hay una franja buena que se mueve de partida en partida:
+   se sortea primero la franja y de ella salen cuánto sube y cuánto baja la
+   empresa, así que siempre existe y nunca está en el mismo sitio. Con
+   mejor atributo la franja es más ancha. */
+const EST_PRECIO = 100;
+const EST_META_BIEN = 2; /* multiplicar tu dinero por esto si va bien */
+const EST_META_MAL = 0.3; /* conservar al menos esta parte si va mal */
+const EST_AMORTIZA = 10; /* lo que la empresa devuelve de deuda si va bien */
+const EST_TOPE = 80; /* ningún banco presta más del 80% */
+const casoEstructura = ayuda => {
+  const lo = 30 + 5 * indiceAzar(5); /* de 30 a 50 */
+  const ancho = numero(ayuda, 0) >= 60 ? 15 : 10;
+  const hi = Math.min(EST_TOPE - 10, lo + ancho);
+  /* bien: (100·(1+sube) − (d − 10)) / (100 − d) = 2    justo en d = lo */
+  const sube = (EST_PRECIO * EST_META_BIEN - EST_META_BIEN * lo + lo - EST_AMORTIZA) / EST_PRECIO - 1;
+  /* mal:  (100·(1−baja) − d) / (100 − d) = 0,3          justo en d = hi */
+  const baja = 1 - (EST_META_MAL * (EST_PRECIO - hi) + hi) / EST_PRECIO;
+  return {
+    lo,
+    hi,
+    sube,
+    baja,
+    nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía"
+  };
+};
+const resultadoEstructura = (c, deuda) => {
+  const tuyo = EST_PRECIO - deuda;
+  const bien = tuyo > 0 ? (EST_PRECIO * (1 + c.sube) - Math.max(0, deuda - EST_AMORTIZA)) / tuyo : 0;
+  const mal = tuyo > 0 ? Math.max(0, EST_PRECIO * (1 - c.baja) - deuda) / tuyo : 0;
+  const okBien = bien >= EST_META_BIEN - 1e-9,
+    okMal = mal >= EST_META_MAL - 1e-9;
+  return {
+    tuyo,
+    bien,
+    mal,
+    okBien,
+    okMal,
+    nivel: okBien && okMal ? "exito" : okBien || okMal ? "parcial" : "fallo"
+  };
+};
 function JuegoEstructura({
   ayuda,
   onFin
 }) {
-  const [caso] = useState(() => {
-    const eb = 14 + indiceAzar(12);
-    return {
-      eb,
-      precio: eb * 8,
-      crec: 1.14 + numero(Math.random(), 0.5) * 0.22,
-      nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía"
-    };
-  });
-  const maxDeuda = Math.round(caso.eb * 5);
-  const [deuda, setDeuda] = useState(Math.round(caso.eb * 2));
+  const [caso] = useState(() => casoEstructura(ayuda));
+  const [deuda, setDeuda] = useState(0);
   const [cerrado, setCerrado] = useState(null);
-  const propio = Math.max(0, caso.precio - deuda);
-  const apal = deuda / caso.eb;
-  const tasa = apal <= 3 ? 0.09 : 0.09 + (apal - 3) * 0.025; /* más deuda, más cara */
-  const interes = deuda * tasa;
-  const cobertura = interes > 0 ? caso.eb / interes : 99;
-  const minPropio = caso.precio * 0.1;
-
-  /* escenario bueno: la empresa crece y amortiza deuda */
-  const ebBien = caso.eb * caso.crec;
-  const deudaBien = Math.max(0, deuda - caso.eb * 1.2);
-  const propioBien = Math.max(0, ebBien * 8 - deudaBien);
-  const moicBien = propio > 0 ? propioBien / propio : 0;
-
-  /* escenario malo: el EBITDA cae 20% y el múltiplo se contrae */
-  const ebMal = caso.eb * 0.8;
-  const propioMal = Math.max(0, ebMal * 6.5 - deuda);
-  const moicMal = propio > 0 ? propioMal / propio : 0;
-  const rompe = cobertura < 2;
-  const confirmar = () => {
-    if (propio < minPropio) return;
-    let nivel;
-    if (rompe) nivel = numero(Math.random(), 0.5) < 0.7 ? "fallo" : "parcial";else if (moicBien >= 2.4 && moicMal > 0.6) nivel = "exito";else if (moicBien >= 1.7) nivel = "parcial";else nivel = "fallo";
-    setCerrado(nivel);
-  };
+  const r = resultadoEstructura(caso, deuda);
+  const x = v => v.toFixed(1).replace(".", ",") + "x";
   const cierre = {
-    exito: "Estructura fina. Suficiente deuda para que tu capital rinda de verdad y suficiente aire para aguantar un mal año sin que el banco se meta.",
-    parcial: "Sale, sin brillar. O te faltó deuda y tu capital rindió como un bono, o te sobró y el margen quedó justo.",
-    fallo: rompe ? "Te pasaste. Con esta deuda, el EBITDA no alcanza ni para pagar dos veces los intereses: al primer trimestre flojo se rompe el covenant y el banco toma el control de la empresa." : "El trato no compensa. Pusiste demasiado capital propio para el retorno que da, o el escenario malo se te lleva todo."
+    exito: "Punto justo. Con esa deuda tu dinero rinde de verdad si sale bien, y si sale mal te queda con qué volver a empezar.",
+    parcial: r.okBien ? "Si sale bien ganas mucho, pero pediste tanto que un mal año se lleva casi todo lo que pusiste." : "Estás a salvo si sale mal, pero pusiste tanto de tu bolsillo que si sale bien tu dinero apenas rinde.",
+    fallo: "No cumples ninguna de las dos metas: ni ganas lo suficiente si sale bien, ni aguantas si sale mal."
   };
-  const pctDeuda = caso.precio > 0 ? deuda / caso.precio * 100 : 0;
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-jw"
-  }, /*#__PURE__*/React.createElement(Pista, null, "Vas a comprar ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), ". Gana ", /*#__PURE__*/React.createElement("strong", null, caso.eb, " millones"), " al a\xF1o operando y te la venden en ", /*#__PURE__*/React.createElement("strong", null, caso.precio, " millones"), ". Puedes pagarla con tu dinero, con dinero prestado, o con una mezcla. Mueve el deslizador y mira c\xF3mo cambian los dos escenarios de abajo."), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Pista, null, "Compras ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), " por ", /*#__PURE__*/React.createElement("strong", null, EST_PRECIO, " millones"), ". T\xFA pones una parte y el banco te presta el resto. Pedir prestado hace que ganes m\xE1s si sale bien\u2026 y que pierdas m\xE1s si sale mal."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-estCaso"
+  }, "Compras ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), " por ", /*#__PURE__*/React.createElement("strong", null, EST_PRECIO, " millones"), ". \xBFCu\xE1nto le pides al banco?"), /*#__PURE__*/React.createElement("div", {
     className: "ea-est"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-estL"
-  }, /*#__PURE__*/React.createElement("span", null, "Cu\xE1nto pides prestado"), /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("span", null, "El banco te presta"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
-  }, deuda, " millones \xB7 ", apal.toFixed(1), " veces lo que gana")), /*#__PURE__*/React.createElement("input", {
+  }, deuda, " millones")), /*#__PURE__*/React.createElement("input", {
     className: "ea-slider",
     type: "range",
     min: "0",
-    max: maxDeuda,
-    step: "1",
+    max: EST_TOPE,
+    step: "5",
     value: deuda,
     disabled: !!cerrado,
-    onChange: e => setDeuda(entero(e.target.value, 0, 0, maxDeuda)),
-    "aria-label": "Deuda"
+    onChange: e => setDeuda(entero(e.target.value, 0, 0, EST_TOPE)),
+    "aria-label": "Cu\xE1nto te presta el banco"
   })), /*#__PURE__*/React.createElement("div", {
     className: "ea-mix",
     style: {
@@ -12959,60 +13098,38 @@ function JuegoEstructura({
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-mixSeg efe",
     style: {
-      width: (100 - pctDeuda).toFixed(1) + "%"
+      width: r.tuyo + "%"
     }
-  }, 100 - pctDeuda >= 18 ? "tu dinero " + Math.round(100 - pctDeuda) + "%" : ""), /*#__PURE__*/React.createElement("div", {
+  }, r.tuyo >= 18 ? "tú " + r.tuyo : ""), /*#__PURE__*/React.createElement("div", {
     className: "ea-mixSeg cart",
     style: {
-      width: pctDeuda.toFixed(1) + "%"
+      width: deuda + "%"
     }
-  }, pctDeuda >= 18 ? "prestado " + Math.round(pctDeuda) + "%" : "")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-tabla",
-    style: {
-      marginTop: 12
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Pones de tu bolsillo"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, propio.toFixed(0), " millones"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Intereses que pagar\xE1s al a\xF1o"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, interes.toFixed(1), " millones \xB7 ", (tasa * 100).toFixed(1), "%"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Veces que el EBITDA cubre esos intereses"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, cobertura >= 99 ? "sin deuda" : cobertura.toFixed(1) + "x")), /*#__PURE__*/React.createElement("div", {
+  }, deuda >= 18 ? "banco " + deuda : "")), /*#__PURE__*/React.createElement("div", {
     className: "ea-escen"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenC bien"
+    className: "ea-escenC " + (r.okBien ? "bien" : "mal")
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-lecK"
-  }, "Si va bien"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenX"
-  }, "La empresa crece ", Math.round((caso.crec - 1) * 100), "% y pagas parte de la deuda."), /*#__PURE__*/React.createElement("div", {
+  }, "Si le va bien \xB7 vale ", Math.round(caso.sube * 100), "% m\xE1s"), /*#__PURE__*/React.createElement("div", {
     className: "ea-escenV ea-mono"
-  }, moicBien.toFixed(2), "x"), /*#__PURE__*/React.createElement("div", {
+  }, x(r.bien)), /*#__PURE__*/React.createElement("div", {
     className: "ea-escenX"
-  }, "Recuperas ", propioBien.toFixed(0), " millones sobre los ", propio.toFixed(0), " que pusiste.")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenC mal"
+  }, "tu dinero se multiplica por ", x(r.bien)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-estMeta"
+  }, r.okBien ? "✓" : "✗", " Meta: ", x(EST_META_BIEN), " o m\xE1s")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-escenC " + (r.okMal ? "bien" : "mal")
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-lecK"
-  }, "Si va mal"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenX"
-  }, "El EBITDA cae un quinto y nadie paga m\xFAltiplos altos ese a\xF1o."), /*#__PURE__*/React.createElement("div", {
+  }, "Si le va mal \xB7 vale ", Math.round(caso.baja * 100), "% menos"), /*#__PURE__*/React.createElement("div", {
     className: "ea-escenV ea-mono"
-  }, moicMal.toFixed(2), "x"), /*#__PURE__*/React.createElement("div", {
+  }, Math.round(r.mal * 100), "%"), /*#__PURE__*/React.createElement("div", {
     className: "ea-escenX"
-  }, moicMal <= 0.05 ? "Tu capital se va a cero: la deuda se come todo el valor." : "Te quedan " + propioMal.toFixed(0) + " millones de los " + propio.toFixed(0) + " que pusiste."))), propio < minPropio && /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta mal"
-  }, "Ning\xFAn banco te presta tanto: tienes que poner al menos el 10% del precio de tu propio bolsillo."), rompe && propio >= minPropio && /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta mal"
-  }, "Con esta deuda el EBITDA no cubre ni dos veces los intereses. Es el nivel en el que un trimestre flojo te cuesta la empresa."), !cerrado ? /*#__PURE__*/React.createElement("button", {
+  }, r.mal <= 0.005 ? "lo pierdes todo: el banco cobra primero" : "de tu dinero te queda el " + Math.round(r.mal * 100) + "%"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-estMeta"
+  }, r.okMal ? "✓" : "✗", " Meta: conservar ", Math.round(EST_META_MAL * 100), "% o m\xE1s"))), !cerrado ? /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
-    onClick: confirmar,
-    disabled: propio < minPropio
+    onClick: () => setCerrado(r.nivel)
   }, "Cerrar el trato as\xED") : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-alerta " + (cerrado === "exito" ? "bien" : cerrado === "fallo" ? "mal" : "")
   }, cierre[cerrado]), /*#__PURE__*/React.createElement("button", {
@@ -13142,23 +13259,38 @@ function JuegoBanderas({
 }
 
 /* ---- La pizarra del comité: pares de concepto y significado ---- */
+/* Cada par lleva su color, el mismo en el concepto y en su definición:
+   al destapar una ficha el color se queda en la memoria mucho mejor que
+   un texto de dos palabras, y sirve de ancla para saber dónde estaba su
+   pareja. Sin el rojo, que en todo el juego significa fallo, y sin el
+   turquesa, que al lado del azul se confunde a simple vista. */
+const COLORES_PARES = [0, 1, 3, 4, 5, 7].map(i => COLORES_MEM[i].c);
+
+/* Segundos con la pizarra destapada antes de empezar. Más con mejor
+   atributo, para que «te ayuda» siga significando algo aquí. */
+const vistaParesDe = ayuda => clamp(Math.round(5 + numero(ayuda, 0) / 25), 5, 9);
 function JuegoPares({
   ayuda,
   onFin
 }) {
   const [pz] = useState(() => elegirAzar(PIZARRAS));
   const [fichas] = useState(() => {
+    /* los colores también se barajan: que el WACC no sea siempre cobre */
+    const cols = COLORES_PARES.slice().sort(() => Math.random() - 0.5);
     const arr = [];
     pz.p.forEach((par, i) => {
+      const col = cols[i % cols.length];
       arr.push({
         id: i + "a",
         par: i,
-        t: par[0]
+        t: par[0],
+        col
       });
       arr.push({
         id: i + "b",
         par: i,
-        t: par[1]
+        t: par[1],
+        col
       });
     });
     return arr.sort(() => Math.random() - 0.5);
@@ -13168,13 +13300,22 @@ function JuegoPares({
   const [hechas, setHechas] = useState([]);
   const [err, setErr] = useState(0);
   const [fin, setFin] = useState(false);
+  const [cuenta, setCuenta] = useState(() => vistaParesDe(ayuda));
+  const mirando = cuenta > 0;
   const bloqueo = useRef(false);
+
+  /* la pizarra destapada, y la cuenta atrás hasta taparla */
+  useEffect(() => {
+    if (cuenta <= 0) return;
+    const t = setTimeout(() => setCuenta(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cuenta]);
   const cerrar = nivel => {
     setFin(true);
     setTimeout(() => onFin(nivel), 900);
   };
   const tocar = f => {
-    if (fin || bloqueo.current) return;
+    if (mirando || fin || bloqueo.current) return;
     if (hechas.indexOf(f.par) >= 0) return;
     if (abiertas.some(x => x.id === f.id)) return;
     const nuevas = abiertas.concat(f);
@@ -13203,24 +13344,35 @@ function JuegoPares({
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, pz.t), /*#__PURE__*/React.createElement("span", null, "Fallos ", err, " de ", maxErr)), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, mirando ? "Mira la pizarra" : pz.t), /*#__PURE__*/React.createElement("span", null, mirando ? "se tapa en " + cuenta + (cuenta === 1 ? " segundo" : " segundos") : "Fallos " + err + " de " + maxErr)), /*#__PURE__*/React.createElement("div", {
     className: "ea-tab4"
   }, fichas.map(f => {
     const hecha = hechas.indexOf(f.par) >= 0;
     const abierta = abiertas.some(x => x.id === f.id);
+    const vista = mirando || hecha || abierta;
     return /*#__PURE__*/React.createElement("div", _extends({
       key: f.id
-    }, pulsable(() => tocar(f), hecha || abierta ? f.t : "Ficha tapada", hecha), {
-      className: "ea-fichaP" + (hecha ? " hecha" : abierta ? " abierta" : " tapada")
-    }), hecha || abierta ? f.t : "");
-  })), /*#__PURE__*/React.createElement("div", {
+    }, pulsable(() => tocar(f), vista ? f.t : "Ficha tapada", hecha || mirando), {
+      className: "ea-fichaP" + (mirando ? " vista" : hecha ? " hecha" : abierta ? " abierta" : " tapada") + (vista ? " pintada" : ""),
+      style: vista ? {
+        background: f.col + "33",
+        borderColor: f.col
+      } : undefined
+    }), vista ? f.t : "");
+  })), mirando && /*#__PURE__*/React.createElement("button", {
+    className: "ea-mini",
+    style: {
+      marginTop: 10
+    },
+    onClick: () => setCuenta(0)
+  }, "Ya lo mir\xE9, empezar"), /*#__PURE__*/React.createElement("div", {
     style: {
       minHeight: 20,
       marginTop: 9,
       fontSize: 13,
       color: "#6B6B6B"
     }
-  }, fin ? hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos" : ""));
+  }, fin ? hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos" : mirando ? "Cada par tiene su color: el concepto y su definición se pintan igual." : ""));
 }
 
 /* ---- El carril del capital ---- */
@@ -13545,53 +13697,101 @@ function JuegoComite({
   }, "Continuar")));
 }
 
-/* ---- La subasta y la maldición del ganador ---- */
+/* ---- La subasta y la maldición del ganador ----
+   Rehecha (28-sep-2026). La anterior tenía un tope escondido de ocho
+   rondas: a la octava subida se acababa sola y lo contaba como si te
+   hubieras retirado. Empezando en 40 y subiendo 8-13 por ronda, eso te
+   echaba hacia los 110 aunque tu estimación fuera 145. Además el éxito
+   pedía pagar menos del 82% del valor, que casi nunca pasaba, y los
+   rivales se retiraban por sorteo en vez de por un límite propio.
+
+   Ahora es una subasta de verdad, sin tope de rondas:
+     · cada rival tiene su precio máximo (del 70% al 120% del valor) y se
+       retira en cuanto la oferta lo pasa. Termina sola, porque los
+       límites son finitos.
+     · si te retiras, la subasta sigue sin ti: gana el rival con el límite
+       más alto y paga lo que marca el segundo. Tu retirada se juzga por lo
+       que pagó él: si pagó de más, hiciste bien.
+   Medido con 30.000 subastas (atributo 72): pujar hasta tu estimación da
+   éxito ~54% y fallo ~17%; retirarse muy pronto o pujar de más, bastante
+   peor. Es la maldición del ganador sin necesidad de explicarla. */
+const SUB_RIVALES = ["Fondo regional", "Comprador estratégico", "Family office"];
+const pasoSubasta = valor => Math.max(4, Math.round(valor * 0.06)) + indiceAzar(4);
+const casoSubasta = ayuda => {
+  const valor = 60 + numero(Math.random(), 0.5) * 80;
+  const ruido = Math.max(3, 20 - numero(ayuda, 0) / 6);
+  return {
+    valor,
+    estimacion: Math.max(10, Math.round(valor + ruido * gauss())),
+    limites: SUB_RIVALES.map(() => valor * (0.7 + numero(Math.random(), 0.5) * 0.5)),
+    inicio: Math.round(valor * 0.5)
+  };
+};
+/* si te retiras en p: gana el de límite más alto, al precio del segundo */
+const cierreRetiro = (caso, p) => {
+  const vivos = caso.limites.map((m, i) => ({
+    m,
+    i
+  })).filter(x => x.m >= p).sort((x, y) => y.m - x.m);
+  if (!vivos.length) return {
+    quien: null,
+    final: p
+  };
+  const final = Math.round(Math.max(p, vivos.length > 1 ? vivos[1].m : p));
+  return {
+    quien: SUB_RIVALES[vivos[0].i],
+    final
+  };
+};
+const nivelSubasta = (caso, fin) => {
+  if (fin.gano) {
+    const r = fin.precio / caso.valor;
+    return r <= 1 ? "exito" : r <= 1.1 ? "parcial" : "fallo";
+  }
+  if (fin.final > caso.valor) return "exito";
+  return fin.precio >= caso.valor * 0.9 ? "parcial" : "fallo";
+};
 function JuegoSubasta({
   ayuda,
   onFin
 }) {
-  const [valor] = useState(() => 60 + Math.random() * 80);
-  const [señal] = useState(() => Math.round(valor + (28 - ayuda / 5) * gauss()));
-  const [precio, setPrecio] = useState(40);
-  const [vivos, setVivos] = useState([true, true, true]);
-  const [ronda, setRonda] = useState(0);
+  const [caso] = useState(() => casoSubasta(ayuda));
+  const [precio, setPrecio] = useState(caso.inicio);
+  const [siguiente, setSiguiente] = useState(() => caso.inicio + pasoSubasta(caso.valor));
+  const [fuera, setFuera] = useState([null, null, null]); /* precio al que se retiró cada rival */
+  const [ronda, setRonda] = useState(1);
   const [fin, setFin] = useState(null);
-  const rivales = ["Fondo regional", "Comprador estratégico", "Family office"];
   const subir = () => {
-    const nuevo = precio + 8 + Math.floor(Math.random() * 6);
-    const siguen = vivos.map(v => v && Math.random() > clamp((nuevo - valor * 0.8) / 55, 0.08, 0.75));
+    if (fin) return;
+    const nuevo = siguiente;
+    const f = fuera.map((x, i) => x == null && caso.limites[i] < nuevo ? nuevo : x);
     setPrecio(nuevo);
-    setVivos(siguen);
+    setFuera(f);
     setRonda(ronda + 1);
-    if (siguen.every(v => !v)) {
-      const ratio = nuevo / valor;
-      setFin({
-        gano: true,
-        precio: nuevo,
-        ratio
-      });
-    } else if (ronda >= 7) {
-      setFin({
-        gano: false,
-        precio: nuevo,
-        ratio: nuevo / valor,
-        forzado: true
-      });
-    }
+    setSiguiente(nuevo + pasoSubasta(caso.valor));
+    if (f.every(x => x != null)) setFin({
+      gano: true,
+      precio: nuevo
+    });
   };
-  const retirarse = () => setFin({
-    gano: false,
-    precio,
-    ratio: precio / valor
-  });
-  const cerrar = () => {
-    if (fin.gano) onFin(fin.ratio <= 0.82 ? "exito" : fin.ratio <= 1 ? "parcial" : "fallo");else onFin(fin.ratio >= 1 ? "parcial" : fin.ratio >= 0.85 ? "parcial" : "fallo");
+  const retirarse = () => {
+    if (fin) return;
+    const c = cierreRetiro(caso, precio);
+    setFin({
+      gano: false,
+      precio,
+      final: c.final,
+      quien: c.quien
+    });
   };
+  const nivel = fin ? nivelSubasta(caso, fin) : null;
+  const V = Math.round(caso.valor);
+  const texto = !fin ? null : fin.gano ? nivel === "exito" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Pagaste lo que vale o menos: ese es el trabajo." : nivel === "parcial" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Casi lo que vale: sin margen, pero sin daño." : "Te la llevaste por " + fin.precio + " y valía " + V + ". Ganaste la subasta y perdiste plata: eso es la maldición del ganador." : nivel === "exito" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ": pagó de más. Retirarse a tiempo también es ganar." : nivel === "parcial" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Se llevó una buena compra, pero te retiraste cerca del valor." : "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Dejaste ir una empresa barata: la prudencia también cuesta cuando sobra.";
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Tu estimaci\xF3n de valor ", señal), /*#__PURE__*/React.createElement("span", null, "Ronda ", ronda + 1)), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, "Tu estimaci\xF3n: ", caso.estimacion, " millones"), /*#__PURE__*/React.createElement("span", null, "Ronda ", ronda)), /*#__PURE__*/React.createElement("div", {
     className: "ea-precio ea-mono"
   }, precio), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -13599,12 +13799,12 @@ function JuegoSubasta({
       color: "var(--gris)",
       marginBottom: 10
     }
-  }, "Oferta actual sobre la mesa, en millones."), rivales.map((r, i) => /*#__PURE__*/React.createElement("div", {
-    className: "ea-postor" + (vivos[i] ? "" : " fuera"),
+  }, "Oferta sobre la mesa, en millones. Tu estimaci\xF3n puede fallar por arriba o por abajo."), SUB_RIVALES.map((r, i) => /*#__PURE__*/React.createElement("div", {
+    className: "ea-postor" + (fuera[i] == null ? "" : " fuera"),
     key: i
   }, /*#__PURE__*/React.createElement("span", null, r), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
-  }, vivos[i] ? "sigue" : "se retiró"))), !fin ? /*#__PURE__*/React.createElement("div", {
+  }, fuera[i] == null ? "sigue" : "se retiró en " + fuera[i]))), !fin ? /*#__PURE__*/React.createElement("div", {
     className: "ea-fila2"
   }, /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
@@ -13613,7 +13813,7 @@ function JuegoSubasta({
       flex: 1
     },
     onClick: subir
-  }, "Subir la oferta"), /*#__PURE__*/React.createElement("button", {
+  }, "Subir a ", siguiente), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
     style: {
       marginTop: 0,
@@ -13622,10 +13822,10 @@ function JuegoSubasta({
     },
     onClick: retirarse
   }, "Retirarme")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta " + (fin.gano ? fin.ratio <= 1 ? "bien" : "mal" : fin.ratio >= 0.85 ? "" : "mal")
-  }, "El activo val\xEDa ", Math.round(valor), ".", fin.gano ? fin.ratio <= 0.82 ? " Te lo llevaste con descuento real, que es exactamente el trabajo." : fin.ratio <= 1 ? " Ganaste pagando casi lo que vale. Sin margen, pero sin daño." : " Ganaste la subasta y perdiste plata. Eso se llama maldición del ganador y es la forma más elegante de arruinarse." : fin.ratio >= 1 ? " Te retiraste justo antes de pagar de más. Retirarse a tiempo también es ganar." : " Dejaste ir un activo que estaba barato. La disciplina también cuesta cuando se aplica de más."), /*#__PURE__*/React.createElement("button", {
+    className: "ea-alerta " + (nivel === "exito" ? "bien" : nivel === "fallo" ? "mal" : "")
+  }, texto), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
-    onClick: cerrar
+    onClick: () => onFin(nivel)
   }, "Continuar")));
 }
 
@@ -15750,38 +15950,9 @@ function Motor() {
     irA("identidad");
   };
 
-  /* Entrar de un clic. Hasta ahora, para ver la primera decision habia que
-     pasar por seis pantallas de configuracion y decidir cosas que todavia
-     no significaban nada: no sabes si quieres empezar a los 40 hasta que
-     has jugado una vez. Aqui se eligen valores sensatos, se entra, y lo
-     que el jugador quiera cambiar lo cambia en la siguiente vida.
-      El pais sale al azar menos Estados Unidos, que arranca debiendo
-     dieciseis mil de universidad: como primer contacto es un castigo que
-     nadie eligio. */
-  const jugarYa = () => {
-    if (!enFase("portada")) return;
-    const na = elegirAzar(NACIONES.filter(x => x.id !== "us")) || NACIONES[0];
-    const ca = elegirAzar(CARRERAS) || CARRERAS[0];
-    tirarPartida();
-    setElec(SETUP0);
-    setFin(null);
-    setRes(null);
-    setCierre(null);
-    setTab(null);
-    arrancarPartida({
-      ...SETUP0,
-      modo: "aprendiz",
-      edad: 20,
-      duracion: "decada",
-      pais: na.id,
-      estudio: ca.id,
-      guia: true
-    });
-  };
-
   /* el rastro de lo ya elegido, para que se vea qué hay detrás del Atrás */
   const rastro = () => {
-    const partes = [MODO(elec.modo).n, "empiezas a los " + EDAD_DE(elec.edad).e];
+    const partes = ["Empiezas a los " + EDAD_DE(elec.edad).e];
     const na = NACIONES.find(x => x.id === elec.pais);
     if (na) partes.push(na.n);
     return partes.join(" · ");
@@ -17220,27 +17391,35 @@ function Motor() {
   }, "Volver a leer el aviso"), /*#__PURE__*/React.createElement("div", {
     className: "ea-regla"
   }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-cifras",
+    className: "ea-cifras ea-cifrasPortada",
     style: {
       marginBottom: 26
     }
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraK"
-  }, "Recorrido"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-cifraV ea-mono"
-  }, "T\xFA eliges")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-cifraK"
-  }, "Edad"), /*#__PURE__*/React.createElement("div", {
+  }, "La carrera"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
-  }, "Desde los 20 o los 50")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "De pasante a socio"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-cifraD"
+  }, "Ascensos, contratos y la opci\xF3n de montar tu propia firma.")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraK"
-  }, "La meta"), /*#__PURE__*/React.createElement("div", {
+  }, "El punto de partida"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
-  }, "No depender del sueldo")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "Nunca es tarde para invertir"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-cifraD"
+  }, "Empieza a los 20, 30, 40 o 50: m\xE1s joven, m\xE1s tiempo; m\xE1s tarde, m\xE1s capital y experiencia.")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraK"
-  }, "Por el camino"), /*#__PURE__*/React.createElement("div", {
+  }, "El objetivo"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
-  }, "Bodas, hijos, estafas"))), guardado ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "Independencia financiera"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-cifraD"
+  }, "Que tu patrimonio cubra tu vida sin depender del sueldo.")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-cifraK"
+  }, "Los imprevistos"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-cifraV ea-dis"
+  }, "Crisis, familia y fraudes"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-cifraD"
+  }, "Mercados que caen, decisiones de pareja e hijos, y ofertas demasiado buenas."))), guardado ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-guarda"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-lecK",
@@ -17289,21 +17468,8 @@ function Motor() {
     }
   }, "Empezar otra vida borra la partida guardada.")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     className: "ea-jugarYa ea-dis",
-    onClick: jugarYa
-  }, "Jugar ya"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12.5,
-      color: "var(--gris)",
-      marginTop: 8
-    }
-  }, "Una d\xE9cada. Sin configurar nada."), /*#__PURE__*/React.createElement("button", {
-    className: "ea-atras ea-dis",
-    style: {
-      marginTop: 14,
-      marginBottom: 0
-    },
     onClick: empezar
-  }, "Prefiero elegirlo todo \u2192")), /*#__PURE__*/React.createElement("div", {
+  }, "Jugar ya")), /*#__PURE__*/React.createElement("div", {
     className: "ea-panel",
     style: {
       marginTop: 30,
@@ -17334,7 +17500,7 @@ function Motor() {
       letterSpacing: ".26em",
       color: "var(--cobre)"
     }
-  }, "Paso uno de cinco"), /*#__PURE__*/React.createElement("h2", {
+  }, "Paso uno de cuatro"), /*#__PURE__*/React.createElement("h2", {
     className: "ea-final ea-dis",
     style: {
       marginTop: 8
@@ -17386,9 +17552,9 @@ function Motor() {
       marginTop: 0
     },
     onClick: () => {
-      if (enFase("identidad")) irA("modo");
+      if (enFase("identidad")) irA("edad");
     }
-  }, elec.nombre.trim() ? "Seguir como " + elec.nombre.trim() : "Seguir sin nombre")), fase === "modo" && /*#__PURE__*/React.createElement("div", {
+  }, elec.nombre.trim() ? "Seguir como " + elec.nombre.trim() : "Seguir sin nombre")), fase === "edad" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
@@ -17404,52 +17570,12 @@ function Motor() {
       letterSpacing: ".26em",
       color: "var(--cobre)"
     }
-  }, "Paso dos de cinco"), /*#__PURE__*/React.createElement("h2", {
+  }, "Paso dos de cuatro"), /*#__PURE__*/React.createElement("h2", {
     className: "ea-final ea-dis",
     style: {
       marginTop: 8
     }
-  }, "\xBFCu\xE1nto sabes de esto?"), /*#__PURE__*/React.createElement("p", {
-    className: "ea-lede",
-    style: {
-      marginBottom: 18
-    }
-  }, "No hay respuesta mala."), MODOS.map(m => /*#__PURE__*/React.createElement("button", {
-    className: "ea-opcion" + (elec.modo === m.id ? " on" : ""),
-    key: m.id,
-    onClick: () => {
-      if (enFase("modo")) elige("modo", m.id, "edad");
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionN"
-  }, m.n), /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionD"
-  }, m.d), m.ayuda > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionM"
-  }, "Los minijuegos te dan ", m.ayuda, " puntos de ventaja y las preguntas traen recordatorio")))), fase === "edad" && /*#__PURE__*/React.createElement("div", {
-    className: "ea-wrap",
-    style: {
-      maxWidth: 760,
-      margin: "4vh auto"
-    }
-  }, /*#__PURE__*/React.createElement(Atras, {
-    a: "modo",
-    texto: "Cambiar el modo"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-dis",
-    style: {
-      fontSize: 12,
-      letterSpacing: ".26em",
-      color: "var(--cobre)"
-    }
-  }, "Paso tres de cinco"), /*#__PURE__*/React.createElement("h2", {
-    className: "ea-final ea-dis",
-    style: {
-      marginTop: 8
-    }
-  }, "\xBFA qu\xE9 edad empiezas?"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-rastro ea-mono"
-  }, "Modo ", MODO(elec.modo).n.toLowerCase()), /*#__PURE__*/React.createElement("p", {
+  }, "\xBFA qu\xE9 edad empiezas?"), /*#__PURE__*/React.createElement("p", {
     className: "ea-lede",
     style: {
       marginBottom: 18
@@ -17504,7 +17630,7 @@ function Motor() {
       letterSpacing: ".26em",
       color: "var(--cobre)"
     }
-  }, "Paso tres de cinco"), /*#__PURE__*/React.createElement("h2", {
+  }, "Paso dos de cuatro"), /*#__PURE__*/React.createElement("h2", {
     className: "ea-final ea-dis",
     style: {
       marginTop: 8
@@ -17570,7 +17696,7 @@ function Motor() {
       letterSpacing: ".26em",
       color: "var(--cobre)"
     }
-  }, "Paso cuatro de cinco"), /*#__PURE__*/React.createElement("h2", {
+  }, "Paso tres de cuatro"), /*#__PURE__*/React.createElement("h2", {
     className: "ea-final ea-dis",
     style: {
       marginTop: 8
@@ -17593,7 +17719,8 @@ function Motor() {
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-nombre ea-dis",
     style: {
-      fontSize: 19
+      fontSize: 19,
+      color: "var(--tinta)"
     }
   }, p.n), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono",
@@ -17639,7 +17766,7 @@ function Motor() {
       letterSpacing: ".26em",
       color: "var(--cobre)"
     }
-  }, "Paso cinco de cinco"), /*#__PURE__*/React.createElement("h2", {
+  }, "Paso cuatro de cuatro"), /*#__PURE__*/React.createElement("h2", {
     className: "ea-final ea-dis",
     style: {
       marginTop: 8
@@ -17660,7 +17787,8 @@ function Motor() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-nombre ea-dis",
     style: {
-      fontSize: 19
+      fontSize: 19,
+      color: "var(--tinta)"
     }
   }, c.n), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -17677,58 +17805,22 @@ function Motor() {
     className: "ea-mini",
     onClick: () => {
       if (!enFase("estudio")) return;
+      /* Al elegir la carrera empieza la partida, con los avisos de
+         guía siempre puestos. Había una pantalla más («¿Te vas
+         guiando o vas solo?») y se quitó el 28-sep-2026: los
+         avisos son cortos y salen una sola vez, no hace falta
+         preguntar por ellos. */
       setElec(x => ({
         ...x,
         estudio: c.id
       }));
-      irA("guia");
-    }
-  }, EDAD_DE(elec.edad).e <= 20 ? "Graduarte de esto" : "Empezar con esto")))), fase === "guia" && /*#__PURE__*/React.createElement("div", {
-    className: "ea-wrap",
-    style: {
-      maxWidth: 700,
-      margin: "6vh auto"
-    }
-  }, /*#__PURE__*/React.createElement(Atras, {
-    a: "estudio",
-    texto: "Cambiar la carrera"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-dis",
-    style: {
-      fontSize: 12,
-      letterSpacing: ".26em",
-      color: "var(--cobre)"
-    }
-  }, "\xDAltima cosa"), /*#__PURE__*/React.createElement("h2", {
-    className: "ea-final ea-dis",
-    style: {
-      marginTop: 8
-    }
-  }, "\xBFTe vas guiando o vas solo?"), /*#__PURE__*/React.createElement("button", {
-    className: "ea-opcion",
-    onClick: () => {
-      if (enFase("guia")) arrancarPartida({
+      arrancarPartida({
         ...elec,
+        estudio: c.id,
         guia: true
       });
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionN"
-  }, "Gu\xEDame por el camino"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionD"
-  }, "Ocho avisos de tres l\xEDneas. Salen una vez y no vuelven.")), /*#__PURE__*/React.createElement("button", {
-    className: "ea-opcion",
-    onClick: () => {
-      if (enFase("guia")) arrancarPartida({
-        ...elec,
-        guia: false
-      });
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionN"
-  }, "S\xE9 lo que hago"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionD"
-  }, "Directo a jugar, sin avisos."))), (fase === "evento" || fase === "minijuego" || fase === "resultado" || fase === "cierre" || fase === "retiro") && /*#__PURE__*/React.createElement("div", {
+  }, EDAD_DE(elec.edad).e <= 20 ? "Graduarte de esto" : "Empezar con esto")))), (fase === "evento" || fase === "minijuego" || fase === "resultado" || fase === "cierre" || fase === "retiro") && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-placa"

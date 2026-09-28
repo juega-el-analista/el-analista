@@ -71,9 +71,8 @@ async function unaVida(semilla, vistos, hitos) {
 
   await act(async () => { reloj(400); await micro(); });
   await pulsa(porRot(/acepto y quiero/i));
-  await pulsa(porRot(/^Prefiero elegirlo todo/));
+  await pulsa(porRot(/^Jugar ya$/));
   await pulsa(porRot(/^Seguir sin nombre|^Seguir como/));
-  await pulsa(porRot(/^Analista/));
   /* Esta prueba mide cuanto de lo escrito llega a verse, asi que juega la
      carrera entera a proposito: con la decada, que es lo que trae por
      defecto, la mitad del contenido saldria como «nunca visto» sin que

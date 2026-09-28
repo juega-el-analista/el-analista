@@ -207,6 +207,13 @@ const CSS = `
 .ea-num:hover{border-color:var(--cobre)}
 
 .ea-mult{font-size:50px;line-height:1;color:var(--tintaPapel)}
+.ea-jwCentro{text-align:center}
+.ea-jwCentro .ea-mult{font-size:clamp(56px,16vw,92px);margin-top:10px}
+.ea-suerteMeta{font-size:11.5px;color:var(--gris);margin-top:6px}
+.ea-suerteHist{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px}
+.ea-suerteH{font-size:12px;padding:2px 8px;border:1px solid rgba(61,61,61,.25)}
+.ea-suerteH.ok{color:#2F7A3D;border-color:#2F7A3D}
+.ea-suerteH.mal{color:var(--rojo);border-color:var(--rojo)}
 .ea-fila2{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
 .ea-qtxt{font-size:16.5px;color:#3D3D3D;margin:0 0 13px}
 .ea-expl{font-size:13.5px;color:var(--gris);margin-top:11px;border-left:2px solid var(--cobre);padding-left:10px}
@@ -232,9 +239,15 @@ const CSS = `
 .ea-regla{height:1px;background:var(--borde);margin:24px 0}
 .ea-final{font-size:33px;color:var(--tintaPapel);line-height:1.1;margin:0 0 12px}
 .ea-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:15px}
+/* en la portada, dos por dos: con cuatro textos largos, auto-fit dejaba
+   tres arriba y uno huérfano abajo, o se montaban en pantallas estrechas */
+.ea-cifras.ea-cifrasPortada{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px}
+@media (max-width:460px){.ea-cifras.ea-cifrasPortada{grid-template-columns:1fr}}
+.ea-cifraV{overflow-wrap:break-word}
 .ea-cifraK{font-size:11px;color:var(--gris);letter-spacing:.18em;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 .ea-cifraV{font-size:20px;color:var(--tintaPapel)}
+.ea-cifraD{font-size:12.5px;line-height:1.45;color:var(--gris);margin-top:5px}
 `;
 
 const CSS5 = `
@@ -669,14 +682,14 @@ const JUEGOS = {
     ensena: "El primer número que se pone sobre la mesa ancla toda la conversación que viene después.",
   },
   suerte: {
-    n: "Aguantar la posición", tema: "Riesgo y disciplina", dur: "20 s",
-    i: "Cada vez que aguantas sube el múltiplo y sube el riesgo de quedarte pegado.",
+    n: "Aguantar la posición", tema: "Riesgo y disciplina", dur: "30 s",
+    i: "El múltiplo sube solo y en algún momento se da vuelta. Tú decides cuándo cerrar.",
     pasos: [
-      "Empiezas con una posición ganadora y un múltiplo bajo.",
-      "Cada vez que aguantas, el múltiplo sube y también la probabilidad de perderlo todo.",
-      "Cierras cuando quieras. Si te pasas, te quedas sin nada.",
+      "Al empezar, el múltiplo arranca en 1,00x y va subiendo poco a poco.",
+      "Cierras cuando quieras y te quedas con ese número. Si se da vuelta antes, ese intento se pierde.",
+      "Tienes tres intentos y cuenta el mejor. Nadie sabe dónde se da vuelta: cada vez es distinto.",
     ],
-    gana: "Cerrar con un múltiplo decente. Reventar la posición es fallo.",
+    gana: "Cerrar en 3,00x o más es éxito. En 2,00x o más, resultado a medias.",
     ensena: "Toda posición ganadora te invita a esperar un poco más. La ruina casi siempre viene de no tener regla de salida escrita antes de entrar.",
   },
   tresraya: {
@@ -758,13 +771,13 @@ const JUEGOS = {
   },
   estructura: {
     n: "Armar la estructura", tema: "Apalancamiento", dur: "40 s",
-    i: "Decides cuánta deuda y cuánto capital propio pone la compra.",
+    i: "Compras una empresa de 100 millones. Tú pones una parte y el banco te presta el resto.",
     pasos: [
-      "Tienes un EBITDA, un precio de compra y dos tipos de deuda con costos distintos.",
-      "Mueves las barras de deuda senior y mezzanine; el resto lo pone tu capital.",
-      "Ves el múltiplo estimado a cinco años antes de cerrar.",
+      "Con la barra decides cuánto te presta el banco. Lo que falta lo pones tú.",
+      "Debajo ves qué pasa con tu dinero si a la empresa le va bien y si le va mal.",
+      "Más préstamo: ganas más si va bien, pero pierdes más si va mal. Busca el punto medio.",
     ],
-    gana: "Múltiplo de dos y media veces o más sin pasarte de apalancamiento.",
+    gana: "Cumplir las dos metas es éxito. Una sola, resultado a medias.",
     ensena: "La deuda multiplica el retorno del capital y también el riesgo de perderlo todo. Pasado cierto punto el banco manda, no tú.",
   },
   banderas: {
@@ -782,8 +795,8 @@ const JUEGOS = {
     n: "La pizarra del comité", tema: "Conceptos", dur: "40 s",
     i: "Fichas boca abajo: une cada concepto con lo que significa.",
     pasos: [
-      "Todas las fichas empiezan tapadas.",
-      "Destapas dos por turno buscando el concepto y su definición.",
+      "Antes de empezar ves la pizarra destapada unos segundos: mira dónde queda cada cosa.",
+      "Después se tapa y destapas dos por turno. Cada par tiene su color: el concepto y su definición se pintan igual.",
       "Tienes un número limitado de fallos.",
     ],
     gana: "Completar la pizarra con pocos fallos.",
@@ -813,13 +826,13 @@ const JUEGOS = {
   },
   subasta: {
     n: "La subasta", tema: "Valoración y disciplina", dur: "40 s",
-    i: "Cuatro postores por el mismo activo y nadie sabe cuánto vale de verdad.",
+    i: "Tú y tres rivales pujan por la misma empresa, y nadie sabe cuánto vale de verdad.",
     pasos: [
-      "Tienes tu propia estimación de valor, que puede estar equivocada.",
-      "Subes la oferta o te retiras en cada ronda.",
-      "Si todos se retiran, el activo es tuyo al precio que quedó.",
+      "Tienes tu propia estimación de lo que vale. Puede estar equivocada, por arriba o por abajo.",
+      "En cada ronda subes la oferta o te retiras. Cada rival tiene su límite y se retira al pasarlo.",
+      "Si se retiran todos, es tuya al precio que quedó. Si te retiras tú, la subasta sigue sin ti.",
     ],
-    gana: "Ganar pagando por debajo del valor real. Retirarse a tiempo también cuenta.",
+    gana: "Ganar pagando lo que vale o menos es éxito. Retirarte cuando el que gana acaba pagando de más, también.",
     ensena: "La maldición del ganador: en una subasta, el que más paga suele ser el que más se equivocó estimando.",
   },
 };
@@ -902,6 +915,10 @@ const CSS2 = `
 .ea-marca.fuera{border-color:var(--gris);color:var(--gris)}
 
 .ea-est{margin:12px 0}
+.ea-estCaso{font-size:16px;line-height:1.45;color:#3D3D3D;margin:4px 0 2px}
+.ea-estMeta{font-size:12.5px;margin-top:8px;font-weight:600;color:#3D3D3D}
+.ea-escenC.bien .ea-estMeta{color:#2F7A3D}
+.ea-escenC.mal .ea-estMeta{color:var(--rojo)}
 .ea-estL{display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px}
 .ea-alerta{font-size:13px;padding:8px 11px;border-left:3px solid var(--cobre);background:rgba(185,83,42,.1);margin-top:11px;color:#3D3D3D}
 .ea-alerta.mal{border-color:var(--rojo);background:rgba(178,59,39,.12)}
@@ -933,6 +950,9 @@ const CSS3 = `
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-fichaP.abierta{background:rgba(185,83,42,.2);border-color:var(--cobre)}
 .ea-fichaP.hecha{background:rgba(62,107,60,.18);border-color:#3D8A49;cursor:default}
+.ea-fichaP.vista{cursor:default}
+.ea-fichaP.pintada{border-width:1px 1px 1px 5px}
+.ea-fichaP.hecha.pintada{opacity:.62}
 
 .ea-pista4{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:rgba(61,61,61,.12);padding:5px;
   border:1px solid rgba(61,61,61,.25)}
@@ -1425,8 +1445,12 @@ const CSS4 = `
 /* tres · el juego, sin nada alrededor */
 .ea-juegoPleno{position:fixed;inset:0;z-index:70;background:var(--papel);
   overflow-y:auto;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));
-  animation:ea-entra .2s ease-out}
-.ea-juegoPleno .ea-jw{max-width:560px;margin:0 auto;padding-top:env(safe-area-inset-top,0px)}
+  animation:ea-entra .2s ease-out;display:flex;flex-direction:column}
+/* En el centro de la pantalla, en los dos ejes. Con margin:auto dentro de
+   un flex y no con justify-content:center: si el juego es más alto que la
+   pantalla, justify-content cortaría la parte de arriba sin poder llegar a
+   ella con el scroll; margin:auto se queda en 0 y el scroll sigue normal. */
+.ea-juegoPleno .ea-jw{width:100%;max-width:560px;margin:auto;padding-top:env(safe-area-inset-top,0px)}
 
 /* ---- el rodillo del cierre ---- */
 .ea-rodillos{display:inline-flex;align-items:center;gap:1px;line-height:1}
@@ -2539,30 +2563,45 @@ const BANDERAS = [
 ];
 
 /* ---------- de dónde vienes ---------- */
+/* Sueldo, costo de vida e impuesto, relativos a Madrid = 1. Recalibrados
+   el 28-sep-2026 con datos reales, suavizados a mitad de camino para no
+   romper el juego (npm run paises lo mide):
+     · sueldo: analista financiero junior. Real: Caracas 0,18 · Bogotá 0,34
+       · Buenos Aires 0,30 · CDMX 0,35 · Miami 1,73 (Glassdoor, Computrabajo,
+       Fedecámaras, ZipRecruiter). Aquí, a mitad entre eso y lo que había.
+     · costo de vida: una persona con alquiler (livingcost.org, jun-2026:
+       Caracas 0,59 · Bogotá 0,52 · Buenos Aires 0,59 · CDMX 0,70 · Miami
+       1,52). Bogotá, CDMX y Caracas van algo más caros que el dato: como el
+       sueldo se suavizó a mitad de camino y el costo no, con el costo real
+       México y Colombia vivían como en Madrid pagando menos impuestos, y
+       México acababa más rico que España. npm run paises lo mide.
+     · impuesto: renta + aportes del empleado, a mitad entre lo que paga un
+       junior y lo que paga una carrera avanzada, porque es una sola tasa
+       para toda la partida. Florida no cobra impuesto estatal. */
 const NACIONES = [
   { id: "ve", n: "Venezuela", ban: "Caracas",
     d: "Creciste viendo inflación de tres dígitos, así que entiendes el dinero antes que nadie. El mercado local es pequeño y todo se resuelve por quién conoces a quién.",
-    mods: { red: 7, cri: 7 }, cash: 1200, sal: 0.7, gas: 0.64, tax: 0.2, sesgo: "Emergentes",
+    mods: { red: 7, cri: 7 }, cash: 1200, sal: 0.46, gas: 0.62, tax: 0.12, sesgo: "Emergentes",
     nota: "Sueldos bajos, costo de vida bajo, impuestos bajos, todo el mundo se conoce." },
   { id: "co", n: "Colombia", ban: "Bogotá",
     d: "Mercado mediano y ordenado, con banca de inversión de verdad y competencia por los puestos.",
-    mods: { red: 4, rep: 3 }, cash: 3000, sal: 0.92, gas: 0.86, tax: 0.27, sesgo: "Emergentes",
+    mods: { red: 4, rep: 3 }, cash: 3000, sal: 0.6, gas: 0.66, tax: 0.17, sesgo: "Emergentes",
     nota: "Punto de equilibrio entre oportunidad y estabilidad." },
   { id: "ar", n: "Argentina", ban: "Buenos Aires",
     d: "El país que te enseña macro a la fuerza. Cada década trae una crisis y cada crisis deja una generación que sabe leer una curva.",
-    mods: { cri: 9, mod: 2 }, cash: 1800, sal: 0.78, gas: 0.72, tax: 0.3, sesgo: "Tasas",
+    mods: { cri: 9, mod: 2 }, cash: 1800, sal: 0.54, gas: 0.59, tax: 0.24, sesgo: "Tasas",
     nota: "Criterio macro altísimo, ingresos volátiles." },
   { id: "mx", n: "México", ban: "Ciudad de México",
     d: "El mercado más grande de habla hispana y la puerta de entrada al capital estadounidense.",
-    mods: { red: 4, mod: 3 }, cash: 4500, sal: 1.08, gas: 1.0, tax: 0.3, sesgo: "Comercio",
+    mods: { red: 4, mod: 3 }, cash: 4500, sal: 0.72, gas: 0.85, tax: 0.21, sesgo: "Comercio",
     nota: "Volumen de operaciones alto y cercanía con el norte." },
   { id: "es", n: "España", ban: "Madrid",
     d: "Acceso a Europa, instituciones sólidas y una carrera más lenta pero más predecible.",
-    mods: { rep: 5, mod: 3 }, cash: 7000, sal: 1.0, gas: 0.95, tax: 0.37, sesgo: "Mercados",
+    mods: { rep: 5, mod: 3 }, cash: 7000, sal: 1, gas: 1, tax: 0.31, sesgo: "Mercados",
     nota: "Estabilidad y la carga fiscal más alta de la lista." },
-  { id: "us", n: "Estados Unidos", ban: "Nueva York",
-    d: "El centro del mundo financiero. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
-    mods: { mod: 7 }, cash: -16000, sal: 1.6, gas: 1.5, tax: 0.33, sesgo: "Mercados",
+  { id: "us", n: "Estados Unidos", ban: "Miami",
+    d: "La capital financiera de América Latina en Estados Unidos. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
+    mods: { mod: 7 }, cash: -16000, sal: 1.7, gas: 1.52, tax: 0.22, sesgo: "Mercados",
     nota: "Empiezas debiendo dieciséis mil dólares de la universidad." },
 ];
 
@@ -3158,7 +3197,7 @@ const E3 = [
       { t: "Esperar a que se aclare la norma", d: { cash: -3500, cri: 4, msg: "La norma se aclara dos semanas después y para entonces ya perdiste 30% del poder de compra." } },
       { t: "Consultarlo con un abogado", d: { cash: -1200, cri: 3, rep: 2, msg: "Legalmente impecable y financieramente tarde." } },
     ] },
-  { id: 55, clave: true, min: 1, max: 6, t: "Te ofrecen una visa de trabajo", x: "Una firma de Nueva York quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
+  { id: 55, clave: true, min: 1, max: 6, t: "Te ofrecen una visa de trabajo", x: "Una firma de Miami quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
     o: [
       { t: "Aceptar y mudarte", req: { noPais: "us" }, d: { cash: 9000, mod: 7, red: -8, ene: -9, car: 7, msg: "Otra liga, otro idioma en la mesa y una red que hay que construir desde cero." }, mudar: "us" },
       { t: "Quedarte donde tu red vale algo", d: { red: 7, rep: 4, car: 2, msg: "Tu ventaja competitiva es local y decides no regalarla." } },
@@ -3634,7 +3673,7 @@ const LECCIONES = [
   { id: "secuencia", pri: 9, cuando: (c) => c.edad >= 45 && c.cobertura >= 0.6,
     t: "El orden de los retornos",
     x: (c) => `Ya estás cerca de vivir de tu capital. A partir de aquí importa el orden: dos años malos al principio del retiro hacen más daño que los mismos dos años al final, porque vendes cuando está barato. Por eso se baja el riesgo antes de retirarse, no después.` },
-  { id: "moneda", pri: 5, cuando: (c) => c.tax >= 0.22 || c.pais === "ar" || c.pais === "ve",
+  { id: "moneda", pri: 5, cuando: (c) => ["ve", "ar", "co", "mx"].indexOf(c.pais) >= 0,
     t: "El riesgo que viene con el pasaporte",
     x: (c) => `Vives y cobras en un país donde la moneda y las reglas cambian. Buena parte de tu patrimonio debería estar en activos que no dependan de esa decisión, no por pesimismo sino por la misma razón por la que no se pone todo en una sola empresa.` },
   { id: "millon", pri: 10, cuando: (c) => c.patrimonio >= 1000000 && c.patAntes < 1000000,
@@ -3860,7 +3899,7 @@ const BASE = {
   /* el recorrido mensual acumulado de la cartera */
   curva: [],
   /* configuración de la partida */
-  modo: "normal", edadIni: 20, estudia: 0,
+  modo: "aprendiz", edadIni: 20, estudia: 0,
   /* cuántos años piensas jugar antes de que te pregunten si te retiras */
   meta: 30,
   nombre: "", genero: null,
@@ -3968,11 +4007,14 @@ const PAREJA_TXT = (st) => ({
   divorciado: gen(st, "divorciado", "divorciada", "con un divorcio detrás"),
   viudo: gen(st, "viudo", "viuda", "en duelo"),
 }[st && st.pareja] || "sin pareja");
+/* Un solo modo. Hubo dos (Aprendiz y Analista) y se quitó la elección:
+   el juego es para quien nunca ha invertido, así que todo el mundo juega
+   con las explicaciones y la ventaja de aprendiz. Se conserva la tabla
+   para no tocar a quien la lee; MODO() devuelve siempre este. */
 const MODOS = [
   { id: "aprendiz", n: "Aprendiz", d: "Cada término se explica antes de usarse, los exámenes traen una clase previa y los minijuegos perdonan más. Pensado para quien nunca ha invertido nada.", ayuda: 22, indulgencia: 1 },
-  { id: "normal", n: "Analista", d: "El juego como está pensado: se explica lo justo y se espera que vayas atando cabos.", ayuda: 0, indulgencia: 0 },
 ];
-const MODO = (id) => MODOS.find((x) => x.id === id) || MODOS[1];
+const MODO = () => MODOS[0];
 const EDADES = [
   { e: 20, n: "20 años", d: "Recién graduado, sin nada ahorrado y con todo el tiempo del mundo a favor.", cash: 0, car: 0, mods: {} },
   { e: 30, n: "30 años", d: "Ya trabajaste unos años. Empiezas con algo de dinero, algo de red y menos años por delante.", cash: 9000, car: 14, mods: { cri: 6, red: 8, rep: 5 } },
@@ -4581,7 +4623,7 @@ const sanear = (bruto) => {
   st.shock = clamp(numero(r.shock, 0), -2, 2);
   st.pareja = PAREJAS.indexOf(r.pareja) >= 0 ? r.pareja : "solo";
   st.hijos = entero(r.hijos, 0, 0, 8);
-  st.modo = MODOS.some((m) => m.id === r.modo) ? r.modo : "normal";
+  st.modo = "aprendiz";   /* un solo modo: los guardados en «normal» pasan a este */
   st.nombre = saneaNombre(r.nombre);
   st.genero = GENEROS.some((g) => g.id === r.genero) ? r.genero : null;
   st.ritmo = RITMOS.some((x) => x.id === r.ritmo) ? r.ritmo : "normal";
@@ -5237,30 +5279,133 @@ function JuegoAnclaje({ ayuda, onFin }) {
   );
 }
 
-function JuegoSuerte({ ayuda, onFin }) {
-  const [mult, setMult] = useState(1);
-  const [paso, setPaso] = useState(0);
-  const [estado, setEstado] = useState(null);
-  const riesgo = clamp(0.1 + paso * 0.075 - ayuda / 900, 0.05, 0.72);
+/* ---- Aguantar la posición: el múltiplo sube solo hasta que se da vuelta ----
+   Antes era pulsar «aguantar» y tirar un dado cada vez. Ahora el número
+   sube poco a poco y el jugador decide cuándo cerrar, sin saber dónde se
+   va a dar vuelta: la regla de salida tiene que traerla él.
 
-  const aguantar = () => {
-    if (Math.random() < riesgo) { setEstado("Se te dio vuelta la posición"); setTimeout(() => onFin("fallo"), 850); }
-    else { setMult(+(mult + 0.32 + paso * 0.11).toFixed(2)); setPaso(paso + 1); }
+   Dónde se da vuelta: P(llegar a m) = k / m, la forma clásica. Con k < 1
+   a veces se da vuelta nada más abrir, y cuanto más alto, más raro llegar.
+   El atributo mueve k: con mejor criterio aguanta un poco más en promedio.
+   Tope en 10x para que un intento no dure para siempre.
+
+   Tres intentos y cuenta el MEJOR: reventar uno no te saca del juego, que
+   es justo lo que da ganas de volver a intentarlo. Medido con 40.000
+   tiradas (k 0,94): salir siempre en 3x da éxito ~68%; salir en 5x, ~46%;
+   salir en 2x casi nunca falla pero nunca pasa de parcial. */
+const SUERTE_INTENTOS = 3;
+const SUERTE_EXITO = 3;
+const SUERTE_PARCIAL = 2;
+const SUERTE_TOPE = 10;
+const SUERTE_PASO = 1.02;      /* por cada tick de 100 ms: 2x en ~3,5 s, 3x en ~5,5 s */
+const vueltaSuerte = (ayuda) => {
+  const k = clamp(0.8 + numero(ayuda, 0) / 500, 0.8, 0.97);
+  const u = clamp(numero(Math.random(), 0.5), 0, 0.999999);
+  return clamp(k / (1 - u), 1, SUERTE_TOPE);
+};
+const fmtX = (m) => m.toFixed(2).replace(".", ",") + "x";
+
+function JuegoSuerte({ ayuda, onFin }) {
+  const [intento, setIntento] = useState(0);
+  const [mult, setMult] = useState(1);
+  const [fase, setFase] = useState("listo");   /* listo · subiendo · cerrado · vuelta · fin */
+  const [hist, setHist] = useState([]);        /* { m, ok, vuelta } por intento */
+  const vuelta = useRef(1);
+  const actual = useRef(1);        /* el múltiplo vivo, sin esperar al render */
+  const abierto = useRef(false);   /* un intento solo se cierra una vez */
+
+  const mejor = hist.reduce((a, h) => (h.ok && h.m > a ? h.m : a), 0);
+  const quedan = SUERTE_INTENTOS - hist.length;
+
+  /* el número sube solo mientras el intento está abierto */
+  useEffect(() => {
+    if (fase !== "subiendo") return;
+    const t = setInterval(() => {
+      if (!abierto.current) return;
+      const sig = +(actual.current * SUERTE_PASO).toFixed(4);
+      if (sig >= vuelta.current) {
+        abierto.current = false;
+        actual.current = vuelta.current;
+        setMult(vuelta.current);
+        setFase("vuelta");
+        setHist((h) => h.concat({ m: vuelta.current, ok: false, vuelta: vuelta.current }));
+        return;
+      }
+      actual.current = sig;
+      setMult(sig);
+    }, 100);
+    return () => clearInterval(t);
+  }, [fase]);
+
+  /* terminados los tres intentos, se cierra con el mejor */
+  useEffect(() => {
+    if (hist.length < SUERTE_INTENTOS || fase === "fin") return;
+    setFase("fin");
+    const nv = mejor >= SUERTE_EXITO ? "exito" : mejor >= SUERTE_PARCIAL ? "parcial" : "fallo";
+    const t = setTimeout(() => onFin(nv), 1300);
+    return () => clearTimeout(t);
+  }, [hist.length]);
+
+  const abrir = () => {
+    if (fase !== "listo" && fase !== "cerrado" && fase !== "vuelta") return;
+    if (hist.length >= SUERTE_INTENTOS) return;
+    vuelta.current = vueltaSuerte(ayuda);
+    setIntento(hist.length + 1);
+    actual.current = 1;
+    setMult(1);
+    /* a veces se da vuelta nada más abrir: también pasa en los mercados */
+    if (vuelta.current <= 1.0001) {
+      setFase("vuelta");
+      setHist((h) => h.concat({ m: 1, ok: false, vuelta: 1 }));
+      return;
+    }
+    abierto.current = true;
+    setFase("subiendo");
   };
   const cerrar = () => {
-    setEstado("Cerraste en " + mult.toFixed(2) + "x");
-    setTimeout(() => onFin(mult >= 2.4 ? "exito" : mult >= 1.6 ? "parcial" : "fallo"), 850);
+    if (fase !== "subiendo" || !abierto.current) return;
+    abierto.current = false;
+    const m = actual.current;
+    setMult(m);
+    setFase("cerrado");
+    setHist((h) => h.concat({ m, ok: true, vuelta: vuelta.current }));
   };
 
+  const ultimo = hist[hist.length - 1];
+  const color = fase === "vuelta" ? "var(--rojo)" : fase === "cerrado" ? "#2F7A3D" : undefined;
+  const aviso = fase === "listo" ? "Cuando abras, el múltiplo empieza a subir. Cierra antes de que se dé vuelta."
+    : fase === "subiendo" ? "Subiendo… ¿cierras o aguantas?"
+    : fase === "cerrado" ? "Cerraste en " + fmtX(ultimo.m) + ". Se iba a dar vuelta en " + fmtX(ultimo.vuelta) + "."
+    : fase === "vuelta" ? (ultimo && ultimo.vuelta <= 1.0001 ? "Se dio vuelta nada más abrir. Pasa." : "Se dio vuelta en " + fmtX(ultimo.vuelta) + ". Ese intento se pierde.")
+    : mejor >= SUERTE_EXITO ? "Te quedas con " + fmtX(mejor) + ". Éxito."
+    : mejor >= SUERTE_PARCIAL ? "Te quedas con " + fmtX(mejor) + ". Resultado a medias."
+    : mejor > 0 ? "Te quedas con " + fmtX(mejor) + ". Muy poco para lo que arriesgaste." : "Los tres se dieron vuelta.";
+
   return (
-    <div className="ea-jw">
-      <div className="ea-jinfo ea-dis"><span>Múltiplo acumulado</span><span>Riesgo de vuelta {(riesgo * 100).toFixed(0)}%</span></div>
-      <div className="ea-mult ea-mono">{mult.toFixed(2)}x</div>
-      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{estado}</div>
-      <div className="ea-fila2">
-        <button className="ea-btn" style={{ marginTop: 0 }} onClick={aguantar} disabled={!!estado}>Aguantar</button>
-        <button className="ea-btn" style={{ marginTop: 0, background: "var(--cobre)" }} onClick={cerrar} disabled={!!estado}>Cerrar posición</button>
+    <div className="ea-jw ea-jwCentro">
+      <div className="ea-jinfo ea-dis">
+        <span>{intento ? "Intento " + intento + " de " + SUERTE_INTENTOS : "Tres intentos"}</span>
+        <span>Tu mejor {mejor ? fmtX(mejor) : "—"}</span>
       </div>
+      <div className="ea-mult ea-mono" style={color ? { color } : undefined}>{fmtX(mult)}</div>
+      <div className="ea-suerteMeta ea-mono">éxito desde {fmtX(SUERTE_EXITO)} · a medias desde {fmtX(SUERTE_PARCIAL)}</div>
+      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{aviso}</div>
+      {fase === "subiendo" ? (
+        <button className="ea-btn" style={{ background: "var(--cobre)" }} onClick={cerrar}>Cerrar en {fmtX(mult)}</button>
+      ) : fase !== "fin" ? (
+        <button className="ea-btn" onClick={abrir}>
+          {fase === "listo" ? "Abrir la posición" : "Otro intento · quedan " + quedan}
+        </button>
+      ) : null}
+      {hist.length > 0 && (
+        <div className="ea-suerteHist">
+          {hist.map((h, i) => (
+            <span key={i} className={"ea-suerteH ea-mono" + (h.ok ? " ok" : " mal")}>
+              {i + 1} · {h.ok ? "cerraste " + fmtX(h.m) : "vuelta " + fmtX(h.vuelta)}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -6148,121 +6293,102 @@ function JuegoTrading({ ayuda, onFin }) {
 }
 
 /* ---- Armar la estructura ----
-   Reescrito de arriba abajo. Antes eran dos deslizadores llamados
-   "senior" y "mezzanine" y un múltiplo que aparecía sin explicación.
-   Ahora hay una sola decisión —cuánto pides prestado— con la cuenta
-   completa a la vista y, sobre todo, los dos escenarios en números:
-   qué te llevas si va bien y qué pasa si va mal. Que es exactamente
-   lo que enseña el apalancamiento. */
+   Rehecho otra vez (28-sep-2026). La versión anterior no se podía ganar:
+   pedía multiplicar el capital por 2,4 si iba bien, y en todas las empresas
+   posibles la cobertura de intereses rompía antes de llegar ahí. Además
+   hablaba de EBITDA, cobertura y covenant, y la meta no se veía.
+
+   Ahora: una empresa de 100 millones, una barra (cuánto te presta el
+   banco) y dos metas que tiran en sentidos contrarios, con su ✓ en vivo.
+     · si le va bien, multiplicar tu dinero por 2 o más  → pide deuda
+     · si le va mal, conservar al menos el 30%           → pide poca deuda
+   Entre las dos hay una franja buena que se mueve de partida en partida:
+   se sortea primero la franja y de ella salen cuánto sube y cuánto baja la
+   empresa, así que siempre existe y nunca está en el mismo sitio. Con
+   mejor atributo la franja es más ancha. */
+const EST_PRECIO = 100;
+const EST_META_BIEN = 2;      /* multiplicar tu dinero por esto si va bien */
+const EST_META_MAL = 0.3;     /* conservar al menos esta parte si va mal */
+const EST_AMORTIZA = 10;      /* lo que la empresa devuelve de deuda si va bien */
+const EST_TOPE = 80;          /* ningún banco presta más del 80% */
+const casoEstructura = (ayuda) => {
+  const lo = 30 + 5 * indiceAzar(5);                       /* de 30 a 50 */
+  const ancho = numero(ayuda, 0) >= 60 ? 15 : 10;
+  const hi = Math.min(EST_TOPE - 10, lo + ancho);
+  /* bien: (100·(1+sube) − (d − 10)) / (100 − d) = 2    justo en d = lo */
+  const sube = (EST_PRECIO * EST_META_BIEN - EST_META_BIEN * lo + lo - EST_AMORTIZA) / EST_PRECIO - 1;
+  /* mal:  (100·(1−baja) − d) / (100 − d) = 0,3          justo en d = hi */
+  const baja = 1 - (EST_META_MAL * (EST_PRECIO - hi) + hi) / EST_PRECIO;
+  return { lo, hi, sube, baja,
+    nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía" };
+};
+const resultadoEstructura = (c, deuda) => {
+  const tuyo = EST_PRECIO - deuda;
+  const bien = tuyo > 0 ? (EST_PRECIO * (1 + c.sube) - Math.max(0, deuda - EST_AMORTIZA)) / tuyo : 0;
+  const mal = tuyo > 0 ? Math.max(0, EST_PRECIO * (1 - c.baja) - deuda) / tuyo : 0;
+  const okBien = bien >= EST_META_BIEN - 1e-9, okMal = mal >= EST_META_MAL - 1e-9;
+  return { tuyo, bien, mal, okBien, okMal, nivel: okBien && okMal ? "exito" : okBien || okMal ? "parcial" : "fallo" };
+};
+
 function JuegoEstructura({ ayuda, onFin }) {
-  const [caso] = useState(() => {
-    const eb = 14 + indiceAzar(12);
-    return {
-      eb,
-      precio: eb * 8,
-      crec: 1.14 + numero(Math.random(), 0.5) * 0.22,
-      nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía",
-    };
-  });
-  const maxDeuda = Math.round(caso.eb * 5);
-  const [deuda, setDeuda] = useState(Math.round(caso.eb * 2));
+  const [caso] = useState(() => casoEstructura(ayuda));
+  const [deuda, setDeuda] = useState(0);
   const [cerrado, setCerrado] = useState(null);
-
-  const propio = Math.max(0, caso.precio - deuda);
-  const apal = deuda / caso.eb;
-  const tasa = apal <= 3 ? 0.09 : 0.09 + (apal - 3) * 0.025;   /* más deuda, más cara */
-  const interes = deuda * tasa;
-  const cobertura = interes > 0 ? caso.eb / interes : 99;
-  const minPropio = caso.precio * 0.1;
-
-  /* escenario bueno: la empresa crece y amortiza deuda */
-  const ebBien = caso.eb * caso.crec;
-  const deudaBien = Math.max(0, deuda - caso.eb * 1.2);
-  const propioBien = Math.max(0, ebBien * 8 - deudaBien);
-  const moicBien = propio > 0 ? propioBien / propio : 0;
-
-  /* escenario malo: el EBITDA cae 20% y el múltiplo se contrae */
-  const ebMal = caso.eb * 0.8;
-  const propioMal = Math.max(0, ebMal * 6.5 - deuda);
-  const moicMal = propio > 0 ? propioMal / propio : 0;
-
-  const rompe = cobertura < 2;
-
-  const confirmar = () => {
-    if (propio < minPropio) return;
-    let nivel;
-    if (rompe) nivel = numero(Math.random(), 0.5) < 0.7 ? "fallo" : "parcial";
-    else if (moicBien >= 2.4 && moicMal > 0.6) nivel = "exito";
-    else if (moicBien >= 1.7) nivel = "parcial";
-    else nivel = "fallo";
-    setCerrado(nivel);
-  };
+  const r = resultadoEstructura(caso, deuda);
+  const x = (v) => v.toFixed(1).replace(".", ",") + "x";
 
   const cierre = {
-    exito: "Estructura fina. Suficiente deuda para que tu capital rinda de verdad y suficiente aire para aguantar un mal año sin que el banco se meta.",
-    parcial: "Sale, sin brillar. O te faltó deuda y tu capital rindió como un bono, o te sobró y el margen quedó justo.",
-    fallo: rompe
-      ? "Te pasaste. Con esta deuda, el EBITDA no alcanza ni para pagar dos veces los intereses: al primer trimestre flojo se rompe el covenant y el banco toma el control de la empresa."
-      : "El trato no compensa. Pusiste demasiado capital propio para el retorno que da, o el escenario malo se te lleva todo.",
+    exito: "Punto justo. Con esa deuda tu dinero rinde de verdad si sale bien, y si sale mal te queda con qué volver a empezar.",
+    parcial: r.okBien
+      ? "Si sale bien ganas mucho, pero pediste tanto que un mal año se lleva casi todo lo que pusiste."
+      : "Estás a salvo si sale mal, pero pusiste tanto de tu bolsillo que si sale bien tu dinero apenas rinde.",
+    fallo: "No cumples ninguna de las dos metas: ni ganas lo suficiente si sale bien, ni aguantas si sale mal.",
   };
-
-  const pctDeuda = caso.precio > 0 ? (deuda / caso.precio) * 100 : 0;
 
   return (
     <div className="ea-jw">
       <Pista>
-        Vas a comprar <strong>{caso.nombre}</strong>. Gana <strong>{caso.eb} millones</strong> al año operando
-        y te la venden en <strong>{caso.precio} millones</strong>. Puedes pagarla con tu dinero, con dinero
-        prestado, o con una mezcla. Mueve el deslizador y mira cómo cambian los dos escenarios de abajo.
+        Compras <strong>{caso.nombre}</strong> por <strong>{EST_PRECIO} millones</strong>. Tú pones una parte y
+        el banco te presta el resto. Pedir prestado hace que ganes más si sale bien… y que pierdas más si sale mal.
       </Pista>
+
+      {/* la situación, siempre a la vista: la Pista de arriba se pliega */}
+      <div className="ea-estCaso">
+        Compras <strong>{caso.nombre}</strong> por <strong>{EST_PRECIO} millones</strong>. ¿Cuánto le pides al banco?
+      </div>
 
       <div className="ea-est">
         <div className="ea-estL">
-          <span>Cuánto pides prestado</span>
-          <span className="ea-mono">{deuda} millones · {apal.toFixed(1)} veces lo que gana</span>
+          <span>El banco te presta</span>
+          <span className="ea-mono">{deuda} millones</span>
         </div>
-        <input className="ea-slider" type="range" min="0" max={maxDeuda} step="1" value={deuda} disabled={!!cerrado}
-          onChange={(e) => setDeuda(entero(e.target.value, 0, 0, maxDeuda))} aria-label="Deuda" />
+        <input className="ea-slider" type="range" min="0" max={EST_TOPE} step="5" value={deuda} disabled={!!cerrado}
+          onChange={(e) => setDeuda(entero(e.target.value, 0, 0, EST_TOPE))} aria-label="Cuánto te presta el banco" />
       </div>
 
-      {/* la foto de quién pone qué */}
+      {/* quién pone qué */}
       <div className="ea-mix" style={{ marginTop: 6 }}>
-        <div className="ea-mixSeg efe" style={{ width: (100 - pctDeuda).toFixed(1) + "%" }}>
-          {100 - pctDeuda >= 18 ? "tu dinero " + Math.round(100 - pctDeuda) + "%" : ""}
-        </div>
-        <div className="ea-mixSeg cart" style={{ width: pctDeuda.toFixed(1) + "%" }}>
-          {pctDeuda >= 18 ? "prestado " + Math.round(pctDeuda) + "%" : ""}
-        </div>
-      </div>
-
-      <div className="ea-tabla" style={{ marginTop: 12 }}>
-        <span className="ea-td">Pones de tu bolsillo</span><span className="ea-tdn ea-mono">{propio.toFixed(0)} millones</span>
-        <span className="ea-td">Intereses que pagarás al año</span><span className="ea-tdn ea-mono">{interes.toFixed(1)} millones · {(tasa * 100).toFixed(1)}%</span>
-        <span className="ea-td">Veces que el EBITDA cubre esos intereses</span><span className="ea-tdn ea-mono">{cobertura >= 99 ? "sin deuda" : cobertura.toFixed(1) + "x"}</span>
+        <div className="ea-mixSeg efe" style={{ width: r.tuyo + "%" }}>{r.tuyo >= 18 ? "tú " + r.tuyo : ""}</div>
+        <div className="ea-mixSeg cart" style={{ width: deuda + "%" }}>{deuda >= 18 ? "banco " + deuda : ""}</div>
       </div>
 
       <div className="ea-escen">
-        <div className="ea-escenC bien">
-          <div className="ea-lecK">Si va bien</div>
-          <div className="ea-escenX">La empresa crece {Math.round((caso.crec - 1) * 100)}% y pagas parte de la deuda.</div>
-          <div className="ea-escenV ea-mono">{moicBien.toFixed(2)}x</div>
-          <div className="ea-escenX">Recuperas {propioBien.toFixed(0)} millones sobre los {propio.toFixed(0)} que pusiste.</div>
+        <div className={"ea-escenC " + (r.okBien ? "bien" : "mal")}>
+          <div className="ea-lecK">Si le va bien · vale {Math.round(caso.sube * 100)}% más</div>
+          <div className="ea-escenV ea-mono">{x(r.bien)}</div>
+          <div className="ea-escenX">tu dinero se multiplica por {x(r.bien)}</div>
+          <div className="ea-estMeta">{r.okBien ? "✓" : "✗"} Meta: {x(EST_META_BIEN)} o más</div>
         </div>
-        <div className="ea-escenC mal">
-          <div className="ea-lecK">Si va mal</div>
-          <div className="ea-escenX">El EBITDA cae un quinto y nadie paga múltiplos altos ese año.</div>
-          <div className="ea-escenV ea-mono">{moicMal.toFixed(2)}x</div>
-          <div className="ea-escenX">
-            {moicMal <= 0.05 ? "Tu capital se va a cero: la deuda se come todo el valor." : "Te quedan " + propioMal.toFixed(0) + " millones de los " + propio.toFixed(0) + " que pusiste."}
-          </div>
+        <div className={"ea-escenC " + (r.okMal ? "bien" : "mal")}>
+          <div className="ea-lecK">Si le va mal · vale {Math.round(caso.baja * 100)}% menos</div>
+          <div className="ea-escenV ea-mono">{Math.round(r.mal * 100)}%</div>
+          <div className="ea-escenX">{r.mal <= 0.005 ? "lo pierdes todo: el banco cobra primero" : "de tu dinero te queda el " + Math.round(r.mal * 100) + "%"}</div>
+          <div className="ea-estMeta">{r.okMal ? "✓" : "✗"} Meta: conservar {Math.round(EST_META_MAL * 100)}% o más</div>
         </div>
       </div>
 
-      {propio < minPropio && <div className="ea-alerta mal">Ningún banco te presta tanto: tienes que poner al menos el 10% del precio de tu propio bolsillo.</div>}
-      {rompe && propio >= minPropio && <div className="ea-alerta mal">Con esta deuda el EBITDA no cubre ni dos veces los intereses. Es el nivel en el que un trimestre flojo te cuesta la empresa.</div>}
-
       {!cerrado ? (
-        <button className="ea-btn" onClick={confirmar} disabled={propio < minPropio}>Cerrar el trato así</button>
+        <button className="ea-btn" onClick={() => setCerrado(r.nivel)}>Cerrar el trato así</button>
       ) : (
         <div>
           <div className={"ea-alerta " + (cerrado === "exito" ? "bien" : cerrado === "fallo" ? "mal" : "")}>{cierre[cerrado]}</div>
@@ -6393,13 +6519,27 @@ function JuegoBanderas({ ayuda, onFin, modo }) {
 }
 
 /* ---- La pizarra del comité: pares de concepto y significado ---- */
+/* Cada par lleva su color, el mismo en el concepto y en su definición:
+   al destapar una ficha el color se queda en la memoria mucho mejor que
+   un texto de dos palabras, y sirve de ancla para saber dónde estaba su
+   pareja. Sin el rojo, que en todo el juego significa fallo, y sin el
+   turquesa, que al lado del azul se confunde a simple vista. */
+const COLORES_PARES = [0, 1, 3, 4, 5, 7].map((i) => COLORES_MEM[i].c);
+
+/* Segundos con la pizarra destapada antes de empezar. Más con mejor
+   atributo, para que «te ayuda» siga significando algo aquí. */
+const vistaParesDe = (ayuda) => clamp(Math.round(5 + numero(ayuda, 0) / 25), 5, 9);
+
 function JuegoPares({ ayuda, onFin }) {
   const [pz] = useState(() => elegirAzar(PIZARRAS));
   const [fichas] = useState(() => {
+    /* los colores también se barajan: que el WACC no sea siempre cobre */
+    const cols = COLORES_PARES.slice().sort(() => Math.random() - 0.5);
     const arr = [];
     pz.p.forEach((par, i) => {
-      arr.push({ id: i + "a", par: i, t: par[0] });
-      arr.push({ id: i + "b", par: i, t: par[1] });
+      const col = cols[i % cols.length];
+      arr.push({ id: i + "a", par: i, t: par[0], col });
+      arr.push({ id: i + "b", par: i, t: par[1], col });
     });
     return arr.sort(() => Math.random() - 0.5);
   });
@@ -6408,12 +6548,21 @@ function JuegoPares({ ayuda, onFin }) {
   const [hechas, setHechas] = useState([]);
   const [err, setErr] = useState(0);
   const [fin, setFin] = useState(false);
+  const [cuenta, setCuenta] = useState(() => vistaParesDe(ayuda));
+  const mirando = cuenta > 0;
   const bloqueo = useRef(false);
+
+  /* la pizarra destapada, y la cuenta atrás hasta taparla */
+  useEffect(() => {
+    if (cuenta <= 0) return;
+    const t = setTimeout(() => setCuenta((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cuenta]);
 
   const cerrar = (nivel) => { setFin(true); setTimeout(() => onFin(nivel), 900); };
 
   const tocar = (f) => {
-    if (fin || bloqueo.current) return;
+    if (mirando || fin || bloqueo.current) return;
     if (hechas.indexOf(f.par) >= 0) return;
     if (abiertas.some((x) => x.id === f.id)) return;
     const nuevas = abiertas.concat(f);
@@ -6437,21 +6586,35 @@ function JuegoPares({ ayuda, onFin }) {
 
   return (
     <div className="ea-jw">
-      <div className="ea-jinfo ea-dis"><span>{pz.t}</span><span>Fallos {err} de {maxErr}</span></div>
+      <div className="ea-jinfo ea-dis">
+        <span>{mirando ? "Mira la pizarra" : pz.t}</span>
+        <span>{mirando
+          ? "se tapa en " + cuenta + (cuenta === 1 ? " segundo" : " segundos")
+          : "Fallos " + err + " de " + maxErr}</span>
+      </div>
       <div className="ea-tab4">
         {fichas.map((f) => {
           const hecha = hechas.indexOf(f.par) >= 0;
           const abierta = abiertas.some((x) => x.id === f.id);
+          const vista = mirando || hecha || abierta;
           return (
-            <div key={f.id} {...pulsable(() => tocar(f), hecha || abierta ? f.t : "Ficha tapada", hecha)}
-              className={"ea-fichaP" + (hecha ? " hecha" : abierta ? " abierta" : " tapada")}>
-              {hecha || abierta ? f.t : ""}
+            <div key={f.id} {...pulsable(() => tocar(f), vista ? f.t : "Ficha tapada", hecha || mirando)}
+              className={"ea-fichaP" + (mirando ? " vista" : hecha ? " hecha" : abierta ? " abierta" : " tapada")
+                + (vista ? " pintada" : "")}
+              style={vista ? { background: f.col + "33", borderColor: f.col } : undefined}>
+              {vista ? f.t : ""}
             </div>
           );
         })}
       </div>
+      {mirando && (
+        <button className="ea-mini" style={{ marginTop: 10 }} onClick={() => setCuenta(0)}>
+          Ya lo miré, empezar
+        </button>
+      )}
       <div style={{ minHeight: 20, marginTop: 9, fontSize: 13, color: "#6B6B6B" }}>
-        {fin ? (hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos") : ""}
+        {fin ? (hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos")
+          : mirando ? "Cada par tiene su color: el concepto y su definición se pintan igual." : ""}
       </div>
     </div>
   );
@@ -6707,63 +6870,103 @@ function JuegoComite({ ayuda, onFin }) {
   );
 }
 
-/* ---- La subasta y la maldición del ganador ---- */
+/* ---- La subasta y la maldición del ganador ----
+   Rehecha (28-sep-2026). La anterior tenía un tope escondido de ocho
+   rondas: a la octava subida se acababa sola y lo contaba como si te
+   hubieras retirado. Empezando en 40 y subiendo 8-13 por ronda, eso te
+   echaba hacia los 110 aunque tu estimación fuera 145. Además el éxito
+   pedía pagar menos del 82% del valor, que casi nunca pasaba, y los
+   rivales se retiraban por sorteo en vez de por un límite propio.
+
+   Ahora es una subasta de verdad, sin tope de rondas:
+     · cada rival tiene su precio máximo (del 70% al 120% del valor) y se
+       retira en cuanto la oferta lo pasa. Termina sola, porque los
+       límites son finitos.
+     · si te retiras, la subasta sigue sin ti: gana el rival con el límite
+       más alto y paga lo que marca el segundo. Tu retirada se juzga por lo
+       que pagó él: si pagó de más, hiciste bien.
+   Medido con 30.000 subastas (atributo 72): pujar hasta tu estimación da
+   éxito ~54% y fallo ~17%; retirarse muy pronto o pujar de más, bastante
+   peor. Es la maldición del ganador sin necesidad de explicarla. */
+const SUB_RIVALES = ["Fondo regional", "Comprador estratégico", "Family office"];
+const pasoSubasta = (valor) => Math.max(4, Math.round(valor * 0.06)) + indiceAzar(4);
+const casoSubasta = (ayuda) => {
+  const valor = 60 + numero(Math.random(), 0.5) * 80;
+  const ruido = Math.max(3, 20 - numero(ayuda, 0) / 6);
+  return {
+    valor,
+    estimacion: Math.max(10, Math.round(valor + ruido * gauss())),
+    limites: SUB_RIVALES.map(() => valor * (0.7 + numero(Math.random(), 0.5) * 0.5)),
+    inicio: Math.round(valor * 0.5),
+  };
+};
+/* si te retiras en p: gana el de límite más alto, al precio del segundo */
+const cierreRetiro = (caso, p) => {
+  const vivos = caso.limites.map((m, i) => ({ m, i })).filter((x) => x.m >= p).sort((x, y) => y.m - x.m);
+  if (!vivos.length) return { quien: null, final: p };
+  const final = Math.round(Math.max(p, vivos.length > 1 ? vivos[1].m : p));
+  return { quien: SUB_RIVALES[vivos[0].i], final };
+};
+const nivelSubasta = (caso, fin) => {
+  if (fin.gano) { const r = fin.precio / caso.valor; return r <= 1 ? "exito" : r <= 1.1 ? "parcial" : "fallo"; }
+  if (fin.final > caso.valor) return "exito";
+  return fin.precio >= caso.valor * 0.9 ? "parcial" : "fallo";
+};
+
 function JuegoSubasta({ ayuda, onFin }) {
-  const [valor] = useState(() => 60 + Math.random() * 80);
-  const [señal] = useState(() => Math.round(valor + (28 - ayuda / 5) * gauss()));
-  const [precio, setPrecio] = useState(40);
-  const [vivos, setVivos] = useState([true, true, true]);
-  const [ronda, setRonda] = useState(0);
+  const [caso] = useState(() => casoSubasta(ayuda));
+  const [precio, setPrecio] = useState(caso.inicio);
+  const [siguiente, setSiguiente] = useState(() => caso.inicio + pasoSubasta(caso.valor));
+  const [fuera, setFuera] = useState([null, null, null]);   /* precio al que se retiró cada rival */
+  const [ronda, setRonda] = useState(1);
   const [fin, setFin] = useState(null);
 
-  const rivales = ["Fondo regional", "Comprador estratégico", "Family office"];
-
   const subir = () => {
-    const nuevo = precio + 8 + Math.floor(Math.random() * 6);
-    const siguen = vivos.map((v) => v && Math.random() > clamp((nuevo - valor * 0.8) / 55, 0.08, 0.75));
-    setPrecio(nuevo); setVivos(siguen); setRonda(ronda + 1);
-    if (siguen.every((v) => !v)) {
-      const ratio = nuevo / valor;
-      setFin({ gano: true, precio: nuevo, ratio });
-    } else if (ronda >= 7) {
-      setFin({ gano: false, precio: nuevo, ratio: nuevo / valor, forzado: true });
-    }
+    if (fin) return;
+    const nuevo = siguiente;
+    const f = fuera.map((x, i) => (x == null && caso.limites[i] < nuevo ? nuevo : x));
+    setPrecio(nuevo); setFuera(f); setRonda(ronda + 1);
+    setSiguiente(nuevo + pasoSubasta(caso.valor));
+    if (f.every((x) => x != null)) setFin({ gano: true, precio: nuevo });
+  };
+  const retirarse = () => {
+    if (fin) return;
+    const c = cierreRetiro(caso, precio);
+    setFin({ gano: false, precio, final: c.final, quien: c.quien });
   };
 
-  const retirarse = () => setFin({ gano: false, precio, ratio: precio / valor });
-
-  const cerrar = () => {
-    if (fin.gano) onFin(fin.ratio <= 0.82 ? "exito" : fin.ratio <= 1 ? "parcial" : "fallo");
-    else onFin(fin.ratio >= 1 ? "parcial" : fin.ratio >= 0.85 ? "parcial" : "fallo");
-  };
+  const nivel = fin ? nivelSubasta(caso, fin) : null;
+  const V = Math.round(caso.valor);
+  const texto = !fin ? null
+    : fin.gano
+      ? nivel === "exito" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Pagaste lo que vale o menos: ese es el trabajo."
+        : nivel === "parcial" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Casi lo que vale: sin margen, pero sin daño."
+        : "Te la llevaste por " + fin.precio + " y valía " + V + ". Ganaste la subasta y perdiste plata: eso es la maldición del ganador."
+      : nivel === "exito" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ": pagó de más. Retirarse a tiempo también es ganar."
+        : nivel === "parcial" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Se llevó una buena compra, pero te retiraste cerca del valor."
+        : "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Dejaste ir una empresa barata: la prudencia también cuesta cuando sobra.";
 
   return (
     <div className="ea-jw">
-      <div className="ea-jinfo ea-dis"><span>Tu estimación de valor {señal}</span><span>Ronda {ronda + 1}</span></div>
+      <div className="ea-jinfo ea-dis"><span>Tu estimación: {caso.estimacion} millones</span><span>Ronda {ronda}</span></div>
       <div className="ea-precio ea-mono">{precio}</div>
-      <div style={{ fontSize: 12.5, color: "var(--gris)", marginBottom: 10 }}>Oferta actual sobre la mesa, en millones.</div>
-      {rivales.map((r, i) => (
-        <div className={"ea-postor" + (vivos[i] ? "" : " fuera")} key={i}>
-          <span>{r}</span><span className="ea-mono">{vivos[i] ? "sigue" : "se retiró"}</span>
+      <div style={{ fontSize: 12.5, color: "var(--gris)", marginBottom: 10 }}>
+        Oferta sobre la mesa, en millones. Tu estimación puede fallar por arriba o por abajo.
+      </div>
+      {SUB_RIVALES.map((r, i) => (
+        <div className={"ea-postor" + (fuera[i] == null ? "" : " fuera")} key={i}>
+          <span>{r}</span><span className="ea-mono">{fuera[i] == null ? "sigue" : "se retiró en " + fuera[i]}</span>
         </div>
       ))}
       {!fin ? (
         <div className="ea-fila2">
-          <button className="ea-btn" style={{ marginTop: 0, flex: 1 }} onClick={subir}>Subir la oferta</button>
+          <button className="ea-btn" style={{ marginTop: 0, flex: 1 }} onClick={subir}>Subir a {siguiente}</button>
           <button className="ea-btn" style={{ marginTop: 0, flex: 1, background: "var(--rojo)" }} onClick={retirarse}>Retirarme</button>
         </div>
       ) : (
         <div>
-          <div className={"ea-alerta " + (fin.gano ? (fin.ratio <= 1 ? "bien" : "mal") : (fin.ratio >= 0.85 ? "" : "mal"))}>
-            El activo valía {Math.round(valor)}.
-            {fin.gano
-              ? fin.ratio <= 0.82 ? " Te lo llevaste con descuento real, que es exactamente el trabajo."
-                : fin.ratio <= 1 ? " Ganaste pagando casi lo que vale. Sin margen, pero sin daño."
-                : " Ganaste la subasta y perdiste plata. Eso se llama maldición del ganador y es la forma más elegante de arruinarse."
-              : fin.ratio >= 1 ? " Te retiraste justo antes de pagar de más. Retirarse a tiempo también es ganar."
-                : " Dejaste ir un activo que estaba barato. La disciplina también cuesta cuando se aplica de más."}
-          </div>
-          <button className="ea-btn" onClick={cerrar}>Continuar</button>
+          <div className={"ea-alerta " + (nivel === "exito" ? "bien" : nivel === "fallo" ? "mal" : "")}>{texto}</div>
+          <button className="ea-btn" onClick={() => onFin(nivel)}>Continuar</button>
         </div>
       )}
     </div>
@@ -8334,31 +8537,9 @@ function Motor() {
     setFin(null); setRes(null); setCierre(null); setTab(null); irA("identidad");
   };
 
-  /* Entrar de un clic. Hasta ahora, para ver la primera decision habia que
-     pasar por seis pantallas de configuracion y decidir cosas que todavia
-     no significaban nada: no sabes si quieres empezar a los 40 hasta que
-     has jugado una vez. Aqui se eligen valores sensatos, se entra, y lo
-     que el jugador quiera cambiar lo cambia en la siguiente vida.
-
-     El pais sale al azar menos Estados Unidos, que arranca debiendo
-     dieciseis mil de universidad: como primer contacto es un castigo que
-     nadie eligio. */
-  const jugarYa = () => {
-    if (!enFase("portada")) return;
-    const na = elegirAzar(NACIONES.filter((x) => x.id !== "us")) || NACIONES[0];
-    const ca = elegirAzar(CARRERAS) || CARRERAS[0];
-    tirarPartida();
-    setElec(SETUP0);
-    setFin(null); setRes(null); setCierre(null); setTab(null);
-    arrancarPartida({
-      ...SETUP0, modo: "aprendiz", edad: 20, duracion: "decada",
-      pais: na.id, estudio: ca.id, guia: true,
-    });
-  };
-
   /* el rastro de lo ya elegido, para que se vea qué hay detrás del Atrás */
   const rastro = () => {
-    const partes = [MODO(elec.modo).n, "empiezas a los " + EDAD_DE(elec.edad).e];
+    const partes = ["Empiezas a los " + EDAD_DE(elec.edad).e];
     const na = NACIONES.find((x) => x.id === elec.pais);
     if (na) partes.push(na.n);
     return partes.join(" · ");
@@ -9383,11 +9564,15 @@ function Motor() {
           <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
             onClick={() => { if (enFase("portada")) irA("aviso"); }}>Volver a leer el aviso</button>
           <div className="ea-regla" />
-          <div className="ea-cifras" style={{ marginBottom: 26 }}>
-            <div><div className="ea-cifraK">Recorrido</div><div className="ea-cifraV ea-mono">Tú eliges</div></div>
-            <div><div className="ea-cifraK">Edad</div><div className="ea-cifraV ea-dis">Desde los 20 o los 50</div></div>
-            <div><div className="ea-cifraK">La meta</div><div className="ea-cifraV ea-dis">No depender del sueldo</div></div>
-            <div><div className="ea-cifraK">Por el camino</div><div className="ea-cifraV ea-dis">Bodas, hijos, estafas</div></div>
+          <div className="ea-cifras ea-cifrasPortada" style={{ marginBottom: 26 }}>
+            <div><div className="ea-cifraK">La carrera</div><div className="ea-cifraV ea-dis">De pasante a socio</div>
+              <div className="ea-cifraD">Ascensos, contratos y la opción de montar tu propia firma.</div></div>
+            <div><div className="ea-cifraK">El punto de partida</div><div className="ea-cifraV ea-dis">Nunca es tarde para invertir</div>
+              <div className="ea-cifraD">Empieza a los 20, 30, 40 o 50: más joven, más tiempo; más tarde, más capital y experiencia.</div></div>
+            <div><div className="ea-cifraK">El objetivo</div><div className="ea-cifraV ea-dis">Independencia financiera</div>
+              <div className="ea-cifraD">Que tu patrimonio cubra tu vida sin depender del sueldo.</div></div>
+            <div><div className="ea-cifraK">Los imprevistos</div><div className="ea-cifraV ea-dis">Crisis, familia y fraudes</div>
+              <div className="ea-cifraD">Mercados que caen, decisiones de pareja e hijos, y ofertas demasiado buenas.</div></div>
           </div>
           {guardado ? (
             <div>
@@ -9411,13 +9596,10 @@ function Motor() {
             </div>
           ) : (
             <div>
-              <button className="ea-jugarYa ea-dis" onClick={jugarYa}>Jugar ya</button>
-              <div style={{ fontSize: 12.5, color: "var(--gris)", marginTop: 8 }}>
-                Una década. Sin configurar nada.
-              </div>
-              <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }} onClick={empezar}>
-                Prefiero elegirlo todo →
-              </button>
+              {/* Una sola entrada: «Jugar ya» abre la configuración (nombre,
+                  edad, duración, país, carrera). Hubo un atajo que lo elegía
+                  todo al azar; se quitó el 28-sep-2026 a pedido de Alessandro. */}
+              <button className="ea-jugarYa ea-dis" onClick={empezar}>Jugar ya</button>
             </div>
           )}
 
@@ -9435,7 +9617,7 @@ function Motor() {
       {fase === "identidad" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a="portada" texto="Volver a la portada" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso uno de cinco</div>
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso uno de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Quién eres?</h2>
           <p className="ea-lede" style={{ marginBottom: 20 }}>
             Solo para que el juego te hable a ti. No cambia ningún número.
@@ -9456,37 +9638,17 @@ function Motor() {
 
           <div className="ea-regla" style={{ marginTop: 26 }} />
           <button className="ea-btnO" style={{ marginTop: 0 }}
-            onClick={() => { if (enFase("identidad")) irA("modo"); }}>
+            onClick={() => { if (enFase("identidad")) irA("edad"); }}>
             {elec.nombre.trim() ? "Seguir como " + elec.nombre.trim() : "Seguir sin nombre"}
           </button>
         </div>
       )}
 
-      {fase === "modo" && (
-        <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
-          <Atras a="identidad" texto="Cambiar tu nombre" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso dos de cinco</div>
-          <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Cuánto sabes de esto?</h2>
-          <p className="ea-lede" style={{ marginBottom: 18 }}>
-            No hay respuesta mala.
-          </p>
-          {MODOS.map((m) => (
-            <button className={"ea-opcion" + (elec.modo === m.id ? " on" : "")} key={m.id}
-              onClick={() => { if (enFase("modo")) elige("modo", m.id, "edad"); }}>
-              <div className="ea-opcionN">{m.n}</div>
-              <div className="ea-opcionD">{m.d}</div>
-              {m.ayuda > 0 && <div className="ea-opcionM">Los minijuegos te dan {m.ayuda} puntos de ventaja y las preguntas traen recordatorio</div>}
-            </button>
-          ))}
-        </div>
-      )}
-
       {fase === "edad" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
-          <Atras a="modo" texto="Cambiar el modo" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso tres de cinco</div>
+          <Atras a="identidad" texto="Cambiar tu nombre" />
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso dos de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿A qué edad empiezas?</h2>
-          <div className="ea-rastro ea-mono">Modo {MODO(elec.modo).n.toLowerCase()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
             Nadie está fuera de tiempo. Más tarde es menos años y más criterio, red y dinero.
           </p>
@@ -9518,7 +9680,7 @@ function Motor() {
       {fase === "familia" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a="edad" texto="Cambiar la edad" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso tres de cinco</div>
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso dos de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Cómo llegas a los {EDAD_DE(elec.edad).e}?</h2>
           <div className="ea-rastro ea-mono">Empiezas a los {EDAD_DE(elec.edad).e}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
@@ -9555,7 +9717,7 @@ function Motor() {
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a={EDAD_DE(elec.edad).e >= 30 ? "familia" : "edad"}
             texto={EDAD_DE(elec.edad).e >= 30 ? "Cambiar tu situación" : "Cambiar la edad"} />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso cuatro de cinco</div>
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso tres de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿De dónde vienes?</h2>
           <div className="ea-rastro ea-mono">{rastro()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
@@ -9564,7 +9726,7 @@ function Motor() {
           {NACIONES.map((p) => (
             <div className="ea-panel" key={p.id} style={{ marginBottom: 10 }}>
               <div className="ea-itemTop">
-                <span className="ea-nombre ea-dis" style={{ fontSize: 19 }}>{p.n}</span>
+                <span className="ea-nombre ea-dis" style={{ fontSize: 19, color: "var(--tinta)" }}>{p.n}</span>
                 <span className="ea-mono" style={{ fontSize: 12.5, color: "var(--gris)" }}>{p.ban}</span>
               </div>
               <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "8px 0" }}>{p.d}</div>
@@ -9583,7 +9745,7 @@ function Motor() {
       {fase === "estudio" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a="pais" texto="Cambiar el origen" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso cinco de cinco</div>
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso cuatro de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>
             {EDAD_DE(elec.edad).e <= 20 ? "¿Qué estás por terminar?" : "¿Qué estudiaste?"}
           </h2>
@@ -9593,34 +9755,23 @@ function Motor() {
           </p>
           {CARRERAS.map((c) => (
             <div className="ea-panel" key={c.id} style={{ marginBottom: 10 }}>
-              <div className="ea-nombre ea-dis" style={{ fontSize: 19 }}>{c.n}</div>
+              <div className="ea-nombre ea-dis" style={{ fontSize: 19, color: "var(--tinta)" }}>{c.n}</div>
               <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "7px 0" }}>{c.d}</div>
               <div style={{ fontSize: 12, color: "var(--cobre)" }}>
                 {Object.keys(c.mods).map((k) => ETIQ[k] + " +" + c.mods[k]).join(" · ")} · mejor en {c.juegos.map((j) => JUEGO(j).n.toLowerCase()).join(" y ")}
               </div>
               <button className="ea-mini" onClick={() => {
                 if (!enFase("estudio")) return;
+                /* Al elegir la carrera empieza la partida, con los avisos de
+                   guía siempre puestos. Había una pantalla más («¿Te vas
+                   guiando o vas solo?») y se quitó el 28-sep-2026: los
+                   avisos son cortos y salen una sola vez, no hace falta
+                   preguntar por ellos. */
                 setElec((x) => ({ ...x, estudio: c.id }));
-                irA("guia");
+                arrancarPartida({ ...elec, estudio: c.id, guia: true });
               }}>{EDAD_DE(elec.edad).e <= 20 ? "Graduarte de esto" : "Empezar con esto"}</button>
             </div>
           ))}
-        </div>
-      )}
-
-      {fase === "guia" && (
-        <div className="ea-wrap" style={{ maxWidth: 700, margin: "6vh auto" }}>
-          <Atras a="estudio" texto="Cambiar la carrera" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Última cosa</div>
-          <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Te vas guiando o vas solo?</h2>
-          <button className="ea-opcion" onClick={() => { if (enFase("guia")) arrancarPartida({ ...elec, guia: true }); }}>
-            <div className="ea-opcionN">Guíame por el camino</div>
-            <div className="ea-opcionD">Ocho avisos de tres líneas. Salen una vez y no vuelven.</div>
-          </button>
-          <button className="ea-opcion" onClick={() => { if (enFase("guia")) arrancarPartida({ ...elec, guia: false }); }}>
-            <div className="ea-opcionN">Sé lo que hago</div>
-            <div className="ea-opcionD">Directo a jugar, sin avisos.</div>
-          </button>
         </div>
       )}
 
