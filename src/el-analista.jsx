@@ -568,18 +568,23 @@ const RANGOS = [
 /* Retorno esperado, volatilidad y beta al factor de mercado.
    La beta es lo que hace que la diversificación funcione como en la vida real:
    dos activos con beta alta caen juntos aunque en el papel parezcan distintos. */
+/* Retornos de largo plazo en dólares, separados como en la realidad
+   (28-sep-2026): antes las acciones rendían 5,2%, menos que la deuda
+   corporativa, y cualquier mezcla daba casi lo mismo. Ahora el orden es
+   el de siempre: efectivo < deuda de empresas < bonos LatAm < oro... y
+   las acciones como motor, con más riesgo por encima. */
 const ACTIVOS = [
-  { k: "bonos", n: "Bonos soberanos LatAm", mu: 0.045, sd: 0.085, b: 0.25,
-    d: "Cupón fijo de gobiernos de la región. Le pega la tasa y el riesgo país." },
-  { k: "corp", n: "Deuda corporativa grado inversión", mu: 0.053, sd: 0.10, b: 0.45,
-    d: "Paga más que el soberano a cambio de riesgo de crédito de empresas sólidas." },
-  { k: "acciones", n: "Renta variable global", mu: 0.052, sd: 0.13, b: 1,
+  { k: "bonos", n: "Bonos soberanos LatAm", mu: 0.05, sd: 0.09, b: 0.25,
+    d: "Cupón fijo de gobiernos de la región. Paga más que la deuda de empresas sólidas porque le pega el riesgo país." },
+  { k: "corp", n: "Deuda corporativa grado inversión", mu: 0.043, sd: 0.065, b: 0.35,
+    d: "Deuda de empresas sólidas de todo el mundo. Rinde poco y se mueve poco: es el lastre que estabiliza." },
+  { k: "acciones", n: "Renta variable global", mu: 0.075, sd: 0.16, b: 1,
     d: "El motor de largo plazo. También el que te hace pasar años en rojo." },
-  { k: "reits", n: "Inmobiliario listado", mu: 0.055, sd: 0.16, b: 0.85,
+  { k: "reits", n: "Inmobiliario listado", mu: 0.065, sd: 0.18, b: 0.85,
     d: "Renta de inmuebles con liquidez de bolsa. Sensible a las tasas." },
-  { k: "oro", n: "Oro y materias primas", mu: 0.032, sd: 0.15, b: -0.2,
+  { k: "oro", n: "Oro y materias primas", mu: 0.035, sd: 0.15, b: -0.2,
     d: "No produce nada. Su gracia es subir cuando el resto se cae." },
-  { k: "distressed", n: "Deuda distressed", mu: 0.082, sd: 0.24, b: 0.7,
+  { k: "distressed", n: "Deuda distressed", mu: 0.09, sd: 0.24, b: 0.7,
     d: "Comprar barato lo que nadie quiere. O el papel recupera, o no vale nada." },
   { k: "cripto", n: "Cripto", mu: 0.11, sd: 0.46, b: 1.15,
     d: "Retorno alto en el promedio y caídas del 70% en el camino." },
@@ -2619,21 +2624,23 @@ const CARRERAS = [
    Cada uno es una combinación conocida que puedes aplicar de un toque y después
    mover activo por activo. Los pesos suman uno contando el efectivo. */
 const PERFILES = [
+  /* De menos a más riesgo, cada uno en su escalón (esperado · año malo):
+     3,8% · −3% | 4,9% · −8% | 5,8% · −12% | 6,4% · −16% | 8,9% · −48% */
   { id: "conservador", n: "Conservador",
-    w: { bonos: 0.35, corp: 0.20, acciones: 0.18, reits: 0.05, oro: 0.07, distressed: 0, cripto: 0, efectivo: 0.15 },
+    w: { bonos: 0.20, corp: 0.35, acciones: 0.05, reits: 0, oro: 0.05, distressed: 0, cripto: 0, efectivo: 0.35 },
     d: "Duermes tranquilo. Los años buenos te saben a poco y los malos casi no se sienten." },
-  { id: "indexado", n: "Indexado simple",
-    w: { bonos: 0.20, corp: 0.10, acciones: 0.55, reits: 0.08, oro: 0.05, distressed: 0, cripto: 0, efectivo: 0.02 },
-    d: "Sesenta y cuarenta de toda la vida. Aburrido, barato y difícil de superar en treinta años." },
-  { id: "balanceado", n: "Balanceado",
-    w: { bonos: 0.18, corp: 0.12, acciones: 0.35, reits: 0.10, oro: 0.05, distressed: 0.12, cripto: 0.04, efectivo: 0.04 },
-    d: "El punto medio razonable. Aguanta un mal año sin desarmarte y captura la mayor parte de los buenos." },
   { id: "todoterreno", n: "Todo terreno",
-    w: { bonos: 0.25, corp: 0.10, acciones: 0.25, reits: 0.10, oro: 0.25, distressed: 0, cripto: 0, efectivo: 0.05 },
+    w: { bonos: 0.20, corp: 0.15, acciones: 0.25, reits: 0.05, oro: 0.25, distressed: 0, cripto: 0, efectivo: 0.10 },
     d: "Reparte entre activos que reaccionan distinto al mismo shock. Nunca ganas el año, casi nunca lo pierdes." },
+  { id: "balanceado", n: "Balanceado",
+    w: { bonos: 0.25, corp: 0.15, acciones: 0.40, reits: 0.08, oro: 0.07, distressed: 0, cripto: 0, efectivo: 0.05 },
+    d: "El punto medio razonable. Aguanta un mal año sin desarmarte y captura buena parte de los buenos." },
+  { id: "indexado", n: "Indexado simple",
+    w: { bonos: 0.25, corp: 0.15, acciones: 0.60, reits: 0, oro: 0, distressed: 0, cripto: 0, efectivo: 0 },
+    d: "Sesenta y cuarenta de toda la vida. Aburrido, barato y difícil de superar en treinta años." },
   { id: "arriesgado", n: "Arriesgado",
-    w: { bonos: 0, corp: 0.04, acciones: 0.34, reits: 0.12, oro: 0.04, distressed: 0.26, cripto: 0.20, efectivo: 0 },
-    d: "Vas por el rendimiento alto y asumes que habrá años en los que pierdas un tercio de todo." },
+    w: { bonos: 0, corp: 0, acciones: 0.35, reits: 0.05, oro: 0, distressed: 0.30, cripto: 0.30, efectivo: 0 },
+    d: "Vas por el rendimiento alto y asumes que habrá años en los que pierdas casi la mitad." },
 ];
 
 /* Media y desviación de una combinación cualquiera de pesos.
@@ -7927,7 +7934,7 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
           const on = preset && preset.id === pf.id;
           return (
             <button key={pf.id} className={"ea-perfil" + (on ? " on" : "")} onClick={() => setW({ ...pf.w })}>
-              <div className="ea-perfilT ea-dis">{pf.n}{on ? " ·" : ""}</div>
+              <div className="ea-perfilT ea-dis">{pf.n}{on ? " ✓" : ""}</div>
               <div className="ea-perfilD">{pf.d}</div>
               <div className="ea-perfilN ea-mono">
                 esperado {(est2.mu * 100).toFixed(1)}% · un año malo {((est2.mu - 2 * est2.sd) * 100).toFixed(0)}%
@@ -8475,7 +8482,7 @@ function Motor() {
     st.guiaVistas = [];
 
     /* cuánto va a durar esto antes de que se le pregunte si se retira */
-    st.meta = DURACION(sel.duracion).meta;
+    st.meta = DURACION("decada").meta;   /* siempre diez años; luego, seguir si quieres */
 
     /* la edad: años de trayectoria, ahorro y desgaste */
     st.edadIni = ed.e;
@@ -9653,14 +9660,9 @@ function Motor() {
             Nadie está fuera de tiempo. Más tarde es menos años y más criterio, red y dinero.
           </p>
 
-          <div className="ea-campoK ea-dis">Cuánto quieres jugar</div>
-          <div className="ea-generos" style={{ marginBottom: 6 }}>
-            {DURACIONES.map((d) => (
-              <button key={d.id} className={"ea-mini" + (elec.duracion === d.id ? " on" : "")}
-                style={{ marginTop: 0 }} onClick={() => setElec((x) => ({ ...x, duracion: d.id }))}>{d.n}</button>
-            ))}
-          </div>
-          <div className="ea-itemD" style={{ marginBottom: 20 }}>{DURACION(elec.duracion).d}</div>
+          {/* Sin elegir cuánto jugar: siempre es una década y al llegar se
+              ofrece seguir de cinco en cinco. Hubo un selector «Una década /
+              La carrera entera»; se quitó el 28-sep-2026. */}
 
           {EDADES.map((e) => (
             <button className={"ea-opcion" + (elec.edad === e.e ? " on" : "")} key={e.e}

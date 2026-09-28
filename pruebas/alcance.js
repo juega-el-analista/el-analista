@@ -73,11 +73,6 @@ async function unaVida(semilla, vistos, hitos) {
   await pulsa(porRot(/acepto y quiero/i));
   await pulsa(porRot(/^Jugar ya$/));
   await pulsa(porRot(/^Seguir sin nombre|^Seguir como/));
-  /* Esta prueba mide cuanto de lo escrito llega a verse, asi que juega la
-     carrera entera a proposito: con la decada, que es lo que trae por
-     defecto, la mitad del contenido saldria como «nunca visto» sin que
-     eso signifique que es inalcanzable. */
-  await pulsa(porRot(/^La carrera entera$/));
   await pulsa(porRot(/^Empezar a los 20/));
   const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
   await pulsa(p[semilla % Math.max(1, p.length)] || p[0]);
@@ -97,6 +92,12 @@ async function unaVida(semilla, vistos, hitos) {
       if (TITULOS_V.has(tit)) hitos.add(tit);
     }
     if (/Así terminó/.test(t)) ano++;
+    /* Esta prueba mide cuanto de lo escrito llega a verse, asi que juega
+       treinta años a proposito: el juego ya solo trae la decada, y al
+       llegar se sigue de cinco en cinco hasta los 50. Con diez años la
+       mitad del contenido saldria como «nunca visto» sin serlo. */
+    const mE = t.match(/Llegaste a los (\d+)/);
+    if (mE && Number(mE[1]) < 50 && await pulsa(porRot(/^Seguir cinco años más$/))) continue;
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
     if (ops.length) { await pulsa(ops[Math.floor(Math.random() * ops.length) % ops.length]); continue; }

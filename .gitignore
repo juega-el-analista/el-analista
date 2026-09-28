@@ -11,3 +11,6 @@ pruebas/*-log.txt
 
 # la sala de juegos se genera con npm run catalogo; no se publica
 catalogo.html
+
+# la carpeta que publica Pages se arma con npm run sitio
+sitio/

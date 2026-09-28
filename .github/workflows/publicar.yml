@@ -57,10 +57,11 @@ jobs:
       - name: Robustez
         run: npm run robustez
 
-      - name: Preparar la carpeta del sitio
-        run: |
-          mkdir -p sitio
-          cp index.html sitio/index.html
+      # El juego más lo que lo hace instalable (manifiesto, iconos y el
+      # trabajador que lo deja jugar sin conexión). pruebas/pwa.js verifica
+      # que index.html, el del artifact y el quine, no se toque.
+      - name: Preparar la carpeta del sitio, como app instalable
+        run: npm run sitio
 
       - name: Configurar Pages
         uses: actions/configure-pages@v5

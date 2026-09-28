@@ -21,6 +21,7 @@
     "subasta": "node pruebas/subasta.js",
     "paises": "node pruebas/paises.js 6",
     "catalogo": "node pruebas/catalogo.js",
+    "sitio": "node pruebas/pwa.js",
     "puertas": "node pruebas/puertas.js 12"
   },
   "devDependencies": {
