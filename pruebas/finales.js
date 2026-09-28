@@ -26,10 +26,17 @@ function reloj(ms) {
   }
 }
 const micro = async () => { for (let i = 0; i < 6; i++) await Promise.resolve(); };
-let src = fs.readFileSync(path.join(__dirname, "compilado.js"), "utf8");
-src = src.replace("module.exports = ElAnalista;", "module.exports = { ElAnalista };");
-fs.writeFileSync(path.join(__dirname, "probeFin.js"), src);
-const { ElAnalista } = require(path.join(__dirname, "probeFin.js"));
+/* ============================================================
+   COMPILAR AQUI, NO REAPROVECHAR
+   Esto leia pruebas/compilado.js sin generarlo, asi que medía lo que
+   hubiera dejado el ultimo script que SI compila (banco.js/cargar).
+   Corriendo esta prueba sola, o despues de editar el juego sin pasar
+   por otra, daba resultados de codigo viejo sin avisar de nada: una
+   prueba que mide una version antigua es peor que no tenerla.
+   ============================================================ */
+const { cargar } = require(path.join(__dirname, "banco.js"));
+const RUTA_JUEGO = process.argv[3] || path.join(__dirname, "..", "src", "el-analista.jsx");
+const ElAnalista = cargar(RUTA_JUEGO);
 
 function txtDe(j) {
   if (j == null || j === false || j === true) return "";
@@ -58,22 +65,26 @@ async function unaVida(semilla) {
 
   await act(async () => { reloj(400); await micro(); });
   await pulsa(porRot(/acepto y quiero jugar/i));
-  await pulsa(porRot(/^Empezar$/));
-  /* La pantalla de identidad: genero y nombre. Esta prueba era anterior
-     a ella y se quedaba clavada justo aqui, con las 20 partidas en
-     duracion 0 y sin llegar nunca a una pantalla final. */
-  await pulsa(porRot(/^(Femenino|Masculino|Prefiero no decirlo)$/));
-  await pulsa(porRot(/^Seguir sin nombre$/));
-  await pulsa(porRot(/^Analista/));
-  await pulsa(porRot(/^Empezar a los 20/));
-  const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
-  await pulsa(p[semilla % Math.max(1, p.length)] || p[0]);
-  const c = bs().filter((b) => /^(Graduarte de esto|Empezar con esto)$/.test(rot(b)));
-  await pulsa(c[semilla % Math.max(1, c.length)] || c[0]);
-  /* y el ultimo paso: guia si o no */
-  await pulsa(porRot(/^(Sé lo que hago|Guíame por el camino)$/));
 
-  let ano = 0, pasos = 0, cargo = "Pasante", burnouts = 0, ultimaEne = null;
+  /* Una sola entrada: «Jugar ya» abre la configuración completa. */
+  {
+    await pulsa(porRot(/^Jugar ya$/));
+    /* La pantalla de identidad: genero y nombre. Esta prueba era anterior
+       a ella y se quedaba clavada justo aqui, con las 20 partidas en
+       duracion 0 y sin llegar nunca a una pantalla final. */
+    await pulsa(porRot(/^(Femenino|Masculino|Prefiero no decirlo)$/));
+    await pulsa(porRot(/^Seguir sin nombre$/));
+    /* la duracion vive en esta misma pantalla; por defecto es la decada */
+    await pulsa(porRot(/^Empezar a los 20/));
+    const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
+    await pulsa(p[semilla % Math.max(1, p.length)] || p[0]);
+    const c = bs().filter((b) => /^(Graduarte de esto|Empezar con esto)$/.test(rot(b)));
+    await pulsa(c[semilla % Math.max(1, c.length)] || c[0]);
+    /* y el ultimo paso: guia si o no */
+    await pulsa(porRot(/^(Sé lo que hago|Guíame por el camino)/));
+  }
+
+  let ano = 0, pasos = 0, cargo = "Pasante", burnouts = 0, ultimaEne = null, ultimoAno = null;
   while (pasos++ < 1600) {
     await act(async () => { reloj(2500); await micro(); });
     const j = r.toJSON();
@@ -89,7 +100,13 @@ async function unaVida(semilla) {
     const mC = t.match(/^([A-ZÁÉÍÓÚÑ][a-záéíóúñ ]+?) [A-ZÁÉÍÓÚÑ]/);
     if (mC) cargo = mC[1];
     if (/Te quiebras/.test(t)) burnouts++;
-    if (/Así terminó/.test(t)) ano++;
+    /* Contar años por «se ve la pantalla de cierre» contaba iteraciones,
+       no años: mientras el informe siga en pantalla, cada vuelta del
+       bucle sumaba uno. Con el anuncio delante son dos vueltas por año y
+       el promedio salia al doble. Se cuenta el año concreto, y solo
+       cuando cambia. */
+    const mA = t.match(/Así terminó (\d{4})/);
+    if (mA && mA[1] !== ultimoAno) { ultimoAno = mA[1]; ano++; }
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
     if (ops.length) { await pulsa(ops[Math.floor(Math.random() * ops.length) % ops.length]); continue; }
@@ -97,6 +114,10 @@ async function unaVida(semilla) {
        hay que poder cerrarlos, o la prueba se queda dentro de uno y la
        partida no avanza nunca. Van primero, justo por eso. */
     if (await pulsa(porRot(/^(Entendido|Después|Ver la sección|Cerrar y volver|Aplica o descarta|✕)$/))) continue;
+    /* «Ver el año» cierra el anuncio del rodillo. Va PRIMERO porque el
+       informe sigue montado debajo: sin esto la prueba pulsaba el boton
+       de abajo y se saltaba el anuncio entero sin llegar a probarlo. */
+    if (await pulsa(porRot(/^Ver el año$/))) continue;
     if (await pulsa(porRot(/^(Lo siguiente|Cerrar el año|Continuar|Entendido, empezar|Ya lo tengo|Terminar|Siguiente|Entregar el informe|Cerrar el trato|Fijar|Poner el número|Cerrar posición|Aguantar|Comprar|Empezar 20|Poner el capital|Sentarte a hacer|Ver el balance)/))) continue;
     let z = null;
     try { z = r.root.findAll((x) => x.props && x.props.role === "button" && typeof x.props.onClick === "function")[0]; } catch (e) {}
@@ -123,11 +144,18 @@ async function unaVida(semilla) {
   const res = [];
   for (let i = 0; i < N; i++) { res.push(await unaVida(1000003 * (i + 1))); process.stdout.write("."); }
   console.log("\n");
-  const llegan = res.filter((x) => x.ano >= 30).length;
+  /* La meta por defecto es la decada, asi que lo que se mide es cuantas
+     partidas llegan a cerrarse. Antes, con treinta anios fijos, solo 6 de
+     20 llegaban al final y la pantalla final quedaba practicamente sin
+     probar. */
+  const META = 10;
+  const llegan = res.filter((x) => x.ano >= META).length;
+  const acaban = res.filter((x) => x.fin !== "se quedó colgada" && x.fin !== "error").length;
   const media = (res.reduce((a, x) => a + x.ano, 0) / res.length).toFixed(1);
   console.log("  vidas jugadas: " + res.length);
-  console.log("  años cerrados de media: " + media + " de 30");
-  console.log("  llegan a los 30 años: " + llegan + " de " + res.length + "  (" + Math.round(llegan / res.length * 100) + "%)");
+  console.log("  años cerrados de media: " + media + " de " + META);
+  console.log("  llegan a los " + META + " años: " + llegan + " de " + res.length + "  (" + Math.round(llegan / res.length * 100) + "%)");
+  console.log("  alcanzan un balance final: " + acaban + " de " + res.length + "  (" + Math.round(acaban / res.length * 100) + "%)");
   console.log("");
   const porFin = {};
   res.forEach((x) => { porFin[x.fin] = (porFin[x.fin] || 0) + 1; });

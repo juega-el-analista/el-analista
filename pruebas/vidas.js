@@ -101,7 +101,6 @@ async function vivir(nombre, criterio, semilla, edadIni) {
   await act(async () => { reloj(400); await micro(); });
   await pulsa(porRot(/acepto y quiero jugar/i));
   await pulsa(porRot(/^Empezar$/));
-  await pulsa(porRot(/^Analista/));
   await pulsa(porRot(new RegExp("^Empezar a los " + edadIni)));
   const paises = bs().filter((b) => /^Elegir$/.test(rot(b)));
   await pulsa(paises[1] || paises[0]);

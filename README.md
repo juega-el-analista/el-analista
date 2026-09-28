@@ -20,7 +20,7 @@ autónomo**: React va dentro, no pide red y no necesita servidor.
 | Escenas de vida | 23 — parejas, hijos, divorcios, duelos, estafas |
 | Negocios del fondo | 22, con las cinco señales que los definen |
 
-Modos: **Aprendiz** (cada término se explica antes de usarse) y **Analista**.
+Un solo modo de juego: cada término se explica antes de usarse y los minijuegos dan una ventaja de entrada. (Hubo dos, Aprendiz y Analista; se quitó la elección el 28-sep-2026.)
 Puedes empezar a los 20, 30, 40 o 50.
 
 ## Si vas a tocar el código

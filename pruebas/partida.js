@@ -89,7 +89,6 @@ const log = (x) => registro.push(x);
   const bAviso = porRotulo(/acepto y quiero jugar/i);
   if (bAviso) await pulsa(bAviso);
   await pulsa(porRotulo(/^Empezar$/));
-  await pulsa(porRotulo(/^Analista/));
   await pulsa(porRotulo(/^Empezar a los 20/));
   /* país: el segundo de la lista, para no coger siempre el primero */
   const paises = bs().filter((b) => /^Elegir$/.test(rot(b)));

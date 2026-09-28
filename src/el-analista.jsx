@@ -118,6 +118,37 @@ const CSS = `
 .ea-op.no{border-color:var(--rojo);background:rgba(178,59,39,.13)}
 .ea-opN{font-size:11px;letter-spacing:.16em;color:var(--gris);margin-right:9px}
 .ea-opTag{display:block;font-size:11px;letter-spacing:.14em;color:var(--gris);margin-top:5px}
+.ea-opSolo{display:inline-block;font-size:9.5px;letter-spacing:.14em;color:var(--cobre);
+  border:1px solid var(--cobre);padding:1px 6px;margin-left:8px;vertical-align:middle}
+
+/* Una opcion que no te alcanza se ve, y se ve POR QUE no te alcanza. No
+   se esconde: enterarte de lo que te estas perdiendo es justo lo que
+   hace que quieras tener mas energia o mas criterio la proxima vez. */
+/* Salia una cada tres años de juego y pasaba desapercibida: opacidad al
+   52% y un borde punteado gris sobre fondo gris. Ahora se ve que esta
+   cerrada, y por que, sin tener que buscarlo. */
+.ea-op.sinfuerza{opacity:1;cursor:not-allowed;border-style:dashed;
+  border-color:rgba(178,59,39,.42);background:rgba(178,59,39,.05);
+  color:rgba(61,61,61,.55)}
+.ea-op.sinfuerza:hover{transform:none;background:rgba(178,59,39,.05)}
+.ea-op.sinfuerza .ea-opN{color:rgba(155,56,38,.6)}
+/* Lo que mueve cada opcion, en simbolos y con color: verde lo que suma,
+   rojo lo que cuesta. Antes era una linea de texto gris donde ganar red
+   y perder energia pesaban visualmente lo mismo. */
+.ea-efs{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.ea-ef{display:inline-flex;align-items:center;gap:3px;font-size:12px;
+  padding:3px 9px;border-radius:11px;border:1px solid;line-height:1.5}
+/* los signos mandan sobre el icono: son los que dicen cuanto */
+.ea-efS{font-size:13.5px;font-weight:700;letter-spacing:-.06em}
+.ea-ef.pos{color:#2E7A3D;border-color:rgba(62,138,73,.45);background:rgba(79,160,92,.1)}
+.ea-ef.neg{color:#9B3826;border-color:rgba(178,59,39,.4);background:rgba(178,59,39,.08)}
+.ea-op:disabled .ea-ef{filter:grayscale(.55)}
+
+.ea-opCandado{display:inline-flex;align-items:center;gap:5px;font-size:11px;
+  letter-spacing:.06em;border-radius:11px;background:rgba(178,59,39,.1);
+  font-variant-numeric:tabular-nums;color:#9B3826;
+  border:1px solid rgba(178,59,39,.45);padding:3px 9px;margin-left:9px;vertical-align:middle;
+  white-space:nowrap}
 
 .ea-sello{position:absolute;top:14px;right:18px;transform:rotate(-11deg);
   border:3px solid var(--cobre);color:var(--cobre);padding:4px 11px;font-size:14px;
@@ -176,6 +207,13 @@ const CSS = `
 .ea-num:hover{border-color:var(--cobre)}
 
 .ea-mult{font-size:50px;line-height:1;color:var(--tintaPapel)}
+.ea-jwCentro{text-align:center}
+.ea-jwCentro .ea-mult{font-size:clamp(56px,16vw,92px);margin-top:10px}
+.ea-suerteMeta{font-size:11.5px;color:var(--gris);margin-top:6px}
+.ea-suerteHist{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px}
+.ea-suerteH{font-size:12px;padding:2px 8px;border:1px solid rgba(61,61,61,.25)}
+.ea-suerteH.ok{color:#2F7A3D;border-color:#2F7A3D}
+.ea-suerteH.mal{color:var(--rojo);border-color:var(--rojo)}
 .ea-fila2{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
 .ea-qtxt{font-size:16.5px;color:#3D3D3D;margin:0 0 13px}
 .ea-expl{font-size:13.5px;color:var(--gris);margin-top:11px;border-left:2px solid var(--cobre);padding-left:10px}
@@ -201,9 +239,15 @@ const CSS = `
 .ea-regla{height:1px;background:var(--borde);margin:24px 0}
 .ea-final{font-size:33px;color:var(--tintaPapel);line-height:1.1;margin:0 0 12px}
 .ea-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:15px}
+/* en la portada, dos por dos: con cuatro textos largos, auto-fit dejaba
+   tres arriba y uno huérfano abajo, o se montaban en pantallas estrechas */
+.ea-cifras.ea-cifrasPortada{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px}
+@media (max-width:460px){.ea-cifras.ea-cifrasPortada{grid-template-columns:1fr}}
+.ea-cifraV{overflow-wrap:break-word}
 .ea-cifraK{font-size:11px;color:var(--gris);letter-spacing:.18em;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 .ea-cifraV{font-size:20px;color:var(--tintaPapel)}
+.ea-cifraD{font-size:12.5px;line-height:1.45;color:var(--gris);margin-top:5px}
 `;
 
 const CSS5 = `
@@ -481,9 +525,11 @@ const CSS5 = `
 .ea-generos .ea-mini.on{border-color:var(--cobre);color:var(--tintaPapel);background:rgba(185,83,42,.15)}
 
 /* --- volver atrás en la configuración --- */
-.ea-atras{background:transparent;border:none;color:var(--gris);font:inherit;font-size:11.5px;
+/* display:block porque es un <button>, o sea inline: sin esto el boton
+   que venga detras se le pega al lado en la misma linea. */
+.ea-atras{display:block;background:transparent;border:none;color:var(--gris);font:inherit;font-size:11.5px;
   letter-spacing:.14em;padding:6px 0;margin-bottom:10px;cursor:pointer;text-transform:uppercase;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
+  text-align:left;font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-atras:hover{color:var(--cobre)}
 .ea-rastro{font-size:12px;color:var(--cobre);margin:6px 0 14px;letter-spacing:.04em}
 
@@ -604,13 +650,13 @@ const JUEGOS = {
   },
   memoria: {
     n: "Peinar el legajo", tema: "Memoria de trabajo", dur: "30 s",
-    i: "Las casillas se encienden en un orden y tienes que repetirlo.",
+    i: "Tres rondas. Las casillas se encienden en un orden y tienes que repetirlo, y cada ronda alarga la anterior.",
     pasos: [
-      "Mira la secuencia en que se encienden las casillas.",
-      "Cuando se apaguen, tócalas en ese mismo orden.",
-      "Cada ronda agrega un paso más a la secuencia.",
+      "Ronda uno: se encienden 3 casillas. Tócalas en el mismo orden.",
+      "Ronda dos: las mismas 3 y una más al final.",
+      "Ronda tres: esas 4 y dos más al final.",
     ],
-    gana: "Repetir las tres secuencias sin equivocarte.",
+    gana: "Las tres rondas es éxito. Dos rondas, resultado parcial.",
     ensena: "Retener detalle sin apuntar nada: quién dijo qué, en qué cláusula y en qué página.",
   },
   ojo: {
@@ -636,14 +682,14 @@ const JUEGOS = {
     ensena: "El primer número que se pone sobre la mesa ancla toda la conversación que viene después.",
   },
   suerte: {
-    n: "Aguantar la posición", tema: "Riesgo y disciplina", dur: "20 s",
-    i: "Cada vez que aguantas sube el múltiplo y sube el riesgo de quedarte pegado.",
+    n: "Aguantar la posición", tema: "Riesgo y disciplina", dur: "30 s",
+    i: "El múltiplo sube solo y en algún momento se da vuelta. Tú decides cuándo cerrar.",
     pasos: [
-      "Empiezas con una posición ganadora y un múltiplo bajo.",
-      "Cada vez que aguantas, el múltiplo sube y también la probabilidad de perderlo todo.",
-      "Cierras cuando quieras. Si te pasas, te quedas sin nada.",
+      "Al empezar, el múltiplo arranca en 1,00x y va subiendo poco a poco.",
+      "Cierras cuando quieras y te quedas con ese número. Si se da vuelta antes, ese intento se pierde.",
+      "Tienes tres intentos y cuenta el mejor. Nadie sabe dónde se da vuelta: cada vez es distinto.",
     ],
-    gana: "Cerrar con un múltiplo decente. Reventar la posición es fallo.",
+    gana: "Cerrar en 3,00x o más es éxito. En 2,00x o más, resultado a medias.",
     ensena: "Toda posición ganadora te invita a esperar un poco más. La ruina casi siempre viene de no tener regla de salida escrita antes de entrar.",
   },
   tresraya: {
@@ -725,13 +771,13 @@ const JUEGOS = {
   },
   estructura: {
     n: "Armar la estructura", tema: "Apalancamiento", dur: "40 s",
-    i: "Decides cuánta deuda y cuánto capital propio pone la compra.",
+    i: "Compras una empresa de 100 millones. Tú pones una parte y el banco te presta el resto.",
     pasos: [
-      "Tienes un EBITDA, un precio de compra y dos tipos de deuda con costos distintos.",
-      "Mueves las barras de deuda senior y mezzanine; el resto lo pone tu capital.",
-      "Ves el múltiplo estimado a cinco años antes de cerrar.",
+      "Con la barra decides cuánto te presta el banco. Lo que falta lo pones tú.",
+      "Debajo ves qué pasa con tu dinero si a la empresa le va bien y si le va mal.",
+      "Más préstamo: ganas más si va bien, pero pierdes más si va mal. Busca el punto medio.",
     ],
-    gana: "Múltiplo de dos y media veces o más sin pasarte de apalancamiento.",
+    gana: "Cumplir las dos metas es éxito. Una sola, resultado a medias.",
     ensena: "La deuda multiplica el retorno del capital y también el riesgo de perderlo todo. Pasado cierto punto el banco manda, no tú.",
   },
   banderas: {
@@ -749,8 +795,8 @@ const JUEGOS = {
     n: "La pizarra del comité", tema: "Conceptos", dur: "40 s",
     i: "Fichas boca abajo: une cada concepto con lo que significa.",
     pasos: [
-      "Todas las fichas empiezan tapadas.",
-      "Destapas dos por turno buscando el concepto y su definición.",
+      "Antes de empezar ves la pizarra destapada unos segundos: mira dónde queda cada cosa.",
+      "Después se tapa y destapas dos por turno. Cada par tiene su color: el concepto y su definición se pintan igual.",
       "Tienes un número limitado de fallos.",
     ],
     gana: "Completar la pizarra con pocos fallos.",
@@ -780,13 +826,13 @@ const JUEGOS = {
   },
   subasta: {
     n: "La subasta", tema: "Valoración y disciplina", dur: "40 s",
-    i: "Cuatro postores por el mismo activo y nadie sabe cuánto vale de verdad.",
+    i: "Tú y tres rivales pujan por la misma empresa, y nadie sabe cuánto vale de verdad.",
     pasos: [
-      "Tienes tu propia estimación de valor, que puede estar equivocada.",
-      "Subes la oferta o te retiras en cada ronda.",
-      "Si todos se retiran, el activo es tuyo al precio que quedó.",
+      "Tienes tu propia estimación de lo que vale. Puede estar equivocada, por arriba o por abajo.",
+      "En cada ronda subes la oferta o te retiras. Cada rival tiene su límite y se retira al pasarlo.",
+      "Si se retiran todos, es tuya al precio que quedó. Si te retiras tú, la subasta sigue sin ti.",
     ],
-    gana: "Ganar pagando por debajo del valor real. Retirarse a tiempo también cuenta.",
+    gana: "Ganar pagando lo que vale o menos es éxito. Retirarte cuando el que gana acaba pagando de más, también.",
     ensena: "La maldición del ganador: en una subasta, el que más paga suele ser el que más se equivocó estimando.",
   },
 };
@@ -869,6 +915,10 @@ const CSS2 = `
 .ea-marca.fuera{border-color:var(--gris);color:var(--gris)}
 
 .ea-est{margin:12px 0}
+.ea-estCaso{font-size:16px;line-height:1.45;color:#3D3D3D;margin:4px 0 2px}
+.ea-estMeta{font-size:12.5px;margin-top:8px;font-weight:600;color:#3D3D3D}
+.ea-escenC.bien .ea-estMeta{color:#2F7A3D}
+.ea-escenC.mal .ea-estMeta{color:var(--rojo)}
 .ea-estL{display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px}
 .ea-alerta{font-size:13px;padding:8px 11px;border-left:3px solid var(--cobre);background:rgba(185,83,42,.1);margin-top:11px;color:#3D3D3D}
 .ea-alerta.mal{border-color:var(--rojo);background:rgba(178,59,39,.12)}
@@ -900,6 +950,9 @@ const CSS3 = `
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
 .ea-fichaP.abierta{background:rgba(185,83,42,.2);border-color:var(--cobre)}
 .ea-fichaP.hecha{background:rgba(62,107,60,.18);border-color:#3D8A49;cursor:default}
+.ea-fichaP.vista{cursor:default}
+.ea-fichaP.pintada{border-width:1px 1px 1px 5px}
+.ea-fichaP.hecha.pintada{opacity:.62}
 
 .ea-pista4{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:rgba(61,61,61,.12);padding:5px;
   border:1px solid rgba(61,61,61,.25)}
@@ -1022,6 +1075,433 @@ const CSS4 = `
 /* partida guardada */
 .ea-guarda{border:1px solid var(--borde);border-left:3px solid var(--cobre);background:rgba(185,83,42,.08);
   padding:13px 16px;margin-top:4px}
+
+/* La puerta de entrada. Es el unico boton de la portada que tiene que
+   verse desde la otra punta de la habitacion: todo lo demas es opcional. */
+.ea-jugarYa{background:var(--cobre);color:#20120A;border:2px solid var(--cobre);
+  padding:17px 38px;font:inherit;font-size:19px;letter-spacing:.14em;cursor:pointer;border-radius:2px;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;
+  transition:background .15s,transform .12s}
+.ea-jugarYa:hover{background:#C86A3E;border-color:#C86A3E}
+.ea-jugarYa:active{transform:translateY(1px)}
+
+/* los cinco perfiles de cartera, como tarjetas que se pueden comparar de
+   un vistazo en vez de cinco botones sin cifras */
+.ea-perfiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:8px;margin-top:4px}
+.ea-perfil{text-align:left;background:transparent;border:1px solid var(--borde);color:var(--tintaPapel);
+  font:inherit;padding:11px 13px;cursor:pointer;border-radius:2px;
+  transition:border-color .15s,background .15s}
+.ea-perfil:hover{border-color:var(--cobre)}
+.ea-perfil.on{border-color:var(--cobre);background:rgba(185,83,42,.1)}
+.ea-perfilT{font-size:14px;letter-spacing:.05em;color:var(--tintaPapel)}
+.ea-perfilD{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.45}
+.ea-perfilN{font-size:11.5px;color:var(--cobre);margin-top:6px}
+
+/* ============================================================
+   QUE SE SIENTA VIVO
+   El juego se veia bien y no se movia: todo aparecia de golpe y ya. Lo
+   que sigue no cambia ninguna regla, solo hace que las cosas entren, se
+   asienten y respondan al dedo.
+   ============================================================ */
+
+/* Las opciones entran una detras de otra, no las tres a la vez. El
+   escalonado lo pone el JSX con animationDelay. */
+/* el escalonado sale de --i, que pone el JSX: asi el marco de las
+   decisiones que pesan puede retrasarlas todas sin pelearse con un
+   animationDelay en linea, que ganaria siempre */
+.ea-op{animation:ea-sube .32s cubic-bezier(.2,.8,.3,1) backwards;
+  animation-delay:calc(var(--i,0) * 70ms)}
+@keyframes ea-sube{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.ea-op:active:not(:disabled){transform:translateX(3px) scale(.995)}
+
+/* Los chips del resultado dan un saltito al entrar: es el momento en que
+   el juego te dice que ganaste o perdiste algo. */
+.ea-chip{animation:ea-pop .34s cubic-bezier(.2,1.5,.4,1) backwards}
+@keyframes ea-pop{0%{opacity:0;transform:scale(.72)}60%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+
+/* El sello cae con peso en vez de aparecer. */
+@keyframes ea-stamp{
+  0%{transform:rotate(-11deg) scale(2.1);opacity:0}
+  55%{transform:rotate(-11deg) scale(.92);opacity:.95}
+  75%{transform:rotate(-11deg) scale(1.04)}
+  100%{transform:rotate(-11deg) scale(1);opacity:.85}
+}
+.ea-sello{animation:ea-stamp .42s cubic-bezier(.2,.9,.3,1)}
+
+/* El año como puntos: llenos los que quedan, apagados los ya jugados. */
+.ea-puntos{display:inline-flex;gap:5px;align-items:center}
+.ea-punto{width:7px;height:7px;border-radius:50%;background:var(--cobre);
+  transition:background .3s ease,transform .3s ease}
+.ea-punto.ido{background:rgba(159,184,168,.34);transform:scale(.75)}
+
+/* El aviso de la cinta entra y se queda, sin parpadeo brusco. */
+.ea-avisoFlash{color:var(--verde);animation:ea-flash .5s ease-out}
+@keyframes ea-flash{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* Botones con algo de peso al pulsarlos. */
+.ea-btn,.ea-btnO,.ea-mini,.ea-comprar,.ea-aplicar,.ea-jugarYa{transition:background .15s,border-color .15s,color .15s,transform .1s}
+.ea-mini:active:not(:disabled),.ea-btnO:active,.ea-aplicar:active{transform:translateY(1px)}
+.ea-opcion{animation:ea-sube .3s cubic-bezier(.2,.8,.3,1) backwards}
+.ea-opcion:active{transform:translateY(1px)}
+.ea-perfil:active{transform:translateY(1px)}
+
+/* La placa de arriba reacciona cuando el patrimonio se mueve. */
+.ea-plata{transition:color .35s ease}
+
+/* ============================================================
+   QUE CADA ESCENA SE VEA DISTINTA
+   El mismo memorando gris servia para un martes en la oficina, para que
+   se case tu hermano y para la decision que parte la carrera en dos.
+   Ahora cada clase trae su sello, su color y su borde.
+   ============================================================ */
+.ea-selloClase{position:absolute;top:44px;right:22px;opacity:.9;
+  animation:ea-sellar .5s cubic-bezier(.2,1.5,.4,1) backwards;animation-delay:.14s}
+@keyframes ea-sellar{
+  0%{opacity:0;transform:rotate(-26deg) scale(.4)}
+  55%{opacity:.95;transform:rotate(6deg) scale(1.14)}
+  100%{opacity:.9;transform:rotate(0) scale(1)}
+}
+/* el borde izquierdo dice de que va antes de leer una palabra */
+.ea-memo{border-left:4px solid transparent;transition:border-color .3s ease}
+.ea-memo-documento{border-left-color:rgba(61,61,61,.16)}
+.ea-memo-corazon{border-left-color:rgba(185,83,42,.75)}
+.ea-memo-corona{border-left-color:var(--cobre);
+  box-shadow:0 18px 40px rgba(0,51,24,.28), 0 2px 0 var(--papel2), inset 0 0 0 1px rgba(185,83,42,.22)}
+.ea-memo-bifurca{border-left-color:var(--cobre)}
+.ea-memo-sello{border-left-color:var(--tintaPapel)}
+/* el titulo deja sitio al sello para no chocar con el */
+.ea-memo .ea-memoTit{padding-right:52px}
+
+/* Un fondo que no es un folio en blanco: dos manchas muy suaves que dan
+   profundidad sin ensuciar nada de lo que hay encima. */
+.ea-root{background-image:
+  radial-gradient(60vw 40vw at 88% -8%, rgba(31,107,62,.055), transparent 60%),
+  radial-gradient(52vw 36vw at 2% 104%, rgba(185,83,42,.05), transparent 62%)}
+
+/* La cifra del patrimonio da un latido cuando se mueve, para que el
+   cambio se note aunque no estuvieras mirando ese rincon. */
+@keyframes ea-latido{
+  0%{transform:scale(1)} 38%{transform:scale(1.055)} 100%{transform:scale(1)}
+}
+.ea-plata.late{animation:ea-latido .5s cubic-bezier(.2,.9,.3,1)}
+.ea-plata{display:inline-block;transform-origin:right center}
+
+/* la pestaña activa se subraya deslizando, no parpadeando */
+.ea-tab{position:relative}
+.ea-tab:after{content:"";position:absolute;left:12%;right:12%;bottom:-2px;height:2px;
+  background:var(--cobre);transform:scaleX(0);transform-origin:center;
+  transition:transform .26s cubic-bezier(.2,.8,.3,1)}
+.ea-tab.on:after{transform:scaleX(1)}
+.ea-tab.on{border-bottom-color:transparent}
+
+/* ---- las rondas del juego de memoria: 3 · 4 · 6 ---- */
+.ea-memRondas{display:flex;gap:7px;margin:0 0 12px}
+.ea-memRonda{min-width:32px;height:26px;padding:0 9px;border-radius:13px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12.5px;font-weight:600;
+  border:1px solid rgba(61,61,61,.25);color:var(--gris);background:transparent;
+  transition:all .3s cubic-bezier(.2,.8,.3,1)}
+.ea-memRonda.ahora{border-color:var(--cobre);color:var(--tintaPapel);
+  background:rgba(185,83,42,.12);transform:scale(1.08)}
+.ea-memRonda.hecha{border-color:#3D8A49;color:#2E7A3D;background:rgba(79,160,92,.14)}
+.ea-celdaC{transition:background .12s,transform .1s,border-color .12s,box-shadow .12s}
+
+/* ---- la fila de stats ---- */
+.ea-stats{flex-basis:100%;display:flex;flex-direction:column;gap:12px;
+  border-top:1px solid rgba(159,184,168,.16);padding-top:12px;margin-top:2px}
+
+/* la barra de experiencia hacia el siguiente cargo */
+.ea-xpTop{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  font-size:10.5px;letter-spacing:.16em;color:var(--papel);margin-bottom:5px}
+.ea-xpTop span{display:inline-flex;align-items:center;gap:6px}
+.ea-xpSig{color:var(--tenue)}
+.ea-xpBar{height:7px;background:#041F0E;border-radius:4px;overflow:hidden;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.ea-xpFill{height:100%;border-radius:4px;
+  background:linear-gradient(90deg,#8A6A28,#F2B441);
+  box-shadow:0 0 10px rgba(242,180,65,.45);
+  transition:width .8s cubic-bezier(.2,.8,.3,1)}
+
+/* los cinco anillos */
+.ea-anillos{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.ea-anillo{display:flex;flex-direction:column;align-items:center;gap:1px;position:relative}
+.ea-anilloDisco{position:relative;width:40px;height:40px}
+.ea-anilloDisco svg{display:block;overflow:visible}
+.ea-anilloFondo{fill:rgba(4,31,14,.7);stroke:rgba(159,184,168,.14);stroke-width:3.4}
+.ea-anilloArco{fill:none;stroke-width:3.4;stroke-linecap:round;
+  transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.3,1), stroke .3s ease;
+  filter:drop-shadow(0 0 3px currentColor)}
+.ea-anilloIco{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.ea-anilloN{font-size:13px;font-weight:600;line-height:1.1;margin-top:3px}
+.ea-anilloK{font-size:8.5px;letter-spacing:.12em;color:var(--tenue);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.ea-anillo.bajo .ea-anilloDisco{animation:ea-avisoAnillo 1.6s ease-in-out infinite}
+@keyframes ea-avisoAnillo{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+
+/* el +3 que sube y se desvanece encima del anillo */
+.ea-anilloD{position:absolute;left:50%;top:-4px;transform:translateX(-50%);
+  font-size:12.5px;font-weight:700;pointer-events:none;white-space:nowrap;
+  text-shadow:0 1px 3px rgba(0,0,0,.6);
+  animation:ea-delta 1.2s cubic-bezier(.2,.8,.3,1) forwards}
+.ea-anilloD.sube{color:#9FE6A9}
+.ea-anilloD.baja{color:#F4A596}
+@keyframes ea-delta{
+  0%{opacity:0;transform:translate(-50%,6px) scale(.7)}
+  18%{opacity:1;transform:translate(-50%,-4px) scale(1.18)}
+  100%{opacity:0;transform:translate(-50%,-26px) scale(1)}
+}
+
+@media(max-width:420px){
+  .ea-anilloDisco{width:36px;height:36px}
+  .ea-anilloDisco svg{width:36px;height:36px}
+  .ea-anilloK{font-size:7.5px;letter-spacing:.06em}
+}
+
+/* ============================================================
+   LA DECISION QUE PESA, A PANTALLA COMPLETA
+   Fondo de fieltro con un halo del color de su clase detras, el sello
+   grande que cae, el titulo en grande y las opciones entrando de una en
+   una cuando el titulo ya se asento. Todo con la misma escena de dentro.
+   ============================================================ */
+/* Dos fondos a proposito: si el navegador no entiende color-mix()
+   descarta la declaracion ENTERA, y sin la primera linea el marco
+   quedaria transparente sobre el juego. */
+.ea-escenaPlena{position:fixed;inset:0;z-index:72;overflow-y:auto;
+  background:var(--fieltro);
+  background:
+    radial-gradient(60vmax 50vmax at 50% 18%, color-mix(in srgb, var(--tono,#B9532A) 26%, transparent), transparent 62%),
+    var(--fieltro);
+  display:flex;justify-content:center;align-items:flex-start;
+  padding:calc(24px + env(safe-area-inset-top,0px)) 16px calc(28px + env(safe-area-inset-bottom,0px));
+  animation:ea-entra .32s ease-out}
+.ea-escenaPlenaCaja{width:100%;max-width:600px;margin:auto 0}
+
+.ea-dramaTop{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:18px}
+.ea-dramaIco{color:var(--tono,var(--cobre));
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.45));
+  animation:ea-caerSello .62s cubic-bezier(.2,1.35,.35,1) backwards;animation-delay:.08s}
+@keyframes ea-caerSello{
+  0%{opacity:0;transform:translateY(-40px) rotate(-24deg) scale(1.7)}
+  60%{opacity:1;transform:translateY(4px) rotate(5deg) scale(.94)}
+  100%{opacity:1;transform:none}
+}
+.ea-dramaK{font-size:11.5px;letter-spacing:.34em;color:var(--tono,var(--cobre));
+  animation:ea-flash .4s ease-out backwards;animation-delay:.42s}
+
+/* el memorando dentro del marco: mas grande, con mas aire y sin el sello
+   de la esquina, que ya esta arriba en grande */
+.ea-memoDrama{border-left:none;
+  box-shadow:0 28px 70px rgba(0,0,0,.5);
+  box-shadow:0 28px 70px rgba(0,0,0,.5), 0 0 0 1px color-mix(in srgb, var(--tono,#B9532A) 40%, transparent);
+  animation:ea-sube .5s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:.3s}
+.ea-memoDrama .ea-selloClase{display:none}
+.ea-memoDrama .ea-memoHead{display:none}
+.ea-memoDrama .ea-memoTit{font-size:clamp(28px,7.6vw,40px);line-height:1.05;padding-right:0;
+  text-align:center;text-wrap:balance;margin-bottom:14px}
+.ea-memoDrama .ea-memoTxt{font-size:clamp(16px,4.3vw,18px);text-align:center;
+  max-width:44ch;margin:0 auto}
+/* las opciones esperan a que el titulo se haya asentado */
+.ea-memoDrama .ea-op{padding:15px 16px;font-size:15.5px;animation-delay:calc(.75s + var(--i,0) * 110ms)}
+.ea-memoDrama .ea-op:hover:not(:disabled){transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(0,0,0,.14);border-color:var(--tono,var(--cobre))}
+
+/* ---- el anuncio de una decision que pesa ----
+   Una legendaria o una bifurcacion salian como una opcion mas dentro del
+   mismo memorando de siempre. Estas se llevan la pantalla. */
+.ea-anuncioEsc{position:fixed;inset:0;z-index:72;background:var(--fieltro);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;text-align:center;padding:26px;cursor:pointer;
+  animation:ea-entra .26s ease-out}
+.ea-anuncioEscIco{color:var(--tono,var(--cobre));
+  animation:ea-plantar .5s cubic-bezier(.2,1.4,.35,1) backwards;animation-delay:.08s}
+.ea-anuncioEscIco svg{filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
+.ea-anuncioEscK{font-size:11.5px;letter-spacing:.32em;color:var(--cobre);
+  animation:ea-flash .4s ease-out backwards;animation-delay:.3s}
+.ea-anuncioEscT{font-size:clamp(28px,8.5vw,50px);line-height:1.04;color:var(--papel);
+  max-width:17ch;text-wrap:balance;
+  animation:ea-sube .46s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:.38s}
+.ea-anuncioEscB{font-size:11px;letter-spacing:.24em;color:var(--tenue);margin-top:16px;
+  animation:ea-flash .5s ease-out backwards;animation-delay:.95s}
+
+/* ---- la cabecera del dinero ----
+   Era «USD 6.375» a secas y debajo «efectivo 9,6 k · cartera 12,1 k» en
+   una linea apretada que no decia ni que era ni por que habia dos
+   numeros. Ahora lleva rotulo y el reparto se VE. */
+.ea-patK{font-size:9.5px;letter-spacing:.26em;color:var(--tenue);margin-bottom:1px}
+.ea-reparto{margin-top:7px;min-width:172px}
+.ea-repartoBar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:#041F0E}
+.ea-repEf{background:var(--tenue);transition:width .5s cubic-bezier(.2,.8,.3,1)}
+.ea-repCa{background:var(--cobre);transition:width .5s cubic-bezier(.2,.8,.3,1)}
+.ea-repartoL{display:flex;gap:12px;justify-content:flex-end;font-size:10.5px;
+  color:var(--tenue);margin-top:5px}
+.ea-repartoL span{display:inline-flex;align-items:center;gap:5px}
+.ea-punto2{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0}
+.ea-punto2.ef{background:var(--tenue)}
+.ea-punto2.ca{background:var(--cobre)}
+
+/* ---- la curva de la portada ---- */
+.ea-portadaArte{width:100%;max-width:420px;height:auto;display:block;margin:18px 0 6px;overflow:visible}
+.ea-paBase{stroke:var(--borde);stroke-width:1}
+.ea-paTick{stroke:var(--borde);stroke-width:1;opacity:.55}
+.ea-paCurva{fill:none;stroke:var(--cobre);stroke-width:2.6;stroke-linecap:round;
+  stroke-dasharray:420;stroke-dashoffset:420;animation:ea-trazar 1.5s cubic-bezier(.3,.7,.3,1) .25s forwards}
+@keyframes ea-trazar{to{stroke-dashoffset:0}}
+.ea-paPunto{fill:var(--cobre);opacity:0;animation:ea-brotar .45s cubic-bezier(.2,1.6,.4,1) 1.6s forwards}
+@keyframes ea-brotar{0%{opacity:0;r:0}60%{opacity:1;r:8}100%{opacity:1;r:5.5}}
+
+/* ---- iconos ---- */
+.ea-ico{display:inline-block;vertical-align:-.16em;flex-shrink:0}
+.ea-quien{display:flex;flex-wrap:wrap;gap:3px 13px;align-items:center}
+.ea-quien span{display:inline-flex;align-items:center;gap:5px}
+.ea-quienRama{color:var(--cobre)}
+/* las constantes: icono y cifra, sin la palabra delante */
+.ea-signos span{display:inline-flex;align-items:center;gap:4px}
+.ea-statN{display:inline-flex;align-items:center;gap:6px}
+
+/* los tres grupos de Comprar */
+.ea-grupos{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.ea-grupo{display:inline-flex;align-items:center;gap:6px;background:transparent;
+  border:1px solid var(--borde);color:var(--gris);font:inherit;font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+  padding:8px 13px;border-radius:20px;cursor:pointer;transition:all .15s}
+.ea-grupo:hover{border-color:var(--cobre);color:var(--tintaPapel)}
+.ea-grupo.on{border-color:var(--cobre);background:rgba(185,83,42,.12);color:var(--tintaPapel)}
+/* cada cosa que compras lleva su simbolo: dice de que familia es antes
+   de que llegues a leer el nombre */
+.ea-itemConIco{display:inline-flex;align-items:center;gap:9px;color:var(--tintaPapel)}
+.ea-itemConIco svg{color:var(--cobre);flex-shrink:0}
+.ea-item.tuyo .ea-itemConIco svg{color:var(--verde);opacity:.8}
+
+/* una linea, no un bloque: el termino a mano y la explicacion a un toque */
+.ea-recuerda{background:transparent;border:none;color:var(--cobre);font:inherit;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+  padding:4px 0;margin:0 0 6px;cursor:pointer;text-align:left}
+.ea-recuerda:hover{color:#C86A3E}
+
+/* ---- el golpe de dinero de una decision ----
+   Lo que se gana o se pierde al decidir tiene que verse desde la otra
+   punta de la mesa. Antes era un chip de doce pixeles igual que los
+   demas, y es lo unico que el jugador estaba esperando. */
+.ea-golpe{display:flex; align-items:baseline; gap:.1em; margin-top:16px;
+  font-family:'IBM Plex Mono',ui-monospace,monospace; line-height:1;
+  animation:ea-golpeIn .5s cubic-bezier(.2,1.4,.4,1) backwards; animation-delay:.12s}
+.ea-golpe.sube{color:#2E7A3D}
+.ea-golpe.baja{color:#8A2E1E}
+.ea-golpeS{font-size:30px; opacity:.75}
+.ea-golpeV{font-size:clamp(34px,10vw,46px); font-weight:600}
+.ea-golpeU{font-size:13px; letter-spacing:.14em; opacity:.6; margin-left:.25em}
+@keyframes ea-golpeIn{
+  0%{opacity:0; transform:translateY(10px) scale(.86)}
+  60%{transform:translateY(0) scale(1.04)}
+  100%{opacity:1; transform:none}
+}
+
+/* ============================================================
+   EL MINIJUEGO, A PANTALLA ENTERA
+   Antes vivia dentro del memorando, con la ficha y las pestañas
+   alrededor: no se notaba que cambiabas de actividad y competia con la
+   contabilidad por la atencion. Ahora se lleva la pantalla.
+   ============================================================ */
+
+/* uno · el anuncio. Azul, que no es un color del juego: eso es lo que
+   hace que se lea como «esto es otra cosa» sin decirlo. */
+.ea-anuncioJuego{position:fixed;inset:0;z-index:70;background:#10324F;color:#EAF2F8;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;text-align:center;padding:24px;cursor:pointer;
+  animation:ea-entra .22s ease-out}
+.ea-anuncioJK{font-size:12.5px;letter-spacing:.34em;color:#7FA8C9}
+.ea-anuncioJN{font-size:clamp(34px,11vw,62px);line-height:1.02;max-width:14ch;
+  animation:ea-plantar .42s cubic-bezier(.2,1.3,.35,1) backwards;animation-delay:.1s}
+@keyframes ea-plantar{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+.ea-anuncioJT{font-size:12px;letter-spacing:.2em;color:#7FA8C9;
+  animation:ea-flash .4s ease-out backwards;animation-delay:.34s}
+
+/* dos · las instrucciones, grandes y sobre fondo oscurecido */
+.ea-reglasPleno{position:fixed;inset:0;z-index:70;background:rgba(6,23,13,.93);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:22px 16px;overflow-y:auto;animation:ea-entra .25s ease-out}
+.ea-reglasCaja{width:100%;max-width:560px;margin:auto;color:var(--hueso);
+  animation:ea-sube .32s cubic-bezier(.2,.8,.3,1) backwards;animation-delay:.06s}
+.ea-reglasCaja .ea-jnombre{font-size:clamp(28px,8vw,44px);color:var(--papel);margin-bottom:12px}
+.ea-reglasCaja .ea-jnombre span{color:var(--cobre);letter-spacing:.24em}
+.ea-reglasCaja .ea-jtag{border-color:var(--borde);color:var(--tenue)}
+.ea-reglasX{font-size:clamp(16px,4.4vw,19px);line-height:1.55;color:var(--papel);
+  margin:14px 0 4px;max-width:46ch}
+.ea-pasosG .ea-paso{font-size:clamp(15px,4vw,17px);color:var(--tenue);padding:7px 0;line-height:1.5}
+.ea-pasosG .ea-pasoN{font-size:13px;color:var(--cobre)}
+.ea-reglasGana{font-size:13.5px;color:var(--tenue);border-left:2px solid var(--cobre);
+  padding-left:11px;margin-top:12px;line-height:1.5}
+.ea-reglasCaja .ea-atras{color:var(--tenue)}
+.ea-reglasCaja .ea-atras:hover{color:var(--cobre)}
+.ea-reglasCaja .ea-lecX,.ea-reglasCaja .ea-glosX,.ea-reglasCaja .ea-glosT{color:var(--papel)}
+.ea-reglasCaja .ea-lec{background:rgba(185,83,42,.12);border-color:rgba(185,83,42,.4)}
+.ea-reglasCaja .ea-glos{background:rgba(62,107,60,.16)}
+.ea-btnJugar{width:100%;margin-top:22px;padding:17px 20px;font-size:15px;
+  background:var(--cobre);color:#20120A}
+.ea-btnJugar:hover:not(:disabled){background:#C86A3E}
+
+/* tres · el juego, sin nada alrededor */
+.ea-juegoPleno{position:fixed;inset:0;z-index:70;background:var(--papel);
+  overflow-y:auto;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));
+  animation:ea-entra .2s ease-out;display:flex;flex-direction:column}
+/* En el centro de la pantalla, en los dos ejes. Con margin:auto dentro de
+   un flex y no con justify-content:center: si el juego es más alto que la
+   pantalla, justify-content cortaría la parte de arriba sin poder llegar a
+   ella con el scroll; margin:auto se queda en 0 y el scroll sigue normal. */
+.ea-juegoPleno .ea-jw{width:100%;max-width:560px;margin:auto;padding-top:env(safe-area-inset-top,0px)}
+
+/* ---- el rodillo del cierre ---- */
+.ea-rodillos{display:inline-flex;align-items:center;gap:1px;line-height:1}
+.ea-rodillo{display:inline-block;height:1em;overflow:hidden;vertical-align:bottom;
+  width:.62em;position:relative}
+.ea-rodCol{display:flex;flex-direction:column;transition-property:transform;will-change:transform}
+.ea-rodD{height:1em;line-height:1;display:flex;align-items:center;justify-content:center}
+/* El punto de los miles se apoya abajo, donde va un punto. Centrado
+   entre las ruedas quedaba flotando a media altura. */
+.ea-rodSep{display:inline-block;opacity:.5;width:.3em;text-align:center;
+  align-self:flex-end;line-height:1}
+
+/* La pantalla del anuncio: el cierre del anio pasa por aqui antes de
+   ensenar el informe. Es el unico momento del juego que no pide leer. */
+.ea-anuncio{position:fixed;inset:0;z-index:80;background:var(--fieltro);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;text-align:center;animation:ea-entra .3s ease-out;cursor:pointer}
+@keyframes ea-entra{from{opacity:0}to{opacity:1}}
+.ea-anuncioK{font-size:12px;letter-spacing:.3em;color:var(--tenue);margin-bottom:10px}
+.ea-anuncioN{font-size:clamp(38px,12vw,86px);color:var(--papel);line-height:1;
+  display:flex;align-items:center;gap:.12em}
+.ea-anuncioU{font-size:.42em;color:var(--tenue);letter-spacing:.1em}
+.ea-anuncioD{margin-top:20px;font-size:clamp(17px,4.5vw,25px);letter-spacing:.04em;
+  animation:ea-pop .4s cubic-bezier(.2,1.5,.4,1) backwards}
+.ea-anuncioD.sube{color:#7FD08C}
+.ea-anuncioD.baja{color:#E0897B}
+.ea-anuncioL{margin-top:8px;font-size:13px;color:var(--tenue);
+  animation:ea-flash .4s ease-out backwards}
+.ea-anuncioB{margin-top:30px;animation:ea-flash .4s ease-out backwards}
+
+/* Hay gente que marea. Si su sistema lo pide, nada se mueve: el juego
+   sigue funcionando igual porque ninguna animacion cambia una regla. */
+/* Hay gente que marea, y hay sistemas que piden menos movimiento sin que
+   su dueño se acuerde de haberlo pedido: Windows con los efectos de
+   animacion apagados le dice a Chrome «reduced-motion», y con una media
+   query pura eso apagaba el juego entero sin forma de encenderlo.
+
+   Por eso el freno no es una media query sino una clase que pone el
+   propio juego: por defecto sigue al sistema, y el jugador puede
+   encender el movimiento desde su Ficha. El retardo hay que matarlo
+   igual que la duracion, no solo la duracion: varias cosas entran
+   escalonadas con animation-delay y relleno backwards, o sea invisibles
+   hasta que les toca, y sin esto el anuncio del año se quedaba DOS
+   SEGUNDOS sin boton para salir. */
+.ea-quieto *,.ea-quieto *::before,.ea-quieto *::after{
+  animation-duration:.001ms !important;
+  animation-iteration-count:1 !important;
+  transition-duration:.001ms !important;
+  animation-delay:0ms !important;
+  transition-delay:0ms !important;
+}
 `;
 
 /* ---------- mejoras que se compran una sola vez ---------- */
@@ -2083,30 +2563,45 @@ const BANDERAS = [
 ];
 
 /* ---------- de dónde vienes ---------- */
+/* Sueldo, costo de vida e impuesto, relativos a Madrid = 1. Recalibrados
+   el 28-sep-2026 con datos reales, suavizados a mitad de camino para no
+   romper el juego (npm run paises lo mide):
+     · sueldo: analista financiero junior. Real: Caracas 0,18 · Bogotá 0,34
+       · Buenos Aires 0,30 · CDMX 0,35 · Miami 1,73 (Glassdoor, Computrabajo,
+       Fedecámaras, ZipRecruiter). Aquí, a mitad entre eso y lo que había.
+     · costo de vida: una persona con alquiler (livingcost.org, jun-2026:
+       Caracas 0,59 · Bogotá 0,52 · Buenos Aires 0,59 · CDMX 0,70 · Miami
+       1,52). Bogotá, CDMX y Caracas van algo más caros que el dato: como el
+       sueldo se suavizó a mitad de camino y el costo no, con el costo real
+       México y Colombia vivían como en Madrid pagando menos impuestos, y
+       México acababa más rico que España. npm run paises lo mide.
+     · impuesto: renta + aportes del empleado, a mitad entre lo que paga un
+       junior y lo que paga una carrera avanzada, porque es una sola tasa
+       para toda la partida. Florida no cobra impuesto estatal. */
 const NACIONES = [
   { id: "ve", n: "Venezuela", ban: "Caracas",
     d: "Creciste viendo inflación de tres dígitos, así que entiendes el dinero antes que nadie. El mercado local es pequeño y todo se resuelve por quién conoces a quién.",
-    mods: { red: 7, cri: 7 }, cash: 1200, sal: 0.7, gas: 0.64, tax: 0.2, sesgo: "Emergentes",
+    mods: { red: 7, cri: 7 }, cash: 1200, sal: 0.46, gas: 0.62, tax: 0.12, sesgo: "Emergentes",
     nota: "Sueldos bajos, costo de vida bajo, impuestos bajos, todo el mundo se conoce." },
   { id: "co", n: "Colombia", ban: "Bogotá",
     d: "Mercado mediano y ordenado, con banca de inversión de verdad y competencia por los puestos.",
-    mods: { red: 4, rep: 3 }, cash: 3000, sal: 0.92, gas: 0.86, tax: 0.27, sesgo: "Emergentes",
+    mods: { red: 4, rep: 3 }, cash: 3000, sal: 0.6, gas: 0.66, tax: 0.17, sesgo: "Emergentes",
     nota: "Punto de equilibrio entre oportunidad y estabilidad." },
   { id: "ar", n: "Argentina", ban: "Buenos Aires",
     d: "El país que te enseña macro a la fuerza. Cada década trae una crisis y cada crisis deja una generación que sabe leer una curva.",
-    mods: { cri: 9, mod: 2 }, cash: 1800, sal: 0.78, gas: 0.72, tax: 0.3, sesgo: "Tasas",
+    mods: { cri: 9, mod: 2 }, cash: 1800, sal: 0.54, gas: 0.59, tax: 0.24, sesgo: "Tasas",
     nota: "Criterio macro altísimo, ingresos volátiles." },
   { id: "mx", n: "México", ban: "Ciudad de México",
     d: "El mercado más grande de habla hispana y la puerta de entrada al capital estadounidense.",
-    mods: { red: 4, mod: 3 }, cash: 4500, sal: 1.08, gas: 1.0, tax: 0.3, sesgo: "Comercio",
+    mods: { red: 4, mod: 3 }, cash: 4500, sal: 0.72, gas: 0.85, tax: 0.21, sesgo: "Comercio",
     nota: "Volumen de operaciones alto y cercanía con el norte." },
   { id: "es", n: "España", ban: "Madrid",
     d: "Acceso a Europa, instituciones sólidas y una carrera más lenta pero más predecible.",
-    mods: { rep: 5, mod: 3 }, cash: 7000, sal: 1.0, gas: 0.95, tax: 0.37, sesgo: "Mercados",
+    mods: { rep: 5, mod: 3 }, cash: 7000, sal: 1, gas: 1, tax: 0.31, sesgo: "Mercados",
     nota: "Estabilidad y la carga fiscal más alta de la lista." },
-  { id: "us", n: "Estados Unidos", ban: "Nueva York",
-    d: "El centro del mundo financiero. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
-    mods: { mod: 7 }, cash: -16000, sal: 1.6, gas: 1.5, tax: 0.33, sesgo: "Mercados",
+  { id: "us", n: "Estados Unidos", ban: "Miami",
+    d: "La capital financiera de América Latina en Estados Unidos. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
+    mods: { mod: 7 }, cash: -16000, sal: 1.7, gas: 1.52, tax: 0.22, sesgo: "Mercados",
     nota: "Empiezas debiendo dieciséis mil dólares de la universidad." },
 ];
 
@@ -2260,11 +2755,11 @@ const E = [
   { id: 3, min: 0, max: 2, t: "Café con el socio", x: "El socio director te encuentra en la cafetería y se sienta contigo. Tienes doce minutos de su atención completa.",
     o: [
       { t: "Preguntarle por el negocio y escuchar", d: { red: 7, cri: 4, msg: "Te cuenta cómo levantó su primer mandato. Aprendes más que en dos meses de Excel." } },
-      { t: "Soltarle una idea de originación tuya", j: "reaccion", stat: "red", d: { red: 5, rep: 5, car: 4, msg: "Tienes una ventana de segundos para meter la idea sin que suene forzado." } },
+      { t: "Soltarle una idea de originación tuya", min: { red: 24 }, j: "reaccion", stat: "red", d: { red: 5, rep: 5, car: 4, msg: "Tienes una ventana de segundos para meter la idea sin que suene forzado." } },
     ] },
   { id: 4, min: 0, max: 4, t: "Certificación de por medio", x: "Se abre la inscripción. Cuesta plata, quita fines de semana y no garantiza nada.",
     o: [
-      { t: "Inscribirte y estudiar en serio", j: "quiz", stat: "cri", d: { cash: -1600, mod: 7, cri: 5, ene: -10, car: 3, msg: "Seis meses de sábados perdidos y el examen encima." } },
+      { t: "Inscribirte y estudiar en serio", min: { cri: 18 }, j: "quiz", stat: "cri", d: { cash: -1600, mod: 7, cri: 5, ene: -10, car: 3, msg: "Seis meses de sábados perdidos y el examen encima." } },
       { t: "Saltarlo, tu escuela es la mesa", d: { ene: 4, msg: "Decides que el aprendizaje viene de los mandatos. Tampoco es mala tesis." } },
     ] },
   { id: 5, min: 0, max: 3, t: "Cierre de operación, fiesta en el bar", x: "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
@@ -2275,13 +2770,13 @@ const E = [
     ] },
   { id: 6, min: 0, max: 2, t: "El data room es un desastre", x: "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
     o: [
-      { t: "Armar un índice maestro que sirva a todos", j: "orden", stat: "cri", d: { mod: 5, rep: 5, ene: -10, car: 3, msg: "Ordenas el desastre siguiendo la lógica del proceso." } },
+      { t: "Armar un índice maestro que sirva a todos", min: { mod: 28 }, j: "orden", stat: "cri", d: { mod: 5, rep: 5, ene: -10, car: 3, msg: "Ordenas el desastre siguiendo la lógica del proceso." } },
       { t: "Revisar solo lo que te pidieron", d: { ene: -3, car: 1, msg: "Cumples. Nada más y nada menos." } },
     ] },
-  { id: 7, min: 1, max: 4, t: "Te llama un headhunter", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
+  { id: 7, clave: true, min: 1, max: 4, t: "Te llama un headhunter", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
     o: [
       { t: "Aceptar y mudarte de firma", d: { cash: 4000, ene: -10, rep: -4, car: 6, red: 5, msg: "Nueva placa en la puerta, mismo Excel. Tu antigua red se enfría un poco." } },
-      { t: "Usarla para negociar donde estás", j: "anclaje", stat: "red", d: { cash: 3000, rep: 3, car: 3, msg: "Entras a la oficina del socio con una oferta en la mano y un número en la cabeza." } },
+      { t: "Usarla para negociar donde estás", min: { red: 20 }, j: "anclaje", stat: "red", d: { cash: 3000, rep: 3, car: 3, msg: "Entras a la oficina del socio con una oferta en la mano y un número en la cabeza." } },
       { t: "Decir que no y contarlo abiertamente", d: { rep: 7, red: 3, msg: "La lealtad se cotiza distinto en las firmas pequeñas. Aquí sube." } },
     ] },
   { id: 8, min: 0, max: 4, t: "Un rumor que vale plata", x: "Escuchas en un pasillo que una empresa listada recibirá una oferta el mes que viene. Tu cuenta personal está a un clic.",
@@ -2292,12 +2787,12 @@ const E = [
   { id: 9, min: 1, max: 4, t: "Cien mensajes en frío", x: "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
     o: [
       { t: "Armar la base y escribir todos los días", d: { red: 11, car: 5, ene: -11, msg: "De cien mensajes contestan siete. De esos siete sale una reunión que en dos años será un mandato." } },
-      { t: "Enfocarte en diez contactos bien elegidos", j: "reaccion", stat: "red", d: { red: 7, cri: 4, ene: -4, msg: "Menos volumen y mejor timing. Escribes justo cuando conviene escribir." } },
+      { t: "Enfocarte en diez contactos bien elegidos", min: { red: 20 }, j: "reaccion", stat: "red", d: { red: 7, cri: 4, ene: -4, msg: "Menos volumen y mejor timing. Escribes justo cuando conviene escribir." } },
     ] },
   { id: 10, min: 0, max: 3, t: "El teaser que vuelve marcado", x: "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
     o: [
       { t: "Rehacerlo entero y aprender el formato", d: { mod: 6, rep: 4, ene: -8, car: 2, msg: "La siguiente versión vuelve con cuatro comentarios. Progreso medible." } },
-      { t: "Defender los puntos que no compartes", j: "quiz", stat: "cri", d: { rep: 5, cri: 5, car: 2, msg: "Discutir un comentario técnico te obliga a tener razón de verdad." } },
+      { t: "Defender los puntos que no compartes", min: { cri: 30 }, j: "quiz", stat: "cri", d: { rep: 5, cri: 5, car: 2, msg: "Discutir un comentario técnico te obliga a tener razón de verdad." } },
     ] },
   { id: 11, min: 0, max: 6, t: "Media hora antes del cierre", x: "El mercado cierra en treinta minutos y tienes una orden a medio ejecutar en tu cuenta personal.",
     o: [
@@ -2318,9 +2813,9 @@ const E = [
   { id: 14, min: 3, max: 6, t: "Tu mejor analista renuncia", x: "Se va a un fondo. Te lo dice con dos semanas de aviso y cara de culpa.",
     o: [
       { t: "Desearle bien y mantener el puente", d: { red: 8, rep: 5, ene: -5, msg: "A los dos años ese fondo entra como comprador en un proceso tuyo." } },
-      { t: "Contraofertar y retenerlo", j: "anclaje", stat: "red", d: { car: 4, ene: -5, cash: -2000, msg: "Tienes que encontrar el número que lo convence sin romper la escala del equipo." } },
+      { t: "Contraofertar y retenerlo", min: { red: 34 }, j: "anclaje", stat: "red", d: { car: 4, ene: -5, cash: -2000, msg: "Tienes que encontrar el número que lo convence sin romper la escala del equipo." } },
     ] },
-  { id: 15, min: 4, max: 6, t: "Te ofrecen una silla en el board", x: "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
+  { id: 15, clave: true, min: 4, max: 6, t: "Te ofrecen una silla en el board", x: "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
     o: [
       { t: "Aceptar y tomarlo en serio", d: { red: 10, rep: 8, cri: 6, ene: -9, cash: 8000, car: 4, msg: "Cuatro juntas al año, mucha lectura y una visión del negocio que desde afuera no tenías." } },
       { t: "Declinar por conflicto de interés", d: { rep: 6, cri: 6, msg: "El cliente entiende y confía más. Tu agenda respira." } },
@@ -2343,7 +2838,7 @@ const E = [
   { id: 19, min: 1, max: 5, t: "Prensa al teléfono", x: "Un periodista quiere una cita tuya sobre el sector. Tu firma no tiene política clara al respecto.",
     o: [
       { t: "Hablar solo de datos públicos", d: { rep: 6, red: 4, cri: 3, msg: "Sales citado con prudencia. Dos fondos te escriben esa semana." } },
-      { t: "Aceptar la entrevista técnica en vivo", j: "quiz", stat: "cri", d: { rep: 7, red: 6, msg: "En vivo no hay forma de consultar nada." } },
+      { t: "Aceptar la entrevista técnica en vivo", min: { cri: 34 }, j: "quiz", stat: "cri", d: { rep: 7, red: 6, msg: "En vivo no hay forma de consultar nada." } },
       { t: "Declinar y pasarlo al socio", d: { rep: 2, red: 2, msg: "Correcto y aburrido. A veces es exactamente lo que toca." } },
     ] },
   { id: 20, min: 1, max: 4, t: "Alguien se cuelga de tu trabajo", x: "Un colega presenta al comité el análisis que armaste tú, sin mencionarte.",
@@ -2375,22 +2870,22 @@ const E = [
   { id: 25, min: 0, max: 6, t: "Un amigo levanta capital", x: "Su startup necesita cierre y te ofrece entrar en la ronda como ángel.",
     o: [
       { t: "Invertir un ticket que puedas perder", d: { cash: -3000, red: 4, msg: "Entras por un monto que no te cambia la vida si se pierde. Papeles en orden." } },
-      { t: "Revisarle el modelo antes de decidir", j: "ojo", stat: "mod", d: { red: 6, cri: 4, cash: -1500, msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
+      { t: "Revisarle el modelo antes de decidir", min: { mod: 34 }, j: "ojo", stat: "mod", d: { red: 6, cri: 4, cash: -1500, msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
     ] },
   { id: 26, min: 2, max: 6, t: "Comité de crédito difícil", x: "Defiendes una estructura de factoring sobre un sector volátil. Dos miembros vienen buscando sangre.",
     o: [
-      { t: "Responder con los números en la cabeza", j: "calculo", stat: "mod", d: { car: 6, rep: 7, cri: 4, msg: "Te preguntan tasas y coberturas y no hay tiempo de abrir el archivo." } },
+      { t: "Responder con los números en la cabeza", min: { mod: 30 }, j: "calculo", stat: "mod", d: { car: 6, rep: 7, cri: 4, msg: "Te preguntan tasas y coberturas y no hay tiempo de abrir el archivo." } },
       { t: "Retirar el caso y volver el mes que viene", d: { cri: 6, rep: 2, ene: -3, msg: "Preferible retirarse que perder. Vuelves mejor armado." } },
     ] },
   { id: 27, min: 1, max: 6, t: "Reunión con la familia dueña", x: "Tres hermanos, una empresa y ninguna intención de estar de acuerdo entre ellos.",
     o: [
-      { t: "Aguantar el pulso y buscar el punto medio", j: "tresraya", stat: "red", d: { red: 7, car: 5, rep: 4, msg: "La reunión se vuelve un juego de posiciones antes de hablar de precio." } },
+      { t: "Aguantar el pulso y buscar el punto medio", min: { red: 30 }, j: "tresraya", stat: "red", d: { red: 7, car: 5, rep: 4, msg: "La reunión se vuelve un juego de posiciones antes de hablar de precio." } },
       { t: "Mandar una propuesta por escrito y esperar", d: { car: 2, ene: 3, msg: "Ordenado y sin desgaste. También sin conexión personal." } },
     ] },
   { id: 28, min: 3, max: 6, t: "Un cliente grande aprieta", x: "Amenaza con llevarse la cuenta si no aceptas un fee contingente que castiga a tu equipo.",
     o: [
       { t: "Sostener el esquema de honorarios", sigue: 602, d: { rep: 9, cash: -9000, cri: 6, msg: "Pierdes la cuenta este año y la recuperas en dos, con mejores términos." } },
-      { t: "Negociar un esquema mixto", j: "anclaje", stat: "red", d: { cash: 7000, rep: 4, car: 4, msg: "Retainer bajo y éxito alto. Hay que encontrar el punto exacto." } },
+      { t: "Negociar un esquema mixto", min: { red: 38 }, j: "anclaje", stat: "red", d: { cash: 7000, rep: 4, car: 4, msg: "Retainer bajo y éxito alto. Hay que encontrar el punto exacto." } },
       { t: "Ceder para proteger la facturación", d: { cash: 9000, rep: -7, ene: -7, msg: "El equipo trabaja igual por menos. Alguien renuncia en tres meses." } },
     ] },
   { id: 29, min: 2, max: 6, t: "Auditoría interna sobre tus expedientes", x: "Revisan al azar cinco mandatos tuyos, papel por papel.",
@@ -2414,9 +2909,9 @@ const E = [
       { t: "Explicárselo paso por paso", j: "orden", stat: "cri", d: { red: 6, rep: 6, cri: 4, msg: "Le pides una hoja y le dibujas el orden completo." } },
       { t: "Mandarle el documento y que lo lea", d: { rep: -2, ene: 3, msg: "Técnicamente correcto. El LP se queda con la duda y con la sensación." } },
     ] },
-  { id: 33, min: 2, max: 6, t: "Dos ofertas sobre la mesa", x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
+  { id: 33, clave: true, min: 2, max: 6, t: "Dos ofertas sobre la mesa", x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
     o: [
-      { t: "Ordenar los criterios y decidir con método", j: "orden", stat: "cri", d: { cri: 7, car: 5, rep: 5, msg: "Pones los criterios en orden de importancia antes de mirar los precios." } },
+      { t: "Ordenar los criterios y decidir con método", min: { cri: 38 }, j: "orden", stat: "cri", d: { cri: 7, car: 5, rep: 5, msg: "Pones los criterios en orden de importancia antes de mirar los precios." } },
       { t: "Ir por el precio más alto y punto", chk: { s: "cri", dif: 55, ok: { cash: 6000, car: 4, msg: "El precio alto además cerró sin problemas. Suerte y criterio en la misma jugada." }, no: { rep: -8, ene: -6, msg: "El comprador no consigue el financiamiento y el proceso se cae en la recta final." } } },
     ] },
   { id: 34, min: 0, max: 6, t: "Alguien de la mesa te pregunta qué harías", x: "Sin contexto, sin archivo, sin tiempo. Solo la pregunta y seis pares de ojos esperando.",
@@ -2639,20 +3134,20 @@ const D = [
 const E2 = [
   { id: 40, min: 0, max: 6, t: "Una sesión larga frente a la pantalla", x: "Tienes el día libre y una cuenta propia. El mercado abre en cinco minutos y la tentación es operarlo todo.",
     o: [
-      { t: "Operar la sesión completa", j: "trading", stat: "cri", d: { cash: 3000, cri: 4, ene: -6, msg: "Te sientas a operar de apertura a cierre." } },
+      { t: "Operar la sesión completa", min: { cri: 48 }, j: "trading", stat: "cri", d: { cash: 3000, cri: 4, ene: -6, msg: "Te sientas a operar de apertura a cierre." } },
       { t: "Comprar y apagar la pantalla", d: { cri: 4, ene: 5, cash: 900, msg: "Compras, cierras la laptop y te vas a hacer otra cosa. Suele funcionar mejor de lo que uno acepta." } },
     ] },
   { id: 41, min: 2, max: 6, t: "Un cliente quiere comprar apalancado", x: "El comprador tiene el activo identificado y quiere saber cuánta deuda le puede meter sin ahorcarse.",
     o: [
-      { t: "Armarle la estructura tú mismo", j: "estructura", stat: "mod", d: { car: 6, rep: 6, cash: 5000, mod: 5, msg: "Te sientas a repartir el precio entre deuda y capital." } },
+      { t: "Armarle la estructura tú mismo", min: { mod: 46 }, j: "estructura", stat: "mod", d: { car: 6, rep: 6, cash: 5000, mod: 5, msg: "Te sientas a repartir el precio entre deuda y capital." } },
       { t: "Mandarlo con el banco y quedarte fuera", d: { rep: -2, ene: 3, msg: "El banco arma la estructura y se queda con la relación. Tú te quedas con el fee de asesoría y nada más." } },
     ] },
   { id: 42, min: 1, max: 6, t: "Ocho hallazgos sobre la mesa", x: "El equipo junior te deja una lista de hallazgos de la revisión. Tienes que decidir cuáles suben al comité y cuáles son ruido.",
     o: [
-      { t: "Filtrar tú los hallazgos", j: "banderas", stat: "cri", d: { cri: 7, rep: 6, car: 4, msg: "Te sientas a separar lo que importa de lo que solo hace ruido." } },
+      { t: "Filtrar tú los hallazgos", min: { cri: 44 }, j: "banderas", stat: "cri", d: { cri: 7, rep: 6, car: 4, msg: "Te sientas a separar lo que importa de lo que solo hace ruido." } },
       { t: "Subirlos todos al comité", d: { rep: -4, ene: -3, cri: 2, msg: "El comité se pierde en detalles operativos y el caso pierde fuerza. Filtrar también es tu trabajo." } },
     ] },
-  { id: 43, min: 3, max: 6, t: "Te ofrecen invertir junto a un fondo", x: "Un fondo amigo te deja entrar en coinversión con un ticket pequeño. Hay que revisar la compañía rápido.",
+  { id: 43, clave: true, min: 3, max: 6, t: "Te ofrecen invertir junto a un fondo", x: "Un fondo amigo te deja entrar en coinversión con un ticket pequeño. Hay que revisar la compañía rápido.",
     o: [
       { t: "Revisar y decidir tú", j: "banderas", stat: "cri", d: { cash: 6000, cri: 5, red: 4, msg: "Te dan tres días y un archivo comprimido." } },
       { t: "Entrar confiando en el fondo", chk: { s: "red", dif: 60, ok: { cash: 9000, red: 5, msg: "El fondo hizo bien su trabajo y tú te montaste gratis en su análisis." }, no: { cash: -7000, cri: 5, msg: "El fondo también se equivocó. Confiar en el análisis ajeno sale caro cuando sale mal." } } },
@@ -2702,7 +3197,7 @@ const E3 = [
       { t: "Esperar a que se aclare la norma", d: { cash: -3500, cri: 4, msg: "La norma se aclara dos semanas después y para entonces ya perdiste 30% del poder de compra." } },
       { t: "Consultarlo con un abogado", d: { cash: -1200, cri: 3, rep: 2, msg: "Legalmente impecable y financieramente tarde." } },
     ] },
-  { id: 55, min: 1, max: 6, t: "Te ofrecen una visa de trabajo", x: "Una firma de Nueva York quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
+  { id: 55, clave: true, min: 1, max: 6, t: "Te ofrecen una visa de trabajo", x: "Una firma de Miami quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
     o: [
       { t: "Aceptar y mudarte", req: { noPais: "us" }, d: { cash: 9000, mod: 7, red: -8, ene: -9, car: 7, msg: "Otra liga, otro idioma en la mesa y una red que hay que construir desde cero." }, mudar: "us" },
       { t: "Quedarte donde tu red vale algo", d: { red: 7, rep: 4, car: 2, msg: "Tu ventaja competitiva es local y decides no regalarla." } },
@@ -2848,7 +3343,7 @@ const VIDA = [
   /* ---------------- veinte y pico ---------------- */
   {
     id: 9001, eMin: 21, eMax: 34, una: true, cuando: (st) => st.pareja === "solo",
-    t: "Alguien que te importa", clave: false,
+    t: "Alguien que te importa", clave: true,
     x: "Llevas meses viendo a alguien. No es una decisión financiera y aun así lo es: el tiempo que dedicas, la ciudad en la que decides quedarte y la cantidad de fines de semana que no pasas trabajando salen todos del mismo presupuesto.",
     o: [
       { t: "Ir en serio con esta persona", d: { pareja: "noviazgo", ene: 8, rep: 2, cash: -600, msg: "Empiezas una relación seria. Ganas red de apoyo y pierdes fines de semana de oficina." } },
@@ -2900,7 +3395,7 @@ const VIDA = [
   },
   {
     id: 9011, pri: 1, eMin: 24, eMax: 45, cuando: (st) => st.pareja === "noviazgo",
-    t: "Se rompió", clave: false,
+    t: "Se rompió", clave: true,
     x: "No hubo un motivo grande. Hubo dos años de horarios imposibles, viajes que no cancelaste y una conversación pendiente que nunca tuvo un buen momento.",
     o: [
       { t: "Aceptarlo y seguir", d: { pareja: "solo", ene: -12, cash: -900, car: 5, msg: "Se termina. Trabajas más que nunca durante seis meses y tus números del año salen bien." } },
@@ -3178,7 +3673,7 @@ const LECCIONES = [
   { id: "secuencia", pri: 9, cuando: (c) => c.edad >= 45 && c.cobertura >= 0.6,
     t: "El orden de los retornos",
     x: (c) => `Ya estás cerca de vivir de tu capital. A partir de aquí importa el orden: dos años malos al principio del retiro hacen más daño que los mismos dos años al final, porque vendes cuando está barato. Por eso se baja el riesgo antes de retirarse, no después.` },
-  { id: "moneda", pri: 5, cuando: (c) => c.tax >= 0.22 || c.pais === "ar" || c.pais === "ve",
+  { id: "moneda", pri: 5, cuando: (c) => ["ve", "ar", "co", "mx"].indexOf(c.pais) >= 0,
     t: "El riesgo que viene con el pasaporte",
     x: (c) => `Vives y cobras en un país donde la moneda y las reglas cambian. Buena parte de tu patrimonio debería estar en activos que no dependan de esa decisión, no por pesimismo sino por la misma razón por la que no se pone todo en una sola empresa.` },
   { id: "millon", pri: 10, cuando: (c) => c.patrimonio >= 1000000 && c.patAntes < 1000000,
@@ -3278,6 +3773,27 @@ const yaAceptoAviso = () => {
 const anotarAviso = () => {
   try { if (typeof window !== "undefined" && window.localStorage) window.localStorage.setItem(CLAVE_AVISO, "1"); }
   catch (e) { /* si no se puede guardar, el aviso volverá a salir. No es grave. */ }
+};
+
+/* El movimiento es un ajuste de pantalla, no parte de la partida. Vivia
+   dentro del estado guardado y eso significaba que se perdia al empezar
+   otra vida: encendias las animaciones, arrancabas una partida nueva y
+   volvian a apagarse sin que nada lo dijera. Ahora vive en el navegador,
+   como la aceptacion del aviso, y sobrevive a todas las vidas. */
+const CLAVE_MOV = "el-analista-movimiento";
+const leerMovimiento = () => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return null;
+    const v = window.localStorage.getItem(CLAVE_MOV);
+    return v === "1" ? true : v === "0" ? false : null;
+  } catch (e) { return null; }
+};
+const anotarMovimiento = (v) => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return;
+    if (v === null) window.localStorage.removeItem(CLAVE_MOV);
+    else window.localStorage.setItem(CLAVE_MOV, v ? "1" : "0");
+  } catch (e) { /* sin almacen, el ajuste dura lo que dure la pestaña */ }
 };
 const VERSION = 5;
 
@@ -3383,7 +3899,9 @@ const BASE = {
   /* el recorrido mensual acumulado de la cartera */
   curva: [],
   /* configuración de la partida */
-  modo: "normal", edadIni: 20, estudia: 0,
+  modo: "aprendiz", edadIni: 20, estudia: 0,
+  /* cuántos años piensas jugar antes de que te pregunten si te retiras */
+  meta: 30,
   nombre: "", genero: null,
   guia: false, guiaVistas: [],
   /* qué sistemas del juego ya se abrieron */
@@ -3391,6 +3909,11 @@ const BASE = {
   /* temas del temario que ya se dieron en clase, para no examinar de
      algo que el juego nunca explicó */
   temas: [],
+  /* minijuegos cuyas reglas ya se leyeron: la segunda vez no se vuelven
+     a explicar enteras */
+  jugados: [],
+  /* movimiento: null sigue al sistema, true encendido, false apagado */
+  animar: null,
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
   patron: "", contrato: null, sueldoMult: 1,
   /* si te independizaste y la firma es tuya */
@@ -3484,11 +4007,14 @@ const PAREJA_TXT = (st) => ({
   divorciado: gen(st, "divorciado", "divorciada", "con un divorcio detrás"),
   viudo: gen(st, "viudo", "viuda", "en duelo"),
 }[st && st.pareja] || "sin pareja");
+/* Un solo modo. Hubo dos (Aprendiz y Analista) y se quitó la elección:
+   el juego es para quien nunca ha invertido, así que todo el mundo juega
+   con las explicaciones y la ventaja de aprendiz. Se conserva la tabla
+   para no tocar a quien la lee; MODO() devuelve siempre este. */
 const MODOS = [
   { id: "aprendiz", n: "Aprendiz", d: "Cada término se explica antes de usarse, los exámenes traen una clase previa y los minijuegos perdonan más. Pensado para quien nunca ha invertido nada.", ayuda: 22, indulgencia: 1 },
-  { id: "normal", n: "Analista", d: "El juego como está pensado: se explica lo justo y se espera que vayas atando cabos.", ayuda: 0, indulgencia: 0 },
 ];
-const MODO = (id) => MODOS.find((x) => x.id === id) || MODOS[1];
+const MODO = () => MODOS[0];
 const EDADES = [
   { e: 20, n: "20 años", d: "Recién graduado, sin nada ahorrado y con todo el tiempo del mundo a favor.", cash: 0, car: 0, mods: {} },
   { e: 30, n: "30 años", d: "Ya trabajaste unos años. Empiezas con algo de dinero, algo de red y menos años por delante.", cash: 9000, car: 14, mods: { cri: 6, red: 8, rep: 5 } },
@@ -3497,12 +4023,32 @@ const EDADES = [
 ];
 const EDAD_DE = (e) => EDADES.find((x) => x.e === e) || EDADES[0];
 
-/* Cuanto dura la partida lo decide el jugador, no la tabla. Estos son
-   los puntos donde el juego se para a preguntar «¿te retiras?»; puedes
-   seguir diciendo que no hasta el ultimo. Empezando a los 20 eso llega
-   a los 75, y el retiro voluntario esta disponible mucho antes: en
-   cuanto tu patrimonio cubra lo que cuesta tu vida. */
-const TOPES = [30, 35, 40, 45, 50, 55]; // de los 50 a los 75 si empiezas a los 20
+/* Cuanto dura la partida lo decide el jugador, no la tabla. La partida
+   se para a preguntar «¿te retiras?» al llegar a tu meta, y cada vez que
+   dices que no se estira cinco anios mas, hasta el tope absoluto. El
+   retiro voluntario esta disponible mucho antes: en cuanto tu patrimonio
+   cubra lo que cuesta tu vida.
+
+   La meta la eliges al empezar. Antes eran treinta anios fijos para todo
+   el mundo, y eso son mas de cien decisiones: la propia prueba finales.js
+   solo cerraba 6 de 20 partidas, y la pantalla final —donde vive el
+   registro— casi nadie la veia. Una decada se termina de una sentada, y
+   quien se enganche sigue con el mismo boton de siempre. */
+const META_MIN = 8;
+const META_MAX = 30;
+const TOPE_ABSOLUTO = 55;   /* empezando a los 20, eso son los 75 */
+const DURACIONES = [
+  { id: "decada", meta: 10, n: "Una década",
+    d: "Diez años, de una sentada. Llegas al balance final y ves en qué quedó todo. Si te enganchas, al llegar puedes seguir." },
+  { id: "carrera", meta: 30, n: "La carrera entera",
+    d: "Treinta años. El recorrido completo: el fondo propio, los reconocimientos y el temario hasta arriba. Es largo de verdad." },
+];
+const DURACION = (id) => DURACIONES.find((x) => x.id === id) || DURACIONES[0];
+
+/* la meta de esta partida y el anio en que toca preguntar, con los
+   guardados viejos cayendo en 30 por defecto: para ellos no cambia nada */
+const metaDe = (st) => entero(st && st.meta, 30, META_MIN, META_MAX);
+const topeDe = (st) => Math.min(TOPE_ABSOLUTO, metaDe(st) + entero(st && st.seguir, 0, 0, 20) * 5);
 const semestre = (t) => String(2026 + t);
 const edad = (t, ini) => entero(ini, 20, 20, 50) + entero(t, 0, 0, 60);
 const esClave = (t) => t % 2 === 1;
@@ -4069,12 +4615,15 @@ const sanear = (bruto) => {
   st.quiebras = entero(r.quiebras, 0, 0, 9);
   st.embargos = entero(r.embargos, 0, 0, 99);
   st.vetoCredito = entero(r.vetoCredito, 0, 0, 9);
-  st.seguir = entero(r.seguir, 0, 0, TOPES.length - 1);
+  st.seguir = entero(r.seguir, 0, 0, 20);
+  /* sin meta guardada son los treinta de siempre, para no cambiarle la
+     partida por debajo a quien la empezo antes de que esto existiera */
+  st.meta = entero(r.meta, 30, META_MIN, META_MAX);
   st.fondo = saneaFondo(r.fondo);
   st.shock = clamp(numero(r.shock, 0), -2, 2);
   st.pareja = PAREJAS.indexOf(r.pareja) >= 0 ? r.pareja : "solo";
   st.hijos = entero(r.hijos, 0, 0, 8);
-  st.modo = MODOS.some((m) => m.id === r.modo) ? r.modo : "normal";
+  st.modo = "aprendiz";   /* un solo modo: los guardados en «normal» pasan a este */
   st.nombre = saneaNombre(r.nombre);
   st.genero = GENEROS.some((g) => g.id === r.genero) ? r.genero : null;
   st.ritmo = RITMOS.some((x) => x.id === r.ritmo) ? r.ritmo : "normal";
@@ -4085,6 +4634,8 @@ const sanear = (bruto) => {
      lista: se reconstruye de su rango y su turno, para no quitarle nada
      de lo que ya tenía en pantalla. */
   st.temas = unicos(listaDe(r.temas, (x) => TEMAS.some((t) => t.id === x), 60));
+  st.jugados = unicos(listaDe(r.jugados, (x) => !!JUEGOS[x], 30));
+  st.animar = r.animar === true ? true : r.animar === false ? false : null;
   /* El patrón puede ser una firma de la tabla o una firma tuya, así que
      se acota por longitud en vez de por lista cerrada. */
   st.patron = texto(r.patron, "", 48);
@@ -4112,7 +4663,6 @@ const partidaJugable = (st) => !!(st && st.pais && st.estudio);
 /* consultas a las tablas que nunca devuelven undefined */
 const RANGO = (i) => RANGOS[entero(i, 0, 0, RANGOS.length - 1)] || RANGOS[0];
 const JUEGO = (k) => JUEGOS[k] || JUEGOS.suerte;
-const TOPE_DE = (i) => TOPES[entero(i, 0, 0, TOPES.length - 1)];
 
 const GUIA = [
   { id: "decidir", cuando: (c) => c.fase === "evento",
@@ -4120,10 +4670,10 @@ const GUIA = [
     x: "Ninguna opción es la obviamente correcta: cada una te cuesta algo. Elige y sigue; el año avanza contigo." },
   { id: "secciones", cuando: (c) => c.fase === "evento" && c.vistas.indexOf("decidir") >= 0,
     t: "Arriba están tus secciones",
-    x: "Por ahora tienes dos: tu Ficha y el diccionario de Términos. El juego irá abriendo las demás a medida que avance tu carrera, y te avisará cuando pase. Se abren y se cierran cuando quieras: el juego te espera, no hay reloj." },
-  { id: "terminos", cuando: (c) => c.tab === "terminos",
-    t: "El diccionario",
-    x: "Cualquier palabra que no entiendas está aquí explicada sin jerga. Puedes consultarlo en medio de una decisión." },
+    x: "Por ahora solo tu Ficha. El juego irá abriendo las demás según avance tu carrera. No hay reloj: se abren y se cierran cuando quieras." },
+  { id: "comprar", cuando: (c) => c.tab === "comprar",
+    t: "Aquí se gasta",
+    x: "Cosas para ti, inmuebles que te rentan cada año y mejoras que trabajan solas. Las tres salen del mismo bolsillo." },
   { id: "cartera", cuando: (c) => c.tab === "portafolio",
     t: "Aquí decides qué hace tu dinero",
     x: "La barra de arriba dice cuánto está invertido y cuánto en efectivo. Debajo repartes entre tipos de activo. Nada se aplica hasta que confirmas." },
@@ -4155,6 +4705,38 @@ const puedeComprar = (c, st) => {
    es información útil; saber que cuesta exactamente 18 convierte la
    decisión en aritmética y le quita la apuesta. */
 const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
+/* que simbolo lleva cada atributo, para poder decirlo sin palabras */
+const ICONO_ATRIB = { mod: "tabla", cri: "ojo", red: "nodos", rep: "estrella",
+  car: "escalera", ene: "rayo", cash: "moneda" };
+
+/* Cuanto pesa un cambio, medido en signos y no en cifras.
+   MEJORAS punto 17 tenia razon: el numero exacto convierte la decision
+   en aritmetica y le quita la apuesta. Pero «cuesta energia» tampoco
+   distingue perder tres de perder dieciocho, y esa diferencia si
+   importa al decidir. Tres tramos: uno, dos o tres signos. Sabes si es
+   poco, bastante o mucho, y no te pones a sumar.
+   El efectivo lleva su propia escala porque se mueve en miles. */
+const fuerzaDe = (k, v) => {
+  const x = Math.abs(numero(v, 0));
+  if (k === "cash") return x >= 20000 ? 3 : x >= 5000 ? 2 : 1;
+  return x >= 9 ? 3 : x >= 4 ? 2 : 1;
+};
+
+/* Lo que mueve una opcion: la clave y cuanto, para pintarlo en signos */
+const efectosDe = (o) => {
+  if (!o || typeof o !== "object") return [];
+  const d = o.d
+    || (o.res && (o.res.exito || o.res.parcial || o.res.fallo))
+    || (o.chk && o.chk.ok)
+    || null;
+  if (!d || typeof d !== "object") return [];
+  const out = [];
+  CLAVES_ATRIB.forEach((k) => {
+    const v = numero(d[k], 0);
+    if (v) out.push({ k, v });
+  });
+  return out;
+};
 const efectoDe = (o) => {
   if (!o || typeof o !== "object") return null;
   const d = o.d
@@ -4170,6 +4752,49 @@ const efectoDe = (o) => {
   });
   if (!sube.length && !cuesta.length) return null;
   return { sube, cuesta };
+};
+
+/* ============================================================
+   LO QUE UNA OPCION TE PIDE
+   Hasta ahora podias amanecerte trabajando con la energia a 3, y el
+   juego te dejaba: la energia bajaba a cero y ya. Eso quita el sentido
+   de tener un atributo, porque nunca te cierra una puerta.
+
+   El requisito sale de dos sitios. Uno declarado a mano (o.min), para
+   las puertas que son de criterio, de red o de reputacion. Y otro
+   automatico: si una opcion te va a costar 18 de energia, hace falta
+   que tengas 18. Asi la regla es la misma en las 286 escenas sin haber
+   anotado ninguna, y no hay forma de que se olvide en las que vengan.
+   ============================================================ */
+const CLAVES_REQ = ["ene", "cri", "mod", "red", "rep"];
+const faltaDe = (o, st) => {
+  if (!o || typeof o !== "object" || !st) return null;
+  const pide = {};
+  if (o.min && typeof o.min === "object") {
+    CLAVES_REQ.forEach((k) => {
+      const v = numero(o.min[k], 0);
+      if (v > 0) pide[k] = v;
+    });
+  }
+  /* lo que va a costar, tomado del mejor caso declarado */
+  const d = o.d
+    || (o.res && (o.res.exito || o.res.parcial || o.res.fallo))
+    || (o.chk && o.chk.ok)
+    || null;
+  if (d && typeof d === "object") {
+    const cuesta = -numero(d.ene, 0);
+    if (cuesta > 0) pide.ene = Math.max(numero(pide.ene, 0), cuesta);
+  }
+  /* se avisa del que mas lejos queda: un solo motivo, no una lista */
+  let peor = null;
+  Object.keys(pide).forEach((k) => {
+    const tengo = numero(st[k], 0);
+    const hace = pide[k];
+    if (tengo < hace && (!peor || hace - tengo > peor.falta)) {
+      peor = { k, hace: Math.round(hace), tengo: Math.round(tengo), falta: hace - tengo };
+    }
+  });
+  return peor;
 };
 
 /* Términos del glosario que se pueden reconocer dentro del enunciado
@@ -4363,28 +4988,58 @@ const COLORES_MEM = [
   { c: "#7A6A55", n: "Arena" },
 ];
 
-const VIDAS_MEM = 3;
+/* ============================================================
+   PEINAR EL LEGAJO, COMO SIMON
+   Antes era una sola secuencia de cuatro a siete casillas, disparada de
+   golpe desde el primer momento: dificil antes de haber entendido nada.
 
-/* Segundos para mirar el tablero antes de que empiece a encenderse.
-   Sin esta espera el juego arrancaba disparando la secuencia en el mismo
-   instante en que aparecía en pantalla: no daba tiempo ni a leer las
-   reglas ni a ver de qué colores eran las casillas. */
-const ESPERA_MEM = 8;
+   Ahora son tres rondas, y cada una repite la anterior ENTERA y añade al
+   final. Tres casillas, despues esas mismas tres y una mas, despues esas
+   cuatro y dos mas. Lo que ya memorizaste sirve en la ronda siguiente,
+   que es lo que hace que se aprenda jugando en vez de fallando.
+   ============================================================ */
+const RONDAS_MEM = [3, 4, 6];
+
+/* Con buen atributo se tiene una segunda oportunidad por ronda. La
+   longitud de cada ronda ya no cambia con la ayuda, asi que es la forma
+   de que «te ayuda Memoria 70» siga significando algo. */
+const vidasMemDe = (ayuda) => (numero(ayuda, 0) >= 55 ? 2 : 1);
+
+/* Segundos para mirar el tablero antes de que empiece a encenderse. Eran
+   ocho cuando la primera secuencia ya era larga; con tres casillas de
+   entrada bastan menos, y el boton de saltarla sigue ahi. */
+const ESPERA_MEM = 4;
 
 function JuegoMemoria({ ayuda, onFin }) {
-  const largo = clamp(7 - Math.floor(ayuda / 25), 4, 7);
-  const [seq] = useState(() => Array.from({ length: largo }, () => indiceAzar(9)));
+  /* La secuencia entera se decide al empezar y cada ronda enseña un trozo
+     mas largo de la MISMA: por eso lo memorizado no se tira.
+     Sin la misma casilla dos veces seguidas, que se lee como un parpadeo y
+     no como dos pasos. El reemplazo es aritmetico y no un bucle de
+     reintento: con un Math.random que devuelva siempre lo mismo —que es lo
+     que prueba robustez— un «vuelve a tirar» no terminaria nunca. */
+  const [seq] = useState(() => {
+    const total = RONDAS_MEM[RONDAS_MEM.length - 1];
+    const out = [];
+    for (let i = 0; i < total; i++) {
+      let c = indiceAzar(9);
+      if (i > 0 && c === out[i - 1]) c = (c + 1 + indiceAzar(8)) % 9;
+      out.push(c);
+    }
+    return out;
+  });
+  const VIDAS = vidasMemDe(ayuda);
+  const [ronda, setRonda] = useState(0);
   const [idx, setIdx] = useState(0);
   const [on, setOn] = useState(null);
   const [modo, setModo] = useState("listo");
   const [cuenta, setCuenta] = useState(ESPERA_MEM);
   const [paso, setPaso] = useState(0);
   const [err, setErr] = useState(null);
-  const [vidas, setVidas] = useState(VIDAS_MEM);
+  const [vidas, setVidas] = useState(VIDAS);
   const [aviso, setAviso] = useState(null);
+  const largo = RONDAS_MEM[ronda];
 
-  /* la espera de cortesía, antes de nada. Solo la primera vez: si fallas
-     y te la vuelven a mostrar, el tablero ya lo conoces. */
+  /* la espera de cortesia, solo al principio */
   useEffect(() => {
     if (modo !== "listo") return;
     if (cuenta <= 0) { setModo("ver"); return; }
@@ -4392,15 +5047,28 @@ function JuegoMemoria({ ayuda, onFin }) {
     return () => clearTimeout(t);
   }, [modo, cuenta]);
 
-  /* muestra la secuencia, casilla por casilla */
+  /* enseña la ronda, casilla por casilla */
   useEffect(() => {
     if (modo !== "ver") return;
-    if (idx >= seq.length) { const t = setTimeout(() => { setModo("jugar"); setAviso(null); }, 420); return () => clearTimeout(t); }
+    if (idx >= largo) {
+      const t = setTimeout(() => { setModo("jugar"); setAviso(null); }, 420);
+      return () => clearTimeout(t);
+    }
     setOn(seq[idx]);
     const a = setTimeout(() => setOn(null), 460);
     const b = setTimeout(() => setIdx(idx + 1), 700);
     return () => { clearTimeout(a); clearTimeout(b); };
-  }, [idx, modo, seq]);
+  }, [idx, modo, largo, seq]);
+
+  /* entre ronda y ronda, un respiro y a enseñar la siguiente */
+  useEffect(() => {
+    if (modo !== "entre") return;
+    const t = setTimeout(() => {
+      setRonda((r) => r + 1); setPaso(0); setIdx(0); setOn(null); setErr(null);
+      setVidas(VIDAS); setAviso(null); setModo("ver");
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [modo]);
 
   const tocar = (i) => {
     if (modo !== "jugar") return;
@@ -4408,27 +5076,32 @@ function JuegoMemoria({ ayuda, onFin }) {
       const p = paso + 1;
       setPaso(p); setOn(i);
       setTimeout(() => setOn(null), 160);
-      if (p >= seq.length) {
-        setModo("fin");
-        setAviso("Secuencia completa");
-        /* cuantas menos vidas gastaste, mejor cierra */
-        setTimeout(() => onFin(vidas === VIDAS_MEM ? "exito" : vidas === VIDAS_MEM - 1 ? "exito" : "parcial"), 600);
+      if (p >= largo) {
+        if (ronda >= RONDAS_MEM.length - 1) {
+          setModo("fin");
+          setAviso("Las tres rondas");
+          setTimeout(() => onFin("exito"), 600);
+        } else {
+          const extra = RONDAS_MEM[ronda + 1] - largo;
+          setModo("entre");
+          setAviso("Bien. Ahora " + (extra === 1 ? "una más" : extra + " más") + " al final.");
+        }
       }
       return;
     }
-    /* fallaste: gastas una vida y te la vuelven a mostrar */
+    /* fallaste: si queda oportunidad se repite ESTA ronda, si no se acaba */
     const quedan = vidas - 1;
     setErr(i);
     setVidas(quedan);
     if (quedan <= 0) {
       setModo("fin");
-      setAviso("Se acabaron los intentos");
-      const r = paso / seq.length;
-      setTimeout(() => onFin(r >= 0.6 ? "parcial" : "fallo"), 750);
+      setAviso("Se acabó en la ronda " + (ronda + 1));
+      /* dos rondas completas es un resultado a medias; menos, fallo */
+      setTimeout(() => onFin(ronda >= 2 ? "parcial" : "fallo"), 750);
       return;
     }
     setModo("pausa");
-    setAviso("Ahí no. Te la muestro otra vez.");
+    setAviso("Ahí no. Te repito esta ronda.");
     setTimeout(() => {
       setErr(null); setPaso(0); setIdx(0); setOn(null); setModo("ver");
     }, 950);
@@ -4437,6 +5110,7 @@ function JuegoMemoria({ ayuda, onFin }) {
   const rotuloModo = modo === "listo" ? "Mira el tablero"
     : modo === "ver" ? "Memoriza la secuencia"
     : modo === "jugar" ? "Repítela en el mismo orden"
+    : modo === "entre" ? "Ronda superada"
     : modo === "pausa" ? "Atento" : "Listo";
 
   return (
@@ -4446,13 +5120,25 @@ function JuegoMemoria({ ayuda, onFin }) {
         <span>
           {modo === "listo"
             ? "empieza en " + cuenta + (cuenta === 1 ? " segundo" : " segundos")
-            : paso + " de " + seq.length + " · intentos " + vidas + " de " + VIDAS_MEM}
+            : "ronda " + (ronda + 1) + " de " + RONDAS_MEM.length + " · " + paso + " de " + largo}
         </span>
       </div>
-      <div className="ea-pista">
-        Cada casilla tiene su color. Se van a encender {seq.length} en orden;
-        tú las tocas después en el mismo orden. Si te equivocas, pierdes un intento y te la muestran de nuevo.
+
+      {/* las tres rondas como puntos, y cuantas casillas trae cada una */}
+      <div className="ea-memRondas">
+        {RONDAS_MEM.map((n, r) => (
+          <span key={r} className={"ea-memRonda" + (r < ronda ? " hecha" : r === ronda ? " ahora" : "")}>
+            {n}
+          </span>
+        ))}
       </div>
+
+      <Pista>
+        Cada casilla tiene su color. Tres rondas: se encienden 3, luego 4 y luego 6.
+        Cada ronda repite la anterior entera y añade al final, así que lo que ya
+        memorizaste te sirve.
+      </Pista>
+
       <div className="ea-celdas">
         {COLORES_MEM.map((col, i) => {
           const encendida = on === i;
@@ -4461,34 +5147,35 @@ function JuegoMemoria({ ayuda, onFin }) {
             <button key={i} type="button" className="ea-celdaC" onClick={() => tocar(i)}
               disabled={modo !== "jugar"} aria-label={col.n}
               style={{
-                /* Durante la espera las casillas van a color pleno: la idea
-                   es justamente que se vea el tablero antes de empezar. */
                 background: fallada ? "var(--rojo)" : (encendida || modo === "listo") ? col.c : col.c + "2E",
                 borderColor: (encendida || fallada || modo === "listo") ? "#20120A" : col.c + "77",
                 transform: encendida ? "scale(0.94)" : "none",
+                boxShadow: encendida ? "0 0 18px " + col.c : "none",
               }}>
-              {/* Sin el nombre escrito: si se lee la palabra se memoriza la
-                  palabra, y el juego deja de ser de colores. El nombre sigue
-                  en aria-label para quien use lector de pantalla. */}
+              {/* sin el nombre escrito: se memoriza el color, no la palabra */}
             </button>
           );
         })}
       </div>
+
       {modo === "listo" && (
         <button className="ea-mini" style={{ marginTop: 10 }}
           onClick={() => { setCuenta(0); setModo("ver"); }}>
           Ya lo miré, empezar
         </button>
       )}
-      <div className="ea-vidas">
-        {Array.from({ length: VIDAS_MEM }, (_, k) => (
-          <span key={k} className={"ea-vida" + (k < vidas ? " viva" : "")} />
-        ))}
-      </div>
+      {VIDAS > 1 && (
+        <div className="ea-vidas">
+          {Array.from({ length: VIDAS }, (_, k) => (
+            <span key={k} className={"ea-vida" + (k < vidas ? " viva" : "")} />
+          ))}
+        </div>
+      )}
       <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{aviso}</div>
     </div>
   );
 }
+
 
 function JuegoOjo({ ayuda, onFin }) {
   const segs = clamp(3.5 + ayuda / 28, 3.5, 7.5);
@@ -4592,30 +5279,133 @@ function JuegoAnclaje({ ayuda, onFin }) {
   );
 }
 
-function JuegoSuerte({ ayuda, onFin }) {
-  const [mult, setMult] = useState(1);
-  const [paso, setPaso] = useState(0);
-  const [estado, setEstado] = useState(null);
-  const riesgo = clamp(0.1 + paso * 0.075 - ayuda / 900, 0.05, 0.72);
+/* ---- Aguantar la posición: el múltiplo sube solo hasta que se da vuelta ----
+   Antes era pulsar «aguantar» y tirar un dado cada vez. Ahora el número
+   sube poco a poco y el jugador decide cuándo cerrar, sin saber dónde se
+   va a dar vuelta: la regla de salida tiene que traerla él.
 
-  const aguantar = () => {
-    if (Math.random() < riesgo) { setEstado("Se te dio vuelta la posición"); setTimeout(() => onFin("fallo"), 850); }
-    else { setMult(+(mult + 0.32 + paso * 0.11).toFixed(2)); setPaso(paso + 1); }
+   Dónde se da vuelta: P(llegar a m) = k / m, la forma clásica. Con k < 1
+   a veces se da vuelta nada más abrir, y cuanto más alto, más raro llegar.
+   El atributo mueve k: con mejor criterio aguanta un poco más en promedio.
+   Tope en 10x para que un intento no dure para siempre.
+
+   Tres intentos y cuenta el MEJOR: reventar uno no te saca del juego, que
+   es justo lo que da ganas de volver a intentarlo. Medido con 40.000
+   tiradas (k 0,94): salir siempre en 3x da éxito ~68%; salir en 5x, ~46%;
+   salir en 2x casi nunca falla pero nunca pasa de parcial. */
+const SUERTE_INTENTOS = 3;
+const SUERTE_EXITO = 3;
+const SUERTE_PARCIAL = 2;
+const SUERTE_TOPE = 10;
+const SUERTE_PASO = 1.02;      /* por cada tick de 100 ms: 2x en ~3,5 s, 3x en ~5,5 s */
+const vueltaSuerte = (ayuda) => {
+  const k = clamp(0.8 + numero(ayuda, 0) / 500, 0.8, 0.97);
+  const u = clamp(numero(Math.random(), 0.5), 0, 0.999999);
+  return clamp(k / (1 - u), 1, SUERTE_TOPE);
+};
+const fmtX = (m) => m.toFixed(2).replace(".", ",") + "x";
+
+function JuegoSuerte({ ayuda, onFin }) {
+  const [intento, setIntento] = useState(0);
+  const [mult, setMult] = useState(1);
+  const [fase, setFase] = useState("listo");   /* listo · subiendo · cerrado · vuelta · fin */
+  const [hist, setHist] = useState([]);        /* { m, ok, vuelta } por intento */
+  const vuelta = useRef(1);
+  const actual = useRef(1);        /* el múltiplo vivo, sin esperar al render */
+  const abierto = useRef(false);   /* un intento solo se cierra una vez */
+
+  const mejor = hist.reduce((a, h) => (h.ok && h.m > a ? h.m : a), 0);
+  const quedan = SUERTE_INTENTOS - hist.length;
+
+  /* el número sube solo mientras el intento está abierto */
+  useEffect(() => {
+    if (fase !== "subiendo") return;
+    const t = setInterval(() => {
+      if (!abierto.current) return;
+      const sig = +(actual.current * SUERTE_PASO).toFixed(4);
+      if (sig >= vuelta.current) {
+        abierto.current = false;
+        actual.current = vuelta.current;
+        setMult(vuelta.current);
+        setFase("vuelta");
+        setHist((h) => h.concat({ m: vuelta.current, ok: false, vuelta: vuelta.current }));
+        return;
+      }
+      actual.current = sig;
+      setMult(sig);
+    }, 100);
+    return () => clearInterval(t);
+  }, [fase]);
+
+  /* terminados los tres intentos, se cierra con el mejor */
+  useEffect(() => {
+    if (hist.length < SUERTE_INTENTOS || fase === "fin") return;
+    setFase("fin");
+    const nv = mejor >= SUERTE_EXITO ? "exito" : mejor >= SUERTE_PARCIAL ? "parcial" : "fallo";
+    const t = setTimeout(() => onFin(nv), 1300);
+    return () => clearTimeout(t);
+  }, [hist.length]);
+
+  const abrir = () => {
+    if (fase !== "listo" && fase !== "cerrado" && fase !== "vuelta") return;
+    if (hist.length >= SUERTE_INTENTOS) return;
+    vuelta.current = vueltaSuerte(ayuda);
+    setIntento(hist.length + 1);
+    actual.current = 1;
+    setMult(1);
+    /* a veces se da vuelta nada más abrir: también pasa en los mercados */
+    if (vuelta.current <= 1.0001) {
+      setFase("vuelta");
+      setHist((h) => h.concat({ m: 1, ok: false, vuelta: 1 }));
+      return;
+    }
+    abierto.current = true;
+    setFase("subiendo");
   };
   const cerrar = () => {
-    setEstado("Cerraste en " + mult.toFixed(2) + "x");
-    setTimeout(() => onFin(mult >= 2.4 ? "exito" : mult >= 1.6 ? "parcial" : "fallo"), 850);
+    if (fase !== "subiendo" || !abierto.current) return;
+    abierto.current = false;
+    const m = actual.current;
+    setMult(m);
+    setFase("cerrado");
+    setHist((h) => h.concat({ m, ok: true, vuelta: vuelta.current }));
   };
 
+  const ultimo = hist[hist.length - 1];
+  const color = fase === "vuelta" ? "var(--rojo)" : fase === "cerrado" ? "#2F7A3D" : undefined;
+  const aviso = fase === "listo" ? "Cuando abras, el múltiplo empieza a subir. Cierra antes de que se dé vuelta."
+    : fase === "subiendo" ? "Subiendo… ¿cierras o aguantas?"
+    : fase === "cerrado" ? "Cerraste en " + fmtX(ultimo.m) + ". Se iba a dar vuelta en " + fmtX(ultimo.vuelta) + "."
+    : fase === "vuelta" ? (ultimo && ultimo.vuelta <= 1.0001 ? "Se dio vuelta nada más abrir. Pasa." : "Se dio vuelta en " + fmtX(ultimo.vuelta) + ". Ese intento se pierde.")
+    : mejor >= SUERTE_EXITO ? "Te quedas con " + fmtX(mejor) + ". Éxito."
+    : mejor >= SUERTE_PARCIAL ? "Te quedas con " + fmtX(mejor) + ". Resultado a medias."
+    : mejor > 0 ? "Te quedas con " + fmtX(mejor) + ". Muy poco para lo que arriesgaste." : "Los tres se dieron vuelta.";
+
   return (
-    <div className="ea-jw">
-      <div className="ea-jinfo ea-dis"><span>Múltiplo acumulado</span><span>Riesgo de vuelta {(riesgo * 100).toFixed(0)}%</span></div>
-      <div className="ea-mult ea-mono">{mult.toFixed(2)}x</div>
-      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{estado}</div>
-      <div className="ea-fila2">
-        <button className="ea-btn" style={{ marginTop: 0 }} onClick={aguantar} disabled={!!estado}>Aguantar</button>
-        <button className="ea-btn" style={{ marginTop: 0, background: "var(--cobre)" }} onClick={cerrar} disabled={!!estado}>Cerrar posición</button>
+    <div className="ea-jw ea-jwCentro">
+      <div className="ea-jinfo ea-dis">
+        <span>{intento ? "Intento " + intento + " de " + SUERTE_INTENTOS : "Tres intentos"}</span>
+        <span>Tu mejor {mejor ? fmtX(mejor) : "—"}</span>
       </div>
+      <div className="ea-mult ea-mono" style={color ? { color } : undefined}>{fmtX(mult)}</div>
+      <div className="ea-suerteMeta ea-mono">éxito desde {fmtX(SUERTE_EXITO)} · a medias desde {fmtX(SUERTE_PARCIAL)}</div>
+      <div style={{ minHeight: 22, marginTop: 8, fontSize: 13.5, color: "#6B6B6B" }}>{aviso}</div>
+      {fase === "subiendo" ? (
+        <button className="ea-btn" style={{ background: "var(--cobre)" }} onClick={cerrar}>Cerrar en {fmtX(mult)}</button>
+      ) : fase !== "fin" ? (
+        <button className="ea-btn" onClick={abrir}>
+          {fase === "listo" ? "Abrir la posición" : "Otro intento · quedan " + quedan}
+        </button>
+      ) : null}
+      {hist.length > 0 && (
+        <div className="ea-suerteHist">
+          {hist.map((h, i) => (
+            <span key={i} className={"ea-suerteH ea-mono" + (h.ok ? " ok" : " mal")}>
+              {i + 1} · {h.ok ? "cerraste " + fmtX(h.m) : "vuelta " + fmtX(h.vuelta)}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -4744,11 +5534,18 @@ function JuegoQuiz({ ayuda, nivel, onFin, modo, temas }) {
         <span>Pregunta {i + 1} de {cuantas} · {(NIVEL_N[nv] || "").toLowerCase()}</span>
         <span>{"Aciertos " + ok + (ayudas > 0 ? " · " + ayudas + (ayudas === 1 ? " explicación" : " explicaciones") : "")}</span>
       </div>
-      {/* en aprendiz el recordatorio sale solo; en analista hay que pedirlo */}
-      {ctx && (modo === "aprendiz" || verContexto) && (
-        <div className="ea-glos">
-          <div className="ea-glosK">{modo === "aprendiz" ? "Antes de responder, el recordatorio" : "Lo que necesitas saber"}</div>
-          <div className="ea-glosT">{ctx.t}</div>
+      {/* El recordatorio era un bloque de cuatro lineas delante de CADA
+          pregunta en modo aprendiz. Ahora es una linea con el termino, y
+          se abre quien lo necesite: la ayuda sigue estando, pero deja de
+          leerse cuatro veces por examen sin que nadie la pidiera. */}
+      {ctx && (
+        <button className="ea-recuerda ea-dis"
+          onClick={() => { if (!verContexto) setAyudas(ayudas + 1); setVerContexto(!verContexto); }}>
+          {verContexto ? "↑" : "↓"} Recordatorio · {ctx.t}
+        </button>
+      )}
+      {ctx && verContexto && (
+        <div className="ea-glos ea-panelAb">
           <div className="ea-glosX">{ctx.x}</div>
           {ctx.ej && <div className="ea-glosX" style={{ marginTop: 6, fontStyle: "italic" }}>{ctx.ej}</div>}
         </div>
@@ -4766,17 +5563,6 @@ function JuegoQuiz({ ayuda, nivel, onFin, modo, temas }) {
           );
         })}
       </div>
-      {sel === null && ctx && modo !== "aprendiz" && !verContexto && (
-        <button className="ea-mini ea-explicame" style={{ marginTop: 12 }}
-          onClick={() => { setVerContexto(true); setAyudas(ayudas + 1); }}>
-          No lo sé · explícame
-        </button>
-      )}
-      {sel === null && !ctx && modo !== "aprendiz" && (
-        <div className="ea-td" style={{ marginTop: 10, fontSize: 11.5 }}>
-          Si no la sabes, responde igual: la explicación viene después y por eso está el examen.
-        </div>
-      )}
       {sel !== null && (
         <div>
           <div className="ea-expl">{p.e}</div>
@@ -5053,10 +5839,10 @@ function JuegoOrden({ ayuda, onFin }) {
         <span>Colocados {paso} de {total}</span>
         <span>Intentos {vidas} de {VIDAS_ORDEN}</span>
       </div>
-      <div className="ea-pista">
+      <Pista>
         Toca los elementos en el orden que pide el enunciado, del primero al último.
         Equivocarte cuesta un intento, no la partida.
-      </div>
+      </Pista>
       <p className="ea-qtxt">{set.t}</p>
       <div className="ea-ordenL">
         {lista.map((item, k) => (
@@ -5151,8 +5937,28 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
-function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema }) {
+function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, visto, onVisto }) {
+  /* Tres pasos, no uno. Antes el minijuego aparecia dentro del
+     memorando, con la ficha y las pestañas alrededor, y no se notaba
+     que cambiabas de actividad. Ahora: el anuncio —una pantalla de
+     color que dice HORA DE JUGAR—, las instrucciones grandes sobre
+     fondo oscuro, y el juego a pantalla entera sin nada mas. */
+  const [paso, setPaso] = useState("anuncio");
   const [listo, setListo] = useState(false);
+  /* las reglas, para quien ya jugó esto antes y quiere repasarlas */
+  const [recordar, setRecordar] = useState(false);
+  /* y el «para qué sirve», que no hace falta antes de jugar */
+  const [porQue, setPorQue] = useState(false);
+
+  /* el anuncio se pasa solo, y tambien al toque: quien ya lo vio veinte
+     veces no tiene por que esperar */
+  useEffect(() => {
+    if (paso !== "anuncio") return;
+    if (typeof setTimeout !== "function") { setPaso("reglas"); return; }
+    const espera = sinMovimiento() ? 60 : 1150;
+    const t = setTimeout(() => setPaso("reglas"), espera);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [paso]);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
      pasa una vez: da igual si el jugador machaca el boton, si un
      setTimeout viejo dispara tarde o si el componente ya se desmonto.
@@ -5167,41 +5973,102 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema })
   };
   const j = JUEGOS[tipo];
   if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
-  if (listo) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
+  if (listo) {
+    return (
+      <div className="ea-juegoPleno">
+        <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />
+      </div>
+    );
+  }
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
+  const empezar = () => { if (onVisto) onVisto(tipo); setListo(true); };
+
+  /* ---- paso uno: el anuncio ----
+     Una pantalla de color que no pide leer nada. Solo avisa de que esto
+     ya no es una decision, es otra cosa. */
+  if (paso === "anuncio") {
+    return (
+      <div className="ea-anuncioJuego" onClick={() => setPaso("reglas")}>
+        <div className="ea-anuncioJK ea-dis">Hora de jugar</div>
+        <div className="ea-anuncioJN ea-dis">{j.n}</div>
+        <div className="ea-anuncioJT ea-dis">{j.tema} · {j.dur}</div>
+      </div>
+    );
+  }
+
+  /* ---- paso dos: las instrucciones, grandes y encima ----
+     Sobre un fondo oscurecido para que no compitan con nada. Quien ya
+     jugo esto se salta los pasos: le basta el nombre y el boton. */
   return (
-    <div className="ea-jw">
-      {/* Antes solo se veían tema y duración, así que «Tres en raya» aparecía
-          como texto suelto y no se entendía que ibas a jugar algo. */}
-      <div className="ea-jnombre ea-dis"><span>VAS A JUGAR</span>{j.n}</div>
-      <div className="ea-jmeta">
-        <span className="ea-jtag">{j.tema}</span>
-        <span className="ea-jtag">{j.dur}</span>
-        {nivelJuego && <span className="ea-jtag">Nivel {nivel} · {NIVEL_N[nivel]}</span>}
-      </div>
-      <p className="ea-memoTxt" style={{ marginTop: 8 }}>{j.i}</p>
-      <div className="ea-lecK">Cómo se juega</div>
-      <ul className="ea-pasos">
-        {j.pasos.map((t, i) => (
-          <li className="ea-paso" key={i}><span className="ea-pasoN">{i + 1}</span><span>{t}</span></li>
-        ))}
-      </ul>
-      <div className="ea-tabla" style={{ marginTop: 12 }}>
-        <span className="ea-td">Cuenta como éxito</span><span className="ea-tdn">{j.gana}</span>
-        <span className="ea-td">Te ayuda</span><span className="ea-tdn">{statN} {Math.round(ayuda)} de 100</span>
-      </div>
-      <div className="ea-lec">
-        <div className="ea-lecK">Para qué sirve esto</div>
-        <div className="ea-lecX">{j.ensena}</div>
-      </div>
-      {modo === "aprendiz" && (GLOS_JUEGO[tipo] || []).map((k) => GLOSARIO[k]).filter(Boolean).map((g, i) => (
-        <div className="ea-glos" key={i}>
-          <div className="ea-glosK">{i === 0 ? "Palabras que vas a ver" : ""}</div>
-          <div className="ea-glosT">{g.n}</div>
-          <div className="ea-glosX">{g.x}</div>
+    <div className="ea-reglasPleno">
+      <div className="ea-reglasCaja">
+        <div className="ea-jnombre ea-dis"><span>{visto ? "Otra vez" : "Vas a jugar"}</span>{j.n}</div>
+        <div className="ea-jmeta">
+          {!visto && <span className="ea-jtag">{j.tema}</span>}
+          <span className="ea-jtag">{j.dur}</span>
+          {nivelJuego && <span className="ea-jtag">Nivel {nivel} · {NIVEL_N[nivel]}</span>}
+          <span className="ea-jtag">{statN} {Math.round(ayuda)}</span>
         </div>
-      ))}
-      <button className="ea-btn" onClick={() => setListo(true)}>Entendido, empezar</button>
+
+        {!visto && (
+          <div>
+            <p className="ea-reglasX">{j.i}</p>
+            <ul className="ea-pasos ea-pasosG">
+              {j.pasos.map((t, i) => (
+                <li className="ea-paso" key={i}><span className="ea-pasoN">{i + 1}</span><span>{t}</span></li>
+              ))}
+            </ul>
+            <div className="ea-reglasGana">{j.gana}</div>
+          </div>
+        )}
+
+        <button className="ea-btn ea-btnJugar" onClick={empezar}>
+          {visto ? "Empezar" : "Entendido, empezar"}
+        </button>
+
+        {visto && (
+          <div>
+            <button className="ea-atras ea-dis" style={{ marginTop: 12, marginBottom: 0 }}
+              onClick={() => setRecordar((v) => !v)}>
+              {recordar ? "↑ Ya me acuerdo" : "↓ Recordarme las reglas"}
+            </button>
+            {recordar && (
+              <div className="ea-panelAb">
+                <p className="ea-reglasX">{j.i}</p>
+                <ul className="ea-pasos ea-pasosG">
+                  {j.pasos.map((t, i) => (
+                    <li className="ea-paso" key={i}><span className="ea-pasoN">{i + 1}</span><span>{t}</span></li>
+                  ))}
+                </ul>
+                <div className="ea-reglasGana">{j.gana}</div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {!visto && (
+          <div>
+            <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }}
+              onClick={() => setPorQue((v) => !v)}>
+              {porQue ? "↑ Cerrar" : "↓ Para qué sirve esto"}
+            </button>
+            {porQue && (
+              <div className="ea-panelAb">
+                <div className="ea-lec" style={{ marginTop: 8 }}>
+                  <div className="ea-lecX">{j.ensena}</div>
+                </div>
+                {modo === "aprendiz" && (GLOS_JUEGO[tipo] || []).map((k) => GLOSARIO[k]).filter(Boolean).map((g, i) => (
+                  <div className="ea-glos" key={i}>
+                    {i === 0 && <div className="ea-glosK">Palabras que vas a ver</div>}
+                    <div className="ea-glosT">{g.n}</div>
+                    <div className="ea-glosX">{g.x}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -5251,9 +6118,9 @@ function JuegoCatedra({ ayuda, nivel, onFin, onTema }) {
           <div className="ea-lecK">Con números</div>
           <div className="ea-ejX">{tema.ej}</div>
         </div>
-        <div className="ea-pista" style={{ marginTop: 14, marginBottom: 0 }}>
+        <Pista>
           Léelo con calma. Cuando pases de aquí ya no vuelves a ver la explicación.
-        </div>
+        </Pista>
         <button className="ea-btn" onClick={() => setFase("quiz")}>Ya lo tengo, pregúntame</button>
       </div>
     );
@@ -5359,11 +6226,11 @@ function JuegoTrading({ ayuda, onFin }) {
 
   return (
     <div className="ea-jw">
-      <div className="ea-pista">
+      <Pista>
         Una acción va a moverse durante {TICKS} momentos. Con <strong>Comprar</strong> la tienes y su subida o bajada
         te toca entera; con <strong>Vender</strong> te sales a efectivo y dejas de moverte. Compites contra alguien
         que compró al principio y no volvió a tocar nada. Ganas si terminas por encima de él.
-      </div>
+      </Pista>
 
       <div className={"ea-estado " + (dentro ? "dentro" : "fuera")}>
         {dentro ? "TIENES LA ACCIÓN" : "ESTÁS EN EFECTIVO"}
@@ -5426,121 +6293,102 @@ function JuegoTrading({ ayuda, onFin }) {
 }
 
 /* ---- Armar la estructura ----
-   Reescrito de arriba abajo. Antes eran dos deslizadores llamados
-   "senior" y "mezzanine" y un múltiplo que aparecía sin explicación.
-   Ahora hay una sola decisión —cuánto pides prestado— con la cuenta
-   completa a la vista y, sobre todo, los dos escenarios en números:
-   qué te llevas si va bien y qué pasa si va mal. Que es exactamente
-   lo que enseña el apalancamiento. */
+   Rehecho otra vez (28-sep-2026). La versión anterior no se podía ganar:
+   pedía multiplicar el capital por 2,4 si iba bien, y en todas las empresas
+   posibles la cobertura de intereses rompía antes de llegar ahí. Además
+   hablaba de EBITDA, cobertura y covenant, y la meta no se veía.
+
+   Ahora: una empresa de 100 millones, una barra (cuánto te presta el
+   banco) y dos metas que tiran en sentidos contrarios, con su ✓ en vivo.
+     · si le va bien, multiplicar tu dinero por 2 o más  → pide deuda
+     · si le va mal, conservar al menos el 30%           → pide poca deuda
+   Entre las dos hay una franja buena que se mueve de partida en partida:
+   se sortea primero la franja y de ella salen cuánto sube y cuánto baja la
+   empresa, así que siempre existe y nunca está en el mismo sitio. Con
+   mejor atributo la franja es más ancha. */
+const EST_PRECIO = 100;
+const EST_META_BIEN = 2;      /* multiplicar tu dinero por esto si va bien */
+const EST_META_MAL = 0.3;     /* conservar al menos esta parte si va mal */
+const EST_AMORTIZA = 10;      /* lo que la empresa devuelve de deuda si va bien */
+const EST_TOPE = 80;          /* ningún banco presta más del 80% */
+const casoEstructura = (ayuda) => {
+  const lo = 30 + 5 * indiceAzar(5);                       /* de 30 a 50 */
+  const ancho = numero(ayuda, 0) >= 60 ? 15 : 10;
+  const hi = Math.min(EST_TOPE - 10, lo + ancho);
+  /* bien: (100·(1+sube) − (d − 10)) / (100 − d) = 2    justo en d = lo */
+  const sube = (EST_PRECIO * EST_META_BIEN - EST_META_BIEN * lo + lo - EST_AMORTIZA) / EST_PRECIO - 1;
+  /* mal:  (100·(1−baja) − d) / (100 − d) = 0,3          justo en d = hi */
+  const baja = 1 - (EST_META_MAL * (EST_PRECIO - hi) + hi) / EST_PRECIO;
+  return { lo, hi, sube, baja,
+    nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía" };
+};
+const resultadoEstructura = (c, deuda) => {
+  const tuyo = EST_PRECIO - deuda;
+  const bien = tuyo > 0 ? (EST_PRECIO * (1 + c.sube) - Math.max(0, deuda - EST_AMORTIZA)) / tuyo : 0;
+  const mal = tuyo > 0 ? Math.max(0, EST_PRECIO * (1 - c.baja) - deuda) / tuyo : 0;
+  const okBien = bien >= EST_META_BIEN - 1e-9, okMal = mal >= EST_META_MAL - 1e-9;
+  return { tuyo, bien, mal, okBien, okMal, nivel: okBien && okMal ? "exito" : okBien || okMal ? "parcial" : "fallo" };
+};
+
 function JuegoEstructura({ ayuda, onFin }) {
-  const [caso] = useState(() => {
-    const eb = 14 + indiceAzar(12);
-    return {
-      eb,
-      precio: eb * 8,
-      crec: 1.14 + numero(Math.random(), 0.5) * 0.22,
-      nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía",
-    };
-  });
-  const maxDeuda = Math.round(caso.eb * 5);
-  const [deuda, setDeuda] = useState(Math.round(caso.eb * 2));
+  const [caso] = useState(() => casoEstructura(ayuda));
+  const [deuda, setDeuda] = useState(0);
   const [cerrado, setCerrado] = useState(null);
-
-  const propio = Math.max(0, caso.precio - deuda);
-  const apal = deuda / caso.eb;
-  const tasa = apal <= 3 ? 0.09 : 0.09 + (apal - 3) * 0.025;   /* más deuda, más cara */
-  const interes = deuda * tasa;
-  const cobertura = interes > 0 ? caso.eb / interes : 99;
-  const minPropio = caso.precio * 0.1;
-
-  /* escenario bueno: la empresa crece y amortiza deuda */
-  const ebBien = caso.eb * caso.crec;
-  const deudaBien = Math.max(0, deuda - caso.eb * 1.2);
-  const propioBien = Math.max(0, ebBien * 8 - deudaBien);
-  const moicBien = propio > 0 ? propioBien / propio : 0;
-
-  /* escenario malo: el EBITDA cae 20% y el múltiplo se contrae */
-  const ebMal = caso.eb * 0.8;
-  const propioMal = Math.max(0, ebMal * 6.5 - deuda);
-  const moicMal = propio > 0 ? propioMal / propio : 0;
-
-  const rompe = cobertura < 2;
-
-  const confirmar = () => {
-    if (propio < minPropio) return;
-    let nivel;
-    if (rompe) nivel = numero(Math.random(), 0.5) < 0.7 ? "fallo" : "parcial";
-    else if (moicBien >= 2.4 && moicMal > 0.6) nivel = "exito";
-    else if (moicBien >= 1.7) nivel = "parcial";
-    else nivel = "fallo";
-    setCerrado(nivel);
-  };
+  const r = resultadoEstructura(caso, deuda);
+  const x = (v) => v.toFixed(1).replace(".", ",") + "x";
 
   const cierre = {
-    exito: "Estructura fina. Suficiente deuda para que tu capital rinda de verdad y suficiente aire para aguantar un mal año sin que el banco se meta.",
-    parcial: "Sale, sin brillar. O te faltó deuda y tu capital rindió como un bono, o te sobró y el margen quedó justo.",
-    fallo: rompe
-      ? "Te pasaste. Con esta deuda, el EBITDA no alcanza ni para pagar dos veces los intereses: al primer trimestre flojo se rompe el covenant y el banco toma el control de la empresa."
-      : "El trato no compensa. Pusiste demasiado capital propio para el retorno que da, o el escenario malo se te lleva todo.",
+    exito: "Punto justo. Con esa deuda tu dinero rinde de verdad si sale bien, y si sale mal te queda con qué volver a empezar.",
+    parcial: r.okBien
+      ? "Si sale bien ganas mucho, pero pediste tanto que un mal año se lleva casi todo lo que pusiste."
+      : "Estás a salvo si sale mal, pero pusiste tanto de tu bolsillo que si sale bien tu dinero apenas rinde.",
+    fallo: "No cumples ninguna de las dos metas: ni ganas lo suficiente si sale bien, ni aguantas si sale mal.",
   };
-
-  const pctDeuda = caso.precio > 0 ? (deuda / caso.precio) * 100 : 0;
 
   return (
     <div className="ea-jw">
-      <div className="ea-pista">
-        Vas a comprar <strong>{caso.nombre}</strong>. Gana <strong>{caso.eb} millones</strong> al año operando
-        y te la venden en <strong>{caso.precio} millones</strong>. Puedes pagarla con tu dinero, con dinero
-        prestado, o con una mezcla. Mueve el deslizador y mira cómo cambian los dos escenarios de abajo.
+      <Pista>
+        Compras <strong>{caso.nombre}</strong> por <strong>{EST_PRECIO} millones</strong>. Tú pones una parte y
+        el banco te presta el resto. Pedir prestado hace que ganes más si sale bien… y que pierdas más si sale mal.
+      </Pista>
+
+      {/* la situación, siempre a la vista: la Pista de arriba se pliega */}
+      <div className="ea-estCaso">
+        Compras <strong>{caso.nombre}</strong> por <strong>{EST_PRECIO} millones</strong>. ¿Cuánto le pides al banco?
       </div>
 
       <div className="ea-est">
         <div className="ea-estL">
-          <span>Cuánto pides prestado</span>
-          <span className="ea-mono">{deuda} millones · {apal.toFixed(1)} veces lo que gana</span>
+          <span>El banco te presta</span>
+          <span className="ea-mono">{deuda} millones</span>
         </div>
-        <input className="ea-slider" type="range" min="0" max={maxDeuda} step="1" value={deuda} disabled={!!cerrado}
-          onChange={(e) => setDeuda(entero(e.target.value, 0, 0, maxDeuda))} aria-label="Deuda" />
+        <input className="ea-slider" type="range" min="0" max={EST_TOPE} step="5" value={deuda} disabled={!!cerrado}
+          onChange={(e) => setDeuda(entero(e.target.value, 0, 0, EST_TOPE))} aria-label="Cuánto te presta el banco" />
       </div>
 
-      {/* la foto de quién pone qué */}
+      {/* quién pone qué */}
       <div className="ea-mix" style={{ marginTop: 6 }}>
-        <div className="ea-mixSeg efe" style={{ width: (100 - pctDeuda).toFixed(1) + "%" }}>
-          {100 - pctDeuda >= 18 ? "tu dinero " + Math.round(100 - pctDeuda) + "%" : ""}
-        </div>
-        <div className="ea-mixSeg cart" style={{ width: pctDeuda.toFixed(1) + "%" }}>
-          {pctDeuda >= 18 ? "prestado " + Math.round(pctDeuda) + "%" : ""}
-        </div>
-      </div>
-
-      <div className="ea-tabla" style={{ marginTop: 12 }}>
-        <span className="ea-td">Pones de tu bolsillo</span><span className="ea-tdn ea-mono">{propio.toFixed(0)} millones</span>
-        <span className="ea-td">Intereses que pagarás al año</span><span className="ea-tdn ea-mono">{interes.toFixed(1)} millones · {(tasa * 100).toFixed(1)}%</span>
-        <span className="ea-td">Veces que el EBITDA cubre esos intereses</span><span className="ea-tdn ea-mono">{cobertura >= 99 ? "sin deuda" : cobertura.toFixed(1) + "x"}</span>
+        <div className="ea-mixSeg efe" style={{ width: r.tuyo + "%" }}>{r.tuyo >= 18 ? "tú " + r.tuyo : ""}</div>
+        <div className="ea-mixSeg cart" style={{ width: deuda + "%" }}>{deuda >= 18 ? "banco " + deuda : ""}</div>
       </div>
 
       <div className="ea-escen">
-        <div className="ea-escenC bien">
-          <div className="ea-lecK">Si va bien</div>
-          <div className="ea-escenX">La empresa crece {Math.round((caso.crec - 1) * 100)}% y pagas parte de la deuda.</div>
-          <div className="ea-escenV ea-mono">{moicBien.toFixed(2)}x</div>
-          <div className="ea-escenX">Recuperas {propioBien.toFixed(0)} millones sobre los {propio.toFixed(0)} que pusiste.</div>
+        <div className={"ea-escenC " + (r.okBien ? "bien" : "mal")}>
+          <div className="ea-lecK">Si le va bien · vale {Math.round(caso.sube * 100)}% más</div>
+          <div className="ea-escenV ea-mono">{x(r.bien)}</div>
+          <div className="ea-escenX">tu dinero se multiplica por {x(r.bien)}</div>
+          <div className="ea-estMeta">{r.okBien ? "✓" : "✗"} Meta: {x(EST_META_BIEN)} o más</div>
         </div>
-        <div className="ea-escenC mal">
-          <div className="ea-lecK">Si va mal</div>
-          <div className="ea-escenX">El EBITDA cae un quinto y nadie paga múltiplos altos ese año.</div>
-          <div className="ea-escenV ea-mono">{moicMal.toFixed(2)}x</div>
-          <div className="ea-escenX">
-            {moicMal <= 0.05 ? "Tu capital se va a cero: la deuda se come todo el valor." : "Te quedan " + propioMal.toFixed(0) + " millones de los " + propio.toFixed(0) + " que pusiste."}
-          </div>
+        <div className={"ea-escenC " + (r.okMal ? "bien" : "mal")}>
+          <div className="ea-lecK">Si le va mal · vale {Math.round(caso.baja * 100)}% menos</div>
+          <div className="ea-escenV ea-mono">{Math.round(r.mal * 100)}%</div>
+          <div className="ea-escenX">{r.mal <= 0.005 ? "lo pierdes todo: el banco cobra primero" : "de tu dinero te queda el " + Math.round(r.mal * 100) + "%"}</div>
+          <div className="ea-estMeta">{r.okMal ? "✓" : "✗"} Meta: conservar {Math.round(EST_META_MAL * 100)}% o más</div>
         </div>
       </div>
 
-      {propio < minPropio && <div className="ea-alerta mal">Ningún banco te presta tanto: tienes que poner al menos el 10% del precio de tu propio bolsillo.</div>}
-      {rompe && propio >= minPropio && <div className="ea-alerta mal">Con esta deuda el EBITDA no cubre ni dos veces los intereses. Es el nivel en el que un trimestre flojo te cuesta la empresa.</div>}
-
       {!cerrado ? (
-        <button className="ea-btn" onClick={confirmar} disabled={propio < minPropio}>Cerrar el trato así</button>
+        <button className="ea-btn" onClick={() => setCerrado(r.nivel)}>Cerrar el trato así</button>
       ) : (
         <div>
           <div className={"ea-alerta " + (cerrado === "exito" ? "bien" : cerrado === "fallo" ? "mal" : "")}>{cierre[cerrado]}</div>
@@ -5671,13 +6519,27 @@ function JuegoBanderas({ ayuda, onFin, modo }) {
 }
 
 /* ---- La pizarra del comité: pares de concepto y significado ---- */
+/* Cada par lleva su color, el mismo en el concepto y en su definición:
+   al destapar una ficha el color se queda en la memoria mucho mejor que
+   un texto de dos palabras, y sirve de ancla para saber dónde estaba su
+   pareja. Sin el rojo, que en todo el juego significa fallo, y sin el
+   turquesa, que al lado del azul se confunde a simple vista. */
+const COLORES_PARES = [0, 1, 3, 4, 5, 7].map((i) => COLORES_MEM[i].c);
+
+/* Segundos con la pizarra destapada antes de empezar. Más con mejor
+   atributo, para que «te ayuda» siga significando algo aquí. */
+const vistaParesDe = (ayuda) => clamp(Math.round(5 + numero(ayuda, 0) / 25), 5, 9);
+
 function JuegoPares({ ayuda, onFin }) {
   const [pz] = useState(() => elegirAzar(PIZARRAS));
   const [fichas] = useState(() => {
+    /* los colores también se barajan: que el WACC no sea siempre cobre */
+    const cols = COLORES_PARES.slice().sort(() => Math.random() - 0.5);
     const arr = [];
     pz.p.forEach((par, i) => {
-      arr.push({ id: i + "a", par: i, t: par[0] });
-      arr.push({ id: i + "b", par: i, t: par[1] });
+      const col = cols[i % cols.length];
+      arr.push({ id: i + "a", par: i, t: par[0], col });
+      arr.push({ id: i + "b", par: i, t: par[1], col });
     });
     return arr.sort(() => Math.random() - 0.5);
   });
@@ -5686,12 +6548,21 @@ function JuegoPares({ ayuda, onFin }) {
   const [hechas, setHechas] = useState([]);
   const [err, setErr] = useState(0);
   const [fin, setFin] = useState(false);
+  const [cuenta, setCuenta] = useState(() => vistaParesDe(ayuda));
+  const mirando = cuenta > 0;
   const bloqueo = useRef(false);
+
+  /* la pizarra destapada, y la cuenta atrás hasta taparla */
+  useEffect(() => {
+    if (cuenta <= 0) return;
+    const t = setTimeout(() => setCuenta((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cuenta]);
 
   const cerrar = (nivel) => { setFin(true); setTimeout(() => onFin(nivel), 900); };
 
   const tocar = (f) => {
-    if (fin || bloqueo.current) return;
+    if (mirando || fin || bloqueo.current) return;
     if (hechas.indexOf(f.par) >= 0) return;
     if (abiertas.some((x) => x.id === f.id)) return;
     const nuevas = abiertas.concat(f);
@@ -5715,21 +6586,35 @@ function JuegoPares({ ayuda, onFin }) {
 
   return (
     <div className="ea-jw">
-      <div className="ea-jinfo ea-dis"><span>{pz.t}</span><span>Fallos {err} de {maxErr}</span></div>
+      <div className="ea-jinfo ea-dis">
+        <span>{mirando ? "Mira la pizarra" : pz.t}</span>
+        <span>{mirando
+          ? "se tapa en " + cuenta + (cuenta === 1 ? " segundo" : " segundos")
+          : "Fallos " + err + " de " + maxErr}</span>
+      </div>
       <div className="ea-tab4">
         {fichas.map((f) => {
           const hecha = hechas.indexOf(f.par) >= 0;
           const abierta = abiertas.some((x) => x.id === f.id);
+          const vista = mirando || hecha || abierta;
           return (
-            <div key={f.id} {...pulsable(() => tocar(f), hecha || abierta ? f.t : "Ficha tapada", hecha)}
-              className={"ea-fichaP" + (hecha ? " hecha" : abierta ? " abierta" : " tapada")}>
-              {hecha || abierta ? f.t : ""}
+            <div key={f.id} {...pulsable(() => tocar(f), vista ? f.t : "Ficha tapada", hecha || mirando)}
+              className={"ea-fichaP" + (mirando ? " vista" : hecha ? " hecha" : abierta ? " abierta" : " tapada")
+                + (vista ? " pintada" : "")}
+              style={vista ? { background: f.col + "33", borderColor: f.col } : undefined}>
+              {vista ? f.t : ""}
             </div>
           );
         })}
       </div>
+      {mirando && (
+        <button className="ea-mini" style={{ marginTop: 10 }} onClick={() => setCuenta(0)}>
+          Ya lo miré, empezar
+        </button>
+      )}
       <div style={{ minHeight: 20, marginTop: 9, fontSize: 13, color: "#6B6B6B" }}>
-        {fin ? (hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos") : ""}
+        {fin ? (hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos")
+          : mirando ? "Cada par tiene su color: el concepto y su definición se pintan igual." : ""}
       </div>
     </div>
   );
@@ -5942,10 +6827,10 @@ function JuegoComite({ ayuda, onFin }) {
         <span>Tres negocios · capital para uno</span>
         <span>{ayuda >= 60 ? "Tu criterio ya descarta lo obvio" : "Sin pistas"}</span>
       </div>
-      <div className="ea-pista">
+      <Pista>
         Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman;
         depender de un solo cliente y arrastrar deuda restan casi lo mismo. Elige uno.
-      </div>
+      </Pista>
 
       {mesa.map((e, i) => {
         const marcado = sel === i;
@@ -5985,63 +6870,103 @@ function JuegoComite({ ayuda, onFin }) {
   );
 }
 
-/* ---- La subasta y la maldición del ganador ---- */
+/* ---- La subasta y la maldición del ganador ----
+   Rehecha (28-sep-2026). La anterior tenía un tope escondido de ocho
+   rondas: a la octava subida se acababa sola y lo contaba como si te
+   hubieras retirado. Empezando en 40 y subiendo 8-13 por ronda, eso te
+   echaba hacia los 110 aunque tu estimación fuera 145. Además el éxito
+   pedía pagar menos del 82% del valor, que casi nunca pasaba, y los
+   rivales se retiraban por sorteo en vez de por un límite propio.
+
+   Ahora es una subasta de verdad, sin tope de rondas:
+     · cada rival tiene su precio máximo (del 70% al 120% del valor) y se
+       retira en cuanto la oferta lo pasa. Termina sola, porque los
+       límites son finitos.
+     · si te retiras, la subasta sigue sin ti: gana el rival con el límite
+       más alto y paga lo que marca el segundo. Tu retirada se juzga por lo
+       que pagó él: si pagó de más, hiciste bien.
+   Medido con 30.000 subastas (atributo 72): pujar hasta tu estimación da
+   éxito ~54% y fallo ~17%; retirarse muy pronto o pujar de más, bastante
+   peor. Es la maldición del ganador sin necesidad de explicarla. */
+const SUB_RIVALES = ["Fondo regional", "Comprador estratégico", "Family office"];
+const pasoSubasta = (valor) => Math.max(4, Math.round(valor * 0.06)) + indiceAzar(4);
+const casoSubasta = (ayuda) => {
+  const valor = 60 + numero(Math.random(), 0.5) * 80;
+  const ruido = Math.max(3, 20 - numero(ayuda, 0) / 6);
+  return {
+    valor,
+    estimacion: Math.max(10, Math.round(valor + ruido * gauss())),
+    limites: SUB_RIVALES.map(() => valor * (0.7 + numero(Math.random(), 0.5) * 0.5)),
+    inicio: Math.round(valor * 0.5),
+  };
+};
+/* si te retiras en p: gana el de límite más alto, al precio del segundo */
+const cierreRetiro = (caso, p) => {
+  const vivos = caso.limites.map((m, i) => ({ m, i })).filter((x) => x.m >= p).sort((x, y) => y.m - x.m);
+  if (!vivos.length) return { quien: null, final: p };
+  const final = Math.round(Math.max(p, vivos.length > 1 ? vivos[1].m : p));
+  return { quien: SUB_RIVALES[vivos[0].i], final };
+};
+const nivelSubasta = (caso, fin) => {
+  if (fin.gano) { const r = fin.precio / caso.valor; return r <= 1 ? "exito" : r <= 1.1 ? "parcial" : "fallo"; }
+  if (fin.final > caso.valor) return "exito";
+  return fin.precio >= caso.valor * 0.9 ? "parcial" : "fallo";
+};
+
 function JuegoSubasta({ ayuda, onFin }) {
-  const [valor] = useState(() => 60 + Math.random() * 80);
-  const [señal] = useState(() => Math.round(valor + (28 - ayuda / 5) * gauss()));
-  const [precio, setPrecio] = useState(40);
-  const [vivos, setVivos] = useState([true, true, true]);
-  const [ronda, setRonda] = useState(0);
+  const [caso] = useState(() => casoSubasta(ayuda));
+  const [precio, setPrecio] = useState(caso.inicio);
+  const [siguiente, setSiguiente] = useState(() => caso.inicio + pasoSubasta(caso.valor));
+  const [fuera, setFuera] = useState([null, null, null]);   /* precio al que se retiró cada rival */
+  const [ronda, setRonda] = useState(1);
   const [fin, setFin] = useState(null);
 
-  const rivales = ["Fondo regional", "Comprador estratégico", "Family office"];
-
   const subir = () => {
-    const nuevo = precio + 8 + Math.floor(Math.random() * 6);
-    const siguen = vivos.map((v) => v && Math.random() > clamp((nuevo - valor * 0.8) / 55, 0.08, 0.75));
-    setPrecio(nuevo); setVivos(siguen); setRonda(ronda + 1);
-    if (siguen.every((v) => !v)) {
-      const ratio = nuevo / valor;
-      setFin({ gano: true, precio: nuevo, ratio });
-    } else if (ronda >= 7) {
-      setFin({ gano: false, precio: nuevo, ratio: nuevo / valor, forzado: true });
-    }
+    if (fin) return;
+    const nuevo = siguiente;
+    const f = fuera.map((x, i) => (x == null && caso.limites[i] < nuevo ? nuevo : x));
+    setPrecio(nuevo); setFuera(f); setRonda(ronda + 1);
+    setSiguiente(nuevo + pasoSubasta(caso.valor));
+    if (f.every((x) => x != null)) setFin({ gano: true, precio: nuevo });
+  };
+  const retirarse = () => {
+    if (fin) return;
+    const c = cierreRetiro(caso, precio);
+    setFin({ gano: false, precio, final: c.final, quien: c.quien });
   };
 
-  const retirarse = () => setFin({ gano: false, precio, ratio: precio / valor });
-
-  const cerrar = () => {
-    if (fin.gano) onFin(fin.ratio <= 0.82 ? "exito" : fin.ratio <= 1 ? "parcial" : "fallo");
-    else onFin(fin.ratio >= 1 ? "parcial" : fin.ratio >= 0.85 ? "parcial" : "fallo");
-  };
+  const nivel = fin ? nivelSubasta(caso, fin) : null;
+  const V = Math.round(caso.valor);
+  const texto = !fin ? null
+    : fin.gano
+      ? nivel === "exito" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Pagaste lo que vale o menos: ese es el trabajo."
+        : nivel === "parcial" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Casi lo que vale: sin margen, pero sin daño."
+        : "Te la llevaste por " + fin.precio + " y valía " + V + ". Ganaste la subasta y perdiste plata: eso es la maldición del ganador."
+      : nivel === "exito" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ": pagó de más. Retirarse a tiempo también es ganar."
+        : nivel === "parcial" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Se llevó una buena compra, pero te retiraste cerca del valor."
+        : "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Dejaste ir una empresa barata: la prudencia también cuesta cuando sobra.";
 
   return (
     <div className="ea-jw">
-      <div className="ea-jinfo ea-dis"><span>Tu estimación de valor {señal}</span><span>Ronda {ronda + 1}</span></div>
+      <div className="ea-jinfo ea-dis"><span>Tu estimación: {caso.estimacion} millones</span><span>Ronda {ronda}</span></div>
       <div className="ea-precio ea-mono">{precio}</div>
-      <div style={{ fontSize: 12.5, color: "var(--gris)", marginBottom: 10 }}>Oferta actual sobre la mesa, en millones.</div>
-      {rivales.map((r, i) => (
-        <div className={"ea-postor" + (vivos[i] ? "" : " fuera")} key={i}>
-          <span>{r}</span><span className="ea-mono">{vivos[i] ? "sigue" : "se retiró"}</span>
+      <div style={{ fontSize: 12.5, color: "var(--gris)", marginBottom: 10 }}>
+        Oferta sobre la mesa, en millones. Tu estimación puede fallar por arriba o por abajo.
+      </div>
+      {SUB_RIVALES.map((r, i) => (
+        <div className={"ea-postor" + (fuera[i] == null ? "" : " fuera")} key={i}>
+          <span>{r}</span><span className="ea-mono">{fuera[i] == null ? "sigue" : "se retiró en " + fuera[i]}</span>
         </div>
       ))}
       {!fin ? (
         <div className="ea-fila2">
-          <button className="ea-btn" style={{ marginTop: 0, flex: 1 }} onClick={subir}>Subir la oferta</button>
+          <button className="ea-btn" style={{ marginTop: 0, flex: 1 }} onClick={subir}>Subir a {siguiente}</button>
           <button className="ea-btn" style={{ marginTop: 0, flex: 1, background: "var(--rojo)" }} onClick={retirarse}>Retirarme</button>
         </div>
       ) : (
         <div>
-          <div className={"ea-alerta " + (fin.gano ? (fin.ratio <= 1 ? "bien" : "mal") : (fin.ratio >= 0.85 ? "" : "mal"))}>
-            El activo valía {Math.round(valor)}.
-            {fin.gano
-              ? fin.ratio <= 0.82 ? " Te lo llevaste con descuento real, que es exactamente el trabajo."
-                : fin.ratio <= 1 ? " Ganaste pagando casi lo que vale. Sin margen, pero sin daño."
-                : " Ganaste la subasta y perdiste plata. Eso se llama maldición del ganador y es la forma más elegante de arruinarse."
-              : fin.ratio >= 1 ? " Te retiraste justo antes de pagar de más. Retirarse a tiempo también es ganar."
-                : " Dejaste ir un activo que estaba barato. La disciplina también cuesta cuando se aplica de más."}
-          </div>
-          <button className="ea-btn" onClick={cerrar}>Continuar</button>
+          <div className={"ea-alerta " + (nivel === "exito" ? "bien" : nivel === "fallo" ? "mal" : "")}>{texto}</div>
+          <button className="ea-btn" onClick={() => onFin(nivel)}>Continuar</button>
         </div>
       )}
     </div>
@@ -6049,6 +6974,371 @@ function JuegoSubasta({ ayuda, onFin }) {
 }
 
 /* ---- piezas del informe de cierre ---- */
+
+/* ============================================================
+   EL INTERRUPTOR DEL MOVIMIENTO
+   null = lo que diga el sistema · true = encendido · false = apagado.
+   Vive fuera de React porque lo consultan componentes sueltos (la cifra
+   que cuenta, el rodillo) que no tienen el estado de la partida a mano.
+   El Motor lo pone al dia en cada render desde st.animar.
+   ============================================================ */
+let MOVIMIENTO = null;
+const sistemaPideQuieto = () => {
+  try {
+    return typeof window !== "undefined" && typeof window.matchMedia === "function"
+      && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (e) { return false; }
+};
+const sinMovimiento = () => {
+  if (MOVIMIENTO === true) return false;
+  if (MOVIMIENTO === false) return true;
+  return sistemaPideQuieto();
+};
+
+/* ============================================================
+   UNA CIFRA QUE CUENTA EN VEZ DE SALTAR
+   El patrimonio es EL numero del juego y cambiaba de golpe: de 12.000 a
+   19.400 sin que nada dijera que habias ganado. Verlo subir convierte un
+   dato en una recompensa, que es de lo que vive un juego.
+
+   Tres guardarraíles, porque esto corre tambien dentro del arnes de
+   pruebas, que monta un window falso: sin requestAnimationFrame se pone
+   el valor final y ya, y quien haya pedido menos movimiento en su
+   sistema no ve ninguna animacion.
+   ============================================================ */
+function Cifra({ v, ms, desde: arranque }) {
+  const fin = numero(v, 0);
+  /* Donde no hay valor anterior que recordar —porque el componente se
+     monta de cero, como en el cierre de anio— hay que decirle de donde
+     viene, o se pinta ya en su destino y no cuenta nada. Justo lo que me
+     paso: la cifra del cierre no animaba y parecia que si. */
+  const inicial = esNumero(arranque) ? numero(arranque, 0) : fin;
+  const [x, setX] = useState(inicial);
+  const desde = useRef(inicial);
+  useEffect(() => {
+    const ini = numero(desde.current, 0);
+    if (ini === fin) return;
+    if (sinMovimiento() || typeof requestAnimationFrame !== "function" || typeof cancelAnimationFrame !== "function") {
+      desde.current = fin; setX(fin); return;
+    }
+    const dura = numero(ms, 650);
+    const t0 = Date.now();
+    let id = 0, vivo = true;
+    const paso = () => {
+      if (!vivo) return;
+      const p = clamp((Date.now() - t0) / dura, 0, 1);
+      const e = 1 - Math.pow(1 - p, 3);   /* frena al llegar */
+      setX(ini + (fin - ini) * e);
+      if (p < 1) id = requestAnimationFrame(paso);
+      else desde.current = fin;
+    };
+    id = requestAnimationFrame(paso);
+    return () => { vivo = false; desde.current = fin; try { cancelAnimationFrame(id); } catch (e) {} };
+  }, [fin]);
+  return fmt(x);
+}
+
+/* ============================================================
+   EL RODILLO
+   La cifra del cierre contaba, pero contaba en una esquina y con letra
+   de informe. El momento en que se sabe como fue el anio merece la
+   pantalla entera: cada digito es un tambor que gira y se para, de
+   izquierda a derecha, como el marcador de una maquina.
+
+   Cada rueda lleva los diez digitos repetidos tres veces y aterriza en
+   la tercera vuelta, asi que gira de verdad en vez de deslizarse al
+   sitio. Los separadores de miles no giran: se quedan fijos, que es lo
+   que hace que se lea el numero mientras se mueve.
+   ============================================================ */
+const RUEDA = [];
+for (let v = 0; v < 3; v++) for (let d = 0; d <= 9; d++) RUEDA.push(d);
+
+function Rodillo({ v }) {
+  const txt = fmt(numero(v, 0));
+  const [rodando, setRodando] = useState(true);
+  const quieto = sinMovimiento();
+
+  useEffect(() => {
+    if (quieto) { setRodando(false); return; }
+    setRodando(true);
+    if (typeof setTimeout !== "function") { setRodando(false); return; }
+    /* un respiro antes de soltar los frenos: sin esto el navegador pinta
+       ya el estado final y no hay transicion que ver */
+    const t = setTimeout(() => setRodando(false), 60);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [txt, quieto]);
+
+  if (quieto) return <span className="ea-rodillos ea-mono">{txt}</span>;
+
+  const cifras = txt.split("");
+  /* la rueda n tarda mas que la n-1, asi que el numero cuaja de
+     izquierda a derecha y la ultima en pararse es la de las unidades */
+  let idx = -1;
+  return (
+    <span className="ea-rodillos ea-mono" aria-label={"USD " + txt}>
+      {cifras.map((c, i) => {
+        if (!/[0-9]/.test(c)) return <span className="ea-rodSep" key={i}>{c}</span>;
+        idx += 1;
+        const destino = 20 + Number(c);   /* tercera vuelta */
+        const dur = 900 + idx * 260;
+        return (
+          <span className="ea-rodillo" key={i} aria-hidden="true">
+            <span className="ea-rodCol"
+              style={{
+                transform: "translateY(" + (rodando ? 0 : -destino * 100 / RUEDA.length) + "%)",
+                transitionDuration: (rodando ? 0 : dur) + "ms",
+                transitionTimingFunction: "cubic-bezier(.16,.84,.26,1)",
+              }}>
+              {RUEDA.map((d, k) => <span className="ea-rodD" key={k}>{d}</span>)}
+            </span>
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
+/* ============================================================
+   ICONOS
+   Dibujados aqui, no traidos de fuera: el juego tiene que abrirse sin
+   red. Trazo del mismo grosor en todos, para que la fila de arriba se
+   lea como una sola cosa y no como cinco simbolos sueltos.
+   ============================================================ */
+const TRAZOS = {
+  rayo:      "M13.5 2 L5 13.5 h5.2 l-1.2 8.5 L18 10.5 h-5.3 z",
+  edificio:  "M3 21.5V7.2l6.5-3.7 6.5 3.7v14.3 M9.6 21.5v-4.6h3.6v4.6 M6.2 10.4h1.9 M6.2 14h1.9 M14.6 10.4h1.9 M14.6 14h1.9",
+  pin:       "M12 22s6.6-6.3 6.6-10.6a6.6 6.6 0 1 0-13.2 0C5.4 15.7 12 22 12 22z M12 13.2a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4z",
+  escalera:  "M3 21h5.4v-5.4H3zM9.3 21h5.4V10.2H9.3zM15.6 21H21V4.6h-5.4z",
+  ojo:       "M1.6 12S5.5 4.9 12 4.9 22.4 12 22.4 12 18.5 19.1 12 19.1 1.6 12 1.6 12z M12 15.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2z",
+  tabla:     "M3.2 3.6h17.6v16.8H3.2z M3.2 9.2h17.6 M3.2 14.8h17.6 M9.6 3.6v16.8",
+  nodos:     "M6 8.2a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M18 8.2a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M12 21.6a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M7.6 7.4l3 9 M16.4 7.4l-3 9 M8.9 5.3h6.2",
+  estrella:  "M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z",
+  moneda:    "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8v10.4 M14.9 9.3c0-1.3-1.3-2-2.9-2s-2.9.7-2.9 2 1.3 1.9 2.9 2.2 2.9.9 2.9 2.2-1.3 2-2.9 2-2.9-.7-2.9-2",
+  aviso:     "M12 2.4 1.6 20.6h20.8z M12 9.2v5.2 M12 17.4h.02",
+
+  /* ---- lo que se compra ----
+     Veinte trazos para treinta y dos cosas: varias comparten simbolo a
+     proposito, porque lo que tiene que decir el icono es de que FAMILIA
+     es la compra, no cual exactamente. El nombre ya esta al lado. */
+  pesa:      "M2.6 9.4v5.2 M6 7.2v9.6 M18 7.2v9.6 M21.4 9.4v5.2 M6 12h12",
+  plato:     "M12 20.6a8.6 8.6 0 1 0 0-17.2 8.6 8.6 0 0 0 0 17.2z M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4z",
+  libro:     "M4 3.6h11a3 3 0 0 1 3 3v13.8a2.4 2.4 0 0 0-2.4-2.4H4z M4 3.6v14.4 M20 6.6v13.8",
+  reloj:     "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8V12l3.4 2",
+  maleta:    "M3 8.4h18v11.2H3z M8.4 8.4V5.6a1.6 1.6 0 0 1 1.6-1.6h4a1.6 1.6 0 0 1 1.6 1.6v2.8 M3 13.4h18",
+  coche:     "M4 16.6h16 M5.4 16.6l1.4-5.4a2 2 0 0 1 1.9-1.5h6.6a2 2 0 0 1 1.9 1.5l1.4 5.4 M4 16.6v2.4h2.6v-2.4 M17.4 16.6V19H20v-2.4 M7.6 13.4h8.8",
+  barco:     "M3 17.4h18l-2.4 3.2H5.4z M5.6 17.4V9.6h12.8v7.8 M12 9.6V4.2 M8.8 9.6h6.4",
+  casa:      "M3.4 10.6 12 3.6l8.6 7v9.8H3.4z M9.6 20.4v-6h4.8v6",
+  terreno:   "M2.6 18.6 9 15.4l6 3.2 6.4-3.2v-6L15 12.6l-6-3.2-6.4 3.2z M9 9.4v6 M15 12.6v6",
+  palmera:   "M12 21V11 M12 11c-3.4-2.6-7-1.6-8.4.6 2.4-1 4.8-.6 6.4 1 M12 11c3.4-2.6 7-1.6 8.4.6-2.4-1-4.8-.6-6.4 1 M12 11c0-3.6 2.2-6 5-6.4-1.6 1.8-2.2 3.8-2 6.4 M12 11c0-3.6-2.2-6-5-6.4 1.6 1.8 2.2 3.8 2 6.4",
+  anillo:    "M12 21.4a6.6 6.6 0 1 0 0-13.2 6.6 6.6 0 0 0 0 13.2z M8.6 8.8 6.4 3.4h11.2l-2.2 5.4 M12 3.4v5",
+  bebe:      "M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M9.4 11.6h.02 M14.6 11.6h.02 M9.6 15.4c1.4 1.2 3.4 1.2 4.8 0 M8 4.6c1.2-1.4 6.8-1.4 8 0",
+  cuadro:    "M3.6 4.4h16.8v13.2H3.6z M3.6 13.8l4.6-4.2 4.2 3.8 3-2.6 5 4.4 M12 20.8v.8",
+  copa:      "M7.4 3.6h9.2v4.2a4.6 4.6 0 0 1-9.2 0z M12 12.4v5.4 M8.4 20.4h7.2 M7.4 5.2H4.6v1.6a3 3 0 0 0 2.8 2.8 M16.6 5.2h2.8v1.6a3 3 0 0 1-2.8 2.8",
+  cafe:      "M4.4 7.6h12v6.6a5 5 0 0 1-10 0z M16.4 9.2h1.8a2.6 2.6 0 0 1 0 5.2h-1.8 M3.6 20.4h13.6 M8 4.6v-2 M12.8 4.6v-2",
+  balanza:   "M12 3.4v17.2 M7 20.6h10 M4 8.2h16 M4 8.2 1.6 14h4.8z M20 8.2 17.6 14h4.8z M12 3.4 8 8.2h8z",
+  persona:   "M12 12a4.2 4.2 0 1 0 0-8.4A4.2 4.2 0 0 0 12 12z M4.4 20.6c0-4.2 3.4-7 7.6-7s7.6 2.8 7.6 7",
+  pluma:     "M20.4 3.6 9.6 14.4l-1.2 4.6 4.6-1.2L23.8 7 20.4 3.6z M8.4 19 3.6 20.4l1.4-4.8 M14.6 8.6l4 4",
+  escudo:    "M12 21.6s7.6-3.4 7.6-9.6V5.4L12 2.6 4.4 5.4V12c0 6.2 7.6 9.6 7.6 9.6z M8.8 12l2.2 2.2 4.4-4.4",
+  grafico:   "M3.4 20.4h17.2 M6.6 20.4v-6.6 M11 20.4V7.6 M15.4 20.4v-9.4 M19.8 20.4V4.4",
+  micro:     "M12 14.4a3.4 3.4 0 0 0 3.4-3.4V6a3.4 3.4 0 1 0-6.8 0v5a3.4 3.4 0 0 0 3.4 3.4z M6 10.6v.6a6 6 0 0 0 12 0v-.6 M12 17.4v3.2 M9 20.6h6",
+
+  /* ---- que clase de cosa te esta pasando ----
+     Un simbolo por tipo de escena. Antes todas se veian igual: el mismo
+     memorando gris para un dia de oficina, para que se case tu hermano y
+     para la decision que parte la carrera en dos. */
+  documento: "M14 2.6H6.4a2 2 0 0 0-2 2v14.8a2 2 0 0 0 2 2h11.2a2 2 0 0 0 2-2V8.2z M14 2.6v5.6h5.6 M8.4 13h7.2 M8.4 17h4.8",
+  corona:    "M2.8 7.6 6.6 13l5.4-7.6L17.4 13l3.8-5.4v10.2a1.6 1.6 0 0 1-1.6 1.6H4.4a1.6 1.6 0 0 1-1.6-1.6z M2.8 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M21.2 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M12 5.4a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z",
+  bifurca:   "M12 21.4v-6.6 M12 14.8 5.6 8.4V3.2 M12 14.8l6.4-6.4V3.2 M5.6 3.2H3.2 M5.6 3.2h2.4 M18.4 3.2H16 M18.4 3.2h2.4",
+  corazon:   "M12 20.8 4.4 13.2a4.8 4.8 0 0 1 0-6.8 4.8 4.8 0 0 1 6.8 0l.8.8.8-.8a4.8 4.8 0 0 1 6.8 0 4.8 4.8 0 0 1 0 6.8z",
+  sello:     "M12 2.6a4 4 0 0 0-4 4c0 1.6 1.2 2.6 1.2 4.2H6.4a2.4 2.4 0 0 0-2.4 2.4v1.4h16v-1.4a2.4 2.4 0 0 0-2.4-2.4h-2.8c0-1.6 1.2-2.6 1.2-4.2a4 4 0 0 0-4-4z M4.4 18.2h15.2v3.2H4.4z",
+  candado:   "M5.4 10.6h13.2a1.6 1.6 0 0 1 1.6 1.6v7.2a1.6 1.6 0 0 1-1.6 1.6H5.4a1.6 1.6 0 0 1-1.6-1.6v-7.2a1.6 1.6 0 0 1 1.6-1.6z M7.8 10.6V7a4.2 4.2 0 0 1 8.4 0v3.6",
+};
+
+/* Los momentos que se juegan a pantalla completa, ademas de las
+   legendarias y las bifurcaciones, que entran solas. */
+const DRAMA_IDS = [
+  /* te ofrecen otro trabajo, otro pais u otra silla */
+  7,      /* te llama un headhunter */
+  15,     /* una silla en el board */
+  33,     /* dos ofertas sobre la mesa */
+  55,     /* una visa de trabajo */
+  119,    /* la silla del socio se decide en la mesa */
+  120,    /* dirigir la oficina de otro pais */
+  9720, 9721,   /* renunciar y montar lo tuyo */
+  /* la vida que se parte en dos */
+  9001,   /* alguien que te importa */
+  9010,   /* la conversacion: casarse */
+  9011,   /* se rompio */
+  9012,   /* un hijo */
+  9021,   /* tu padre ya no puede solo */
+  9022,   /* se murio */
+];
+
+/* El simbolo, el rotulo y el color de cada clase de escena. */
+const CLASE_ESCENA = (ev) => {
+  if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
+  if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "var(--cobre)" };
+  if (ev.rama) return { k: "bifurca", n: "Bifurcación", c: "var(--cobre)" };
+  /* las de vida traen ventana de edad; las de oficina, de rango */
+  if (ev.eMin != null || ev.eMax != null) return { k: "corazon", n: "Tu vida", c: "#B9532A" };
+  if (ev.clave) return { k: "sello", n: "Decisión clave", c: "var(--tintaPapel)" };
+  return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
+};
+
+/* Que simbolo lleva cada cosa que se compra. Varias comparten el mismo:
+   el icono dice de que familia es la compra, y el nombre dice cual. */
+const ICONO_BIEN = {
+  /* mejoras */
+  research: "libro", gym: "pesa", fiscal: "balanza", coach: "persona",
+  asistente: "persona", prensa: "pluma", terminal: "grafico", abogado: "balanza",
+  broker: "grafico", club: "copa", colchon: "escudo", mba: "libro",
+  /* caprichos */
+  viaje: "maleta", moto: "coche", reloj: "reloj", palco: "copa",
+  carro: "coche", arte: "cuadro", boda: "anillo", apto: "casa",
+  finca: "cafe", playa: "palmera", barco: "barco", hijos: "bebe",
+  /* inmuebles */
+  local: "edificio", ofi: "edificio", galpon: "edificio", edificio: "edificio",
+  terreno: "terreno", hotel: "casa", centro: "edificio", isla: "palmera",
+};
+
+/* un icono de trazo, para lo que solo necesita identificarse */
+function Icono({ k, tam, tono }) {
+  const d = TRAZOS[k];
+  if (!d) return null;
+  const n = numero(tam, 14);
+  return (
+    <svg className="ea-ico" width={n} height={n} viewBox="0 0 24 24" aria-hidden="true" focusable="false"
+      fill="none" stroke={tono || "currentColor"} strokeWidth="1.9"
+      strokeLinecap="round" strokeLinejoin="round">
+      <path d={d} />
+    </svg>
+  );
+}
+
+/* ---- y el que se llena ----
+   Un numero del 0 al 100 no dice nada de un vistazo. Un rayo que se
+   llena hasta donde llega tu energia, si. El vaso vacio queda detras en
+   tenue, y lo lleno se recorta con un rectangulo que sube. */
+let SELLO_ID = 0;
+function IconoLleno({ k, pct, tam, tono }) {
+  const d = TRAZOS[k];
+  const idRef = useRef(null);
+  if (idRef.current === null) { SELLO_ID += 1; idRef.current = "eaLl" + SELLO_ID; }
+  if (!d) return null;
+  const n = numero(tam, 16);
+  const p = clamp(numero(pct, 0) / 100, 0, 1);
+  const alto = 24 * p;
+  return (
+    <svg className="ea-ico" width={n} height={n} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id={idRef.current}>
+          <rect x="0" y={24 - alto} width="24" height={alto} />
+        </clipPath>
+      </defs>
+      <path d={d} fill="currentColor" opacity=".24" />
+      <path d={d} fill={tono || "currentColor"} clipPath={"url(#" + idRef.current + ")"} />
+    </svg>
+  );
+}
+
+/* ---- las reglas dentro del minijuego ----
+   Se quedaban puestas mientras juegas, ocupando un tercio de la pantalla
+   con lo mismo que acababas de leer en la ficha de antes. Ahora se
+   pliegan: quien las necesite las abre, y no estorban al que ya sabe. */
+function Pista({ children }) {
+  const [abierta, setAbierta] = useState(false);
+  return (
+    <div>
+      <button className="ea-recuerda ea-dis" onClick={() => setAbierta(!abierta)}>
+        {abierta ? "↑ Ocultar las reglas" : "↓ Las reglas"}
+      </button>
+      {abierta && <div className="ea-pista ea-panelAb">{children}</div>}
+    </div>
+  );
+}
+
+/* ============================================================
+   LAS STATS, COMO STATS
+   Arriba solo se veian energia y reputacion, y en una linea de numeros
+   pequeños. Criterio, modelaje y red —que son los que abren y cierran
+   puertas— no salian en ningun sitio salvo dentro de la Ficha.
+
+   Ahora son cinco anillos, uno por atributo y cada uno con su color,
+   que se llenan hasta donde llegas. Y cuando uno se mueve, suelta su
+   +3 o su −8 flotando: el juego te dice que ganaste algo en el momento
+   en que lo ganas, no tres pantallas despues.
+   ============================================================ */
+const TONO_ATRIB = {
+  ene: "#7FD08C",   /* verde: lo que te queda en el cuerpo */
+  cri: "#7FB8E6",   /* azul: lo que ves que otros no */
+  mod: "#C9A6F0",   /* lila: lo que sabes montar */
+  red: "#F2B441",   /* oro: a quien conoces */
+  rep: "#F08A6C",   /* coral: lo que dicen de ti */
+};
+const ANILLO_R = 15;
+const ANILLO_C = 2 * Math.PI * ANILLO_R;
+
+function Anillo({ k, v }) {
+  const val = clamp(numero(v, 0), 0, 100);
+  const [delta, setDelta] = useState(null);
+  const ant = useRef(val);
+  const vez = useRef(0);
+  useEffect(() => {
+    const d = Math.round(val - ant.current);
+    ant.current = val;
+    if (!d || sinMovimiento() || typeof setTimeout !== "function") return;
+    vez.current += 1;
+    setDelta({ d, n: vez.current });
+    const t = setTimeout(() => setDelta(null), 1250);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [val]);
+
+  /* por debajo de 25 el anillo se pone rojo, sea el que sea: es el aviso */
+  const bajo = val < 25;
+  const tono = bajo ? "#E0897B" : TONO_ATRIB[k];
+  return (
+    <div className={"ea-anillo" + (bajo ? " bajo" : "")} title={(ETIQ[k] || k) + " " + Math.round(val) + " de 100"}>
+      <div className="ea-anilloDisco">
+        <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+          <circle cx="20" cy="20" r={ANILLO_R} className="ea-anilloFondo" />
+          <circle cx="20" cy="20" r={ANILLO_R} className="ea-anilloArco" stroke={tono}
+            strokeDasharray={ANILLO_C.toFixed(2)}
+            strokeDashoffset={(ANILLO_C * (1 - val / 100)).toFixed(2)}
+            transform="rotate(-90 20 20)" />
+        </svg>
+        <span className="ea-anilloIco" style={{ color: tono }}><Icono k={ICONO_ATRIB[k]} tam={14} /></span>
+        {delta && (
+          <span key={delta.n} className={"ea-anilloD ea-mono " + (delta.d > 0 ? "sube" : "baja")}>
+            {delta.d > 0 ? "+" : "−"}{Math.abs(delta.d)}
+          </span>
+        )}
+      </div>
+      <span className="ea-anilloN ea-mono" style={{ color: tono }}>{Math.round(val)}</span>
+      <span className="ea-anilloK ea-dis">{ETIQ[k]}</span>
+    </div>
+  );
+}
+
+/* ---- el marco de las decisiones que pesan ----
+   Sin drama devuelve la escena tal cual, en su sitio de siempre. Con
+   drama la saca a pantalla completa: fondo oscuro con un halo del color
+   de su clase, el sello grande en el centro y la escena debajo. La
+   escena de dentro es exactamente la misma: no hay un segundo camino
+   de pintado que se pueda desincronizar del primero. */
+function Marco({ drama, tono, ico, clase, ano, children }) {
+  if (!drama) return children;
+  return (
+    <div className="ea-escenaPlena" style={{ "--tono": tono }}>
+      <div className="ea-escenaPlenaCaja">
+        <div className="ea-dramaTop">
+          <div className="ea-dramaIco"><Icono k={ico || "sello"} tam={44} /></div>
+          <div className="ea-dramaK ea-dis">{clase} · {ano}</div>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 function Plegable({ titulo, resumen, abierto, tono, children }) {
   const [ab, setAb] = useState(!!abierto);
@@ -6539,6 +7829,10 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
   const objAct = st.objetivo == null ? 0.7 : st.objetivo;
   const [w, setW] = useState(() => ({ ...actual }));
   const [obj, setObj] = useState(objAct);
+  /* el reparto activo por activo, plegado salvo que lo pidas */
+  const [avanzado, setAvanzado] = useState(false);
+  /* y las cinco medidas de riesgo que no se miran para decidir */
+  const [detalle, setDetalle] = useState(false);
   /* si la cartera cambia por otra via (un evento, retomar partida), los
      controles se ponen al dia solos en vez de quedar mostrando lo viejo */
   const huella = JSON.stringify(actual) + "|" + objAct;
@@ -6598,10 +7892,8 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
       <div className="ea-fila"><span style={{ fontSize: 12.5 }}>En efectivo</span><span className="ea-mono">USD {fmt(st.cash)}</span></div>
       {desvia && (
         <div className="ea-itemD">
-          No cuadra con tu objetivo de abajo, y es normal: el reparto se aplica al cerrar el año y
-          después los gastos del año salen del efectivo. Por eso a mitad de camino la parte invertida
-          queda {invReal > objAct ? "por encima" : "por debajo"} de la que pediste. Al cerrar el año se
-          vuelve a acomodar.
+          Va {invReal > objAct ? "por encima" : "por debajo"} de tu objetivo. Es normal: los gastos del año
+          salen del efectivo. Al cerrar el año se acomoda solo.
         </div>
       )}
 
@@ -6620,73 +7912,107 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
       <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Iría a la cartera</span><span className="ea-mono">USD {fmt(liq * obj)}</span></div>
       <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Quedaría en efectivo</span><span className="ea-mono">USD {fmt(liq * (1 - obj))}</span></div>
       <div className="ea-itemD">
-        Este reparto también manda al cerrar el año: lo que te quede después de gastos se acomoda solo a este
-        porcentaje. Tener algo en efectivo no es cobardía, es lo que evita vender la cartera en el peor momento.
+        Tener algo en efectivo no es cobardía: es lo que evita vender la cartera en el peor momento.
       </div>
 
-      <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Puntos de partida</div>
-      <div className="ea-preset">
-        {PERFILES.map((pf) => (
-          <button key={pf.id} className={"ea-mini" + (preset && preset.id === pf.id ? " on" : "")}
-            style={{ marginTop: 0 }} onClick={() => setW({ ...pf.w })}>{pf.n}</button>
-        ))}
+      {/* Elegir un perfil es la decision de verdad; repartir siete activos
+          a mano es un lujo para quien ya sabe. Antes los siete sliders
+          estaban siempre desplegados y eran lo primero que veia alguien
+          que nunca ha invertido: la pantalla mas intimidante del juego,
+          puesta delante justo del que menos sabe. */}
+      <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Cómo quieres invertirlo</div>
+      <div className="ea-perfiles">
+        {PERFILES.map((pf) => {
+          const est2 = statsPesos({ ...pf.w, efectivo: Math.max(0, 1 - invertidoDe(pf.w)) });
+          const on = preset && preset.id === pf.id;
+          return (
+            <button key={pf.id} className={"ea-perfil" + (on ? " on" : "")} onClick={() => setW({ ...pf.w })}>
+              <div className="ea-perfilT ea-dis">{pf.n}{on ? " ·" : ""}</div>
+              <div className="ea-perfilD">{pf.d}</div>
+              <div className="ea-perfilN ea-mono">
+                esperado {(est2.mu * 100).toFixed(1)}% · un año malo {((est2.mu - 2 * est2.sd) * 100).toFixed(0)}%
+              </div>
+            </button>
+          );
+        })}
       </div>
-      <div className="ea-itemD" style={{ marginTop: -4 }}>
-        {preset ? preset.d : "Combinación tuya. Ningún perfil de la lista se parece a esto."}
-      </div>
+      {!preset && (
+        <div className="ea-itemD" style={{ marginTop: 8 }}>Combinación tuya. No se parece a ninguno de los cinco.</div>
+      )}
 
-      <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Y cómo se reparte por dentro</div>
-      {ACTIVOS.map((a) => {
-        const x = Math.round((w[a.k] || 0) * 100);
-        return (
-          <div className="ea-wrow" key={a.k}>
-            <div className="ea-wtop">
-              <span className="ea-wname">{a.n}</span>
-              <span className="ea-wnum ea-mono">{x}%</span>
-            </div>
-            <input className="ea-slider" type="range" min="0" max="100" step="5" value={x}
-              aria-label={a.n} onChange={(e) => setW(ajustarPesos(w, a.k, clamp(numero(e.target.value, 0) / 100, 0, 1)))} />
-            <div className="ea-wsub">
-              esperado {(a.mu * 100).toFixed(1)} · volatilidad {(a.sd * 100).toFixed(0)} · {a.d}
-            </div>
+      <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }}
+        onClick={() => setAvanzado((v) => !v)}>
+        {avanzado ? "↑ Ocultar el reparto activo por activo" : "↓ Repartir activo por activo"}
+      </button>
+
+      {avanzado && (
+        <div className="ea-panelAb">
+          {ACTIVOS.map((a) => {
+            const x = Math.round((w[a.k] || 0) * 100);
+            return (
+              <div className="ea-wrow" key={a.k}>
+                <div className="ea-wtop">
+                  <span className="ea-wname">{a.n}</span>
+                  <span className="ea-wnum ea-mono">{x}%</span>
+                </div>
+                <input className="ea-slider" type="range" min="0" max="100" step="5" value={x}
+                  aria-label={a.n} onChange={(e) => setW(ajustarPesos(w, a.k, clamp(numero(e.target.value, 0) / 100, 0, 1)))} />
+                <div className="ea-wsub">
+                  esperado {(a.mu * 100).toFixed(1)} · volatilidad {(a.sd * 100).toFixed(0)} · {a.d}
+                </div>
+              </div>
+            );
+          })}
+          <div className="ea-fila" style={{ marginTop: 6 }}>
+            <span className="ea-dis" style={{ fontSize: 12 }}>Efectivo dentro de la cartera</span>
+            <span className="ea-mono">{Math.round(ef * 100)}%</span>
           </div>
-        );
-      })}
-      <div className="ea-fila" style={{ marginTop: 6 }}>
-        <span className="ea-dis" style={{ fontSize: 12 }}>Efectivo dentro de la cartera</span>
-        <span className="ea-mono">{Math.round(ef * 100)}%</span>
-      </div>
-
-      <div className="ea-caja">
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Retorno esperado</span><span className="ea-mono">{(est.mu * 100).toFixed(1)}%</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Volatilidad</span><span className="ea-mono">{(est.sd * 100).toFixed(1)} puntos</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Año normal, entre</span><span className="ea-mono">{((est.mu - est.sd) * 100).toFixed(0)} y {((est.mu + est.sd) * 100).toFixed(0)}</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Un año malo de verdad</span><span className="ea-mono">{((est.mu - 2 * est.sd) * 100).toFixed(0)}%</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Retorno por unidad de riesgo</span><span className="ea-mono">{sharpe.toFixed(2)}</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Sensibilidad al mercado</span><span className="ea-mono">beta {beta.toFixed(2)}</span></div>
-        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Ahorro por diversificar</span><span className="ea-mono">{(ahorra * 100).toFixed(0)}%</span></div>
-      </div>
-
-      {ahorra > 0.14 && (
-        <div className="ea-ok2">
-          Sumados por separado tus activos darían {(sdSuma * 100).toFixed(0)} puntos de volatilidad y juntos dan
-          {" "}{(est.sd * 100).toFixed(0)}. Esa diferencia es lo único gratis que hay en finanzas.
         </div>
       )}
+
+      {/* Las dos cifras que se usan para decidir, arriba. Las otras cinco
+          —beta, sharpe, ahorro por diversificar— son buenas y no las mira
+          nadie antes de mover un slider: se pliegan. */}
+      <div className="ea-caja">
+        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Esperas ganar</span><span className="ea-mono">{(est.mu * 100).toFixed(1)}% al año</span></div>
+        <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Un año malo de verdad</span><span className="ea-mono" style={{ color: "var(--rojo)" }}>{((est.mu - 2 * est.sd) * 100).toFixed(0)}%</span></div>
+      </div>
+      <button className="ea-atras ea-dis" style={{ marginTop: 10, marginBottom: 0 }}
+        onClick={() => setDetalle((v) => !v)}>
+        {detalle ? "↑ Cerrar" : "↓ El detalle del riesgo"}
+      </button>
+      {detalle && (
+        <div className="ea-caja ea-panelAb" style={{ marginTop: 8 }}>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Volatilidad</span><span className="ea-mono">{(est.sd * 100).toFixed(1)} puntos</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Año normal, entre</span><span className="ea-mono">{((est.mu - est.sd) * 100).toFixed(0)} y {((est.mu + est.sd) * 100).toFixed(0)}</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Retorno por unidad de riesgo</span><span className="ea-mono">{sharpe.toFixed(2)}</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Sensibilidad al mercado</span><span className="ea-mono">beta {beta.toFixed(2)}</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Ahorro por diversificar</span><span className="ea-mono">{(ahorra * 100).toFixed(0)}%</span></div>
+          {ahorra > 0.14 && (
+            <div className="ea-ok2">
+              Por separado darían {(sdSuma * 100).toFixed(0)} puntos de volatilidad; juntos, {(est.sd * 100).toFixed(0)}.
+              Esa diferencia es lo único gratis que hay en finanzas.
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Los avisos se quedan: son los que enseñan, y solo salen cuando
+          de verdad hay algo que avisar. */}
       {conc.max >= 0.5 && (
         <div className="ea-avis">
-          {Math.round(conc.max * 100)}% en {conc.activo.n.toLowerCase()}. Si eso cae la mitad, tu cartera
-          se lleva {Math.round(conc.max * 50)}% del golpe.
+          {Math.round(conc.max * 100)}% en {conc.activo.n.toLowerCase()}. Si eso cae la mitad, pierdes
+          {" "}{Math.round(conc.max * 50)}%.
         </div>
       )}
       {(w.cripto || 0) >= 0.25 && (
-        <div className="ea-avis">Con esta dosis de cripto un año malo se te puede llevar un tercio de todo. Que sea porque quieres, no por descuido.</div>
+        <div className="ea-avis">Con esta cripto, un año malo se lleva un tercio de todo.</div>
       )}
       {beta >= 0.95 && (
-        <div className="ea-avis">Beta cerca de uno: tienes varias líneas, pero todas responden al mismo mercado. Eso no es diversificar.</div>
+        <div className="ea-avis">Beta cerca de uno: varias líneas, un solo mercado. Eso no es diversificar.</div>
       )}
       {ef >= 0.4 && (
-        <div className="ea-avis">Casi la mitad de la cartera en efectivo, rindiendo {(EFECTIVO_MU * 100).toFixed(1)}%. Si es un colchón, ya lo tienes arriba en la barra.</div>
+        <div className="ea-avis">Media cartera en efectivo, rindiendo {(EFECTIVO_MU * 100).toFixed(1)}%.</div>
       )}
 
       {cambio ? (
@@ -6709,8 +8035,8 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
         <div className="ea-tengo ea-dis" style={{ marginTop: 12 }}>Así está invertido tu dinero ahora</div>
       )}
       <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 12 }}>
-        Cada movimiento cuesta 0,5% de lo que rotas. Rebalancear una vez al año es sano; perseguir al
-        activo que rindió el año pasado es la forma más común y más cara de perder dinero.
+        Cada movimiento cuesta 0,5% de lo que rotas. Perseguir al activo que rindió el año pasado es la
+        forma más cara de perder dinero.
       </div>
     </div>
   );
@@ -6823,6 +8149,8 @@ function Motor() {
      no tiene sentido guardarlo en la partida. */
   const hitosAno = useRef([]);
   const [tab, setTab] = useState(null);
+  /* que grupo de Comprar se esta mirando */
+  const [grupo, setGrupo] = useState("caprichos");
   const [cola, setCola] = useState([]);
   /* Mientras la cartera tenga cambios a medias no se deja avanzar: antes
      se podía mover los pesos, seguir jugando y perder el cambio sin que
@@ -6838,6 +8166,12 @@ function Motor() {
     if (!id || ya.indexOf(id) >= 0) return st;
     return { ...st, temas: ya.concat(id).slice(-60) };
   });
+  /* queda anotado que ya leiste las reglas de este minijuego */
+  const apuntarJuego = (k) => setS((st) => {
+    const ya = Array.isArray(st.jugados) ? st.jugados : [];
+    if (!k || ya.indexOf(k) >= 0) return st;
+    return { ...st, jugados: ya.concat(k).slice(-30) };
+  });
   const [ev, setEv] = useState(null);
   const [op, setOp] = useState(null);
   const [res, setRes] = useState(null);
@@ -6845,12 +8179,26 @@ function Motor() {
   const [fin, setFin] = useState(null);
   const [guardado, setGuardado] = useState(null);
   const [aviso, setAviso] = useState("");
+  /* el aviso legal entero, plegado por defecto */
+  const [avisoLargo, setAvisoLargo] = useState(false);
+  /* la pantalla del rodillo, que tapa el informe hasta que el jugador
+     ha visto cuanto tiene ahora */
+  const [anuncio, setAnuncio] = useState(false);
+  /* la segunda mitad de la leccion del año, la de las cifras propias */
+  const [verLeccion, setVerLeccion] = useState(false);
+  /* el movimiento: del navegador, no de la partida */
+  const [animar, setAnimarBruto] = useState(leerMovimiento);
+  const setAnimar = (v) => { anotarMovimiento(v); setAnimarBruto(v); };
   /* Las cuatro decisiones de partida viven aquí y NO tocan el estado del
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
      duplica sus bonos: no hay nada acumulado que duplicar. */
-  const SETUP0 = { nombre: "", genero: null, modo: "normal", edad: 20, pais: null, estudio: null, guia: null,
-    pareja: "solo", hijos: 0 };
+  /* El modo arranca en Aprendiz a proposito: es el que explica cada
+     termino antes de usarlo, y quien ya sabe de esto lo cambia en un
+     clic. Al reves —empezar en Analista— el que no sabe no se entera de
+     que existia la ayuda hasta que ya se perdio. */
+  const SETUP0 = { nombre: "", genero: null, modo: "aprendiz", edad: 20, pais: null, estudio: null, guia: null,
+    pareja: "solo", hijos: 0, duracion: "decada" };
   const [elec, setElec] = useState(SETUP0);
   const aceptarAviso = () => { anotarAviso(); irA("portada"); };
 
@@ -6910,7 +8258,7 @@ function Motor() {
     };
   }, [tab, carteraPend]);
 
-  const tope = TOPE_DE(s.seguir);
+  const tope = topeDe(s);
   const nacion = NACIONES.find((x) => x.id === s.pais) || NACIONES[0];
   const estudio = CARRERAS.find((x) => x.id === s.estudio) || CARRERAS[0];
   const pesosAct = s.pesos || PERFILES[0].w;
@@ -7060,6 +8408,20 @@ function Motor() {
   /* una escena solo sirve si tiene opciones jugables */
   const escenaValida = (e) => !!(e && e.t && Array.isArray(e.o) && e.o.length);
 
+  /* Las que se juegan a pantalla completa. Primero lo probe con todas las
+     «clave» y salian siete por partida, casi una por año: si todo es
+     dramatico, nada lo es. Las veinte decisiones clave del juego salen
+     cada dos años y muchas son rutina de oficina. Esto es mas estrecho:
+     las legendarias, las bifurcaciones y los momentos que parten una
+     vida en dos, que se nombran uno por uno. */
+  const pesada = (e) => !!(e && (e.legendaria || e.rama || DRAMA_IDS.indexOf(e.id) >= 0));
+  /* presenta una escena, con anuncio si toca */
+  const ponerEscena = (e) => {
+    setEv(e);
+    setOp(null);
+    irA("evento");
+  };
+
   const arrancarAno = (st) => {
     hitosAno.current = [];
     let lista = [];
@@ -7079,9 +8441,7 @@ function Motor() {
       return;
     }
     setCola(lista.slice(1));
-    setEv(lista[0]);
-    setOp(null);
-    irA("evento");
+    ponerEscena(lista[0]);
     /* El snapshot va aquí, con la escena todavía sin resolver: así una
        recarga devuelve a esta misma decisión y no hay nada que duplicar. */
     guardarEscena(st, lista);
@@ -7113,6 +8473,9 @@ function Motor() {
     st.genero = GENEROS.some((g) => g.id === sel.genero) ? sel.genero : null;
     st.guia = sel.guia === true;
     st.guiaVistas = [];
+
+    /* cuánto va a durar esto antes de que se le pregunte si se retira */
+    st.meta = DURACION(sel.duracion).meta;
 
     /* la edad: años de trayectoria, ahorro y desgaste */
     st.edadIni = ed.e;
@@ -7176,7 +8539,7 @@ function Motor() {
 
   /* el rastro de lo ya elegido, para que se vea qué hay detrás del Atrás */
   const rastro = () => {
-    const partes = [MODO(elec.modo).n, "empiezas a los " + EDAD_DE(elec.edad).e];
+    const partes = ["Empiezas a los " + EDAD_DE(elec.edad).e];
     const na = NACIONES.find((x) => x.id === elec.pais);
     if (na) partes.push(na.n);
     return partes.join(" · ");
@@ -7204,10 +8567,8 @@ function Motor() {
     if (aviso) setAviso(aviso);
     const pendientes = colaDeIds(st.cola, st);
     if (pendientes.length) {
-      setEv(pendientes[0]);
       setCola(pendientes.slice(1));
-      setOp(null);
-      irA("evento");
+      ponerEscena(pendientes[0]);
       return;
     }
     arrancarAno(st);
@@ -7852,6 +9213,8 @@ function Motor() {
       cobertura, gastos, indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0,
     });
     if (terminar) setFin(terminar);
+    setAnuncio(true);       /* primero el rodillo, y despues el informe */
+    setVerLeccion(false);   /* la leccion del año nuevo vuelve a su titular */
     irA("cierre");
   };
 
@@ -7870,6 +9233,15 @@ function Motor() {
 
   const elegir = (o) => {
     if (!enFase("evento") || !o) return;
+    /* El boton ya sale apagado, pero el guardarrail va tambien aqui: un
+       disabled solo detiene al raton. Con la salvedad de siempre, que si
+       no queda ninguna disponible se puede tomar cualquiera. */
+    try {
+      const ops = opcionesDe(ev);
+      const faltas = ops.map((x) => faltaDe(x, s));
+      const todasFuera = faltas.length > 0 && faltas.every(Boolean);
+      if (!todasFuera && faltaDe(o, s)) return;
+    } catch (e) { /* ante la duda, se deja decidir */ }
     setOp(o);
     if (o.juego || o.j) { irA("minijuego"); return; }
     if (o.chk) {
@@ -7889,7 +9261,7 @@ function Motor() {
     if (!enFase("resultado")) return;
     const resto = (Array.isArray(cola) ? cola : []).filter(escenaValida);
     if (resto.length > 0) {
-      setEv(resto[0]); setCola(resto.slice(1)); setOp(null); irA("evento");
+      setCola(resto.slice(1)); ponerEscena(resto[0]);
       guardarEscena(s, resto);
     } else cerrarAno();
   };
@@ -7900,7 +9272,7 @@ function Motor() {
     if (s.turno >= tope) {
       /* Antes el juego te jubilaba por decreto a la segunda prórroga.
          Ahora solo se acaba solo cuando ya no queda tabla que estirar. */
-      if (s.seguir >= TOPES.length - 1) { tirarPartida(); setFin("completo"); irA("fin"); return; }
+      if (topeDe(s) >= TOPE_ABSOLUTO) { tirarPartida(); setFin("completo"); irA("fin"); return; }
       persistir(s); irA("retiro"); return;
     }
     persistir(s);
@@ -7909,7 +9281,7 @@ function Motor() {
 
   const retirarse = () => { tirarPartida(); setFin("retiro"); irA("fin"); };
   const seguirCinco = () => {
-    const st = { ...s, seguir: Math.min(s.seguir + 1, TOPES.length - 1) };
+    const st = { ...s, seguir: entero(s.seguir + 1, 1, 0, 20) };
     setS(st); persistir(st); arrancarAno(st);
   };
 
@@ -7940,16 +9312,36 @@ function Motor() {
   const netoDelAno = netoAnual(s);
   const pesoTren = netoDelAno > 0 ? gastosAnuales / netoDelAno : 1;
 
+  /* Una partida corta no se puede juzgar con la vara de una carrera
+     entera. En diez anios la cobertura no llega a uno ni jugando
+     perfecto, asi que con la escalera larga TODA partida corta caia en
+     el veredicto mas duro —y encima le decia al jugador que habia
+     trabajado tres decadas. Por debajo de veinte anios se mide lo unico
+     que de verdad se puede medir en ese plazo: cuantos anios de sueldo
+     neto llevas guardados. */
   const veredicto = useMemo(() => {
     if (fin === "despido") return { t: "Salida por la puerta de atrás", x: "Tu reputación se agotó antes que tu talento. En esta industria el capital más escaso no es el financiero." };
     if (fin === "burnout") return { t: "El cuerpo cobró la cuenta", x: "Llegaste lejos y a un costo que no aparece en ningún estado financiero." };
     if (s.fondo && cobertura >= 1.5) return { t: "Del otro lado de la mesa", x: "Terminaste administrando capital propio y ajeno, con un patrimonio que cubre tu vida sin depender de nadie. Muy pocos cruzan esa línea." };
     if (cobertura >= 1.5 && s.rango >= 5) return { t: "Te retiraste arriba y con el número resuelto", x: "Cargo alto, patrimonio que cubre tus gastos con holgura y una red que te sobrevive." };
     if (cobertura >= 1) return { t: "Libertad financiera", x: "Tu patrimonio cubre tu forma de vivir sin que tengas que volver a la oficina. Ya no trabajas porque necesites." };
+
+    const anos = entero(s.turno, 0, 0, 60);
+    if (anos < 20) {
+      const neto = netoAnual(s);
+      const veces = neto > 0 ? patrimonio / neto : 0;
+      const cuantos = anos + (anos === 1 ? " año" : " años");
+      if (patrimonio < 0) return { t: "Cerraste debiendo", x: "Después de " + cuantos + " sales con el patrimonio en negativo. Pasa, y se sale: lo que no se puede es no mirarlo. La deuda cara se paga antes que cualquier inversión." };
+      if (veces >= 5) return { t: "Arrancaste muy por delante", x: "En " + cuantos + " guardaste " + veces.toFixed(1) + " años de tu sueldo neto. A este ritmo el interés compuesto hace el resto del trabajo: mira abajo lo que traían los años que no jugaste." };
+      if (veces >= 2.5) return { t: "Vas bien encaminado", x: "Llevas " + veces.toFixed(1) + " años de sueldo guardados en " + cuantos + ". Es una base de verdad, y la parte difícil —empezar— ya está hecha." };
+      if (veces >= 1) return { t: "Empezaste, que es lo que casi nadie hace", x: "Un año entero de sueldo guardado en " + cuantos + ". No suena a mucho y es exactamente donde se separa el que acumula del que no." };
+      return { t: "Todo se fue en vivir", x: "Después de " + cuantos + " no queda casi nada guardado. No es raro: el gasto persigue al sueldo solo, y la única forma de romperlo es apartar el ahorro el día que cobras, no a fin de mes." };
+    }
+
     if (cobertura >= 0.6) return { t: "Casi, pero todavía no", x: "Tienes un patrimonio serio y aun así te falta para cubrir tu tren de vida. O trabajas unos años más, o el tren de vida se ajusta." };
     if (s.rango >= 5) return { t: "Llegaste alto y gastaste igual de alto", x: "El cargo lo conseguiste. El patrimonio para sostenerlo sin sueldo, no. Es un final más común de lo que parece." };
-    return { t: "El sueldo era el plan", x: "Trabajaste tres décadas y sigues dependiendo del próximo pago. La carrera no fue mala, la acumulación sí." };
-  }, [fin, cobertura, s.rango, s.fondo]);
+    return { t: "El sueldo era el plan", x: "Trabajaste " + anos + " años y sigues dependiendo del próximo pago. La carrera no fue mala, la acumulación sí." };
+  }, [fin, cobertura, s.rango, s.fondo, s.turno, patrimonio]);
 
   /* Si los requisitos dejaran una escena sin ninguna opcion visible, el
      jugador quedaria encerrado. Antes que eso, se le muestran todas. */
@@ -7977,9 +9369,15 @@ function Motor() {
     return vis.length ? vis : todas;
   };
 
+  /* El icono va junto al nombre del atributo: es el unico sitio donde se
+     ven los dos juntos, y con eso se aprende que el rayo es energia sin
+     que nadie tenga que explicarlo. */
   const Stat = ({ k, v, ene }) => (
     <div className="ea-stat">
-      <div className="ea-statTop"><span className="ea-dis">{ETIQ[k]}</span><span className="ea-mono">{Math.round(v)}</span></div>
+      <div className="ea-statTop">
+        <span className="ea-dis ea-statN"><Icono k={ICONO_ATRIB[k]} tam={13} />{ETIQ[k]}</span>
+        <span className="ea-mono">{Math.round(v)}</span>
+      </div>
       <div className="ea-bar"><div className={"ea-fill" + (ene ? " ene" : "") + (v < 25 ? " baja" : "")} style={{ width: v + "%" }} /></div>
     </div>
   );
@@ -7988,22 +9386,78 @@ function Motor() {
   const selloCls = { exito: "", parcial: " med", fallo: " mal" };
   /* La barra solo muestra lo que ya está abierto: en el primer año son
      dos secciones, no siete. El tercer elemento de cada par es la llave. */
+  /* ============================================================
+     CUATRO SECCIONES, NO SIETE
+     Ficha, Cartera, Terminos, Inmuebles, Mejoras, Fondo y Vida era un
+     menu de contabilidad. Y eran siete porque cada sistema que se añadia
+     traia su pestaña, no porque hicieran falta siete sitios.
+
+     Ahora: Ficha (quien eres y tus numeros, con el diccionario dentro),
+     Cartera (tu dinero y, cuando llegue, tu fondo: las dos cosas son
+     invertir), Comprar (inmuebles, mejoras y caprichos: las tres son
+     gastar) y Vida (como vives, tu gente y tu expediente).
+     ============================================================ */
+  const hayCompras = abierto(s, "inmuebles") || abierto(s, "mejoras") || abierto(s, "vida");
+  /* los tres grupos de Comprar, con lo que cada uno hace en una linea */
+  const GRUPOS_COMPRA = [
+    { id: "caprichos", n: "Para ti", ico: "copa", lista: CAPRICHOS, abierto: abierto(s, "vida"),
+      d: "Sube tu tren de vida. Unos conservan valor y otros no; casi todos cobran mantenimiento." },
+    { id: "inmuebles", n: "Rentan", ico: "edificio", lista: PROPIEDADES, abierto: abierto(s, "inmuebles"),
+      d: "Existen para pagarte algo cada año. La renta y el mantenimiento salen en el cierre." },
+    { id: "mejoras", n: "Te mejoran", ico: "grafico", lista: PERKS, abierto: abierto(s, "mejoras"),
+      d: "Se compran una vez y trabajan para ti todos los años que queden." },
+  ];
+  const GRUPO_ACT = GRUPOS_COMPRA.filter((g) => g.abierto).find((g) => g.id === grupo)
+    || GRUPOS_COMPRA.filter((g) => g.abierto)[0]
+    || GRUPOS_COMPRA[0];
   const TABS = [
-    ["ficha", "Ficha", null],
-    ["portafolio", "Cartera", "cartera"],
-    ["terminos", "Términos", null],
-    ["props", "Inmuebles", "inmuebles"],
-    ["mejoras", "Mejoras", "mejoras"],
-    ["fondo", "Fondo", "fondo"],
-    ["expediente", "Vida", "vida"],
-  ].filter((p) => p[2] === null || abierto(s, p[2]));
+    ["ficha", "Ficha", true],
+    ["portafolio", "Cartera", abierto(s, "cartera")],
+    /* «Compras» y no «Comprar»: la seccion es un sustantivo y el boton
+       de dentro es el verbo. Con los dos llamados igual habia dos
+       «Comprar» en pantalla haciendo cosas distintas —y finales.js se
+       colgaba abriendo y cerrando el menu para siempre, que fue como
+       salio a la luz. */
+    ["comprar", "Compras", hayCompras],
+    ["expediente", "Vida", abierto(s, "vida")],
+  ].filter((p) => p[2]);
   const PAREJA_N = { solo: "sin pareja", noviazgo: "en pareja", casado: "casado", divorciado: "divorciado", viudo: "viudo" };
   const parejaTxt = PAREJA_TXT(s);
   const ramaN = s.rama ? nombreRama(s, s.rama) : null;
   const ano = 2026 + s.turno;
 
+  /* el interruptor global, al dia en cada render */
+  MOVIMIENTO = animar;
+  const quietoAhora = sinMovimiento();
+
+  /* El latido de la cifra de arriba cuando el patrimonio se mueve. Se
+     apaga solo, porque una animacion que se queda puesta deja de ser un
+     aviso y pasa a ser ruido. */
+  const [late, setLate] = useState(false);
+  const patAnt = useRef(patrimonio);
+  useEffect(() => {
+    if (Math.round(patAnt.current) === Math.round(patrimonio)) return;
+    patAnt.current = patrimonio;
+    if (quietoAhora || typeof setTimeout !== "function") return;
+    setLate(true);
+    const t = setTimeout(() => setLate(false), 560);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [patrimonio, quietoAhora]);
+
+  /* La cascara del documento trae su propio freno con !important dentro
+     de una media query, y ese gana siempre: hay que retirarlo desde
+     fuera marcando #raiz. Sin esto, encender el movimiento en la Ficha
+     no servia de nada y el rodillo seguia sin girar. */
+  useEffect(() => {
+    if (typeof document === "undefined" || !document.getElementById) return;
+    var r = document.getElementById("raiz");
+    if (!r || !r.classList) return;
+    if (quietoAhora) r.classList.remove("ea-mov");
+    else r.classList.add("ea-mov");
+  }, [quietoAhora]);
+
   return (
-    <div className="ea-root">
+    <div className={"ea-root" + (quietoAhora ? " ea-quieto" : "")}>
       <style>{CSS}{CSS2}{CSS3}{CSS4}{CSS5}</style>
 
       {fase === "aviso" && (
@@ -8011,55 +9465,73 @@ function Motor() {
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Antes de entrar</div>
           <h1 className="ea-h1 ea-dis" style={{ fontSize: "clamp(34px,8vw,58px)" }}>Esto es un juego</h1>
 
+          {/* Tres frases, no cinco bloques. El aviso segui­a siendo un muro
+              de mil palabras delante de la puerta, y un muro no se lee: se
+              salta. Lo que la ley y el jugador necesitan saber cabe en tres
+              lineas —es ficcion, no es asesoria, y hay vida adulta dentro—
+              y el texto completo sigue entero, a un clic. */}
           <div className="ea-aviso">
-            <div className="ea-avisoB">
-              <div className="ea-avisoK ea-dis">Nada de aquí es real</div>
-              <p>
-                Las empresas, los fondos, las noticias y los números están inventados. No existe ninguna
-                de las oportunidades que vas a ver, no hay dinero de verdad en juego y nada de lo que
-                decidas aquí tiene la menor consecuencia fuera de esta pantalla. Puedes arruinarte
-                tranquilo: es el mejor sitio para hacerlo.
-              </p>
-            </div>
-
-            <div className="ea-avisoB">
-              <div className="ea-avisoK ea-dis">Es para aprender, no para hacerte caso</div>
-              <p>
-                El juego enseña cómo funcionan el interés compuesto, la diversificación, el riesgo, la deuda
-                y el coste de vivir por encima de tus posibilidades. Eso son conceptos, y los conceptos sí
-                se trasladan a la vida. Las cifras concretas, no: <strong>esto no es asesoría financiera</strong>.
-                Ninguna decisión de tu dinero real debería basarse en lo que pase en una partida.
-              </p>
-            </div>
-
-            <div className="ea-avisoB">
-              <div className="ea-avisoK ea-dis">Los números están simplificados a propósito</div>
-              <p>
-                Los rendimientos se simulan con modelos deliberadamente sencillos para que se entiendan.
-                El mercado real es más desordenado, los impuestos cambian según el país y el año, y el
-                rendimiento pasado no predice el futuro ni aquí ni allá. Si un resultado del juego te
-                parece demasiado bueno, probablemente lo sea.
-              </p>
-            </div>
-
-            <div className="ea-avisoB">
-              <div className="ea-avisoK ea-dis">Hay vida adulta dentro</div>
-              <p>
-                Además de la carrera, la partida incluye escenas de la vida que afectan al dinero:
-                parejas y rupturas, hijos, divorcios, enfermedad, la muerte de alguien cercano y
-                estafas. Nada está contado de forma explícita ni gráfica, pero conviene que lo sepas
-                antes de empezar.
-              </p>
-            </div>
-
-            <div className="ea-avisoB">
-              <div className="ea-avisoK ea-dis">Tu partida no sale de tu navegador</div>
-              <p>
-                Lo que juegas se guarda en tu propio dispositivo para que puedas retomarlo. No se envía
-                a ningún sitio, no se pide ningún dato tuyo y no hay cuenta que crear.
-              </p>
-            </div>
+            <div className="ea-avisoB"><p>Todo está <strong>inventado</strong>. No hay dinero de verdad en juego.</p></div>
+            <div className="ea-avisoB"><p><strong>Esto no es asesoría financiera.</strong></p></div>
+            <div className="ea-avisoB"><p><strong>Hay vida adulta dentro</strong>: parejas, hijos, divorcios, enfermedad, muerte y estafas.</p></div>
           </div>
+
+          <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }}
+            onClick={() => setAvisoLargo((v) => !v)}>
+            {avisoLargo ? "↑ Cerrar el aviso completo" : "↓ Leer el aviso completo"}
+          </button>
+
+          {avisoLargo && (
+            <div className="ea-aviso ea-panelAb" style={{ marginTop: 6 }}>
+              <div className="ea-avisoB">
+                <div className="ea-avisoK ea-dis">Nada de aquí es real</div>
+                <p>
+                  Las empresas, los fondos, las noticias y los números están inventados. No existe ninguna
+                  de las oportunidades que vas a ver, no hay dinero de verdad en juego y nada de lo que
+                  decidas aquí tiene la menor consecuencia fuera de esta pantalla. Puedes arruinarte
+                  tranquilo: es el mejor sitio para hacerlo.
+                </p>
+              </div>
+
+              <div className="ea-avisoB">
+                <div className="ea-avisoK ea-dis">Es para aprender, no para hacerte caso</div>
+                <p>
+                  El juego enseña cómo funcionan el interés compuesto, la diversificación, el riesgo, la deuda
+                  y el coste de vivir por encima de tus posibilidades. Eso son conceptos, y los conceptos sí
+                  se trasladan a la vida. Las cifras concretas, no: <strong>esto no es asesoría financiera</strong>.
+                  Ninguna decisión de tu dinero real debería basarse en lo que pase en una partida.
+                </p>
+              </div>
+
+              <div className="ea-avisoB">
+                <div className="ea-avisoK ea-dis">Los números están simplificados a propósito</div>
+                <p>
+                  Los rendimientos se simulan con modelos deliberadamente sencillos para que se entiendan.
+                  El mercado real es más desordenado, los impuestos cambian según el país y el año, y el
+                  rendimiento pasado no predice el futuro ni aquí ni allá. Si un resultado del juego te
+                  parece demasiado bueno, probablemente lo sea.
+                </p>
+              </div>
+
+              <div className="ea-avisoB">
+                <div className="ea-avisoK ea-dis">Hay vida adulta dentro</div>
+                <p>
+                  Además de la carrera, la partida incluye escenas de la vida que afectan al dinero:
+                  parejas y rupturas, hijos, divorcios, enfermedad, la muerte de alguien cercano y
+                  estafas. Nada está contado de forma explícita ni gráfica, pero conviene que lo sepas
+                  antes de empezar.
+                </p>
+              </div>
+
+              <div className="ea-avisoB">
+                <div className="ea-avisoK ea-dis">Tu partida no sale de tu navegador</div>
+                <p>
+                  Lo que juegas se guarda en tu propio dispositivo para que puedas retomarlo. No se envía
+                  a ningún sitio, no se pide ningún dato tuyo y no hay cuenta que crear.
+                </p>
+              </div>
+            </div>
+          )}
 
           <div className="ea-regla" />
           <button className="ea-btnO" onClick={aceptarAviso}>Entendido, acepto y quiero jugar</button>
@@ -8074,21 +9546,33 @@ function Motor() {
         <div className="ea-wrap ea-portada">
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Simulador de carrera e inversión</div>
           <h1 className="ea-h1 ea-dis">El Analista</h1>
+          {/* La curva que sube, dibujandose. Es de lo que va el juego, y
+              la portada era texto sobre blanco. Se dibuja con
+              stroke-dashoffset, asi que no hay imagen que cargar. */}
+          <svg className="ea-portadaArte" viewBox="0 0 320 96" aria-hidden="true" focusable="false">
+            <line className="ea-paBase" x1="6" y1="88" x2="314" y2="88" />
+            {[68, 140, 212, 284].map((x, i) => (
+              <line key={i} className="ea-paTick" x1={x} y1="88" x2={x} y2="82" />
+            ))}
+            <path className="ea-paCurva"
+              d="M10 82 C 52 80, 68 66, 96 62 S 130 72, 152 54 S 188 30, 214 34 S 252 20, 276 12 L 300 8" />
+            <circle className="ea-paPunto" cx="300" cy="8" r="5.5" />
+          </svg>
           <p className="ea-lede">
-            Treinta años de carrera y de dinero, y tú eliges desde dónde los empiezas: recién graduado a los
-            veinte, o a los cincuenta con media vida hecha y bastante más criterio. De dónde vienes y qué
-            estudiaste te van a abrir unas puertas y cerrarte otras. Cada año trae decisiones, noticias que
-            sacuden el mercado, una cartera que repartes tú y un examen que se pone más difícil a medida que
-            estudias. Al final decides si te retiras o sigues cinco años más.
+            Un año por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
           </p>
           <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
             onClick={() => { if (enFase("portada")) irA("aviso"); }}>Volver a leer el aviso</button>
           <div className="ea-regla" />
-          <div className="ea-cifras" style={{ marginBottom: 26 }}>
-            <div><div className="ea-cifraK">Recorrido</div><div className="ea-cifraV ea-mono">30 años</div></div>
-            <div><div className="ea-cifraK">Edad</div><div className="ea-cifraV ea-dis">Elige tu edad</div></div>
-            <div><div className="ea-cifraK">La meta</div><div className="ea-cifraV ea-dis">Ser millonario</div></div>
-            <div><div className="ea-cifraK">Por el camino</div><div className="ea-cifraV ea-dis">Bodas, hijos, estafas</div></div>
+          <div className="ea-cifras ea-cifrasPortada" style={{ marginBottom: 26 }}>
+            <div><div className="ea-cifraK">La carrera</div><div className="ea-cifraV ea-dis">De pasante a socio</div>
+              <div className="ea-cifraD">Ascensos, contratos y la opción de montar tu propia firma.</div></div>
+            <div><div className="ea-cifraK">El punto de partida</div><div className="ea-cifraV ea-dis">Nunca es tarde para invertir</div>
+              <div className="ea-cifraD">Empieza a los 20, 30, 40 o 50: más joven, más tiempo; más tarde, más capital y experiencia.</div></div>
+            <div><div className="ea-cifraK">El objetivo</div><div className="ea-cifraV ea-dis">Independencia financiera</div>
+              <div className="ea-cifraD">Que tu patrimonio cubra tu vida sin depender del sueldo.</div></div>
+            <div><div className="ea-cifraK">Los imprevistos</div><div className="ea-cifraV ea-dis">Crisis, familia y fraudes</div>
+              <div className="ea-cifraD">Mercados que caen, decisiones de pareja e hijos, y ofertas demasiado buenas.</div></div>
           </div>
           {guardado ? (
             <div>
@@ -8098,7 +9582,7 @@ function Motor() {
                   {2026 + guardado.s.turno} · {edad(guardado.s.turno, guardado.s.edadIni)} años · {RANGO(guardado.s.rango).n}
                 </div>
                 <div className="ea-mono" style={{ fontSize: 13, color: "var(--gris)", marginTop: 3 }}>
-                  patrimonio USD {fmt(guardado.s.cash + guardado.s.cartera)} · año {guardado.s.turno + 1} de {TOPE_DE(guardado.s.seguir)}
+                  patrimonio USD {fmt(guardado.s.cash + guardado.s.cartera)} · año {guardado.s.turno + 1} de {topeDe(guardado.s)}
                 </div>
               </div>
               <div className="ea-fila2" style={{ marginTop: 14 }}>
@@ -8111,7 +9595,12 @@ function Motor() {
               </div>
             </div>
           ) : (
-            <button className="ea-btnO" onClick={empezar}>Empezar</button>
+            <div>
+              {/* Una sola entrada: «Jugar ya» abre la configuración (nombre,
+                  edad, duración, país, carrera). Hubo un atajo que lo elegía
+                  todo al azar; se quitó el 28-sep-2026 a pedido de Alessandro. */}
+              <button className="ea-jugarYa ea-dis" onClick={empezar}>Jugar ya</button>
+            </div>
           )}
 
           {/* Los números a batir, antes de empezar. Es el gancho: se ve
@@ -8128,11 +9617,10 @@ function Motor() {
       {fase === "identidad" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a="portada" texto="Volver a la portada" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso uno de cinco</div>
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso uno de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Quién eres?</h2>
           <p className="ea-lede" style={{ marginBottom: 20 }}>
-            Nada de esto sale de tu navegador ni cambia tus números: el nombre es para que el juego
-            te hable a ti, y el género solo para concordar las palabras.
+            Solo para que el juego te hable a ti. No cambia ningún número.
           </p>
 
           <label className="ea-campoK ea-dis" htmlFor="ea-nombre">Tu nombre</label>
@@ -8150,50 +9638,37 @@ function Motor() {
 
           <div className="ea-regla" style={{ marginTop: 26 }} />
           <button className="ea-btnO" style={{ marginTop: 0 }}
-            onClick={() => { if (enFase("identidad")) irA("modo"); }}>
+            onClick={() => { if (enFase("identidad")) irA("edad"); }}>
             {elec.nombre.trim() ? "Seguir como " + elec.nombre.trim() : "Seguir sin nombre"}
           </button>
         </div>
       )}
 
-      {fase === "modo" && (
-        <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
-          <Atras a="identidad" texto="Cambiar tu nombre" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso dos de cinco</div>
-          <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Cuánto sabes de esto?</h2>
-          <p className="ea-lede" style={{ marginBottom: 18 }}>
-            No hay respuesta mala. El juego trata de enseñar finanzas, así que lo lógico es que se ajuste
-            a de dónde partes. Puedes cambiar de opinión empezando otra vida cuando quieras.
-          </p>
-          {MODOS.map((m) => (
-            <button className={"ea-opcion" + (elec.modo === m.id ? " on" : "")} key={m.id}
-              onClick={() => { if (enFase("modo")) elige("modo", m.id, "edad"); }}>
-              <div className="ea-opcionN">{m.n}</div>
-              <div className="ea-opcionD">{m.d}</div>
-              {m.ayuda > 0 && <div className="ea-opcionM">Los minijuegos te dan {m.ayuda} puntos de ventaja y las preguntas traen recordatorio</div>}
-            </button>
-          ))}
-        </div>
-      )}
-
       {fase === "edad" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
-          <Atras a="modo" texto="Cambiar el modo" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso tres de cinco</div>
+          <Atras a="identidad" texto="Cambiar tu nombre" />
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso dos de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿A qué edad empiezas?</h2>
-          <div className="ea-rastro ea-mono">Modo {MODO(elec.modo).n.toLowerCase()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            Nadie está fuera de tiempo. Empezar a los cincuenta no es empezar perdiendo: es empezar con
-            menos años por delante y bastante más criterio, red y dinero que a los veinte. En todos los
-            casos juegas treinta años.
+            Nadie está fuera de tiempo. Más tarde es menos años y más criterio, red y dinero.
           </p>
+
+          <div className="ea-campoK ea-dis">Cuánto quieres jugar</div>
+          <div className="ea-generos" style={{ marginBottom: 6 }}>
+            {DURACIONES.map((d) => (
+              <button key={d.id} className={"ea-mini" + (elec.duracion === d.id ? " on" : "")}
+                style={{ marginTop: 0 }} onClick={() => setElec((x) => ({ ...x, duracion: d.id }))}>{d.n}</button>
+            ))}
+          </div>
+          <div className="ea-itemD" style={{ marginBottom: 20 }}>{DURACION(elec.duracion).d}</div>
+
           {EDADES.map((e) => (
             <button className={"ea-opcion" + (elec.edad === e.e ? " on" : "")} key={e.e}
               onClick={() => { if (enFase("edad")) elige("edad", e.e, e.e >= 30 ? "familia" : "pais"); }}>
               <div className="ea-opcionN">Empezar a los {e.e}</div>
               <div className="ea-opcionD">{e.d}</div>
               <div className="ea-opcionM">
-                Terminas a los {e.e + 30}
+                Te preguntan si te retiras a los {e.e + DURACION(elec.duracion).meta}, y ahí decides si sigues
                 {e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado"}
                 {Object.keys(e.mods || {}).length ? " · " + Object.keys(e.mods).map((k) => ETIQ[k] + " " + (e.mods[k] > 0 ? "+" : "") + e.mods[k]).join(" · ") : ""}
               </div>
@@ -8205,13 +9680,11 @@ function Motor() {
       {fase === "familia" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a="edad" texto="Cambiar la edad" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso tres de cinco</div>
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso dos de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Cómo llegas a los {EDAD_DE(elec.edad).e}?</h2>
           <div className="ea-rastro ea-mono">Empiezas a los {EDAD_DE(elec.edad).e}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            A esta edad casi nadie llega sin nadie y sin cuentas que pagar. Lo que digas aquí cambia lo que
-            te cuesta vivir desde el primer año, y también qué te va a ofrecer el juego: no tiene sentido
-            que te pregunte si quieres pareja cuando llegas casado.
+            Cambia lo que te cuesta vivir desde el primer año.
           </p>
 
           <div className="ea-campoK ea-dis">Con quién llegas</div>
@@ -8244,16 +9717,16 @@ function Motor() {
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a={EDAD_DE(elec.edad).e >= 30 ? "familia" : "edad"}
             texto={EDAD_DE(elec.edad).e >= 30 ? "Cambiar tu situación" : "Cambiar la edad"} />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso cuatro de cinco</div>
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso tres de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿De dónde vienes?</h2>
           <div className="ea-rastro ea-mono">{rastro()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            El país define tu sueldo, tu costo de vida, qué noticias te tocan más de cerca y con qué instintos empiezas.
+            Define tu sueldo, tu costo de vida y con qué instintos empiezas.
           </p>
           {NACIONES.map((p) => (
             <div className="ea-panel" key={p.id} style={{ marginBottom: 10 }}>
               <div className="ea-itemTop">
-                <span className="ea-nombre ea-dis" style={{ fontSize: 19 }}>{p.n}</span>
+                <span className="ea-nombre ea-dis" style={{ fontSize: 19, color: "var(--tinta)" }}>{p.n}</span>
                 <span className="ea-mono" style={{ fontSize: 12.5, color: "var(--gris)" }}>{p.ban}</span>
               </div>
               <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "8px 0" }}>{p.d}</div>
@@ -8272,52 +9745,33 @@ function Motor() {
       {fase === "estudio" && (
         <div className="ea-wrap" style={{ maxWidth: 760, margin: "4vh auto" }}>
           <Atras a="pais" texto="Cambiar el origen" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso cinco de cinco</div>
+          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso cuatro de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>
             {EDAD_DE(elec.edad).e <= 20 ? "¿Qué estás por terminar?" : "¿Qué estudiaste?"}
           </h2>
           <div className="ea-rastro ea-mono">{rastro()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            Tu carrera te da atributos de entrada y, sobre todo, opciones que solo tú vas a poder tomar cuando aparezcan.
-            Al elegir aquí empieza la partida: hasta este momento nada está decidido.
+            Te da atributos y opciones que solo tú vas a poder tomar. Al elegir, empieza la partida.
           </p>
           {CARRERAS.map((c) => (
             <div className="ea-panel" key={c.id} style={{ marginBottom: 10 }}>
-              <div className="ea-nombre ea-dis" style={{ fontSize: 19 }}>{c.n}</div>
+              <div className="ea-nombre ea-dis" style={{ fontSize: 19, color: "var(--tinta)" }}>{c.n}</div>
               <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "7px 0" }}>{c.d}</div>
               <div style={{ fontSize: 12, color: "var(--cobre)" }}>
                 {Object.keys(c.mods).map((k) => ETIQ[k] + " +" + c.mods[k]).join(" · ")} · mejor en {c.juegos.map((j) => JUEGO(j).n.toLowerCase()).join(" y ")}
               </div>
               <button className="ea-mini" onClick={() => {
                 if (!enFase("estudio")) return;
+                /* Al elegir la carrera empieza la partida, con los avisos de
+                   guía siempre puestos. Había una pantalla más («¿Te vas
+                   guiando o vas solo?») y se quitó el 28-sep-2026: los
+                   avisos son cortos y salen una sola vez, no hace falta
+                   preguntar por ellos. */
                 setElec((x) => ({ ...x, estudio: c.id }));
-                irA("guia");
+                arrancarPartida({ ...elec, estudio: c.id, guia: true });
               }}>{EDAD_DE(elec.edad).e <= 20 ? "Graduarte de esto" : "Empezar con esto"}</button>
             </div>
           ))}
-        </div>
-      )}
-
-      {fase === "guia" && (
-        <div className="ea-wrap" style={{ maxWidth: 700, margin: "6vh auto" }}>
-          <Atras a="estudio" texto="Cambiar la carrera" />
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Última cosa</div>
-          <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿Te vas guiando o vas solo?</h2>
-          <p className="ea-lede" style={{ marginBottom: 22 }}>
-            No es un tutorial de diez pantallas. Si dices que sí, te van saliendo avisos de tres líneas
-            en el momento en que cada cosa aparece por primera vez, y se cierran con un clic. Nada más.
-          </p>
-          <button className="ea-opcion" onClick={() => { if (enFase("guia")) arrancarPartida({ ...elec, guia: true }); }}>
-            <div className="ea-opcionN">Guíame por el camino</div>
-            <div className="ea-opcionD">
-              Ocho avisos cortos repartidos por la partida: la primera decisión, las secciones de arriba,
-              la cartera, el informe del año. Salen una vez y no vuelven.
-            </div>
-          </button>
-          <button className="ea-opcion" onClick={() => { if (enFase("guia")) arrancarPartida({ ...elec, guia: false }); }}>
-            <div className="ea-opcionN">Sé lo que hago</div>
-            <div className="ea-opcionD">Directo a jugar, sin avisos. Puedes activarlos después empezando otra vida.</div>
-          </button>
         </div>
       )}
 
@@ -8328,8 +9782,15 @@ function Motor() {
               <div className="ea-nombre ea-dis">{s.nombre ? s.nombre : RANGO(s.rango).n}</div>
               {/* Antes solo se veía la formación y la bandera. Dónde trabajas
                   era invisible, y es lo primero que define tu año. */}
-              <div className="ea-sub ea-dis">
-                {s.nombre ? RANGO(s.rango).n + " · " : ""}{s.patron || estudio.n} · {nacion.n}{ramaN ? " · " + ramaN : ""}
+              {/* Era una linea de texto con puntos: «Analista · Mercantil
+                  Praga · Venezuela». Ahora cada cosa lleva su icono, asi
+                  que se distingue de un vistazo donde trabajas de donde
+                  vives sin tener que leerlo. */}
+              <div className="ea-sub ea-dis ea-quien">
+                {s.nombre && <span><Icono k="escalera" tam={12} />{RANGO(s.rango).n}</span>}
+                <span><Icono k="edificio" tam={12} />{s.patron || estudio.n}</span>
+                <span><Icono k="pin" tam={12} />{nacion.n}</span>
+                {ramaN && <span className="ea-quienRama">{ramaN}</span>}
               </div>
             </div>
             <div className="ea-reloj">
@@ -8337,26 +9798,91 @@ function Motor() {
                   peso a cada decisión, porque el jugador empieza a contar
                   turnos en vez de vivir el año que tiene delante. */}
               <div className="ea-dis">{ano} · {edad(s.turno, s.edadIni)} años</div>
-              <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "")}>USD {fmt(patrimonio)}</div>
-              {abierto(s, "cartera") && (
-                <div className="ea-mono" style={{ fontSize: 11.5, marginTop: 2 }}>efectivo {fmt(s.cash)} · cartera {fmt(s.cartera)}</div>
-              )}
+              {/* La cifra sin rotulo no se entendia: ponia «USD 6.375» y ya.
+                  Ahora dice que es, y el reparto entre lo que tienes a mano
+                  y lo que esta invertido se ve en una barra en vez de
+                  leerse en una linea de texto apretada. */}
+              <div className="ea-patK ea-dis">Tu patrimonio</div>
+              <div className={"ea-plata ea-mono" + (patrimonio < 0 ? " neg" : "") + (late ? " late" : "")}>
+                USD <Cifra v={patrimonio} />
+              </div>
+              {abierto(s, "cartera") && (() => {
+                const liq = Math.max(0, s.cash) + Math.max(0, s.cartera);
+                const pEf = liq > 0 ? (Math.max(0, s.cash) / liq) * 100 : 100;
+                return (
+                  <div className="ea-reparto">
+                    <div className="ea-repartoBar" aria-hidden="true">
+                      <span className="ea-repEf" style={{ width: pEf.toFixed(1) + "%" }} />
+                      <span className="ea-repCa" style={{ width: (100 - pEf).toFixed(1) + "%" }} />
+                    </div>
+                    <div className="ea-repartoL ea-mono">
+                      <span><i className="ea-punto2 ef" />a mano {fmtCorto(s.cash)}</span>
+                      <span><i className="ea-punto2 ca" />invertido {fmtCorto(s.cartera)}</span>
+                    </div>
+                  </div>
+                );
+              })()}
               {/* El sueldo es el número que el jugador usa para decidir; energía y
                   reputación solo salen cuando están en zona de aviso, que es el
                   único momento en que cambian una decisión. */}
+              {/* La energia era un numero del 0 al 100 escondido en una
+                  linea de texto, y solo cuando ya ibas mal. Ahora es un
+                  rayo que se llena hasta donde llegas, siempre a la
+                  vista: se lee sin leer. Igual la reputacion. */}
               <div className="ea-mono ea-signos">
-                <span>sueldo {fmt(salarioAnual(s))} al año</span>
-                {s.ene < 50 && <span className={s.ene < 30 ? "mal" : "ojo"}>energía {Math.round(s.ene)}</span>}
-                {s.rep < 30 && <span className={s.rep < 20 ? "mal" : "ojo"}>reputación {Math.round(s.rep)}</span>}
-                {s.deuda > 0 && <span className="mal">debes {fmt(s.deuda)}</span>}
+                <span title={"Sueldo " + fmt(salarioAnual(s)) + " al año"}>
+                  <Icono k="moneda" tam={13} />{fmtCorto(salarioAnual(s))} al año
+                </span>
+                {s.deuda > 0 && (
+                  <span className="mal" title={"Debes " + fmt(s.deuda)}>
+                    <Icono k="aviso" tam={13} />debes {fmtCorto(s.deuda)}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* ---- la fila de stats, a lo ancho de la placa ----
+                Primero hacia donde va tu carrera, como una barra de
+                experiencia: cuanto te falta para el siguiente cargo. Y
+                debajo los cinco atributos, cada uno con su anillo. */}
+            <div className="ea-stats">
+              {(() => {
+                const r = entero(s.rango, 0, 0, RANGOS.length - 1);
+                const techo = RANGO(r).umbral;
+                const suelo = r > 0 ? RANGO(r - 1).umbral : 0;
+                const tope = techo === Infinity;
+                const p = tope ? 1 : clamp((numero(s.carrera, 0) - suelo) / Math.max(1, techo - suelo), 0, 1);
+                return (
+                  <div className="ea-xp" title={tope ? "Cargo máximo" : "Hacia " + RANGO(r + 1).n}>
+                    <div className="ea-xpTop ea-dis">
+                      <span><Icono k="escalera" tam={12} />{RANGO(r).n}</span>
+                      <span className="ea-xpSig">{tope ? "cargo máximo" : "→ " + RANGO(r + 1).n}</span>
+                    </div>
+                    <div className="ea-xpBar"><div className="ea-xpFill" style={{ width: (p * 100).toFixed(1) + "%" }} /></div>
+                  </div>
+                );
+              })()}
+              <div className="ea-anillos">
+                {["ene", "cri", "mod", "red", "rep"].map((k) => <Anillo key={k} k={k} v={s[k]} />)}
               </div>
             </div>
           </div>
           {fase !== "cierre" && (fase === "evento" || fase === "minijuego" || fase === "resultado") && (
             <div className="ea-cinta">
               <span className="ea-cintaK ea-dis">{ano}</span>
-              <span>Quedan {cola.length + (fase === "evento" ? 1 : fase === "minijuego" ? 1 : 0)} situaciones este año{abierto(s, "cartera") ? " · cartera " + perfilN.toLowerCase() : ""}</span>
-              {aviso && <span style={{ marginLeft: "auto", color: "var(--verde)", flexShrink: 0 }}>{aviso}</span>}
+              {/* El año como puntos: se ve de un vistazo cuánto queda sin
+                  tener que leer «quedan tres situaciones este año». */}
+              {(() => {
+                const quedan = cola.length + (fase === "evento" || fase === "minijuego" ? 1 : 0);
+                const total = Math.max(quedan, hitosAno.current.length + quedan);
+                const puntos = [];
+                for (let i = 0; i < Math.min(total, 8); i++) {
+                  puntos.push(<span key={i} className={"ea-punto" + (i < total - quedan ? " ido" : "")} />);
+                }
+                return <span className="ea-puntos" aria-label={"Quedan " + quedan + " situaciones este año"}>{puntos}</span>;
+              })()}
+              {abierto(s, "cartera") && <span>cartera {perfilN.toLowerCase()}</span>}
+              {aviso && <span className="ea-avisoFlash" style={{ marginLeft: "auto", flexShrink: 0 }}>{aviso}</span>}
             </div>
           )}
 
@@ -8530,7 +10056,43 @@ function Motor() {
                     {/* Con el retomar automático el jugador ya no pasa por la
                         portada, así que hace falta una puerta de vuelta. No
                         borra nada: la partida queda guardada. */}
-                    <button className="ea-cerrar ea-dis" style={{ marginBottom: 14 }}
+                    {/* El movimiento, encendible a mano. Windows con los
+                        efectos de animacion apagados le dice a Chrome que
+                        quiere menos movimiento, y eso apagaba el rodillo
+                        del cierre y las cifras que cuentan sin que hubiera
+                        forma de encenderlos. */}
+                    <Plegable titulo="Movimiento"
+                      resumen={animar === true ? "encendido" : animar === false ? "apagado" : (sistemaPideQuieto() ? "lo apaga tu sistema" : "sigue a tu sistema")}>
+                      <div className="ea-itemD" style={{ marginBottom: 8 }}>
+                        Las cifras que cuentan y el rodillo del cierre de año. Por defecto el juego hace lo
+                        que pida tu sistema{sistemaPideQuieto() ? ", y el tuyo los está apagando" : ""}.
+                        Se queda puesto para todas tus partidas.
+                      </div>
+                      <div className="ea-generos">
+                        {[[null, "Como mi sistema"], [true, "Encendido"], [false, "Apagado"]].map((par) => (
+                          <button key={String(par[0])} style={{ marginTop: 0 }}
+                            className={"ea-mini" + (animar === par[0] ? " on" : "")}
+                            onClick={() => setAnimar(par[0])}>{par[1]}</button>
+                        ))}
+                      </div>
+                    </Plegable>
+
+                    {/* El diccionario era una pestaña fija. Es una
+                        consulta, no una accion: vive aqui dentro y se
+                        abre cuando hace falta. */}
+                    <Plegable titulo="El diccionario" resumen={Object.keys(GLOSARIO).length + " palabras"}>
+                      <div className="ea-itemD" style={{ marginBottom: 10 }}>
+                        Todas las palabras que usa el juego, sin jerga.
+                      </div>
+                      {Object.keys(GLOSARIO).map((k) => (
+                        <div className="ea-item" key={k}>
+                          <div className="ea-itemN">{GLOSARIO[k].n}</div>
+                          <div className="ea-itemD">{GLOSARIO[k].x}</div>
+                        </div>
+                      ))}
+                    </Plegable>
+
+                    <button className="ea-cerrar ea-dis" style={{ marginBottom: 14, marginTop: 14 }}
                       onClick={() => { persistir(s, true); setTab(null); irA("portada"); }}>
                       Guardar y volver a la portada
                     </button>
@@ -8587,60 +10149,62 @@ function Motor() {
                   </div>
                 )}
 
+                {/* Tu dinero y tu fondo son la misma actividad —invertir—
+                    y eran dos pestañas. El fondo llega en rango 4, asi
+                    que hasta entonces esto es solo la cartera. */}
                 {tab === "portafolio" && (
                   <PanelCartera st={s} onAplicar={aplicarCartera} onPendiente={setCarteraPend} />
                 )}
 
-                {tab === "terminos" && (
+                {/* ---- COMPRAR: las tres listas en un solo sitio ----
+                     Inmuebles, mejoras y caprichos eran tres pestañas y
+                     son la misma accion: sacar dinero y cambiarlo por
+                     algo. Aqui se eligen por lo que hacen, no por en que
+                     menu vivian. */}
+                {tab === "comprar" && (
                   <div>
-                    <div className="ea-rot ea-dis">El diccionario</div>
-                    <div className="ea-itemD" style={{ marginBottom: 14 }}>
-                      Todas las palabras que el juego usa, explicadas sin jerga. Está aquí siempre, en
-                      cualquier modo, y puedes consultarlo en medio de una decisión.
+                    <div className="ea-grupos">
+                      {GRUPOS_COMPRA.filter((g) => g.abierto).map((g) => (
+                        <button key={g.id} className={"ea-grupo" + (grupo === g.id ? " on" : "")}
+                          onClick={() => setGrupo(g.id)}>
+                          <Icono k={g.ico} tam={15} />{g.n}
+                        </button>
+                      ))}
                     </div>
-                    {Object.keys(GLOSARIO).map((k) => (
-                      <div className="ea-item" key={k}>
-                        <div className="ea-itemN">{GLOSARIO[k].n}</div>
-                        <div className="ea-itemD">{GLOSARIO[k].x}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                    <div className="ea-itemD" style={{ margin: "4px 0 12px" }}>{GRUPO_ACT.d}</div>
 
-                {tab === "props" && (
-                  <div>
-                    <div className="ea-rot ea-dis">Inmuebles que rentan</div>
-                    <div className="ea-itemD" style={{ marginBottom: 10 }}>
-                      A diferencia de los caprichos, estos existen para pagarte algo cada año. La renta aparece
-                      en el informe de cierre y el mantenimiento también.
-                    </div>
-                    {PROPIEDADES.map((c) => {
-                      const ya = s.bienes.indexOf(c.id) >= 0;
+                    {GRUPO_ACT.lista.map((c) => {
+                      const esPerk = GRUPO_ACT.id === "mejoras";
+                      const ya = esPerk ? tiene(s, c.id) : s.bienes.indexOf(c.id) >= 0;
+                      const caro = s.cash + s.cartera < c.c;
+                      const puede = esPerk ? true : puedeComprar(c, s);
                       return (
                         <div className={"ea-item" + (ya ? " tuyo" : "")} key={c.id}>
                           <div className="ea-itemTop">
-                            <span className="ea-itemN">{c.n}</span>
+                            <span className="ea-itemN ea-itemConIco">
+                              <Icono k={ICONO_BIEN[c.id] || "moneda"} tam={19} />{c.n}
+                            </span>
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(c.c)}</span>
                           </div>
-                          <div className="ea-etqs">
-                            {c.renta
-                              ? <span className="ea-etq act">renta {fmt(c.renta * 2)} al año</span>
-                              : <span className="ea-etq">sin renta, solo aprecia</span>}
-                            <span className="ea-etq">aprecia {(c.ap * 200).toFixed(1)}%</span>
-                            {c.up ? <span className="ea-etq cost">mantener {fmt(c.up * 2)} al año</span> : null}
-                            {c.vida ? <span className="ea-etq vida">+{c.vida} de índice</span> : null}
-                            {c.renta && c.up ? (
-                              <span className="ea-etq act">neto {fmt(c.renta * 2 - c.up * 2)} · {(((c.renta * 2 - c.up * 2) / c.c) * 100).toFixed(1)}% del precio</span>
-                            ) : null}
-                          </div>
+                          {!esPerk && (
+                            <div className="ea-etqs">
+                              {c.renta ? <span className="ea-etq act">renta {fmt(c.renta * 2)} al año</span> : null}
+                              {c.ap ? <span className="ea-etq act">aprecia {(c.ap * 200).toFixed(1)}%</span> : null}
+                              {c.dep ? <span className="ea-etq con">pierde {(c.dep * 200).toFixed(1)}% al año</span> : null}
+                              {c.up ? <span className="ea-etq cost">mantener {fmt(c.up * 2)} al año</span> : null}
+                              {c.vida ? <span className="ea-etq vida">+{c.vida} de tren de vida</span> : null}
+                            </div>
+                          )}
                           <div className="ea-itemD">{c.d}</div>
                           {ya
-                            ? <span className="ea-tengo ea-dis">Vale hoy USD {fmt(s.valores[c.id] || 0)}</span>
-                            : !puedeComprar(c, s)
+                            ? <span className="ea-tengo ea-dis">
+                                {esPerk ? "Ya la tienes" : c.tipo === "consumo" ? "Ya lo tienes" : "Vale hoy USD " + fmt(s.valores[c.id] || 0)}
+                              </span>
+                            : !puede
                             ? <span className="ea-dis" style={{ fontSize: 11, letterSpacing: ".1em", color: "var(--gris)" }}>{c.porQue || "Todavía no te toca"}</span>
-                            : <button className={s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis"}
-                                disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
-                                {s.cash + s.cartera < c.c ? "No te alcanza" : "Comprar"}
+                            : <button className={caro ? "ea-mini" : "ea-comprar ea-dis"} disabled={caro}
+                                onClick={() => (esPerk ? comprarPerk(c) : comprarBien(c))}>
+                                {caro ? "No te alcanza" : "Comprar"}
                               </button>}
                         </div>
                       );
@@ -8648,25 +10212,13 @@ function Motor() {
                   </div>
                 )}
 
-                {tab === "mejoras" && (
-                  <div>
-                    {PERKS.map((p) => (
-                      <div className={"ea-item" + (tiene(s, p.id) ? " tuyo" : "")} key={p.id}>
-                        <div className="ea-itemTop">
-                          <span className="ea-itemN">{p.n}</span>
-                          <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(p.c)}</span>
-                        </div>
-                        <div className="ea-itemD">{p.d}</div>
-                        {tiene(s, p.id) ? <span className="ea-tengo ea-dis">Ya la tienes</span>
-                          : <button className={s.cash + s.cartera < p.c ? "ea-mini" : "ea-comprar ea-dis"}
-                            disabled={s.cash + s.cartera < p.c} onClick={() => comprarPerk(p)}>Comprar</button>}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {tab === "fondo" && (
-                  <div>
+                {/* El fondo vive dentro de Cartera: tu dinero y el dinero
+                    que administras son la misma actividad, y eran dos
+                    pestañas. Llega en rango 4, asi que hasta entonces
+                    Cartera es solo la cartera. */}
+                {tab === "portafolio" && abierto(s, "fondo") && (
+                  <div style={{ marginTop: 24, borderTop: "1px solid var(--borde)", paddingTop: 18 }}>
+                    <div className="ea-rot ea-dis">Tu fondo</div>
                     {!s.fondo && (
                       <div>
                         <div className="ea-itemD" style={{ marginBottom: 12 }}>
@@ -8870,43 +10422,15 @@ function Motor() {
                       Y sí cambia los números, para bien y para mal.
                     </div>
 
-                    {/* ---- caprichos: aquí sí se decide ---- */}
-                    <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Caprichos</div>
-                    <div className="ea-itemD" style={{ marginBottom: 10 }}>
-                      Ninguno de estos es un error. Solo tienen consecuencias: unos suben tu índice y se van a cero,
-                      otros lo suben y conservan valor, y casi todos cobran mantenimiento cada año.
-                    </div>
-                    {CAPRICHOS.map((c) => {
-                      const ya = s.bienes.indexOf(c.id) >= 0;
-                      return (
-                        <div className={"ea-item" + (ya ? " tuyo" : "")} key={c.id}>
-                          <div className="ea-itemTop">
-                            <span className="ea-itemN">{c.n}</span>
-                            <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(c.c)}</span>
-                          </div>
-                          <div className="ea-etqs">
-                            <span className="ea-etq vida">+{c.vida} de índice</span>
-                            <span className={"ea-etq" + (c.tipo === "activo" ? " act" : " con")}>
-                              {c.tipo === "activo" ? "conserva valor" : "no se recupera"}
-                            </span>
-                            {c.up ? <span className="ea-etq cost">mantener {fmt(c.up * 2)} al año</span> : null}
-                            {c.renta ? <span className="ea-etq act">renta {fmt(c.renta * 2)}</span> : null}
-                            {c.ene ? <span className="ea-etq">energía +{c.ene}</span> : null}
-                            {c.red ? <span className="ea-etq">red +{c.red}</span> : null}
-                            {c.rep ? <span className="ea-etq">reputación +{c.rep}</span> : null}
-                          </div>
-                          <div className="ea-itemD">{c.d}</div>
-                          {ya
-                            ? <span className="ea-tengo ea-dis">{c.tipo === "activo" ? "Vale hoy USD " + fmt(s.valores[c.id] || 0) : "Ya lo tienes"}</span>
-                            : !puedeComprar(c, s)
-                            ? <span className="ea-dis" style={{ fontSize: 11, letterSpacing: ".1em", color: "var(--gris)" }}>{c.porQue || "Todavía no te toca"}</span>
-                            : <button className={s.cash + s.cartera < c.c ? "ea-mini" : "ea-comprar ea-dis"}
-                                disabled={s.cash + s.cartera < c.c} onClick={() => comprarBien(c)}>
-                                {s.cash + s.cartera < c.c ? "No te alcanza" : "Comprar"}
-                              </button>}
-                        </div>
-                      );
-                    })}
+                    {/* Los caprichos se mudaron a Comprar, con los
+                        inmuebles y las mejoras: las tres eran la misma
+                        accion en tres pestañas distintas. Aqui queda el
+                        atajo, que es donde uno mira su tren de vida y
+                        piensa en subirlo. */}
+                    <button className="ea-comprar ea-dis" style={{ marginTop: 18 }}
+                      onClick={() => { setGrupo("caprichos"); setTab("comprar"); }}>
+                      Comprar algo para ti
+                    </button>
 
                     {/* ---- el legado: premios ---- */}
                     {(Array.isArray(s.premios) ? s.premios : []).length > 0 && (
@@ -9000,30 +10524,91 @@ function Motor() {
             )}
 
             <div>
-              {fase === "evento" && ev && (
-                <div className="ea-memo">
+              {/* ---- las decisiones que pesan, en el centro ----
+                  Antes habia una tarjeta de dos segundos que anunciaba la
+                  escena y despues la decision volvia a salir en el mismo
+                  memorando de siempre: la decision EN SI seguia viendose
+                  como una opcion cualquiera. Ahora una oferta de trabajo,
+                  casarse o una legendaria se juegan enteras a pantalla
+                  completa. Mismo memorando, mismas opciones y mismos
+                  candados —un solo camino de pintado—, solo que dentro de
+                  un marco que se lleva la pantalla. */}
+              {fase === "evento" && ev && (() => {
+                const cl = CLASE_ESCENA(ev);
+                return (
+                <Marco drama={pesada(ev)} tono={cl.c} ico={cl.k} clase={cl.n} ano={ano}>
+                <div className={"ea-memo ea-memo-" + cl.k + (pesada(ev) ? " ea-memoDrama" : "")} key={ev.id}>
                   <div className={"ea-memoHead ea-dis" + (ev.legendaria ? " clave legend" : ev.clave ? " clave" : "")}>
-                    <span>{ev.legendaria ? "Decisión legendaria" : ev.rama ? "Bifurcación" : ev.clave ? "Decisión clave" : "Memorando interno"}</span><span>{ano}</span>
+                    <span>{cl.n}</span><span>{ano}</span>
+                  </div>
+                  {/* El sello de la clase de escena: entra girando y se
+                      asienta. Es lo que hace que un dia de oficina y la
+                      decision que parte tu carrera no se vean igual. */}
+                  <div className="ea-selloClase" style={{ color: cl.c }}>
+                    <Icono k={cl.k} tam={30} />
                   </div>
                   <h2 className="ea-memoTit ea-dis">{ev.t}</h2>
                   <p className="ea-memoTxt">{ev.x}</p>
                   <div className="ea-ops">
-                    {opcionesDe(ev).map((o, i) => (
-                      <button className="ea-op" key={i} disabled={carteraPend} onClick={() => elegir(o)}>
-                        <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
-                        {o.req && <span className="ea-opTag" style={{ color: "var(--cobre)" }}>Solo tú puedes tomar esta</span>}
-                        {(o.juego || o.j) && <span className="ea-opTag">{JUEGO(o.juego || o.j).n} · {JUEGO(o.juego || o.j).tema} · te ayuda {ETIQ[o.stat] || "Criterio"} {Math.round(ayudaDe(o))}</span>}
-                        {o.ramaId && <span className="ea-opTag">{o.ramaId === "boutique" ? FIRMA_DE(s).d : (RAMAS.find((r) => r.id === o.ramaId) || {}).d}</span>}
-                        {(() => {
-                          const ef = efectoDe(o);
-                          if (!ef) return null;
-                          const partes = [];
-                          if (ef.sube.length) partes.push("sube " + ef.sube.join(", "));
-                          if (ef.cuesta.length) partes.push("cuesta " + ef.cuesta.join(", "));
-                          return <span className="ea-opTag">{partes.join(" · ")}</span>;
-                        })()}
-                      </button>
-                    ))}
+                    {/* Una sola linea de letra chica por opcion. Antes cada
+                        opcion podia arrastrar cuatro: el minijuego con su tema,
+                        la ayuda, la rama y el efecto. Debajo de una frase de
+                        una linea, eso es mas metadato que decision. */}
+                    {(() => {
+                      const ops = opcionesDe(ev);
+                      let faltas = ops.map((o) => { try { return faltaDe(o, s); } catch (e) { return null; } });
+                      /* El guardarrail. Si TODAS quedaran bloqueadas el
+                         jugador se queda encerrado en la escena, asi que
+                         en ese caso se abren todas: quedarse sin energia
+                         encarece la vida, no la termina. */
+                      if (faltas.length && faltas.every(Boolean)) faltas = faltas.map(() => null);
+                      return ops.map((o, i) => {
+                        const tipo = o.juego || o.j;
+                        const efs = efectosDe(o);
+                        const falta = faltas[i];
+                        const bits = [];
+                        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
+                        return (
+                          <button className={"ea-op" + (falta ? " sinfuerza" : "")} key={i}
+                            style={{ "--i": i }}
+                            disabled={carteraPend || !!falta}
+                            title={falta ? "Te falta " + (ETIQ[falta.k] || falta.k).toLowerCase() : undefined}
+                            onClick={() => elegir(o)}>
+                            <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
+                            {o.req && !falta && <span className="ea-opSolo ea-dis">solo tú</span>}
+                            {/* Con el nombre del atributo, no solo el icono:
+                                esto es un «por qué no puedo hacer esto» y
+                                ahí no se adivina. */}
+                            {falta && (
+                              <span className="ea-opCandado ea-dis">
+                                <Icono k="candado" tam={12} />
+                                {(ETIQ[falta.k] || falta.k)} {falta.tengo} de {falta.hace}
+                              </span>
+                            )}
+                            {/* Lo que gana y lo que cuesta, en simbolos:
+                                un rayo con su cifra se lee de un vistazo
+                                y «cuesta energía» hay que leerlo. */}
+                            {efs.length > 0 && (
+                              <span className="ea-efs">
+                                {efs.map((e, n) => {
+                                  const fuerza = fuerzaDe(e.k, e.v);
+                                  const signo = (e.v > 0 ? "+" : "−").repeat(fuerza);
+                                  return (
+                                    <span key={n} className={"ea-ef " + (e.v > 0 ? "pos" : "neg")}
+                                      title={(ETIQ[e.k] || e.k) + ", " + (e.v > 0 ? "sube" : "baja")
+                                        + " " + (fuerza === 3 ? "mucho" : fuerza === 2 ? "bastante" : "un poco")}>
+                                      <span className="ea-efS ea-mono" aria-hidden="true">{signo}</span>
+                                      <Icono k={ICONO_ATRIB[e.k]} tam={13} />
+                                    </span>
+                                  );
+                                })}
+                              </span>
+                            )}
+                            {bits.length > 0 && <span className="ea-opTag">{bits.join(" · ")}</span>}
+                          </button>
+                        );
+                      });
+                    })()}
                     {opcionesDe(ev).length === 0 && (
                       <button className="ea-op" onClick={() => resolverEscena({ msg: "El asunto se resolvió sin que te tocara decidir." }, "parcial", null)}>
                         <span className="ea-opN ea-mono">A</span>Dejar que siga su curso
@@ -9031,16 +10616,18 @@ function Motor() {
                     )}
                   </div>
                 </div>
-              )}
+                </Marco>
+                );
+              })()}
 
+              {/* Sin memorando alrededor: la tarjeta se lleva la pantalla
+                  entera ella sola, en sus tres pasos. */}
               {fase === "minijuego" && op && (
-                <div className="ea-memo">
-                  <div className="ea-memoHead ea-dis clave"><span>{JUEGO(op.juego || op.j).n} · {JUEGO(op.juego || op.j).dur}</span><span>{ano}</span></div>
-                  <h2 className="ea-memoTit ea-dis">{op.t}</h2>
-                  <TarjetaJuego tipo={op.juego || op.j} ayuda={ayudaDe(op)} nivel={nivelDe(s.turno, s.estudia)}
-                    statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo}
-                    temas={s.temas} onTema={apuntarTema} />
-                </div>
+                <TarjetaJuego tipo={op.juego || op.j} ayuda={ayudaDe(op)} nivel={nivelDe(s.turno, s.estudia)}
+                  statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo}
+                  temas={s.temas} onTema={apuntarTema}
+                  visto={(Array.isArray(s.jugados) ? s.jugados : []).indexOf(op.juego || op.j) >= 0}
+                  onVisto={apuntarJuego} />
               )}
 
               {fase === "resultado" && res && (
@@ -9049,11 +10636,27 @@ function Motor() {
                   <div className={"ea-sello ea-dis" + selloCls[res.nivel]}>{selloTxt[res.nivel]}</div>
                   <h2 className="ea-memoTit ea-dis">{(ev && ev.t) || "Resolución"}</h2>
                   <p className="ea-memoTxt">{res.msg}</p>
-                  {res.cambios.filter((c) => c.nota || c.v).length > 0 && (
+                  {/* El dinero deja de ser un chip entre seis. Es lo que el
+                      jugador vino a ver, asi que sale solo, grande y
+                      contando; los atributos quedan detras, en pequeño. */}
+                  {(() => {
+                    const plata = res.cambios.find((c) => c.k === "cash" && c.v);
+                    if (!plata) return null;
+                    const sube = plata.v > 0;
+                    return (
+                      <div className={"ea-golpe " + (sube ? "sube" : "baja")}>
+                        <span className="ea-golpeS">{sube ? "+" : "−"}</span>
+                        <span className="ea-golpeV ea-mono"><Cifra v={Math.abs(plata.v)} desde={0} ms={800} /></span>
+                        <span className="ea-golpeU ea-dis">USD</span>
+                      </div>
+                    );
+                  })()}
+                  {res.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").length > 0 && (
                     <div className="ea-cambios">
-                      {res.cambios.filter((c) => c.nota || c.v).map((c, i) => (
-                        <span className={"ea-chip ea-mono " + (c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}>
-                          {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + (c.k === "cash" ? fmt(c.v) : c.v))}
+                      {res.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").map((c, i) => (
+                        <span className={"ea-chip ea-mono " + (c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}
+                          style={{ animationDelay: (260 + i * 90) + "ms" }}>
+                          {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v)}
                         </span>
                       ))}
                     </div>
@@ -9069,73 +10672,79 @@ function Motor() {
                   <div className="ea-memoHead ea-dis clave"><span>Cierre del año</span><span>{cierre.ano}</span></div>
                   <h2 className="ea-memoTit ea-dis">Así terminó {cierre.ano}</h2>
 
-                  {/* lo primero y casi lo único: tres cifras */}
+                  {/* El numero grande ya se vio a pantalla completa en el
+                      rodillo, asi que aqui la cabecera es una linea: como
+                      quedaste, cuanto se movio, cuanto ahorraste y cuanto
+                      cubres. El resto vive en tres cajones, no en seis. */}
                   <div className="ea-titular">
                     <div className="ea-titularK ea-dis">Tu patrimonio</div>
-                    <div className="ea-titularV ea-mono">USD {fmt(cierre.patrimonio)}</div>
+                    <div className="ea-titularV ea-mono" style={{ fontSize: 26 }}>USD {fmt(cierre.patrimonio)}</div>
                     <div className="ea-titularL">
                       <span className="ea-mono" style={{ color: cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E" }}>
                         {cierre.patrimonio >= cierre.patAntes ? "+" : "−"}{fmt(Math.abs(cierre.patrimonio - cierre.patAntes))} en el año
                       </span>
                       <span className="ea-mono" style={{ color: cierre.ahorro >= 0 ? "#2E7A3D" : "#8A2E1E" }}>
-                        ahorraste {Math.round(cierre.ahorro * 100)}% de lo que entró
+                        ahorraste {Math.round(cierre.ahorro * 100)}%
                       </span>
+                      <span className="ea-mono">cubres {Math.round(cierre.cobertura * 100)}% de tu vida</span>
                     </div>
                     {cierre.ascenso && <div className="ea-titularA ea-dis">Ascenso a {cierre.ascenso}</div>}
+                    {/* la barra de independencia deja de ser un cajon propio:
+                        era un numero y una barra, y ya estan aqui */}
+                    <div className="ea-ind" style={{ marginTop: 10 }}>
+                      <div className="ea-indF" style={{ width: Math.min(100, cierre.indep * 100) + "%" }} />
+                      <div className="ea-indM" style={{ left: "71.4%" }} />
+                    </div>
                   </div>
 
-                  {cierre.leccion && (
-                    <div className="ea-lec" style={{ marginTop: 14 }}>
-                      <div className="ea-lecK">Lo que enseña este año</div>
-                      <div className="ea-lecT">{cierre.leccion.t}</div>
-                      <div className="ea-lecX">{cierre.leccion.x}</div>
-                    </div>
-                  )}
+                  {/* La leccion era un parrafo de siete lineas, y es lo
+                      primero que se ve al cerrar el año. Ahora se lee el
+                      titular y la primera frase; el resto, que es donde
+                      van tus cifras concretas, espera a que lo pidas. */}
+                  {cierre.leccion && (() => {
+                    const x = texto(cierre.leccion.x, "", 1200);
+                    const corte = x.search(/\.\s/);
+                    const primera = corte > 0 ? x.slice(0, corte + 1) : x;
+                    const resto = corte > 0 ? x.slice(corte + 2) : "";
+                    return (
+                      <div className="ea-lec" style={{ marginTop: 14 }}>
+                        <div className="ea-lecK">Lo que enseña este año</div>
+                        <div className="ea-lecT">{cierre.leccion.t}</div>
+                        <div className="ea-lecX">{primera}</div>
+                        {resto && !verLeccion && (
+                          <button className="ea-atras ea-dis" style={{ marginTop: 6, marginBottom: 0 }}
+                            onClick={() => setVerLeccion(true)}>↓ Con tus números</button>
+                        )}
+                        {resto && verLeccion && <div className="ea-lecX ea-panelAb" style={{ marginTop: 6 }}>{resto}</div>}
+                      </div>
+                    );
+                  })()}
 
                   {cierre.hitos.length > 0 && (
                     <div className="ea-hitos">
-                      {cierre.hitos.map((h, i) => (<span className="ea-hito" key={i}>{h}</span>))}
+                      {cierre.hitos.map((h, i) => (
+                        <span className="ea-hito" key={i} style={{ animationDelay: (i * 100) + "ms" }}>{h}</span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Lo que paso sale a la vista: es lo unico del informe que
+                      cuenta algo en vez de dar un dato, y estaba plegado. */}
+                  {cierre.notas.length > 0 && (
+                    <div style={{ marginTop: 14 }}>
+                      {cierre.notas.map((n, i) => (
+                        <div key={i} className="ea-td" style={{ fontSize: 13.5, marginBottom: 6 }}>{n}</div>
+                      ))}
                     </div>
                   )}
 
                   <div className="ea-plegs">
 
-                  <Plegable titulo="Las noticias del año" resumen={cierre.notis.length ? cierre.notis.length + (cierre.notis.length === 1 ? " noticia" : " noticias") : "sin novedades"}>
-                    {cierre.notis.map((n, i) => (
-                      <div className="ea-noti" key={i} style={{ marginTop: i === 0 ? 0 : 8 }}>
-                        <div className="ea-notiK">{n.k}</div>
-                        <div className="ea-notiT">{n.t}</div>
-                      </div>
-                    ))}
-                    {cierre.notis.length === 0 && <div className="ea-td">Un año sin sobresaltos en los mercados.</div>}
-                  </Plegable>
-
-                  <Plegable titulo="De dónde salió tu patrimonio"
-                    resumen={(cierre.patAntes > 0 ? ((cierre.patrimonio / cierre.patAntes - 1) * 100).toFixed(1) + "%" : "primer año")}
-                    tono={cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E"}>
-                  <div>
-                    <div className="ea-lecK">Patrimonio</div>
-                    <div className="ea-mono" style={{ fontSize: 26, color: "#3D3D3D", margin: "3px 0" }}>
-                      USD {fmt(cierre.patrimonio)}
-                    </div>
-                    <div className="ea-dis" style={{ fontSize: 14, color: cierre.patrimonio >= cierre.patAntes ? "#3D8A49" : "var(--rojo)" }}>
-                      {cierre.patrimonio >= cierre.patAntes ? "+" : ""}{fmt(cierre.patrimonio - cierre.patAntes)} en el año
-                      {cierre.patAntes > 0 ? " · " + ((cierre.patrimonio / cierre.patAntes - 1) * 100).toFixed(1) + "%" : ""}
-                    </div>
-                    <Chispa datos={cierre.histo} desde={2026} />
-                    <div className="ea-tabla" style={{ marginTop: 4 }}>
-                      <span className="ea-td">Efectivo</span><span className="ea-tdn ea-mono">{fmt(s.cash)}</span>
-                      <span className="ea-td">Cartera invertida</span><span className="ea-tdn ea-mono">{fmt(s.cartera)}</span>
-                      <span className="ea-td">Bienes</span><span className="ea-tdn ea-mono">{fmt(cierre.bienesV)}</span>
-                    </div>
-                  </div>
-
-                  </Plegable>
-
-                  {/* el año en plata */}
+                  {/* CAJON 1 · el dinero del año, con el reparto del
+                      patrimonio dentro: antes eran dos cajones que decian
+                      medio lo mismo. */}
                   <Plegable titulo="El año en plata" resumen={(cierre.neto >= 0 ? "+" : "−") + fmt(Math.abs(cierre.neto))}
                     tono={cierre.neto >= 0 ? "#2E7A3D" : "#8A2E1E"}>
-                  <div>
                     <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
                       <Flujo titulo={"Entró USD " + fmt(cierre.ingreso)} lista={cierre.ing} tope={cierre.ingreso} />
                       <Flujo titulo={"Salió USD " + fmt(cierre.egreso)} lista={cierre.egr} tope={cierre.ingreso} neg />
@@ -9148,39 +10757,36 @@ function Motor() {
                       <div className={"ea-flfill" + (cierre.ahorro < 0 ? " neg" : "")}
                         style={{ width: Math.min(100, Math.abs(cierre.ahorro) * 100) + "%" }} />
                     </div>
-                    <div className="ea-td" style={{ marginTop: 4 }}>
-                      Tasa de ahorro {Math.round(cierre.ahorro * 100)}% de todo lo que entró.
-                    </div>
                     {cierre.deuda && (
                       <div className="ea-alerta mal">
                         Cerraste el año en rojo por USD {fmt(-s.cash)}: gastas más de lo que entra y la diferencia se financia.
-                        {cierre.patAntes > 1000 ? " Te comiste la cartera y seguiste." : " A este cargo es normal, y también es la razón por la que el primer objetivo es que la resta dé positivo."}
                       </div>
                     )}
-                  </div>
-
+                    <div className="ea-tabla" style={{ marginTop: 14 }}>
+                      <span className="ea-td">Efectivo</span><span className="ea-tdn ea-mono">{fmt(s.cash)}</span>
+                      <span className="ea-td">Cartera invertida</span><span className="ea-tdn ea-mono">{fmt(s.cartera)}</span>
+                      <span className="ea-td">Bienes</span><span className="ea-tdn ea-mono">{fmt(cierre.bienesV)}</span>
+                    </div>
+                    <Chispa datos={cierre.histo} desde={2026} />
                   </Plegable>
 
-                  {/* la cartera */}
+                  {/* CAJON 2 · la cartera */}
                   {cierre.cartera && (
                     <Plegable titulo="Tu cartera, mes a mes"
                       resumen={(cierre.cartera.ret >= 0 ? "+" : "") + (cierre.cartera.ret * 100).toFixed(1) + "%"}
                       tono={cierre.cartera.ret >= 0 ? "#2E7A3D" : "#8A2E1E"}>
-                    <div className={"ea-alerta " + (cierre.cartera.ret >= 0.02 ? "bien" : cierre.cartera.ret < -0.02 ? "mal" : "")} style={{ marginTop: 0 }}>
-                      <div className="ea-lecK">Tu cartera {perfilN.toLowerCase()} · {Math.round(cierre.cartera.obj * 100)}% invertido</div>
-                      <div className="ea-mono" style={{ fontSize: 23, color: "#3D3D3D", margin: "4px 0" }}>
+                      <div className="ea-mono" style={{ fontSize: 21, color: "#3D3D3D" }}>
                         {fmt(cierre.cartera.antes)} → {fmt(cierre.cartera.despues)}
                       </div>
-                      <div className="ea-dis" style={{ fontSize: 16, color: cierre.cartera.ret >= 0 ? "#3D8A49" : "var(--rojo)" }}>
+                      <div className="ea-dis" style={{ fontSize: 15, color: cierre.cartera.ret >= 0 ? "#3D8A49" : "var(--rojo)" }}>
                         {cierre.cartera.ret >= 0 ? "+" : ""}{(cierre.cartera.ret * 100).toFixed(1)}% · {cierre.cartera.ret >= 0 ? "ganaste" : "perdiste"} USD {fmt(Math.abs(cierre.cartera.despues - cierre.cartera.antes))}
                       </div>
                       {cierre.cartera.camino && <Curva camino={cierre.cartera.camino} ret={cierre.cartera.ret} hitos={cierre.hitosDec} />}
                       <div className="ea-td" style={{ marginTop: 3 }}>
-                        Esperabas {(cierre.cartera.mu * 100).toFixed(1)} con una desviación de {(cierre.cartera.sd * 100).toFixed(1)} puntos, así que
-                        {" "}{Math.abs(cierre.cartera.ret - cierre.cartera.mu) < cierre.cartera.sd ? "este año entra dentro de lo normal" : "este año fue de los raros, para bien o para mal"}.
+                        Esperabas {(cierre.cartera.mu * 100).toFixed(1)} con una desviación de {(cierre.cartera.sd * 100).toFixed(1)} puntos.
                         {cierre.cartera.aporte > 100 ? " Metiste USD " + fmt(cierre.cartera.aporte) + " de aporte nuevo." : cierre.cartera.aporte < -100 ? " Sacaste USD " + fmt(-cierre.cartera.aporte) + " de la cartera." : ""}
                       </div>
-                      <div style={{ marginTop: 8 }}>
+                      <div style={{ marginTop: 10 }}>
                         {cierre.cartera.detalle.map((d, i) => (
                           <div key={i} style={{ marginBottom: 4 }}>
                             <div className="ea-flin">
@@ -9195,35 +10801,20 @@ function Motor() {
                           </div>
                         ))}
                       </div>
-                    </div>
-                  )}
-
                     </Plegable>
                   )}
 
-                  {/* qué tan cerca estás de no necesitar el sueldo */}
-                  <Plegable titulo="Camino a no depender del sueldo" resumen={Math.round(cierre.cobertura * 100) + "% cubierto"}>
-                  <div>
-                    <div className="ea-lecK">Camino a no depender del sueldo</div>
-                    <div className="ea-td" style={{ marginTop: 2 }}>
-                      Tu patrimonio cubre {Math.round(cierre.cobertura * 100)}% de tus gastos de USD {fmt(cierre.gastos)} retirando el 4%.
-                    </div>
-                    <div className="ea-ind">
-                      <div className="ea-indF" style={{ width: Math.min(100, cierre.indep * 100) + "%" }} />
-                      <div className="ea-indM" style={{ left: "71.4%" }} />
-                    </div>
-                    <div className="ea-td" style={{ marginTop: 3, fontSize: 11.5 }}>
-                      La marca es 25 veces tu gasto anual, USD {fmt(cierre.gastos * 25)}.
-                    </div>
-                  </div>
-
+                  {/* CAJON 3 · lo que hizo el mercado */}
+                  <Plegable titulo="Las noticias del año"
+                    resumen={cierre.notis.length ? cierre.notis.length + (cierre.notis.length === 1 ? " noticia" : " noticias") : "sin novedades"}>
+                    {cierre.notis.map((n, i) => (
+                      <div className="ea-noti" key={i} style={{ marginTop: i === 0 ? 0 : 8 }}>
+                        <div className="ea-notiK">{n.k}</div>
+                        <div className="ea-notiT">{n.t}</div>
+                      </div>
+                    ))}
+                    {cierre.notis.length === 0 && <div className="ea-td">Un año sin sobresaltos en los mercados.</div>}
                   </Plegable>
-
-                  {cierre.notas.length > 0 && (
-                    <Plegable titulo="Lo que pasó por el camino" resumen={cierre.notas.length + (cierre.notas.length === 1 ? " nota" : " notas")} abierto>
-                      {cierre.notas.map((n, i) => (<div key={i} className="ea-td" style={{ fontSize: 13.5, marginBottom: 5 }}>{n}</div>))}
-                    </Plegable>
-                  )}
 
                   </div>
 
@@ -9280,12 +10871,58 @@ function Motor() {
         </div>
       )}
 
+      {/* ============================================================
+          EL ANUNCIO DEL AÑO
+          Tapa el informe hasta que el jugador ha visto cuanto tiene. Es
+          el unico momento del juego que no pide leer nada: un numero
+          grande girando y cuanto se movio. El informe espera debajo.
+          ============================================================ */}
+      {fase === "cierre" && cierre && anuncio && (() => {
+        const sube = cierre.patrimonio >= cierre.patAntes;
+        const dif = Math.abs(cierre.patrimonio - cierre.patAntes);
+        return (
+          <div className="ea-anuncio" onClick={() => setAnuncio(false)}>
+            {/* Ojo al tocar esta linea: «Asi terminó» es lo que cuenta
+                finales.js para saber cuantos años se jugaron, y esta en
+                la cabecera del informe. Repetirla aqui hacia que cada
+                año se contara dos veces. */}
+            <div className="ea-anuncioK ea-dis">Cierre de {cierre.ano}</div>
+            <div className="ea-anuncioN ea-mono">
+              <span className="ea-anuncioU ea-dis">USD</span>
+              <Rodillo v={cierre.patrimonio} />
+            </div>
+            <div className={"ea-anuncioD ea-mono " + (sube ? "sube" : "baja")}
+              style={{ animationDelay: "1.5s" }}>
+              {sube ? "+" : "−"}{fmt(dif)} en el año
+            </div>
+            {cierre.ascenso && (
+              <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.8s", color: "var(--cobre)", fontSize: 16 }}>
+                Ascenso a {cierre.ascenso}
+              </div>
+            )}
+            {cierre.hitos.length > 0 && (
+              <div className="ea-anuncioL" style={{ animationDelay: "2s" }}>{cierre.hitos.join(" · ")}</div>
+            )}
+            <div className="ea-anuncioB" style={{ animationDelay: "2.2s" }}>
+              <button className="ea-jugarYa ea-dis" style={{ fontSize: 15, padding: "13px 30px" }}
+                onClick={(e) => { e.stopPropagation(); setAnuncio(false); }}>
+                Ver el año
+              </button>
+            </div>
+          </div>
+        );
+      })()}
+
       {nuevoSistema && (() => {
         const ap = APERTURAS.find((a) => a.id === nuevoSistema);
         const g = ap && ap.guia;
         if (!g) return null;
-        const par = TABS.find((p) => p[2] === nuevoSistema);
-        const destino = par ? par[0] : (nuevoSistema === "banco" ? "ficha" : null);
+        /* A donde lleva el boton «Ver la seccion». Con las pestañas
+           fusionadas ya no hay una por sistema: inmuebles y mejoras caen
+           en Comprar, el fondo en Cartera, y el banco en Ficha. */
+        const DESTINO = { cartera: "portafolio", fondo: "portafolio", vida: "expediente",
+          inmuebles: "comprar", mejoras: "comprar", banco: "ficha" };
+        const destino = DESTINO[nuevoSistema] || null;
         return (
           <div className="ea-modalFondo" onClick={() => setNuevoSistema(null)}>
             <div className="ea-modal ea-panelAb" onClick={(e) => e.stopPropagation()}>
