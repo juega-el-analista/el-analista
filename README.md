@@ -37,6 +37,21 @@ npm run servir       # sirve el juego en http://localhost:5173
 
 El archivo `index.html` se abre con doble clic, sin más.
 
+## Como app
+
+El sitio publicado se puede instalar como app: con su icono, a pantalla
+completa y jugable sin conexión.
+
+- **Android / Chrome / Edge:** botón «Instalar la app» abajo a la derecha,
+  o el menú del navegador → «Instalar».
+- **iPhone / iPad:** en Safari, Compartir → «Añadir a pantalla de inicio».
+
+Lo arma `npm run sitio` (en `pruebas/pwa.js`): copia el juego a `sitio/` y
+le añade el manifiesto, los iconos de `pwa/` y el trabajador que lo deja
+jugar sin conexión. Solo toca la copia de Pages; `index.html` sigue siendo
+el documento que sabe reconstruirse. `npm run sitio -- servir` lo sirve en
+http://localhost:5175 para probarlo.
+
 El juego está en vivo en **https://aleferrara1807.github.io/el-analista/**, y se
 reconstruye y republica solo en cada push a `main` — pero solo si las pruebas
 pasan. Si fallan, el sitio se queda con la última versión buena.
