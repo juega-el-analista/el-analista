@@ -44,9 +44,9 @@ Antes, en el navegador: cuenta de Apple Developer (99 USD al año), acuerdos
 aceptados en App Store Connect. Si sale a nombre de una empresa, inscríbete
 como organización; te piden el número D-U-N-S y tarda unos días.
 
-El identificador de la app está puesto como `com.juegaelanalista.elanalista`
-en `app.json`. Cámbialo antes del primer build si prefieres otro: después ya
-no se puede.
+El identificador de la app está puesto como `com.elanalista.app`
+en `app.json`, a partir del dominio elanalista.com. Después del primer
+build ya no se puede cambiar.
 
 ```bash
 npm install --global eas-cli

@@ -9,14 +9,14 @@
     "backgroundColor": "#F7F7F5",
     "primaryColor": "#0B3A1F",
     "ios": {
-      "bundleIdentifier": "com.juegaelanalista.elanalista",
+      "bundleIdentifier": "com.elanalista.app",
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.juegaelanalista.elanalista",
+      "package": "com.elanalista.app",
       "adaptiveIcon": {
         "backgroundColor": "#0B3A1F",
         "foregroundImage": "./assets/android-icon-foreground.png"
