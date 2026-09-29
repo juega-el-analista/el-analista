@@ -23,21 +23,39 @@ export function PanelFondo({ ctx }) {
           <div className="ea-itemD" style={{ marginBottom: 12 }}>
             Para levantar tu propio fondo necesitas un patrimonio de USD {fmt(UMBRAL_FONDO)}, red y cargo.
             Comprometes 2% del tamaño como capital propio, 1% si tu rama es private
-            equity. Cobras 2% anual de administración y veinte de las ganancias.
+            equity, y ese dinero sale de lo líquido: efectivo y cartera. Lo que tienes en
+            bienes no cuenta para eso. Cobras 2% anual de administración y veinte de las ganancias.
           </div>
           <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Tu patrimonio</span><span className="ea-mono">USD {fmt(patrimonio)}</span></div>
+          <div className="ea-fila"><span style={{ fontSize: 12.5 }}>De eso, líquido (efectivo y cartera)</span><span className="ea-mono">USD {fmt(s.cash + s.cartera)}</span></div>
           {patrimonio >= UMBRAL_FONDO ? TAMANOS.map((t) => {
             const pct = s.rama === "pe" ? 0.01 : 0.02;
-            const listo = s.red >= t.red && s.rango >= t.rango && s.cash + s.cartera >= t.m * pct;
+            const parte = t.m * pct;
+            const liquido = s.cash + s.cartera;
+            const okRed = s.red >= t.red, okCargo = s.rango >= t.rango, okLiq = liquido >= parte;
+            const listo = okRed && okCargo && okLiq;
+            /* Antes solo decía red y cargo, y el botón «Todavía no calificas»
+               sin motivo: un Socio con red 100 y más de cinco millones no
+               podía saber que le faltaba liquidez, porque su patrimonio
+               estaba en bienes. Ahora se ve cada requisito y lo que falta. */
+            const motivo = !okCargo ? "Te falta el cargo de " + RANGO(t.rango).n
+              : !okRed ? "Te falta red: tienes " + Math.round(s.red) + " de " + t.red
+              : "Te faltan USD " + fmt(Math.max(0, parte - liquido)) + " líquidos";
             return (
               <div className="ea-item" key={t.n}>
                 <div className="ea-itemTop">
                   <span className="ea-itemN">Fondo de {t.n}</span>
-                  <span className="ea-mono" style={{ fontSize: 12.5 }}>{fmt(t.m * pct)}</span>
+                  <span className="ea-mono" style={{ fontSize: 12.5 }}>tu parte: {fmt(parte)}</span>
                 </div>
-                <div className="ea-itemD">Pide red {t.red} y cargo de {RANGO(t.rango).n} hacia arriba.</div>
+                <div className="ea-itemD">
+                  <span style={{ color: okRed ? "#2F7A3D" : "var(--rojo)" }}>{okRed ? "✓" : "✗"} red {t.red}</span>
+                  {" · "}
+                  <span style={{ color: okCargo ? "#2F7A3D" : "var(--rojo)" }}>{okCargo ? "✓" : "✗"} {RANGO(t.rango).n} o más</span>
+                  {" · "}
+                  <span style={{ color: okLiq ? "#2F7A3D" : "var(--rojo)" }}>{okLiq ? "✓" : "✗"} USD {fmt(parte)} líquidos</span>
+                </div>
                 <button className="ea-mini" disabled={!listo} onClick={() => levantarFondo(t)}>
-                  {listo ? "Levantar el fondo" : "Todavía no calificas"}
+                  {listo ? "Levantar el fondo" : motivo}
                 </button>
               </div>
             );

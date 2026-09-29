@@ -88,6 +88,7 @@ import {
   QUIEBRA_VECES,
   DESCUENTO_EMBARGO,
 } from "../motor/deuda.js";
+import { esDeEmpleado, DUENO } from "../datos/escenas-dueno.js";
 
 /* ============================================================
    LA PARTIDA
@@ -282,8 +283,11 @@ export function usePartida() {
   };
 
   const sacar = (fuente, st, usados) => {
-    let pool = fuente.filter((e) => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0 && st.vistos.indexOf(e.id) < 0);
-    if (pool.length === 0) pool = fuente.filter((e) => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0);
+    /* con firma propia no salen las de empleado, y sin ella no salen las de dueño */
+    const cabe = (e) => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0
+      && !(st.propia && esDeEmpleado(e)) && !(e.dueno && !st.propia);
+    let pool = fuente.filter((e) => cabe(e) && st.vistos.indexOf(e.id) < 0);
+    if (pool.length === 0) pool = fuente.filter(cabe);
     return pool.length ? elegirAzar(pool) : null;
   };
 
@@ -320,7 +324,7 @@ export function usePartida() {
        carrera que partir en dos. */
     if (st.turno >= 4 && Math.random() < 0.11) {
       const posibles = LEGENDARIAS.filter((e) =>
-        st.rango >= e.min && st.rango <= e.max
+        st.rango >= e.min && st.rango <= e.max && !(st.propia && esDeEmpleado(e))
         && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0);
       const leg = elegirAzar(posibles);
       if (leg) { lista.push(leg); usados.push(leg.id); }
@@ -379,7 +383,7 @@ export function usePartida() {
        se dejara de ver el minijuego de trading. */
     const objetivo = Math.min(forzadas + 2 + (Math.random() < 0.45 ? 1 : 0), 5);
     while (lista.length < objetivo) {
-      const e = sacar(E, st, usados);
+      const e = sacar(st.propia ? E.concat(DUENO) : E, st, usados);
       if (!e) break;
       lista.push(e); usados.push(e.id);
     }

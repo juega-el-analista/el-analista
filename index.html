@@ -8575,6 +8575,160 @@ const SORPRESAS_MALAS = [{
 }];
 const IDS_APERTURA = APERTURAS.map(a => a.id);
 
+/* ---- src/datos/escenas-dueno.js ---- */
+/* ============================================================
+   CUANDO LA FIRMA ES TUYA
+   Con firma propia no hay jefe que te ascienda, headhunter que te
+   tiente ni socio que decida por ti: esas escenas dejan de salir.
+   En su lugar salen las de dueño, que solo existen si montaste lo
+   tuyo. (28-sep-2026: seguían llegando ofertas de trabajo a quien ya
+   tenía su propia constructora.)
+   ============================================================ */
+const SOLO_EMPLEADO = [7, /* te llama un headhunter */
+20, /* un colega se cuelga de tu trabajo ante el comité */
+21, /* llega el bono (te lo da tu firma) */
+22, /* anuncian la fusión de tu firma */
+55, /* una firma de Miami quiere contratarte */
+942, /* el socio te pide que lo expliques tú */
+119, /* la silla del socio se decide en la mesa */
+120, /* te mandan a dirigir la oficina de otro país */
+9804 /* te ofrecen la silla: el techo trabajando para alguien */];
+const esDeEmpleado = e => !!e && SOLO_EMPLEADO.indexOf(e.id) >= 0;
+const DUENO = [{
+  id: 9601,
+  dueno: true,
+  clave: true,
+  min: 3,
+  max: 6,
+  t: "Te quieren comprar la firma",
+  x: "Un grupo más grande te ofrece comprar tu firma. Buen precio, tres años de permanencia obligatoria y dejar de ser quien firma las decisiones.",
+  o: [{
+    t: "Vender una parte minoritaria y seguir al mando",
+    d: {
+      cash: 60000,
+      red: 6,
+      rep: -2,
+      msg: "Entra capital y un socio con voz. Sigues al mando, aunque ahora hay alguien más en la mesa."
+    }
+  }, {
+    t: "Pedir más y hacerlos esperar",
+    j: "anclaje",
+    stat: "red",
+    d: {
+      cash: 90000,
+      red: 4,
+      rep: -3,
+      msg: "Pones tu número sobre la mesa y dejas que el silencio negocie."
+    }
+  }, {
+    t: "No vender",
+    d: {
+      rep: 5,
+      cri: 3,
+      ene: -4,
+      msg: "Lo que construiste no está a la venta. Todavía."
+    }
+  }]
+}, {
+  id: 9602,
+  dueno: true,
+  min: 3,
+  max: 6,
+  t: "Tu mejor socio quiere irse con clientes",
+  x: "La persona que trajo la mitad de tus clientes te avisa de que la tienta otra firma. Si se va, se lleva la agenda.",
+  o: [{
+    t: "Darle una parte de la firma",
+    d: {
+      cash: -25000,
+      red: 5,
+      rep: 3,
+      msg: "Ahora también es dueño de una parte. Se queda, y se queda por otra razón."
+    }
+  }, {
+    t: "Dejarlo ir y quedarte con lo que queda",
+    d: {
+      red: -8,
+      ene: 4,
+      cri: 2,
+      msg: "Se va con dos clientes. Duele, pero la firma sigue siendo toda tuya."
+    }
+  }]
+}, {
+  id: 9603,
+  dueno: true,
+  min: 3,
+  max: 6,
+  t: "Los bonos de fin de año los pones tú",
+  x: "Cerró el año y el reparto depende de ti. Lo que te quedas tú es exactamente lo que no le das a tu equipo.",
+  o: [{
+    t: "Repartir con generosidad",
+    d: {
+      cash: -15000,
+      rep: 6,
+      red: 4,
+      msg: "El equipo lo nota. Este año nadie contesta a los headhunters."
+    }
+  }, {
+    t: "Quedarte con la mayor parte",
+    d: {
+      cash: 20000,
+      rep: -5,
+      red: -3,
+      msg: "Tu cuenta sube y la sala se enfría un poco."
+    }
+  }]
+}, {
+  id: 9604,
+  dueno: true,
+  min: 4,
+  max: 6,
+  t: "Un competidor propone fusionaros",
+  x: "Una firma parecida a la tuya quiere unir fuerzas: el doble de clientes y dos personas diciendo que mandan.",
+  o: [{
+    t: "Fusionaros",
+    d: {
+      cash: 40000,
+      red: 8,
+      rep: -3,
+      ene: -6,
+      msg: "Más escala, más reuniones y un socio con el que discutirlo todo."
+    }
+  }, {
+    t: "Seguir por tu cuenta",
+    d: {
+      rep: 3,
+      cri: 2,
+      car: -2,
+      msg: "Creces más lento, pero decides tú."
+    }
+  }]
+}, {
+  id: 9605,
+  dueno: true,
+  min: 3,
+  max: 6,
+  t: "Tu cliente grande te pide abrir en Miami",
+  x: "Tu cliente más importante se muda a Miami y te propone seguirlo. Abrir allá cuesta caro y te parte entre dos ciudades.",
+  o: [{
+    t: "Abrir una oficina allá",
+    d: {
+      cash: -40000,
+      red: 9,
+      car: 5,
+      ene: -8,
+      msg: "Dos oficinas, dos agendas y un cliente que ahora te debe una."
+    }
+  }, {
+    t: "Atenderlo desde aquí",
+    d: {
+      red: -3,
+      ene: 3,
+      rep: 2,
+      msg: "Lo atiendes a distancia. Algo se pierde, pero no te partes en dos."
+    }
+  }]
+}];
+
 /* ---- src/motor/cola-del-anio.js ---- */
 /* ============================================================
    REHIDRATAR LA COLA DEL ANIO
@@ -8588,7 +8742,7 @@ const IDS_APERTURA = APERTURAS.map(a => a.id);
    jugar, asi que se podria farmear el mismo anio dos veces. Por eso el
    snapshot se toma **al presentar cada escena**, antes de aplicar nada.
    ============================================================ */
-const ESCENAS_FIJAS = [].concat(E, D, VIDA, LEGENDARIAS, [DECISION_RAMA, ESCENA_CONTRATO], APERTURAS.map(a => a.escena)).filter(e => e && e.id != null);
+const ESCENAS_FIJAS = [].concat(E, D, VIDA, LEGENDARIAS, DUENO, [DECISION_RAMA, ESCENA_CONTRATO], APERTURAS.map(a => a.escena)).filter(e => e && e.id != null);
 const IDS_FIRMA = [9720, 9721];
 
 /* Devuelve la escena de ese id, o null. Las de firma propia se generan
@@ -12256,8 +12410,10 @@ function usePartida() {
     return true;
   };
   const sacar = (fuente, st, usados) => {
-    let pool = fuente.filter(e => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0 && st.vistos.indexOf(e.id) < 0);
-    if (pool.length === 0) pool = fuente.filter(e => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0);
+    /* con firma propia no salen las de empleado, y sin ella no salen las de dueño */
+    const cabe = e => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0 && !(st.propia && esDeEmpleado(e)) && !(e.dueno && !st.propia);
+    let pool = fuente.filter(e => cabe(e) && st.vistos.indexOf(e.id) < 0);
+    if (pool.length === 0) pool = fuente.filter(cabe);
     return pool.length ? elegirAzar(pool) : null;
   };
 
@@ -12301,7 +12457,7 @@ function usePartida() {
        legendaria en el año uno no significaría nada porque todavía no hay
        carrera que partir en dos. */
     if (st.turno >= 4 && Math.random() < 0.11) {
-      const posibles = LEGENDARIAS.filter(e => st.rango >= e.min && st.rango <= e.max && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0);
+      const posibles = LEGENDARIAS.filter(e => st.rango >= e.min && st.rango <= e.max && !(st.propia && esDeEmpleado(e)) && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0);
       const leg = elegirAzar(posibles);
       if (leg) {
         lista.push(leg);
@@ -12372,7 +12528,7 @@ function usePartida() {
        se dejara de ver el minijuego de trading. */
     const objetivo = Math.min(forzadas + 2 + (Math.random() < 0.45 ? 1 : 0), 5);
     while (lista.length < objetivo) {
-      const e = sacar(E, st, usados);
+      const e = sacar(st.propia ? E.concat(DUENO) : E, st, usados);
       if (!e) break;
       lista.push(e);
       usados.push(e.id);
@@ -19234,7 +19390,7 @@ function PanelFondo({
     style: {
       marginBottom: 12
     }
-  }, "Para levantar tu propio fondo necesitas un patrimonio de USD ", fmt(UMBRAL_FONDO), ", red y cargo. Comprometes 2% del tama\xF1o como capital propio, 1% si tu rama es private equity. Cobras 2% anual de administraci\xF3n y veinte de las ganancias."), /*#__PURE__*/React.createElement("div", {
+  }, "Para levantar tu propio fondo necesitas un patrimonio de USD ", fmt(UMBRAL_FONDO), ", red y cargo. Comprometes 2% del tama\xF1o como capital propio, 1% si tu rama es private equity, y ese dinero sale de lo l\xEDquido: efectivo y cartera. Lo que tienes en bienes no cuenta para eso. Cobras 2% anual de administraci\xF3n y veinte de las ganancias."), /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
   }, /*#__PURE__*/React.createElement("span", {
     style: {
@@ -19242,9 +19398,27 @@ function PanelFondo({
     }
   }, "Tu patrimonio"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
-  }, "USD ", fmt(patrimonio))), patrimonio >= UMBRAL_FONDO ? TAMANOS.map(t => {
+  }, "USD ", fmt(patrimonio))), /*#__PURE__*/React.createElement("div", {
+    className: "ea-fila"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12.5
+    }
+  }, "De eso, l\xEDquido (efectivo y cartera)"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-mono"
+  }, "USD ", fmt(s.cash + s.cartera))), patrimonio >= UMBRAL_FONDO ? TAMANOS.map(t => {
     const pct = s.rama === "pe" ? 0.01 : 0.02;
-    const listo = s.red >= t.red && s.rango >= t.rango && s.cash + s.cartera >= t.m * pct;
+    const parte = t.m * pct;
+    const liquido = s.cash + s.cartera;
+    const okRed = s.red >= t.red,
+      okCargo = s.rango >= t.rango,
+      okLiq = liquido >= parte;
+    const listo = okRed && okCargo && okLiq;
+    /* Antes solo decía red y cargo, y el botón «Todavía no calificas»
+       sin motivo: un Socio con red 100 y más de cinco millones no
+       podía saber que le faltaba liquidez, porque su patrimonio
+       estaba en bienes. Ahora se ve cada requisito y lo que falta. */
+    const motivo = !okCargo ? "Te falta el cargo de " + RANGO(t.rango).n : !okRed ? "Te falta red: tienes " + Math.round(s.red) + " de " + t.red : "Te faltan USD " + fmt(Math.max(0, parte - liquido)) + " líquidos";
     return /*#__PURE__*/React.createElement("div", {
       className: "ea-item",
       key: t.n
@@ -19257,13 +19431,25 @@ function PanelFondo({
       style: {
         fontSize: 12.5
       }
-    }, fmt(t.m * pct))), /*#__PURE__*/React.createElement("div", {
+    }, "tu parte: ", fmt(parte))), /*#__PURE__*/React.createElement("div", {
       className: "ea-itemD"
-    }, "Pide red ", t.red, " y cargo de ", RANGO(t.rango).n, " hacia arriba."), /*#__PURE__*/React.createElement("button", {
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: okRed ? "#2F7A3D" : "var(--rojo)"
+      }
+    }, okRed ? "✓" : "✗", " red ", t.red), " · ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: okCargo ? "#2F7A3D" : "var(--rojo)"
+      }
+    }, okCargo ? "✓" : "✗", " ", RANGO(t.rango).n, " o m\xE1s"), " · ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: okLiq ? "#2F7A3D" : "var(--rojo)"
+      }
+    }, okLiq ? "✓" : "✗", " USD ", fmt(parte), " l\xEDquidos")), /*#__PURE__*/React.createElement("button", {
       className: "ea-mini",
       disabled: !listo,
       onClick: () => levantarFondo(t)
-    }, listo ? "Levantar el fondo" : "Todavía no calificas"));
+    }, listo ? "Levantar el fondo" : motivo));
   }) : /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD",
     style: {

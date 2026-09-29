@@ -5,6 +5,7 @@ import { LEGENDARIAS } from "../datos/legendarias.js";
 import { escenaFirma } from "./firma-propia.js";
 import { ESCENA_CONTRATO } from "../datos/contratos.js";
 import { APERTURAS } from "../datos/aperturas.js";
+import { DUENO } from "../datos/escenas-dueno.js";
 
 /* ============================================================
    REHIDRATAR LA COLA DEL ANIO
@@ -19,7 +20,7 @@ import { APERTURAS } from "../datos/aperturas.js";
    snapshot se toma **al presentar cada escena**, antes de aplicar nada.
    ============================================================ */
 const ESCENAS_FIJAS = [].concat(
-  E, D, VIDA, LEGENDARIAS,
+  E, D, VIDA, LEGENDARIAS, DUENO,
   [DECISION_RAMA, ESCENA_CONTRATO],
   APERTURAS.map((a) => a.escena)
 ).filter((e) => e && e.id != null);

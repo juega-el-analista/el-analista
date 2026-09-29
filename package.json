@@ -22,6 +22,7 @@
     "estructura": "node pruebas/estructura.js",
     "subasta": "node pruebas/subasta.js",
     "paises": "node pruebas/paises.js 6",
+    "firma": "node pruebas/firma.js",
     "catalogo": "node pruebas/catalogo.js",
     "sitio": "node pruebas/pwa.js",
     "puertas": "node pruebas/puertas.js 12"
