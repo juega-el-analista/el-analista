@@ -43,7 +43,7 @@ true;
 
 export default function App() {
   const alMensaje = useCallback((e) => {
-    if (e.nativeEvent.data === "toque") Haptics.selectionAsync().catch(() => {});
+    if (e.nativeEvent.data === "toque") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
   }, []);
 
   // Cualquier navegación fuera del juego (no hay ninguna hoy) se corta aquí:
