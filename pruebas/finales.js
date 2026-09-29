@@ -35,7 +35,7 @@ const micro = async () => { for (let i = 0; i < 6; i++) await Promise.resolve();
    prueba que mide una version antigua es peor que no tenerla.
    ============================================================ */
 const { cargar } = require(path.join(__dirname, "banco.js"));
-const RUTA_JUEGO = process.argv[3] || path.join(__dirname, "..", "src", "el-analista.jsx");
+const RUTA_JUEGO = process.argv[3] || require("./unir.js").rutaUnida();
 const ElAnalista = cargar(RUTA_JUEGO);
 
 function txtDe(j) {

@@ -5,8 +5,9 @@ que elijas. Cada año trae decisiones, noticias que sacuden el mercado, una
 cartera que repartes tú y un examen que se pone más difícil a medida que
 estudias. Al final decides si te retiras.
 
-El juego entero es **un solo archivo JSX** que se empaqueta en **un HTML
-autónomo**: React va dentro, no pide red y no necesita servidor.
+El juego está escrito en **módulos de React** (datos, motor, minijuegos,
+componentes y vistas) y se empaqueta en **un HTML autónomo**: React va
+dentro, no pide red y no necesita servidor.
 
 ## Qué hay dentro
 
@@ -31,8 +32,9 @@ Lee **[CONTRIBUIR.md](CONTRIBUIR.md)** primero. Son tres reglas y las cosas que 
 
 ```bash
 npm install          # solo la primera vez
-npm run build        # src/el-analista.jsx  ->  index.html
-npm run servir       # sirve el juego en http://localhost:5173
+npm run dev          # el juego en módulos, con recarga en vivo: http://localhost:5176
+npm run build        # src/  ->  index.html, el único archivo que se publica
+npm run servir       # sirve ese index.html en http://localhost:5173
 ```
 
 El archivo `index.html` se abre con doble clic, sin más.
@@ -80,11 +82,29 @@ nunca responde y `Math.random` secuestrado.
 ## Estructura
 
 ```
-src/       el juego, un único .jsx
-index.html el HTML autónomo que se publica, generado — no se edita a mano
-historia/  la versión original, para comparar
-pruebas/   la batería de verificación
+src/
+  ElAnalista.jsx   el componente raíz: lo que se monta en cualquier página
+  main.jsx         arranque en desarrollo (npm run dev)
+  vistas/          las pantallas del juego
+  componentes/     piezas de interfaz: cifras, rodillo, iconos, cartera, registro
+  minijuegos/      los 20 minijuegos, uno por archivo, y MiniJuego que los reparte
+  motor/           la lógica sin interfaz: aritmética, guardado, saneador, deuda, metas
+  datos/           el contenido: escenas, preguntas, temario, glosario, países
+  hooks/           estado compartido fuera de React, como el interruptor del movimiento
+  estilos/         el CSS del juego
+index.html   el HTML autónomo que se publica, generado: no se edita a mano
+historia/    la versión original, para comparar
+pruebas/     la batería de verificación y las herramientas de empaquetado
 ```
+
+Las carpetas van de abajo hacia arriba: `datos` y `motor` no importan nada
+de `componentes`, `minijuegos` ni `vistas`. No hay imports circulares, y
+`npm run unir` falla si aparece uno.
+
+Para publicar y para las pruebas, `pruebas/unir.js` vuelve a juntar los
+módulos en un solo archivo (`pruebas/unido.jsx`, que no se versiona), en el
+orden en que se necesitan. Es lo que permite que el `index.html` siga
+siendo un documento único que sabe reconstruirse a sí mismo.
 
 ## Blindaje
 

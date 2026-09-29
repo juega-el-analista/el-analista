@@ -34,7 +34,7 @@ async function avanza(ms) {
 }
 
 const { cargar } = require(path.join(__dirname, "banco.js"));
-cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
+cargar(require("./unir.js").rutaUnida());
 const comp = path.join(__dirname, "compilado.js");
 const tmp = path.join(__dirname, "probeSuerte.js");
 fs.writeFileSync(tmp, fs.readFileSync(comp, "utf8").replace("module.exports = ElAnalista;",

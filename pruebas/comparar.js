@@ -1,7 +1,7 @@
 /* rutas del repo, para que los scripts funcionen desde cualquier sitio */
 const path = require("path");
 const RAIZ = path.join(__dirname, "..");
-const RUTA_FUENTE = path.join(RAIZ, "src", "el-analista.jsx");
+const RUTA_FUENTE = require("./unir.js").rutaUnida();
 const RUTA_BUILD = path.join(RAIZ, "index.html");
 const RUTA_ORIGINAL = path.join(RAIZ, "historia", "el-analista.v5-original.jsx");
 

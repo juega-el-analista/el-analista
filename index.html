@@ -659,14 +659,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
 <script id="motor-juego">function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 var React = window.React; var { useState, useEffect, useRef, useMemo } = React;
 
-/* ============================================================
-   EL ANALISTA  ·  v5
-   De los 20 a los 50, un año por turno.
-   Dieciocho minijuegos, un temario de finanzas en cinco niveles que
-   sube contigo, una cartera que reparte activo por activo y un
-   informe de cierre que te explica qué acabas de aprender.
-   ============================================================ */
-
+/* ---- src/estilos/base.js ---- */
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -908,6 +901,8 @@ const CSS = `
 .ea-cifraV{font-size:20px;color:var(--tintaPapel)}
 .ea-cifraD{font-size:12.5px;line-height:1.45;color:var(--gris);margin-top:5px}
 `;
+
+/* ---- src/estilos/minijuegos.js ---- */
 const CSS5 = `
 /* --- memoria por colores --- */
 .ea-celdaC{aspect-ratio:1/1;border:2px solid;cursor:pointer;transition:background .12s,transform .1s,border-color .12s;
@@ -1212,6 +1207,83 @@ const CSS5 = `
 .ea-famC{border:1px solid var(--borde);padding:4px 9px;font-size:11.5px;color:var(--gris)}
 `;
 
+/* ---- src/motor/aritmetica.js ---- */
+/* ============================================================
+   BLINDAJE · CAPA UNO: ARITMÉTICA QUE NO SE ROMPE
+   Todo número que entra al juego pasa por aquí. Un NaN, un Infinity
+   o un string donde debía ir un número no llegan nunca a la pantalla
+   ni al estado guardado: se convierten en un valor razonable y el
+   juego sigue. Es la diferencia entre "USD NaN" y una partida sana.
+   ============================================================ */
+const TOPE_PLATA = 1e12;
+
+/* convierte cualquier cosa en un número finito, o devuelve el de respaldo */
+const numero = (v, def = 0) => {
+  const x = typeof v === "number" ? v : parseFloat(v);
+  return Number.isFinite(x) ? x : Number.isFinite(def) ? def : 0;
+};
+
+/* ¿es esto un número utilizable? Ojo: numero(v, NaN) NO sirve para
+   preguntarlo, porque cuando el valor por defecto no es finito devuelve
+   cero, y cero sí es finito. Este predicado es el que hay que usar. */
+const esNumero = v => {
+  const x = typeof v === "number" ? v : parseFloat(v);
+  return Number.isFinite(x);
+};
+
+/* entero acotado: ni fracciones, ni índices fuera de rango */
+const entero = (v, def, min, max) => {
+  const x = Math.round(numero(v, def));
+  if (!Number.isFinite(x)) return def;
+  return Math.max(min, Math.min(max, x));
+};
+
+/* texto acotado: corta cadenas kilométricas y descarta lo que no sea texto */
+const texto = (v, def = "", max = 160) => typeof v === "string" ? v.slice(0, max) : def;
+
+/* clamp que nunca propaga NaN: si le entra basura, devuelve el punto neutro del rango */
+const clamp = (v, a, b) => {
+  const x = numero(v, NaN);
+  if (!Number.isFinite(x)) return Math.max(a, Math.min(b, 0));
+  return Math.max(a, Math.min(b, x));
+};
+
+/* normal estándar acotada a cinco desviaciones.
+   Los bucles tienen tope: si alguien sustituye Math.random por una
+   función que siempre devuelve cero, esto no se cuelga. */
+const gauss = () => {
+  let u = 0,
+    v = 0,
+    vueltas = 0;
+  while (u === 0 && vueltas++ < 12) u = numero(Math.random(), 0.5);
+  while (v === 0 && vueltas++ < 24) v = numero(Math.random(), 0.5);
+  if (u <= 0) u = 1e-9;
+  const g = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  return Number.isFinite(g) ? Math.max(-5, Math.min(5, g)) : 0;
+};
+
+/* formateo de plata a prueba de todo: sin NaN, sin infinitos, sin excepciones */
+const fmt = n => {
+  let x = numero(n, 0);
+  if (x > TOPE_PLATA) x = TOPE_PLATA;
+  if (x < -TOPE_PLATA) x = -TOPE_PLATA;
+  try {
+    return new Intl.NumberFormat("es-VE", {
+      maximumFractionDigits: 0
+    }).format(Math.round(x));
+  } catch (e) {
+    return String(Math.round(x));
+  }
+};
+
+/* índice al azar siempre dentro del arreglo, pase lo que pase con Math.random */
+const indiceAzar = largo => {
+  const i = Math.floor(numero(Math.random(), 0) * largo);
+  return Number.isFinite(i) ? Math.min(largo - 1, Math.max(0, i)) : 0;
+};
+const elegirAzar = arr => Array.isArray(arr) && arr.length ? arr[indiceAzar(arr.length)] : null;
+
+/* ---- src/datos/mercado.js ---- */
 /* ---------- escala de la carrera ---------- */
 const RANGOS = [{
   n: "Pasante",
@@ -1345,269 +1417,7 @@ const ETIQ = {
   cash: "Efectivo"
 };
 
-/* ============================================================
-   LOS DIECIOCHO MODOS
-   n nombre · i de qué se trata · tema qué entrena · dur cuánto dura
-   pasos cómo se juega, paso por paso · gana cuándo cuenta como éxito
-   ensena para qué sirve esto en la vida real
-   ============================================================ */
-const JUEGOS = {
-  catedra: {
-    n: "La clase de las siete",
-    tema: "Temario",
-    dur: "60 s",
-    i: "Un tema de finanzas explicado desde cero, con un ejemplo en números, y acto seguido dos o tres preguntas sobre lo que acabas de leer.",
-    pasos: ["Lees la explicación del tema que te tocó. No hay prisa.", "Miras el ejemplo con números, que es donde suele caer la ficha.", "Pasas al examen y respondes sobre eso mismo, no sobre otra cosa."],
-    gana: "Todas correctas es éxito. La mitad o más, resultado parcial.",
-    ensena: "Es el único modo que enseña antes de examinar. Si hay un concepto que se te resiste, aquí es donde lo vas a entender."
-  },
-  comite: {
-    n: "El comité de inversión",
-    tema: "Criterio de inversión",
-    dur: "60 s",
-    i: "Tres empresas sobre la mesa, capital para una. Los cinco datos que de verdad importan están a la vista y hay que elegir.",
-    pasos: ["Lees los cinco indicadores de cada negocio: crecimiento, margen, mayor cliente, deuda y ventaja competitiva.", "Decides dónde va el capital. No hay pista ni segunda oportunidad.", "Se te muestra cuál era el mejor y por qué."],
-    gana: "Acertar el mejor es éxito. El segundo, resultado parcial.",
-    ensena: "Distinguir un negocio bueno de uno que solo parece bueno. El que más crece casi nunca es el mejor: lo es el que crece con margen y sin depender de un solo cliente."
-  },
-  precision: {
-    n: "Calzar el número",
-    tema: "Ejecución",
-    dur: "20 s",
-    i: "Un cursor recorre una barra sin parar y tienes que detenerlo dentro de la banda buena.",
-    pasos: ["El cursor va y viene de un extremo al otro de la barra.", "Toca fijar cuando esté dentro de la banda clara del centro.", "Son tres intentos y la banda se angosta en cada uno."],
-    gana: "Dos o tres aciertos es éxito. Uno solo es resultado parcial.",
-    ensena: "Ejecutar dentro de un rango de precio. Entrar a 100 o a 103 en la misma idea es la diferencia entre ganar y empatar."
-  },
-  memoria: {
-    n: "Peinar el legajo",
-    tema: "Memoria de trabajo",
-    dur: "30 s",
-    i: "Tres rondas. Las casillas se encienden en un orden y tienes que repetirlo, y cada ronda alarga la anterior.",
-    pasos: ["Ronda uno: se encienden 3 casillas. Tócalas en el mismo orden.", "Ronda dos: las mismas 3 y una más al final.", "Ronda tres: esas 4 y dos más al final."],
-    gana: "Las tres rondas es éxito. Dos rondas, resultado parcial.",
-    ensena: "Retener detalle sin apuntar nada: quién dijo qué, en qué cláusula y en qué página."
-  },
-  ojo: {
-    n: "Ojo clínico",
-    tema: "Detalle contable",
-    dur: "20 s",
-    i: "Una cifra no cuadra con las demás. Encuéntrala antes de que se acabe el tiempo.",
-    pasos: ["Aparece una grilla de cifras casi idénticas.", "Una sola rompe el patrón del resto.", "Tócala antes de que corra el reloj."],
-    gana: "Encontrarla rápido es éxito. Encontrarla al filo es parcial.",
-    ensena: "En una revisión nadie te señala el error. El número raro está ahí y hay que verlo."
-  },
-  anclaje: {
-    n: "Anclaje",
-    tema: "Negociación",
-    dur: "30 s",
-    i: "Hay un rango de acuerdo que no ves. Mueves tu oferta y lees la respuesta.",
-    pasos: ["La contraparte tiene un rango de aceptación oculto.", "Mueves la oferta y te dice si está cerca, lejos o fuera.", "Cierras cuando creas que estás dentro sin haber regalado dinero."],
-    gana: "Cerrar dentro del rango y en el borde que te conviene.",
-    ensena: "El primer número que se pone sobre la mesa ancla toda la conversación que viene después."
-  },
-  suerte: {
-    n: "Aguantar la posición",
-    tema: "Riesgo y disciplina",
-    dur: "30 s",
-    i: "El múltiplo sube solo y en algún momento se da vuelta. Tú decides cuándo cerrar.",
-    pasos: ["Al empezar, el múltiplo arranca en 1,00x y va subiendo poco a poco.", "Cierras cuando quieras y te quedas con ese número. Si se da vuelta antes, ese intento se pierde.", "Tienes tres intentos y cuenta el mejor. Nadie sabe dónde se da vuelta: cada vez es distinto."],
-    gana: "Cerrar en 3,00x o más es éxito. En 2,00x o más, resultado a medias.",
-    ensena: "Toda posición ganadora te invita a esperar un poco más. La ruina casi siempre viene de no tener regla de salida escrita antes de entrar."
-  },
-  tresraya: {
-    n: "El pulso",
-    tema: "Negociación",
-    dur: "40 s",
-    i: "Tres en raya contra la contraparte, con lo que eso significa en una mesa.",
-    pasos: ["Juegas tres en raya contra el otro lado de la mesa.", "Ganar es cerrar en tus términos.", "Empatar es partir la diferencia, que muchas veces es el resultado realista."],
-    gana: "Ganar es éxito, empatar es parcial, perder es fallo.",
-    ensena: "Casi ninguna negociación se gana por fuerza. Se gana por no dejar abierta la jugada que el otro estaba esperando."
-  },
-  quiz: {
-    n: "Examen de inversiones",
-    tema: "Conocimiento",
-    dur: "60 s",
-    i: "Preguntas de finanzas de verdad, y el nivel sube con los años que llevas de carrera.",
-    pasos: ["Te toca un bloque de preguntas del nivel que corresponde a tu edad profesional.", "Cada respuesta trae una explicación, la aciertes o no.", "Con criterio alto se descarta una opción mala antes de responder."],
-    gana: "Todas correctas es éxito. Dos tercios o más es parcial.",
-    ensena: "Es el examen que en la vida real nadie te aplica y que igual te van a cobrar. El temario crece contigo: empieza en interés compuesto y termina en estructuración."
-  },
-  reaccion: {
-    n: "Cerrar la orden",
-    tema: "Ejecución",
-    dur: "15 s",
-    i: "Cuando el panel se ponga verde, dale. Si te adelantas, la orden se va al precio equivocado.",
-    pasos: ["El panel está en espera durante un tiempo que no conoces.", "Cuando se pone verde, toca lo más rápido posible.", "Adelantarte cuenta como orden mal ejecutada."],
-    gana: "Cinco de seis puntos en tres órdenes.",
-    ensena: "En mercados líquidos el precio se mueve mientras dudas. En ilíquidos, el que duda ni siquiera llega a operar."
-  },
-  calculo: {
-    n: "Cuentas rápidas",
-    tema: "Cálculo mental",
-    dur: "40 s",
-    i: "Tres cuentas de cabeza contra reloj, sin calculadora, del tipo que se hace en una reunión.",
-    pasos: ["Aparece una cuenta con tres respuestas posibles y un reloj corriendo.", "Elige antes de que llegue a cero.", "Las cuentas se vuelven más difíciles a medida que avanza tu carrera."],
-    gana: "Las tres correctas es éxito, dos es parcial.",
-    ensena: "Nadie abre Excel en medio de una reunión. El que aproxima bien de cabeza dirige la conversación."
-  },
-  orden: {
-    n: "Poner en orden",
-    tema: "Estructura",
-    dur: "25 s",
-    i: "Toca los elementos en el orden correcto. Un error y se acaba.",
-    pasos: ["Te dan una lista desordenada y un criterio de orden.", "Toca los elementos uno por uno en la secuencia correcta.", "Un error termina el ejercicio."],
-    gana: "Completar toda la secuencia.",
-    ensena: "Prelación de cobro, pasos de una valoración, cascada de un fondo. El orden no es un detalle: define quién cobra y quién no."
-  },
-  semaforo: {
-    n: "Compra o vende",
-    tema: "Lectura de mercado",
-    dur: "25 s",
-    i: "Seis señales de mercado, pocos segundos cada una. Decide rápido.",
-    pasos: ["Aparece una noticia o señal de mercado.", "Decides comprar o vender antes de que se agote el tiempo.", "Con los años el reloj se acorta y las señales se vuelven ambiguas."],
-    gana: "Cinco o seis aciertos de seis.",
-    ensena: "Reaccionar a una noticia sin releerla tres veces. La mayoría de señales son obvias cuando ya sabes qué mira el mercado."
-  },
-  trading: {
-    n: "La sesión completa",
-    tema: "Operación",
-    dur: "30 s",
-    i: "Operas una sesión entera contra el que compró al principio y no tocó nada.",
-    pasos: ["El precio avanza tick por tick en el gráfico.", "Compras y vendes cuando quieras: solo ganas o pierdes mientras estás dentro.", "Al final se compara tu cuenta contra comprar y esperar."],
-    gana: "Sacarle cuatro puntos o más a la estrategia pasiva es éxito. Empatar es parcial.",
-    ensena: "Ganarle al que no hizo nada es mucho más difícil de lo que parece, y ese es exactamente el punto del ejercicio."
-  },
-  estructura: {
-    n: "Armar la estructura",
-    tema: "Apalancamiento",
-    dur: "40 s",
-    i: "Compras una empresa de 100 millones. Tú pones una parte y el banco te presta el resto.",
-    pasos: ["Con la barra decides cuánto te presta el banco. Lo que falta lo pones tú.", "Debajo ves qué pasa con tu dinero si a la empresa le va bien y si le va mal.", "Más préstamo: ganas más si va bien, pero pierdes más si va mal. Busca el punto medio."],
-    gana: "Cumplir las dos metas es éxito. Una sola, resultado a medias.",
-    ensena: "La deuda multiplica el retorno del capital y también el riesgo de perderlo todo. Pasado cierto punto el banco manda, no tú."
-  },
-  banderas: {
-    n: "Banderas rojas",
-    tema: "Due diligence",
-    dur: "45 s",
-    i: "Un expediente con señales mezcladas. Marca solo las que de verdad preocupan.",
-    pasos: ["Lees una lista de hechos sobre una empresa o un fondo.", "Marcas los que son verdaderas señales de alarma.", "Marcar cosas normales como sospechosas también cuenta en contra."],
-    gana: "Encontrar todas las banderas rojas sin falsos positivos.",
-    ensena: "El fraude casi nunca se esconde. Está en el expediente, mezclado con veinte datos irrelevantes que distraen."
-  },
-  pares: {
-    n: "La pizarra del comité",
-    tema: "Conceptos",
-    dur: "40 s",
-    i: "Fichas boca abajo: une cada concepto con lo que significa.",
-    pasos: ["Antes de empezar ves la pizarra destapada unos segundos: mira dónde queda cada cosa.", "Después se tapa y destapas dos por turno. Cada par tiene su color: el concepto y su definición se pintan igual.", "Tienes un número limitado de fallos."],
-    gana: "Completar la pizarra con pocos fallos.",
-    ensena: "Manejar el vocabulario sin dudar. En una mesa, dudar de qué es el WACC cuesta más que equivocarse en la cuenta."
-  },
-  carril: {
-    n: "El carril del capital",
-    tema: "Asignación y reflejos",
-    dur: "25 s",
-    i: "Tu capital corre por tres carriles y tú decides por cuál va.",
-    pasos: ["Tu capital avanza por uno de tres carriles.", "Te cambias de carril para atrapar retornos y esquivar los golpes.", "Cada golpe recibido resta y cada retorno atrapado suma."],
-    gana: "Puntos altos con pocos golpes.",
-    ensena: "Rotar entre activos parece fácil visto en retrospectiva. En tiempo real casi siempre te cambias tarde."
-  },
-  cuatro: {
-    n: "Cuatro en línea",
-    tema: "Negociación",
-    dur: "60 s",
-    i: "Cuatro fichas seguidas contra la contraparte.",
-    pasos: ["Sueltas fichas por columna, igual que en el juego de mesa.", "Ganas con cuatro en línea en cualquier dirección.", "El que controla el centro del tablero controla la negociación."],
-    gana: "Ganar la partida. El empate es parcial.",
-    ensena: "Pensar dos jugadas por delante y bloquear al otro sin dejar de construir lo tuyo."
-  },
-  subasta: {
-    n: "La subasta",
-    tema: "Valoración y disciplina",
-    dur: "40 s",
-    i: "Tú y tres rivales pujan por la misma empresa, y nadie sabe cuánto vale de verdad.",
-    pasos: ["Tienes tu propia estimación de lo que vale. Puede estar equivocada, por arriba o por abajo.", "En cada ronda subes la oferta o te retiras. Cada rival tiene su límite y se retira al pasarlo.", "Si se retiran todos, es tuya al precio que quedó. Si te retiras tú, la subasta sigue sin ti."],
-    gana: "Ganar pagando lo que vale o menos es éxito. Retirarte cuando el que gana acaba pagando de más, también.",
-    ensena: "La maldición del ganador: en una subasta, el que más paga suele ser el que más se equivocó estimando."
-  }
-};
-
-/* ============================================================
-   BLINDAJE · CAPA UNO: ARITMÉTICA QUE NO SE ROMPE
-   Todo número que entra al juego pasa por aquí. Un NaN, un Infinity
-   o un string donde debía ir un número no llegan nunca a la pantalla
-   ni al estado guardado: se convierten en un valor razonable y el
-   juego sigue. Es la diferencia entre "USD NaN" y una partida sana.
-   ============================================================ */
-const TOPE_PLATA = 1e12;
-
-/* convierte cualquier cosa en un número finito, o devuelve el de respaldo */
-const numero = (v, def = 0) => {
-  const x = typeof v === "number" ? v : parseFloat(v);
-  return Number.isFinite(x) ? x : Number.isFinite(def) ? def : 0;
-};
-
-/* ¿es esto un número utilizable? Ojo: numero(v, NaN) NO sirve para
-   preguntarlo, porque cuando el valor por defecto no es finito devuelve
-   cero, y cero sí es finito. Este predicado es el que hay que usar. */
-const esNumero = v => {
-  const x = typeof v === "number" ? v : parseFloat(v);
-  return Number.isFinite(x);
-};
-
-/* entero acotado: ni fracciones, ni índices fuera de rango */
-const entero = (v, def, min, max) => {
-  const x = Math.round(numero(v, def));
-  if (!Number.isFinite(x)) return def;
-  return Math.max(min, Math.min(max, x));
-};
-
-/* texto acotado: corta cadenas kilométricas y descarta lo que no sea texto */
-const texto = (v, def = "", max = 160) => typeof v === "string" ? v.slice(0, max) : def;
-
-/* clamp que nunca propaga NaN: si le entra basura, devuelve el punto neutro del rango */
-const clamp = (v, a, b) => {
-  const x = numero(v, NaN);
-  if (!Number.isFinite(x)) return Math.max(a, Math.min(b, 0));
-  return Math.max(a, Math.min(b, x));
-};
-
-/* normal estándar acotada a cinco desviaciones.
-   Los bucles tienen tope: si alguien sustituye Math.random por una
-   función que siempre devuelve cero, esto no se cuelga. */
-const gauss = () => {
-  let u = 0,
-    v = 0,
-    vueltas = 0;
-  while (u === 0 && vueltas++ < 12) u = numero(Math.random(), 0.5);
-  while (v === 0 && vueltas++ < 24) v = numero(Math.random(), 0.5);
-  if (u <= 0) u = 1e-9;
-  const g = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  return Number.isFinite(g) ? Math.max(-5, Math.min(5, g)) : 0;
-};
-
-/* formateo de plata a prueba de todo: sin NaN, sin infinitos, sin excepciones */
-const fmt = n => {
-  let x = numero(n, 0);
-  if (x > TOPE_PLATA) x = TOPE_PLATA;
-  if (x < -TOPE_PLATA) x = -TOPE_PLATA;
-  try {
-    return new Intl.NumberFormat("es-VE", {
-      maximumFractionDigits: 0
-    }).format(Math.round(x));
-  } catch (e) {
-    return String(Math.round(x));
-  }
-};
-
-/* índice al azar siempre dentro del arreglo, pase lo que pase con Math.random */
-const indiceAzar = largo => {
-  const i = Math.floor(numero(Math.random(), 0) * largo);
-  return Number.isFinite(i) ? Math.min(largo - 1, Math.max(0, i)) : 0;
-};
-const elegirAzar = arr => Array.isArray(arr) && arr.length ? arr[indiceAzar(arr.length)] : null;
+/* ---- src/estilos/graficos.js ---- */
 const CSS2 = `
 .ea-graf{width:100%;height:150px;border:1px solid rgba(61,61,61,.25);background:rgba(61,61,61,.05);display:block}
 .ea-grafL{fill:none;stroke:var(--tintaPapel);stroke-width:2}
@@ -1642,6 +1452,8 @@ const CSS2 = `
 .ea-badge{font-size:10.5px;letter-spacing:.14em;color:var(--cobre);border:1px solid var(--cobre);padding:2px 7px;
   font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
 `;
+
+/* ---- src/estilos/tableros.js ---- */
 const CSS3 = `
 .ea-tab4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .ea-fichaP{aspect-ratio:1/1.25;border:1px solid rgba(61,61,61,.3);background:rgba(61,61,61,.09);cursor:pointer;
@@ -1697,6 +1509,8 @@ const CSS3 = `
 .ea-postor.fuera{opacity:.4;text-decoration:line-through}
 .ea-precio{font-size:44px;line-height:1;color:var(--tintaPapel)}
 `;
+
+/* ---- src/estilos/cartera.js ---- */
 const CSS4 = `
 /* reparto entre cartera y efectivo */
 /* El boton que confirma un cambio de cartera no puede parecerse a los
@@ -2204,6 +2018,7 @@ const CSS4 = `
 }
 `;
 
+/* ---- src/datos/estilo-de-vida.js ---- */
 /* ---------- mejoras que se compran una sola vez ---------- */
 const PERKS = [{
   id: "research",
@@ -2672,6 +2487,170 @@ const NOTICIAS = [{
   }
 }];
 
+/* ---- src/datos/glosario.js ---- */
+/* el temario completo, con su nivel */
+/* ============================================================
+   GLOSARIO
+   Cada término que el juego usa, explicado como se lo explicarías
+   a alguien que nunca ha pisado un banco. En modo aprendiz aparece
+   solo, antes de que la palabra se use por primera vez.
+   ============================================================ */
+const GLOSARIO = {
+  accion: {
+    n: "Acción",
+    x: "Un pedacito de la propiedad de una empresa. Si tienes una acción de una panadería, eres dueño de una parte mínima de esa panadería: te toca parte de lo que gane y pierdes si le va mal."
+  },
+  bono: {
+    n: "Bono",
+    x: "Un préstamo que tú le haces a un gobierno o a una empresa. Ellos te devuelven el dinero en una fecha pactada y mientras tanto te pagan intereses. Es más aburrido que una acción y por eso mismo suele ser más seguro."
+  },
+  cartera: {
+    n: "Cartera o portafolio",
+    x: "El conjunto de todo lo que tienes invertido. No es un producto que se compra: es simplemente la suma de tus cosas y cómo están repartidas."
+  },
+  interesCompuesto: {
+    n: "Interés compuesto",
+    x: "Cuando lo que ganas empieza a generar ganancias por su cuenta. Ganas sobre tu dinero, y al año siguiente ganas sobre tu dinero más lo que ganaste. Al principio es imperceptible; a los veinte años es la mayor parte de tu patrimonio."
+  },
+  inflacion: {
+    n: "Inflación",
+    x: "Que las cosas cuesten más cada año. Si tu dinero está quieto y la inflación es 5%, dentro de un año compras 5% menos con lo mismo. Guardar efectivo no es neutral: es perder despacio."
+  },
+  volatilidad: {
+    n: "Volatilidad",
+    x: "Cuánto se mueve el precio de algo. Alta volatilidad significa años de subir mucho y años de caer mucho. No es lo mismo que riesgo de perderlo todo, pero se siente parecido cuando estás mirando."
+  },
+  diversificar: {
+    n: "Diversificar",
+    x: "No poner todo en el mismo sitio. La gracia es que si las cosas que tienes no suben y bajan al mismo tiempo, el conjunto se mueve menos que cada parte por separado."
+  },
+  liquidez: {
+    n: "Liquidez",
+    x: "Qué tan rápido puedes convertir algo en dinero sin malbaratar. El efectivo es líquido, un apartamento no. Un activo excelente pero ilíquido no te sirve si mañana necesitas pagar algo."
+  },
+  riesgo: {
+    n: "Riesgo",
+    x: "La posibilidad de que el resultado no sea el que esperabas. En finanzas casi nunca se elimina, se cambia de forma: menos riesgo de perder suele venir con menos posibilidad de ganar."
+  },
+  rendimiento: {
+    n: "Rendimiento o retorno",
+    x: "Lo que ganaste, en porcentaje de lo que pusiste. Si pusiste 100 y ahora tienes 107, tu rendimiento fue 7%."
+  },
+  comision: {
+    n: "Comisión",
+    x: "Lo que cobra el intermediario por moverte el dinero. Parece pequeña porque se expresa en porcentajes chiquitos, pero se cobra todos los años y sobre todo tu dinero."
+  },
+  fondoIndexado: {
+    n: "Fondo indexado",
+    x: "Una canasta que compra un poco de todas las empresas de un mercado. No intenta escoger las buenas: se las lleva todas. Cobra muy poco y por eso, a treinta años, le gana a la mayoría de los que sí intentan escoger."
+  },
+  fondoEmergencia: {
+    n: "Fondo de emergencia",
+    x: "Dinero aburrido, en efectivo, para cubrir entre 3 y 6 meses de tus gastos. No es una inversión, es un seguro: existe para que un imprevisto no te obligue a vender tus inversiones en el peor momento."
+  },
+  patrimonio: {
+    n: "Patrimonio",
+    x: "Todo lo que tienes menos todo lo que debes. Es el número que de verdad importa, y no tiene nada que ver con cuánto ganas al mes."
+  },
+  apalancamiento: {
+    n: "Apalancamiento",
+    x: "Invertir con dinero prestado. Multiplica lo que ganas y multiplica igual lo que pierdes. Es la herramienta que más fortunas ha hecho y más ha deshecho."
+  },
+  ebitda: {
+    n: "EBITDA",
+    x: "Lo que gana una empresa por operar, antes de intereses, impuestos y depreciación. Sirve para comparar empresas entre sí sin que estorbe cómo están financiadas."
+  },
+  beta: {
+    n: "Beta",
+    x: "Cuánto se mueve algo cuando se mueve el mercado entero. Beta uno significa que va al mismo ritmo. Beta cero significa que le da igual lo que haga el mercado."
+  },
+  rebalanceo: {
+    n: "Rebalanceo",
+    x: "Volver a poner tu cartera en las proporciones que decidiste. Obliga a vender un poco de lo que subió y comprar de lo que bajó, que es exactamente lo contrario de lo que pide el estómago."
+  },
+  fcl: {
+    n: "Flujo de caja libre",
+    x: "El dinero que de verdad le sobra a la empresa después de operar y de invertir en mantenerse en pie. Una empresa puede declarar utilidad contable y quemar caja al mismo tiempo: la utilidad es una opinión, la caja es un hecho."
+  },
+  wacc: {
+    n: "Costo de capital",
+    x: "Lo que le cuesta a una empresa el dinero que usa, mezclando deuda y capital propio. La deuda sale más barata porque cobra primero y sus intereses desgravan; el capital propio es el más caro porque cobra último y sin garantía."
+  },
+  opcion: {
+    n: "Opción",
+    x: "El derecho, no la obligación, de comprar o vender algo a un precio fijado. Se paga una prima por ese derecho. Gana valor cuando el precio se mueve a favor y también cuando hay más incertidumbre."
+  },
+  cobertura: {
+    n: "Cobertura",
+    x: "Montar una posición que gane justo cuando tu negocio pierde, para que el conjunto se mueva menos. No busca ganar dinero: busca que un movimiento de precios o de moneda no te descoloque."
+  },
+  activo: {
+    n: "Activo",
+    x: "Cualquier cosa que tengas y que valga algo: dinero, una acción, un local, una máquina. La prueba de fuego es si alguien te lo compraría. Un gasto ya hecho no es un activo por mucho que costara."
+  },
+  costoOportunidad: {
+    n: "Costo de oportunidad",
+    x: "Lo que dejas de ganar por elegir una cosa en vez de otra. Tener dinero parado en la cuenta no es gratis: cuesta exactamente lo que habría rendido en otro sitio."
+  },
+  seguro: {
+    n: "Seguro",
+    x: "Pagar una cantidad pequeña y segura para no tener que pagar una enorme e improbable. Tiene sentido cuando el golpe que cubre te arruinaría; no lo tiene para cosas que podrías pagar de tu bolsillo."
+  },
+  multiplo: {
+    n: "Múltiplo de valoración",
+    x: "Cuántas veces sus ganancias vale una empresa. Un múltiplo alto significa que el mercado espera crecimiento; también significa que estás pagando por un futuro que aún no ocurrió."
+  },
+  distressed: {
+    n: "Deuda distressed",
+    x: "Deuda de empresas en problemas, que se compra muy por debajo de su valor nominal. Se apuesta a que la empresa se recupere o a que al liquidarla quede más de lo que pagaste."
+  },
+  earnout: {
+    n: "Earn out",
+    x: "Parte del precio de una compra que solo se paga si la empresa cumple ciertos resultados después. Sirve cuando comprador y vendedor no se ponen de acuerdo en cuánto vale el futuro."
+  },
+  capitalTrabajo: {
+    n: "Capital de trabajo",
+    x: "El dinero atrapado en el día a día: inventario en el almacén y facturas que aún no te han pagado. Si crece más rápido que las ventas, el negocio consume caja aunque parezca que gana."
+  },
+  dilucion: {
+    n: "Dilución",
+    x: "Cuando una empresa emite acciones nuevas, tu porcentaje de la empresa baja aunque tengas las mismas acciones. Te quedas con una tajada menor de un pastel que ojalá sea mayor."
+  },
+  tir: {
+    n: "Tasa interna de retorno",
+    x: "El rendimiento anualizado de una inversión contando cuándo entra y sale cada peso. A diferencia del múltiplo, castiga tardar: duplicar en dos años y en diez dan el mismo múltiplo y TIR muy distintas."
+  },
+  encaje: {
+    n: "Encaje legal",
+    x: "La parte de los depósitos que un banco no puede prestar y tiene que dejar inmovilizada en el banco central. Sirve de colchón si mucha gente retira a la vez, y de palanca para abrir o cerrar el crédito de todo un país."
+  },
+  tasaRectora: {
+    n: "Tasa de referencia",
+    x: "El precio al que se prestan los bancos entre ellos, que fija el banco central. Cuando sube, todo el crédito del país se encarece; cuando baja, se abarata. Es el dial principal de la política monetaria."
+  },
+  cartaCredito: {
+    n: "Carta de crédito",
+    x: "Un banco se pone en medio de dos empresas que no se conocen: promete pagarle al vendedor, pero solo contra documentos que prueben que embarcó lo pactado. Resuelve que ninguno quiera ser el primero en cumplir."
+  },
+  devaluacion: {
+    n: "Devaluación",
+    x: "Que tu moneda valga menos frente a otra. Todo lo importado sube y tus ahorros locales compran menos, aunque el número de tu cuenta no se haya movido. Para quien cobra en local, es un recorte de sueldo que nadie anuncia."
+  },
+  tasaEfectiva: {
+    n: "Tasa efectiva",
+    x: "Lo que de verdad te cuesta un préstamo contando comisiones, seguros y el efecto de componer. Siempre es mayor que la tasa nominal que anuncian, y es la única comparable entre dos ofertas."
+  },
+  intermediacion: {
+    n: "Margen de intermediación",
+    x: "La diferencia entre lo que un banco te paga por tus ahorros y lo que cobra por prestar ese mismo dinero. Es su negocio principal y la razón por la que la cuenta de ahorro rinde tan poco."
+  },
+  regla4: {
+    n: "La regla del 4%",
+    x: "Una referencia: si retiras cada año el 4% de tu patrimonio, históricamente el dinero aguanta unos treinta años. Por eso se dice que necesitas 25 veces tu gasto anual."
+  }
+};
+
+/* ---- src/datos/preguntas.js ---- */
 /* ---------- banco de preguntas ---------- */
 const BANCO = [{
   q: "Sube la tasa de descuento y todo lo demás queda igual. El valor presente de los flujos futuros",
@@ -3806,168 +3785,7 @@ const BANCO2 = [{
   e: "Es de las señales más confiables de deterioro en la calidad de los ingresos."
 }];
 
-/* el temario completo, con su nivel */
-/* ============================================================
-   GLOSARIO
-   Cada término que el juego usa, explicado como se lo explicarías
-   a alguien que nunca ha pisado un banco. En modo aprendiz aparece
-   solo, antes de que la palabra se use por primera vez.
-   ============================================================ */
-const GLOSARIO = {
-  accion: {
-    n: "Acción",
-    x: "Un pedacito de la propiedad de una empresa. Si tienes una acción de una panadería, eres dueño de una parte mínima de esa panadería: te toca parte de lo que gane y pierdes si le va mal."
-  },
-  bono: {
-    n: "Bono",
-    x: "Un préstamo que tú le haces a un gobierno o a una empresa. Ellos te devuelven el dinero en una fecha pactada y mientras tanto te pagan intereses. Es más aburrido que una acción y por eso mismo suele ser más seguro."
-  },
-  cartera: {
-    n: "Cartera o portafolio",
-    x: "El conjunto de todo lo que tienes invertido. No es un producto que se compra: es simplemente la suma de tus cosas y cómo están repartidas."
-  },
-  interesCompuesto: {
-    n: "Interés compuesto",
-    x: "Cuando lo que ganas empieza a generar ganancias por su cuenta. Ganas sobre tu dinero, y al año siguiente ganas sobre tu dinero más lo que ganaste. Al principio es imperceptible; a los veinte años es la mayor parte de tu patrimonio."
-  },
-  inflacion: {
-    n: "Inflación",
-    x: "Que las cosas cuesten más cada año. Si tu dinero está quieto y la inflación es 5%, dentro de un año compras 5% menos con lo mismo. Guardar efectivo no es neutral: es perder despacio."
-  },
-  volatilidad: {
-    n: "Volatilidad",
-    x: "Cuánto se mueve el precio de algo. Alta volatilidad significa años de subir mucho y años de caer mucho. No es lo mismo que riesgo de perderlo todo, pero se siente parecido cuando estás mirando."
-  },
-  diversificar: {
-    n: "Diversificar",
-    x: "No poner todo en el mismo sitio. La gracia es que si las cosas que tienes no suben y bajan al mismo tiempo, el conjunto se mueve menos que cada parte por separado."
-  },
-  liquidez: {
-    n: "Liquidez",
-    x: "Qué tan rápido puedes convertir algo en dinero sin malbaratar. El efectivo es líquido, un apartamento no. Un activo excelente pero ilíquido no te sirve si mañana necesitas pagar algo."
-  },
-  riesgo: {
-    n: "Riesgo",
-    x: "La posibilidad de que el resultado no sea el que esperabas. En finanzas casi nunca se elimina, se cambia de forma: menos riesgo de perder suele venir con menos posibilidad de ganar."
-  },
-  rendimiento: {
-    n: "Rendimiento o retorno",
-    x: "Lo que ganaste, en porcentaje de lo que pusiste. Si pusiste 100 y ahora tienes 107, tu rendimiento fue 7%."
-  },
-  comision: {
-    n: "Comisión",
-    x: "Lo que cobra el intermediario por moverte el dinero. Parece pequeña porque se expresa en porcentajes chiquitos, pero se cobra todos los años y sobre todo tu dinero."
-  },
-  fondoIndexado: {
-    n: "Fondo indexado",
-    x: "Una canasta que compra un poco de todas las empresas de un mercado. No intenta escoger las buenas: se las lleva todas. Cobra muy poco y por eso, a treinta años, le gana a la mayoría de los que sí intentan escoger."
-  },
-  fondoEmergencia: {
-    n: "Fondo de emergencia",
-    x: "Dinero aburrido, en efectivo, para cubrir entre 3 y 6 meses de tus gastos. No es una inversión, es un seguro: existe para que un imprevisto no te obligue a vender tus inversiones en el peor momento."
-  },
-  patrimonio: {
-    n: "Patrimonio",
-    x: "Todo lo que tienes menos todo lo que debes. Es el número que de verdad importa, y no tiene nada que ver con cuánto ganas al mes."
-  },
-  apalancamiento: {
-    n: "Apalancamiento",
-    x: "Invertir con dinero prestado. Multiplica lo que ganas y multiplica igual lo que pierdes. Es la herramienta que más fortunas ha hecho y más ha deshecho."
-  },
-  ebitda: {
-    n: "EBITDA",
-    x: "Lo que gana una empresa por operar, antes de intereses, impuestos y depreciación. Sirve para comparar empresas entre sí sin que estorbe cómo están financiadas."
-  },
-  beta: {
-    n: "Beta",
-    x: "Cuánto se mueve algo cuando se mueve el mercado entero. Beta uno significa que va al mismo ritmo. Beta cero significa que le da igual lo que haga el mercado."
-  },
-  rebalanceo: {
-    n: "Rebalanceo",
-    x: "Volver a poner tu cartera en las proporciones que decidiste. Obliga a vender un poco de lo que subió y comprar de lo que bajó, que es exactamente lo contrario de lo que pide el estómago."
-  },
-  fcl: {
-    n: "Flujo de caja libre",
-    x: "El dinero que de verdad le sobra a la empresa después de operar y de invertir en mantenerse en pie. Una empresa puede declarar utilidad contable y quemar caja al mismo tiempo: la utilidad es una opinión, la caja es un hecho."
-  },
-  wacc: {
-    n: "Costo de capital",
-    x: "Lo que le cuesta a una empresa el dinero que usa, mezclando deuda y capital propio. La deuda sale más barata porque cobra primero y sus intereses desgravan; el capital propio es el más caro porque cobra último y sin garantía."
-  },
-  opcion: {
-    n: "Opción",
-    x: "El derecho, no la obligación, de comprar o vender algo a un precio fijado. Se paga una prima por ese derecho. Gana valor cuando el precio se mueve a favor y también cuando hay más incertidumbre."
-  },
-  cobertura: {
-    n: "Cobertura",
-    x: "Montar una posición que gane justo cuando tu negocio pierde, para que el conjunto se mueva menos. No busca ganar dinero: busca que un movimiento de precios o de moneda no te descoloque."
-  },
-  activo: {
-    n: "Activo",
-    x: "Cualquier cosa que tengas y que valga algo: dinero, una acción, un local, una máquina. La prueba de fuego es si alguien te lo compraría. Un gasto ya hecho no es un activo por mucho que costara."
-  },
-  costoOportunidad: {
-    n: "Costo de oportunidad",
-    x: "Lo que dejas de ganar por elegir una cosa en vez de otra. Tener dinero parado en la cuenta no es gratis: cuesta exactamente lo que habría rendido en otro sitio."
-  },
-  seguro: {
-    n: "Seguro",
-    x: "Pagar una cantidad pequeña y segura para no tener que pagar una enorme e improbable. Tiene sentido cuando el golpe que cubre te arruinaría; no lo tiene para cosas que podrías pagar de tu bolsillo."
-  },
-  multiplo: {
-    n: "Múltiplo de valoración",
-    x: "Cuántas veces sus ganancias vale una empresa. Un múltiplo alto significa que el mercado espera crecimiento; también significa que estás pagando por un futuro que aún no ocurrió."
-  },
-  distressed: {
-    n: "Deuda distressed",
-    x: "Deuda de empresas en problemas, que se compra muy por debajo de su valor nominal. Se apuesta a que la empresa se recupere o a que al liquidarla quede más de lo que pagaste."
-  },
-  earnout: {
-    n: "Earn out",
-    x: "Parte del precio de una compra que solo se paga si la empresa cumple ciertos resultados después. Sirve cuando comprador y vendedor no se ponen de acuerdo en cuánto vale el futuro."
-  },
-  capitalTrabajo: {
-    n: "Capital de trabajo",
-    x: "El dinero atrapado en el día a día: inventario en el almacén y facturas que aún no te han pagado. Si crece más rápido que las ventas, el negocio consume caja aunque parezca que gana."
-  },
-  dilucion: {
-    n: "Dilución",
-    x: "Cuando una empresa emite acciones nuevas, tu porcentaje de la empresa baja aunque tengas las mismas acciones. Te quedas con una tajada menor de un pastel que ojalá sea mayor."
-  },
-  tir: {
-    n: "Tasa interna de retorno",
-    x: "El rendimiento anualizado de una inversión contando cuándo entra y sale cada peso. A diferencia del múltiplo, castiga tardar: duplicar en dos años y en diez dan el mismo múltiplo y TIR muy distintas."
-  },
-  encaje: {
-    n: "Encaje legal",
-    x: "La parte de los depósitos que un banco no puede prestar y tiene que dejar inmovilizada en el banco central. Sirve de colchón si mucha gente retira a la vez, y de palanca para abrir o cerrar el crédito de todo un país."
-  },
-  tasaRectora: {
-    n: "Tasa de referencia",
-    x: "El precio al que se prestan los bancos entre ellos, que fija el banco central. Cuando sube, todo el crédito del país se encarece; cuando baja, se abarata. Es el dial principal de la política monetaria."
-  },
-  cartaCredito: {
-    n: "Carta de crédito",
-    x: "Un banco se pone en medio de dos empresas que no se conocen: promete pagarle al vendedor, pero solo contra documentos que prueben que embarcó lo pactado. Resuelve que ninguno quiera ser el primero en cumplir."
-  },
-  devaluacion: {
-    n: "Devaluación",
-    x: "Que tu moneda valga menos frente a otra. Todo lo importado sube y tus ahorros locales compran menos, aunque el número de tu cuenta no se haya movido. Para quien cobra en local, es un recorte de sueldo que nadie anuncia."
-  },
-  tasaEfectiva: {
-    n: "Tasa efectiva",
-    x: "Lo que de verdad te cuesta un préstamo contando comisiones, seguros y el efecto de componer. Siempre es mayor que la tasa nominal que anuncian, y es la única comparable entre dos ofertas."
-  },
-  intermediacion: {
-    n: "Margen de intermediación",
-    x: "La diferencia entre lo que un banco te paga por tus ahorros y lo que cobra por prestar ese mismo dinero. Es su negocio principal y la razón por la que la cuenta de ahorro rinde tan poco."
-  },
-  regla4: {
-    n: "La regla del 4%",
-    x: "Una referencia: si retiras cada año el 4% de tu patrimonio, históricamente el dinero aguanta unos treinta años. Por eso se dice que necesitas 25 veces tu gasto anual."
-  }
-};
-
+/* ---- src/datos/catedra.js ---- */
 /* ============================================================
    CÁTEDRA · el temario con clase y examen
    Cada tema trae una explicación en lenguaje llano, un ejemplo con
@@ -4669,6 +4487,7 @@ const armarExamen = (nv, cuantas, temasVistos) => {
   return out.sort(() => Math.random() - 0.5).slice(0, cuantas);
 };
 
+/* ---- src/datos/bienes-y-ramas.js ---- */
 /* ---------- propiedades ---------- */
 const PROPIEDADES = [{
   id: "local",
@@ -4767,6 +4586,7 @@ const RAMAS = [{
   d: "Te independizas. Ingresos irregulares y más altos en promedio, un punto de reputación por semestre y más desgaste."
 }];
 
+/* ---- src/datos/fondo.js ---- */
 /* ============================================================
    EL DEAL FLOW DEL FONDO
    Antes cada empresa era un nombre, un sector y un múltiplo esperado
@@ -5059,6 +4879,7 @@ const senalesDeal = e => [{
   mal: numero(e.foso, 1) <= 1
 }];
 
+/* ---- src/datos/paises.js ---- */
 /* ---------- banderas rojas ----------
    Reescrito: cada línea, sea bandera roja o no, lleva su propia razón.
    Antes el juego te decía "estas tres eran" y te dejaba igual de ciego
@@ -5415,6 +5236,7 @@ const NACIONES = [{
   nota: "Empiezas debiendo dieciséis mil dólares de la universidad."
 }];
 
+/* ---- src/datos/carreras.js ---- */
 /* ---------- qué estudiaste ---------- */
 const CARRERAS = [{
   id: "eco",
@@ -5550,6 +5372,7 @@ const PERFILES = [
   d: "Vas por el rendimiento alto y asumes que habrá años en los que pierdas casi la mitad."
 }];
 
+/* ---- src/motor/cartera.js ---- */
 /* Media y desviación de una combinación cualquiera de pesos.
    La varianza se parte en dos: la parte de mercado, que se suma entre activos
    porque caen juntos, y la propia de cada uno, que sí se diluye al repartir. */
@@ -5623,47 +5446,7 @@ const concentracion = w => {
 };
 const COSTO_CAMBIO = 0.005;
 
-/* ============================================================
-   BASE DE DATOS DE MINIJUEGOS
-   Cada modo declara su nombre, su instrucción, el tema financiero
-   que ejercita y cuánto dura. El motor lee de aquí.
-   ============================================================ */
-
-const MINIJUEGOS = Object.keys(JUEGOS).map(k => ({
-  id: k,
-  ...JUEGOS[k]
-}));
-
-/* ---------- fichas de la pizarra ---------- */
-const PIZARRAS = [{
-  t: "Conceptos de valoración",
-  p: [["WACC", "Costo promedio del capital"], ["TIR", "Tasa que deja el VAN en cero"], ["Beta", "Sensibilidad al índice"], ["Valor terminal", "La mayor parte del DCF"], ["Deuda neta", "Puente de equity a firm value"], ["Prima de riesgo país", "Se suma al costo del equity"]]
-}, {
-  t: "Vocabulario de fondos",
-  p: [["Carry", "20% de la ganancia"], ["Hurdle", "Retorno preferente del ocho"], ["Dry powder", "Capital sin desplegar"], ["TVPI", "Valor total sobre lo aportado"], ["DPI", "Lo que ya se devolvió"], ["Curva J", "Pérdidas al inicio del fondo"]]
-}, {
-  t: "Renta fija y crédito",
-  p: [["Duración", "Sensibilidad a la tasa"], ["Cupón", "Interés periódico del bono"], ["Covenant", "Condición que hay que cumplir"], ["Subordinada", "Cobra después de la senior"], ["Convertible", "Deuda con opción a acciones"], ["Cross default", "Un impago dispara los demás"]]
-}, {
-  t: "Contabilidad que importa",
-  p: [["EBITDA", "Antes de intereses y depreciación"], ["Capital de trabajo", "Inventario más cobrar menos pagar"], ["Flujo libre", "Lo que sobra después de invertir"], ["Devengo", "Se reconoce sin haber cobrado"], ["Impuesto diferido", "Diferencia contable y fiscal"], ["Provisión", "Gasto reconocido sin pagar aún"]]
-}];
-
-/* ---------- carriles del capital ---------- */
-const CARRILES = [{
-  n: "Bonos",
-  bueno: "Cupón",
-  malo: "Alza de tasas"
-}, {
-  n: "Acciones",
-  bueno: "Dividendo",
-  malo: "Profit warning"
-}, {
-  n: "Cripto",
-  bueno: "Rally",
-  malo: "Liquidación"
-}];
-
+/* ---- src/datos/escenas-carrera.js ---- */
 /* ---------- eventos de semestre, muchos con juego rápido ---------- */
 const E = [{
   id: 1,
@@ -8474,6 +8257,7 @@ const E6 = [{
 }];
 E.push.apply(E, E6);
 
+/* ---- src/datos/escenas-vida.js ---- */
 /* ============================================================
    LA VIDA QUE PASA MIENTRAS TRABAJAS
    Un simulador de carrera que solo habla de sueldos y carteras miente
@@ -9274,6 +9058,7 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
   }]
 }];
 
+/* ---- src/datos/lecciones.js ---- */
 /* ---------- estado inicial y utilidades de resolución ---------- */
 
 /* ============================================================
@@ -9549,6 +9334,7 @@ const HITOS = [{
   t: "Ocho cifras"
 }];
 
+/* ---- src/motor/guardado.js ---- */
 /* ============================================================
    GUARDAR LA PARTIDA
    Treinta años son demasiado recorrido para perderlo al recargar.
@@ -9714,6 +9500,8 @@ const olvidarPartida = async () => {
     } catch (e) {}
   }
 };
+
+/* ---- src/motor/estado-inicial.js ---- */
 const BASE = {
   turno: 0,
   rango: 0,
@@ -9865,6 +9653,7 @@ const GASTOS = [{
 }];
 const NIVEL_GASTO = id => GASTOS.find(x => x.id === id) || GASTOS[1];
 
+/* ---- src/motor/edad-y-metas.js ---- */
 /* ============================================================
    METAS POR EDAD
    Referencia habitual de la planificación financiera: cuántas veces tu
@@ -10037,6 +9826,7 @@ const escalar = (d, nivel) => {
   return out;
 };
 
+/* ---- src/datos/premios.js ---- */
 /* ============================================================
    RECONOCIMIENTOS
    Un patrimonio no es un legado. Estos premios son la otra forma de
@@ -10147,6 +9937,7 @@ const premiosNuevos = st => {
   });
 };
 
+/* ---- src/datos/legendarias.js ---- */
 /* ============================================================
    DECISIONES LEGENDARIAS
    Una carrera entera tiene tres o cuatro momentos que la parten en dos.
@@ -10293,6 +10084,7 @@ const LEGENDARIAS = [{
   }]
 }];
 
+/* ---- src/motor/firma-propia.js ---- */
 /* ============================================================
    TU PROPIA FIRMA
    Independizarse no puede significar lo mismo para todo el mundo: a un
@@ -10419,6 +10211,7 @@ const escenaFirma = (st, id) => {
   };
 };
 
+/* ---- src/datos/contratos.js ---- */
 /* ============================================================
    DONDE TRABAJAS Y CON QUE CONTRATO
    El juego siempre es finanzas, pero cada formacion entra por una
@@ -10502,6 +10295,7 @@ const ESCENA_CONTRATO = {
   }])
 };
 
+/* ---- src/datos/aperturas.js ---- */
 /* ============================================================
    APERTURA ESCALONADA
    El juego no se muestra entero desde el primer año. Cada sistema
@@ -10745,6 +10539,7 @@ const SORPRESAS_MALAS = [{
 }];
 const IDS_APERTURA = APERTURAS.map(a => a.id);
 
+/* ---- src/motor/cola-del-anio.js ---- */
 /* ============================================================
    REHIDRATAR LA COLA DEL ANIO
    Una recarga a mitad de partida tiene que devolver al jugador a la
@@ -10785,6 +10580,317 @@ const tocaAbrir = (st, a) => entero(st && st.rango, 0, 0, 99) >= a.rango || ente
 /* la única consulta que hace el resto del juego */
 const abierto = (st, id) => !!(st && Array.isArray(st.abiertos) && st.abiertos.indexOf(id) >= 0);
 
+/* ---- src/datos/modos.js ---- */
+/* ============================================================
+   LOS DIECIOCHO MODOS
+   n nombre · i de qué se trata · tema qué entrena · dur cuánto dura
+   pasos cómo se juega, paso por paso · gana cuándo cuenta como éxito
+   ensena para qué sirve esto en la vida real
+   ============================================================ */
+const JUEGOS = {
+  catedra: {
+    n: "La clase de las siete",
+    tema: "Temario",
+    dur: "60 s",
+    i: "Un tema de finanzas explicado desde cero, con un ejemplo en números, y acto seguido dos o tres preguntas sobre lo que acabas de leer.",
+    pasos: ["Lees la explicación del tema que te tocó. No hay prisa.", "Miras el ejemplo con números, que es donde suele caer la ficha.", "Pasas al examen y respondes sobre eso mismo, no sobre otra cosa."],
+    gana: "Todas correctas es éxito. La mitad o más, resultado parcial.",
+    ensena: "Es el único modo que enseña antes de examinar. Si hay un concepto que se te resiste, aquí es donde lo vas a entender."
+  },
+  comite: {
+    n: "El comité de inversión",
+    tema: "Criterio de inversión",
+    dur: "60 s",
+    i: "Tres empresas sobre la mesa, capital para una. Los cinco datos que de verdad importan están a la vista y hay que elegir.",
+    pasos: ["Lees los cinco indicadores de cada negocio: crecimiento, margen, mayor cliente, deuda y ventaja competitiva.", "Decides dónde va el capital. No hay pista ni segunda oportunidad.", "Se te muestra cuál era el mejor y por qué."],
+    gana: "Acertar el mejor es éxito. El segundo, resultado parcial.",
+    ensena: "Distinguir un negocio bueno de uno que solo parece bueno. El que más crece casi nunca es el mejor: lo es el que crece con margen y sin depender de un solo cliente."
+  },
+  precision: {
+    n: "Calzar el número",
+    tema: "Ejecución",
+    dur: "20 s",
+    i: "Un cursor recorre una barra sin parar y tienes que detenerlo dentro de la banda buena.",
+    pasos: ["El cursor va y viene de un extremo al otro de la barra.", "Toca fijar cuando esté dentro de la banda clara del centro.", "Son tres intentos y la banda se angosta en cada uno."],
+    gana: "Dos o tres aciertos es éxito. Uno solo es resultado parcial.",
+    ensena: "Ejecutar dentro de un rango de precio. Entrar a 100 o a 103 en la misma idea es la diferencia entre ganar y empatar."
+  },
+  memoria: {
+    n: "Peinar el legajo",
+    tema: "Memoria de trabajo",
+    dur: "30 s",
+    i: "Tres rondas. Las casillas se encienden en un orden y tienes que repetirlo, y cada ronda alarga la anterior.",
+    pasos: ["Ronda uno: se encienden 3 casillas. Tócalas en el mismo orden.", "Ronda dos: las mismas 3 y una más al final.", "Ronda tres: esas 4 y dos más al final."],
+    gana: "Las tres rondas es éxito. Dos rondas, resultado parcial.",
+    ensena: "Retener detalle sin apuntar nada: quién dijo qué, en qué cláusula y en qué página."
+  },
+  ojo: {
+    n: "Ojo clínico",
+    tema: "Detalle contable",
+    dur: "20 s",
+    i: "Una cifra no cuadra con las demás. Encuéntrala antes de que se acabe el tiempo.",
+    pasos: ["Aparece una grilla de cifras casi idénticas.", "Una sola rompe el patrón del resto.", "Tócala antes de que corra el reloj."],
+    gana: "Encontrarla rápido es éxito. Encontrarla al filo es parcial.",
+    ensena: "En una revisión nadie te señala el error. El número raro está ahí y hay que verlo."
+  },
+  anclaje: {
+    n: "Anclaje",
+    tema: "Negociación",
+    dur: "30 s",
+    i: "Hay un rango de acuerdo que no ves. Mueves tu oferta y lees la respuesta.",
+    pasos: ["La contraparte tiene un rango de aceptación oculto.", "Mueves la oferta y te dice si está cerca, lejos o fuera.", "Cierras cuando creas que estás dentro sin haber regalado dinero."],
+    gana: "Cerrar dentro del rango y en el borde que te conviene.",
+    ensena: "El primer número que se pone sobre la mesa ancla toda la conversación que viene después."
+  },
+  suerte: {
+    n: "Aguantar la posición",
+    tema: "Riesgo y disciplina",
+    dur: "30 s",
+    i: "El múltiplo sube solo y en algún momento se da vuelta. Tú decides cuándo cerrar.",
+    pasos: ["Al empezar, el múltiplo arranca en 1,00x y va subiendo poco a poco.", "Cierras cuando quieras y te quedas con ese número. Si se da vuelta antes, ese intento se pierde.", "Tienes tres intentos y cuenta el mejor. Nadie sabe dónde se da vuelta: cada vez es distinto."],
+    gana: "Cerrar en 3,00x o más es éxito. En 2,00x o más, resultado a medias.",
+    ensena: "Toda posición ganadora te invita a esperar un poco más. La ruina casi siempre viene de no tener regla de salida escrita antes de entrar."
+  },
+  tresraya: {
+    n: "El pulso",
+    tema: "Negociación",
+    dur: "40 s",
+    i: "Tres en raya contra la contraparte, con lo que eso significa en una mesa.",
+    pasos: ["Juegas tres en raya contra el otro lado de la mesa.", "Ganar es cerrar en tus términos.", "Empatar es partir la diferencia, que muchas veces es el resultado realista."],
+    gana: "Ganar es éxito, empatar es parcial, perder es fallo.",
+    ensena: "Casi ninguna negociación se gana por fuerza. Se gana por no dejar abierta la jugada que el otro estaba esperando."
+  },
+  quiz: {
+    n: "Examen de inversiones",
+    tema: "Conocimiento",
+    dur: "60 s",
+    i: "Preguntas de finanzas de verdad, y el nivel sube con los años que llevas de carrera.",
+    pasos: ["Te toca un bloque de preguntas del nivel que corresponde a tu edad profesional.", "Cada respuesta trae una explicación, la aciertes o no.", "Con criterio alto se descarta una opción mala antes de responder."],
+    gana: "Todas correctas es éxito. Dos tercios o más es parcial.",
+    ensena: "Es el examen que en la vida real nadie te aplica y que igual te van a cobrar. El temario crece contigo: empieza en interés compuesto y termina en estructuración."
+  },
+  reaccion: {
+    n: "Cerrar la orden",
+    tema: "Ejecución",
+    dur: "15 s",
+    i: "Cuando el panel se ponga verde, dale. Si te adelantas, la orden se va al precio equivocado.",
+    pasos: ["El panel está en espera durante un tiempo que no conoces.", "Cuando se pone verde, toca lo más rápido posible.", "Adelantarte cuenta como orden mal ejecutada."],
+    gana: "Cinco de seis puntos en tres órdenes.",
+    ensena: "En mercados líquidos el precio se mueve mientras dudas. En ilíquidos, el que duda ni siquiera llega a operar."
+  },
+  calculo: {
+    n: "Cuentas rápidas",
+    tema: "Cálculo mental",
+    dur: "40 s",
+    i: "Tres cuentas de cabeza contra reloj, sin calculadora, del tipo que se hace en una reunión.",
+    pasos: ["Aparece una cuenta con tres respuestas posibles y un reloj corriendo.", "Elige antes de que llegue a cero.", "Las cuentas se vuelven más difíciles a medida que avanza tu carrera."],
+    gana: "Las tres correctas es éxito, dos es parcial.",
+    ensena: "Nadie abre Excel en medio de una reunión. El que aproxima bien de cabeza dirige la conversación."
+  },
+  orden: {
+    n: "Poner en orden",
+    tema: "Estructura",
+    dur: "25 s",
+    i: "Toca los elementos en el orden correcto. Un error y se acaba.",
+    pasos: ["Te dan una lista desordenada y un criterio de orden.", "Toca los elementos uno por uno en la secuencia correcta.", "Un error termina el ejercicio."],
+    gana: "Completar toda la secuencia.",
+    ensena: "Prelación de cobro, pasos de una valoración, cascada de un fondo. El orden no es un detalle: define quién cobra y quién no."
+  },
+  semaforo: {
+    n: "Compra o vende",
+    tema: "Lectura de mercado",
+    dur: "25 s",
+    i: "Seis señales de mercado, pocos segundos cada una. Decide rápido.",
+    pasos: ["Aparece una noticia o señal de mercado.", "Decides comprar o vender antes de que se agote el tiempo.", "Con los años el reloj se acorta y las señales se vuelven ambiguas."],
+    gana: "Cinco o seis aciertos de seis.",
+    ensena: "Reaccionar a una noticia sin releerla tres veces. La mayoría de señales son obvias cuando ya sabes qué mira el mercado."
+  },
+  trading: {
+    n: "La sesión completa",
+    tema: "Operación",
+    dur: "30 s",
+    i: "Operas una sesión entera contra el que compró al principio y no tocó nada.",
+    pasos: ["El precio avanza tick por tick en el gráfico.", "Compras y vendes cuando quieras: solo ganas o pierdes mientras estás dentro.", "Al final se compara tu cuenta contra comprar y esperar."],
+    gana: "Sacarle cuatro puntos o más a la estrategia pasiva es éxito. Empatar es parcial.",
+    ensena: "Ganarle al que no hizo nada es mucho más difícil de lo que parece, y ese es exactamente el punto del ejercicio."
+  },
+  estructura: {
+    n: "Armar la estructura",
+    tema: "Apalancamiento",
+    dur: "40 s",
+    i: "Compras una empresa de 100 millones. Tú pones una parte y el banco te presta el resto.",
+    pasos: ["Con la barra decides cuánto te presta el banco. Lo que falta lo pones tú.", "Debajo ves qué pasa con tu dinero si a la empresa le va bien y si le va mal.", "Más préstamo: ganas más si va bien, pero pierdes más si va mal. Busca el punto medio."],
+    gana: "Cumplir las dos metas es éxito. Una sola, resultado a medias.",
+    ensena: "La deuda multiplica el retorno del capital y también el riesgo de perderlo todo. Pasado cierto punto el banco manda, no tú."
+  },
+  banderas: {
+    n: "Banderas rojas",
+    tema: "Due diligence",
+    dur: "45 s",
+    i: "Un expediente con señales mezcladas. Marca solo las que de verdad preocupan.",
+    pasos: ["Lees una lista de hechos sobre una empresa o un fondo.", "Marcas los que son verdaderas señales de alarma.", "Marcar cosas normales como sospechosas también cuenta en contra."],
+    gana: "Encontrar todas las banderas rojas sin falsos positivos.",
+    ensena: "El fraude casi nunca se esconde. Está en el expediente, mezclado con veinte datos irrelevantes que distraen."
+  },
+  pares: {
+    n: "La pizarra del comité",
+    tema: "Conceptos",
+    dur: "40 s",
+    i: "Fichas boca abajo: une cada concepto con lo que significa.",
+    pasos: ["Antes de empezar ves la pizarra destapada unos segundos: mira dónde queda cada cosa.", "Después se tapa y destapas dos por turno. Cada par tiene su color: el concepto y su definición se pintan igual.", "Tienes un número limitado de fallos."],
+    gana: "Completar la pizarra con pocos fallos.",
+    ensena: "Manejar el vocabulario sin dudar. En una mesa, dudar de qué es el WACC cuesta más que equivocarse en la cuenta."
+  },
+  carril: {
+    n: "El carril del capital",
+    tema: "Asignación y reflejos",
+    dur: "25 s",
+    i: "Tu capital corre por tres carriles y tú decides por cuál va.",
+    pasos: ["Tu capital avanza por uno de tres carriles.", "Te cambias de carril para atrapar retornos y esquivar los golpes.", "Cada golpe recibido resta y cada retorno atrapado suma."],
+    gana: "Puntos altos con pocos golpes.",
+    ensena: "Rotar entre activos parece fácil visto en retrospectiva. En tiempo real casi siempre te cambias tarde."
+  },
+  cuatro: {
+    n: "Cuatro en línea",
+    tema: "Negociación",
+    dur: "60 s",
+    i: "Cuatro fichas seguidas contra la contraparte.",
+    pasos: ["Sueltas fichas por columna, igual que en el juego de mesa.", "Ganas con cuatro en línea en cualquier dirección.", "El que controla el centro del tablero controla la negociación."],
+    gana: "Ganar la partida. El empate es parcial.",
+    ensena: "Pensar dos jugadas por delante y bloquear al otro sin dejar de construir lo tuyo."
+  },
+  subasta: {
+    n: "La subasta",
+    tema: "Valoración y disciplina",
+    dur: "40 s",
+    i: "Tú y tres rivales pujan por la misma empresa, y nadie sabe cuánto vale de verdad.",
+    pasos: ["Tienes tu propia estimación de lo que vale. Puede estar equivocada, por arriba o por abajo.", "En cada ronda subes la oferta o te retiras. Cada rival tiene su límite y se retira al pasarlo.", "Si se retiran todos, es tuya al precio que quedó. Si te retiras tú, la subasta sigue sin ti."],
+    gana: "Ganar pagando lo que vale o menos es éxito. Retirarte cuando el que gana acaba pagando de más, también.",
+    ensena: "La maldición del ganador: en una subasta, el que más paga suele ser el que más se equivocó estimando."
+  }
+};
+
+/* ---- src/motor/reglas.js ---- */
+/* consultas a las tablas que nunca devuelven undefined */
+const RANGO = i => RANGOS[entero(i, 0, 0, RANGOS.length - 1)] || RANGOS[0];
+const JUEGO = k => JUEGOS[k] || JUEGOS.suerte;
+const GUIA = [{
+  id: "decidir",
+  cuando: c => c.fase === "evento",
+  t: "Esto es una decisión",
+  x: "Ninguna opción es la obviamente correcta: cada una te cuesta algo. Elige y sigue; el año avanza contigo."
+}, {
+  id: "secciones",
+  cuando: c => c.fase === "evento" && c.vistas.indexOf("decidir") >= 0,
+  t: "Arriba están tus secciones",
+  x: "Por ahora solo tu Ficha. El juego irá abriendo las demás según avance tu carrera. No hay reloj: se abren y se cierran cuando quieras."
+}, {
+  id: "comprar",
+  cuando: c => c.tab === "comprar",
+  t: "Aquí se gasta",
+  x: "Cosas para ti, inmuebles que te rentan cada año y mejoras que trabajan solas. Las tres salen del mismo bolsillo."
+}, {
+  id: "cartera",
+  cuando: c => c.tab === "portafolio",
+  t: "Aquí decides qué hace tu dinero",
+  x: "La barra de arriba dice cuánto está invertido y cuánto en efectivo. Debajo repartes entre tipos de activo. Nada se aplica hasta que confirmas."
+}, {
+  id: "ficha",
+  cuando: c => c.tab === "ficha",
+  t: "Tus números y el banco",
+  x: "Aquí ves sueldo, gastos y patrimonio. Al final de la sección puedes pedir un préstamo o pagar deuda."
+}, {
+  id: "juego",
+  cuando: c => c.fase === "minijuego",
+  t: "Un modo de juego",
+  x: "Primero te explican las reglas y qué cuenta como éxito. Cuando entiendas, empiezas: el resultado afecta a tu carrera."
+}, {
+  id: "cierre",
+  cuando: c => c.fase === "cierre",
+  t: "El informe del año",
+  x: "Lo que entró, lo que salió y cómo se movió tu cartera. Al final hay una lección sacada de tus propios números: es la parte que enseña."
+}, {
+  id: "vida",
+  cuando: c => c.tab === "expediente",
+  t: "Cómo vives",
+  x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo."
+}];
+
+/* Algunos bienes solo tienen sentido en cierta vida: una boda sin pareja
+   o un fondo de educación sin hijos era comprable, y era la incoherencia
+   que mas chirriaba. El requisito se consulta siempre por aqui, para que
+   un requiere() mal escrito no tumbe la pantalla entera. */
+const puedeComprar = (c, st) => {
+  if (!c || typeof c.requiere !== "function") return true;
+  try {
+    return !!c.requiere(st);
+  } catch (e) {
+    return true;
+  }
+};
+
+/* Qué atributos mueve una opción, para poder decirlo ANTES de elegir en
+   vez de después. A propósito sin cifras: saber que algo cuesta energía
+   es información útil; saber que cuesta exactamente 18 convierte la
+   decisión en aritmética y le quita la apuesta. */
+const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
+/* que simbolo lleva cada atributo, para poder decirlo sin palabras */
+const ICONO_ATRIB = {
+  mod: "tabla",
+  cri: "ojo",
+  red: "nodos",
+  rep: "estrella",
+  car: "escalera",
+  ene: "rayo",
+  cash: "moneda"
+};
+
+/* Cuanto pesa un cambio, medido en signos y no en cifras.
+   MEJORAS punto 17 tenia razon: el numero exacto convierte la decision
+   en aritmetica y le quita la apuesta. Pero «cuesta energia» tampoco
+   distingue perder tres de perder dieciocho, y esa diferencia si
+   importa al decidir. Tres tramos: uno, dos o tres signos. Sabes si es
+   poco, bastante o mucho, y no te pones a sumar.
+   El efectivo lleva su propia escala porque se mueve en miles. */
+const fuerzaDe = (k, v) => {
+  const x = Math.abs(numero(v, 0));
+  if (k === "cash") return x >= 20000 ? 3 : x >= 5000 ? 2 : 1;
+  return x >= 9 ? 3 : x >= 4 ? 2 : 1;
+};
+
+/* Lo que mueve una opcion: la clave y cuanto, para pintarlo en signos */
+const efectosDe = o => {
+  if (!o || typeof o !== "object") return [];
+  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
+  if (!d || typeof d !== "object") return [];
+  const out = [];
+  CLAVES_ATRIB.forEach(k => {
+    const v = numero(d[k], 0);
+    if (v) out.push({
+      k,
+      v
+    });
+  });
+  return out;
+};
+const efectoDe = o => {
+  if (!o || typeof o !== "object") return null;
+  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
+  if (!d || typeof d !== "object") return null;
+  const sube = [],
+    cuesta = [];
+  CLAVES_ATRIB.forEach(k => {
+    const v = numero(d[k], 0);
+    if (v > 0) sube.push((ETIQ[k] || k).toLowerCase());else if (v < 0) cuesta.push((ETIQ[k] || k).toLowerCase());
+  });
+  if (!sube.length && !cuesta.length) return null;
+  return {
+    sube,
+    cuesta
+  };
+};
+
+/* ---- src/motor/saneador.js ---- */
 /* ============================================================
    BLINDAJE . CAPA DOS: EL SANEADOR
    Toda partida que entra al estado, venga de un guardado, de una
@@ -10956,125 +11062,7 @@ const sanear = bruto => {
 /* una partida solo se ofrece para retomar si de verdad se puede jugar */
 const partidaJugable = st => !!(st && st.pais && st.estudio);
 
-/* consultas a las tablas que nunca devuelven undefined */
-const RANGO = i => RANGOS[entero(i, 0, 0, RANGOS.length - 1)] || RANGOS[0];
-const JUEGO = k => JUEGOS[k] || JUEGOS.suerte;
-const GUIA = [{
-  id: "decidir",
-  cuando: c => c.fase === "evento",
-  t: "Esto es una decisión",
-  x: "Ninguna opción es la obviamente correcta: cada una te cuesta algo. Elige y sigue; el año avanza contigo."
-}, {
-  id: "secciones",
-  cuando: c => c.fase === "evento" && c.vistas.indexOf("decidir") >= 0,
-  t: "Arriba están tus secciones",
-  x: "Por ahora solo tu Ficha. El juego irá abriendo las demás según avance tu carrera. No hay reloj: se abren y se cierran cuando quieras."
-}, {
-  id: "comprar",
-  cuando: c => c.tab === "comprar",
-  t: "Aquí se gasta",
-  x: "Cosas para ti, inmuebles que te rentan cada año y mejoras que trabajan solas. Las tres salen del mismo bolsillo."
-}, {
-  id: "cartera",
-  cuando: c => c.tab === "portafolio",
-  t: "Aquí decides qué hace tu dinero",
-  x: "La barra de arriba dice cuánto está invertido y cuánto en efectivo. Debajo repartes entre tipos de activo. Nada se aplica hasta que confirmas."
-}, {
-  id: "ficha",
-  cuando: c => c.tab === "ficha",
-  t: "Tus números y el banco",
-  x: "Aquí ves sueldo, gastos y patrimonio. Al final de la sección puedes pedir un préstamo o pagar deuda."
-}, {
-  id: "juego",
-  cuando: c => c.fase === "minijuego",
-  t: "Un modo de juego",
-  x: "Primero te explican las reglas y qué cuenta como éxito. Cuando entiendas, empiezas: el resultado afecta a tu carrera."
-}, {
-  id: "cierre",
-  cuando: c => c.fase === "cierre",
-  t: "El informe del año",
-  x: "Lo que entró, lo que salió y cómo se movió tu cartera. Al final hay una lección sacada de tus propios números: es la parte que enseña."
-}, {
-  id: "vida",
-  cuando: c => c.tab === "expediente",
-  t: "Cómo vives",
-  x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo."
-}];
-
-/* Algunos bienes solo tienen sentido en cierta vida: una boda sin pareja
-   o un fondo de educación sin hijos era comprable, y era la incoherencia
-   que mas chirriaba. El requisito se consulta siempre por aqui, para que
-   un requiere() mal escrito no tumbe la pantalla entera. */
-const puedeComprar = (c, st) => {
-  if (!c || typeof c.requiere !== "function") return true;
-  try {
-    return !!c.requiere(st);
-  } catch (e) {
-    return true;
-  }
-};
-
-/* Qué atributos mueve una opción, para poder decirlo ANTES de elegir en
-   vez de después. A propósito sin cifras: saber que algo cuesta energía
-   es información útil; saber que cuesta exactamente 18 convierte la
-   decisión en aritmética y le quita la apuesta. */
-const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
-/* que simbolo lleva cada atributo, para poder decirlo sin palabras */
-const ICONO_ATRIB = {
-  mod: "tabla",
-  cri: "ojo",
-  red: "nodos",
-  rep: "estrella",
-  car: "escalera",
-  ene: "rayo",
-  cash: "moneda"
-};
-
-/* Cuanto pesa un cambio, medido en signos y no en cifras.
-   MEJORAS punto 17 tenia razon: el numero exacto convierte la decision
-   en aritmetica y le quita la apuesta. Pero «cuesta energia» tampoco
-   distingue perder tres de perder dieciocho, y esa diferencia si
-   importa al decidir. Tres tramos: uno, dos o tres signos. Sabes si es
-   poco, bastante o mucho, y no te pones a sumar.
-   El efectivo lleva su propia escala porque se mueve en miles. */
-const fuerzaDe = (k, v) => {
-  const x = Math.abs(numero(v, 0));
-  if (k === "cash") return x >= 20000 ? 3 : x >= 5000 ? 2 : 1;
-  return x >= 9 ? 3 : x >= 4 ? 2 : 1;
-};
-
-/* Lo que mueve una opcion: la clave y cuanto, para pintarlo en signos */
-const efectosDe = o => {
-  if (!o || typeof o !== "object") return [];
-  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
-  if (!d || typeof d !== "object") return [];
-  const out = [];
-  CLAVES_ATRIB.forEach(k => {
-    const v = numero(d[k], 0);
-    if (v) out.push({
-      k,
-      v
-    });
-  });
-  return out;
-};
-const efectoDe = o => {
-  if (!o || typeof o !== "object") return null;
-  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
-  if (!d || typeof d !== "object") return null;
-  const sube = [],
-    cuesta = [];
-  CLAVES_ATRIB.forEach(k => {
-    const v = numero(d[k], 0);
-    if (v > 0) sube.push((ETIQ[k] || k).toLowerCase());else if (v < 0) cuesta.push((ETIQ[k] || k).toLowerCase());
-  });
-  if (!sube.length && !cuesta.length) return null;
-  return {
-    sube,
-    cuesta
-  };
-};
-
+/* ---- src/motor/requisitos.js ---- */
 /* ============================================================
    LO QUE UNA OPCION TE PIDE
    Hasta ahora podias amanecerte trabajando con la energia a 3, y el
@@ -11204,6 +11192,7 @@ const pulsable = (fn, rotulo, apagado) => ({
   }
 });
 
+/* ---- src/minijuegos/JuegoPrecision.jsx ---- */
 /* ============================ MINIJUEGOS ============================ */
 
 function JuegoPrecision({
@@ -11286,6 +11275,243 @@ function JuegoPrecision({
   }, "Fijar"));
 }
 
+/* ---- src/componentes/Iconos.jsx ---- */
+/* ============================================================
+   ICONOS
+   Dibujados aqui, no traidos de fuera: el juego tiene que abrirse sin
+   red. Trazo del mismo grosor en todos, para que la fila de arriba se
+   lea como una sola cosa y no como cinco simbolos sueltos.
+   ============================================================ */
+const TRAZOS = {
+  rayo: "M13.5 2 L5 13.5 h5.2 l-1.2 8.5 L18 10.5 h-5.3 z",
+  edificio: "M3 21.5V7.2l6.5-3.7 6.5 3.7v14.3 M9.6 21.5v-4.6h3.6v4.6 M6.2 10.4h1.9 M6.2 14h1.9 M14.6 10.4h1.9 M14.6 14h1.9",
+  pin: "M12 22s6.6-6.3 6.6-10.6a6.6 6.6 0 1 0-13.2 0C5.4 15.7 12 22 12 22z M12 13.2a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4z",
+  escalera: "M3 21h5.4v-5.4H3zM9.3 21h5.4V10.2H9.3zM15.6 21H21V4.6h-5.4z",
+  ojo: "M1.6 12S5.5 4.9 12 4.9 22.4 12 22.4 12 18.5 19.1 12 19.1 1.6 12 1.6 12z M12 15.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2z",
+  tabla: "M3.2 3.6h17.6v16.8H3.2z M3.2 9.2h17.6 M3.2 14.8h17.6 M9.6 3.6v16.8",
+  nodos: "M6 8.2a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M18 8.2a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M12 21.6a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M7.6 7.4l3 9 M16.4 7.4l-3 9 M8.9 5.3h6.2",
+  estrella: "M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z",
+  moneda: "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8v10.4 M14.9 9.3c0-1.3-1.3-2-2.9-2s-2.9.7-2.9 2 1.3 1.9 2.9 2.2 2.9.9 2.9 2.2-1.3 2-2.9 2-2.9-.7-2.9-2",
+  aviso: "M12 2.4 1.6 20.6h20.8z M12 9.2v5.2 M12 17.4h.02",
+  /* ---- lo que se compra ----
+     Veinte trazos para treinta y dos cosas: varias comparten simbolo a
+     proposito, porque lo que tiene que decir el icono es de que FAMILIA
+     es la compra, no cual exactamente. El nombre ya esta al lado. */
+  pesa: "M2.6 9.4v5.2 M6 7.2v9.6 M18 7.2v9.6 M21.4 9.4v5.2 M6 12h12",
+  plato: "M12 20.6a8.6 8.6 0 1 0 0-17.2 8.6 8.6 0 0 0 0 17.2z M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4z",
+  libro: "M4 3.6h11a3 3 0 0 1 3 3v13.8a2.4 2.4 0 0 0-2.4-2.4H4z M4 3.6v14.4 M20 6.6v13.8",
+  reloj: "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8V12l3.4 2",
+  maleta: "M3 8.4h18v11.2H3z M8.4 8.4V5.6a1.6 1.6 0 0 1 1.6-1.6h4a1.6 1.6 0 0 1 1.6 1.6v2.8 M3 13.4h18",
+  coche: "M4 16.6h16 M5.4 16.6l1.4-5.4a2 2 0 0 1 1.9-1.5h6.6a2 2 0 0 1 1.9 1.5l1.4 5.4 M4 16.6v2.4h2.6v-2.4 M17.4 16.6V19H20v-2.4 M7.6 13.4h8.8",
+  barco: "M3 17.4h18l-2.4 3.2H5.4z M5.6 17.4V9.6h12.8v7.8 M12 9.6V4.2 M8.8 9.6h6.4",
+  casa: "M3.4 10.6 12 3.6l8.6 7v9.8H3.4z M9.6 20.4v-6h4.8v6",
+  terreno: "M2.6 18.6 9 15.4l6 3.2 6.4-3.2v-6L15 12.6l-6-3.2-6.4 3.2z M9 9.4v6 M15 12.6v6",
+  palmera: "M12 21V11 M12 11c-3.4-2.6-7-1.6-8.4.6 2.4-1 4.8-.6 6.4 1 M12 11c3.4-2.6 7-1.6 8.4.6-2.4-1-4.8-.6-6.4 1 M12 11c0-3.6 2.2-6 5-6.4-1.6 1.8-2.2 3.8-2 6.4 M12 11c0-3.6-2.2-6-5-6.4 1.6 1.8 2.2 3.8 2 6.4",
+  anillo: "M12 21.4a6.6 6.6 0 1 0 0-13.2 6.6 6.6 0 0 0 0 13.2z M8.6 8.8 6.4 3.4h11.2l-2.2 5.4 M12 3.4v5",
+  bebe: "M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M9.4 11.6h.02 M14.6 11.6h.02 M9.6 15.4c1.4 1.2 3.4 1.2 4.8 0 M8 4.6c1.2-1.4 6.8-1.4 8 0",
+  cuadro: "M3.6 4.4h16.8v13.2H3.6z M3.6 13.8l4.6-4.2 4.2 3.8 3-2.6 5 4.4 M12 20.8v.8",
+  copa: "M7.4 3.6h9.2v4.2a4.6 4.6 0 0 1-9.2 0z M12 12.4v5.4 M8.4 20.4h7.2 M7.4 5.2H4.6v1.6a3 3 0 0 0 2.8 2.8 M16.6 5.2h2.8v1.6a3 3 0 0 1-2.8 2.8",
+  cafe: "M4.4 7.6h12v6.6a5 5 0 0 1-10 0z M16.4 9.2h1.8a2.6 2.6 0 0 1 0 5.2h-1.8 M3.6 20.4h13.6 M8 4.6v-2 M12.8 4.6v-2",
+  balanza: "M12 3.4v17.2 M7 20.6h10 M4 8.2h16 M4 8.2 1.6 14h4.8z M20 8.2 17.6 14h4.8z M12 3.4 8 8.2h8z",
+  persona: "M12 12a4.2 4.2 0 1 0 0-8.4A4.2 4.2 0 0 0 12 12z M4.4 20.6c0-4.2 3.4-7 7.6-7s7.6 2.8 7.6 7",
+  pluma: "M20.4 3.6 9.6 14.4l-1.2 4.6 4.6-1.2L23.8 7 20.4 3.6z M8.4 19 3.6 20.4l1.4-4.8 M14.6 8.6l4 4",
+  escudo: "M12 21.6s7.6-3.4 7.6-9.6V5.4L12 2.6 4.4 5.4V12c0 6.2 7.6 9.6 7.6 9.6z M8.8 12l2.2 2.2 4.4-4.4",
+  grafico: "M3.4 20.4h17.2 M6.6 20.4v-6.6 M11 20.4V7.6 M15.4 20.4v-9.4 M19.8 20.4V4.4",
+  micro: "M12 14.4a3.4 3.4 0 0 0 3.4-3.4V6a3.4 3.4 0 1 0-6.8 0v5a3.4 3.4 0 0 0 3.4 3.4z M6 10.6v.6a6 6 0 0 0 12 0v-.6 M12 17.4v3.2 M9 20.6h6",
+  /* ---- que clase de cosa te esta pasando ----
+     Un simbolo por tipo de escena. Antes todas se veian igual: el mismo
+     memorando gris para un dia de oficina, para que se case tu hermano y
+     para la decision que parte la carrera en dos. */
+  documento: "M14 2.6H6.4a2 2 0 0 0-2 2v14.8a2 2 0 0 0 2 2h11.2a2 2 0 0 0 2-2V8.2z M14 2.6v5.6h5.6 M8.4 13h7.2 M8.4 17h4.8",
+  corona: "M2.8 7.6 6.6 13l5.4-7.6L17.4 13l3.8-5.4v10.2a1.6 1.6 0 0 1-1.6 1.6H4.4a1.6 1.6 0 0 1-1.6-1.6z M2.8 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M21.2 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M12 5.4a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z",
+  bifurca: "M12 21.4v-6.6 M12 14.8 5.6 8.4V3.2 M12 14.8l6.4-6.4V3.2 M5.6 3.2H3.2 M5.6 3.2h2.4 M18.4 3.2H16 M18.4 3.2h2.4",
+  corazon: "M12 20.8 4.4 13.2a4.8 4.8 0 0 1 0-6.8 4.8 4.8 0 0 1 6.8 0l.8.8.8-.8a4.8 4.8 0 0 1 6.8 0 4.8 4.8 0 0 1 0 6.8z",
+  sello: "M12 2.6a4 4 0 0 0-4 4c0 1.6 1.2 2.6 1.2 4.2H6.4a2.4 2.4 0 0 0-2.4 2.4v1.4h16v-1.4a2.4 2.4 0 0 0-2.4-2.4h-2.8c0-1.6 1.2-2.6 1.2-4.2a4 4 0 0 0-4-4z M4.4 18.2h15.2v3.2H4.4z",
+  candado: "M5.4 10.6h13.2a1.6 1.6 0 0 1 1.6 1.6v7.2a1.6 1.6 0 0 1-1.6 1.6H5.4a1.6 1.6 0 0 1-1.6-1.6v-7.2a1.6 1.6 0 0 1 1.6-1.6z M7.8 10.6V7a4.2 4.2 0 0 1 8.4 0v3.6"
+};
+
+/* Los momentos que se juegan a pantalla completa, ademas de las
+   legendarias y las bifurcaciones, que entran solas. */
+const DRAMA_IDS = [/* te ofrecen otro trabajo, otro pais u otra silla */
+7, /* te llama un headhunter */
+15, /* una silla en el board */
+33, /* dos ofertas sobre la mesa */
+55, /* una visa de trabajo */
+119, /* la silla del socio se decide en la mesa */
+120, /* dirigir la oficina de otro pais */
+9720, 9721, /* renunciar y montar lo tuyo */
+/* la vida que se parte en dos */
+9001, /* alguien que te importa */
+9010, /* la conversacion: casarse */
+9011, /* se rompio */
+9012, /* un hijo */
+9021, /* tu padre ya no puede solo */
+9022 /* se murio */];
+
+/* El simbolo, el rotulo y el color de cada clase de escena. */
+const CLASE_ESCENA = ev => {
+  if (!ev) return {
+    k: "documento",
+    n: "Memorando interno",
+    c: "var(--gris)"
+  };
+  if (ev.legendaria) return {
+    k: "corona",
+    n: "Decisión legendaria",
+    c: "var(--cobre)"
+  };
+  if (ev.rama) return {
+    k: "bifurca",
+    n: "Bifurcación",
+    c: "var(--cobre)"
+  };
+  /* las de vida traen ventana de edad; las de oficina, de rango */
+  if (ev.eMin != null || ev.eMax != null) return {
+    k: "corazon",
+    n: "Tu vida",
+    c: "#B9532A"
+  };
+  if (ev.clave) return {
+    k: "sello",
+    n: "Decisión clave",
+    c: "var(--tintaPapel)"
+  };
+  return {
+    k: "documento",
+    n: "Memorando interno",
+    c: "var(--gris)"
+  };
+};
+
+/* Que simbolo lleva cada cosa que se compra. Varias comparten el mismo:
+   el icono dice de que familia es la compra, y el nombre dice cual. */
+const ICONO_BIEN = {
+  /* mejoras */
+  research: "libro",
+  gym: "pesa",
+  fiscal: "balanza",
+  coach: "persona",
+  asistente: "persona",
+  prensa: "pluma",
+  terminal: "grafico",
+  abogado: "balanza",
+  broker: "grafico",
+  club: "copa",
+  colchon: "escudo",
+  mba: "libro",
+  /* caprichos */
+  viaje: "maleta",
+  moto: "coche",
+  reloj: "reloj",
+  palco: "copa",
+  carro: "coche",
+  arte: "cuadro",
+  boda: "anillo",
+  apto: "casa",
+  finca: "cafe",
+  playa: "palmera",
+  barco: "barco",
+  hijos: "bebe",
+  /* inmuebles */
+  local: "edificio",
+  ofi: "edificio",
+  galpon: "edificio",
+  edificio: "edificio",
+  terreno: "terreno",
+  hotel: "casa",
+  centro: "edificio",
+  isla: "palmera"
+};
+
+/* un icono de trazo, para lo que solo necesita identificarse */
+function Icono({
+  k,
+  tam,
+  tono
+}) {
+  const d = TRAZOS[k];
+  if (!d) return null;
+  const n = numero(tam, 14);
+  return /*#__PURE__*/React.createElement("svg", {
+    className: "ea-ico",
+    width: n,
+    height: n,
+    viewBox: "0 0 24 24",
+    "aria-hidden": "true",
+    focusable: "false",
+    fill: "none",
+    stroke: tono || "currentColor",
+    strokeWidth: "1.9",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: d
+  }));
+}
+
+/* ---- y el que se llena ----
+   Un numero del 0 al 100 no dice nada de un vistazo. Un rayo que se
+   llena hasta donde llega tu energia, si. El vaso vacio queda detras en
+   tenue, y lo lleno se recorta con un rectangulo que sube. */
+let SELLO_ID = 0;
+function IconoLleno({
+  k,
+  pct,
+  tam,
+  tono
+}) {
+  const d = TRAZOS[k];
+  const idRef = useRef(null);
+  if (idRef.current === null) {
+    SELLO_ID += 1;
+    idRef.current = "eaLl" + SELLO_ID;
+  }
+  if (!d) return null;
+  const n = numero(tam, 16);
+  const p = clamp(numero(pct, 0) / 100, 0, 1);
+  const alto = 24 * p;
+  return /*#__PURE__*/React.createElement("svg", {
+    className: "ea-ico",
+    width: n,
+    height: n,
+    viewBox: "0 0 24 24",
+    "aria-hidden": "true",
+    focusable: "false"
+  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("clipPath", {
+    id: idRef.current
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "0",
+    y: 24 - alto,
+    width: "24",
+    height: alto
+  }))), /*#__PURE__*/React.createElement("path", {
+    d: d,
+    fill: "currentColor",
+    opacity: ".24"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: d,
+    fill: tono || "currentColor",
+    clipPath: "url(#" + idRef.current + ")"
+  }));
+}
+
+/* ---- las reglas dentro del minijuego ----
+   Se quedaban puestas mientras juegas, ocupando un tercio de la pantalla
+   con lo mismo que acababas de leer en la ficha de antes. Ahora se
+   pliegan: quien las necesite las abre, y no estorban al que ya sabe. */
+function Pista({
+  children
+}) {
+  const [abierta, setAbierta] = useState(false);
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    className: "ea-recuerda ea-dis",
+    onClick: () => setAbierta(!abierta)
+  }, abierta ? "↑ Ocultar las reglas" : "↓ Las reglas"), abierta && /*#__PURE__*/React.createElement("div", {
+    className: "ea-pista ea-panelAb"
+  }, children));
+}
+
+/* ---- src/minijuegos/JuegoMemoria.jsx ---- */
 /* ---- Peinar el legajo · memoria de trabajo ----
    Reescrito: cada casilla tiene su propio color y su propio nombre, así
    que la secuencia se recuerda como "cobre, verde, vino" y no como tres
@@ -11514,6 +11740,8 @@ function JuegoMemoria({
     }
   }, aviso));
 }
+
+/* ---- src/minijuegos/JuegoOjo.jsx ---- */
 function JuegoOjo({
   ayuda,
   onFin
@@ -11584,6 +11812,8 @@ function JuegoOjo({
     }
   }, aviso));
 }
+
+/* ---- src/minijuegos/JuegoAnclaje.jsx ---- */
 function JuegoAnclaje({
   ayuda,
   onFin
@@ -11655,6 +11885,7 @@ function JuegoAnclaje({
   }, "Poner el n\xFAmero sobre la mesa"));
 }
 
+/* ---- src/minijuegos/JuegoSuerte.jsx ---- */
 /* ---- Aguantar la posición: el múltiplo sube solo hasta que se da vuelta ----
    Antes era pulsar «aguantar» y tirar un dado cada vez. Ahora el número
    sube poco a poco y el jugador decide cuándo cerrar, sin saber dónde se
@@ -11796,6 +12027,8 @@ function JuegoSuerte({
     className: "ea-suerteH ea-mono" + (h.ok ? " ok" : " mal")
   }, i + 1, " \xB7 ", h.ok ? "cerraste " + fmtX(h.m) : "vuelta " + fmtX(h.vuelta)))));
 }
+
+/* ---- src/minijuegos/JuegoTresRaya.jsx ---- */
 const LINEAS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 function JuegoTresRaya({
   ayuda,
@@ -11888,6 +12121,7 @@ function JuegoTresRaya({
   }, estado ? txt[estado] : ""));
 }
 
+/* ---- src/minijuegos/JuegoQuiz.jsx ---- */
 /* una pregunta solo es utilizable si tiene enunciado, al menos dos
    opciones y un índice de respuesta correcta que apunte a una de ellas */
 const preguntaValida = p => !!(p && typeof p.q === "string" && p.q && Array.isArray(p.o) && p.o.length >= 2 && Number.isInteger(p.c) && p.c >= 0 && p.c < p.o.length && typeof p.o[p.c] === "string");
@@ -12007,6 +12241,7 @@ function JuegoQuiz({
   }, i >= cuantas - 1 ? "Terminar" : "Continuar")));
 }
 
+/* ---- src/minijuegos/JuegoReaccion.jsx ---- */
 /* ---- rápidos ---- */
 
 function JuegoReaccion({
@@ -12072,6 +12307,7 @@ function JuegoReaccion({
   }, "Toca el panel apenas se ponga verde."));
 }
 
+/* ---- src/minijuegos/JuegoCalculo.jsx ---- */
 /* cada generador declara desde qué nivel aparece, así las cuentas
    se van complicando en vez de repetirse durante treinta años */
 const CUENTAS = [{
@@ -12339,6 +12575,7 @@ function JuegoCalculo({
   }, ronda >= 2 ? "Terminar" : "Continuar")));
 }
 
+/* ---- src/minijuegos/JuegoOrden.jsx ---- */
 /* ---- Poner en orden ----
    Reescrito: antes un solo error terminaba el juego. Ahora tienes tres
    intentos, el error se marca en rojo un momento y puedes seguir desde
@@ -12415,6 +12652,8 @@ function JuegoOrden({
     }
   }, aviso));
 }
+
+/* ---- src/minijuegos/JuegoSemaforo.jsx ---- */
 function JuegoSemaforo({
   ayuda,
   nivel,
@@ -12480,6 +12719,1128 @@ function JuegoSemaforo({
     onClick: seguir
   }, i >= 5 ? "Terminar" : "Continuar")));
 }
+
+/* ---- src/minijuegos/JuegoCatedra.jsx ---- */
+/* ---- juegos interactivos nuevos ---- */
+
+/* ---- La clase de las siete ----
+   El minijuego que faltaba: te explica un tema, con ejemplo numérico, y
+   acto seguido te pregunta por él. Nada de examinar sobre cosas que el
+   juego nunca se molestó en enseñar. El tema sale del nivel que te toca,
+   y si ya viste todos los de tu nivel, sube o baja uno. */
+function JuegoCatedra({
+  ayuda,
+  nivel,
+  onFin,
+  onTema
+}) {
+  const nv = clamp(numero(nivel, 1), 1, 5);
+  const [tema] = useState(() => {
+    const enNivel = TEMAS.filter(x => x.nv === nv);
+    const cerca = TEMAS.filter(x => Math.abs(x.nv - nv) <= 1);
+    return elegirAzar(enNivel.length ? enNivel : cerca.length ? cerca : TEMAS) || TEMAS[0];
+  });
+  const [preg] = useState(() => {
+    const buenas = (tema.q || []).filter(p => p && p.q && Array.isArray(p.ops) && p.ops.indexOf(p.correcta) >= 0);
+    const cuantas = ayuda >= 60 ? 2 : Math.min(3, buenas.length);
+    return buenas.slice().sort(() => Math.random() - 0.5).slice(0, Math.max(1, cuantas)).map(p => ({
+      ...p,
+      ops: p.ops.slice().sort(() => Math.random() - 0.5)
+    }));
+  });
+  const [fase, setFase] = useState("clase");
+  const [i, setI] = useState(0);
+  const [sel, setSel] = useState(null);
+  const [ok, setOk] = useState(0);
+
+  /* Desde que se da la clase, este tema ya puede salir en un examen. */
+  const avisaTema = useRef(onTema);
+  avisaTema.current = onTema;
+  useEffect(() => {
+    if (avisaTema.current && tema && tema.id) avisaTema.current(tema.id);
+  }, []);
+  if (fase === "clase") {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-jw"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-jinfo ea-dis"
+    }, /*#__PURE__*/React.createElement("span", null, "Clase \xB7 nivel ", nv), /*#__PURE__*/React.createElement("span", null, preg.length, " ", preg.length === 1 ? "pregunta" : "preguntas", " despu\xE9s")), /*#__PURE__*/React.createElement("h3", {
+      className: "ea-claseT ea-dis"
+    }, tema.n), /*#__PURE__*/React.createElement("p", {
+      className: "ea-memoTxt"
+    }, tema.x), /*#__PURE__*/React.createElement("div", {
+      className: "ea-ej"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-lecK"
+    }, "Con n\xFAmeros"), /*#__PURE__*/React.createElement("div", {
+      className: "ea-ejX"
+    }, tema.ej)), /*#__PURE__*/React.createElement(Pista, null, "L\xE9elo con calma. Cuando pases de aqu\xED ya no vuelves a ver la explicaci\xF3n."), /*#__PURE__*/React.createElement("button", {
+      className: "ea-btn",
+      onClick: () => setFase("quiz")
+    }, "Ya lo tengo, preg\xFAntame"));
+  }
+  const p = preg[Math.min(i, preg.length - 1)];
+  const responder = txt => {
+    if (sel !== null) return;
+    setSel(txt);
+    if (txt === p.correcta) setOk(ok + 1);
+  };
+  const seguir = () => {
+    if (i >= preg.length - 1) {
+      const r = ok / preg.length;
+      onFin(r >= 0.999 ? "exito" : r >= 0.5 ? "parcial" : "fallo");
+    } else {
+      setI(i + 1);
+      setSel(null);
+    }
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-jinfo ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, tema.n), /*#__PURE__*/React.createElement("span", null, "Pregunta ", i + 1, " de ", preg.length, " \xB7 aciertos ", ok)), /*#__PURE__*/React.createElement("p", {
+    className: "ea-qtxt"
+  }, p.q), /*#__PURE__*/React.createElement("div", {
+    className: "ea-ops",
+    style: {
+      marginTop: 0
+    }
+  }, p.ops.map((txt, k) => {
+    let cls = "ea-op";
+    if (sel !== null && txt === p.correcta) cls += " ok";else if (sel === txt) cls += " no";
+    return /*#__PURE__*/React.createElement("button", {
+      className: cls,
+      key: k,
+      disabled: sel !== null,
+      onClick: () => responder(txt)
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-opN ea-mono"
+    }, String.fromCharCode(65 + k % 26)), txt);
+  })), sel !== null && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-expl"
+  }, p.e), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: seguir
+  }, i >= preg.length - 1 ? "Terminar la clase" : "Siguiente")));
+}
+
+/* ---- src/minijuegos/JuegoTrading.jsx ---- */
+/* ---- La sesión ----
+   Reescrito para que se entienda qué estás mirando. Antes decía "Dentro"
+   y "Fuera" sin explicar de qué, y comparaba contra un rival invisible.
+   Ahora: un cartel grande dice si tienes la acción o estás en efectivo,
+   hay leyenda bajo el gráfico, y el rival contra el que compites está
+   nombrado desde el primer segundo. */
+function JuegoTrading({
+  ayuda,
+  onFin
+}) {
+  const TICKS = 24;
+  const RITMO = 780;
+  const [serie] = useState(() => {
+    const vol = clamp(0.055 - ayuda * 0.00012, 0.03, 0.055);
+    const tendencia = (numero(Math.random(), 0.5) - 0.42) * 0.012;
+    const arr = [100];
+    for (let i = 1; i < TICKS; i++) {
+      arr.push(Math.max(20, arr[i - 1] * (1 + tendencia + vol * gauss())));
+    }
+    return arr;
+  });
+  const [i, setI] = useState(0);
+  const [dentro, setDentro] = useState(false);
+  const [equity, setEquity] = useState(100);
+  const [hist, setHist] = useState([100]);
+  const [fin, setFin] = useState(false);
+  const [ops, setOps] = useState(0);
+  const dentroRef = useRef(false);
+  useEffect(() => {
+    dentroRef.current = dentro;
+  }, [dentro]);
+  useEffect(() => {
+    if (fin) return;
+    const id = setTimeout(() => {
+      if (i >= TICKS - 1) {
+        setFin(true);
+        return;
+      }
+      const r = serie[i + 1] / serie[i] - 1;
+      const nuevo = dentroRef.current ? equity * (1 + r) : equity;
+      setEquity(nuevo);
+      setHist(h => h.concat(nuevo));
+      setI(i + 1);
+    }, RITMO);
+    return () => clearTimeout(id);
+  }, [i, fin, serie, equity]);
+  const precio = serie[Math.min(i, TICKS - 1)];
+  const bench = precio / serie[0] * 100;
+  const mio = (equity / 100 - 1) * 100;
+  const suyo = (bench / 100 - 1) * 100;
+  const dif = mio - suyo;
+  const path = (datos, alto, max, min) => datos.map((v, k) => {
+    const x = k / (TICKS - 1) * 100;
+    const y = alto - (v - min) / (max - min || 1) * alto;
+    return (k === 0 ? "M" : "L") + x.toFixed(2) + " " + y.toFixed(2);
+  }).join(" ");
+  const vistos = serie.slice(0, i + 1);
+  const todos = vistos.concat(hist);
+  const max = Math.max.apply(null, todos),
+    min = Math.min.apply(null, todos);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement(Pista, null, "Una acci\xF3n va a moverse durante ", TICKS, " momentos. Con ", /*#__PURE__*/React.createElement("strong", null, "Comprar"), " la tienes y su subida o bajada te toca entera; con ", /*#__PURE__*/React.createElement("strong", null, "Vender"), " te sales a efectivo y dejas de moverte. Compites contra alguien que compr\xF3 al principio y no volvi\xF3 a tocar nada. Ganas si terminas por encima de \xE9l."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-estado " + (dentro ? "dentro" : "fuera")
+  }, dentro ? "TIENES LA ACCIÓN" : "ESTÁS EN EFECTIVO"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-jinfo ea-dis",
+    style: {
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "Momento ", i + 1, " de ", TICKS), /*#__PURE__*/React.createElement("span", null, "Precio ", precio.toFixed(1), " \xB7 operaciones ", ops)), /*#__PURE__*/React.createElement("svg", {
+    className: "ea-graf",
+    viewBox: "0 0 100 60",
+    preserveAspectRatio: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    className: "ea-grafL",
+    d: path(vistos, 60, max, min),
+    vectorEffect: "non-scaling-stroke"
+  }), /*#__PURE__*/React.createElement("path", {
+    className: "ea-grafD",
+    d: path(hist, 60, max, min),
+    vectorEffect: "non-scaling-stroke"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ea-leyenda"
+  }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "ea-lineaL"
+  }), " precio de la acci\xF3n"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "ea-lineaD"
+  }), " tu cuenta")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-marcador"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-lecK"
+  }, "Tu cuenta"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-mono ea-marcaV",
+    style: {
+      color: mio >= 0 ? "#3D8A49" : "var(--rojo)"
+    }
+  }, mio >= 0 ? "+" : "", mio.toFixed(1), "%")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-lecK"
+  }, "El que compr\xF3 y no toc\xF3 nada"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-mono ea-marcaV",
+    style: {
+      color: suyo >= 0 ? "#3D8A49" : "var(--rojo)"
+    }
+  }, suyo >= 0 ? "+" : "", suyo.toFixed(1), "%")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-lecK"
+  }, "Le llevas"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-mono ea-marcaV",
+    style: {
+      color: dif >= 0 ? "#3D8A49" : "var(--rojo)"
+    }
+  }, dif >= 0 ? "+" : "", dif.toFixed(1)))), !fin ? /*#__PURE__*/React.createElement("div", {
+    className: "ea-fila2"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    style: {
+      marginTop: 0,
+      flex: 1
+    },
+    onClick: () => {
+      setDentro(true);
+      setOps(ops + 1);
+    },
+    disabled: dentro
+  }, "Comprar"), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    style: {
+      marginTop: 0,
+      flex: 1,
+      background: "var(--rojo)"
+    },
+    onClick: () => {
+      setDentro(false);
+      setOps(ops + 1);
+    },
+    disabled: !dentro
+  }, "Vender")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-alerta " + (dif >= 4 ? "bien" : dif >= -0.5 ? "" : "mal")
+  }, "Cerr\xF3 la sesi\xF3n. Terminaste ", dif >= 0 ? "por encima" : "por debajo", " del que compr\xF3 al principio y se fue a dormir, por ", Math.abs(dif).toFixed(1), " puntos, despu\xE9s de ", ops, " ", ops === 1 ? "operación" : "operaciones", ".", dif < 0 ? " Es el resultado más común: entrar y salir suele costar más de lo que salva." : " Que salga bien una vez no significa que se pueda repetir treinta años seguidos."), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: () => onFin(dif >= 4 ? "exito" : dif >= -0.5 ? "parcial" : "fallo")
+  }, "Continuar")));
+}
+
+/* ---- src/minijuegos/JuegoEstructura.jsx ---- */
+/* ---- Armar la estructura ----
+   Rehecho otra vez (28-sep-2026). La versión anterior no se podía ganar:
+   pedía multiplicar el capital por 2,4 si iba bien, y en todas las empresas
+   posibles la cobertura de intereses rompía antes de llegar ahí. Además
+   hablaba de EBITDA, cobertura y covenant, y la meta no se veía.
+
+   Ahora: una empresa de 100 millones, una barra (cuánto te presta el
+   banco) y dos metas que tiran en sentidos contrarios, con su ✓ en vivo.
+     · si le va bien, multiplicar tu dinero por 2 o más  → pide deuda
+     · si le va mal, conservar al menos el 30%           → pide poca deuda
+   Entre las dos hay una franja buena que se mueve de partida en partida:
+   se sortea primero la franja y de ella salen cuánto sube y cuánto baja la
+   empresa, así que siempre existe y nunca está en el mismo sitio. Con
+   mejor atributo la franja es más ancha. */
+const EST_PRECIO = 100;
+const EST_META_BIEN = 2; /* multiplicar tu dinero por esto si va bien */
+const EST_META_MAL = 0.3; /* conservar al menos esta parte si va mal */
+const EST_AMORTIZA = 10; /* lo que la empresa devuelve de deuda si va bien */
+const EST_TOPE = 80; /* ningún banco presta más del 80% */
+const casoEstructura = ayuda => {
+  const lo = 30 + 5 * indiceAzar(5); /* de 30 a 50 */
+  const ancho = numero(ayuda, 0) >= 60 ? 15 : 10;
+  const hi = Math.min(EST_TOPE - 10, lo + ancho);
+  /* bien: (100·(1+sube) − (d − 10)) / (100 − d) = 2    justo en d = lo */
+  const sube = (EST_PRECIO * EST_META_BIEN - EST_META_BIEN * lo + lo - EST_AMORTIZA) / EST_PRECIO - 1;
+  /* mal:  (100·(1−baja) − d) / (100 − d) = 0,3          justo en d = hi */
+  const baja = 1 - (EST_META_MAL * (EST_PRECIO - hi) + hi) / EST_PRECIO;
+  return {
+    lo,
+    hi,
+    sube,
+    baja,
+    nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía"
+  };
+};
+const resultadoEstructura = (c, deuda) => {
+  const tuyo = EST_PRECIO - deuda;
+  const bien = tuyo > 0 ? (EST_PRECIO * (1 + c.sube) - Math.max(0, deuda - EST_AMORTIZA)) / tuyo : 0;
+  const mal = tuyo > 0 ? Math.max(0, EST_PRECIO * (1 - c.baja) - deuda) / tuyo : 0;
+  const okBien = bien >= EST_META_BIEN - 1e-9,
+    okMal = mal >= EST_META_MAL - 1e-9;
+  return {
+    tuyo,
+    bien,
+    mal,
+    okBien,
+    okMal,
+    nivel: okBien && okMal ? "exito" : okBien || okMal ? "parcial" : "fallo"
+  };
+};
+function JuegoEstructura({
+  ayuda,
+  onFin
+}) {
+  const [caso] = useState(() => casoEstructura(ayuda));
+  const [deuda, setDeuda] = useState(0);
+  const [cerrado, setCerrado] = useState(null);
+  const r = resultadoEstructura(caso, deuda);
+  const x = v => v.toFixed(1).replace(".", ",") + "x";
+  const cierre = {
+    exito: "Punto justo. Con esa deuda tu dinero rinde de verdad si sale bien, y si sale mal te queda con qué volver a empezar.",
+    parcial: r.okBien ? "Si sale bien ganas mucho, pero pediste tanto que un mal año se lleva casi todo lo que pusiste." : "Estás a salvo si sale mal, pero pusiste tanto de tu bolsillo que si sale bien tu dinero apenas rinde.",
+    fallo: "No cumples ninguna de las dos metas: ni ganas lo suficiente si sale bien, ni aguantas si sale mal."
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement(Pista, null, "Compras ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), " por ", /*#__PURE__*/React.createElement("strong", null, EST_PRECIO, " millones"), ". T\xFA pones una parte y el banco te presta el resto. Pedir prestado hace que ganes m\xE1s si sale bien\u2026 y que pierdas m\xE1s si sale mal."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-estCaso"
+  }, "Compras ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), " por ", /*#__PURE__*/React.createElement("strong", null, EST_PRECIO, " millones"), ". \xBFCu\xE1nto le pides al banco?"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-est"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-estL"
+  }, /*#__PURE__*/React.createElement("span", null, "El banco te presta"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-mono"
+  }, deuda, " millones")), /*#__PURE__*/React.createElement("input", {
+    className: "ea-slider",
+    type: "range",
+    min: "0",
+    max: EST_TOPE,
+    step: "5",
+    value: deuda,
+    disabled: !!cerrado,
+    onChange: e => setDeuda(entero(e.target.value, 0, 0, EST_TOPE)),
+    "aria-label": "Cu\xE1nto te presta el banco"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ea-mix",
+    style: {
+      marginTop: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-mixSeg efe",
+    style: {
+      width: r.tuyo + "%"
+    }
+  }, r.tuyo >= 18 ? "tú " + r.tuyo : ""), /*#__PURE__*/React.createElement("div", {
+    className: "ea-mixSeg cart",
+    style: {
+      width: deuda + "%"
+    }
+  }, deuda >= 18 ? "banco " + deuda : "")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-escen"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-escenC " + (r.okBien ? "bien" : "mal")
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-lecK"
+  }, "Si le va bien \xB7 vale ", Math.round(caso.sube * 100), "% m\xE1s"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-escenV ea-mono"
+  }, x(r.bien)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-escenX"
+  }, "tu dinero se multiplica por ", x(r.bien)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-estMeta"
+  }, r.okBien ? "✓" : "✗", " Meta: ", x(EST_META_BIEN), " o m\xE1s")), /*#__PURE__*/React.createElement("div", {
+    className: "ea-escenC " + (r.okMal ? "bien" : "mal")
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-lecK"
+  }, "Si le va mal \xB7 vale ", Math.round(caso.baja * 100), "% menos"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-escenV ea-mono"
+  }, Math.round(r.mal * 100), "%"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-escenX"
+  }, r.mal <= 0.005 ? "lo pierdes todo: el banco cobra primero" : "de tu dinero te queda el " + Math.round(r.mal * 100) + "%"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-estMeta"
+  }, r.okMal ? "✓" : "✗", " Meta: conservar ", Math.round(EST_META_MAL * 100), "% o m\xE1s"))), !cerrado ? /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: () => setCerrado(r.nivel)
+  }, "Cerrar el trato as\xED") : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-alerta " + (cerrado === "exito" ? "bien" : cerrado === "fallo" ? "mal" : "")
+  }, cierre[cerrado]), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: () => onFin(cerrado)
+  }, "Continuar")));
+}
+
+/* ---- src/minijuegos/JuegoBanderas.jsx ---- */
+/* ---- Banderas rojas ----
+   Reescrito. Los tres cambios que importan:
+   · cada línea, la marques o no, explica al final por qué era o no era
+     una bandera roja. Antes solo se pintaba de verde y el jugador se
+     quedaba igual de ciego que al empezar.
+   · el resultado distingue tres cosas distintas: las que cazaste, las
+     que se te pasaron y las que marcaste de más. No es lo mismo fallar
+     por no ver un problema que por ver problemas donde no los hay.
+   · en modo aprendiz se dice antes de empezar qué tipo de cosa buscar,
+     porque a quien nunca ha leído unos estados financieros no se le
+     puede pedir que adivine el criterio. */
+function JuegoBanderas({
+  ayuda,
+  onFin,
+  modo
+}) {
+  const CUANTAS = 3;
+  const [caso] = useState(() => {
+    const b = elegirAzar(BANDERAS) || BANDERAS[0];
+    /* con criterio alto se descartan señuelos, y se dice cuántos */
+    const quitar = ayuda >= 65 ? 2 : ayuda >= 45 ? 1 : 0;
+    const malas = (b.mal || []).map((x, i) => ({
+      ...x,
+      id: "m" + i,
+      roja: true
+    }));
+    const buenas = (b.ok || []).map((x, i) => ({
+      ...x,
+      id: "b" + i,
+      roja: false
+    })).sort(() => Math.random() - 0.5).slice(0, Math.max(2, 5 - quitar));
+    return {
+      t: b.t,
+      doc: b.doc,
+      pista: b.pista,
+      quitar,
+      lista: malas.concat(buenas).sort(() => Math.random() - 0.5)
+    };
+  });
+  const [sel, setSel] = useState([]);
+  const [rev, setRev] = useState(false);
+  const marcada = it => sel.indexOf(it.id) >= 0;
+  const marcar = it => {
+    if (rev) return;
+    if (marcada(it)) setSel(sel.filter(y => y !== it.id));else if (sel.length < CUANTAS) setSel(sel.concat(it.id));
+  };
+  const rojas = caso.lista.filter(x => x.roja);
+  const cazadas = rojas.filter(marcada);
+  const perdidas = rojas.filter(x => !marcada(x));
+  const falsas = caso.lista.filter(x => !x.roja && marcada(x));
+  const aciertos = cazadas.length;
+  const veredicto = aciertos === CUANTAS ? "Las tres. Levantaste exactamente lo que había que levantar y no te inventaste problemas donde no los había." : aciertos === CUANTAS - 1 ? "Dos de tres. Suficiente para que el asunto escale, y la que se te pasó es de las que salen caras." : aciertos === 1 ? "Solo una. Con este informe la operación sigue adelante creyendo que está limpia." : "Ninguna. Marcaste ruido operativo y dejaste pasar los tres problemas de verdad.";
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-jinfo ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, "Marcadas ", sel.length, " de ", CUANTAS), /*#__PURE__*/React.createElement("span", null, caso.quitar > 0 ? "Tu criterio descartó " + caso.quitar + (caso.quitar === 1 ? " señuelo" : " señuelos") : "Sin descartes")), caso.doc && /*#__PURE__*/React.createElement("div", {
+    className: "ea-docK ea-dis"
+  }, "Sobre la mesa \xB7 ", caso.doc), /*#__PURE__*/React.createElement("p", {
+    className: "ea-qtxt",
+    style: {
+      marginTop: 8
+    }
+  }, caso.t), modo === "aprendiz" && caso.pista && !rev && /*#__PURE__*/React.createElement("div", {
+    className: "ea-glos"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-glosK"
+  }, "Qu\xE9 est\xE1s buscando"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-glosX"
+  }, caso.pista)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-ops",
+    style: {
+      marginTop: 12
+    }
+  }, caso.lista.map(it => {
+    let cls = "ea-check";
+    if (rev) cls += it.roja ? " bien" : marcada(it) ? " mal" : "";else if (marcada(it)) cls += " sel";
+    return /*#__PURE__*/React.createElement("button", {
+      className: cls,
+      key: it.id,
+      disabled: rev,
+      onClick: () => marcar(it)
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-checkB ea-mono"
+    }, marcada(it) ? "X" : "·"), /*#__PURE__*/React.createElement("span", null, it.t, rev && /*#__PURE__*/React.createElement("span", {
+      className: "ea-checkX"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-checkR ea-dis" + (it.roja ? " roja" : "")
+    }, it.roja ? marcada(it) ? "Bandera roja · la viste" : "Bandera roja · se te pasó" : marcada(it) ? "No lo era · la marcaste de más" : "No lo era"), it.x)));
+  })), !rev ? /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    disabled: sel.length < CUANTAS,
+    onClick: () => setRev(true)
+  }, "Entregar el informe") : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-alerta " + (aciertos === CUANTAS ? "bien" : aciertos === CUANTAS - 1 ? "" : "mal")
+  }, veredicto), /*#__PURE__*/React.createElement("div", {
+    className: "ea-tabla",
+    style: {
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-td"
+  }, "Banderas que cazaste"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-tdn ea-mono"
+  }, cazadas.length, " de ", CUANTAS), /*#__PURE__*/React.createElement("span", {
+    className: "ea-td"
+  }, "Se te pasaron"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-tdn ea-mono"
+  }, perdidas.length), /*#__PURE__*/React.createElement("span", {
+    className: "ea-td"
+  }, "Marcaste de m\xE1s"), /*#__PURE__*/React.createElement("span", {
+    className: "ea-tdn ea-mono"
+  }, falsas.length)), falsas.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "ea-expl"
+  }, "Marcar de m\xE1s tambi\xE9n cuesta: en una operaci\xF3n real, levantar tres alarmas falsas quema tu credibilidad para el d\xEDa que la alarma sea verdadera."), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: () => onFin(aciertos === CUANTAS ? "exito" : aciertos === CUANTAS - 1 ? "parcial" : "fallo")
+  }, "Continuar")));
+}
+
+/* ---- src/datos/minijuegos.js ---- */
+/* ============================================================
+   BASE DE DATOS DE MINIJUEGOS
+   Cada modo declara su nombre, su instrucción, el tema financiero
+   que ejercita y cuánto dura. El motor lee de aquí.
+   ============================================================ */
+
+const MINIJUEGOS = Object.keys(JUEGOS).map(k => ({
+  id: k,
+  ...JUEGOS[k]
+}));
+
+/* ---------- fichas de la pizarra ---------- */
+const PIZARRAS = [{
+  t: "Conceptos de valoración",
+  p: [["WACC", "Costo promedio del capital"], ["TIR", "Tasa que deja el VAN en cero"], ["Beta", "Sensibilidad al índice"], ["Valor terminal", "La mayor parte del DCF"], ["Deuda neta", "Puente de equity a firm value"], ["Prima de riesgo país", "Se suma al costo del equity"]]
+}, {
+  t: "Vocabulario de fondos",
+  p: [["Carry", "20% de la ganancia"], ["Hurdle", "Retorno preferente del ocho"], ["Dry powder", "Capital sin desplegar"], ["TVPI", "Valor total sobre lo aportado"], ["DPI", "Lo que ya se devolvió"], ["Curva J", "Pérdidas al inicio del fondo"]]
+}, {
+  t: "Renta fija y crédito",
+  p: [["Duración", "Sensibilidad a la tasa"], ["Cupón", "Interés periódico del bono"], ["Covenant", "Condición que hay que cumplir"], ["Subordinada", "Cobra después de la senior"], ["Convertible", "Deuda con opción a acciones"], ["Cross default", "Un impago dispara los demás"]]
+}, {
+  t: "Contabilidad que importa",
+  p: [["EBITDA", "Antes de intereses y depreciación"], ["Capital de trabajo", "Inventario más cobrar menos pagar"], ["Flujo libre", "Lo que sobra después de invertir"], ["Devengo", "Se reconoce sin haber cobrado"], ["Impuesto diferido", "Diferencia contable y fiscal"], ["Provisión", "Gasto reconocido sin pagar aún"]]
+}];
+
+/* ---------- carriles del capital ---------- */
+const CARRILES = [{
+  n: "Bonos",
+  bueno: "Cupón",
+  malo: "Alza de tasas"
+}, {
+  n: "Acciones",
+  bueno: "Dividendo",
+  malo: "Profit warning"
+}, {
+  n: "Cripto",
+  bueno: "Rally",
+  malo: "Liquidación"
+}];
+
+/* ---- src/minijuegos/JuegoPares.jsx ---- */
+/* ---- La pizarra del comité: pares de concepto y significado ---- */
+/* Cada par lleva su color, el mismo en el concepto y en su definición:
+   al destapar una ficha el color se queda en la memoria mucho mejor que
+   un texto de dos palabras, y sirve de ancla para saber dónde estaba su
+   pareja. Sin el rojo, que en todo el juego significa fallo, y sin el
+   turquesa, que al lado del azul se confunde a simple vista. */
+const COLORES_PARES = [0, 1, 3, 4, 5, 7].map(i => COLORES_MEM[i].c);
+
+/* Segundos con la pizarra destapada antes de empezar. Más con mejor
+   atributo, para que «te ayuda» siga significando algo aquí. */
+const vistaParesDe = ayuda => clamp(Math.round(5 + numero(ayuda, 0) / 25), 5, 9);
+function JuegoPares({
+  ayuda,
+  onFin
+}) {
+  const [pz] = useState(() => elegirAzar(PIZARRAS));
+  const [fichas] = useState(() => {
+    /* los colores también se barajan: que el WACC no sea siempre cobre */
+    const cols = COLORES_PARES.slice().sort(() => Math.random() - 0.5);
+    const arr = [];
+    pz.p.forEach((par, i) => {
+      const col = cols[i % cols.length];
+      arr.push({
+        id: i + "a",
+        par: i,
+        t: par[0],
+        col
+      });
+      arr.push({
+        id: i + "b",
+        par: i,
+        t: par[1],
+        col
+      });
+    });
+    return arr.sort(() => Math.random() - 0.5);
+  });
+  const maxErr = clamp(4 + Math.floor(ayuda / 22), 4, 8);
+  const [abiertas, setAbiertas] = useState([]);
+  const [hechas, setHechas] = useState([]);
+  const [err, setErr] = useState(0);
+  const [fin, setFin] = useState(false);
+  const [cuenta, setCuenta] = useState(() => vistaParesDe(ayuda));
+  const mirando = cuenta > 0;
+  const bloqueo = useRef(false);
+
+  /* la pizarra destapada, y la cuenta atrás hasta taparla */
+  useEffect(() => {
+    if (cuenta <= 0) return;
+    const t = setTimeout(() => setCuenta(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cuenta]);
+  const cerrar = nivel => {
+    setFin(true);
+    setTimeout(() => onFin(nivel), 900);
+  };
+  const tocar = f => {
+    if (mirando || fin || bloqueo.current) return;
+    if (hechas.indexOf(f.par) >= 0) return;
+    if (abiertas.some(x => x.id === f.id)) return;
+    const nuevas = abiertas.concat(f);
+    setAbiertas(nuevas);
+    if (nuevas.length < 2) return;
+    bloqueo.current = true;
+    if (nuevas[0].par === nuevas[1].par) {
+      setTimeout(() => {
+        const h = hechas.concat(nuevas[0].par);
+        setHechas(h);
+        setAbiertas([]);
+        bloqueo.current = false;
+        if (h.length === pz.p.length) cerrar(err === 0 ? "exito" : err <= 2 ? "exito" : "parcial");
+      }, 420);
+    } else {
+      setTimeout(() => {
+        const e = err + 1;
+        setErr(e);
+        setAbiertas([]);
+        bloqueo.current = false;
+        if (e >= maxErr) cerrar(hechas.length >= pz.p.length - 2 ? "parcial" : "fallo");
+      }, 750);
+    }
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-jinfo ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, mirando ? "Mira la pizarra" : pz.t), /*#__PURE__*/React.createElement("span", null, mirando ? "se tapa en " + cuenta + (cuenta === 1 ? " segundo" : " segundos") : "Fallos " + err + " de " + maxErr)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-tab4"
+  }, fichas.map(f => {
+    const hecha = hechas.indexOf(f.par) >= 0;
+    const abierta = abiertas.some(x => x.id === f.id);
+    const vista = mirando || hecha || abierta;
+    return /*#__PURE__*/React.createElement("div", _extends({
+      key: f.id
+    }, pulsable(() => tocar(f), vista ? f.t : "Ficha tapada", hecha || mirando), {
+      className: "ea-fichaP" + (mirando ? " vista" : hecha ? " hecha" : abierta ? " abierta" : " tapada") + (vista ? " pintada" : ""),
+      style: vista ? {
+        background: f.col + "33",
+        borderColor: f.col
+      } : undefined
+    }), vista ? f.t : "");
+  })), mirando && /*#__PURE__*/React.createElement("button", {
+    className: "ea-mini",
+    style: {
+      marginTop: 10
+    },
+    onClick: () => setCuenta(0)
+  }, "Ya lo mir\xE9, empezar"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: 20,
+      marginTop: 9,
+      fontSize: 13,
+      color: "#6B6B6B"
+    }
+  }, fin ? hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos" : mirando ? "Cada par tiene su color: el concepto y su definición se pintan igual." : ""));
+}
+
+/* ---- src/minijuegos/JuegoCarril.jsx ---- */
+/* ---- El carril del capital ---- */
+function JuegoCarril({
+  ayuda,
+  onFin
+}) {
+  const TOTAL = 26;
+  const [carril, setCarril] = useState(1);
+  const [objs, setObjs] = useState([]);
+  const [t, setT] = useState(0);
+  const [pts, setPts] = useState(0);
+  const [golpes, setGolpes] = useState(0);
+  const [fin, setFin] = useState(false);
+  const carrilRef = useRef(1);
+  useEffect(() => {
+    carrilRef.current = carril;
+  }, [carril]);
+  const vel = 22;
+  const probMalo = clamp(0.5 - ayuda / 320, 0.28, 0.5);
+  useEffect(() => {
+    if (fin) return;
+    const id = setTimeout(() => {
+      setObjs(prev => {
+        let lista = prev.map(o => ({
+          ...o,
+          y: o.y + vel
+        }));
+        if (t < TOTAL && t % 2 === 0) {
+          const c = Math.floor(Math.random() * 3);
+          lista = lista.concat({
+            k: t,
+            c,
+            y: -30,
+            malo: Math.random() < probMalo,
+            tocado: false
+          });
+        }
+        lista.forEach(o => {
+          if (!o.tocado && o.y >= 170 && o.y <= 205 && o.c === carrilRef.current) {
+            o.tocado = true;
+            if (o.malo) setGolpes(g => g + 1);else setPts(p => p + 1);
+          }
+        });
+        return lista.filter(o => o.y < 240);
+      });
+      if (t >= TOTAL + 8) {
+        setFin(true);
+        return;
+      }
+      setT(t + 1);
+    }, 190);
+    return () => clearTimeout(id);
+  }, [t, fin, probMalo]);
+  const cerrar = () => {
+    const neto = pts - golpes * 2;
+    onFin(neto >= 6 ? "exito" : neto >= 2 ? "parcial" : "fallo");
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-jinfo ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, "Retornos ", pts), /*#__PURE__*/React.createElement("span", null, "Golpes ", golpes)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-pistaC"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-lineaC",
+    style: {
+      left: "33.3%"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "ea-lineaC",
+    style: {
+      left: "66.6%"
+    }
+  }), objs.map(o => /*#__PURE__*/React.createElement("div", {
+    key: o.k,
+    className: "ea-obj " + (o.malo ? "malo" : "bueno"),
+    style: {
+      left: o.c * 33.3 + 3.6 + "%",
+      top: o.y + "px",
+      opacity: o.tocado ? 0.25 : 1
+    }
+  }, o.malo ? CARRILES[o.c].malo : CARRILES[o.c].bueno)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-cap",
+    style: {
+      left: carril * 33.3 + 3.6 + "%"
+    }
+  }, "Tu capital")), /*#__PURE__*/React.createElement("input", {
+    className: "ea-slider ea-carrilS",
+    type: "range",
+    min: "0",
+    max: "2",
+    step: "1",
+    value: carril,
+    disabled: fin,
+    "aria-label": "Carril de tu capital",
+    onChange: e => setCarril(entero(e.target.value, 1, 0, 2))
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "ea-carrilN"
+  }, CARRILES.map((c, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "ea-carrilE ea-dis" + (carril === i ? " on" : "")
+  }, c.n))), fin && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-alerta " + (pts - golpes * 2 >= 6 ? "bien" : pts - golpes * 2 >= 2 ? "" : "mal")
+  }, "Cerraste con ", pts, " retornos y ", golpes, " golpes. Rotar entre activos captura oportunidades y tambi\xE9n te expone justo cuando el carril equivocado se pone feo."), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: cerrar
+  }, "Continuar")));
+}
+
+/* ---- src/minijuegos/JuegoCuatro.jsx ---- */
+/* ---- Cuatro en línea contra la contraparte ---- */
+const COLS = 7,
+  FILAS = 6;
+function JuegoCuatro({
+  ayuda,
+  onFin
+}) {
+  const [tab, setTab] = useState(() => Array(COLS * FILAS).fill(null));
+  const [bloqueo, setBloqueo] = useState(false);
+  const [estado, setEstado] = useState(null);
+  const [linea, setLinea] = useState([]);
+  const torpeza = clamp(ayuda / 170, 0.05, 0.5);
+  const idx = (c, f) => f * COLS + c;
+  const alturaCol = (bd, c) => {
+    let f = 0;
+    while (f < FILAS && bd[idx(c, f)]) f++;
+    return f;
+  };
+  const libres = bd => {
+    const l = [];
+    for (let c = 0; c < COLS; c++) if (alturaCol(bd, c) < FILAS) l.push(c);
+    return l;
+  };
+  const ganadorEn = (bd, p) => {
+    const dirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
+    for (let c = 0; c < COLS; c++) for (let f = 0; f < FILAS; f++) {
+      for (const d of dirs) {
+        const cel = [];
+        for (let k = 0; k < 4; k++) {
+          const cc = c + d[0] * k,
+            ff = f + d[1] * k;
+          if (cc < 0 || cc >= COLS || ff < 0 || ff >= FILAS) {
+            cel.length = 0;
+            break;
+          }
+          if (bd[idx(cc, ff)] !== p) {
+            cel.length = 0;
+            break;
+          }
+          cel.push(idx(cc, ff));
+        }
+        if (cel.length === 4) return cel;
+      }
+    }
+    return null;
+  };
+  const soltar = (bd, c, p) => {
+    const f = alturaCol(bd, c);
+    if (f >= FILAS) return null;
+    const n = bd.slice();
+    n[idx(c, f)] = p;
+    return n;
+  };
+  const jugadaIA = bd => {
+    const l = libres(bd);
+    for (const c of l) {
+      const n = soltar(bd, c, "O");
+      if (n && ganadorEn(n, "O")) return c;
+    }
+    for (const c of l) {
+      const n = soltar(bd, c, "X");
+      if (n && ganadorEn(n, "X")) return c;
+    }
+    if (Math.random() < torpeza) return elegirAzar(l);
+    const seguras = l.filter(c => {
+      const n = soltar(bd, c, "O");
+      const m = soltar(n, c, "X");
+      return !(m && ganadorEn(m, "X"));
+    });
+    const cand = seguras.length ? seguras : l;
+    return cand.reduce((mej, c) => Math.abs(c - 3) < Math.abs(mej - 3) ? c : mej, cand[0]);
+  };
+  const terminar = (n, l) => {
+    setEstado(n);
+    setLinea(l || []);
+    setBloqueo(true);
+    setTimeout(() => onFin(n), 1150);
+  };
+  const jugar = c => {
+    if (bloqueo || estado) return;
+    const n = soltar(tab, c, "X");
+    if (!n) return;
+    setTab(n);
+    const g = ganadorEn(n, "X");
+    if (g) {
+      terminar("exito", g);
+      return;
+    }
+    if (libres(n).length === 0) {
+      terminar("parcial");
+      return;
+    }
+    setBloqueo(true);
+    setTimeout(() => {
+      const c2 = jugadaIA(n);
+      const n2 = soltar(n, c2, "O");
+      setTab(n2);
+      const g2 = ganadorEn(n2, "O");
+      if (g2) {
+        terminar("fallo", g2);
+        return;
+      }
+      if (libres(n2).length === 0) {
+        terminar("parcial");
+        return;
+      }
+      setBloqueo(false);
+    }, 430);
+  };
+  const txt = {
+    exito: "Cierras en tus términos",
+    parcial: "Tablero lleno, partieron la diferencia",
+    fallo: "Te ganaron la posición"
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-jinfo ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, "Tus fichas en cobre"), /*#__PURE__*/React.createElement("span", null, "Lectura de la contraparte ", Math.round(100 - torpeza * 100))), /*#__PURE__*/React.createElement("div", {
+    className: "ea-pista4"
+  }, Array.from({
+    length: COLS
+  }, (_, c) => /*#__PURE__*/React.createElement("div", _extends({
+    className: "ea-col4",
+    key: c
+  }, pulsable(() => jugar(c), "Soltar ficha en la columna " + (c + 1))), Array.from({
+    length: FILAS
+  }, (_, f) => {
+    const v = tab[idx(c, f)];
+    return /*#__PURE__*/React.createElement("div", {
+      key: f,
+      className: "ea-hueco" + (v === "X" ? " mia" : v === "O" ? " suya" : "") + (linea.indexOf(idx(c, f)) >= 0 ? " gana" : "")
+    });
+  })))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: 22,
+      marginTop: 11,
+      fontSize: 14,
+      color: "#6B6B6B"
+    }
+  }, estado ? txt[estado] : "Toca una columna para soltar tu ficha."));
+}
+
+/* ---- src/minijuegos/JuegoComite.jsx ---- */
+/* ---- El comité de inversión ----
+   Tres negocios sobre la mesa y capital para uno. No hay pistas: están
+   los cinco datos y hay que decidir. Es el modo que entrena lo único
+   que de verdad hace falta para gestionar un fondo, que es distinguir
+   un buen negocio de uno que solo lo parece. */
+function JuegoComite({
+  ayuda,
+  onFin
+}) {
+  const [mesa] = useState(() => {
+    const pool = EMPRESAS.slice().sort(() => Math.random() - 0.5);
+    /* con criterio alto la diferencia entre el mejor y el resto es más clara */
+    const cuantos = 3;
+    const elegidas = pool.slice(0, cuantos).map(e => ({
+      ...e,
+      q: calidadDeal(e)
+    }));
+    return elegidas.sort(() => Math.random() - 0.5);
+  });
+  const [sel, setSel] = useState(null);
+  const orden = mesa.slice().sort((a, b) => b.q - a.q);
+  const mejor = orden[0];
+  const elegido = sel == null ? null : mesa[sel];
+  const puesto = elegido ? orden.findIndex(x => x.n === elegido.n) : -1;
+  const nivel = puesto === 0 ? "exito" : puesto === 1 ? "parcial" : "fallo";
+  const cierre = puesto === 0 ? "Elegiste el mejor de los tres. Fíjate en qué te lo dijo: no era el que más crecía, era el que crecía con margen, sin depender de un cliente y sin deuda encima." : puesto === 1 ? "Segundo mejor. Defendible en un comité, y aun así había uno claramente superior." : "Te quedaste con el peor de los tres. Casi siempre pasa por mirar el crecimiento y no mirar de quién depende la facturación.";
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-jinfo ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, "Tres negocios \xB7 capital para uno"), /*#__PURE__*/React.createElement("span", null, ayuda >= 60 ? "Tu criterio ya descarta lo obvio" : "Sin pistas")), /*#__PURE__*/React.createElement(Pista, null, "Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman; depender de un solo cliente y arrastrar deuda restan casi lo mismo. Elige uno."), mesa.map((e, i) => {
+    const marcado = sel === i;
+    const esMejor = sel != null && e.n === mejor.n;
+    return /*#__PURE__*/React.createElement("div", {
+      key: e.n,
+      className: "ea-deal" + (marcado ? " sel" : "") + (sel != null && esMejor ? " gana" : "")
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-itemTop"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-itemN"
+    }, e.n), /*#__PURE__*/React.createElement("span", {
+      className: "ea-mono",
+      style: {
+        fontSize: 12,
+        flexShrink: 0
+      }
+    }, e.s)), /*#__PURE__*/React.createElement("div", {
+      className: "ea-dealS"
+    }, senalesDeal(e).map(x => /*#__PURE__*/React.createElement("span", {
+      key: x.k,
+      className: "ea-sen" + (x.bien ? " bien" : x.mal ? " mal" : "")
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-senK"
+    }, x.k), /*#__PURE__*/React.createElement("span", {
+      className: "ea-senV ea-mono"
+    }, x.v)))), /*#__PURE__*/React.createElement("div", {
+      className: "ea-itemD"
+    }, e.d), sel == null ? /*#__PURE__*/React.createElement("button", {
+      className: "ea-mini",
+      onClick: () => setSel(i)
+    }, "Poner el capital aqu\xED") : /*#__PURE__*/React.createElement("div", {
+      className: "ea-dealR"
+    }, esMejor ? "Era el mejor de los tres" : "Múltiplo esperado " + baseDeal(e).toFixed(2) + "x", marcado && !esMejor ? " · lo elegiste" : ""));
+  }), sel != null && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-alerta " + (nivel === "exito" ? "bien" : nivel === "fallo" ? "mal" : "")
+  }, cierre), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: () => onFin(nivel)
+  }, "Continuar")));
+}
+
+/* ---- src/minijuegos/JuegoSubasta.jsx ---- */
+/* ---- La subasta y la maldición del ganador ----
+   Rehecha (28-sep-2026). La anterior tenía un tope escondido de ocho
+   rondas: a la octava subida se acababa sola y lo contaba como si te
+   hubieras retirado. Empezando en 40 y subiendo 8-13 por ronda, eso te
+   echaba hacia los 110 aunque tu estimación fuera 145. Además el éxito
+   pedía pagar menos del 82% del valor, que casi nunca pasaba, y los
+   rivales se retiraban por sorteo en vez de por un límite propio.
+
+   Ahora es una subasta de verdad, sin tope de rondas:
+     · cada rival tiene su precio máximo (del 70% al 120% del valor) y se
+       retira en cuanto la oferta lo pasa. Termina sola, porque los
+       límites son finitos.
+     · si te retiras, la subasta sigue sin ti: gana el rival con el límite
+       más alto y paga lo que marca el segundo. Tu retirada se juzga por lo
+       que pagó él: si pagó de más, hiciste bien.
+   Medido con 30.000 subastas (atributo 72): pujar hasta tu estimación da
+   éxito ~54% y fallo ~17%; retirarse muy pronto o pujar de más, bastante
+   peor. Es la maldición del ganador sin necesidad de explicarla. */
+const SUB_RIVALES = ["Fondo regional", "Comprador estratégico", "Family office"];
+const pasoSubasta = valor => Math.max(4, Math.round(valor * 0.06)) + indiceAzar(4);
+const casoSubasta = ayuda => {
+  const valor = 60 + numero(Math.random(), 0.5) * 80;
+  const ruido = Math.max(3, 20 - numero(ayuda, 0) / 6);
+  return {
+    valor,
+    estimacion: Math.max(10, Math.round(valor + ruido * gauss())),
+    limites: SUB_RIVALES.map(() => valor * (0.7 + numero(Math.random(), 0.5) * 0.5)),
+    inicio: Math.round(valor * 0.5)
+  };
+};
+/* si te retiras en p: gana el de límite más alto, al precio del segundo */
+const cierreRetiro = (caso, p) => {
+  const vivos = caso.limites.map((m, i) => ({
+    m,
+    i
+  })).filter(x => x.m >= p).sort((x, y) => y.m - x.m);
+  if (!vivos.length) return {
+    quien: null,
+    final: p
+  };
+  const final = Math.round(Math.max(p, vivos.length > 1 ? vivos[1].m : p));
+  return {
+    quien: SUB_RIVALES[vivos[0].i],
+    final
+  };
+};
+const nivelSubasta = (caso, fin) => {
+  if (fin.gano) {
+    const r = fin.precio / caso.valor;
+    return r <= 1 ? "exito" : r <= 1.1 ? "parcial" : "fallo";
+  }
+  if (fin.final > caso.valor) return "exito";
+  return fin.precio >= caso.valor * 0.9 ? "parcial" : "fallo";
+};
+function JuegoSubasta({
+  ayuda,
+  onFin
+}) {
+  const [caso] = useState(() => casoSubasta(ayuda));
+  const [precio, setPrecio] = useState(caso.inicio);
+  const [siguiente, setSiguiente] = useState(() => caso.inicio + pasoSubasta(caso.valor));
+  const [fuera, setFuera] = useState([null, null, null]); /* precio al que se retiró cada rival */
+  const [ronda, setRonda] = useState(1);
+  const [fin, setFin] = useState(null);
+  const subir = () => {
+    if (fin) return;
+    const nuevo = siguiente;
+    const f = fuera.map((x, i) => x == null && caso.limites[i] < nuevo ? nuevo : x);
+    setPrecio(nuevo);
+    setFuera(f);
+    setRonda(ronda + 1);
+    setSiguiente(nuevo + pasoSubasta(caso.valor));
+    if (f.every(x => x != null)) setFin({
+      gano: true,
+      precio: nuevo
+    });
+  };
+  const retirarse = () => {
+    if (fin) return;
+    const c = cierreRetiro(caso, precio);
+    setFin({
+      gano: false,
+      precio,
+      final: c.final,
+      quien: c.quien
+    });
+  };
+  const nivel = fin ? nivelSubasta(caso, fin) : null;
+  const V = Math.round(caso.valor);
+  const texto = !fin ? null : fin.gano ? nivel === "exito" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Pagaste lo que vale o menos: ese es el trabajo." : nivel === "parcial" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Casi lo que vale: sin margen, pero sin daño." : "Te la llevaste por " + fin.precio + " y valía " + V + ". Ganaste la subasta y perdiste plata: eso es la maldición del ganador." : nivel === "exito" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ": pagó de más. Retirarse a tiempo también es ganar." : nivel === "parcial" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Se llevó una buena compra, pero te retiraste cerca del valor." : "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Dejaste ir una empresa barata: la prudencia también cuesta cuando sobra.";
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-jw"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-jinfo ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, "Tu estimaci\xF3n: ", caso.estimacion, " millones"), /*#__PURE__*/React.createElement("span", null, "Ronda ", ronda)), /*#__PURE__*/React.createElement("div", {
+    className: "ea-precio ea-mono"
+  }, precio), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      color: "var(--gris)",
+      marginBottom: 10
+    }
+  }, "Oferta sobre la mesa, en millones. Tu estimaci\xF3n puede fallar por arriba o por abajo."), SUB_RIVALES.map((r, i) => /*#__PURE__*/React.createElement("div", {
+    className: "ea-postor" + (fuera[i] == null ? "" : " fuera"),
+    key: i
+  }, /*#__PURE__*/React.createElement("span", null, r), /*#__PURE__*/React.createElement("span", {
+    className: "ea-mono"
+  }, fuera[i] == null ? "sigue" : "se retiró en " + fuera[i]))), !fin ? /*#__PURE__*/React.createElement("div", {
+    className: "ea-fila2"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    style: {
+      marginTop: 0,
+      flex: 1
+    },
+    onClick: subir
+  }, "Subir a ", siguiente), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    style: {
+      marginTop: 0,
+      flex: 1,
+      background: "var(--rojo)"
+    },
+    onClick: retirarse
+  }, "Retirarme")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-alerta " + (nivel === "exito" ? "bien" : nivel === "fallo" ? "mal" : "")
+  }, texto), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btn",
+    onClick: () => onFin(nivel)
+  }, "Continuar")));
+}
+
+/* ---- src/minijuegos/MiniJuego.jsx ---- */
 function MiniJuego({
   tipo,
   ayuda,
@@ -12579,6 +13940,31 @@ function MiniJuego({
   });
 }
 
+/* ---- src/hooks/movimiento.js ---- */
+/* ---- piezas del informe de cierre ---- */
+
+/* ============================================================
+   EL INTERRUPTOR DEL MOVIMIENTO
+   null = lo que diga el sistema · true = encendido · false = apagado.
+   Vive fuera de React porque lo consultan componentes sueltos (la cifra
+   que cuenta, el rodillo) que no tienen el estado de la partida a mano.
+   El Motor lo pone al dia en cada render desde st.animar.
+   ============================================================ */
+let MOVIMIENTO = null;
+const sistemaPideQuieto = () => {
+  try {
+    return typeof window !== "undefined" && typeof window.matchMedia === "function" && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (e) {
+    return false;
+  }
+};
+const sinMovimiento = () => {
+  if (MOVIMIENTO === true) return false;
+  if (MOVIMIENTO === false) return true;
+  return sistemaPideQuieto();
+};
+
+/* ---- src/minijuegos/TarjetaJuego.jsx ---- */
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
@@ -12768,1098 +14154,7 @@ function TarjetaJuego({
   }, g.x)))))));
 }
 
-/* ---- juegos interactivos nuevos ---- */
-
-/* ---- La clase de las siete ----
-   El minijuego que faltaba: te explica un tema, con ejemplo numérico, y
-   acto seguido te pregunta por él. Nada de examinar sobre cosas que el
-   juego nunca se molestó en enseñar. El tema sale del nivel que te toca,
-   y si ya viste todos los de tu nivel, sube o baja uno. */
-function JuegoCatedra({
-  ayuda,
-  nivel,
-  onFin,
-  onTema
-}) {
-  const nv = clamp(numero(nivel, 1), 1, 5);
-  const [tema] = useState(() => {
-    const enNivel = TEMAS.filter(x => x.nv === nv);
-    const cerca = TEMAS.filter(x => Math.abs(x.nv - nv) <= 1);
-    return elegirAzar(enNivel.length ? enNivel : cerca.length ? cerca : TEMAS) || TEMAS[0];
-  });
-  const [preg] = useState(() => {
-    const buenas = (tema.q || []).filter(p => p && p.q && Array.isArray(p.ops) && p.ops.indexOf(p.correcta) >= 0);
-    const cuantas = ayuda >= 60 ? 2 : Math.min(3, buenas.length);
-    return buenas.slice().sort(() => Math.random() - 0.5).slice(0, Math.max(1, cuantas)).map(p => ({
-      ...p,
-      ops: p.ops.slice().sort(() => Math.random() - 0.5)
-    }));
-  });
-  const [fase, setFase] = useState("clase");
-  const [i, setI] = useState(0);
-  const [sel, setSel] = useState(null);
-  const [ok, setOk] = useState(0);
-
-  /* Desde que se da la clase, este tema ya puede salir en un examen. */
-  const avisaTema = useRef(onTema);
-  avisaTema.current = onTema;
-  useEffect(() => {
-    if (avisaTema.current && tema && tema.id) avisaTema.current(tema.id);
-  }, []);
-  if (fase === "clase") {
-    return /*#__PURE__*/React.createElement("div", {
-      className: "ea-jw"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "ea-jinfo ea-dis"
-    }, /*#__PURE__*/React.createElement("span", null, "Clase \xB7 nivel ", nv), /*#__PURE__*/React.createElement("span", null, preg.length, " ", preg.length === 1 ? "pregunta" : "preguntas", " despu\xE9s")), /*#__PURE__*/React.createElement("h3", {
-      className: "ea-claseT ea-dis"
-    }, tema.n), /*#__PURE__*/React.createElement("p", {
-      className: "ea-memoTxt"
-    }, tema.x), /*#__PURE__*/React.createElement("div", {
-      className: "ea-ej"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "ea-lecK"
-    }, "Con n\xFAmeros"), /*#__PURE__*/React.createElement("div", {
-      className: "ea-ejX"
-    }, tema.ej)), /*#__PURE__*/React.createElement(Pista, null, "L\xE9elo con calma. Cuando pases de aqu\xED ya no vuelves a ver la explicaci\xF3n."), /*#__PURE__*/React.createElement("button", {
-      className: "ea-btn",
-      onClick: () => setFase("quiz")
-    }, "Ya lo tengo, preg\xFAntame"));
-  }
-  const p = preg[Math.min(i, preg.length - 1)];
-  const responder = txt => {
-    if (sel !== null) return;
-    setSel(txt);
-    if (txt === p.correcta) setOk(ok + 1);
-  };
-  const seguir = () => {
-    if (i >= preg.length - 1) {
-      const r = ok / preg.length;
-      onFin(r >= 0.999 ? "exito" : r >= 0.5 ? "parcial" : "fallo");
-    } else {
-      setI(i + 1);
-      setSel(null);
-    }
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, tema.n), /*#__PURE__*/React.createElement("span", null, "Pregunta ", i + 1, " de ", preg.length, " \xB7 aciertos ", ok)), /*#__PURE__*/React.createElement("p", {
-    className: "ea-qtxt"
-  }, p.q), /*#__PURE__*/React.createElement("div", {
-    className: "ea-ops",
-    style: {
-      marginTop: 0
-    }
-  }, p.ops.map((txt, k) => {
-    let cls = "ea-op";
-    if (sel !== null && txt === p.correcta) cls += " ok";else if (sel === txt) cls += " no";
-    return /*#__PURE__*/React.createElement("button", {
-      className: cls,
-      key: k,
-      disabled: sel !== null,
-      onClick: () => responder(txt)
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-opN ea-mono"
-    }, String.fromCharCode(65 + k % 26)), txt);
-  })), sel !== null && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-expl"
-  }, p.e), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: seguir
-  }, i >= preg.length - 1 ? "Terminar la clase" : "Siguiente")));
-}
-
-/* ---- La sesión ----
-   Reescrito para que se entienda qué estás mirando. Antes decía "Dentro"
-   y "Fuera" sin explicar de qué, y comparaba contra un rival invisible.
-   Ahora: un cartel grande dice si tienes la acción o estás en efectivo,
-   hay leyenda bajo el gráfico, y el rival contra el que compites está
-   nombrado desde el primer segundo. */
-function JuegoTrading({
-  ayuda,
-  onFin
-}) {
-  const TICKS = 24;
-  const RITMO = 780;
-  const [serie] = useState(() => {
-    const vol = clamp(0.055 - ayuda * 0.00012, 0.03, 0.055);
-    const tendencia = (numero(Math.random(), 0.5) - 0.42) * 0.012;
-    const arr = [100];
-    for (let i = 1; i < TICKS; i++) {
-      arr.push(Math.max(20, arr[i - 1] * (1 + tendencia + vol * gauss())));
-    }
-    return arr;
-  });
-  const [i, setI] = useState(0);
-  const [dentro, setDentro] = useState(false);
-  const [equity, setEquity] = useState(100);
-  const [hist, setHist] = useState([100]);
-  const [fin, setFin] = useState(false);
-  const [ops, setOps] = useState(0);
-  const dentroRef = useRef(false);
-  useEffect(() => {
-    dentroRef.current = dentro;
-  }, [dentro]);
-  useEffect(() => {
-    if (fin) return;
-    const id = setTimeout(() => {
-      if (i >= TICKS - 1) {
-        setFin(true);
-        return;
-      }
-      const r = serie[i + 1] / serie[i] - 1;
-      const nuevo = dentroRef.current ? equity * (1 + r) : equity;
-      setEquity(nuevo);
-      setHist(h => h.concat(nuevo));
-      setI(i + 1);
-    }, RITMO);
-    return () => clearTimeout(id);
-  }, [i, fin, serie, equity]);
-  const precio = serie[Math.min(i, TICKS - 1)];
-  const bench = precio / serie[0] * 100;
-  const mio = (equity / 100 - 1) * 100;
-  const suyo = (bench / 100 - 1) * 100;
-  const dif = mio - suyo;
-  const path = (datos, alto, max, min) => datos.map((v, k) => {
-    const x = k / (TICKS - 1) * 100;
-    const y = alto - (v - min) / (max - min || 1) * alto;
-    return (k === 0 ? "M" : "L") + x.toFixed(2) + " " + y.toFixed(2);
-  }).join(" ");
-  const vistos = serie.slice(0, i + 1);
-  const todos = vistos.concat(hist);
-  const max = Math.max.apply(null, todos),
-    min = Math.min.apply(null, todos);
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement(Pista, null, "Una acci\xF3n va a moverse durante ", TICKS, " momentos. Con ", /*#__PURE__*/React.createElement("strong", null, "Comprar"), " la tienes y su subida o bajada te toca entera; con ", /*#__PURE__*/React.createElement("strong", null, "Vender"), " te sales a efectivo y dejas de moverte. Compites contra alguien que compr\xF3 al principio y no volvi\xF3 a tocar nada. Ganas si terminas por encima de \xE9l."), /*#__PURE__*/React.createElement("div", {
-    className: "ea-estado " + (dentro ? "dentro" : "fuera")
-  }, dentro ? "TIENES LA ACCIÓN" : "ESTÁS EN EFECTIVO"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-jinfo ea-dis",
-    style: {
-      marginTop: 10
-    }
-  }, /*#__PURE__*/React.createElement("span", null, "Momento ", i + 1, " de ", TICKS), /*#__PURE__*/React.createElement("span", null, "Precio ", precio.toFixed(1), " \xB7 operaciones ", ops)), /*#__PURE__*/React.createElement("svg", {
-    className: "ea-graf",
-    viewBox: "0 0 100 60",
-    preserveAspectRatio: "none"
-  }, /*#__PURE__*/React.createElement("path", {
-    className: "ea-grafL",
-    d: path(vistos, 60, max, min),
-    vectorEffect: "non-scaling-stroke"
-  }), /*#__PURE__*/React.createElement("path", {
-    className: "ea-grafD",
-    d: path(hist, 60, max, min),
-    vectorEffect: "non-scaling-stroke"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "ea-leyenda"
-  }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
-    className: "ea-lineaL"
-  }), " precio de la acci\xF3n"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
-    className: "ea-lineaD"
-  }), " tu cuenta")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-marcador"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "Tu cuenta"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mono ea-marcaV",
-    style: {
-      color: mio >= 0 ? "#3D8A49" : "var(--rojo)"
-    }
-  }, mio >= 0 ? "+" : "", mio.toFixed(1), "%")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "El que compr\xF3 y no toc\xF3 nada"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mono ea-marcaV",
-    style: {
-      color: suyo >= 0 ? "#3D8A49" : "var(--rojo)"
-    }
-  }, suyo >= 0 ? "+" : "", suyo.toFixed(1), "%")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "Le llevas"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mono ea-marcaV",
-    style: {
-      color: dif >= 0 ? "#3D8A49" : "var(--rojo)"
-    }
-  }, dif >= 0 ? "+" : "", dif.toFixed(1)))), !fin ? /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila2"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    style: {
-      marginTop: 0,
-      flex: 1
-    },
-    onClick: () => {
-      setDentro(true);
-      setOps(ops + 1);
-    },
-    disabled: dentro
-  }, "Comprar"), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    style: {
-      marginTop: 0,
-      flex: 1,
-      background: "var(--rojo)"
-    },
-    onClick: () => {
-      setDentro(false);
-      setOps(ops + 1);
-    },
-    disabled: !dentro
-  }, "Vender")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta " + (dif >= 4 ? "bien" : dif >= -0.5 ? "" : "mal")
-  }, "Cerr\xF3 la sesi\xF3n. Terminaste ", dif >= 0 ? "por encima" : "por debajo", " del que compr\xF3 al principio y se fue a dormir, por ", Math.abs(dif).toFixed(1), " puntos, despu\xE9s de ", ops, " ", ops === 1 ? "operación" : "operaciones", ".", dif < 0 ? " Es el resultado más común: entrar y salir suele costar más de lo que salva." : " Que salga bien una vez no significa que se pueda repetir treinta años seguidos."), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: () => onFin(dif >= 4 ? "exito" : dif >= -0.5 ? "parcial" : "fallo")
-  }, "Continuar")));
-}
-
-/* ---- Armar la estructura ----
-   Rehecho otra vez (28-sep-2026). La versión anterior no se podía ganar:
-   pedía multiplicar el capital por 2,4 si iba bien, y en todas las empresas
-   posibles la cobertura de intereses rompía antes de llegar ahí. Además
-   hablaba de EBITDA, cobertura y covenant, y la meta no se veía.
-
-   Ahora: una empresa de 100 millones, una barra (cuánto te presta el
-   banco) y dos metas que tiran en sentidos contrarios, con su ✓ en vivo.
-     · si le va bien, multiplicar tu dinero por 2 o más  → pide deuda
-     · si le va mal, conservar al menos el 30%           → pide poca deuda
-   Entre las dos hay una franja buena que se mueve de partida en partida:
-   se sortea primero la franja y de ella salen cuánto sube y cuánto baja la
-   empresa, así que siempre existe y nunca está en el mismo sitio. Con
-   mejor atributo la franja es más ancha. */
-const EST_PRECIO = 100;
-const EST_META_BIEN = 2; /* multiplicar tu dinero por esto si va bien */
-const EST_META_MAL = 0.3; /* conservar al menos esta parte si va mal */
-const EST_AMORTIZA = 10; /* lo que la empresa devuelve de deuda si va bien */
-const EST_TOPE = 80; /* ningún banco presta más del 80% */
-const casoEstructura = ayuda => {
-  const lo = 30 + 5 * indiceAzar(5); /* de 30 a 50 */
-  const ancho = numero(ayuda, 0) >= 60 ? 15 : 10;
-  const hi = Math.min(EST_TOPE - 10, lo + ancho);
-  /* bien: (100·(1+sube) − (d − 10)) / (100 − d) = 2    justo en d = lo */
-  const sube = (EST_PRECIO * EST_META_BIEN - EST_META_BIEN * lo + lo - EST_AMORTIZA) / EST_PRECIO - 1;
-  /* mal:  (100·(1−baja) − d) / (100 − d) = 0,3          justo en d = hi */
-  const baja = 1 - (EST_META_MAL * (EST_PRECIO - hi) + hi) / EST_PRECIO;
-  return {
-    lo,
-    hi,
-    sube,
-    baja,
-    nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía"
-  };
-};
-const resultadoEstructura = (c, deuda) => {
-  const tuyo = EST_PRECIO - deuda;
-  const bien = tuyo > 0 ? (EST_PRECIO * (1 + c.sube) - Math.max(0, deuda - EST_AMORTIZA)) / tuyo : 0;
-  const mal = tuyo > 0 ? Math.max(0, EST_PRECIO * (1 - c.baja) - deuda) / tuyo : 0;
-  const okBien = bien >= EST_META_BIEN - 1e-9,
-    okMal = mal >= EST_META_MAL - 1e-9;
-  return {
-    tuyo,
-    bien,
-    mal,
-    okBien,
-    okMal,
-    nivel: okBien && okMal ? "exito" : okBien || okMal ? "parcial" : "fallo"
-  };
-};
-function JuegoEstructura({
-  ayuda,
-  onFin
-}) {
-  const [caso] = useState(() => casoEstructura(ayuda));
-  const [deuda, setDeuda] = useState(0);
-  const [cerrado, setCerrado] = useState(null);
-  const r = resultadoEstructura(caso, deuda);
-  const x = v => v.toFixed(1).replace(".", ",") + "x";
-  const cierre = {
-    exito: "Punto justo. Con esa deuda tu dinero rinde de verdad si sale bien, y si sale mal te queda con qué volver a empezar.",
-    parcial: r.okBien ? "Si sale bien ganas mucho, pero pediste tanto que un mal año se lleva casi todo lo que pusiste." : "Estás a salvo si sale mal, pero pusiste tanto de tu bolsillo que si sale bien tu dinero apenas rinde.",
-    fallo: "No cumples ninguna de las dos metas: ni ganas lo suficiente si sale bien, ni aguantas si sale mal."
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement(Pista, null, "Compras ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), " por ", /*#__PURE__*/React.createElement("strong", null, EST_PRECIO, " millones"), ". T\xFA pones una parte y el banco te presta el resto. Pedir prestado hace que ganes m\xE1s si sale bien\u2026 y que pierdas m\xE1s si sale mal."), /*#__PURE__*/React.createElement("div", {
-    className: "ea-estCaso"
-  }, "Compras ", /*#__PURE__*/React.createElement("strong", null, caso.nombre), " por ", /*#__PURE__*/React.createElement("strong", null, EST_PRECIO, " millones"), ". \xBFCu\xE1nto le pides al banco?"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-est"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-estL"
-  }, /*#__PURE__*/React.createElement("span", null, "El banco te presta"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, deuda, " millones")), /*#__PURE__*/React.createElement("input", {
-    className: "ea-slider",
-    type: "range",
-    min: "0",
-    max: EST_TOPE,
-    step: "5",
-    value: deuda,
-    disabled: !!cerrado,
-    onChange: e => setDeuda(entero(e.target.value, 0, 0, EST_TOPE)),
-    "aria-label": "Cu\xE1nto te presta el banco"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mix",
-    style: {
-      marginTop: 6
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-mixSeg efe",
-    style: {
-      width: r.tuyo + "%"
-    }
-  }, r.tuyo >= 18 ? "tú " + r.tuyo : ""), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mixSeg cart",
-    style: {
-      width: deuda + "%"
-    }
-  }, deuda >= 18 ? "banco " + deuda : "")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escen"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenC " + (r.okBien ? "bien" : "mal")
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "Si le va bien \xB7 vale ", Math.round(caso.sube * 100), "% m\xE1s"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenV ea-mono"
-  }, x(r.bien)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenX"
-  }, "tu dinero se multiplica por ", x(r.bien)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-estMeta"
-  }, r.okBien ? "✓" : "✗", " Meta: ", x(EST_META_BIEN), " o m\xE1s")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenC " + (r.okMal ? "bien" : "mal")
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lecK"
-  }, "Si le va mal \xB7 vale ", Math.round(caso.baja * 100), "% menos"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenV ea-mono"
-  }, Math.round(r.mal * 100), "%"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-escenX"
-  }, r.mal <= 0.005 ? "lo pierdes todo: el banco cobra primero" : "de tu dinero te queda el " + Math.round(r.mal * 100) + "%"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-estMeta"
-  }, r.okMal ? "✓" : "✗", " Meta: conservar ", Math.round(EST_META_MAL * 100), "% o m\xE1s"))), !cerrado ? /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: () => setCerrado(r.nivel)
-  }, "Cerrar el trato as\xED") : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta " + (cerrado === "exito" ? "bien" : cerrado === "fallo" ? "mal" : "")
-  }, cierre[cerrado]), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: () => onFin(cerrado)
-  }, "Continuar")));
-}
-
-/* ---- Banderas rojas ----
-   Reescrito. Los tres cambios que importan:
-   · cada línea, la marques o no, explica al final por qué era o no era
-     una bandera roja. Antes solo se pintaba de verde y el jugador se
-     quedaba igual de ciego que al empezar.
-   · el resultado distingue tres cosas distintas: las que cazaste, las
-     que se te pasaron y las que marcaste de más. No es lo mismo fallar
-     por no ver un problema que por ver problemas donde no los hay.
-   · en modo aprendiz se dice antes de empezar qué tipo de cosa buscar,
-     porque a quien nunca ha leído unos estados financieros no se le
-     puede pedir que adivine el criterio. */
-function JuegoBanderas({
-  ayuda,
-  onFin,
-  modo
-}) {
-  const CUANTAS = 3;
-  const [caso] = useState(() => {
-    const b = elegirAzar(BANDERAS) || BANDERAS[0];
-    /* con criterio alto se descartan señuelos, y se dice cuántos */
-    const quitar = ayuda >= 65 ? 2 : ayuda >= 45 ? 1 : 0;
-    const malas = (b.mal || []).map((x, i) => ({
-      ...x,
-      id: "m" + i,
-      roja: true
-    }));
-    const buenas = (b.ok || []).map((x, i) => ({
-      ...x,
-      id: "b" + i,
-      roja: false
-    })).sort(() => Math.random() - 0.5).slice(0, Math.max(2, 5 - quitar));
-    return {
-      t: b.t,
-      doc: b.doc,
-      pista: b.pista,
-      quitar,
-      lista: malas.concat(buenas).sort(() => Math.random() - 0.5)
-    };
-  });
-  const [sel, setSel] = useState([]);
-  const [rev, setRev] = useState(false);
-  const marcada = it => sel.indexOf(it.id) >= 0;
-  const marcar = it => {
-    if (rev) return;
-    if (marcada(it)) setSel(sel.filter(y => y !== it.id));else if (sel.length < CUANTAS) setSel(sel.concat(it.id));
-  };
-  const rojas = caso.lista.filter(x => x.roja);
-  const cazadas = rojas.filter(marcada);
-  const perdidas = rojas.filter(x => !marcada(x));
-  const falsas = caso.lista.filter(x => !x.roja && marcada(x));
-  const aciertos = cazadas.length;
-  const veredicto = aciertos === CUANTAS ? "Las tres. Levantaste exactamente lo que había que levantar y no te inventaste problemas donde no los había." : aciertos === CUANTAS - 1 ? "Dos de tres. Suficiente para que el asunto escale, y la que se te pasó es de las que salen caras." : aciertos === 1 ? "Solo una. Con este informe la operación sigue adelante creyendo que está limpia." : "Ninguna. Marcaste ruido operativo y dejaste pasar los tres problemas de verdad.";
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Marcadas ", sel.length, " de ", CUANTAS), /*#__PURE__*/React.createElement("span", null, caso.quitar > 0 ? "Tu criterio descartó " + caso.quitar + (caso.quitar === 1 ? " señuelo" : " señuelos") : "Sin descartes")), caso.doc && /*#__PURE__*/React.createElement("div", {
-    className: "ea-docK ea-dis"
-  }, "Sobre la mesa \xB7 ", caso.doc), /*#__PURE__*/React.createElement("p", {
-    className: "ea-qtxt",
-    style: {
-      marginTop: 8
-    }
-  }, caso.t), modo === "aprendiz" && caso.pista && !rev && /*#__PURE__*/React.createElement("div", {
-    className: "ea-glos"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-glosK"
-  }, "Qu\xE9 est\xE1s buscando"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-glosX"
-  }, caso.pista)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-ops",
-    style: {
-      marginTop: 12
-    }
-  }, caso.lista.map(it => {
-    let cls = "ea-check";
-    if (rev) cls += it.roja ? " bien" : marcada(it) ? " mal" : "";else if (marcada(it)) cls += " sel";
-    return /*#__PURE__*/React.createElement("button", {
-      className: cls,
-      key: it.id,
-      disabled: rev,
-      onClick: () => marcar(it)
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-checkB ea-mono"
-    }, marcada(it) ? "X" : "·"), /*#__PURE__*/React.createElement("span", null, it.t, rev && /*#__PURE__*/React.createElement("span", {
-      className: "ea-checkX"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-checkR ea-dis" + (it.roja ? " roja" : "")
-    }, it.roja ? marcada(it) ? "Bandera roja · la viste" : "Bandera roja · se te pasó" : marcada(it) ? "No lo era · la marcaste de más" : "No lo era"), it.x)));
-  })), !rev ? /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    disabled: sel.length < CUANTAS,
-    onClick: () => setRev(true)
-  }, "Entregar el informe") : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta " + (aciertos === CUANTAS ? "bien" : aciertos === CUANTAS - 1 ? "" : "mal")
-  }, veredicto), /*#__PURE__*/React.createElement("div", {
-    className: "ea-tabla",
-    style: {
-      marginTop: 10
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Banderas que cazaste"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, cazadas.length, " de ", CUANTAS), /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Se te pasaron"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, perdidas.length), /*#__PURE__*/React.createElement("span", {
-    className: "ea-td"
-  }, "Marcaste de m\xE1s"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-tdn ea-mono"
-  }, falsas.length)), falsas.length > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "ea-expl"
-  }, "Marcar de m\xE1s tambi\xE9n cuesta: en una operaci\xF3n real, levantar tres alarmas falsas quema tu credibilidad para el d\xEDa que la alarma sea verdadera."), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: () => onFin(aciertos === CUANTAS ? "exito" : aciertos === CUANTAS - 1 ? "parcial" : "fallo")
-  }, "Continuar")));
-}
-
-/* ---- La pizarra del comité: pares de concepto y significado ---- */
-/* Cada par lleva su color, el mismo en el concepto y en su definición:
-   al destapar una ficha el color se queda en la memoria mucho mejor que
-   un texto de dos palabras, y sirve de ancla para saber dónde estaba su
-   pareja. Sin el rojo, que en todo el juego significa fallo, y sin el
-   turquesa, que al lado del azul se confunde a simple vista. */
-const COLORES_PARES = [0, 1, 3, 4, 5, 7].map(i => COLORES_MEM[i].c);
-
-/* Segundos con la pizarra destapada antes de empezar. Más con mejor
-   atributo, para que «te ayuda» siga significando algo aquí. */
-const vistaParesDe = ayuda => clamp(Math.round(5 + numero(ayuda, 0) / 25), 5, 9);
-function JuegoPares({
-  ayuda,
-  onFin
-}) {
-  const [pz] = useState(() => elegirAzar(PIZARRAS));
-  const [fichas] = useState(() => {
-    /* los colores también se barajan: que el WACC no sea siempre cobre */
-    const cols = COLORES_PARES.slice().sort(() => Math.random() - 0.5);
-    const arr = [];
-    pz.p.forEach((par, i) => {
-      const col = cols[i % cols.length];
-      arr.push({
-        id: i + "a",
-        par: i,
-        t: par[0],
-        col
-      });
-      arr.push({
-        id: i + "b",
-        par: i,
-        t: par[1],
-        col
-      });
-    });
-    return arr.sort(() => Math.random() - 0.5);
-  });
-  const maxErr = clamp(4 + Math.floor(ayuda / 22), 4, 8);
-  const [abiertas, setAbiertas] = useState([]);
-  const [hechas, setHechas] = useState([]);
-  const [err, setErr] = useState(0);
-  const [fin, setFin] = useState(false);
-  const [cuenta, setCuenta] = useState(() => vistaParesDe(ayuda));
-  const mirando = cuenta > 0;
-  const bloqueo = useRef(false);
-
-  /* la pizarra destapada, y la cuenta atrás hasta taparla */
-  useEffect(() => {
-    if (cuenta <= 0) return;
-    const t = setTimeout(() => setCuenta(c => c - 1), 1000);
-    return () => clearTimeout(t);
-  }, [cuenta]);
-  const cerrar = nivel => {
-    setFin(true);
-    setTimeout(() => onFin(nivel), 900);
-  };
-  const tocar = f => {
-    if (mirando || fin || bloqueo.current) return;
-    if (hechas.indexOf(f.par) >= 0) return;
-    if (abiertas.some(x => x.id === f.id)) return;
-    const nuevas = abiertas.concat(f);
-    setAbiertas(nuevas);
-    if (nuevas.length < 2) return;
-    bloqueo.current = true;
-    if (nuevas[0].par === nuevas[1].par) {
-      setTimeout(() => {
-        const h = hechas.concat(nuevas[0].par);
-        setHechas(h);
-        setAbiertas([]);
-        bloqueo.current = false;
-        if (h.length === pz.p.length) cerrar(err === 0 ? "exito" : err <= 2 ? "exito" : "parcial");
-      }, 420);
-    } else {
-      setTimeout(() => {
-        const e = err + 1;
-        setErr(e);
-        setAbiertas([]);
-        bloqueo.current = false;
-        if (e >= maxErr) cerrar(hechas.length >= pz.p.length - 2 ? "parcial" : "fallo");
-      }, 750);
-    }
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, mirando ? "Mira la pizarra" : pz.t), /*#__PURE__*/React.createElement("span", null, mirando ? "se tapa en " + cuenta + (cuenta === 1 ? " segundo" : " segundos") : "Fallos " + err + " de " + maxErr)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-tab4"
-  }, fichas.map(f => {
-    const hecha = hechas.indexOf(f.par) >= 0;
-    const abierta = abiertas.some(x => x.id === f.id);
-    const vista = mirando || hecha || abierta;
-    return /*#__PURE__*/React.createElement("div", _extends({
-      key: f.id
-    }, pulsable(() => tocar(f), vista ? f.t : "Ficha tapada", hecha || mirando), {
-      className: "ea-fichaP" + (mirando ? " vista" : hecha ? " hecha" : abierta ? " abierta" : " tapada") + (vista ? " pintada" : ""),
-      style: vista ? {
-        background: f.col + "33",
-        borderColor: f.col
-      } : undefined
-    }), vista ? f.t : "");
-  })), mirando && /*#__PURE__*/React.createElement("button", {
-    className: "ea-mini",
-    style: {
-      marginTop: 10
-    },
-    onClick: () => setCuenta(0)
-  }, "Ya lo mir\xE9, empezar"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      minHeight: 20,
-      marginTop: 9,
-      fontSize: 13,
-      color: "#6B6B6B"
-    }
-  }, fin ? hechas.length === pz.p.length ? "Pizarra completa" : "Se acabaron los intentos" : mirando ? "Cada par tiene su color: el concepto y su definición se pintan igual." : ""));
-}
-
-/* ---- El carril del capital ---- */
-function JuegoCarril({
-  ayuda,
-  onFin
-}) {
-  const TOTAL = 26;
-  const [carril, setCarril] = useState(1);
-  const [objs, setObjs] = useState([]);
-  const [t, setT] = useState(0);
-  const [pts, setPts] = useState(0);
-  const [golpes, setGolpes] = useState(0);
-  const [fin, setFin] = useState(false);
-  const carrilRef = useRef(1);
-  useEffect(() => {
-    carrilRef.current = carril;
-  }, [carril]);
-  const vel = 22;
-  const probMalo = clamp(0.5 - ayuda / 320, 0.28, 0.5);
-  useEffect(() => {
-    if (fin) return;
-    const id = setTimeout(() => {
-      setObjs(prev => {
-        let lista = prev.map(o => ({
-          ...o,
-          y: o.y + vel
-        }));
-        if (t < TOTAL && t % 2 === 0) {
-          const c = Math.floor(Math.random() * 3);
-          lista = lista.concat({
-            k: t,
-            c,
-            y: -30,
-            malo: Math.random() < probMalo,
-            tocado: false
-          });
-        }
-        lista.forEach(o => {
-          if (!o.tocado && o.y >= 170 && o.y <= 205 && o.c === carrilRef.current) {
-            o.tocado = true;
-            if (o.malo) setGolpes(g => g + 1);else setPts(p => p + 1);
-          }
-        });
-        return lista.filter(o => o.y < 240);
-      });
-      if (t >= TOTAL + 8) {
-        setFin(true);
-        return;
-      }
-      setT(t + 1);
-    }, 190);
-    return () => clearTimeout(id);
-  }, [t, fin, probMalo]);
-  const cerrar = () => {
-    const neto = pts - golpes * 2;
-    onFin(neto >= 6 ? "exito" : neto >= 2 ? "parcial" : "fallo");
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Retornos ", pts), /*#__PURE__*/React.createElement("span", null, "Golpes ", golpes)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-pistaC"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-lineaC",
-    style: {
-      left: "33.3%"
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-lineaC",
-    style: {
-      left: "66.6%"
-    }
-  }), objs.map(o => /*#__PURE__*/React.createElement("div", {
-    key: o.k,
-    className: "ea-obj " + (o.malo ? "malo" : "bueno"),
-    style: {
-      left: o.c * 33.3 + 3.6 + "%",
-      top: o.y + "px",
-      opacity: o.tocado ? 0.25 : 1
-    }
-  }, o.malo ? CARRILES[o.c].malo : CARRILES[o.c].bueno)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-cap",
-    style: {
-      left: carril * 33.3 + 3.6 + "%"
-    }
-  }, "Tu capital")), /*#__PURE__*/React.createElement("input", {
-    className: "ea-slider ea-carrilS",
-    type: "range",
-    min: "0",
-    max: "2",
-    step: "1",
-    value: carril,
-    disabled: fin,
-    "aria-label": "Carril de tu capital",
-    onChange: e => setCarril(entero(e.target.value, 1, 0, 2))
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-carrilN"
-  }, CARRILES.map((c, i) => /*#__PURE__*/React.createElement("span", {
-    key: i,
-    className: "ea-carrilE ea-dis" + (carril === i ? " on" : "")
-  }, c.n))), fin && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta " + (pts - golpes * 2 >= 6 ? "bien" : pts - golpes * 2 >= 2 ? "" : "mal")
-  }, "Cerraste con ", pts, " retornos y ", golpes, " golpes. Rotar entre activos captura oportunidades y tambi\xE9n te expone justo cuando el carril equivocado se pone feo."), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: cerrar
-  }, "Continuar")));
-}
-
-/* ---- Cuatro en línea contra la contraparte ---- */
-const COLS = 7,
-  FILAS = 6;
-function JuegoCuatro({
-  ayuda,
-  onFin
-}) {
-  const [tab, setTab] = useState(() => Array(COLS * FILAS).fill(null));
-  const [bloqueo, setBloqueo] = useState(false);
-  const [estado, setEstado] = useState(null);
-  const [linea, setLinea] = useState([]);
-  const torpeza = clamp(ayuda / 170, 0.05, 0.5);
-  const idx = (c, f) => f * COLS + c;
-  const alturaCol = (bd, c) => {
-    let f = 0;
-    while (f < FILAS && bd[idx(c, f)]) f++;
-    return f;
-  };
-  const libres = bd => {
-    const l = [];
-    for (let c = 0; c < COLS; c++) if (alturaCol(bd, c) < FILAS) l.push(c);
-    return l;
-  };
-  const ganadorEn = (bd, p) => {
-    const dirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
-    for (let c = 0; c < COLS; c++) for (let f = 0; f < FILAS; f++) {
-      for (const d of dirs) {
-        const cel = [];
-        for (let k = 0; k < 4; k++) {
-          const cc = c + d[0] * k,
-            ff = f + d[1] * k;
-          if (cc < 0 || cc >= COLS || ff < 0 || ff >= FILAS) {
-            cel.length = 0;
-            break;
-          }
-          if (bd[idx(cc, ff)] !== p) {
-            cel.length = 0;
-            break;
-          }
-          cel.push(idx(cc, ff));
-        }
-        if (cel.length === 4) return cel;
-      }
-    }
-    return null;
-  };
-  const soltar = (bd, c, p) => {
-    const f = alturaCol(bd, c);
-    if (f >= FILAS) return null;
-    const n = bd.slice();
-    n[idx(c, f)] = p;
-    return n;
-  };
-  const jugadaIA = bd => {
-    const l = libres(bd);
-    for (const c of l) {
-      const n = soltar(bd, c, "O");
-      if (n && ganadorEn(n, "O")) return c;
-    }
-    for (const c of l) {
-      const n = soltar(bd, c, "X");
-      if (n && ganadorEn(n, "X")) return c;
-    }
-    if (Math.random() < torpeza) return elegirAzar(l);
-    const seguras = l.filter(c => {
-      const n = soltar(bd, c, "O");
-      const m = soltar(n, c, "X");
-      return !(m && ganadorEn(m, "X"));
-    });
-    const cand = seguras.length ? seguras : l;
-    return cand.reduce((mej, c) => Math.abs(c - 3) < Math.abs(mej - 3) ? c : mej, cand[0]);
-  };
-  const terminar = (n, l) => {
-    setEstado(n);
-    setLinea(l || []);
-    setBloqueo(true);
-    setTimeout(() => onFin(n), 1150);
-  };
-  const jugar = c => {
-    if (bloqueo || estado) return;
-    const n = soltar(tab, c, "X");
-    if (!n) return;
-    setTab(n);
-    const g = ganadorEn(n, "X");
-    if (g) {
-      terminar("exito", g);
-      return;
-    }
-    if (libres(n).length === 0) {
-      terminar("parcial");
-      return;
-    }
-    setBloqueo(true);
-    setTimeout(() => {
-      const c2 = jugadaIA(n);
-      const n2 = soltar(n, c2, "O");
-      setTab(n2);
-      const g2 = ganadorEn(n2, "O");
-      if (g2) {
-        terminar("fallo", g2);
-        return;
-      }
-      if (libres(n2).length === 0) {
-        terminar("parcial");
-        return;
-      }
-      setBloqueo(false);
-    }, 430);
-  };
-  const txt = {
-    exito: "Cierras en tus términos",
-    parcial: "Tablero lleno, partieron la diferencia",
-    fallo: "Te ganaron la posición"
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Tus fichas en cobre"), /*#__PURE__*/React.createElement("span", null, "Lectura de la contraparte ", Math.round(100 - torpeza * 100))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-pista4"
-  }, Array.from({
-    length: COLS
-  }, (_, c) => /*#__PURE__*/React.createElement("div", _extends({
-    className: "ea-col4",
-    key: c
-  }, pulsable(() => jugar(c), "Soltar ficha en la columna " + (c + 1))), Array.from({
-    length: FILAS
-  }, (_, f) => {
-    const v = tab[idx(c, f)];
-    return /*#__PURE__*/React.createElement("div", {
-      key: f,
-      className: "ea-hueco" + (v === "X" ? " mia" : v === "O" ? " suya" : "") + (linea.indexOf(idx(c, f)) >= 0 ? " gana" : "")
-    });
-  })))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      minHeight: 22,
-      marginTop: 11,
-      fontSize: 14,
-      color: "#6B6B6B"
-    }
-  }, estado ? txt[estado] : "Toca una columna para soltar tu ficha."));
-}
-
-/* ---- El comité de inversión ----
-   Tres negocios sobre la mesa y capital para uno. No hay pistas: están
-   los cinco datos y hay que decidir. Es el modo que entrena lo único
-   que de verdad hace falta para gestionar un fondo, que es distinguir
-   un buen negocio de uno que solo lo parece. */
-function JuegoComite({
-  ayuda,
-  onFin
-}) {
-  const [mesa] = useState(() => {
-    const pool = EMPRESAS.slice().sort(() => Math.random() - 0.5);
-    /* con criterio alto la diferencia entre el mejor y el resto es más clara */
-    const cuantos = 3;
-    const elegidas = pool.slice(0, cuantos).map(e => ({
-      ...e,
-      q: calidadDeal(e)
-    }));
-    return elegidas.sort(() => Math.random() - 0.5);
-  });
-  const [sel, setSel] = useState(null);
-  const orden = mesa.slice().sort((a, b) => b.q - a.q);
-  const mejor = orden[0];
-  const elegido = sel == null ? null : mesa[sel];
-  const puesto = elegido ? orden.findIndex(x => x.n === elegido.n) : -1;
-  const nivel = puesto === 0 ? "exito" : puesto === 1 ? "parcial" : "fallo";
-  const cierre = puesto === 0 ? "Elegiste el mejor de los tres. Fíjate en qué te lo dijo: no era el que más crecía, era el que crecía con margen, sin depender de un cliente y sin deuda encima." : puesto === 1 ? "Segundo mejor. Defendible en un comité, y aun así había uno claramente superior." : "Te quedaste con el peor de los tres. Casi siempre pasa por mirar el crecimiento y no mirar de quién depende la facturación.";
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Tres negocios \xB7 capital para uno"), /*#__PURE__*/React.createElement("span", null, ayuda >= 60 ? "Tu criterio ya descarta lo obvio" : "Sin pistas")), /*#__PURE__*/React.createElement(Pista, null, "Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman; depender de un solo cliente y arrastrar deuda restan casi lo mismo. Elige uno."), mesa.map((e, i) => {
-    const marcado = sel === i;
-    const esMejor = sel != null && e.n === mejor.n;
-    return /*#__PURE__*/React.createElement("div", {
-      key: e.n,
-      className: "ea-deal" + (marcado ? " sel" : "") + (sel != null && esMejor ? " gana" : "")
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "ea-itemTop"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-itemN"
-    }, e.n), /*#__PURE__*/React.createElement("span", {
-      className: "ea-mono",
-      style: {
-        fontSize: 12,
-        flexShrink: 0
-      }
-    }, e.s)), /*#__PURE__*/React.createElement("div", {
-      className: "ea-dealS"
-    }, senalesDeal(e).map(x => /*#__PURE__*/React.createElement("span", {
-      key: x.k,
-      className: "ea-sen" + (x.bien ? " bien" : x.mal ? " mal" : "")
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-senK"
-    }, x.k), /*#__PURE__*/React.createElement("span", {
-      className: "ea-senV ea-mono"
-    }, x.v)))), /*#__PURE__*/React.createElement("div", {
-      className: "ea-itemD"
-    }, e.d), sel == null ? /*#__PURE__*/React.createElement("button", {
-      className: "ea-mini",
-      onClick: () => setSel(i)
-    }, "Poner el capital aqu\xED") : /*#__PURE__*/React.createElement("div", {
-      className: "ea-dealR"
-    }, esMejor ? "Era el mejor de los tres" : "Múltiplo esperado " + baseDeal(e).toFixed(2) + "x", marcado && !esMejor ? " · lo elegiste" : ""));
-  }), sel != null && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta " + (nivel === "exito" ? "bien" : nivel === "fallo" ? "mal" : "")
-  }, cierre), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: () => onFin(nivel)
-  }, "Continuar")));
-}
-
-/* ---- La subasta y la maldición del ganador ----
-   Rehecha (28-sep-2026). La anterior tenía un tope escondido de ocho
-   rondas: a la octava subida se acababa sola y lo contaba como si te
-   hubieras retirado. Empezando en 40 y subiendo 8-13 por ronda, eso te
-   echaba hacia los 110 aunque tu estimación fuera 145. Además el éxito
-   pedía pagar menos del 82% del valor, que casi nunca pasaba, y los
-   rivales se retiraban por sorteo en vez de por un límite propio.
-
-   Ahora es una subasta de verdad, sin tope de rondas:
-     · cada rival tiene su precio máximo (del 70% al 120% del valor) y se
-       retira en cuanto la oferta lo pasa. Termina sola, porque los
-       límites son finitos.
-     · si te retiras, la subasta sigue sin ti: gana el rival con el límite
-       más alto y paga lo que marca el segundo. Tu retirada se juzga por lo
-       que pagó él: si pagó de más, hiciste bien.
-   Medido con 30.000 subastas (atributo 72): pujar hasta tu estimación da
-   éxito ~54% y fallo ~17%; retirarse muy pronto o pujar de más, bastante
-   peor. Es la maldición del ganador sin necesidad de explicarla. */
-const SUB_RIVALES = ["Fondo regional", "Comprador estratégico", "Family office"];
-const pasoSubasta = valor => Math.max(4, Math.round(valor * 0.06)) + indiceAzar(4);
-const casoSubasta = ayuda => {
-  const valor = 60 + numero(Math.random(), 0.5) * 80;
-  const ruido = Math.max(3, 20 - numero(ayuda, 0) / 6);
-  return {
-    valor,
-    estimacion: Math.max(10, Math.round(valor + ruido * gauss())),
-    limites: SUB_RIVALES.map(() => valor * (0.7 + numero(Math.random(), 0.5) * 0.5)),
-    inicio: Math.round(valor * 0.5)
-  };
-};
-/* si te retiras en p: gana el de límite más alto, al precio del segundo */
-const cierreRetiro = (caso, p) => {
-  const vivos = caso.limites.map((m, i) => ({
-    m,
-    i
-  })).filter(x => x.m >= p).sort((x, y) => y.m - x.m);
-  if (!vivos.length) return {
-    quien: null,
-    final: p
-  };
-  const final = Math.round(Math.max(p, vivos.length > 1 ? vivos[1].m : p));
-  return {
-    quien: SUB_RIVALES[vivos[0].i],
-    final
-  };
-};
-const nivelSubasta = (caso, fin) => {
-  if (fin.gano) {
-    const r = fin.precio / caso.valor;
-    return r <= 1 ? "exito" : r <= 1.1 ? "parcial" : "fallo";
-  }
-  if (fin.final > caso.valor) return "exito";
-  return fin.precio >= caso.valor * 0.9 ? "parcial" : "fallo";
-};
-function JuegoSubasta({
-  ayuda,
-  onFin
-}) {
-  const [caso] = useState(() => casoSubasta(ayuda));
-  const [precio, setPrecio] = useState(caso.inicio);
-  const [siguiente, setSiguiente] = useState(() => caso.inicio + pasoSubasta(caso.valor));
-  const [fuera, setFuera] = useState([null, null, null]); /* precio al que se retiró cada rival */
-  const [ronda, setRonda] = useState(1);
-  const [fin, setFin] = useState(null);
-  const subir = () => {
-    if (fin) return;
-    const nuevo = siguiente;
-    const f = fuera.map((x, i) => x == null && caso.limites[i] < nuevo ? nuevo : x);
-    setPrecio(nuevo);
-    setFuera(f);
-    setRonda(ronda + 1);
-    setSiguiente(nuevo + pasoSubasta(caso.valor));
-    if (f.every(x => x != null)) setFin({
-      gano: true,
-      precio: nuevo
-    });
-  };
-  const retirarse = () => {
-    if (fin) return;
-    const c = cierreRetiro(caso, precio);
-    setFin({
-      gano: false,
-      precio,
-      final: c.final,
-      quien: c.quien
-    });
-  };
-  const nivel = fin ? nivelSubasta(caso, fin) : null;
-  const V = Math.round(caso.valor);
-  const texto = !fin ? null : fin.gano ? nivel === "exito" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Pagaste lo que vale o menos: ese es el trabajo." : nivel === "parcial" ? "Te la llevaste por " + fin.precio + " y valía " + V + ". Casi lo que vale: sin margen, pero sin daño." : "Te la llevaste por " + fin.precio + " y valía " + V + ". Ganaste la subasta y perdiste plata: eso es la maldición del ganador." : nivel === "exito" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ": pagó de más. Retirarse a tiempo también es ganar." : nivel === "parcial" ? "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Se llevó una buena compra, pero te retiraste cerca del valor." : "Te retiraste en " + fin.precio + ". " + (fin.quien || "Un rival") + " se la llevó por " + fin.final + " y valía " + V + ". Dejaste ir una empresa barata: la prudencia también cuesta cuando sobra.";
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-jw"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Tu estimaci\xF3n: ", caso.estimacion, " millones"), /*#__PURE__*/React.createElement("span", null, "Ronda ", ronda)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-precio ea-mono"
-  }, precio), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12.5,
-      color: "var(--gris)",
-      marginBottom: 10
-    }
-  }, "Oferta sobre la mesa, en millones. Tu estimaci\xF3n puede fallar por arriba o por abajo."), SUB_RIVALES.map((r, i) => /*#__PURE__*/React.createElement("div", {
-    className: "ea-postor" + (fuera[i] == null ? "" : " fuera"),
-    key: i
-  }, /*#__PURE__*/React.createElement("span", null, r), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, fuera[i] == null ? "sigue" : "se retiró en " + fuera[i]))), !fin ? /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila2"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    style: {
-      marginTop: 0,
-      flex: 1
-    },
-    onClick: subir
-  }, "Subir a ", siguiente), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    style: {
-      marginTop: 0,
-      flex: 1,
-      background: "var(--rojo)"
-    },
-    onClick: retirarse
-  }, "Retirarme")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-alerta " + (nivel === "exito" ? "bien" : nivel === "fallo" ? "mal" : "")
-  }, texto), /*#__PURE__*/React.createElement("button", {
-    className: "ea-btn",
-    onClick: () => onFin(nivel)
-  }, "Continuar")));
-}
-
-/* ---- piezas del informe de cierre ---- */
-
-/* ============================================================
-   EL INTERRUPTOR DEL MOVIMIENTO
-   null = lo que diga el sistema · true = encendido · false = apagado.
-   Vive fuera de React porque lo consultan componentes sueltos (la cifra
-   que cuenta, el rodillo) que no tienen el estado de la partida a mano.
-   El Motor lo pone al dia en cada render desde st.animar.
-   ============================================================ */
-let MOVIMIENTO = null;
-const sistemaPideQuieto = () => {
-  try {
-    return typeof window !== "undefined" && typeof window.matchMedia === "function" && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  } catch (e) {
-    return false;
-  }
-};
-const sinMovimiento = () => {
-  if (MOVIMIENTO === true) return false;
-  if (MOVIMIENTO === false) return true;
-  return sistemaPideQuieto();
-};
-
+/* ---- src/componentes/Cifra.jsx ---- */
 /* ============================================================
    UNA CIFRA QUE CUENTA EN VEZ DE SALTAR
    El patrimonio es EL numero del juego y cambiaba de golpe: de 12.000 a
@@ -13915,6 +14210,7 @@ function Cifra({
   return fmt(x);
 }
 
+/* ---- src/componentes/Rodillo.jsx ---- */
 /* ============================================================
    EL RODILLO
    La cifra del cierre contaba, pero contaba en una esquina y con letra
@@ -13990,241 +14286,7 @@ function Rodillo({
   }));
 }
 
-/* ============================================================
-   ICONOS
-   Dibujados aqui, no traidos de fuera: el juego tiene que abrirse sin
-   red. Trazo del mismo grosor en todos, para que la fila de arriba se
-   lea como una sola cosa y no como cinco simbolos sueltos.
-   ============================================================ */
-const TRAZOS = {
-  rayo: "M13.5 2 L5 13.5 h5.2 l-1.2 8.5 L18 10.5 h-5.3 z",
-  edificio: "M3 21.5V7.2l6.5-3.7 6.5 3.7v14.3 M9.6 21.5v-4.6h3.6v4.6 M6.2 10.4h1.9 M6.2 14h1.9 M14.6 10.4h1.9 M14.6 14h1.9",
-  pin: "M12 22s6.6-6.3 6.6-10.6a6.6 6.6 0 1 0-13.2 0C5.4 15.7 12 22 12 22z M12 13.2a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4z",
-  escalera: "M3 21h5.4v-5.4H3zM9.3 21h5.4V10.2H9.3zM15.6 21H21V4.6h-5.4z",
-  ojo: "M1.6 12S5.5 4.9 12 4.9 22.4 12 22.4 12 18.5 19.1 12 19.1 1.6 12 1.6 12z M12 15.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2z",
-  tabla: "M3.2 3.6h17.6v16.8H3.2z M3.2 9.2h17.6 M3.2 14.8h17.6 M9.6 3.6v16.8",
-  nodos: "M6 8.2a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M18 8.2a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M12 21.6a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z M7.6 7.4l3 9 M16.4 7.4l-3 9 M8.9 5.3h6.2",
-  estrella: "M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z",
-  moneda: "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8v10.4 M14.9 9.3c0-1.3-1.3-2-2.9-2s-2.9.7-2.9 2 1.3 1.9 2.9 2.2 2.9.9 2.9 2.2-1.3 2-2.9 2-2.9-.7-2.9-2",
-  aviso: "M12 2.4 1.6 20.6h20.8z M12 9.2v5.2 M12 17.4h.02",
-  /* ---- lo que se compra ----
-     Veinte trazos para treinta y dos cosas: varias comparten simbolo a
-     proposito, porque lo que tiene que decir el icono es de que FAMILIA
-     es la compra, no cual exactamente. El nombre ya esta al lado. */
-  pesa: "M2.6 9.4v5.2 M6 7.2v9.6 M18 7.2v9.6 M21.4 9.4v5.2 M6 12h12",
-  plato: "M12 20.6a8.6 8.6 0 1 0 0-17.2 8.6 8.6 0 0 0 0 17.2z M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4z",
-  libro: "M4 3.6h11a3 3 0 0 1 3 3v13.8a2.4 2.4 0 0 0-2.4-2.4H4z M4 3.6v14.4 M20 6.6v13.8",
-  reloj: "M12 21.4a9.4 9.4 0 1 0 0-18.8 9.4 9.4 0 0 0 0 18.8z M12 6.8V12l3.4 2",
-  maleta: "M3 8.4h18v11.2H3z M8.4 8.4V5.6a1.6 1.6 0 0 1 1.6-1.6h4a1.6 1.6 0 0 1 1.6 1.6v2.8 M3 13.4h18",
-  coche: "M4 16.6h16 M5.4 16.6l1.4-5.4a2 2 0 0 1 1.9-1.5h6.6a2 2 0 0 1 1.9 1.5l1.4 5.4 M4 16.6v2.4h2.6v-2.4 M17.4 16.6V19H20v-2.4 M7.6 13.4h8.8",
-  barco: "M3 17.4h18l-2.4 3.2H5.4z M5.6 17.4V9.6h12.8v7.8 M12 9.6V4.2 M8.8 9.6h6.4",
-  casa: "M3.4 10.6 12 3.6l8.6 7v9.8H3.4z M9.6 20.4v-6h4.8v6",
-  terreno: "M2.6 18.6 9 15.4l6 3.2 6.4-3.2v-6L15 12.6l-6-3.2-6.4 3.2z M9 9.4v6 M15 12.6v6",
-  palmera: "M12 21V11 M12 11c-3.4-2.6-7-1.6-8.4.6 2.4-1 4.8-.6 6.4 1 M12 11c3.4-2.6 7-1.6 8.4.6-2.4-1-4.8-.6-6.4 1 M12 11c0-3.6 2.2-6 5-6.4-1.6 1.8-2.2 3.8-2 6.4 M12 11c0-3.6-2.2-6-5-6.4 1.6 1.8 2.2 3.8 2 6.4",
-  anillo: "M12 21.4a6.6 6.6 0 1 0 0-13.2 6.6 6.6 0 0 0 0 13.2z M8.6 8.8 6.4 3.4h11.2l-2.2 5.4 M12 3.4v5",
-  bebe: "M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M9.4 11.6h.02 M14.6 11.6h.02 M9.6 15.4c1.4 1.2 3.4 1.2 4.8 0 M8 4.6c1.2-1.4 6.8-1.4 8 0",
-  cuadro: "M3.6 4.4h16.8v13.2H3.6z M3.6 13.8l4.6-4.2 4.2 3.8 3-2.6 5 4.4 M12 20.8v.8",
-  copa: "M7.4 3.6h9.2v4.2a4.6 4.6 0 0 1-9.2 0z M12 12.4v5.4 M8.4 20.4h7.2 M7.4 5.2H4.6v1.6a3 3 0 0 0 2.8 2.8 M16.6 5.2h2.8v1.6a3 3 0 0 1-2.8 2.8",
-  cafe: "M4.4 7.6h12v6.6a5 5 0 0 1-10 0z M16.4 9.2h1.8a2.6 2.6 0 0 1 0 5.2h-1.8 M3.6 20.4h13.6 M8 4.6v-2 M12.8 4.6v-2",
-  balanza: "M12 3.4v17.2 M7 20.6h10 M4 8.2h16 M4 8.2 1.6 14h4.8z M20 8.2 17.6 14h4.8z M12 3.4 8 8.2h8z",
-  persona: "M12 12a4.2 4.2 0 1 0 0-8.4A4.2 4.2 0 0 0 12 12z M4.4 20.6c0-4.2 3.4-7 7.6-7s7.6 2.8 7.6 7",
-  pluma: "M20.4 3.6 9.6 14.4l-1.2 4.6 4.6-1.2L23.8 7 20.4 3.6z M8.4 19 3.6 20.4l1.4-4.8 M14.6 8.6l4 4",
-  escudo: "M12 21.6s7.6-3.4 7.6-9.6V5.4L12 2.6 4.4 5.4V12c0 6.2 7.6 9.6 7.6 9.6z M8.8 12l2.2 2.2 4.4-4.4",
-  grafico: "M3.4 20.4h17.2 M6.6 20.4v-6.6 M11 20.4V7.6 M15.4 20.4v-9.4 M19.8 20.4V4.4",
-  micro: "M12 14.4a3.4 3.4 0 0 0 3.4-3.4V6a3.4 3.4 0 1 0-6.8 0v5a3.4 3.4 0 0 0 3.4 3.4z M6 10.6v.6a6 6 0 0 0 12 0v-.6 M12 17.4v3.2 M9 20.6h6",
-  /* ---- que clase de cosa te esta pasando ----
-     Un simbolo por tipo de escena. Antes todas se veian igual: el mismo
-     memorando gris para un dia de oficina, para que se case tu hermano y
-     para la decision que parte la carrera en dos. */
-  documento: "M14 2.6H6.4a2 2 0 0 0-2 2v14.8a2 2 0 0 0 2 2h11.2a2 2 0 0 0 2-2V8.2z M14 2.6v5.6h5.6 M8.4 13h7.2 M8.4 17h4.8",
-  corona: "M2.8 7.6 6.6 13l5.4-7.6L17.4 13l3.8-5.4v10.2a1.6 1.6 0 0 1-1.6 1.6H4.4a1.6 1.6 0 0 1-1.6-1.6z M2.8 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M21.2 7.6a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z M12 5.4a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8z",
-  bifurca: "M12 21.4v-6.6 M12 14.8 5.6 8.4V3.2 M12 14.8l6.4-6.4V3.2 M5.6 3.2H3.2 M5.6 3.2h2.4 M18.4 3.2H16 M18.4 3.2h2.4",
-  corazon: "M12 20.8 4.4 13.2a4.8 4.8 0 0 1 0-6.8 4.8 4.8 0 0 1 6.8 0l.8.8.8-.8a4.8 4.8 0 0 1 6.8 0 4.8 4.8 0 0 1 0 6.8z",
-  sello: "M12 2.6a4 4 0 0 0-4 4c0 1.6 1.2 2.6 1.2 4.2H6.4a2.4 2.4 0 0 0-2.4 2.4v1.4h16v-1.4a2.4 2.4 0 0 0-2.4-2.4h-2.8c0-1.6 1.2-2.6 1.2-4.2a4 4 0 0 0-4-4z M4.4 18.2h15.2v3.2H4.4z",
-  candado: "M5.4 10.6h13.2a1.6 1.6 0 0 1 1.6 1.6v7.2a1.6 1.6 0 0 1-1.6 1.6H5.4a1.6 1.6 0 0 1-1.6-1.6v-7.2a1.6 1.6 0 0 1 1.6-1.6z M7.8 10.6V7a4.2 4.2 0 0 1 8.4 0v3.6"
-};
-
-/* Los momentos que se juegan a pantalla completa, ademas de las
-   legendarias y las bifurcaciones, que entran solas. */
-const DRAMA_IDS = [/* te ofrecen otro trabajo, otro pais u otra silla */
-7, /* te llama un headhunter */
-15, /* una silla en el board */
-33, /* dos ofertas sobre la mesa */
-55, /* una visa de trabajo */
-119, /* la silla del socio se decide en la mesa */
-120, /* dirigir la oficina de otro pais */
-9720, 9721, /* renunciar y montar lo tuyo */
-/* la vida que se parte en dos */
-9001, /* alguien que te importa */
-9010, /* la conversacion: casarse */
-9011, /* se rompio */
-9012, /* un hijo */
-9021, /* tu padre ya no puede solo */
-9022 /* se murio */];
-
-/* El simbolo, el rotulo y el color de cada clase de escena. */
-const CLASE_ESCENA = ev => {
-  if (!ev) return {
-    k: "documento",
-    n: "Memorando interno",
-    c: "var(--gris)"
-  };
-  if (ev.legendaria) return {
-    k: "corona",
-    n: "Decisión legendaria",
-    c: "var(--cobre)"
-  };
-  if (ev.rama) return {
-    k: "bifurca",
-    n: "Bifurcación",
-    c: "var(--cobre)"
-  };
-  /* las de vida traen ventana de edad; las de oficina, de rango */
-  if (ev.eMin != null || ev.eMax != null) return {
-    k: "corazon",
-    n: "Tu vida",
-    c: "#B9532A"
-  };
-  if (ev.clave) return {
-    k: "sello",
-    n: "Decisión clave",
-    c: "var(--tintaPapel)"
-  };
-  return {
-    k: "documento",
-    n: "Memorando interno",
-    c: "var(--gris)"
-  };
-};
-
-/* Que simbolo lleva cada cosa que se compra. Varias comparten el mismo:
-   el icono dice de que familia es la compra, y el nombre dice cual. */
-const ICONO_BIEN = {
-  /* mejoras */
-  research: "libro",
-  gym: "pesa",
-  fiscal: "balanza",
-  coach: "persona",
-  asistente: "persona",
-  prensa: "pluma",
-  terminal: "grafico",
-  abogado: "balanza",
-  broker: "grafico",
-  club: "copa",
-  colchon: "escudo",
-  mba: "libro",
-  /* caprichos */
-  viaje: "maleta",
-  moto: "coche",
-  reloj: "reloj",
-  palco: "copa",
-  carro: "coche",
-  arte: "cuadro",
-  boda: "anillo",
-  apto: "casa",
-  finca: "cafe",
-  playa: "palmera",
-  barco: "barco",
-  hijos: "bebe",
-  /* inmuebles */
-  local: "edificio",
-  ofi: "edificio",
-  galpon: "edificio",
-  edificio: "edificio",
-  terreno: "terreno",
-  hotel: "casa",
-  centro: "edificio",
-  isla: "palmera"
-};
-
-/* un icono de trazo, para lo que solo necesita identificarse */
-function Icono({
-  k,
-  tam,
-  tono
-}) {
-  const d = TRAZOS[k];
-  if (!d) return null;
-  const n = numero(tam, 14);
-  return /*#__PURE__*/React.createElement("svg", {
-    className: "ea-ico",
-    width: n,
-    height: n,
-    viewBox: "0 0 24 24",
-    "aria-hidden": "true",
-    focusable: "false",
-    fill: "none",
-    stroke: tono || "currentColor",
-    strokeWidth: "1.9",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: d
-  }));
-}
-
-/* ---- y el que se llena ----
-   Un numero del 0 al 100 no dice nada de un vistazo. Un rayo que se
-   llena hasta donde llega tu energia, si. El vaso vacio queda detras en
-   tenue, y lo lleno se recorta con un rectangulo que sube. */
-let SELLO_ID = 0;
-function IconoLleno({
-  k,
-  pct,
-  tam,
-  tono
-}) {
-  const d = TRAZOS[k];
-  const idRef = useRef(null);
-  if (idRef.current === null) {
-    SELLO_ID += 1;
-    idRef.current = "eaLl" + SELLO_ID;
-  }
-  if (!d) return null;
-  const n = numero(tam, 16);
-  const p = clamp(numero(pct, 0) / 100, 0, 1);
-  const alto = 24 * p;
-  return /*#__PURE__*/React.createElement("svg", {
-    className: "ea-ico",
-    width: n,
-    height: n,
-    viewBox: "0 0 24 24",
-    "aria-hidden": "true",
-    focusable: "false"
-  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("clipPath", {
-    id: idRef.current
-  }, /*#__PURE__*/React.createElement("rect", {
-    x: "0",
-    y: 24 - alto,
-    width: "24",
-    height: alto
-  }))), /*#__PURE__*/React.createElement("path", {
-    d: d,
-    fill: "currentColor",
-    opacity: ".24"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: d,
-    fill: tono || "currentColor",
-    clipPath: "url(#" + idRef.current + ")"
-  }));
-}
-
-/* ---- las reglas dentro del minijuego ----
-   Se quedaban puestas mientras juegas, ocupando un tercio de la pantalla
-   con lo mismo que acababas de leer en la ficha de antes. Ahora se
-   pliegan: quien las necesite las abre, y no estorban al que ya sabe. */
-function Pista({
-  children
-}) {
-  const [abierta, setAbierta] = useState(false);
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
-    className: "ea-recuerda ea-dis",
-    onClick: () => setAbierta(!abierta)
-  }, abierta ? "↑ Ocultar las reglas" : "↓ Las reglas"), abierta && /*#__PURE__*/React.createElement("div", {
-    className: "ea-pista ea-panelAb"
-  }, children));
-}
-
+/* ---- src/componentes/Stats.jsx ---- */
 /* ============================================================
    LAS STATS, COMO STATS
    Arriba solo se veian energia y reputacion, y en una linea de numeros
@@ -14385,6 +14447,7 @@ function Plegable({
   }, children));
 }
 
+/* ---- src/componentes/CaminoDelAnio.jsx ---- */
 /* ============================================================
    EL CAMINO DEL AÑO
    El informe mostraba la cartera como dos números, el de enero y el de
@@ -14815,6 +14878,7 @@ function Flujo({
   }))))));
 }
 
+/* ---- src/componentes/Registro.jsx ---- */
 /* ============================================================
    PANEL DE CARTERA
    Una barra decide cuánto de tu dinero está invertido y cuánto en
@@ -14991,6 +15055,8 @@ function BotonAnotar({
     }
   }, motivo)));
 }
+
+/* ---- src/componentes/PanelCartera.jsx ---- */
 function PanelCartera({
   st,
   onAplicar,
@@ -15337,6 +15403,7 @@ function PanelCartera({
   }, "Cada movimiento cuesta 0,5% de lo que rotas. Perseguir al activo que rindi\xF3 el a\xF1o pasado es la forma m\xE1s cara de perder dinero."));
 }
 
+/* ---- src/motor/fondo.js ---- */
 /* ============================ JUEGO ============================ */
 
 const UMBRAL_FONDO = 5000000;
@@ -15373,6 +15440,7 @@ const puedeSiguienteFondo = st => {
 };
 const ROMANOS = ["", "I", "II", "III", "IV", "V", "VI", "VII"];
 
+/* ---- src/motor/deuda.js ---- */
 /* ============================================================
    DEBER DINERO
    Hasta ahora el efectivo podía quedarse en negativo y no pasaba nada:
@@ -15430,6 +15498,8 @@ const TAMANOS = [{
   red: 75,
   rango: 6
 }];
+
+/* ---- src/vistas/Motor.jsx ---- */
 function Motor() {
   /* Nada entra al estado sin pasar por sanear(). Aunque un evento o un
      minijuego devuelva un disparate, lo que queda guardado es jugable. */
@@ -19871,6 +19941,7 @@ function Motor() {
   }, "Vivir otra vida")));
 }
 
+/* ---- src/componentes/Blindaje.jsx ---- */
 /* ============================================================
    BLINDAJE . CAPA TRES: LA RED
    React desmonta el arbol entero si un componente lanza durante el
@@ -19975,6 +20046,16 @@ class Blindaje extends React.Component {
     }, "Borrar la partida y empezar limpio"))));
   }
 }
+
+/* ---- src/ElAnalista.jsx ---- */
+/* ============================================================
+   EL ANALISTA  ·  v5
+   De los 20 a los 50, un año por turno.
+   Dieciocho minijuegos, un temario de finanzas en cinco niveles que
+   sube contigo, una cartera que reparte activo por activo y un
+   informe de cierre que te explica qué acabas de aprender.
+   ============================================================ */
+
 function ElAnalista() {
   return /*#__PURE__*/React.createElement(Blindaje, null, /*#__PURE__*/React.createElement(Motor, null));
 }</script>
