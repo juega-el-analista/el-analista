@@ -41,6 +41,7 @@ const datos = Object.keys(T.JUEGOS).map((k) => ({
    choquen con los de la sala, y React sale de los UMD. */
 const motor = compilado
   .replace('const React = require("react");', "const React = window.React;")
+  .replace('require("react-router-dom")', "(window.ReactRouterDOM || {})")
   .replace("module.exports = ElAnalista;",
     "window.__EA = { TarjetaJuego, JUEGOS, NIVEL_N, CSS: CSS + CSS2 + CSS3 + CSS4 + CSS5 };");
 const leer = (p) => fs.readFileSync(path.join(RAIZ, "node_modules", p), "utf8");

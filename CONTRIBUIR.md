@@ -89,6 +89,14 @@ Están explicadas donde toca, pero conviene saber que existen:
   unido chocarían), y un módulo no reasigna una variable de otro: si hace falta,
   el dueño de la variable exporta una función para cambiarla, como
   `ponerMovimiento` en `src/hooks/movimiento.js`.
+- **Las vistas no guardan estado de la partida.** Todo vive en `usePartida`
+  (`src/hooks/usePartida.jsx`), que devuelve un objeto, `ctx`, con los datos y las
+  acciones. Las vistas lo reciben como `{ ctx }`, sacan lo que usan y llaman a esas
+  acciones. Si una vista nueva necesita algo que no está, se agrega a lo que
+  devuelve `usePartida`; no se duplica el estado en la vista.
+- **La ruta sigue a la fase, no al revés.** Para que una pantalla nueva tenga su
+  dirección, su fase se agrega a una sección de `src/secciones.js`. Una ruta que
+  no dependa de la partida, como `/glosario`, va en `src/rutas.jsx`.
 
 ## Dónde está escrito el porqué
 

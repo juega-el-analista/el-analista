@@ -24,8 +24,10 @@ const SRC = path.join(RAIZ, "src");
 const ENTRADA = path.join(SRC, "ElAnalista.jsx");
 const SALIDA = path.join(__dirname, "unido.jsx");
 
-/* el único import que queda: el de React, con todos los hooks que usa el juego */
-const HOOKS = ["useState", "useEffect", "useRef", "useMemo"];
+/* Los únicos imports que quedan son los de fuera: React y React Router,
+   cada uno en una sola línea con todo lo que usa el juego. Empaquetar y
+   el banco de pruebas los reescriben a sus globales o a require. */
+const FUERA = ["react", "react-router-dom"];
 
 const IMPORT = /^import\s[\s\S]*?\sfrom\s+"([^"]+)";[ \t]*\n/gm;
 
@@ -63,11 +65,15 @@ function unir() {
     }
   }
 
+  const deFuera = { react: new Set(), "react-router-dom": new Set() };
   const partes = orden.map((ruta) => {
     let txt = fs.readFileSync(ruta, "utf8");
     txt = txt.replace(IMPORT, (todo, de) => {
-      if (de.startsWith(".") || de === "react") return "";
-      throw new Error("import que no sé unir en " + path.relative(RAIZ, ruta) + ": " + de);
+      if (de.startsWith(".")) return "";
+      if (FUERA.indexOf(de) < 0) throw new Error("import que no sé unir en " + path.relative(RAIZ, ruta) + ": " + de);
+      const llaves = todo.match(/\{([^}]*)\}/);
+      if (llaves) llaves[1].split(",").map((x) => x.trim()).filter(Boolean).forEach((x) => deFuera[de].add(x));
+      return "";
     });
     txt = txt.replace(/^export (const|let|function|class) /gm, "$1 ");
     if (/^export (?!default function ElAnalista)/m.test(txt)) {
@@ -75,7 +81,10 @@ function unir() {
     }
     return "/* ---- " + path.relative(RAIZ, ruta).split(path.sep).join("/") + " ---- */\n" + txt.replace(/^\n+/, "");
   });
-  return 'import React, { ' + HOOKS.join(", ") + ' } from "react";\n\n' + partes.join("\n");
+  const cabecera = 'import React, { ' + [...deFuera.react].sort().join(", ") + ' } from "react";\n'
+    + (deFuera["react-router-dom"].size
+      ? 'import { ' + [...deFuera["react-router-dom"]].sort().join(", ") + ' } from "react-router-dom";\n' : "");
+  return cabecera + "\n" + partes.join("\n");
 }
 
 /* Varias pruebas corren a la vez en procesos distintos y todas piden el
