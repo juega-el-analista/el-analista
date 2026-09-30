@@ -668,24 +668,28 @@ var React = window.React; var { useState, useEffect, useRef, useMemo } = React;
    ============================================================ */
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400..900&family=Nunito:wght@400..800&display=swap');
 
 .ea-root{
   /* Las tres voces del juego, en un solo sitio. Antes eran Archivo Narrow
      en mayusculas espaciadas mas IBM Plex Mono para las cifras: la
-     combinacion que hoy se lee como «esto lo hizo una IA». Bricolage tiene
-     trazos con caracter y cifras de ancho fijo —medidas: «1111» y «0000»
-     miden lo mismo—, asi que tambien lleva los numeros y la monoespaciada
-     sobra. Cambiar de fuente es cambiar estas tres lineas. */
-  --f-dis:'Bricolage Grotesque','Arial Narrow',system-ui,sans-serif;
-  --f-txt:'Instrument Sans',system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-num:'Bricolage Grotesque',system-ui,sans-serif;
+     combinacion que hoy se lee como «esto lo hizo una IA». Ahora es voz de
+     videojuego: Rubik, redondeada y gorda, para titulos y cifras, y Nunito
+     para el texto corrido. Las cifras de Rubik son proporcionales de
+     serie («1111» mide tres cuartos de «0000»), pero trae las de ancho
+     fijo: tabular-nums va en todo el juego, no solo en .ea-mono, para que
+     ningun numero que sube —el rodillo del patrimonio, los contadores—
+     baile al cambiar de digito. Cambiar de fuente es cambiar estas tres
+     lineas. */
+  --f-dis:'Rubik','Arial Rounded MT Bold',system-ui,sans-serif;
+  --f-txt:'Nunito',system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-num:'Rubik',system-ui,sans-serif;
   --tinta:#06170D; --fieltro:#0B3A1F; --borde:#1F6B3E;
   --papel:#F7F7F5; --papel2:#E9EEF5; --tintaPapel:#3D3D3D;
   --cobre:#B9532A; --verde:#4FA05C; --rojo:#B23B27; --gris:#6B6B6B;
   --hueso:#EDEDE8; --tenue:#9FB8A8;
   background:var(--papel); color:var(--tintaPapel); min-height:100vh;
-  font-family:var(--f-txt);
+  font-family:var(--f-txt); font-variant-numeric:tabular-nums;
   font-size:15px; line-height:1.55; padding:16px;
 }
 .ea-root *{box-sizing:border-box}
@@ -707,7 +711,7 @@ const CSS = `
 /* los botones: con caracter, sin gritar */
 .ea-btn,.ea-btnO,.ea-comprar,.ea-aplicar,.ea-jugarYa,.ea-mini,.ea-tab,.ea-grupo{letter-spacing:.06em}
 
-/* Bricolage es mas ancha que Archivo Narrow, que era estrecha a proposito.
+/* Rubik es mas ancha que Archivo Narrow, que era estrecha a proposito.
    La linea de la firma en versales espaciadas —«MERIDIANO ESTUDIOS
    ECONOMICOS · VENEZUELA»— dejo de caber junto al dinero y lo empujaba
    debajo, desalineado. En minusculas ocupa la mitad y se lee mejor. */
