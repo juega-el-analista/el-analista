@@ -119,8 +119,15 @@ async function unaVida(semilla) {
        de abajo y se saltaba el anuncio entero sin llegar a probarlo. */
     if (await pulsa(porRot(/^Ver el año$/))) continue;
     if (await pulsa(porRot(/^(Lo siguiente|Cerrar el año|Continuar|Entendido, empezar|Ya lo tengo|Terminar|Siguiente|Entregar el informe|Cerrar el trato|Fijar|Poner el número|Cerrar posición|Aguantar|Comprar|Empezar 20|Poner el capital|Sentarte a hacer|Ver el balance)/))) continue;
+    /* Una casilla al azar, no siempre la primera: en el Cuatro en raya,
+       cuando la primera columna se llena, tocarla ya no hace nada, y en
+       las parejas se volteaba la misma ficha una y otra vez. La partida
+       se quedaba ahí para siempre, y no por culpa del juego. */
     let z = null;
-    try { z = r.root.findAll((x) => x.props && x.props.role === "button" && typeof x.props.onClick === "function")[0]; } catch (e) {}
+    try {
+      const zs = r.root.findAll((x) => x.props && x.props.role === "button" && typeof x.props.onClick === "function");
+      z = zs.length ? zs[Math.floor(Math.random() * zs.length) % zs.length] : null;
+    } catch (e) {}
     if (z) { await act(async () => { z.props.onClick({}); await micro(); }); continue; }
     /* En Banderas Rojas hay que marcar tres casillas distintas. Coger
        siempre la primera la marcaba y desmarcaba en bucle: hay que

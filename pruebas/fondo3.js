@@ -42,6 +42,7 @@ const calidadDeal = (e) => {
   const fo = clamp((numero(e.foso, 1) - 1) / 2, 0, 1);
   return clamp(0.2 * cr + 0.18 * mg + 0.21 * cc + 0.19 * dd + 0.22 * fo, 0, 1);
 };
+const tipoRama = (st) => (st && st.rama) || null;
 const baseDeal = (e) => +(1.15 + calidadDeal(e) * 2.25).toFixed(2);
 
 let semilla = 13579;
@@ -52,7 +53,7 @@ Math.random = rnd;
 /* la función que ejecuta el bloque tal cual está en el juego */
 const correrCierre = new Function(
   "st", "ing", "notas", "TOPE_PLATA", "numero", "clamp", "entero", "fmt",
-  "capacidadFondo", "EMPRESAS", "baseDeal", "gauss",
+  "capacidadFondo", "EMPRESAS", "baseDeal", "gauss", "tipoRama",
   bloque + "\n return st.fondo;"
 );
 
@@ -75,7 +76,7 @@ console.log("  CASO 1 · tres posiciones con salida ya vencida");
 let st = hacerEstado(8), ing = [], notas = [];
 console.log("    antes:  desplegado " + fmt(st.fondo.invertido) + "  reciclado " + fmt(st.fondo.reciclado)
   + "  capacidad " + fmt(capacidadFondo(st.fondo)) + "  posiciones " + st.fondo.posiciones.length);
-let f = correrCierre(st, ing, notas, TOPE_PLATA, numero, clamp, entero, fmt, capacidadFondo, EMPRESAS, baseDeal, gauss);
+let f = correrCierre(st, ing, notas, TOPE_PLATA, numero, clamp, entero, fmt, capacidadFondo, EMPRESAS, baseDeal, gauss, tipoRama);
 console.log("    despues: desplegado " + fmt(f.invertido) + "  reciclado " + fmt(f.reciclado)
   + "  capacidad " + fmt(capacidadFondo(f)) + "  posiciones " + f.posiciones.length);
 console.log("    ofertas nuevas sobre la mesa: " + f.oferta.length);
@@ -95,7 +96,7 @@ console.log("    " + (bien4 ? "ok    " : "FALLA ") + "vuelve a haber deal flow: 
 console.log("");
 console.log("  CASO 2 · posiciones que aun no vencen (salida en el futuro)");
 let st2 = hacerEstado(20), ing2 = [], notas2 = [];
-const f2 = correrCierre(st2, ing2, notas2, TOPE_PLATA, numero, clamp, entero, fmt, capacidadFondo, EMPRESAS, baseDeal, gauss);
+const f2 = correrCierre(st2, ing2, notas2, TOPE_PLATA, numero, clamp, entero, fmt, capacidadFondo, EMPRESAS, baseDeal, gauss, tipoRama);
 console.log("    desplegado sigue en " + fmt(f2.invertido) + " y quedan " + f2.posiciones.length + " posiciones");
 console.log("    " + (f2.invertido === TICKET * 3 && f2.posiciones.length === 3 ? "ok    " : "FALLA ") + "no se vende nada antes de tiempo");
 
@@ -113,7 +114,7 @@ for (let v = 0; v < 10; v++) {
     st3.fondo.invertido += tk;
     st3.fondo.posiciones.push({ n: o.n, s: o.s, ticket: tk, riesgo: o.riesgo, base: o.base, salida: st3.turno });
   });
-  correrCierre(st3, ig, nt, TOPE_PLATA, numero, clamp, entero, fmt, capacidadFondo, EMPRESAS, baseDeal, gauss);
+  correrCierre(st3, ig, nt, TOPE_PLATA, numero, clamp, entero, fmt, capacidadFondo, EMPRESAS, baseDeal, gauss, tipoRama);
   st3.turno += 1;
 }
 console.log("    capacidad inicial " + fmt(cap0) + "  ->  final " + fmt(capacidadFondo(st3.fondo)));
