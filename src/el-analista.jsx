@@ -9,21 +9,53 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
    ============================================================ */
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap');
 
 .ea-root{
+  /* Las tres voces del juego, en un solo sitio. Antes eran Archivo Narrow
+     en mayusculas espaciadas mas IBM Plex Mono para las cifras: la
+     combinacion que hoy se lee como «esto lo hizo una IA». Bricolage tiene
+     trazos con caracter y cifras de ancho fijo —medidas: «1111» y «0000»
+     miden lo mismo—, asi que tambien lleva los numeros y la monoespaciada
+     sobra. Cambiar de fuente es cambiar estas tres lineas. */
+  --f-dis:'Bricolage Grotesque','Arial Narrow',system-ui,sans-serif;
+  --f-txt:'Instrument Sans',system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-num:'Bricolage Grotesque',system-ui,sans-serif;
   --tinta:#06170D; --fieltro:#0B3A1F; --borde:#1F6B3E;
   --papel:#F7F7F5; --papel2:#E9EEF5; --tintaPapel:#3D3D3D;
   --cobre:#B9532A; --verde:#4FA05C; --rojo:#B23B27; --gris:#6B6B6B;
   --hueso:#EDEDE8; --tenue:#9FB8A8;
   background:var(--papel); color:var(--tintaPapel); min-height:100vh;
-  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-family:var(--f-txt);
   font-size:15px; line-height:1.55; padding:16px;
 }
 .ea-root *{box-sizing:border-box}
 .ea-root{overflow-x:clip}
-.ea-dis{font-family:'Archivo Narrow','Arial Narrow',sans-serif; text-transform:uppercase; letter-spacing:.06em; font-weight:700}
-.ea-mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace; font-variant-numeric:tabular-nums}
+.ea-dis{font-family:var(--f-dis); text-transform:uppercase; letter-spacing:.04em; font-weight:700}
+.ea-mono{font-family:var(--f-num); font-variant-numeric:tabular-nums; font-weight:600}
+
+/* Los titulares grandes se escriben como se habla, no en MAYUSCULAS
+   ESPACIADAS: esa era la otra mitad del look de IA. Las mayusculas se
+   quedan en las etiquetas pequeñas —«TU PATRIMONIO», «CIERRE DEL AÑO»—,
+   que es donde sirven para ordenar. */
+.ea-h1,.ea-memoTit,.ea-final,.ea-nombre,.ea-claseT,.ea-jnombre,.ea-opcionN,
+.ea-anuncioJN,.ea-anuncioEscT,.ea-nuevoT,.ea-vidaN,.ea-titularV,.ea-finTit,
+.ea-itemN,.ea-perfilT,.ea-lecT,.ea-guiaT,.ea-notiT,.ea-glosT,.ea-cifraV,.ea-fondoN,.ea-wname{
+  text-transform:none; letter-spacing:-.015em; font-weight:800}
+.ea-h1{letter-spacing:-.035em}
+/* la etiqueta pequeña que va dentro de .ea-jnombre sigue siendo etiqueta */
+.ea-jnombre span{text-transform:uppercase;letter-spacing:.2em;font-weight:700}
+/* los botones: con caracter, sin gritar */
+.ea-btn,.ea-btnO,.ea-comprar,.ea-aplicar,.ea-jugarYa,.ea-mini,.ea-tab,.ea-grupo{letter-spacing:.06em}
+
+/* Bricolage es mas ancha que Archivo Narrow, que era estrecha a proposito.
+   La linea de la firma en versales espaciadas —«MERIDIANO ESTUDIOS
+   ECONOMICOS · VENEZUELA»— dejo de caber junto al dinero y lo empujaba
+   debajo, desalineado. En minusculas ocupa la mitad y se lee mejor. */
+.ea-sub.ea-quien{text-transform:none;letter-spacing:.005em;font-weight:600;font-size:12.5px}
+/* y si aun asi no cabe —nombre largo, pantalla estrecha—, el dinero baja
+   pero pegado a la derecha, no suelto a media placa */
+.ea-reloj{margin-left:auto}
 
 .ea-wrap{max-width:1100px;margin:0 auto}
 .ea-placa{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;
@@ -47,7 +79,7 @@ const CSS = `
 .ea-tabs{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--borde);border-bottom:none;background:var(--papel)}
 .ea-tab{flex:1;min-width:70px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--gris);
   padding:9px 4px;font:inherit;font-size:11px;letter-spacing:.12em;cursor:pointer;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-tab.on{color:var(--tintaPapel);border-bottom-color:var(--cobre)}
 .ea-tab:hover{color:#262626}
 
@@ -70,7 +102,7 @@ const CSS = `
 .ea-comprar{background:var(--cobre);color:#20120A;border:1px solid var(--cobre);padding:9px 18px;
   font:inherit;font-size:12.5px;letter-spacing:.12em;cursor:pointer;margin-top:8px;border-radius:2px;
   transition:background .15s,border-color .15s,transform .12s;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-comprar:hover:not(:disabled){background:#C86A3E;border-color:#C86A3E}
 .ea-comprar:active:not(:disabled){transform:translateY(1px)}
 
@@ -86,12 +118,12 @@ const CSS = `
 .ea-item.tuyo .ea-mono{color:rgba(61,61,61,.55)}
 .ea-item:last-child{border-bottom:none}
 .ea-itemTop{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.ea-itemN{font-size:13.5px;color:var(--tintaPapel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+.ea-itemN{font-size:13.5px;color:var(--tintaPapel);font-family:var(--f-dis);
   text-transform:uppercase;letter-spacing:.05em;font-weight:700}
 .ea-itemD{font-size:12px;color:var(--gris);margin-top:4px}
 .ea-mini{background:transparent;border:1px solid var(--borde);color:var(--tintaPapel);font:inherit;font-size:11px;
   letter-spacing:.1em;padding:5px 10px;cursor:pointer;margin-top:8px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-mini:hover:not(:disabled){border-color:var(--cobre);color:#262626}
 .ea-mini:disabled{opacity:.35;cursor:not-allowed}
 .ea-tengo{color:var(--verde);font-size:11px;letter-spacing:.12em;margin-top:8px;display:inline-block}
@@ -166,19 +198,19 @@ const CSS = `
 .ea-noti{background:rgba(61,61,61,.07);border-left:3px solid var(--tintaPapel);padding:10px 12px;margin-top:14px}
 .ea-notiK{font-size:10.5px;letter-spacing:.2em;color:var(--gris)}
 .ea-notiT{font-size:14.5px;color:#3D3D3D;margin-top:3px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;letter-spacing:.02em}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700;letter-spacing:.02em}
 
 .ea-btn{background:var(--tintaPapel);color:var(--papel);border:none;padding:11px 20px;font:inherit;
   font-size:13px;letter-spacing:.14em;cursor:pointer;margin-top:16px;border-radius:2px;
   transition:background .15s,transform .12s;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-btn:hover:not(:disabled){background:var(--cobre)}
 .ea-btn:active:not(:disabled){transform:translateY(1px)}
 .ea-btn:disabled{opacity:.4;cursor:not-allowed}
 .ea-btnO{background:transparent;color:var(--tintaPapel);border:1px solid var(--borde);padding:11px 20px;
   font:inherit;font-size:13px;letter-spacing:.14em;cursor:pointer;border-radius:2px;
   transition:border-color .15s,color .15s;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-btnO:hover{border-color:var(--cobre);color:var(--cobre)}
 
 .ea-tit{font-size:13px;padding:6px 0;border-bottom:1px dotted var(--borde);display:flex;gap:9px}
@@ -196,7 +228,7 @@ const CSS = `
 .ea-celdas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:260px}
 .ea-celda{aspect-ratio:1/1;background:rgba(61,61,61,.08);border:1px solid rgba(61,61,61,.25);cursor:pointer;
   transition:background .12s;display:flex;align-items:center;justify-content:center;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-size:36px;color:var(--tintaPapel);line-height:1}
+  font-family:var(--f-dis);font-size:36px;color:var(--tintaPapel);line-height:1}
 .ea-celda.on{background:var(--cobre)}
 .ea-celda.mal{background:var(--rojo)}
 .ea-celda.gana{background:rgba(79,160,92,.4)}
@@ -220,7 +252,7 @@ const CSS = `
 
 .ea-luz{height:120px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(61,61,61,.25);
   background:rgba(61,61,61,.06);font-size:22px;text-align:center;padding:14px;line-height:1.2;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;color:#3D3D3D}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700;color:#3D3D3D}
 .ea-luz.lista{background:rgba(79,160,92,.35);border-color:#3D8A49}
 .ea-luz.roja{background:rgba(178,59,39,.28);border-color:var(--rojo)}
 
@@ -245,7 +277,7 @@ const CSS = `
 @media (max-width:460px){.ea-cifras.ea-cifrasPortada{grid-template-columns:1fr}}
 .ea-cifraV{overflow-wrap:break-word}
 .ea-cifraK{font-size:11px;color:var(--gris);letter-spacing:.18em;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-cifraV{font-size:20px;color:var(--tintaPapel)}
 .ea-cifraD{font-size:12.5px;line-height:1.45;color:var(--gris);margin-top:5px}
 `;
@@ -263,13 +295,13 @@ const CSS5 = `
 
 /* --- la clase de la cátedra --- */
 .ea-claseT{font-size:23px;line-height:1.1;margin:4px 0 10px;color:#262626;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;letter-spacing:.02em;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;letter-spacing:.02em;font-weight:700}
 .ea-ej{background:rgba(185,83,42,.1);border-left:3px solid var(--cobre);padding:10px 13px;margin-top:14px}
-.ea-ejX{font-size:14px;color:#3D3D3D;margin-top:3px;font-family:'IBM Plex Mono',ui-monospace,monospace;line-height:1.5}
+.ea-ejX{font-size:14px;color:#3D3D3D;margin-top:3px;font-family:var(--f-num);line-height:1.5}
 
 /* --- la sesión de trading --- */
 .ea-estado{margin-top:12px;padding:11px;text-align:center;font-size:15px;letter-spacing:.16em;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;border:2px solid}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700;border:2px solid}
 .ea-estado.dentro{background:rgba(79,160,92,.28);border-color:#3D8A49;color:#1F5A2E}
 .ea-estado.fuera{background:rgba(61,61,61,.07);border-color:rgba(61,61,61,.3);color:#6B6B6B}
 .ea-leyenda{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:11.5px;color:var(--gris)}
@@ -294,7 +326,7 @@ const CSS5 = `
 .ea-opcion:hover{border-color:var(--cobre)}
 .ea-opcion.on{border-color:var(--cobre);background:rgba(185,83,42,.09)}
 .ea-opcionN{font-size:19px;color:var(--tintaPapel);
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
 .ea-opcionD{font-size:13.5px;color:var(--gris);margin-top:6px;line-height:1.5}
 .ea-opcionM{font-size:12px;color:var(--cobre);margin-top:6px}
 
@@ -308,7 +340,7 @@ const CSS5 = `
 .ea-medidorT{position:absolute;top:0;bottom:0;width:1px;background:rgba(237,237,232,.35)}
 .ea-medidorE{display:flex;justify-content:space-between;gap:4px;margin-top:5px;font-size:9.5px;
   letter-spacing:.06em;color:var(--gris);text-transform:uppercase;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
+  font-family:var(--f-dis);font-weight:700}
 .ea-medidorE span.on{color:var(--cobre)}
 
 /* --- etiquetas de consecuencia en cada compra --- */
@@ -326,7 +358,7 @@ const CSS5 = `
    fuera del lienzo por la izquierda */
 .ea-curva{width:100%;height:auto;display:block}
 .ea-cHitoT{stroke:rgba(61,61,61,.30);stroke-width:1;stroke-dasharray:2 2}
-.ea-cHitoN{font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-size:9px;font-weight:700;
+.ea-cHitoN{font-family:var(--f-dis);font-size:9px;font-weight:700;
   letter-spacing:.06em;text-transform:uppercase;fill:var(--gris)}
 .ea-hitosL{display:flex;flex-direction:column;gap:3px;margin-top:9px;
   border-top:1px dotted rgba(61,61,61,.3);padding-top:8px}
@@ -366,7 +398,7 @@ const CSS5 = `
 .ea-sen.bien{border-color:#3D8A49}
 .ea-sen.mal{border-color:#7A392E}
 .ea-senK{font-size:9px;letter-spacing:.1em;color:var(--tenue);text-transform:uppercase;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
+  font-family:var(--f-dis);font-weight:700}
 .ea-senV{font-size:12.5px;color:var(--tintaPapel)}
 .ea-sen.bien .ea-senV{color:var(--verde)}
 .ea-sen.mal .ea-senV{color:#C4756A}
@@ -447,7 +479,7 @@ const CSS5 = `
 .ea-guiaX{grid-column:1;font-size:13.5px;color:var(--tintaPapel);line-height:1.5;max-width:70ch}
 .ea-guiaB{grid-column:2;grid-row:1 / span 3;align-self:center;background:var(--cobre);border:none;color:#20120A;
   font:inherit;font-size:11px;letter-spacing:.14em;padding:9px 15px;cursor:pointer;text-transform:uppercase;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700;white-space:nowrap}
+  font-family:var(--f-dis);font-weight:700;white-space:nowrap}
 .ea-guiaB:hover{background:var(--papel)}
 @media(max-width:560px){
   .ea-guia{grid-template-columns:1fr}
@@ -492,26 +524,26 @@ const CSS5 = `
 .ea-regFila{display:grid;grid-template-columns:24px 1fr auto auto;gap:10px;align-items:baseline;
   padding:9px 0;border-bottom:1px dotted var(--borde);font-size:13.5px}
 .ea-regFila:last-child{border-bottom:none}
-.ea-regP{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gris);
+.ea-regP{font-family:var(--f-num);font-size:12px;color:var(--gris);
   font-variant-numeric:tabular-nums}
 .ea-regFila.podio .ea-regP{color:var(--cobre)}
 .ea-regN{color:var(--tintaPapel);line-height:1.3}
 .ea-regC{display:block;font-size:11.5px;color:var(--gris)}
-.ea-regV{font-family:'IBM Plex Mono',monospace;color:var(--tintaPapel);text-align:right;
+.ea-regV{font-family:var(--f-num);color:var(--tintaPapel);text-align:right;
   white-space:nowrap;font-variant-numeric:tabular-nums}
-.ea-regM{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--cobre);
+.ea-regM{font-family:var(--f-num);font-size:12px;color:var(--cobre);
   text-align:right;white-space:nowrap;min-width:3ch}
 .ea-regFila.tuya{background:rgba(185,83,42,.11);border-left:2px solid var(--cobre);
   padding-left:8px;margin-left:-10px}
 .ea-regVacio{padding:22px 0;color:var(--gris);font-size:13.5px}
 .ea-regNombre{width:100%;background:var(--papel2);border:1px solid var(--borde);color:var(--tintaPapel);
-  font-family:'IBM Plex Mono',monospace;font-size:14px;padding:9px 11px;border-radius:0;margin-top:6px}
+  font-family:var(--f-num);font-size:14px;padding:9px 11px;border-radius:0;margin-top:6px}
 
 .ea-panelAb{animation:ea-abre .18s ease-out}
 @keyframes ea-abre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .ea-cerrar{display:block;width:100%;background:transparent;border:1px solid var(--borde);
   color:var(--gris);font:inherit;font-size:10.5px;letter-spacing:.14em;padding:7px;margin-bottom:14px;
-  cursor:pointer;text-transform:uppercase;font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
+  cursor:pointer;text-transform:uppercase;font-family:var(--f-dis);font-weight:700}
 .ea-cerrar:hover{border-color:var(--cobre);color:var(--cobre)}
 .ea-tabs{margin-top:16px}
 
@@ -529,21 +561,21 @@ const CSS5 = `
    que venga detras se le pega al lado en la misma linea. */
 .ea-atras{display:block;background:transparent;border:none;color:var(--gris);font:inherit;font-size:11.5px;
   letter-spacing:.14em;padding:6px 0;margin-bottom:10px;cursor:pointer;text-transform:uppercase;
-  text-align:left;font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
+  text-align:left;font-family:var(--f-dis);font-weight:700}
 .ea-atras:hover{color:var(--cobre)}
 .ea-rastro{font-size:12px;color:var(--cobre);margin:6px 0 14px;letter-spacing:.04em}
 
 /* --- glosario del modo aprendiz --- */
 .ea-glos{background:rgba(62,107,60,.1);border-left:3px solid #3D8A49;padding:10px 13px;margin-top:12px}
 .ea-glosK{font-size:10.5px;letter-spacing:.2em;color:var(--gris);
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-glosT{font-size:14.5px;color:#3D3D3D;margin-top:3px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;letter-spacing:.02em}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700;letter-spacing:.02em}
 .ea-glosX{font-size:13.5px;color:#3D3D3D;margin-top:4px;line-height:1.5}
 
 /* --- banderas rojas con explicación --- */
 .ea-docK{font-size:10.5px;letter-spacing:.18em;color:var(--gris);
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-checkX{display:block;font-size:12.5px;line-height:1.5;color:#6B6B6B;margin-top:6px;
   border-top:1px dotted rgba(61,61,61,.3);padding-top:6px}
 .ea-checkR{display:block;font-size:10.5px;letter-spacing:.14em;color:var(--gris);margin-bottom:3px}
@@ -915,7 +947,7 @@ const CSS2 = `
 .ea-grafL{fill:none;stroke:var(--tintaPapel);stroke-width:2}
 .ea-grafD{fill:none;stroke:var(--cobre);stroke-width:2}
 .ea-marca{display:inline-block;padding:3px 10px;border:1px solid rgba(61,61,61,.3);font-size:11.5px;letter-spacing:.12em;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-marca.dentro{border-color:#3D8A49;color:#3D8A49}
 .ea-marca.fuera{border-color:var(--gris);color:var(--gris)}
 
@@ -939,10 +971,10 @@ const CSS2 = `
 
 .ea-fondoC{border:1px solid var(--borde);padding:11px 12px;margin-bottom:10px}
 .ea-fondoT{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:3px}
-.ea-fondoN{font-size:13px;color:var(--tintaPapel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+.ea-fondoN{font-size:13px;color:var(--tintaPapel);font-family:var(--f-dis);
   text-transform:uppercase;letter-spacing:.05em;font-weight:700}
 .ea-badge{font-size:10.5px;letter-spacing:.14em;color:var(--cobre);border:1px solid var(--cobre);padding:2px 7px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 `;
 
 const CSS3 = `
@@ -952,7 +984,7 @@ const CSS3 = `
   line-height:1.2;color:var(--tintaPapel);transition:background .15s,border-color .15s}
 .ea-fichaP.tapada{background:var(--tintaPapel);color:transparent}
 .ea-fichaP.tapada::after{content:"?";color:var(--papel);font-size:20px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
+  font-family:var(--f-dis);font-weight:700}
 .ea-fichaP.abierta{background:rgba(185,83,42,.2);border-color:var(--cobre)}
 .ea-fichaP.hecha{background:rgba(62,107,60,.18);border-color:#3D8A49;cursor:default}
 .ea-fichaP.vista{cursor:default}
@@ -972,27 +1004,27 @@ const CSS3 = `
 .ea-lineaC{position:absolute;top:0;bottom:0;width:1px;background:rgba(61,61,61,.18)}
 .ea-cap{position:absolute;bottom:8px;width:26%;height:26px;background:var(--cobre);
   transition:left .12s ease;display:flex;align-items:center;justify-content:center;color:var(--papel);
-  font-size:10px;letter-spacing:.1em;font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700}
+  font-size:10px;letter-spacing:.1em;font-family:var(--f-dis);font-weight:700}
 .ea-obj{position:absolute;width:26%;height:24px;display:flex;align-items:center;justify-content:center;
   font-size:9.5px;letter-spacing:.06em;text-align:center;line-height:1;padding:2px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:700;text-transform:uppercase}
+  font-family:var(--f-dis);font-weight:700;text-transform:uppercase}
 .ea-obj.bueno{background:rgba(79,160,92,.55);color:#0B3A1F}
 .ea-obj.malo{background:rgba(178,59,39,.6);color:var(--papel)}
 /* El numero del anclaje no tenia unidad ni referencia: se veia un
    slider de 0 a 100 y nada mas. Ahora la cifra manda en pantalla y la
    escala esta rotulada en los dos extremos. */
 .ea-anclaN{font-size:38px;line-height:1;color:var(--tintaPapel);margin:6px 0 0;
-  font-family:'IBM Plex Mono',monospace}
+  font-family:var(--f-num)}
 .ea-anclaE{display:flex;justify-content:space-between;gap:10px;margin-top:2px;
   font-size:10.5px;letter-spacing:.1em;color:var(--gris);
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 
 .ea-carrilS{height:7px;margin:12px 0 3px}
 .ea-carrilS::-webkit-slider-thumb{width:26px;height:20px}
 .ea-carrilS::-moz-range-thumb{width:26px;height:20px}
 .ea-carrilN{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}
 .ea-carrilE{text-align:center;font-size:11.5px;letter-spacing:.08em;color:var(--gris);
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-carrilE.on{color:var(--cobre)}
 
 .ea-postor{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:6px 0;
@@ -1008,11 +1040,11 @@ const CSS4 = `
    demas: es el unico que mueve dinero de verdad. */
 .ea-aplicar{background:var(--cobre);color:#20120A;border:2px solid var(--cobre);padding:13px 22px;
   font:inherit;font-size:14px;letter-spacing:.14em;cursor:pointer;flex:1;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-aplicar:hover{background:#C86A3E;border-color:#C86A3E}
 .ea-descartar{background:transparent;color:var(--gris);border:1px solid var(--borde);padding:13px 16px;
   font:inherit;font-size:12px;letter-spacing:.12em;cursor:pointer;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-descartar:hover{border-color:var(--cobre);color:var(--cobre)}
 /* Una legendaria tiene que verse distinta antes de leerla. */
 .ea-memoHead.legend{background:linear-gradient(90deg,rgba(185,83,42,.22),transparent);
@@ -1024,14 +1056,14 @@ const CSS4 = `
 
 .ea-mix{display:flex;height:23px;border:1px solid var(--borde);overflow:hidden;margin:4px 0 2px}
 .ea-mixSeg{display:flex;align-items:center;justify-content:center;font-size:10.5px;letter-spacing:.1em;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700;
   overflow:hidden;white-space:nowrap;transition:width .25s ease}
 .ea-mixSeg.cart{background:var(--cobre);color:#20120A}
 .ea-mixSeg.efe{background:#041F0E;color:var(--tenue)}
 
 .ea-wrow{margin:11px 0}
 .ea-wtop{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;align-items:baseline}
-.ea-wname{color:var(--tintaPapel);font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;
+.ea-wname{color:var(--tintaPapel);font-family:var(--f-dis);text-transform:uppercase;
   letter-spacing:.05em;font-weight:700;font-size:12.5px}
 .ea-wnum{color:var(--cobre)}
 .ea-wsub{font-size:11px;color:var(--gris);margin-top:1px;line-height:1.35}
@@ -1052,12 +1084,12 @@ const CSS4 = `
 .ea-sparkA{fill:rgba(185,83,42,.16);stroke:none}
 .ea-hitos{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .ea-hito{font-size:10.5px;letter-spacing:.1em;border:1px solid #3D8A49;color:#2E7A3D;padding:3px 9px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-lec{border:1px solid rgba(61,61,61,.22);border-left:3px solid var(--cobre);padding:11px 13px;margin-top:14px;
   background:rgba(185,83,42,.07)}
-.ea-lecK{font-size:10.5px;letter-spacing:.18em;color:var(--gris);font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+.ea-lecK{font-size:10.5px;letter-spacing:.18em;color:var(--gris);font-family:var(--f-dis);
   text-transform:uppercase;font-weight:700}
-.ea-lecT{font-size:16px;color:#3D3D3D;margin:3px 0 5px;font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+.ea-lecT{font-size:16px;color:#3D3D3D;margin:3px 0 5px;font-family:var(--f-dis);
   text-transform:uppercase;letter-spacing:.04em;font-weight:700}
 .ea-lecX{font-size:13.5px;color:#6B6B6B;line-height:1.5}
 .ea-ind{height:12px;background:rgba(61,61,61,.12);margin-top:6px;position:relative}
@@ -1070,12 +1102,12 @@ const CSS4 = `
 /* instrucciones antes de jugar */
 .ea-pasos{margin:6px 0 0;padding:0;list-style:none}
 .ea-paso{display:flex;gap:10px;font-size:13.5px;color:#6B6B6B;padding:4px 0;line-height:1.45}
-.ea-pasoN{font-size:11px;color:var(--cobre);flex-shrink:0;margin-top:3px;font-family:'IBM Plex Mono',ui-monospace,monospace}
+.ea-pasoN{font-size:11px;color:var(--cobre);flex-shrink:0;margin-top:3px;font-family:var(--f-num)}
 .ea-jnombre{font-size:26px;line-height:1.05;color:var(--tintaPapel);margin-bottom:9px}
 .ea-jnombre span{display:block;font-size:10.5px;letter-spacing:.2em;color:var(--gris);margin-bottom:5px}
 .ea-jmeta{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0}
 .ea-jtag{font-size:10.5px;letter-spacing:.12em;border:1px solid rgba(61,61,61,.3);color:var(--gris);padding:3px 8px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700}
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 
 /* partida guardada */
 .ea-guarda{border:1px solid var(--borde);border-left:3px solid var(--cobre);background:rgba(185,83,42,.08);
@@ -1085,7 +1117,7 @@ const CSS4 = `
    verse desde la otra punta de la habitacion: todo lo demas es opcional. */
 .ea-jugarYa{background:var(--cobre);color:#20120A;border:2px solid var(--cobre);
   padding:17px 38px;font:inherit;font-size:19px;letter-spacing:.14em;cursor:pointer;border-radius:2px;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;text-transform:uppercase;font-weight:700;
+  font-family:var(--f-dis);text-transform:uppercase;font-weight:700;
   transition:background .15s,transform .12s}
 .ea-jugarYa:hover{background:#C86A3E;border-color:#C86A3E}
 .ea-jugarYa:active{transform:translateY(1px)}
@@ -1203,7 +1235,7 @@ const CSS4 = `
 .ea-memRondas{display:flex;gap:7px;margin:0 0 12px}
 .ea-memRonda{min-width:32px;height:26px;padding:0 9px;border-radius:13px;
   display:inline-flex;align-items:center;justify-content:center;
-  font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12.5px;font-weight:600;
+  font-family:var(--f-num);font-size:12.5px;font-weight:600;
   border:1px solid rgba(61,61,61,.25);color:var(--gris);background:transparent;
   transition:all .3s cubic-bezier(.2,.8,.3,1)}
 .ea-memRonda.ahora{border-color:var(--cobre);color:var(--tintaPapel);
@@ -1258,7 +1290,10 @@ const CSS4 = `
 
 @media(max-width:420px){
   .ea-anilloDisco{width:36px;height:36px}
-  .ea-anilloDisco svg{width:36px;height:36px}
+  /* solo el anillo, hijo directo. Con «.ea-anilloDisco svg» a secas la
+     regla agarraba tambien el icono de dentro, que tambien es un svg, y
+     en el movil lo inflaba a 36 px tapando el anillo entero. */
+  .ea-anilloDisco > svg{width:36px;height:36px}
   .ea-anilloK{font-size:7.5px;letter-spacing:.06em}
 }
 
@@ -1368,7 +1403,7 @@ const CSS4 = `
 .ea-grupo{display:inline-flex;align-items:center;gap:6px;background:transparent;
   border:1px solid var(--borde);color:var(--gris);font:inherit;font-size:12px;
   letter-spacing:.1em;text-transform:uppercase;font-weight:700;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+  font-family:var(--f-dis);
   padding:8px 13px;border-radius:20px;cursor:pointer;transition:all .15s}
 .ea-grupo:hover{border-color:var(--cobre);color:var(--tintaPapel)}
 .ea-grupo.on{border-color:var(--cobre);background:rgba(185,83,42,.12);color:var(--tintaPapel)}
@@ -1381,7 +1416,7 @@ const CSS4 = `
 /* una linea, no un bloque: el termino a mano y la explicacion a un toque */
 .ea-recuerda{background:transparent;border:none;color:var(--cobre);font:inherit;
   font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
-  font-family:'Archivo Narrow','Arial Narrow',sans-serif;
+  font-family:var(--f-dis);
   padding:4px 0;margin:0 0 6px;cursor:pointer;text-align:left}
 .ea-recuerda:hover{color:#C86A3E}
 
@@ -1390,7 +1425,7 @@ const CSS4 = `
    punta de la mesa. Antes era un chip de doce pixeles igual que los
    demas, y es lo unico que el jugador estaba esperando. */
 .ea-golpe{display:flex; align-items:baseline; gap:.1em; margin-top:16px;
-  font-family:'IBM Plex Mono',ui-monospace,monospace; line-height:1;
+  font-family:var(--f-num); line-height:1;
   animation:ea-golpeIn .5s cubic-bezier(.2,1.4,.4,1) backwards; animation-delay:.12s}
 .ea-golpe.sube{color:#2E7A3D}
 .ea-golpe.baja{color:#8A2E1E}
