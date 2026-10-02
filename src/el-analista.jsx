@@ -3044,12 +3044,9 @@ const E = [
     ] },
   { id: 25, min: 0, max: 6, t: "Un amigo levanta capital", x: "Su startup necesita cierre y te ofrece entrar en la ronda como ángel.",
     o: [
-      { t: "Invertir un ticket que puedas perder", azar: { s: "cri", esc: [
-        { p: 45, r: "Cierra", nivel: "fallo", d: { cash: -3000, cri: 3, msg: "Cierra a los dos años. Lo perdiste, y sabías que podía pasar." } },
-        { p: 30, r: "Sobrevive", nivel: "parcial", d: { cash: -1000, red: 3, deja: "ticket_vivo", luego: [{ id: 7341, en: 2 }], msg: "Sigue vivo, sin crecer. Tu parte vale menos de lo que pusiste." } },
-        { p: 20, r: "Despega", nivel: "exito", d: { cash: 2000, red: 5, deja: "ticket_despega", luego: [{ id: 7342, en: 2 }], msg: "Consiguen clientes grandes. Tu parte ya vale el triple, en papel." } },
-        { p: 5, r: "Una en cien", nivel: "exito", d: { cash: 40000, rep: 6, red: 8, deja: "ticket_unicornio", msg: "Es de esas que salen una de cada cien. Tu ticket vale cuarenta veces lo que pusiste." } },
-      ] } },
+      { t: "Invertir un ticket que puedas perder", d: { cash: -3000, red: 3, deja: "ticket",
+        luego: [{ en: 2, s: "cri", azar: [{ p: 45, id: 7371, bueno: false }, { p: 30, id: 7341 }, { p: 20, id: 7342, bueno: true }, { p: 5, id: 7372, bueno: true }] }],
+        msg: "Entras por un monto que no te cambia la vida si se pierde. Papeles en orden." } },
       { t: "Revisarle el modelo antes de decidir", min: { mod: 34 }, j: "ojo", stat: "mod", d: { red: 6, cri: 4, deja: "revisaste", luego: [{ id: 7343, en: 1 }], msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
       { t: "No invertir y seguir siendo su amigo", d: { ene: 2, red: 2, msg: "Le dices que no con cariño. El dinero y la amistad se quedan cada uno en su sitio." } },
     ] },
@@ -3484,6 +3481,9 @@ const HUELLAS = {
   ticket_despega: "El negocio de tu amigo despegó",
   ticket_unicornio: "El negocio de tu amigo salió uno en cien",
   revisaste: "Le revisaste el modelo a tu amigo",
+  prestaste_primo: "Le prestaste a tu primo sin papeles",
+  contrato_primo: "Le prestaste a tu primo con contrato",
+  ticket: "Pusiste un ticket en el negocio de tu amigo",
 };
 
 const POR_RAMA = "Por el camino que elegiste";
@@ -3797,22 +3797,155 @@ const CONSECUENCIAS = [
       ] } },
       { t: "Perdonarlo y pasar la página", d: { ene: 6, red: 3, cri: 3, msg: "Das el dinero por perdido. Duermes mejor, y aprendiste cuánto vale un papel firmado." } },
     ] },
-  { id: 7332, min: 0, max: 6, por: HUELLAS.primo_exito, t: "Tu primo te ofrece entrar de socio",
-    x: "Tres locales y un cuarto en camino. Quiere que pongas capital a cambio del 20% del negocio.",
-    o: [
-      { t: "Entrar con una parte seria", azar: { s: "cri", esc: [
-        { p: 35, r: "Crece mucho", nivel: "exito", d: { cash: 25000, red: 5, msg: "Llegan a diez locales. Tu 20% paga más que tu bono." } },
-        { p: 45, r: "Va bien", nivel: "parcial", d: { cash: 6000, msg: "Crece despacio y reparte dividendos todos los años." } },
-        { p: 20, r: "El cuarto local lo hunde", nivel: "fallo", d: { cash: -10000, red: -4, msg: "Crecieron demasiado rápido. El cuarto local se come la caja de los otros tres." } },
-      ] } },
-      { t: "Quedarte con lo que ya ganaste", d: { ene: 3, cri: 3, msg: "Te devolvió el doble. Sabes cuándo levantarte de la mesa." } },
-    ] },
   { id: 7333, min: 0, max: 6, por: HUELLAS.garantia, t: "Tu tía te deja de hablar",
     x: "Se enteró de que te quedaste con la moto de tu primo cuando no te pagó.",
     o: [
       { t: "Devolverle la moto", d: { cash: -1500, red: 6, msg: "Se la devuelves. Pierdes el dinero, recuperas a la familia." } },
       { t: "Explicarle que los papeles eran para eso", d: { cri: 4, red: -4, msg: "Tienes razón y no te sirve de nada. Las cenas se vuelven cortas." } },
     ] },
+  /* ---- segundo nivel: lo que te tocó después de prestar sin papeles ---- */
+  { id: 7350, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo está pagando tarde",
+    x: "Lleva tres meses sin pagarte. Dice que el local todavía no despega.",
+    o: [
+      { t: "Reclamarle con firmeza", d: { red: -3, luego: [{ en: 1, azar: [{ p: 50, id: 7360 }, { p: 30, id: 7361 }, { p: 20, id: 7362 }] }], msg: "Lo llamas y se lo dices claro. Del otro lado, un silencio largo." } },
+      { t: "Dejarlo pasar: familia es familia", d: { ene: 2, red: 2, luego: [{ en: 2, azar: [{ p: 40, id: 7363 }, { p: 40, id: 7364 }, { p: 20, id: 7353 }] }], msg: "No le dices nada. Que pague cuando pueda." } },
+      { t: "Ofrecerle menos cuota y más plazo", d: { cri: 4, luego: [{ en: 2, azar: [{ p: 65, id: 7366 }, { p: 35, id: 7362 }] }], msg: "Le propones pagar la mitad durante el doble de tiempo. Acepta aliviado." } },
+    ] },
+  { id: 7351, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo desapareció",
+    x: "No contesta el teléfono. El local está cerrado y nadie en la familia sabe dónde está.",
+    o: [
+      { t: "Buscarlo hasta encontrarlo", d: { ene: -6, luego: [{ en: 1, azar: [{ p: 40, id: 7367 }, { p: 60, id: 7331 }] }], msg: "Preguntas a sus amigos, a su exnovia, a su madre." } },
+      { t: "Darlo por perdido", d: { cri: 5, ene: 3, deja: "estafado", msg: "Cinco mil que no vuelven. Los apuntas como lo que costó aprender." } },
+    ] },
+  { id: 7352, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo te paga a tiempo",
+    x: "Todas las cuotas, sin falta: ya te devolvió los 5.000. Ahora te pide otro préstamo para abrir un segundo local.",
+    o: [
+      { t: "Prestarle otra vez, el doble", d: { cash: -5000, red: 3, luego: [{ en: 2, azar: [{ p: 45, id: 7353 }, { p: 35, id: 7350 }, { p: 20, id: 7351 }] }], msg: "Cobras lo primero y le prestas el doble. Te abraza otra vez." } },
+      { t: "Cobrar y cerrar aquí", d: { cash: 5600, red: 4, msg: "Cobras los 5.000 y los intereses. Fue un buen negocio y sigue siendo tu primo." } },
+    ] },
+  { id: 7353, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "A tu primo le va de maravilla",
+    x: "Tres locales en dos años. Te devuelve el doble y te ofrece el 20% del negocio si pones más capital.",
+    o: [
+      { t: "Entrar de socio con lo que te devuelve", d: { red: 6, deja: "primo_exito", luego: [{ en: 2, s: "cri", azar: [{ p: 35, id: 7368, bueno: true }, { p: 45, id: 7369 }, { p: 20, id: 7370, bueno: false }] }], msg: "Te devuelve el doble y lo vuelves a meter todo en el negocio." } },
+      { t: "Cobrar el doble y quedarte fuera", d: { cash: 10000, ene: 3, deja: "primo_exito", msg: "Te llevas el doble. Sabes cuándo levantarte de la mesa." } },
+    ] },
+  /* ---- segundo nivel: con contrato ---- */
+  { id: 7356, min: 0, max: 6, por: HUELLAS.contrato_primo, t: "Las cuotas llegan cada mes",
+    x: "Tu primo paga cada cuota, con intereses. Los papeles no ofendieron a nadie.",
+    o: [
+      { t: "Cobrar hasta la última", d: { cash: 5800, cri: 3, msg: "Cobras todo, intereses incluidos. Un préstamo bien hecho." } },
+      { t: "Perdonarle los intereses", d: { cash: 5000, red: 6, msg: "Te devuelve lo prestado y le regalas los intereses. Se acuerda en cada cumpleaños." } },
+    ] },
+  { id: 7357, min: 0, max: 6, por: HUELLAS.contrato_primo, t: "Se retrasa, y hay contrato",
+    x: "Lleva dos cuotas atrasadas. El contrato dice que puedes quedarte con la garantía: su moto.",
+    o: [
+      { t: "Ejecutar la garantía", d: { cash: 2500, red: -8, deja: "garantia", luego: [{ id: 7333, en: 1 }], msg: "Te quedas con la moto. Para eso estaba el contrato." } },
+      { t: "Darle un plazo extra, por escrito", d: { cri: 3, luego: [{ en: 1, azar: [{ p: 70, id: 7366 }, { p: 30, id: 7362 }] }], msg: "Firman una adenda: tres meses más. Te lo agradece." } },
+    ] },
+  { id: 7358, min: 0, max: 6, por: HUELLAS.contrato_primo, t: "No paga ni una cuota",
+    x: "Ni una. Por suerte firmaron una garantía.",
+    o: [
+      { t: "Quedarte con la moto", d: { cash: 2500, red: -8, deja: "garantia", luego: [{ id: 7333, en: 1 }], msg: "Recuperas la mitad con la moto. La otra mitad, y a tu primo, no." } },
+      { t: "Perdonarle la deuda y romper el contrato", d: { red: 4, cri: -2, msg: "Rompes el papel delante de él. Pierdes el dinero y te quedas la familia." } },
+    ] },
+  /* ---- segundo nivel: no le prestaste ---- */
+  { id: 7359, min: 0, max: 6, por: HUELLAS.no_prestaste, t: "A tu primo le fue bien sin ti",
+    x: "Consiguió el dinero en otro lado y ya tiene dos locales. En las cenas lo cuenta, mirándote.",
+    o: [
+      { t: "Felicitarlo de verdad", d: { red: 5, ene: 2, msg: "Le dices que te alegras, y es verdad. La cena mejora." } },
+      { t: "Pedirle entrar ahora", d: { cash: -5000, luego: [{ en: 2, azar: [{ p: 50, id: 7369 }, { p: 50, id: 7370 }] }], msg: "Te deja entrar, a un precio más caro que el que te ofreció al principio." } },
+    ] },
+  /* ---- tercer nivel ---- */
+  { id: 7360, min: 0, max: 6, por: "Le reclamaste a tu primo", t: "Te paga, pero ya no te habla",
+    x: "Te devolvió todo en seis meses. En la boda de tu hermana se sentó en la otra punta.",
+    o: [
+      { t: "Buscarlo para arreglarlo", d: { cash: 5000, red: 3, ene: -2, msg: "Le invitas un café. Tardan una hora en reírse de algo." } },
+      { t: "Dejar que el tiempo lo arregle", d: { cash: 5000, red: -3, msg: "Tienes tu dinero. El tiempo, de momento, no arregla nada." } },
+    ] },
+  { id: 7361, min: 0, max: 6, por: "Le reclamaste a tu primo", t: "Se pone al día y te lo agradece",
+    x: "Tu llamada lo despertó: reorganizó el local y te pagó todo.",
+    o: [
+      { t: "Invitarlo a celebrarlo", d: { cash: 5000, red: 6, msg: "Lo celebran juntos. Ahora te cuenta cómo va el local cada mes." } },
+      { t: "Ofrecerle ayuda con las cuentas", d: { cash: 5000, cri: 3, red: 4, msg: "Le armas una hoja de caja. Es lo mejor que le ha pasado al local." } },
+    ] },
+  { id: 7362, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo no tiene nada",
+    x: "Te lo dice llorando: cerró el local y le debe a medio mundo.",
+    o: [
+      { t: "Perdonarle la deuda", d: { red: 6, ene: 4, cri: 2, msg: "Le dices que se olvide. Lo que perdiste en plata lo ganaste en primo." } },
+      { t: "Pedirle algo cada mes, aunque sea poco", d: { cash: 1500, red: -4, msg: "Te paga algo cada mes durante un año, y luego deja de hacerlo." } },
+    ] },
+  { id: 7363, min: 0, max: 6, por: "Lo dejaste pasar", t: "Nunca más vuelve a pagar",
+    x: "Pasaron dos años. Ni una cuota, y en la familia nadie lo menciona.",
+    o: [
+      { t: "Sacarlo en la cena de Navidad", d: { red: -2, luego: [{ id: 7331, en: 1 }], msg: "Lo apuntas para diciembre. No va a ser una cena tranquila." } },
+      { t: "Darlo por perdido", d: { cri: 5, deja: "estafado", msg: "Lo das por perdido. Familia es familia, y esta vez te costó cinco mil." } },
+    ] },
+  { id: 7364, min: 0, max: 6, por: "Lo dejaste pasar", t: "Te paga todo de golpe",
+    x: "Dos años tarde, sin explicaciones y con una transferencia por el total.",
+    o: [
+      { t: "Aceptarlo sin más", d: { cash: 5000, red: 3, msg: "Llegó. Tarde, pero llegó." } },
+      { t: "Pedirle los intereses del retraso", d: { cash: 5600, red: -5, msg: "Te los paga, y te lo recuerda en cada cena." } },
+    ] },
+  { id: 7366, min: 0, max: 6, por: "Le diste más plazo", t: "Cumple el nuevo plan",
+    x: "Menos cuota y más plazo funcionó: paga cada mes, sin falta.",
+    o: [
+      { t: "Seguir así hasta el final", d: { cash: 5000, cri: 3, red: 3, msg: "Te devuelve todo, despacio. Un préstamo bien arreglado." } },
+      { t: "Perdonarle la última cuota", d: { cash: 4000, red: 6, msg: "Le regalas el final. Lo cuenta en la familia como si le hubieras salvado la vida." } },
+    ] },
+  { id: 7367, min: 0, max: 6, por: "Lo buscaste", t: "Lo encuentras: está peor que tú",
+    x: "Vive en casa de un amigo y no tiene ni para el transporte.",
+    o: [
+      { t: "Ayudarle a volver a empezar", d: { cash: -1500, red: 8, ene: -4, msg: "Le pagas un mes de alquiler. El dinero no vuelve; tu primo, sí." } },
+      { t: "Pedirle lo que pueda y despedirte", d: { cash: 500, red: -4, deja: "estafado", msg: "Te da quinientos. No lo vuelves a ver en mucho tiempo." } },
+    ] },
+  { id: 7368, min: 0, max: 6, por: HUELLAS.primo_exito, t: "Diez locales",
+    x: "El negocio de tu primo crece sin parar. Tu 20% vale una fortuna.",
+    o: [
+      { t: "Vender tu parte", d: { cash: 30000, msg: "Vendes tu 20% a un fondo. El préstamo de la familia se volvió patrimonio." } },
+      { t: "Quedarte y cobrar dividendos", d: { cash: 12000, red: 4, msg: "Te quedas dentro. Cada diciembre, un cheque." } },
+    ] },
+  { id: 7369, min: 0, max: 6, por: HUELLAS.primo_exito, t: "Dividendos cada año",
+    x: "Crece despacio y reparte. Tu primo te manda el informe cada diciembre.",
+    o: [
+      { t: "Reinvertir los dividendos", d: { cash: 4000, cri: 3, msg: "Lo vuelves a meter. Crece despacio, contigo dentro." } },
+      { t: "Cobrarlos y disfrutarlos", d: { cash: 6000, ene: 4, msg: "Los cobras. Un negocio de la familia que te paga las vacaciones." } },
+    ] },
+  { id: 7370, min: 0, max: 6, por: HUELLAS.primo_exito, t: "El cuarto local lo hunde",
+    x: "Crecieron demasiado rápido: el cuarto local se come la caja de los otros tres.",
+    o: [
+      { t: "Poner más para salvarlo", azar: { s: "cri", esc: [
+        { p: 40, r: "Se salva", nivel: "exito", d: { cash: 6000, red: 4, msg: "Aguanta. Cierran el cuarto local y los tres que quedan vuelven a ganar." } },
+        { p: 60, r: "Se hunde igual", nivel: "fallo", d: { cash: -8000, red: -3, msg: "Pones más y se hunde igual. Pierdes lo de antes y lo de ahora." } },
+      ] } },
+      { t: "Cerrar el cuarto y salvar los otros", d: { cash: -3000, cri: 5, msg: "Cierras a tiempo. Duele menos que esperar." } },
+    ] },
+
+  /* ---------- el negocio de tu amigo: lo que te toca después ---------- */
+  { id: 7371, min: 0, max: 6, por: HUELLAS.ticket, t: "El negocio de tu amigo cierra",
+    x: "Te escribe para contártelo antes que a nadie. Queda algo de inventario y muchas deudas.",
+    o: [
+      { t: "Ayudarle a cerrar ordenado", d: { red: 6, ene: -4, cri: 3, msg: "Le ayudas a pagar a los proveedores primero. Cierra con la cabeza alta." } },
+      { t: "Pedirle tu parte de lo que quede", d: { cash: 600, red: -5, msg: "Te llega algo. A él le queda menos que a ti." } },
+    ] },
+  { id: 7372, min: 0, max: 6, por: HUELLAS.ticket, t: "Una de cada cien",
+    x: "El negocio de tu amigo vale cuarenta veces lo que pusiste. Un fondo quiere comprar tu parte.",
+    o: [
+      { t: "Vender ya", d: { cash: 60000, deja: "ticket_unicornio", msg: "Cuarenta veces tu ticket, en tu cuenta. De esas cosas que casi nunca pasan." } },
+      { t: "Aguantar hasta la salida a bolsa", d: { deja: "ticket_unicornio", luego: [{ en: 2, s: "cri", azar: [{ p: 60, id: 7373, bueno: true }, { p: 40, id: 7374, bueno: false }] }], msg: "Te quedas. Si sale a bolsa, lo de hoy parecerá poco." } },
+    ] },
+  { id: 7373, min: 0, max: 6, por: "Aguantaste hasta la salida", t: "Sale a bolsa",
+    x: "El negocio de tu amigo toca la campana. Tu parte vale más que todo lo que has ganado trabajando.",
+    o: [
+      { t: "Vender el primer día", d: { cash: 120000, msg: "Vendes el día de la campana. Tu amigo te manda una foto del parqué." } },
+      { t: "Quedarte una parte", d: { cash: 80000, cri: 3, msg: "Vendes la mitad y te quedas con la otra, por si acaso." } },
+    ] },
+  { id: 7374, min: 0, max: 6, por: "Aguantaste hasta la salida", t: "La burbuja se desinfla",
+    x: "El mercado se enfría y la valoración cae a la mitad antes de la salida.",
+    o: [
+      { t: "Vender lo que vale hoy", d: { cash: 25000, cri: 4, msg: "Vendes a la mitad de lo que valía. Sigue siendo muchísimo." } },
+      { t: "Esperar a que vuelva", d: { cash: 15000, ene: -3, msg: "No vuelve. Vendes un año después, por menos." } },
+    ] },
+
   { id: 7334, min: 0, max: 6, por: HUELLAS.no_prestaste, t: "El banco tampoco le prestó",
     x: "Tu primo abrió igual, con un prestamista carísimo. Ahora está ahogado y te vuelve a llamar.",
     o: [
@@ -3824,7 +3957,7 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- el negocio de tu amigo ---------- */
-  { id: 7341, min: 0, max: 6, por: HUELLAS.ticket_vivo, t: "Tu amigo pide una segunda ronda",
+  { id: 7341, min: 0, max: 6, por: HUELLAS.ticket, t: "Tu amigo pide una segunda ronda",
     x: "La empresa sigue viva pero necesita más capital. Si no pones, tu parte se diluye.",
     o: [
       { t: "Poner otra vez", azar: { s: "cri", esc: [
@@ -3834,7 +3967,7 @@ const CONSECUENCIAS = [
       ] } },
       { t: "Dejar que te diluyan", d: { cri: 3, msg: "Te quedas con menos de la mitad de lo que tenías. Sin poner más, que era lo importante." } },
     ] },
-  { id: 7342, min: 0, max: 6, por: HUELLAS.ticket_despega, t: "Te ofrecen comprar tu parte",
+  { id: 7342, min: 0, max: 6, por: HUELLAS.ticket, t: "Te ofrecen comprar tu parte",
     x: "Un fondo quiere las participaciones de los primeros inversores. Te ofrece cinco veces lo que pusiste.",
     o: [
       { t: "Vender ya", d: { cash: 15000, cri: 3, msg: "Cinco veces lo que pusiste, en tu cuenta, hoy. Nadie se arruinó vendiendo con ganancia." } },
@@ -3847,12 +3980,9 @@ const CONSECUENCIAS = [
   { id: 7343, min: 0, max: 6, por: HUELLAS.revisaste, t: "Lo que viste en el modelo",
     x: "Encontraste el número que no cuadraba y tu amigo lo arregló. Ahora sabes mejor que nadie cuánto vale.",
     o: [
-      { t: "Entrar ahora, sabiendo lo que sabes", azar: { s: "cri", esc: [
-        { p: 25, r: "Cierra", nivel: "fallo", d: { cash: -3000, cri: 3, msg: "Ni con el modelo arreglado. A veces el mercado simplemente no está." } },
-        { p: 40, r: "Sobrevive", nivel: "parcial", d: { cash: -500, red: 3, msg: "Va tirando. Tu dinero, también." } },
-        { p: 30, r: "Despega", nivel: "exito", d: { cash: 6000, red: 5, msg: "El modelo bueno trajo inversores buenos. Tu parte vale el triple." } },
-        { p: 5, r: "Una en cien", nivel: "exito", d: { cash: 40000, rep: 6, deja: "ticket_unicornio", msg: "Es de esas que salen una de cada cien, y tú la viste antes que nadie." } },
-      ] } },
+      { t: "Entrar ahora, sabiendo lo que sabes", d: { cash: -3000, deja: "ticket",
+        luego: [{ en: 2, s: "cri", azar: [{ p: 25, id: 7371, bueno: false }, { p: 40, id: 7341 }, { p: 30, id: 7342, bueno: true }, { p: 5, id: 7372, bueno: true }] }],
+        msg: "Entras sabiendo exactamente qué compras. Con el modelo arreglado, las cuentas pintan mejor." } },
       { t: "No entrar: el número no te convence", d: { cri: 5, red: 2, msg: "Le ayudaste sin poner dinero. Es la forma más barata de ser buen amigo." } },
     ] },
 
@@ -3881,21 +4011,21 @@ const TRONCOS = [
       { t: "Negarte y decirle por qué", d: { rep: 4, cri: 4, car: -3, deja: "te_negaste", luego: [{ id: 7303, en: 1 }], msg: "Le dices que no. Él asiente, y deja de mirarte a los ojos." } },
       { t: "Escribirle al comité de auditoría", min: { rep: 30 }, d: { rep: 6, red: -5, ene: -6, deja: "denunciaste", luego: [{ id: 7305, en: 1 }], msg: "Mandas el correo a las once de la noche. A las ocho ya lo sabe todo el piso." } },
     ] },
+  /* Prestar no tiene resultado en el momento: tiene futuro. Al año
+     siguiente te llega una de varias escenas, sorteada con su
+     probabilidad, y cada una vuelve a abrirse en otras. */
   { id: 7330, min: 0, max: 6, t: "Tu primo te pide un préstamo",
     x: "Quiere abrir un negocio de comida y le faltan 5.000. Te lo pide a ti antes que al banco.",
     o: [
-      { t: "Prestar: familia es familia", azar: { esc: [
-        { p: 20, r: "Te estafa", nivel: "fallo", d: { cash: -5000, red: -6, ene: -6, deja: "estafado", luego: [{ id: 7331, en: 2 }], msg: "Desaparece con el dinero. Ni negocio ni primo." } },
-        { p: 35, r: "Te paga tarde", nivel: "parcial", d: { cash: -1500, msg: "Te devuelve casi todo, en cuotas, en tres años." } },
-        { p: 30, r: "Te paga a tiempo", nivel: "exito", d: { red: 4, msg: "Te paga en la fecha que dijo. El negocio va bien." } },
-        { p: 15, r: "Le va de maravilla", nivel: "exito", d: { cash: 4000, red: 8, deja: "primo_exito", luego: [{ id: 7332, en: 2 }], msg: "Abre tres locales y te devuelve el doble." } },
-      ] } },
-      { t: "Prestar con contrato y garantía", azar: { esc: [
-        { p: 10, r: "No paga y te quedas la garantía", nivel: "fallo", d: { cash: -1500, red: -8, deja: "garantia", luego: [{ id: 7333, en: 2 }], msg: "No paga. Te quedas con su moto, y sin primo." } },
-        { p: 60, r: "Paga según el contrato", nivel: "exito", d: { cash: 600, cri: 4, msg: "Paga cada cuota, con intereses. Los papeles no ofendieron a nadie." } },
-        { p: 30, r: "Se ofende y pide en otro lado", nivel: "parcial", d: { red: -4, msg: "Le parece una falta de confianza y no vuelve a llamarte." } },
-      ] } },
-      { t: "Decir que no, y ayudarle con el plan", d: { red: -2, cri: 4, deja: "no_prestaste", luego: [{ id: 7334, en: 2 }], msg: "Le revisas los números una tarde entera. El dinero, que lo pida al banco." } },
+      { t: "Prestar: familia es familia", d: { cash: -5000, red: 4, deja: "prestaste_primo",
+        luego: [{ en: 1, azar: [{ p: 35, id: 7350 }, { p: 20, id: 7351 }, { p: 30, id: 7352 }, { p: 15, id: 7353 }] }],
+        msg: "Le haces la transferencia. Te abraza y te promete pagarte en un año." } },
+      { t: "Prestar con contrato y garantía", d: { cash: -5000, cri: 3, deja: "contrato_primo",
+        luego: [{ en: 1, azar: [{ p: 55, id: 7356 }, { p: 30, id: 7357 }, { p: 15, id: 7358 }] }],
+        msg: "Firman un contrato con cuotas, intereses y su moto como garantía. Le cuesta firmarlo." } },
+      { t: "Decir que no, y ayudarle con el plan", d: { red: -2, cri: 4, deja: "no_prestaste",
+        luego: [{ en: 2, azar: [{ p: 50, id: 7334 }, { p: 50, id: 7359 }] }],
+        msg: "Le revisas los números una tarde entera. El dinero, que lo pida al banco." } },
     ] },
   { id: 7310, min: 1, max: 6, sin: ["sancionado"], t: "Tu amiga monta una startup",
     x: "Tu amiga de la universidad deja su trabajo para montar una fintech. Te ofrece entrar de socio: medio sueldo y el 5% de la empresa.",
@@ -3911,8 +4041,8 @@ const TRONCOS = [
       { t: "Poner tus ahorros sin dejar tu trabajo", d: { cash: -4000, red: 3, deja: "angel", luego: [{ id: 7313, en: 3 }], msg: "Le das tu dinero. Tu nombre, de momento, mejor que no." } },
       { t: "Decirle que no, para no ensuciarla", d: { rep: 2, ene: 2, deja: "fuera", luego: [{ id: 7315, en: 3 }], msg: "No quieres que tu sanción salga en su ronda. Te lo agradece." } },
     ] },
-  { id: 7320, clave: true, min: 2, max: 6, sin: ["heroe"], t: "Dos socias, una sola dirección",
-    x: "Dos socias se disputan la dirección de la firma. Las dos te quieren de su lado y ninguna acepta un no.",
+  { id: 7320, clave: true, min: 2, max: 6, sin: ["heroe"], t: "Guerra por dirigir tu firma",
+    x: "En la firma donde trabajas, dos socias se disputan quién la dirige. Las dos te quieren de su lado y ninguna acepta un no.",
     o: [
       { t: "Ponerte del lado de la veterana", d: { red: 5, deja: "veterana", luego: [{ id: 7321, en: 1 }], msg: "Se lo dices en su despacho. Te sirve un café y te cuenta cómo va a ganar." } },
       { t: "Apostar por la joven que viene subiendo", d: { red: 3, car: 2, deja: "joven", luego: [{ id: 7322, en: 1 }], msg: "Te sumas a la que quiere cambiarlo todo. Es arriesgado y suena bien." } },
@@ -3921,7 +4051,7 @@ const TRONCOS = [
         no: { rep: -8, red: -6, deja: "descubierto", luego: [{ id: 7324, en: 1 }], msg: "Te pillan en una semana. Las dos." } } },
     ] },
   { id: 7326, clave: true, min: 2, max: 6, si: ["heroe"], t: "Las dos socias te necesitan",
-    x: "Desde la investigación eres la persona limpia de la firma. Las dos candidatas a dirigirla quieren tu nombre a su lado.",
+    x: "En la firma donde trabajas, dos socias se disputan quién la dirige. Desde la investigación eres la persona limpia de la casa, y las dos quieren tu nombre a su lado.",
     o: [
       { t: "Apoyar a la veterana", d: { red: 5, rep: 3, deja: "veterana", luego: [{ id: 7321, en: 1 }], msg: "Tu apoyo vale doble. Ella lo sabe." } },
       { t: "Apoyar a la joven", d: { red: 4, car: 3, deja: "joven", luego: [{ id: 7322, en: 1 }], msg: "La que viene a limpiar la casa, con quien ya la limpió una vez." } },
@@ -3936,7 +4066,7 @@ const ARBOLES = [
   { raices: [8], n: "El rumor", c: "#7A4FB0" },
   { raices: [7300], n: "El atajo contable", c: "#B23B27" },
   { raices: [7310, 7317], n: "La startup", c: "#2D6FA3" },
-  { raices: [7320, 7326], n: "La guerra de socias", c: "#8A6A12" },
+  { raices: [7320, 7326], n: "La guerra en tu firma", c: "#8A6A12" },
   { raices: [7330], n: "El préstamo a tu primo", c: "#C2410C" },
   { raices: [25], n: "El negocio de tu amigo", c: "#0F766E" },
 ];
@@ -3947,8 +4077,11 @@ const luegosDe = (o) => {
   if (!o) return [];
   const fuentes = [o, o.d, o.ok, o.no, o.chk && o.chk.ok, o.chk && o.chk.no]
     .concat(o.azar && Array.isArray(o.azar.esc) ? o.azar.esc.map((e) => e && e.d) : []);
-  return unicos([].concat(...fuentes.filter(Boolean).map((x) => [].concat(x.luego || []).map((l) => l && l.id)))
-    .filter((id) => IDS_CONSEC.indexOf(id) >= 0));
+  /* un luego sorteado puede llevar a cualquiera de sus escenas */
+  const idsDe = (l) => (l && Array.isArray(l.azar) ? l.azar.map((a) => a && a.id) : [l && l.id]);
+  const ids = [];
+  fuentes.filter(Boolean).forEach((x) => { [].concat(x.luego || []).forEach((l) => { ids.push(...idsDe(l)); }); });
+  return unicos(ids.filter((id) => IDS_CONSEC.indexOf(id) >= 0));
 };
 /* cuántas consecuencias distintas cuelgan de una opción, contando las
    que cuelgan de esas: es lo que se pierde quien no la elige */
@@ -3982,6 +4115,12 @@ const anotarArbol = (id) => {
     if (v.indexOf(id) < 0) window.localStorage.setItem(CLAVE_ARBOL, JSON.stringify(v.concat(id)));
   } catch (e) { /* sin almacen, se cuenta solo esta vida */ }
 };
+
+/* Escenas cuyo texto dice la cantidad exacta («le faltan 5.000»). El
+   dinero de las escenas se multiplica por tu cargo (ESCALA), y aquí eso
+   hacía que el texto dijera 5.000 y te cobrara 7.500: estas no escalan. */
+const PLATA_FIJA = [7330, 7331, 7333, 7334, 7350, 7351, 7352, 7353, 7356, 7357, 7358, 7359,
+  7360, 7361, 7362, 7363, 7364, 7366, 7367];
 
 /* las escenas de las que cuelga un árbol, y desde qué año salen seguro */
 /* Cada raíz puede tener versiones: se juega UNA de ellas por partida,
@@ -5279,6 +5418,16 @@ const probsAzar = (o, st) => {
   const total = w.reduce((a, x) => a + x, 0) || 1;
   return w.map((x) => x / total);
 };
+/* Los pesos de un luego sorteado. Si nombra un atributo (s), las escenas
+   marcadas como buenas pesan más cuanto más alto lo tengas, y las malas
+   menos. */
+const probsLuego = (x, st) => {
+  const az = Array.isArray(x && x.azar) ? x.azar : [];
+  const tilt = x && x.s ? clamp((numero(st && st[x.s], 45) - 45) / 90, -0.45, 0.45) : 0;
+  const w = az.map((a) => Math.max(0.01, numero(a.p, 0)) * (1 + (a.bueno === true ? tilt : a.bueno === false ? -tilt : 0)));
+  const total = w.reduce((a, v) => a + v, 0) || 1;
+  return w.map((v) => v / total);
+};
 const tirarAzar = (ps) => {
   let r = Math.random(), i = 0;
   for (; i < ps.length - 1; i++) { r -= ps[i]; if (r < 0) break; }
@@ -5554,7 +5703,7 @@ const sanear = (bruto) => {
   st.hitoCartera = r.hitoCartera === true;
   st.huellas = unicos(listaDe(r.huellas, (x) => typeof x === "string" && !!HUELLAS[x], 40));
   st.pendientes = listaDe(r.pendientes, (x) => x && typeof x === "object" && IDS_CONSEC.indexOf(x.id) >= 0, 16)
-    .map((x) => ({ id: x.id, en: entero(x.en, 0, 0, 99) }));
+    .map((x) => ({ id: x.id, en: entero(x.en, 0, 0, 99), p: x.p == null ? null : clamp(numero(x.p, 0), 0, 1) }));
   st.patronAnt = texto(r.patronAnt, "", 48);
   st.startup = r.startup === true;
   st.camino = listaDe(r.camino, (x) => x && typeof x === "object" && IDS_ARBOL.indexOf(x.id) >= 0, 40)
@@ -9977,7 +10126,7 @@ function Motor() {
       cambios.push({ k, v });
     });
     if (d.cash) {
-      let monto = Math.round(d.cash * ESCALA[st.rango]);
+      let monto = Math.round(d.cash * (ev && PLATA_FIJA.indexOf(ev.id) >= 0 ? 1 : ESCALA[st.rango]));
       /* el criterio no evita el golpe, lo amortigua: hasta un tercio
          menos de pérdida cuando de verdad sabes lo que haces */
       if (monto < 0 && st.cri > 55) {
@@ -10010,8 +10159,19 @@ function Motor() {
     if (dejar.length) st.huellas = unicos((Array.isArray(st.huellas) ? st.huellas : []).concat(dejar));
     let pend = (Array.isArray(st.pendientes) ? st.pendientes : []).filter((p) => !(ev && p.id === ev.id));
     [].concat((o && o.luego) || [], d.luego || []).forEach((x) => {
-      if (!x || IDS_CONSEC.indexOf(x.id) < 0 || pend.some((p) => p.id === x.id)) return;
-      pend.push({ id: x.id, en: st.turno + entero(x.en, 1, 1, 10) });
+      if (!x) return;
+      /* Un luego con «azar» no dice qué pasará: dice qué PUEDE pasar.
+         Se sortea hoy cuál de esas escenas te llegará dentro de unos
+         años, y se guarda con qué probabilidad salió. */
+      let id = x.id, prob = null;
+      if (Array.isArray(x.azar) && x.azar.length) {
+        const ps = probsLuego(x, st);
+        const i = tirarAzar(ps);
+        id = x.azar[i] && x.azar[i].id;
+        prob = ps[i];
+      }
+      if (IDS_CONSEC.indexOf(id) < 0 || pend.some((p) => p.id === id)) return;
+      pend.push({ id, en: st.turno + entero(x.en, 1, 1, 10), p: prob });
     });
     st.pendientes = pend.filter((p) => pendienteVivo(p, st)).slice(-16);
     /* y si era un nudo de un árbol, qué rama tomaste y cómo salió */
@@ -11811,7 +11971,10 @@ function Motor() {
                       como una escena mas y el jugador no ve que fue EL
                       quien la provoco, que es todo lo que se busca. */}
                   {ev.por && (
-                    <div className="ea-porQue"><Icono k="eco" tam={14} /><span>Viene de: {ev.por}</span></div>
+                    <div className="ea-porQue"><Icono k="eco" tam={14} /><span>Viene de: {ev.por}{(() => {
+                      const pp = (Array.isArray(s.pendientes) ? s.pendientes : []).find((x) => x.id === ev.id && x.p != null);
+                      return pp ? " · pasaba " + Math.round(pp.p * 100) + " de cada 100 veces" : "";
+                    })()}</span></div>
                   )}
                   <h2 className="ea-memoTit ea-dis">{ev.t}</h2>
                   <p className="ea-memoTxt">{ev.x}</p>
