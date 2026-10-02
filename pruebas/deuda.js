@@ -25,7 +25,7 @@ const clamp = (v, a, b) => { const x = numero(v, NaN); return Number.isFinite(x)
 const entero = (v, d, mi, ma) => Math.max(mi, Math.min(ma, Math.round(numero(v, d))));
 const fmt = (n) => new Intl.NumberFormat("es-VE", { maximumFractionDigits: 0 }).format(Math.round(numero(n, 0)));
 const NACIONES = [{ id: "co", gas: 0.85 }];
-const CUOTA_DEUDA = 0.18, EMBARGO_VECES = 3, QUIEBRA_VECES = 5, DESCUENTO_EMBARGO = 0.62;
+const CUOTA_DEUDA = 0.25, EMBARGO_VECES = 3, QUIEBRA_VECES = 5, DESCUENTO_EMBARGO = 0.62;
 const tasaPrestamo = (st) => {
   const na = NACIONES[0];
   let r = 0.11 + (numero(na.gas, 1) - 1) * 0.06;
@@ -34,23 +34,27 @@ const tasaPrestamo = (st) => {
   r += entero(st.quiebras, 0, 0, 9) * 0.06;
   return clamp(r, 0.06, 0.45);
 };
+/* copia de la del juego: lo que no alcanza sale en falta */
 const cobrar = (st, monto) => {
-  let cash = st.cash - monto, cartera = st.cartera;
+  let cash = st.cash - monto, cartera = st.cartera, falta = 0;
   if (cash < 0) { cartera += cash; cash = 0; }
-  return { cash, cartera };
+  if (cartera < 0) { falta = -cartera; cartera = 0; }
+  return { cash, cartera, falta };
 };
+/* el costo de vida del año: fija el colchon que no se usa para adelantar deuda */
+const GASTOS = 20000;
 const BIENES = { apto: { n: "Apartamento propio" }, carro: { n: "Carro deportivo" }, reloj: { n: "Reloj suizo" } };
 const bienDe = (id) => BIENES[id] || null;
 
 const correr = new Function(
-  "st", "egr", "notas", "salario", "bono", "TOPE_PLATA", "numero", "clamp", "entero", "fmt",
+  "st", "egr", "notas", "salario", "bono", "gastos", "TOPE_PLATA", "numero", "clamp", "entero", "fmt",
   "tasaPrestamo", "cobrar", "bienDe", "CUOTA_DEUDA", "EMBARGO_VECES", "QUIEBRA_VECES", "DESCUENTO_EMBARGO",
   bloque + "\n return st;"
 );
 
 const correrCon = (st, salario, bono) => {
   const egr = [], notas = [];
-  const out = correr(st, egr, notas, salario, bono, TOPE_PLATA, numero, clamp, entero, fmt,
+  const out = correr(st, egr, notas, salario, bono, GASTOS, TOPE_PLATA, numero, clamp, entero, fmt,
     tasaPrestamo, cobrar, bienDe, CUOTA_DEUDA, EMBARGO_VECES, QUIEBRA_VECES, DESCUENTO_EMBARGO);
   return { st: out, egr, notas };
 };

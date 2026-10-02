@@ -832,6 +832,26 @@ const CSS = `
 .ea-descubreB{height:8px;border-radius:99px;background:#EFE7F8;margin-top:8px;overflow:hidden}
 .ea-descubreB div{height:100%;border-radius:99px;background:#7A4FB0;animation:ea-camBarra 1.2s .3s ease-out backwards}
 @keyframes ea-camIn{from{opacity:0;transform:translateX(-10px)}}
+/* ---- escenarios con probabilidad ---- */
+.ea-opAzar{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:10.5px;letter-spacing:.08em;
+  color:#2D6FA3;background:#E6F0F8;border-radius:99px;padding:2px 8px;vertical-align:middle}
+.ea-azar{margin:16px 0 4px;text-align:left}
+.ea-azarK{font-size:11.5px;letter-spacing:.14em;color:var(--gris);margin-bottom:7px}
+.ea-azarB{position:relative;display:flex;height:16px;border-radius:99px;overflow:visible;background:#E8E8E2}
+.ea-azarT{height:100%;opacity:.35;transition:opacity .3s}
+.ea-azarT:first-child{border-radius:99px 0 0 99px}
+.ea-azarT:last-child{border-radius:0 99px 99px 0}
+.ea-azarT.exito{background:#4FA05C}
+.ea-azarT.parcial{background:#C9A227}
+.ea-azarT.fallo{background:#B23B27}
+.ea-azarT.sale{opacity:1;animation:ea-azarSale .5s 1.1s ease-out backwards}
+.ea-azarA{position:absolute;top:-7px;left:var(--a);width:0;height:0;margin-left:-7px;border:7px solid transparent;
+  border-top:9px solid #262626;animation:ea-azarAguja 1.2s cubic-bezier(.3,1.4,.5,1) backwards}
+.ea-azarL{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:12px;color:#9A9A94}
+.ea-azarL span.sale{color:#262626;font-weight:800}
+.ea-azarL b{font-weight:700}
+@keyframes ea-azarAguja{0%{left:0}60%{left:100%}100%{left:var(--a)}}
+@keyframes ea-azarSale{from{opacity:.35}}
 .ea-finalH{margin:18px auto 4px;max-width:520px;padding:16px 18px;border-radius:16px;background:#1A1530;color:#F4EFFF;
   text-align:center;box-shadow:0 10px 30px rgba(42,22,80,.25);animation:ea-finalIn .7s cubic-bezier(.2,.9,.3,1.2) .2s backwards}
 .ea-finalHK{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11.5px;letter-spacing:.16em;color:#C9B3F2}
@@ -6626,10 +6646,57 @@ const E = [{
   x: "Su startup necesita cierre y te ofrece entrar en la ronda como ángel.",
   o: [{
     t: "Invertir un ticket que puedas perder",
-    d: {
-      cash: -3000,
-      red: 4,
-      msg: "Entras por un monto que no te cambia la vida si se pierde. Papeles en orden."
+    azar: {
+      s: "cri",
+      esc: [{
+        p: 45,
+        r: "Cierra",
+        nivel: "fallo",
+        d: {
+          cash: -3000,
+          cri: 3,
+          msg: "Cierra a los dos años. Lo perdiste, y sabías que podía pasar."
+        }
+      }, {
+        p: 30,
+        r: "Sobrevive",
+        nivel: "parcial",
+        d: {
+          cash: -1000,
+          red: 3,
+          deja: "ticket_vivo",
+          luego: [{
+            id: 7341,
+            en: 2
+          }],
+          msg: "Sigue vivo, sin crecer. Tu parte vale menos de lo que pusiste."
+        }
+      }, {
+        p: 20,
+        r: "Despega",
+        nivel: "exito",
+        d: {
+          cash: 2000,
+          red: 5,
+          deja: "ticket_despega",
+          luego: [{
+            id: 7342,
+            en: 2
+          }],
+          msg: "Consiguen clientes grandes. Tu parte ya vale el triple, en papel."
+        }
+      }, {
+        p: 5,
+        r: "Una en cien",
+        nivel: "exito",
+        d: {
+          cash: 40000,
+          rep: 6,
+          red: 8,
+          deja: "ticket_unicornio",
+          msg: "Es de esas que salen una de cada cien. Tu ticket vale cuarenta veces lo que pusiste."
+        }
+      }]
     }
   }, {
     t: "Revisarle el modelo antes de decidir",
@@ -6641,8 +6708,19 @@ const E = [{
     d: {
       red: 6,
       cri: 4,
-      cash: -1500,
+      deja: "revisaste",
+      luego: [{
+        id: 7343,
+        en: 1
+      }],
       msg: "Le pides el modelo y te sientas a buscar el número que no cuadra."
+    }
+  }, {
+    t: "No invertir y seguir siendo su amigo",
+    d: {
+      ene: 2,
+      red: 2,
+      msg: "Le dices que no con cariño. El dinero y la amistad se quedan cada uno en su sitio."
     }
   }]
 }, {
@@ -8475,7 +8553,15 @@ const HUELLAS = {
   veterana: "Apostaste por la socia veterana",
   joven: "Apostaste por la socia joven",
   dos_bandas: "Jugaste a dos bandas entre las socias",
-  descubierto: "Te descubrieron jugando a dos bandas"
+  descubierto: "Te descubrieron jugando a dos bandas",
+  estafado: "Tu primo desapareció con tu préstamo",
+  primo_exito: "A tu primo le fue de maravilla",
+  garantia: "Ejecutaste la garantía de tu primo",
+  no_prestaste: "No le prestaste a tu primo",
+  ticket_vivo: "El negocio de tu amigo sobrevivió",
+  ticket_despega: "El negocio de tu amigo despegó",
+  ticket_unicornio: "El negocio de tu amigo salió uno en cien",
+  revisaste: "Le revisaste el modelo a tu amigo"
 };
 const POR_RAMA = "Por el camino que elegiste";
 const CONSECUENCIAS = [/* ---------- el headhunter ---------- */
@@ -9487,11 +9573,12 @@ const CONSECUENCIAS = [/* ---------- el headhunter ---------- */
         cash: 8000,
         car: 6,
         rep: 8,
+        startup: true,
         luego: [{
           id: 7312,
           en: 2
         }],
-        msg: "Entra la ronda. Ya no ayudas a tu amiga: son socias de verdad."
+        msg: "Entra la ronda y renuncias a tu firma. Ya no ayudas a tu amiga: son socias de verdad."
       },
       no: {
         cash: -6000,
@@ -9521,6 +9608,7 @@ const CONSECUENCIAS = [/* ---------- el headhunter ---------- */
       cash: 60000,
       ene: 8,
       deja: "fundador",
+      vendeStartup: true,
       msg: "Firmas la venta. Tu primera empresa ya tiene dueño, y tú tienes otra vida."
     }
   }, {
@@ -9532,12 +9620,14 @@ const CONSECUENCIAS = [/* ---------- el headhunter ---------- */
         cash: 120000,
         rep: 10,
         deja: "fundador",
+        vendeStartup: true,
         msg: "Dos años después la compra otro, por el triple."
       },
       no: {
         cash: -3000,
         rep: -5,
-        msg: "El banco construye su propia versión. La tuya se queda sin aire."
+        startup: false,
+        msg: "El banco construye su propia versión. La tuya se queda sin aire y vuelves a buscar trabajo."
       }
     }
   }]
@@ -9717,6 +9807,318 @@ const CONSECUENCIAS = [/* ---------- el headhunter ---------- */
       msg: "Te vas con tu versión de la historia. La firma nueva no pregunta."
     }
   }]
+}, /* ---------- el préstamo a tu primo ---------- */
+{
+  id: 7331,
+  min: 0,
+  max: 6,
+  por: HUELLAS.estafado,
+  t: "La cena de Navidad",
+  x: "Tu primo aparece en la cena como si nada. Toda la familia sabe lo del dinero, y todos te miran a ti.",
+  o: [{
+    t: "Reclamárselo delante de todos",
+    azar: {
+      s: "red",
+      esc: [{
+        p: 30,
+        r: "Te paga una parte",
+        nivel: "parcial",
+        d: {
+          cash: 1500,
+          red: -4,
+          msg: "Le da vergüenza y te paga una parte esa misma semana. La cena no la olvida nadie."
+        }
+      }, {
+        p: 50,
+        r: "Se va dando un portazo",
+        nivel: "fallo",
+        d: {
+          red: -8,
+          ene: -5,
+          msg: "Se levanta y se va. Media familia se pone de su lado."
+        }
+      }, {
+        p: 20,
+        r: "La familia te respalda",
+        nivel: "exito",
+        d: {
+          cash: 3000,
+          red: 4,
+          msg: "Tu tía le obliga a firmar un plan de pagos ahí mismo."
+        }
+      }]
+    }
+  }, {
+    t: "Perdonarlo y pasar la página",
+    d: {
+      ene: 6,
+      red: 3,
+      cri: 3,
+      msg: "Das el dinero por perdido. Duermes mejor, y aprendiste cuánto vale un papel firmado."
+    }
+  }]
+}, {
+  id: 7332,
+  min: 0,
+  max: 6,
+  por: HUELLAS.primo_exito,
+  t: "Tu primo te ofrece entrar de socio",
+  x: "Tres locales y un cuarto en camino. Quiere que pongas capital a cambio del 20% del negocio.",
+  o: [{
+    t: "Entrar con una parte seria",
+    azar: {
+      s: "cri",
+      esc: [{
+        p: 35,
+        r: "Crece mucho",
+        nivel: "exito",
+        d: {
+          cash: 25000,
+          red: 5,
+          msg: "Llegan a diez locales. Tu 20% paga más que tu bono."
+        }
+      }, {
+        p: 45,
+        r: "Va bien",
+        nivel: "parcial",
+        d: {
+          cash: 6000,
+          msg: "Crece despacio y reparte dividendos todos los años."
+        }
+      }, {
+        p: 20,
+        r: "El cuarto local lo hunde",
+        nivel: "fallo",
+        d: {
+          cash: -10000,
+          red: -4,
+          msg: "Crecieron demasiado rápido. El cuarto local se come la caja de los otros tres."
+        }
+      }]
+    }
+  }, {
+    t: "Quedarte con lo que ya ganaste",
+    d: {
+      ene: 3,
+      cri: 3,
+      msg: "Te devolvió el doble. Sabes cuándo levantarte de la mesa."
+    }
+  }]
+}, {
+  id: 7333,
+  min: 0,
+  max: 6,
+  por: HUELLAS.garantia,
+  t: "Tu tía te deja de hablar",
+  x: "Se enteró de que te quedaste con la moto de tu primo cuando no te pagó.",
+  o: [{
+    t: "Devolverle la moto",
+    d: {
+      cash: -1500,
+      red: 6,
+      msg: "Se la devuelves. Pierdes el dinero, recuperas a la familia."
+    }
+  }, {
+    t: "Explicarle que los papeles eran para eso",
+    d: {
+      cri: 4,
+      red: -4,
+      msg: "Tienes razón y no te sirve de nada. Las cenas se vuelven cortas."
+    }
+  }]
+}, {
+  id: 7334,
+  min: 0,
+  max: 6,
+  por: HUELLAS.no_prestaste,
+  t: "El banco tampoco le prestó",
+  x: "Tu primo abrió igual, con un prestamista carísimo. Ahora está ahogado y te vuelve a llamar.",
+  o: [{
+    t: "Prestarle para que pague al prestamista",
+    azar: {
+      esc: [{
+        p: 50,
+        r: "Sale adelante y te paga",
+        nivel: "exito",
+        d: {
+          cash: 500,
+          red: 6,
+          msg: "Sin el prestamista encima, el negocio respira y te paga."
+        }
+      }, {
+        p: 50,
+        r: "Se hunde igual",
+        nivel: "fallo",
+        d: {
+          cash: -4000,
+          red: -2,
+          msg: "El agujero era más grande de lo que te contó."
+        }
+      }]
+    }
+  }, {
+    t: "Ayudarle a renegociar con el prestamista",
+    j: "anclaje",
+    stat: "red",
+    d: {
+      red: 8,
+      cri: 4,
+      msg: "Te sientas con él frente al prestamista."
+    }
+  }]
+}, /* ---------- el negocio de tu amigo ---------- */
+{
+  id: 7341,
+  min: 0,
+  max: 6,
+  por: HUELLAS.ticket_vivo,
+  t: "Tu amigo pide una segunda ronda",
+  x: "La empresa sigue viva pero necesita más capital. Si no pones, tu parte se diluye.",
+  o: [{
+    t: "Poner otra vez",
+    azar: {
+      s: "cri",
+      esc: [{
+        p: 55,
+        r: "Se apaga igual",
+        nivel: "fallo",
+        d: {
+          cash: -3000,
+          cri: 4,
+          msg: "Aguanta un año más y cierra. Pusiste dos veces en lo mismo."
+        }
+      }, {
+        p: 35,
+        r: "Remonta",
+        nivel: "exito",
+        d: {
+          cash: 6000,
+          red: 4,
+          msg: "La segunda ronda era lo que faltaba. Empieza a crecer."
+        }
+      }, {
+        p: 10,
+        r: "La compran",
+        nivel: "exito",
+        d: {
+          cash: 15000,
+          rep: 4,
+          msg: "Una empresa grande la compra entera. Tu paciencia cobró."
+        }
+      }]
+    }
+  }, {
+    t: "Dejar que te diluyan",
+    d: {
+      cri: 3,
+      msg: "Te quedas con menos de la mitad de lo que tenías. Sin poner más, que era lo importante."
+    }
+  }]
+}, {
+  id: 7342,
+  min: 0,
+  max: 6,
+  por: HUELLAS.ticket_despega,
+  t: "Te ofrecen comprar tu parte",
+  x: "Un fondo quiere las participaciones de los primeros inversores. Te ofrece cinco veces lo que pusiste.",
+  o: [{
+    t: "Vender ya",
+    d: {
+      cash: 15000,
+      cri: 3,
+      msg: "Cinco veces lo que pusiste, en tu cuenta, hoy. Nadie se arruinó vendiendo con ganancia."
+    }
+  }, {
+    t: "Aguantar hasta la salida",
+    azar: {
+      s: "cri",
+      esc: [{
+        p: 50,
+        r: "Llega la salida",
+        nivel: "exito",
+        d: {
+          cash: 40000,
+          rep: 5,
+          msg: "La compran dos años después. Tu ticket se multiplicó por quince."
+        }
+      }, {
+        p: 35,
+        r: "Se estanca",
+        nivel: "parcial",
+        d: {
+          cash: 3000,
+          msg: "No crece más. Vendes tarde, por menos de lo que te ofrecían."
+        }
+      }, {
+        p: 15,
+        r: "Se cae",
+        nivel: "fallo",
+        d: {
+          cash: -3000,
+          cri: 5,
+          msg: "Pierde a su cliente grande y vale menos que al principio."
+        }
+      }]
+    }
+  }]
+}, {
+  id: 7343,
+  min: 0,
+  max: 6,
+  por: HUELLAS.revisaste,
+  t: "Lo que viste en el modelo",
+  x: "Encontraste el número que no cuadraba y tu amigo lo arregló. Ahora sabes mejor que nadie cuánto vale.",
+  o: [{
+    t: "Entrar ahora, sabiendo lo que sabes",
+    azar: {
+      s: "cri",
+      esc: [{
+        p: 25,
+        r: "Cierra",
+        nivel: "fallo",
+        d: {
+          cash: -3000,
+          cri: 3,
+          msg: "Ni con el modelo arreglado. A veces el mercado simplemente no está."
+        }
+      }, {
+        p: 40,
+        r: "Sobrevive",
+        nivel: "parcial",
+        d: {
+          cash: -500,
+          red: 3,
+          msg: "Va tirando. Tu dinero, también."
+        }
+      }, {
+        p: 30,
+        r: "Despega",
+        nivel: "exito",
+        d: {
+          cash: 6000,
+          red: 5,
+          msg: "El modelo bueno trajo inversores buenos. Tu parte vale el triple."
+        }
+      }, {
+        p: 5,
+        r: "Una en cien",
+        nivel: "exito",
+        d: {
+          cash: 40000,
+          rep: 6,
+          deja: "ticket_unicornio",
+          msg: "Es de esas que salen una de cada cien, y tú la viste antes que nadie."
+        }
+      }]
+    }
+  }, {
+    t: "No entrar: el número no te convence",
+    d: {
+      cri: 5,
+      red: 2,
+      msg: "Le ayudaste sin poner dinero. Es la forma más barata de ser buen amigo."
+    }
+  }]
 }, {
   id: 7324,
   min: 0,
@@ -9800,6 +10202,111 @@ const TRONCOS = [{
         en: 1
       }],
       msg: "Mandas el correo a las once de la noche. A las ocho ya lo sabe todo el piso."
+    }
+  }]
+}, {
+  id: 7330,
+  min: 0,
+  max: 6,
+  t: "Tu primo te pide un préstamo",
+  x: "Quiere abrir un negocio de comida y le faltan 5.000. Te lo pide a ti antes que al banco.",
+  o: [{
+    t: "Prestar: familia es familia",
+    azar: {
+      esc: [{
+        p: 20,
+        r: "Te estafa",
+        nivel: "fallo",
+        d: {
+          cash: -5000,
+          red: -6,
+          ene: -6,
+          deja: "estafado",
+          luego: [{
+            id: 7331,
+            en: 2
+          }],
+          msg: "Desaparece con el dinero. Ni negocio ni primo."
+        }
+      }, {
+        p: 35,
+        r: "Te paga tarde",
+        nivel: "parcial",
+        d: {
+          cash: -1500,
+          msg: "Te devuelve casi todo, en cuotas, en tres años."
+        }
+      }, {
+        p: 30,
+        r: "Te paga a tiempo",
+        nivel: "exito",
+        d: {
+          red: 4,
+          msg: "Te paga en la fecha que dijo. El negocio va bien."
+        }
+      }, {
+        p: 15,
+        r: "Le va de maravilla",
+        nivel: "exito",
+        d: {
+          cash: 4000,
+          red: 8,
+          deja: "primo_exito",
+          luego: [{
+            id: 7332,
+            en: 2
+          }],
+          msg: "Abre tres locales y te devuelve el doble."
+        }
+      }]
+    }
+  }, {
+    t: "Prestar con contrato y garantía",
+    azar: {
+      esc: [{
+        p: 10,
+        r: "No paga y te quedas la garantía",
+        nivel: "fallo",
+        d: {
+          cash: -1500,
+          red: -8,
+          deja: "garantia",
+          luego: [{
+            id: 7333,
+            en: 2
+          }],
+          msg: "No paga. Te quedas con su moto, y sin primo."
+        }
+      }, {
+        p: 60,
+        r: "Paga según el contrato",
+        nivel: "exito",
+        d: {
+          cash: 600,
+          cri: 4,
+          msg: "Paga cada cuota, con intereses. Los papeles no ofendieron a nadie."
+        }
+      }, {
+        p: 30,
+        r: "Se ofende y pide en otro lado",
+        nivel: "parcial",
+        d: {
+          red: -4,
+          msg: "Le parece una falta de confianza y no vuelve a llamarte."
+        }
+      }]
+    }
+  }, {
+    t: "Decir que no, y ayudarle con el plan",
+    d: {
+      red: -2,
+      cri: 4,
+      deja: "no_prestaste",
+      luego: [{
+        id: 7334,
+        en: 2
+      }],
+      msg: "Le revisas los números una tarde entera. El dinero, que lo pida al banco."
     }
   }]
 }, {
@@ -10015,13 +10522,21 @@ const ARBOLES = [{
   raices: [7320, 7326],
   n: "La guerra de socias",
   c: "#8A6A12"
+}, {
+  raices: [7330],
+  n: "El préstamo a tu primo",
+  c: "#C2410C"
+}, {
+  raices: [25],
+  n: "El negocio de tu amigo",
+  c: "#0F766E"
 }];
 const IDS_ARBOL = [].concat(...ARBOLES.map(a => a.raices)).concat(IDS_CONSEC);
 
 /* Todas las escenas a las que puede llevar una opción, salga bien o mal. */
 const luegosDe = o => {
   if (!o) return [];
-  const fuentes = [o, o.d, o.ok, o.no, o.chk && o.chk.ok, o.chk && o.chk.no];
+  const fuentes = [o, o.d, o.ok, o.no, o.chk && o.chk.ok, o.chk && o.chk.no].concat(o.azar && Array.isArray(o.azar.esc) ? o.azar.esc.map(e => e && e.d) : []);
   return unicos([].concat(...fuentes.filter(Boolean).map(x => [].concat(x.luego || []).map(l => l && l.id))).filter(id => IDS_CONSEC.indexOf(id) >= 0));
 };
 /* cuántas consecuencias distintas cuelgan de una opción, contando las
@@ -10074,9 +10589,17 @@ const RAICES = [{
   desde: 2
 }, /* te llama un headhunter */
 {
+  ids: [7330],
+  desde: 2
+}, /* tu primo te pide un préstamo */
+{
   ids: [7300],
   desde: 3
 }, /* un atajo en la conciliación */
+{
+  ids: [25],
+  desde: 3
+}, /* un amigo levanta capital */
 {
   ids: [7310, 7317],
   desde: 4
@@ -11080,19 +11603,43 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
     }
   }, {
     t: "Prestar sin papeles, es familia",
-    chk: {
-      s: "red",
-      dif: 55
-    },
-    ok: {
-      cash: -1200,
-      msg: "Te devuelve casi todo, tarde. Salió bien y no fue por cómo lo hiciste."
-    },
-    no: {
-      cash: -4500,
-      red: -6,
-      ene: -6,
-      msg: "No te paga. No hay contrato, no hay conversación posible y hay una familia partida en dos."
+    azar: {
+      esc: [{
+        p: 25,
+        r: "No te paga",
+        nivel: "fallo",
+        d: {
+          cash: -4500,
+          red: -6,
+          ene: -6,
+          msg: "No te paga. No hay contrato, no hay conversación posible y hay una familia partida en dos."
+        }
+      }, {
+        p: 40,
+        r: "Te paga tarde",
+        nivel: "parcial",
+        d: {
+          cash: -1200,
+          msg: "Te devuelve casi todo, tarde. Salió bien y no fue por cómo lo hiciste."
+        }
+      }, {
+        p: 25,
+        r: "Te paga a tiempo",
+        nivel: "exito",
+        d: {
+          red: 4,
+          msg: "Te paga en la fecha que dijo. Hay gente así."
+        }
+      }, {
+        p: 10,
+        r: "Le va de maravilla",
+        nivel: "exito",
+        d: {
+          cash: 3000,
+          red: 6,
+          msg: "El negocio funciona y te devuelve el préstamo con una parte de las ganancias."
+        }
+      }]
     }
   }, {
     t: "No prestar, y ofrecer ayuda de otra forma",
@@ -11772,6 +12319,8 @@ const BASE = {
   huellas: [],
   pendientes: [],
   patronAnt: "",
+  /* si te fuiste a tiempo completo con la startup (y ya no tienes jefe) */
+  startup: false,
   /* qué elegiste en cada nudo de los árboles, para dibujarlos al final */
   camino: []
 };
@@ -12757,9 +13306,48 @@ const SOLO_EMPLEADO = [7, /* te llama un headhunter */
 119, /* la silla del socio se decide en la mesa */
 120, /* te mandan a dirigir la oficina de otro país */
 9804, /* te ofrecen la silla: el techo trabajando para alguien */
+1, /* el VP te deja un DCF para mañana */
+3, /* café con el socio */
+6, /* el data room: «ese alguien tiene tu cargo» */
+60, /* la pizarra del comité del socio */
+114, /* llevar a tu jefe al examen del fondo */
 /* consecuencias que solo tienen sentido con jefe */
 7101, 7102, 7103, 7104, 7105, 7106, 7201, 7202, 7203, 7204, 8101, 7300, 7301, 7302, 7303, 7304, 7305, 7320, 7321, 7322, 7323, 7324, 7326];
 const esDeEmpleado = e => !!e && SOLO_EMPLEADO.indexOf(e.id) >= 0;
+
+/* ============================================================
+   ESCENARIOS CON PROBABILIDAD
+   Un chequeo de suerte solo tiene dos salidas: bien o mal. La vida no:
+   le prestas a tu primo y puede estafarte, pagarte tarde, pagarte a
+   tiempo o devolverte el doble porque le fue de maravilla. Una opción
+   con «azar» trae sus escenarios, cada uno con su probabilidad (p, en
+   tantos por cien) y su desenlace (d). Si nombra un atributo (s), ese
+   atributo inclina la balanza: con mucho criterio los buenos
+   escenarios pesan más y los malos menos, sin llegar nunca a cero.
+   ============================================================ */
+const probsAzar = (o, st) => {
+  const esc = o && o.azar && Array.isArray(o.azar.esc) ? o.azar.esc : [];
+  const k = o && o.azar && o.azar.s;
+  const tilt = k ? clamp((numero(st && st[k], 45) - 45) / 90, -0.45, 0.45) : 0;
+  const w = esc.map(e => Math.max(0.01, numero(e.p, 0)) * (1 + (e.nivel === "exito" ? tilt : e.nivel === "fallo" ? -tilt : 0)));
+  const total = w.reduce((a, x) => a + x, 0) || 1;
+  return w.map(x => x / total);
+};
+const tirarAzar = ps => {
+  let r = Math.random(),
+    i = 0;
+  for (; i < ps.length - 1; i++) {
+    r -= ps[i];
+    if (r < 0) break;
+  }
+  return i;
+};
+
+/* Sin jefe estás cuando la firma es tuya o cuando te fuiste a tiempo
+   completo con la startup. Antes solo contaba lo primero, y quien dejaba
+   la firma por la startup seguía recibiendo la renovación de su
+   contrato, el headhunter y las escenas de oficina como si nada. */
+const sinJefe = st => !!(st && (st.propia || st.startup));
 
 /* Una escena puede pedir huellas (si) o no soportarlas (sin). Es lo que
    abre y cierra puertas: con una sancion publica no te llama ningun
@@ -12778,7 +13366,7 @@ const huellasOk = (e, st) => {
    las versiones. */
 const pendienteVivo = (p, st) => {
   const e = CONSECUENCIAS.find(x => x.id === (p && p.id));
-  if (!e || st && st.propia && esDeEmpleado(e)) return false;
+  if (!e || sinJefe(st) && esDeEmpleado(e)) return false;
   const h = st && Array.isArray(st.huellas) ? st.huellas : [];
   if (Array.isArray(e.sin) && e.sin.some(x => h.indexOf(x) >= 0)) return false;
   if (p.en <= entero(st && st.turno, 0, 0, 99) && !huellasOk(e, st)) return false;
@@ -13125,11 +13713,13 @@ const sanear = bruto => {
     en: entero(x.en, 0, 0, 99)
   }));
   st.patronAnt = texto(r.patronAnt, "", 48);
+  st.startup = r.startup === true;
   st.camino = listaDe(r.camino, x => x && typeof x === "object" && IDS_ARBOL.indexOf(x.id) >= 0, 40).map(x => ({
     id: x.id,
     o: entero(x.o, 0, 0, 9),
     a: entero(x.a, 0, 0, 60),
-    n: ["exito", "parcial", "fallo"].indexOf(x.n) >= 0 ? x.n : "exito"
+    n: ["exito", "parcial", "fallo"].indexOf(x.n) >= 0 ? x.n : "exito",
+    r: entero(x.r, -1, -1, 9)
   }));
   return st;
 };
@@ -13227,7 +13817,7 @@ const fuerzaDe = (k, v) => {
 /* Lo que mueve una opcion: la clave y cuanto, para pintarlo en signos */
 const efectosDe = o => {
   if (!o || typeof o !== "object") return [];
-  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
+  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && (o.chk.ok || o.ok) || null;
   if (!d || typeof d !== "object") return [];
   const out = [];
   CLAVES_ATRIB.forEach(k => {
@@ -13241,7 +13831,7 @@ const efectosDe = o => {
 };
 const efectoDe = o => {
   if (!o || typeof o !== "object") return null;
-  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
+  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && (o.chk.ok || o.ok) || null;
   if (!d || typeof d !== "object") return null;
   const sube = [],
     cuesta = [];
@@ -13279,7 +13869,7 @@ const faltaDe = (o, st) => {
     });
   }
   /* lo que va a costar, tomado del mejor caso declarado */
-  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && o.chk.ok || null;
+  const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && (o.chk.ok || o.ok) || null;
   if (d && typeof d === "object") {
     const cuesta = -numero(d.ene, 0);
     if (cuesta > 0) pide.ene = Math.max(numero(pide.ene, 0), cuesta);
@@ -16060,6 +16650,11 @@ const FINALES = [{
   t: "Levantaste la mano",
   x: "Denunciaste un ajuste contable y la investigación te dio la razón. En la firma, tu nombre quiere decir limpio."
 }, {
+  id: "unicornio",
+  c: st => hu(st, "ticket_unicornio"),
+  t: "Una de cada cien",
+  x: "Pusiste un ticket pequeño en el negocio de un amigo y salió de esas que salen una de cada cien. Casi nunca pasa; a ti te pasó."
+}, {
   id: "fundador",
   c: st => hu(st, "fundador"),
   t: "Fundaste algo que alguien compró",
@@ -16069,6 +16664,16 @@ const FINALES = [{
   c: st => !!(st && st.propia),
   t: "Tu nombre en la puerta",
   x: st => "Montaste " + FIRMA_DE(st).n.toLowerCase() + " y lo hiciste tuyo. Nadie más firma tus decisiones."
+}, {
+  id: "estafado",
+  c: st => hu(st, "estafado"),
+  t: "Familia es familia",
+  x: "Le prestaste a tu primo sin papeles y desapareció con el dinero. Aprendiste lo que vale un contrato justo con la gente que más quieres."
+}, {
+  id: "primo",
+  c: st => hu(st, "primo_exito"),
+  t: "Creíste en tu primo",
+  x: "Le prestaste cuando nadie más lo hacía y le fue de maravilla. Hay apuestas que se hacen por cariño y salen por talento."
 }, {
   id: "dos_bandas",
   c: st => hu(st, "dos_bandas") || hu(st, "descubierto"),
@@ -16171,6 +16776,45 @@ function FinalHistoria({
     className: "ea-finalHX"
   }, texto));
 }
+
+/* Lo que pudo pasar y lo que pasó. Cada tramo mide su probabilidad; la
+   aguja cae en el que salió. Enseña sin decirlo que una buena decisión
+   puede salir mal y una mala, bien. */
+function BarraAzar({
+  azar
+}) {
+  const ps = azar && Array.isArray(azar.ps) ? azar.ps : [];
+  if (ps.length < 2) return null;
+  const i = entero(azar.i, 0, 0, ps.length - 1);
+  const antes = ps.slice(0, i).reduce((a, x) => a + x, 0);
+  const centro = (antes + ps[i] / 2) * 100;
+  const pct = x => Math.round(x * 100);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-azar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-azarK ea-dis"
+  }, "Ten\xEDa un ", pct(ps[i]), "% de pasar"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-azarB"
+  }, ps.map((x, k) => /*#__PURE__*/React.createElement("span", {
+    key: k,
+    className: "ea-azarT " + ((azar.tonos || [])[k] || "parcial") + (k === i ? " sale" : ""),
+    style: {
+      width: x * 100 + "%"
+    }
+  })), /*#__PURE__*/React.createElement("i", {
+    className: "ea-azarA",
+    style: {
+      "--a": centro + "%"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ea-azarL"
+  }, ps.map((x, k) => /*#__PURE__*/React.createElement("span", {
+    key: k,
+    className: k === i ? "sale" : ""
+  }, (azar.rots || [])[k] || "", " ", /*#__PURE__*/React.createElement("b", {
+    className: "ea-mono"
+  }, pct(x), "%")))));
+}
 function CaminoFinal({
   s
 }) {
@@ -16213,6 +16857,7 @@ function CaminoFinal({
         }, o.t, quedan > 0 && /*#__PURE__*/React.createElement("small", null, quedan === 1 ? "1 escena que no viviste" : quedan + " escenas que no viviste"));
       }
       const azar = !!(o.chk || o.j || o.juego);
+      const escena = o.azar && paso.r >= 0 && o.azar.esc && o.azar.esc[paso.r];
       return /*#__PURE__*/React.createElement("div", {
         className: "ea-rumboSi",
         key: i,
@@ -16223,7 +16868,7 @@ function CaminoFinal({
       }, /*#__PURE__*/React.createElement(Icono, {
         k: "check",
         tam: 14
-      }), /*#__PURE__*/React.createElement("span", null, o.t), azar && /*#__PURE__*/React.createElement("em", null, paso.n === "fallo" ? "salió mal" : paso.n === "parcial" ? "a medias" : "salió bien"));
+      }), /*#__PURE__*/React.createElement("span", null, o.t), escena ? /*#__PURE__*/React.createElement("em", null, escena.r) : azar && /*#__PURE__*/React.createElement("em", null, paso.n === "fallo" ? "salió mal" : paso.n === "parcial" ? "a medias" : "salió bien"));
     })), hijos.length > 0 && /*#__PURE__*/React.createElement("div", {
       className: "ea-hijos"
     }, hijos.map(j => nodo(j, tono, true))));
@@ -16461,6 +17106,7 @@ const TRAZOS = {
      memorando gris para un dia de oficina, para que se case tu hermano y
      para la decision que parte la carrera en dos. */
   check: "M4.6 12.6l4.6 4.6L19.4 7",
+  dado: "M5.4 3.6h13.2a1.8 1.8 0 0 1 1.8 1.8v13.2a1.8 1.8 0 0 1-1.8 1.8H5.4a1.8 1.8 0 0 1-1.8-1.8V5.4a1.8 1.8 0 0 1 1.8-1.8z M8.6 8.6h.01 M15.4 8.6h.01 M12 12h.01 M8.6 15.4h.01 M15.4 15.4h.01",
   /* una flecha que vuelve: lo que decidiste antes */
   eco: "M9.4 14.6 4.2 9.4l5.2-5.2 M4.2 9.4h10.4a5.4 5.4 0 0 1 0 10.8H11",
   documento: "M14 2.6H6.4a2 2 0 0 0-2 2v14.8a2 2 0 0 0 2 2h11.2a2 2 0 0 0 2-2V8.2z M14 2.6v5.6h5.6 M8.4 13h7.2 M8.4 17h4.8",
@@ -17855,7 +18501,8 @@ const topeCredito = (st, neto, bienes) => {
 };
 
 /* la parte de la deuda que hay que amortizar cada año */
-const CUOTA_DEUDA = 0.18;
+/* parte del capital que se devuelve cada año, además de los intereses */
+const CUOTA_DEUDA = 0.25;
 /* por encima de esto el banco deja de esperar y se cobra con lo que haya */
 const EMBARGO_VECES = 3;
 /* y por encima de esto ya no hay embargo que alcance */
@@ -18108,7 +18755,7 @@ function Motor() {
   };
   const sacar = (fuente, st, usados) => {
     /* con firma propia no salen las de empleado, y sin ella no salen las de dueño */
-    const cabe = e => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0 && !(st.propia && esDeEmpleado(e)) && !(e.dueno && !st.propia) && huellasOk(e, st);
+    const cabe = e => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0 && !(sinJefe(st) && esDeEmpleado(e)) && !(e.dueno && !sinJefe(st)) && huellasOk(e, st);
     let pool = fuente.filter(e => cabe(e) && st.vistos.indexOf(e.id) < 0);
     if (pool.length === 0) pool = fuente.filter(cabe);
     return pool.length ? elegirAzar(pool) : null;
@@ -18162,7 +18809,7 @@ function Motor() {
        legendaria en el año uno no significaría nada porque todavía no hay
        carrera que partir en dos. */
     if (st.turno >= 4 && Math.random() < 0.11) {
-      const posibles = LEGENDARIAS.filter(e => st.rango >= e.min && st.rango <= e.max && !(st.propia && esDeEmpleado(e)) && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0 && huellasOk(e, st));
+      const posibles = LEGENDARIAS.filter(e => st.rango >= e.min && st.rango <= e.max && !(sinJefe(st) && esDeEmpleado(e)) && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0 && huellasOk(e, st));
       const leg = elegirAzar(posibles);
       if (leg) {
         lista.push(leg);
@@ -18172,7 +18819,7 @@ function Motor() {
 
     /* Montar lo tuyo se ofrece al llegar a Asociado y otra vez más
        arriba: decir «no ahora» no puede ser decir «no nunca». */
-    if (!st.propia) {
+    if (!sinJefe(st)) {
       const ofertas = [[3, 9720], [5, 9721]];
       for (let k = 0; k < ofertas.length; k++) {
         const rangoMin = ofertas[k][0],
@@ -18217,7 +18864,7 @@ function Motor() {
        solo una de cada cuatro llegaba: el árbol de tu carrera ni se
        plantaba. Ahora llega en Analista Senior, o al quinto año si no
        has subido, con tiempo para que sus consecuencias se vean. */
-    if (!st.rama && (st.rango >= 2 || st.turno >= 4)) {
+    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) {
       lista.push(decisionRama(st));
       usados.push(DECISION_RAMA.id);
     }
@@ -18226,11 +18873,12 @@ function Motor() {
        tres, y con ellos todo lo que cuelga detrás. Cada una sale una vez
        por partida a partir de su año; una por año, para no amontonar. */
     const fuenteRaiz = E.concat(TRONCOS);
-    const raiz = RAICES.filter(x => st.turno >= x.desde && !x.ids.some(id => st.vistos.indexOf(id) >= 0 || usados.indexOf(id) >= 0)).map(x => x.ids.map(id => fuenteRaiz.find(y => y.id === id)).find(e => e && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st) && !(st.propia && esDeEmpleado(e)))).find(Boolean);
-    if (raiz) {
-      lista.push(raiz);
-      usados.push(raiz.id);
-    }
+    const raiz = RAICES.filter(x => st.turno >= x.desde && !x.ids.some(id => st.vistos.indexOf(id) >= 0 || usados.indexOf(id) >= 0)).map(x => x.ids.map(id => fuenteRaiz.find(y => y.id === id)).find(e => e && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st) && !(sinJefe(st) && esDeEmpleado(e)))).filter(Boolean)
+    /* hay más árboles que años: desde el segundo, caben dos raíces */.slice(0, st.turno >= 2 ? 2 : 1);
+    raiz.forEach(e => {
+      lista.push(e);
+      usados.push(e.id);
+    });
     if (esClave(st.turno)) {
       const k = sacar(D, st, usados);
       if (k) {
@@ -18247,7 +18895,7 @@ function Motor() {
        se dejara de ver el minijuego de trading. */
     const objetivo = Math.min(forzadas + 2 + (Math.random() < 0.45 ? 1 : 0), 5);
     while (lista.length < objetivo) {
-      const e = sacar(st.propia ? E.concat(DUENO) : E, st, usados);
+      const e = sacar(sinJefe(st) ? E.concat(DUENO) : E, st, usados);
       if (!e) break;
       lista.push(e);
       usados.push(e.id);
@@ -18712,7 +19360,7 @@ function Motor() {
   });
 
   /* ---------- resolución de una escena ---------- */
-  const resolverEscena = (dBruto, nivelBruto, o) => {
+  const resolverEscena = (dBruto, nivelBruto, o, azar) => {
     const d = dBruto && typeof dBruto === "object" ? dBruto : {};
     const nivel = nivelBruto === "exito" || nivelBruto === "parcial" || nivelBruto === "fallo" ? nivelBruto : "parcial";
     let st = {
@@ -18775,7 +19423,7 @@ function Motor() {
     if (o && o.mudar) st.pais = o.mudar;
     /* Irte de firma de verdad: cambia el nombre en la placa y se guarda
        el de antes, que es adonde se puede volver. */
-    if (o && o.mudaFirma && !st.propia) {
+    if (o && o.mudaFirma && !sinJefe(st)) {
       const antes = st.patron;
       st.patronAnt = antes || "";
       st.patron = otroPatron(st);
@@ -18784,7 +19432,39 @@ function Motor() {
         t: "Te vas de " + (antes || "tu firma") + " a " + st.patron
       });
     }
-    if (o && o.vuelveFirma && !st.propia && st.patronAnt) {
+    /* La startup a tiempo completo: dejas la firma de verdad. Se acaba
+       el contrato, la placa dice dónde estás y cobras la mitad, que es lo
+       que paga una startup. Si se cae, vuelves a buscar trabajo. */
+    if (d.startup === true && !sinJefe(st)) {
+      st.patronAnt = st.patron || "";
+      st.patron = "Tu startup";
+      st.startup = true;
+      st.contrato = null;
+      st.sueldoMult = clamp(numero(st.sueldoMult, 1) * 0.5, 0.3, TOPE_MULT);
+      st.titulares = st.titulares.concat({
+        q: String(2026 + st.turno),
+        t: "Dejas " + (st.patronAnt || "tu firma") + " por la startup"
+      });
+    }
+    if (d.startup === false && st.startup) {
+      st.startup = false;
+      st.patron = otroPatron(st);
+      st.contrato = {
+        anos: 2,
+        desde: st.turno
+      };
+      st.sueldoMult = clamp(numero(st.sueldoMult, 1) * 2, 0.3, TOPE_MULT);
+      st.titulares = st.titulares.concat({
+        q: String(2026 + st.turno),
+        t: "La startup cierra y entras en " + st.patron
+      });
+    }
+    /* venderla te deja por tu cuenta: ni jefe ni sueldo de startup */
+    if (d.vendeStartup && st.startup) {
+      st.patron = "Por tu cuenta";
+      st.sueldoMult = clamp(numero(st.sueldoMult, 1) * 2, 0.3, TOPE_MULT);
+    }
+    if (o && o.vuelveFirma && !sinJefe(st) && st.patronAnt) {
       const antes = st.patron;
       st.patron = st.patronAnt;
       st.patronAnt = antes || "";
@@ -18883,7 +19563,8 @@ function Motor() {
         id: ev.id,
         o: i,
         a: st.turno,
-        n: nivel
+        n: nivel,
+        r: azar && o.azar ? azar.i : -1
       }).slice(-40);
       anotarArbol(ev.id);
     }
@@ -18902,7 +19583,8 @@ function Motor() {
     setRes({
       msg: texto(d.msg, "El asunto quedo cerrado.", 600),
       nivel,
-      cambios
+      cambios,
+      azar: azar || null
     });
     irA("resultado");
   };
@@ -19116,20 +19798,44 @@ function Motor() {
        pero este bloque hace aritmética con la deuda y no debe fiarse */
     st.deuda = clamp(numero(st.deuda, 0), 0, TOPE_PLATA);
     st.vetoCredito = Math.max(0, entero(st.vetoCredito, 0, 0, 9) - 1);
+    /* La cuota era el 18% de la deuda DESPUÉS de sumarle intereses del 11
+       al 45%: con eso la deuda bajaba un 5% al año y 13.000 tardaban más
+       de una década en irse. Además el informe apuntaba como gasto los
+       intereses y la cuota enteros, que no era lo que se cobraba.
+        Ahora la cuota son los intereses del año más un 25% del capital, y
+       se cobra primero el interés. Solo el interés es gasto: devolver
+       capital no te empobrece, cambia efectivo por menos deuda. Y si te
+       sobra efectivo más allá de medio año de gastos, se adelanta deuda:
+       con una tasa así, pagarla es la mejor inversión que tienes. */
+    let pagoDeuda = 0;
     if (numero(st.deuda, 0) > 0) {
       const tasa = tasaPrestamo(st);
       const interes = st.deuda * tasa;
-      st.deuda = clamp(st.deuda + interes, 0, TOPE_PLATA);
-      const cuota = Math.min(st.deuda, st.deuda * CUOTA_DEUDA + interes * 0);
-      egr.push({
-        n: "Intereses y cuota de la deuda, " + Math.round(tasa * 100) + "%",
-        v: interes + cuota
-      });
-      const r2 = cobrar(st, cuota);
+      const amortiza = Math.min(st.deuda, st.deuda * CUOTA_DEUDA);
+      const r2 = cobrar(st, interes + amortiza);
       st.cash = r2.cash;
       st.cartera = r2.cartera;
-      /* lo que no pudiste pagar de la cuota sigue debiéndose */
-      st.deuda = clamp(st.deuda - (cuota - r2.falta), 0, TOPE_PLATA);
+      const pagado = interes + amortiza - r2.falta;
+      const interesPagado = Math.min(interes, pagado);
+      const capitalPagado = Math.max(0, pagado - interes);
+      /* el interés que no pudiste pagar se suma a lo que debes */
+      st.deuda = clamp(st.deuda - capitalPagado + (interes - interesPagado), 0, TOPE_PLATA);
+      egr.push({
+        n: "Intereses de la deuda, " + Math.round(tasa * 100) + "%",
+        v: interesPagado
+      });
+      pagoDeuda += interesPagado;
+      let adelanto = 0;
+      const colchon = gastos * 0.5;
+      if (st.deuda > 0 && st.cash > colchon) {
+        adelanto = Math.min(st.deuda, st.cash - colchon);
+        st.cash -= adelanto;
+        st.deuda = clamp(st.deuda - adelanto, 0, TOPE_PLATA);
+      }
+      const devuelto = capitalPagado + adelanto;
+      if (devuelto > 0) {
+        notas.push(st.deuda > 0 ? "Devuelves USD " + fmt(devuelto) + " de deuda" + (adelanto > 0 ? ", adelantando lo que te sobraba" : "") + ". Te quedan USD " + fmt(st.deuda) + "." : "Terminas de pagar tu deuda: USD " + fmt(devuelto) + " este año.");
+      }
     }
 
     /* si el año cierra en rojo, eso no desaparece: se convierte en deuda
@@ -19442,8 +20148,8 @@ function Motor() {
       ing,
       egr,
       ingreso,
-      egreso,
-      neto,
+      egreso: egreso + pagoDeuda,
+      neto: neto - pagoDeuda,
       ahorro,
       patAntes,
       patrimonio,
@@ -19492,10 +20198,31 @@ function Motor() {
       irA("minijuego");
       return;
     }
+    if (o.azar && Array.isArray(o.azar.esc) && o.azar.esc.length) {
+      const ps = probsAzar(o, s);
+      const i = tirarAzar(ps);
+      const e = o.azar.esc[i] || {};
+      resolverEscena(e.d || {}, e.nivel || "parcial", o, {
+        i,
+        ps,
+        rots: o.azar.esc.map(x => x.r || ""),
+        tonos: o.azar.esc.map(x => x.nivel || "parcial")
+      });
+      return;
+    }
     if (o.chk) {
+      /* El resultado puede venir dentro del chk o a su lado (ok/no en la
+         opción): las dos formas existen en las tablas. Solo se leía la
+         primera, y ocho opciones —«Prestar sin papeles, es familia»,
+         «Meter un ticket pequeño, por la amistad»...— no hacían nada. */
       const p = clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5, 0.12, 0.9);
       const ok = Math.random() < p;
-      resolverEscena(ok ? o.chk.ok : o.chk.no, ok ? "exito" : "fallo", o);
+      resolverEscena(ok ? o.chk.ok || o.ok : o.chk.no || o.no, ok ? "exito" : "fallo", o, {
+        i: ok ? 0 : 1,
+        ps: [p, 1 - p],
+        rots: ["Sale bien", "Sale mal"],
+        tonos: ["exito", "fallo"]
+      });
     } else resolverEscena(o.d, "exito", o);
   };
   const finJuego = nivel => {
@@ -20582,7 +21309,7 @@ function Motor() {
     }
   }, "Contrato"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
-  }, s.propia ? "es tuya, no hay contrato" : s.contrato ? (() => {
+  }, s.propia ? "es tuya, no hay contrato" : s.startup ? "tu startup, no hay contrato" : s.contrato ? (() => {
     const quedan = numero(s.contrato.desde, 0) + numero(s.contrato.anos, 3) - s.turno;
     return numero(s.contrato.anos, 3) + " años · " + (quedan <= 0 ? "vencido" : "quedan " + quedan);
   })() : "sin contrato")), /*#__PURE__*/React.createElement("div", {
@@ -21588,7 +22315,12 @@ function Motor() {
           className: "ea-opN ea-mono"
         }, String.fromCharCode(65 + i % 26)), o.t, o.req && !falta && /*#__PURE__*/React.createElement("span", {
           className: "ea-opSolo ea-dis"
-        }, "solo t\xFA"), falta && /*#__PURE__*/React.createElement("span", {
+        }, "solo t\xFA"), o.azar && /*#__PURE__*/React.createElement("span", {
+          className: "ea-opAzar ea-dis"
+        }, /*#__PURE__*/React.createElement(Icono, {
+          k: "dado",
+          tam: 12
+        }), (o.azar.esc || []).length, " escenarios"), falta && /*#__PURE__*/React.createElement("span", {
           className: "ea-opCandado ea-dis"
         }, /*#__PURE__*/React.createElement(Icono, {
           k: "candado",
@@ -21667,7 +22399,9 @@ function Motor() {
     style: {
       animationDelay: 260 + i * 90 + "ms"
     }
-  }, c.nota ? c.nota : ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v))), /*#__PURE__*/React.createElement("button", {
+  }, c.nota ? c.nota : ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v))), res.azar && /*#__PURE__*/React.createElement(BarraAzar, {
+    azar: res.azar
+  }), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
     disabled: carteraPend,
     onClick: siguienteEscena
