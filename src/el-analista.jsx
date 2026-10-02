@@ -148,6 +148,31 @@ const CSS = `
 .ea-porQue svg{flex-shrink:0}
 .ea-memoDrama .ea-porQue{display:flex;width:fit-content;margin:0 auto 10px}
 
+/* ---- tu camino, al final de la partida ---- */
+.ea-camino{margin-top:24px;text-align:left}
+.ea-arbol{margin-top:20px}
+.ea-arbolT{display:flex;align-items:center;gap:7px;font-size:12px;letter-spacing:.16em;font-weight:800;margin-bottom:10px}
+.ea-nodo{border-left:3px solid;padding:2px 0 2px 14px;margin-left:7px;animation:ea-camIn .5s ease-out backwards}
+.ea-nodoHijo{margin-top:12px}
+.ea-nodoT{font-size:15.5px;font-weight:800;color:#262626;margin:0 0 7px;line-height:1.25;text-transform:none;letter-spacing:-.01em}
+.ea-nodoT .ea-mono{font-size:11.5px;color:var(--gris);font-weight:600;margin-right:8px;letter-spacing:.04em}
+.ea-rumbos{display:flex;flex-direction:column;gap:6px}
+.ea-rumboSi{display:flex;align-items:center;gap:7px;border:2px solid;border-radius:12px;padding:8px 11px;
+  font-weight:700;font-size:13.5px;background:#FFFFFF;box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.ea-rumboSi svg{flex-shrink:0}
+.ea-rumboSi em{margin-left:auto;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;opacity:.75;white-space:nowrap}
+.ea-rumboNo{border:1.5px dashed #CFCFC8;border-radius:12px;padding:7px 11px;font-size:13px;color:#9A9A94}
+.ea-rumboNo small{display:block;margin-top:2px;font-size:11.5px;color:#7A4FB0;font-weight:700}
+.ea-hijos{margin-top:4px}
+.ea-descubre{margin-top:22px;padding-top:14px;border-top:1px solid #E2E2DC}
+.ea-descubreN{font-size:13.5px;color:#3D3D3D}
+.ea-descubreN .ea-mono{font-size:20px;font-weight:800;color:#7A4FB0;margin-right:4px}
+.ea-descubreB{height:8px;border-radius:99px;background:#EFE7F8;margin-top:8px;overflow:hidden}
+.ea-descubreB div{height:100%;border-radius:99px;background:#7A4FB0;animation:ea-camBarra 1.2s .3s ease-out backwards}
+@keyframes ea-camIn{from{opacity:0;transform:translateX(-10px)}}
+@keyframes ea-camBarra{from{width:0}}
+
 .ea-ops{margin-top:18px;display:flex;flex-direction:column;gap:8px}
 .ea-op{display:block;width:100%;text-align:left;background:transparent;color:var(--tintaPapel);
   border:1px solid rgba(61,61,61,.32);padding:11px 13px;font:inherit;font-size:14.5px;cursor:pointer;
@@ -3594,6 +3619,54 @@ const CONSECUENCIAS = [
 ];
 const IDS_CONSEC = CONSECUENCIAS.map((e) => e.id);
 
+/* Los tres árboles que se dibujan al final, por su escena raíz. */
+const ARBOLES = [
+  { raiz: 999, n: "Tu carrera" },
+  { raiz: 7, n: "El headhunter" },
+  { raiz: 8, n: "El rumor" },
+];
+const IDS_ARBOL = ARBOLES.map((a) => a.raiz).concat(IDS_CONSEC);
+
+/* Todas las escenas a las que puede llevar una opción, salga bien o mal. */
+const luegosDe = (o) => {
+  if (!o) return [];
+  const fuentes = [o, o.d, o.ok, o.no, o.chk && o.chk.ok, o.chk && o.chk.no];
+  return unicos([].concat(...fuentes.filter(Boolean).map((x) => [].concat(x.luego || []).map((l) => l && l.id)))
+    .filter((id) => IDS_CONSEC.indexOf(id) >= 0));
+};
+/* cuántas consecuencias distintas cuelgan de una opción, contando las
+   que cuelgan de esas: es lo que se pierde quien no la elige */
+const alcanceDe = (o, visto) => {
+  const v = visto || [];
+  let n = 0;
+  luegosDe(o).forEach((id) => {
+    if (v.indexOf(id) >= 0) return;
+    v.push(id); n += 1;
+    const e = CONSECUENCIAS.find((x) => x.id === id);
+    (e ? e.o : []).forEach((op) => { n += alcanceDe(op, v); });
+  });
+  return n;
+};
+
+/* Las consecuencias que ya viviste alguna vez, en cualquier partida. Es
+   un ajuste del navegador, como el aviso o el movimiento: no se pierde
+   al empezar otra vida, que es justo cuando importa. */
+const CLAVE_ARBOL = "el-analista-arbol";
+const leerArbol = () => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return [];
+    const v = JSON.parse(window.localStorage.getItem(CLAVE_ARBOL) || "[]");
+    return Array.isArray(v) ? v.filter((id) => IDS_CONSEC.indexOf(id) >= 0) : [];
+  } catch (e) { return []; }
+};
+const anotarArbol = (id) => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage || IDS_CONSEC.indexOf(id) < 0) return;
+    const v = leerArbol();
+    if (v.indexOf(id) < 0) window.localStorage.setItem(CLAVE_ARBOL, JSON.stringify(v.concat(id)));
+  } catch (e) { /* sin almacen, se cuenta solo esta vida */ }
+};
+
 /* las escenas de las que cuelga un árbol, y desde qué año salen seguro */
 const RAICES = [
   { id: 8, desde: 1 },   /* un rumor que vale plata */
@@ -4299,6 +4372,8 @@ const BASE = {
   /* lo que decidiste y todavía no ha vuelto: marcas permanentes, escenas
      programadas para más adelante y la firma de la que te fuiste */
   huellas: [], pendientes: [], patronAnt: "",
+  /* qué elegiste en cada nudo de los árboles, para dibujarlos al final */
+  camino: [],
 };
 
 /* cuánto cuesta al año cada persona que depende de ti, antes de país */
@@ -5108,6 +5183,9 @@ const sanear = (bruto) => {
   st.pendientes = listaDe(r.pendientes, (x) => x && typeof x === "object" && IDS_CONSEC.indexOf(x.id) >= 0, 16)
     .map((x) => ({ id: x.id, en: entero(x.en, 0, 0, 99) }));
   st.patronAnt = texto(r.patronAnt, "", 48);
+  st.camino = listaDe(r.camino, (x) => x && typeof x === "object" && IDS_ARBOL.indexOf(x.id) >= 0, 40)
+    .map((x) => ({ id: x.id, o: entero(x.o, 0, 0, 9), a: entero(x.a, 0, 0, 60),
+      n: ["exito", "parcial", "fallo"].indexOf(x.n) >= 0 ? x.n : "exito" }));
   return st;
 };
 
@@ -7427,27 +7505,105 @@ function JuegoSubasta({ ayuda, onFin }) {
   );
 }
 
+/* ============================================================
+   TU CAMINO
+   La pantalla final contaba cuánto dinero hiciste y no por dónde fuiste.
+   Aquí se dibujan los tres árboles de la partida: en color lo que
+   elegiste y lo que te trajo, en gris lo que dejaste pasar y cuántas
+   escenas había detrás. Es la razón para vivir otra vida.
+   ============================================================ */
+const COLOR_ARBOL = { 999: "#B9532A", 7: "#2F7D5B", 8: "#7A4FB0" };
+
+function CaminoFinal({ s }) {
+  const camino = Array.isArray(s && s.camino) ? s.camino : [];
+  const usados = [];
+  let orden = 0;
+
+  const nodo = (k, tono, hondo) => {
+    usados.push(k);
+    const paso = camino[k];
+    const e = escenaDeId(paso.id, s);
+    if (!e) return null;
+    const ops = (Array.isArray(e.o) ? e.o : []).filter((o) => o && o.t);
+    const retraso = (orden++) * 90;
+    /* lo que trajo la opción elegida: los pasos posteriores que cuelgan de ella */
+    const hijosIds = luegosDe(ops[paso.o]);
+    const hijos = [];
+    camino.forEach((x, j) => {
+      if (j > k && usados.indexOf(j) < 0 && hijosIds.indexOf(x.id) >= 0 && !hijos.some((h) => camino[h].id === x.id)) hijos.push(j);
+    });
+    hijos.forEach((j) => usados.push(j));
+    return (
+      <div className={"ea-nodo" + (hondo ? " ea-nodoHijo" : "")} key={k} style={{ borderColor: tono, animationDelay: retraso + "ms" }}>
+        <div className="ea-nodoT ea-dis"><span className="ea-mono">{2026 + paso.a}</span>{e.t}</div>
+        <div className="ea-rumbos">
+          {ops.map((o, i) => {
+            if (i !== paso.o) {
+              const quedan = alcanceDe(o);
+              return (
+                <div className="ea-rumboNo" key={i}>
+                  {o.t}
+                  {quedan > 0 && <small>{quedan === 1 ? "1 escena que no viviste" : quedan + " escenas que no viviste"}</small>}
+                </div>
+              );
+            }
+            const azar = !!(o.chk || o.j || o.juego);
+            return (
+              <div className="ea-rumboSi" key={i} style={{ borderColor: tono, color: tono }}>
+                <Icono k="check" tam={14} />
+                <span>{o.t}</span>
+                {azar && <em>{paso.n === "fallo" ? "salió mal" : paso.n === "parcial" ? "a medias" : "salió bien"}</em>}
+              </div>
+            );
+          })}
+        </div>
+        {/* Lo que trajo la opción elegida va debajo de TODAS las opciones
+            del nudo: puesto justo bajo la elegida, la alternativa en gris
+            quedaba al final de la sub-rama y parecía colgar de ella. */}
+        {hijos.length > 0 && <div className="ea-hijos">{hijos.map((j) => nodo(j, tono, true))}</div>}
+      </div>
+    );
+  };
+
+  const arboles = ARBOLES.map((a) => ({ ...a, k: camino.findIndex((x) => x.id === a.raiz) })).filter((a) => a.k >= 0);
+  if (!arboles.length) return null;
+
+  const descubiertas = unicos(leerArbol().concat(camino.map((x) => x.id).filter((id) => IDS_CONSEC.indexOf(id) >= 0)));
+  const pct = Math.round(descubiertas.length / IDS_CONSEC.length * 100);
+  return (
+    <div className="ea-panel ea-camino">
+      <div className="ea-rot ea-dis">Tu camino</div>
+      <div className="ea-itemD">En color, lo que elegiste. En gris, lo que dejaste pasar.</div>
+      {arboles.map((a) => (
+        <div className="ea-arbol" key={a.raiz}>
+          <div className="ea-arbolT ea-dis" style={{ color: COLOR_ARBOL[a.raiz] }}><Icono k="bifurca" tam={16} />{a.n}</div>
+          {nodo(a.k, COLOR_ARBOL[a.raiz], false)}
+        </div>
+      ))}
+      <div className="ea-descubre">
+        <div className="ea-descubreN"><span className="ea-mono">{descubiertas.length}</span> de {IDS_CONSEC.length} consecuencias descubiertas en todas tus vidas</div>
+        <div className="ea-descubreB"><div style={{ width: pct + "%" }} /></div>
+      </div>
+    </div>
+  );
+}
+
 /* ---- piezas del informe de cierre ---- */
 
 /* ============================================================
    EL INTERRUPTOR DEL MOVIMIENTO
-   null = lo que diga el sistema · true = encendido · false = apagado.
+   false = apagado · cualquier otra cosa = encendido.
    Vive fuera de React porque lo consultan componentes sueltos (la cifra
    que cuenta, el rodillo) que no tienen el estado de la partida a mano.
    El Motor lo pone al dia en cada render desde st.animar.
    ============================================================ */
 let MOVIMIENTO = null;
-const sistemaPideQuieto = () => {
-  try {
-    return typeof window !== "undefined" && typeof window.matchMedia === "function"
-      && !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  } catch (e) { return false; }
-};
-const sinMovimiento = () => {
-  if (MOVIMIENTO === true) return false;
-  if (MOVIMIENTO === false) return true;
-  return sistemaPideQuieto();
-};
+/* Encendido por defecto. Seguir al sistema dejaba el juego quieto en
+   cualquier Windows con los efectos de animacion apagados —un ajuste de
+   rendimiento que casi nadie recuerda haber tocado—, y el rodillo del
+   patrimonio y las cifras que cuentan son media gracia del juego. Quien
+   se maree lo apaga en su Ficha y se queda apagado en todas sus vidas. */
+const sinMovimiento = () => MOVIMIENTO === false;
 
 /* ============================================================
    UNA CIFRA QUE CUENTA EN VEZ DE SALTAR
@@ -7600,6 +7756,7 @@ const TRAZOS = {
      Un simbolo por tipo de escena. Antes todas se veian igual: el mismo
      memorando gris para un dia de oficina, para que se case tu hermano y
      para la decision que parte la carrera en dos. */
+  check:     "M4.6 12.6l4.6 4.6L19.4 7",
   /* una flecha que vuelve: lo que decidiste antes */
   eco:       "M9.4 14.6 4.2 9.4l5.2-5.2 M4.2 9.4h10.4a5.4 5.4 0 0 1 0 10.8H11",
   documento: "M14 2.6H6.4a2 2 0 0 0-2 2v14.8a2 2 0 0 0 2 2h11.2a2 2 0 0 0 2-2V8.2z M14 2.6v5.6h5.6 M8.4 13h7.2 M8.4 17h4.8",
@@ -9327,6 +9484,12 @@ function Motor() {
       pend.push({ id: x.id, en: st.turno + entero(x.en, 1, 1, 10) });
     });
     st.pendientes = pend.filter((p) => pendienteVivo(p, st)).slice(-16);
+    /* y si era un nudo de un árbol, qué rama tomaste y cómo salió */
+    if (ev && o && IDS_ARBOL.indexOf(ev.id) >= 0) {
+      const i = (Array.isArray(ev.o) ? ev.o : []).indexOf(o);
+      if (i >= 0) st.camino = (Array.isArray(st.camino) ? st.camino : []).concat({ id: ev.id, o: i, a: st.turno, n: nivel }).slice(-40);
+      anotarArbol(ev.id);
+    }
 
     if (o && o.sigue && nivel === "exito" && CADENA[o.sigue]) {
       const extra = [].concat(CADENA[o.sigue]).filter(escenaValida);
@@ -10570,16 +10733,15 @@ function Motor() {
                         del cierre y las cifras que cuentan sin que hubiera
                         forma de encenderlos. */}
                     <Plegable titulo="Movimiento"
-                      resumen={animar === true ? "encendido" : animar === false ? "apagado" : (sistemaPideQuieto() ? "lo apaga tu sistema" : "sigue a tu sistema")}>
+                      resumen={animar === false ? "apagado" : "encendido"}>
                       <div className="ea-itemD" style={{ marginBottom: 8 }}>
-                        Las cifras que cuentan y el rodillo del cierre de año. Por defecto el juego hace lo
-                        que pida tu sistema{sistemaPideQuieto() ? ", y el tuyo los está apagando" : ""}.
-                        Se queda puesto para todas tus partidas.
+                        Las cifras que cuentan, el rodillo del cierre de año y todo lo que se mueve.
+                        Si te marea, apágalo: se queda así para todas tus partidas.
                       </div>
                       <div className="ea-generos">
-                        {[[null, "Como mi sistema"], [true, "Encendido"], [false, "Apagado"]].map((par) => (
+                        {[[true, "Encendido"], [false, "Apagado"]].map((par) => (
                           <button key={String(par[0])} style={{ marginTop: 0 }}
-                            className={"ea-mini" + (animar === par[0] ? " on" : "")}
+                            className={"ea-mini" + ((animar === false) === (par[0] === false) ? " on" : "")}
                             onClick={() => setAnimar(par[0])}>{par[1]}</button>
                         ))}
                       </div>
@@ -11511,6 +11673,8 @@ function Motor() {
               <div className="ea-cifraV ea-mono">USD {fmt(gastosAnuales)} al año</div>
             </div>
           </div>
+
+          <CaminoFinal s={s} />
 
           {/* Los seis datos salen del estado: nada que copiar a mano. */}
           <BotonAnotar entrada={{
