@@ -1,0 +1,502 @@
+[
+ {
+  "grupo": "decision clave",
+  "id": 101,
+  "titulo": "La cifra que va en la portada",
+  "texto": "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Calzar el precio con la señal del comprador",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Tu número cae justo dentro del rango del comprador. Firman sin renegociar."
+   },
+   {
+    "indice": 1,
+    "texto": "Blindar el modelo celda por celda",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Encuentras dos inconsistencias antes que nadie. El modelo aguanta cualquier pregunta."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 102,
+  "titulo": "Tres días de due diligence",
+  "texto": "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
+  "empleado": false,
+  "cargo": [
+   0,
+   5
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Peinar el legajo completo en orden",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Reconstruyes la cadena de contratos y aparece un pasivo laboral no declarado. Ajustan el precio."
+   },
+   {
+    "indice": 1,
+    "texto": "Ir directo a los números que suelen fallar",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Vas a la conciliación bancaria y encuentras la diferencia en veinte minutos."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 103,
+  "titulo": "Negociación de honorarios",
+  "texto": "El cliente quiere pagar por éxito y nada por retainer. Tu equipo trabaja ocho meses en cualquier escenario.",
+  "empleado": false,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Anclar alto y ceder despacio",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Cierras retainer y éxito. El cliente cree que ganó la negociación, que es la mejor señal."
+   },
+   {
+    "indice": 1,
+    "texto": "Poner una sola cifra y sostenerla",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Un número, una explicación, cero regateo. Firman en la misma reunión."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 104,
+  "titulo": "La posición que ya dio mucho",
+  "texto": "Una posición de tu portafolio va 70% arriba. Todos los indicadores dicen cosas distintas.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aguantar y dejar correr",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Sales cerca del pico. No se puede pedir más."
+   },
+   {
+    "indice": 1,
+    "texto": "Salir por tramos con disciplina",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Tres salidas escalonadas, precio promedio muy decente."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 105,
+  "titulo": "Comité de crédito",
+  "texto": "Presentas una estructura sobre facturas de un sector volátil. Dos miembros del comité vienen buscando sangre.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ir con el análisis de contraparte hecho",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Detectas la concentración de deudores antes de que la pregunten. Aprueban con condiciones."
+   },
+   {
+    "indice": 1,
+    "texto": "Responder de memoria, sin papeles",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Cinco preguntas seguidas respondidas de memoria. El comité toma nota de tu nombre."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 106,
+  "titulo": "Subasta competitiva",
+  "texto": "Cinco postores, dos rondas. Tu cliente compra y tú decides la estrategia de precio.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Poner precio firme en la primera ronda",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Sacas a tres competidores de una vez y cierras sin segunda vuelta."
+   },
+   {
+    "indice": 1,
+    "texto": "Guardar munición para la segunda vuelta",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Entras en la última vuelta con la mejor información y el mejor precio."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 107,
+  "titulo": "El pitch al comité de inversión",
+  "texto": "Veinte minutos, siete personas y una tesis que tienes que defender sin leer la lámina.",
+  "empleado": false,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ensayar hasta tenerlo memorizado",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Hablas sin mirar la pantalla veinte minutos. Aprueban el mandato ese mismo día."
+   },
+   {
+    "indice": 1,
+    "texto": "Improvisar sobre los números y cerrar en el punto justo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Cierras exactamente en el minuto veinte con la conclusión más fuerte."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 108,
+  "titulo": "Papel distressed a treinta centavos",
+  "texto": "Un bono corporativo cotiza a treinta. La reestructuración puede tardar dos años o no llegar nunca.",
+  "empleado": false,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Comprar y aguantar hasta el acuerdo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "El acuerdo llega y el papel recupera a sesenta y cinco. Doblaste el capital."
+   },
+   {
+    "indice": 1,
+    "texto": "Armar el caso y venderlo a un fondo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Un fondo compra la tesis y te paga por estructurarla. Riesgo ajeno, fee tuyo."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 109,
+  "titulo": "Auditoría regulatoria sorpresa",
+  "texto": "Llegan sin aviso a revisar expedientes de los últimos dos años. Te toca a ti acompañarlos.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Reconstruir la trazabilidad de memoria",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Explicas cada aprobación en orden y sin dudar. El informe sale limpio."
+   },
+   {
+    "indice": 1,
+    "texto": "Ordenar los expedientes antes de entregarlos",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Todo entregado en el orden correcto media hora antes de que lo pidan."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 110,
+  "titulo": "Fijar el rango de precio de la colocación",
+  "texto": "Sale la emisión. Muy arriba no se coloca, muy abajo dejas plata del cliente en la mesa.",
+  "empleado": false,
+  "cargo": [
+   4,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Leer el libro y fijar el punto exacto",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "La emisión se coloca completa y cotiza arriba el primer día."
+   },
+   {
+    "indice": 1,
+    "texto": "Sondear a los anclas uno por uno",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Los tres anclas confirman antes de abrir el libro. La colocación es un trámite."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 111,
+  "titulo": "Primer cierre de tu fondo",
+  "texto": "Tienes la tesis, el track record y una lista de LPs. Falta convencerlos del tamaño del ticket.",
+  "empleado": false,
+  "cargo": [
+   4,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Negociar el ticket con el LP ancla",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "El ancla entra por el doble de lo que esperabas y el resto lo sigue. Primer cierre por encima del objetivo."
+   },
+   {
+    "indice": 1,
+    "texto": "Aguantar la ronda hasta conseguir el tamaño",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Aguantas seis meses más y cierras al tamaño que querías."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 112,
+  "titulo": "Dos cierres el mismo viernes",
+  "texto": "Dos mandatos firman el mismo día en ciudades distintas. Los dos clientes creen que estás con ellos.",
+  "empleado": false,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Coordinar los tiempos al minuto",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Los dos cierran sin fricción y ninguno se entera del otro."
+   },
+   {
+    "indice": 1,
+    "texto": "Delegar uno y jugarte la ejecución del equipo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Tu asociado ejecuta sin un error. Acabas de fabricar un sucesor."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 113,
+  "titulo": "Reasignar tu portafolio antes del cierre de año",
+  "texto": "Tienes que decidir dónde queda parado tu patrimonio los próximos doce meses. Nadie va a revisar esto por ti.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Decidir tú, con tesis propia y convicción",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Lees bien el ciclo y la reasignación funciona. El portafolio se dispara."
+   },
+   {
+    "indice": 1,
+    "texto": "Indexarte y no pensar más en eso",
+    "forma": "directa",
+    "efecto": "Compras el índice y te olvidas. Aburrido y bastante difícil de criticar."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 114,
+  "titulo": "El director de inversiones del fondo te pone a prueba",
+  "texto": "Los primeros quince minutos son preguntas técnicas. Si pasas, el fondo entra en tu proceso y te deja copiar la posición.",
+  "empleado": true,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Entrar al examen sin red",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Respondes las tres sin dudar. Te comparte su lectura del ciclo y replicas la posición."
+   },
+   {
+    "indice": 1,
+    "texto": "Llevar a tu jefe y quedarte de apoyo",
+    "forma": "directa",
+    "efecto": "El fondo entra igual, por la puerta de tu jefe. Tú quedas como el que tomó notas."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 115,
+  "titulo": "Examen de idoneidad del regulador",
+  "texto": "Para firmar operaciones a tu nombre tienes que aprobarlo. Dos intentos y queda en registro público.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Presentarte y responder tú",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Aprobado a la primera. Ya puedes firmar operaciones a tu nombre."
+   },
+   {
+    "indice": 1,
+    "texto": "Postergarlo un año más",
+    "forma": "directa",
+    "efecto": "Sigues firmando bajo la licencia de otro. Cómodo hoy, caro cuando quieras independizarte."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 116,
+  "titulo": "Tu propia tesis frente al comité",
+  "texto": "Propones sobreponderar un sector completo. Si te creen y aciertas, todos lo notan. Si te creen y fallas, también.",
+  "empleado": false,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Defender la tesis con todo el rigor",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Aprueban la tesis y el sector rinde. Tu nombre queda pegado a la mejor decisión del año."
+   },
+   {
+    "indice": 1,
+    "texto": "Proponerla como piloto pequeño",
+    "forma": "directa",
+    "efecto": "Empiezas con un tamaño chico. Menos gloria y también menos posibilidad de desastre."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 117,
+  "titulo": "El dominó antes del negocio",
+  "texto": "El dueño de la empresa familiar te recibe en su casa y saca la mesa antes de hablar de números. Dice que así conoce a la gente.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aceptar la partida y jugarla en serio",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Le ganas limpio y se ríe. A partir de ahí te habla como si te conociera de siempre y firma."
+   },
+   {
+    "indice": 1,
+    "texto": "Ir directo a la propuesta",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Directo al punto y el número cae bien. No hubo química pero hubo firma."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 118,
+  "titulo": "Pulso con el comprador estratégico",
+  "texto": "Del otro lado hay un director de M&A con veinte años más que tú. Cada movimiento suyo busca una concesión tuya.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aguantar el pulso movimiento por movimiento",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Cierras en tus términos y con el precio intacto. El otro lado pide tu tarjeta al final."
+   },
+   {
+    "indice": 1,
+    "texto": "Llevarlo a un proceso competitivo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Traes dos competidores más y el estratégico sube el precio solo."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 119,
+  "titulo": "La silla del socio se decide en la mesa",
+  "texto": "Dos candidatos, una sola promoción, y el socio director los invita a jugar mientras conversan. Nadie dice que sea una prueba.",
+  "empleado": true,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Jugar y dejar que te lea",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Ganas sin humillar a nadie y con conversación. El socio ve lo que quería ver."
+   },
+   {
+    "indice": 1,
+    "texto": "Hablar de tu track record en vez de jugar",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Recitas cinco mandatos con cifras exactas. Difícil discutir contra eso."
+   }
+  ]
+ },
+ {
+  "grupo": "decision clave",
+  "id": 120,
+  "titulo": "Te ofrecen dirigir la oficina de otro país",
+  "texto": "Tres años afuera, equipo nuevo y un mercado que no conoces. Vuelves con galones o no vuelves.",
+  "empleado": true,
+  "cargo": [
+   4,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aceptar y armar el equipo desde cero",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Montas la operación en el orden correcto y en dos años la oficina es rentable."
+   },
+   {
+    "indice": 1,
+    "texto": "Quedarte y consolidar lo que ya tienes",
+    "forma": "directa",
+    "efecto": "Menos riesgo, menos historia. La franquicia local sigue creciendo contigo dentro."
+   }
+  ]
+ }
+]

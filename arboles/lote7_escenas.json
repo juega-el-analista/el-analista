@@ -1,0 +1,342 @@
+[
+ {
+  "grupo": "oficina",
+  "id": 54,
+  "titulo": "Controles de cambio de un día para otro",
+  "texto": "Amaneces con un control cambiario nuevo. Tus ahorros están en moneda local y el dólar oficial no existe en la práctica.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Moverlo todo antes del mediodía",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Creciste con esto. Sabes exactamente a quién llamar y en qué orden."
+   },
+   {
+    "indice": 1,
+    "texto": "Esperar a que se aclare la norma",
+    "forma": "directa",
+    "efecto": "La norma se aclara dos semanas después y para entonces ya perdiste 30% del poder de compra."
+   },
+   {
+    "indice": 2,
+    "texto": "Consultarlo con un abogado",
+    "forma": "directa",
+    "efecto": "Legalmente impecable y financieramente tarde."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 55,
+  "titulo": "Te ofrecen una visa de trabajo",
+  "texto": "Una firma de Miami quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
+  "empleado": true,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aceptar y mudarte",
+    "forma": "directa",
+    "efecto": "Otra liga, otro idioma en la mesa y una red que hay que construir desde cero."
+   },
+   {
+    "indice": 1,
+    "texto": "Quedarte donde tu red vale algo",
+    "forma": "directa",
+    "efecto": "Tu ventaja competitiva es local y decides no regalarla."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 56,
+  "titulo": "Un socio del club te presenta a alguien",
+  "texto": "Cena de doce personas, todos con capital. La conversación es informal hasta que deja de serlo.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aprovechar que conoces a media sala",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Recuerdas nombres, empresas y quién estuvo en qué operación."
+   },
+   {
+    "indice": 1,
+    "texto": "Quedarte con una conversación larga y buena",
+    "forma": "directa",
+    "efecto": "Una relación profunda vale más que doce superficiales."
+   },
+   {
+    "indice": 2,
+    "texto": "Irte temprano",
+    "forma": "directa",
+    "efecto": "Duermes bien y pierdes una noche que quizá importaba."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 60,
+  "titulo": "La pizarra del comité",
+  "texto": "El socio borra el pizarrón y escribe seis conceptos con sus definiciones cruzadas. Dice que si no los tienes automatizados, no puedes hablar en una reunión.",
+  "empleado": true,
+  "cargo": [
+   0,
+   3
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Resolverla en el momento",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te paras frente al pizarrón con seis pares desordenados."
+   },
+   {
+    "indice": 1,
+    "texto": "Pedir estudiarlo y volver mañana",
+    "forma": "directa",
+    "efecto": "Vuelves al día siguiente sabiéndotelo. La oportunidad de impresionar ya pasó."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 61,
+  "titulo": "Rotar entre activos",
+  "texto": "Tienes un año movido por delante y la sensación de que quedarte quieto en una sola clase de activo es dejar plata en la mesa.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Rotar activamente durante el año",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te pasas el año cambiándote de carril según lo que va pasando."
+   },
+   {
+    "indice": 1,
+    "texto": "Quedarte quieto donde estás",
+    "forma": "directa",
+    "efecto": "No tocas nada. Algunos años eso es lo mejor que puedes hacer y otros te cuesta caro."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 62,
+  "titulo": "El tablero de la negociación",
+  "texto": "Cuatro sesiones de negociación, cada una con concesiones que se acumulan. Quien controle el centro del tablero al final se lleva los términos.",
+  "empleado": false,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Sentarte tú a llevar el tablero",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Cada concesión que sueltas cambia la posición de todo lo demás."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandar la propuesta cerrada y no negociar",
+    "forma": "directa",
+    "efecto": "Tómalo o déjalo. Lo toman, con menos entusiasmo del que hubieras querido."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 63,
+  "titulo": "Cuatro postores por el mismo activo",
+  "texto": "Sala llena, sobre cerrado y nadie sabe con certeza cuánto vale la compañía. Tu estimación es solo eso, una estimación.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Entrar a la puja",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Levantas la mano en la primera ronda."
+   },
+   {
+    "indice": 1,
+    "texto": "Quedarte fuera y esperar el próximo proceso",
+    "forma": "directa",
+    "efecto": "No pujas. Meses después te enteras de a cuánto cerró y haces las cuentas de lo que te habría pasado."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 940,
+  "titulo": "Media hora antes de que llegue todo el mundo",
+  "texto": "Llegas temprano y tienes la oficina para ti. Puedes adelantar el modelo que te pidieron para el viernes o abrir el manual que llevas semanas sin tocar.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Sentarte a estudiar un tema a fondo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te sientas con un tema y lo entiendes de verdad. Esas medias horas son las que separan a los que ascienden."
+   },
+   {
+    "indice": 1,
+    "texto": "Adelantar el trabajo del viernes",
+    "forma": "directa",
+    "efecto": "Entregas antes de tiempo. Te lo reconocen y el manual sigue sin abrirse."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 941,
+  "titulo": "La certificación",
+  "texto": "El equipo paga la mitad de un programa de formación. Son seis meses de clases los sábados y un examen que reprueba a la mitad.",
+  "empleado": false,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Presentarte al examen",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Apruebas. La certificación abre puertas que no sabías que estaban cerradas."
+   },
+   {
+    "indice": 1,
+    "texto": "Este año no, ya vas ahogado",
+    "forma": "directa",
+    "efecto": "Lo dejas para el año que viene. Como el año pasado."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 942,
+  "titulo": "Te toca explicarlo tú",
+  "texto": "El socio te pide que le expliques a los pasantes cómo funciona lo que el equipo hace todos los días. No hay mejor forma de descubrir lo que no entiendes que tener que explicarlo.",
+  "empleado": true,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Preparártelo en serio y darlo tú",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Lo explicas con claridad y sin trampas. Media oficina se entera de que sabes."
+   },
+   {
+    "indice": 1,
+    "texto": "Pasárselo a otro del equipo",
+    "forma": "directa",
+    "efecto": "Se lo pasas a un compañero. Él queda bien delante del socio."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 943,
+  "titulo": "Alguien te pregunta algo básico",
+  "texto": "Un amigo fuera del sector te pregunta dónde debería meter sus ahorros. Te das cuenta a media frase de que no sabes explicarlo sin usar palabras que él no entiende.",
+  "empleado": false,
+  "cargo": [
+   0,
+   4
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Repasarlo hasta poder explicarlo en cristiano",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Se lo explicas sin una sola palabra técnica. Si puedes hacer eso, lo entiendes."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandarle el nombre de un fondo y ya",
+    "forma": "directa",
+    "efecto": "Le pasas un nombre sin explicación. Es lo que hace casi todo el mundo y es la razón por la que casi nadie entiende dónde tiene su dinero."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 950,
+  "titulo": "Tres carpetas y un solo cheque",
+  "texto": "El comité tiene capital para una operación y tres candidatas sobre la mesa. Cada una brilla por un lado distinto y falla por otro. Te piden la recomendación.",
+  "empleado": false,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Estudiar los tres negocios y recomendar uno",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Recomendaste el bueno y lo defendiste con los números. Eso es lo que hace que te sigan preguntando."
+   },
+   {
+    "indice": 1,
+    "texto": "Decir que ninguno vale la pena",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "Te plantas y no recomiendas ninguno. Pasar es una decisión y a veces la correcta: el comité lo respeta.",
+     "mal": "Pasas de las tres. Una de ellas triplicó en cuatro años y alguien se acordó de que tú dijiste que no."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 951,
+  "titulo": "El nuevo analista quiere aprender",
+  "texto": "El más joven del equipo te pregunta cómo se sabe si un negocio es bueno. Lo más rápido es enseñárselo con tres carpetas encima de la mesa.",
+  "empleado": false,
+  "cargo": [
+   4,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Sentarte con él y decidir juntos",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Le explicas por qué el que más crece no era el mejor. Se le queda para siempre, y a ti también."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandarle un libro y volver a lo tuyo",
+    "forma": "directa",
+    "efecto": "Le pasas un libro. Es mejor que nada y bastante peor que media hora tuya."
+   }
+  ]
+ }
+]
