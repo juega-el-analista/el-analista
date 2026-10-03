@@ -1,0 +1,44 @@
+import React from "react";
+import { JuegoPrecision } from "./JuegoPrecision.jsx";
+import { JuegoMemoria } from "./JuegoMemoria.jsx";
+import { JuegoOjo } from "./JuegoOjo.jsx";
+import { JuegoAnclaje } from "./JuegoAnclaje.jsx";
+import { JuegoSuerte } from "./JuegoSuerte.jsx";
+import { JuegoTresRaya } from "./JuegoTresRaya.jsx";
+import { JuegoQuiz } from "./JuegoQuiz.jsx";
+import { JuegoReaccion } from "./JuegoReaccion.jsx";
+import { JuegoCalculo } from "./JuegoCalculo.jsx";
+import { JuegoOrden } from "./JuegoOrden.jsx";
+import { JuegoSemaforo } from "./JuegoSemaforo.jsx";
+import { JuegoCatedra } from "./JuegoCatedra.jsx";
+import { JuegoTrading } from "./JuegoTrading.jsx";
+import { JuegoEstructura } from "./JuegoEstructura.jsx";
+import { JuegoBanderas } from "./JuegoBanderas.jsx";
+import { JuegoPares } from "./JuegoPares.jsx";
+import { JuegoCarril } from "./JuegoCarril.jsx";
+import { JuegoCuatro } from "./JuegoCuatro.jsx";
+import { JuegoComite } from "./JuegoComite.jsx";
+import { JuegoSubasta } from "./JuegoSubasta.jsx";
+
+export function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
+  if (tipo === "precision") return <JuegoPrecision ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "memoria") return <JuegoMemoria ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "ojo") return <JuegoOjo ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "anclaje") return <JuegoAnclaje ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "tresraya") return <JuegoTresRaya ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "quiz") return <JuegoQuiz ayuda={ayuda} nivel={nivel} onFin={onFin} modo={modo} temas={temas} />;
+  if (tipo === "catedra") return <JuegoCatedra ayuda={ayuda} nivel={nivel} onFin={onFin} onTema={onTema} />;
+  if (tipo === "comite") return <JuegoComite ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "reaccion") return <JuegoReaccion ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "calculo") return <JuegoCalculo ayuda={ayuda} nivel={nivel} onFin={onFin} />;
+  if (tipo === "orden") return <JuegoOrden ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "semaforo") return <JuegoSemaforo ayuda={ayuda} nivel={nivel} onFin={onFin} />;
+  if (tipo === "trading") return <JuegoTrading ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "estructura") return <JuegoEstructura ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "banderas") return <JuegoBanderas ayuda={ayuda} onFin={onFin} modo={modo} />;
+  if (tipo === "pares") return <JuegoPares ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "carril") return <JuegoCarril ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "cuatro") return <JuegoCuatro ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "subasta") return <JuegoSubasta ayuda={ayuda} onFin={onFin} />;
+  return <JuegoSuerte ayuda={ayuda} onFin={onFin} />;
+}

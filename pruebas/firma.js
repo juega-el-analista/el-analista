@@ -36,7 +36,7 @@ function reloj(ms) {
 const micro = async () => { for (let i = 0; i < 6; i++) await Promise.resolve(); };
 
 const { cargar } = require(path.join(__dirname, "banco.js"));
-cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
+cargar(require("./unir.js").rutaUnida());
 const tmp = path.join(__dirname, "probeFirma.js");
 fs.writeFileSync(tmp, fs.readFileSync(path.join(__dirname, "compilado.js"), "utf8").replace("module.exports = ElAnalista;",
   "module.exports = { ElAnalista, E, D, LEGENDARIAS, DUENO, SOLO_EMPLEADO, ESCENAS_FIJAS, BASE, sanear, firma, VERSION, CLAVE };"));

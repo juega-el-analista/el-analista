@@ -33,7 +33,7 @@ function reloj(ms) {
 const micro = async () => { for (let i = 0; i < 6; i++) await Promise.resolve(); };
 
 const { cargar } = require(path.join(__dirname, "banco.js"));
-const ElAnalista = cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
+const ElAnalista = cargar(require("./unir.js").rutaUnida());
 
 function txtDe(j) {
   if (j == null || j === false || j === true) return "";

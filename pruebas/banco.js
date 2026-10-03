@@ -1,7 +1,7 @@
 /* rutas del repo, para que los scripts funcionen desde cualquier sitio */
 const path = require("path");
 const RAIZ = path.join(__dirname, "..");
-const RUTA_FUENTE = path.join(RAIZ, "src", "el-analista.jsx");
+const RUTA_FUENTE = require("./unir.js").rutaUnida();
 const RUTA_BUILD = path.join(RAIZ, "index.html");
 const RUTA_ORIGINAL = path.join(RAIZ, "historia", "el-analista.v5-original.jsx");
 
@@ -39,9 +39,11 @@ function cargar(archivo) {
   const cjs = out
     .replace(/import\s+React\s*,\s*\{([^}]*)\}\s*from\s*["']react["'];?/,
       'const React = require("react"); const {$1} = React;')
+    .replace(/import\s*\{([^}]*)\}\s*from\s*["']react-router-dom["'];?/,
+      'const {$1} = require("react-router-dom");')
     .replace(/export\s+default\s+function\s+ElAnalista/, "function ElAnalista")
     + "\nmodule.exports = ElAnalista;\n";
-  if (cjs.indexOf("import React") >= 0 || cjs.indexOf("export default") >= 0) {
+  if (cjs.indexOf("import React") >= 0 || /^import /m.test(cjs) || cjs.indexOf("export default") >= 0) {
     throw new Error("no se pudo convertir a CommonJS: quedan restos de ESM");
   }
   const ruta = path.join(__dirname, "compilado.js");

@@ -81,8 +81,22 @@ Están explicadas donde toca, pero conviene saber que existen:
   tiene que **sumar** al objetivo, no ocupar el sitio de un evento normal. Pero
   el conteo va antes de la vida, la bifurcación y la clave: esas tres siempre
   entraron en el presupuesto normal.
-- **`src/el-analista.jsx` es el original.** `index.html` se genera con `npm run build`
-  y es lo que sirve GitHub Pages. No se edita a mano nunca.
+- **`src/` es el original.** `index.html` se genera con `npm run build` y es lo que
+  sirve GitHub Pages. No se edita a mano nunca.
+- **Los módulos se vuelven a unir en uno.** Para publicar y para probar, el juego
+  vuelve a ser un solo archivo (`npm run unir`). Eso pide tres cosas: nada de
+  imports circulares, nada de nombres repetidos entre módulos (en el archivo
+  unido chocarían), y un módulo no reasigna una variable de otro: si hace falta,
+  el dueño de la variable exporta una función para cambiarla, como
+  `ponerMovimiento` en `src/hooks/movimiento.js`.
+- **Las vistas no guardan estado de la partida.** Todo vive en `usePartida`
+  (`src/hooks/usePartida.jsx`), que devuelve un objeto, `ctx`, con los datos y las
+  acciones. Las vistas lo reciben como `{ ctx }`, sacan lo que usan y llaman a esas
+  acciones. Si una vista nueva necesita algo que no está, se agrega a lo que
+  devuelve `usePartida`; no se duplica el estado en la vista.
+- **La ruta sigue a la fase, no al revés.** Para que una pantalla nueva tenga su
+  dirección, su fase se agrega a una sección de `src/secciones.js`. Una ruta que
+  no dependa de la partida, como `/glosario`, va en `src/rutas.jsx`.
 
 ## Dónde está escrito el porqué
 

@@ -1,7 +1,7 @@
 /* rutas del repo, para que los scripts funcionen desde cualquier sitio */
 const path = require("path");
 const RAIZ = path.join(__dirname, "..");
-const RUTA_FUENTE = path.join(RAIZ, "src", "el-analista.jsx");
+const RUTA_FUENTE = require("./unir.js").rutaUnida();
 const RUTA_BUILD = path.join(RAIZ, "index.html");
 const RUTA_ORIGINAL = path.join(RAIZ, "historia", "el-analista.v5-original.jsx");
 
@@ -53,6 +53,24 @@ js = js.replace(
   'var React = window.React; var {$1} = React;'
 );
 if (js === antesImport) throw new Error("no se pudo reescribir el import de React");
+
+/* React Router va dentro del bloque del juego, delante de su código, y
+   no en un bloque propio: así el documento sigue teniendo las mismas
+   marcas y el quine no cambia. Los tres UMD cuelgan sus globales de
+   window (RemixRouter, ReactRouter, ReactRouterDOM) y leen React y
+   ReactDOM de los bloques anteriores. */
+js = js.replace(
+  /import\s*\{([^}]*)\}\s*from\s*["']react-router-dom["'];?/,
+  'var {$1} = window.ReactRouterDOM;'
+);
+if (/^import /m.test(js)) throw new Error("quedó un import sin reescribir");
+const enrutador = ["@remix-run/router/dist/router.umd.min.js",
+  "react-router/dist/umd/react-router.production.min.js",
+  "react-router-dom/dist/umd/react-router-dom.production.min.js"]
+  .map((p) => fs.readFileSync(path.join(RAIZ, "node_modules", p), "utf8")
+    .replace(/\/\/# sourceMappingURL=\S+\s*$/, ""))
+  .join("\n");
+js = enrutador + "\n" + js;
 
 /* el export default pasa a ser una variable global */
 const antesExport = js;

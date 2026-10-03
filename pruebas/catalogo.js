@@ -18,7 +18,7 @@ const SALIDA = path.join(RAIZ, "catalogo.html");
 
 /* compilar el juego con el mismo banco que usan las pruebas */
 const { cargar } = require(path.join(__dirname, "banco.js"));
-cargar(path.join(RAIZ, "src", "el-analista.jsx"));
+cargar(require("./unir.js").rutaUnida());
 const compilado = fs.readFileSync(path.join(__dirname, "compilado.js"), "utf8");
 
 /* Los datos del catálogo se calculan aquí, en node, a partir de las
@@ -41,6 +41,7 @@ const datos = Object.keys(T.JUEGOS).map((k) => ({
    choquen con los de la sala, y React sale de los UMD. */
 const motor = compilado
   .replace('const React = require("react");', "const React = window.React;")
+  .replace('require("react-router-dom")', "(window.ReactRouterDOM || {})")
   .replace("module.exports = ElAnalista;",
     "window.__EA = { TarjetaJuego, JUEGOS, NIVEL_N, CSS: CSS + CSS2 + CSS3 + CSS4 + CSS5 };");
 const leer = (p) => fs.readFileSync(path.join(RAIZ, "node_modules", p), "utf8");

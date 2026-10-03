@@ -44,7 +44,7 @@ const RUTA_VAR = process.argv.slice(3).find((a) => /\.json$/i.test(a));
 const MUESTRA = process.argv.indexOf("muestra") >= 0;
 
 /* el juego, con la tabla del juego o con la variante */
-let fuente = fs.readFileSync(path.join(__dirname, "..", "src", "el-analista.jsx"), "utf8");
+let fuente = fs.readFileSync(require("./unir.js").rutaUnida(), "utf8");
 if (RUTA_VAR) {
   const v = JSON.parse(fs.readFileSync(RUTA_VAR, "utf8"));
   for (const id of Object.keys(v)) {

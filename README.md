@@ -5,8 +5,9 @@ que elijas. Cada año trae decisiones, noticias que sacuden el mercado, una
 cartera que repartes tú y un examen que se pone más difícil a medida que
 estudias. Al final decides si te retiras.
 
-El juego entero es **un solo archivo JSX** que se empaqueta en **un HTML
-autónomo**: React va dentro, no pide red y no necesita servidor.
+El juego está escrito en **módulos de React** (datos, motor, minijuegos,
+componentes y vistas) y se empaqueta en **un HTML autónomo**: React va
+dentro, no pide red y no necesita servidor.
 
 ## Qué hay dentro
 
@@ -31,8 +32,9 @@ Lee **[CONTRIBUIR.md](CONTRIBUIR.md)** primero. Son tres reglas y las cosas que 
 
 ```bash
 npm install          # solo la primera vez
-npm run build        # src/el-analista.jsx  ->  index.html
-npm run servir       # sirve el juego en http://localhost:5173
+npm run dev          # el juego en módulos, con recarga en vivo: http://localhost:5176
+npm run build        # src/  ->  index.html, el único archivo que se publica
+npm run servir       # sirve ese index.html en http://localhost:5173
 ```
 
 El archivo `index.html` se abre con doble clic, sin más.
@@ -90,11 +92,62 @@ nunca responde y `Math.random` secuestrado.
 ## Estructura
 
 ```
-src/       el juego, un único .jsx
-index.html el HTML autónomo que se publica, generado — no se edita a mano
-historia/  la versión original, para comparar
-pruebas/   la batería de verificación
+src/
+  ElAnalista.jsx   el componente raíz: lo que se monta en cualquier página
+  Motor.jsx        junta la partida con las rutas y pone el estilo una vez
+  rutas.jsx        las rutas del juego, una por sección
+  secciones.js     qué fases van en cada sección, con su título y descripción
+  main.jsx         arranque en desarrollo (npm run dev)
+  vistas/
+    Pantallas.jsx  elige la pantalla según la fase y mantiene la ruta al día
+    inicio/        el aviso y la portada
+    personaje/     los cinco pasos: nombre, edad, familia, país, estudios
+    partida/       el año: cabecera, escena, resultado, cierre, retiro, anuncio
+      paneles/     las pestañas: Ficha, Compras, Cartera del fondo, Vida
+    fin/           el balance de la vida
+    referencia/    Glosario y Cátedra, para consultar sin tocar la partida
+  hooks/
+    usePartida.jsx el estado del juego y todas sus acciones
+    useHead.js     el título y la descripción de cada vista
+    movimiento.js  el interruptor del movimiento, fuera de React
+  componentes/     piezas de interfaz: cifras, rodillo, iconos, cartera, registro
+  minijuegos/      los 20 minijuegos, uno por archivo, y MiniJuego que los reparte
+  motor/           la lógica sin interfaz: aritmética, guardado, saneador, deuda, metas
+  datos/           el contenido: escenas, preguntas, temario, glosario, países
+  estilos/         el CSS del juego
+index.html   el HTML autónomo que se publica, generado: no se edita a mano
+historia/    la versión original, para comparar
+pruebas/     la batería de verificación y las herramientas de empaquetado
 ```
+
+## Rutas
+
+| Ruta | Qué muestra |
+|---|---|
+| `/` | el aviso y la portada |
+| `/nueva-partida` | el personaje |
+| `/partida` | el año en curso |
+| `/fin` | el balance de la vida |
+| `/glosario` | los términos, para consultar |
+| `/catedra` | el temario, para consultar |
+
+Las cuatro primeras siguen a la partida: la pantalla la decide la fase del
+juego y la dirección solo la refleja, así que el botón Atrás no deshace
+decisiones. Solo, el juego usa rutas con almohadilla (`#/partida`), que
+funcionan en Pages, abiertas con doble clic, en la app y en el artifact.
+Montado dentro de otra web con React Router, usa el enrutador de esa web:
+en una ruta `juego/*` queda como `/juego/partida`, `/juego/glosario`...
+
+## Módulos
+
+Las carpetas van de abajo hacia arriba: `datos` y `motor` no importan nada
+de `componentes`, `minijuegos` ni `vistas`. No hay imports circulares, y
+`npm run unir` falla si aparece uno.
+
+Para publicar y para las pruebas, `pruebas/unir.js` vuelve a juntar los
+módulos en un solo archivo (`pruebas/unido.jsx`, que no se versiona), en el
+orden en que se necesitan. Es lo que permite que el `index.html` siga
+siendo un documento único que sabe reconstruirse a sí mismo.
 
 ## Blindaje
 

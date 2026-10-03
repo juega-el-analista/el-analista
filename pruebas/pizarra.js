@@ -35,7 +35,7 @@ async function avanza(ms, paso) {
 
 /* compilar el juego y sacar el componente, que no se exporta */
 const { cargar } = require(path.join(__dirname, "banco.js"));
-cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
+cargar(require("./unir.js").rutaUnida());
 const comp = path.join(__dirname, "compilado.js");
 let src = fs.readFileSync(comp, "utf8").replace(
   "module.exports = ElAnalista;",

@@ -1,0 +1,46 @@
+/* ============================================================
+   GLOSARIO
+   Cada término que el juego usa, explicado como se lo explicarías
+   a alguien que nunca ha pisado un banco. En modo aprendiz aparece
+   solo, antes de que la palabra se use por primera vez.
+   ============================================================ */
+export const GLOSARIO = {
+  accion: { n: "Acción", x: "Un pedacito de la propiedad de una empresa. Si tienes una acción de una panadería, eres dueño de una parte mínima de esa panadería: te toca parte de lo que gane y pierdes si le va mal." },
+  bono: { n: "Bono", x: "Un préstamo que tú le haces a un gobierno o a una empresa. Ellos te devuelven el dinero en una fecha pactada y mientras tanto te pagan intereses. Es más aburrido que una acción y por eso mismo suele ser más seguro." },
+  cartera: { n: "Cartera o portafolio", x: "El conjunto de todo lo que tienes invertido. No es un producto que se compra: es simplemente la suma de tus cosas y cómo están repartidas." },
+  interesCompuesto: { n: "Interés compuesto", x: "Cuando lo que ganas empieza a generar ganancias por su cuenta. Ganas sobre tu dinero, y al año siguiente ganas sobre tu dinero más lo que ganaste. Al principio es imperceptible; a los veinte años es la mayor parte de tu patrimonio." },
+  inflacion: { n: "Inflación", x: "Que las cosas cuesten más cada año. Si tu dinero está quieto y la inflación es 5%, dentro de un año compras 5% menos con lo mismo. Guardar efectivo no es neutral: es perder despacio." },
+  volatilidad: { n: "Volatilidad", x: "Cuánto se mueve el precio de algo. Alta volatilidad significa años de subir mucho y años de caer mucho. No es lo mismo que riesgo de perderlo todo, pero se siente parecido cuando estás mirando." },
+  diversificar: { n: "Diversificar", x: "No poner todo en el mismo sitio. La gracia es que si las cosas que tienes no suben y bajan al mismo tiempo, el conjunto se mueve menos que cada parte por separado." },
+  liquidez: { n: "Liquidez", x: "Qué tan rápido puedes convertir algo en dinero sin malbaratar. El efectivo es líquido, un apartamento no. Un activo excelente pero ilíquido no te sirve si mañana necesitas pagar algo." },
+  riesgo: { n: "Riesgo", x: "La posibilidad de que el resultado no sea el que esperabas. En finanzas casi nunca se elimina, se cambia de forma: menos riesgo de perder suele venir con menos posibilidad de ganar." },
+  rendimiento: { n: "Rendimiento o retorno", x: "Lo que ganaste, en porcentaje de lo que pusiste. Si pusiste 100 y ahora tienes 107, tu rendimiento fue 7%." },
+  comision: { n: "Comisión", x: "Lo que cobra el intermediario por moverte el dinero. Parece pequeña porque se expresa en porcentajes chiquitos, pero se cobra todos los años y sobre todo tu dinero." },
+  fondoIndexado: { n: "Fondo indexado", x: "Una canasta que compra un poco de todas las empresas de un mercado. No intenta escoger las buenas: se las lleva todas. Cobra muy poco y por eso, a treinta años, le gana a la mayoría de los que sí intentan escoger." },
+  fondoEmergencia: { n: "Fondo de emergencia", x: "Dinero aburrido, en efectivo, para cubrir entre 3 y 6 meses de tus gastos. No es una inversión, es un seguro: existe para que un imprevisto no te obligue a vender tus inversiones en el peor momento." },
+  patrimonio: { n: "Patrimonio", x: "Todo lo que tienes menos todo lo que debes. Es el número que de verdad importa, y no tiene nada que ver con cuánto ganas al mes." },
+  apalancamiento: { n: "Apalancamiento", x: "Invertir con dinero prestado. Multiplica lo que ganas y multiplica igual lo que pierdes. Es la herramienta que más fortunas ha hecho y más ha deshecho." },
+  ebitda: { n: "EBITDA", x: "Lo que gana una empresa por operar, antes de intereses, impuestos y depreciación. Sirve para comparar empresas entre sí sin que estorbe cómo están financiadas." },
+  beta: { n: "Beta", x: "Cuánto se mueve algo cuando se mueve el mercado entero. Beta uno significa que va al mismo ritmo. Beta cero significa que le da igual lo que haga el mercado." },
+  rebalanceo: { n: "Rebalanceo", x: "Volver a poner tu cartera en las proporciones que decidiste. Obliga a vender un poco de lo que subió y comprar de lo que bajó, que es exactamente lo contrario de lo que pide el estómago." },
+  fcl: { n: "Flujo de caja libre", x: "El dinero que de verdad le sobra a la empresa después de operar y de invertir en mantenerse en pie. Una empresa puede declarar utilidad contable y quemar caja al mismo tiempo: la utilidad es una opinión, la caja es un hecho." },
+  wacc: { n: "Costo de capital", x: "Lo que le cuesta a una empresa el dinero que usa, mezclando deuda y capital propio. La deuda sale más barata porque cobra primero y sus intereses desgravan; el capital propio es el más caro porque cobra último y sin garantía." },
+  opcion: { n: "Opción", x: "El derecho, no la obligación, de comprar o vender algo a un precio fijado. Se paga una prima por ese derecho. Gana valor cuando el precio se mueve a favor y también cuando hay más incertidumbre." },
+  cobertura: { n: "Cobertura", x: "Montar una posición que gane justo cuando tu negocio pierde, para que el conjunto se mueva menos. No busca ganar dinero: busca que un movimiento de precios o de moneda no te descoloque." },
+  activo: { n: "Activo", x: "Cualquier cosa que tengas y que valga algo: dinero, una acción, un local, una máquina. La prueba de fuego es si alguien te lo compraría. Un gasto ya hecho no es un activo por mucho que costara." },
+  costoOportunidad: { n: "Costo de oportunidad", x: "Lo que dejas de ganar por elegir una cosa en vez de otra. Tener dinero parado en la cuenta no es gratis: cuesta exactamente lo que habría rendido en otro sitio." },
+  seguro: { n: "Seguro", x: "Pagar una cantidad pequeña y segura para no tener que pagar una enorme e improbable. Tiene sentido cuando el golpe que cubre te arruinaría; no lo tiene para cosas que podrías pagar de tu bolsillo." },
+  multiplo: { n: "Múltiplo de valoración", x: "Cuántas veces sus ganancias vale una empresa. Un múltiplo alto significa que el mercado espera crecimiento; también significa que estás pagando por un futuro que aún no ocurrió." },
+  distressed: { n: "Deuda distressed", x: "Deuda de empresas en problemas, que se compra muy por debajo de su valor nominal. Se apuesta a que la empresa se recupere o a que al liquidarla quede más de lo que pagaste." },
+  earnout: { n: "Earn out", x: "Parte del precio de una compra que solo se paga si la empresa cumple ciertos resultados después. Sirve cuando comprador y vendedor no se ponen de acuerdo en cuánto vale el futuro." },
+  capitalTrabajo: { n: "Capital de trabajo", x: "El dinero atrapado en el día a día: inventario en el almacén y facturas que aún no te han pagado. Si crece más rápido que las ventas, el negocio consume caja aunque parezca que gana." },
+  dilucion: { n: "Dilución", x: "Cuando una empresa emite acciones nuevas, tu porcentaje de la empresa baja aunque tengas las mismas acciones. Te quedas con una tajada menor de un pastel que ojalá sea mayor." },
+  tir: { n: "Tasa interna de retorno", x: "El rendimiento anualizado de una inversión contando cuándo entra y sale cada peso. A diferencia del múltiplo, castiga tardar: duplicar en dos años y en diez dan el mismo múltiplo y TIR muy distintas." },
+  encaje: { n: "Encaje legal", x: "La parte de los depósitos que un banco no puede prestar y tiene que dejar inmovilizada en el banco central. Sirve de colchón si mucha gente retira a la vez, y de palanca para abrir o cerrar el crédito de todo un país." },
+  tasaRectora: { n: "Tasa de referencia", x: "El precio al que se prestan los bancos entre ellos, que fija el banco central. Cuando sube, todo el crédito del país se encarece; cuando baja, se abarata. Es el dial principal de la política monetaria." },
+  cartaCredito: { n: "Carta de crédito", x: "Un banco se pone en medio de dos empresas que no se conocen: promete pagarle al vendedor, pero solo contra documentos que prueben que embarcó lo pactado. Resuelve que ninguno quiera ser el primero en cumplir." },
+  devaluacion: { n: "Devaluación", x: "Que tu moneda valga menos frente a otra. Todo lo importado sube y tus ahorros locales compran menos, aunque el número de tu cuenta no se haya movido. Para quien cobra en local, es un recorte de sueldo que nadie anuncia." },
+  tasaEfectiva: { n: "Tasa efectiva", x: "Lo que de verdad te cuesta un préstamo contando comisiones, seguros y el efecto de componer. Siempre es mayor que la tasa nominal que anuncian, y es la única comparable entre dos ofertas." },
+  intermediacion: { n: "Margen de intermediación", x: "La diferencia entre lo que un banco te paga por tus ahorros y lo que cobra por prestar ese mismo dinero. Es su negocio principal y la razón por la que la cuenta de ahorro rinde tan poco." },
+  regla4: { n: "La regla del 4%", x: "Una referencia: si retiras cada año el 4% de tu patrimonio, históricamente el dinero aguanta unos treinta años. Por eso se dice que necesitas 25 veces tu gasto anual." },
+};
