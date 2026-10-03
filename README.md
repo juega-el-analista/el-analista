@@ -58,6 +58,16 @@ El juego está en vivo en **https://aleferrara1807.github.io/el-analista/**, y s
 reconstruye y republica solo en cada push a `main` — pero solo si las pruebas
 pasan. Si fallan, el sitio se queda con la última versión buena.
 
+### El backend
+
+`VITE_API_URL` es la URL del backend al que el sitio le hace peticiones. En
+Vercel va en Settings → Environment Variables; en local, copia `.env.example`
+a `.env.local`. `npm run sitio` la mete solo en la copia de `sitio/`: el juego
+la lee en `window.__API_URL` y pide con `window.__pedir(ruta, opciones)`, que
+manda y recibe JSON. Sin la variable el sitio sale igual, sin backend, y
+`__pedir` rechaza con `"sin-api"`. El backend tiene que aceptar (CORS) el
+dominio donde se publique el juego.
+
 ## Cómo se verifica
 
 El proyecto lleva su propia batería. No es decorativa: encontró bugs reales

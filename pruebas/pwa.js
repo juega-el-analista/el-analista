@@ -93,14 +93,78 @@ const registro = `<script>
 })();
 ${CIERRE}`;
 
+/* ---- la conexión con el backend ----
+   VITE_API_URL sale del entorno: en Vercel, de las variables del
+   proyecto; en local, de .env o .env.local (ver .env.example). El nombre
+   es el de Vite por costumbre, pero aquí no hay Vite: lo lee este script.
+
+   Igual que el manifiesto, va SOLO a la copia del sitio. El artifact no
+   habla con ningún backend, y el quine no tiene por qué saber de él.
+
+   El juego la usa desde window.__pedir(ruta, opciones): un fetch que ya
+   sabe la URL base, manda y recibe JSON y rechaza con el código HTTP si
+   la respuesta no es buena. Sin URL configurada, window.__API_URL es null
+   y __pedir rechaza con "sin-api": el juego tiene que poder vivir sin él. */
+const leerEnv = (archivo) => {
+  const ruta = path.join(RAIZ, archivo);
+  if (!fs.existsSync(ruta)) return {};
+  const vars = {};
+  fs.readFileSync(ruta, "utf8").split(/\r?\n/).forEach((linea) => {
+    const m = linea.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
+    if (m) vars[m[1]] = m[2].replace(/^(["'])(.*)\1$/, "$2");
+  });
+  return vars;
+};
+const envLocal = Object.assign({}, leerEnv(".env"), leerEnv(".env.local"));
+const apiCruda = (process.env.VITE_API_URL !== undefined ? process.env.VITE_API_URL : envLocal.VITE_API_URL || "").trim();
+let apiUrl = null;
+if (apiCruda) {
+  let u = null;
+  try { u = new URL(apiCruda); } catch (e) {}
+  ok(u && (u.protocol === "https:" || u.protocol === "http:"), "VITE_API_URL es una URL http(s): " + apiCruda);
+  if (u) apiUrl = apiCruda.replace(/\/+$/, "");
+}
+/* JSON.stringify no escapa "<", y un cierre de script dentro de la URL
+   cortaría el bloque */
+const apiJson = JSON.stringify(apiUrl).replace(/</g, "\\u003c");
+const conexion = `<script>
+(function () {
+  var BASE = ${apiJson};
+  window.__API_URL = BASE;
+  window.__pedir = function (ruta, opciones) {
+    if (!BASE) return Promise.reject(new Error("sin-api"));
+    var o = opciones || {};
+    var cab = Object.assign({ "Accept": "application/json" }, o.headers || {});
+    var cuerpo = o.body;
+    if (cuerpo !== undefined && typeof cuerpo !== "string" && !(cuerpo instanceof FormData)) {
+      cuerpo = JSON.stringify(cuerpo);
+      if (!cab["Content-Type"]) cab["Content-Type"] = "application/json";
+    }
+    var url = /^https?:/.test(ruta) ? ruta : BASE + (ruta.charAt(0) === "/" ? "" : "/") + ruta;
+    return fetch(url, Object.assign({}, o, { headers: cab, body: cuerpo })).then(function (r) {
+      var tipo = r.headers.get("Content-Type") || "";
+      var leer = tipo.indexOf("json") >= 0 ? r.json() : r.text();
+      return leer.then(function (datos) {
+        if (r.ok) return datos;
+        var err = new Error("http-" + r.status);
+        err.status = r.status; err.datos = datos;
+        throw err;
+      });
+    });
+  };
+})();
+${CIERRE}`;
+
 /* ---- inyectar en la cabecera viva ---- */
 const iHead = doc.indexOf("</head>");
 const iIsla = doc.indexOf('id="plantilla"');
 ok(iHead > 0, "el documento tiene cabecera");
 ok(iIsla < 0 || iHead < iIsla, "la primera cabecera es la viva, antes de la isla de plantilla");
-const sitioDoc = doc.slice(0, iHead) + cabecera + "\n" + registro + "\n" + doc.slice(iHead);
+const sitioDoc = doc.slice(0, iHead) + cabecera + "\n" + conexion + "\n" + registro + "\n" + doc.slice(iHead);
 ok(sitioDoc.split('rel="manifest"').length - 1 === 1, "el manifiesto se enlaza una sola vez");
-ok(sitioDoc.slice(iHead + cabecera.length + registro.length + 2) === doc.slice(iHead), "todo lo que va después de la cabecera, islas incluidas, queda idéntico");
+ok(sitioDoc.slice(iHead + cabecera.length + conexion.length + registro.length + 3) === doc.slice(iHead), "todo lo que va después de la cabecera, islas incluidas, queda idéntico");
+ok(doc.indexOf("__API_URL") < 0, "index.html no sabe del backend (el del artifact y el quine)");
+console.log("  " + (apiUrl ? "backend en " + apiUrl : "sin VITE_API_URL: el sitio sale sin backend"));
 ok(doc.indexOf('rel="manifest"') < 0, "index.html sigue sin tocar (el del artifact y el quine)");
 
 /* ---- la carpeta ---- */

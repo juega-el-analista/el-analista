@@ -21,3 +21,7 @@ pruebas/unido.jsx.*.tmp
 
 # lo que deja vite build, solo para probar la version en modulos
 desarrollo/
+
+# variables locales; la plantilla es .env.example
+.env
+.env.local
