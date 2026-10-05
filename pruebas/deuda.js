@@ -109,6 +109,29 @@ let r5 = correrCon(base({ deuda: 0 }), NETO, 0);
 ok("no hay egresos ni notas", r5.egr.length === 0 && r5.notas.length === 0);
 ok("el dinero no se mueve", r5.st.cash === 5000 && r5.st.cartera === 20000);
 
+/* El CASO 2 cierra en rojo pero sin deuda. Con deuda, el rojo se mezclaba
+   con la cuota: el interés salía negativo en el informe y el rojo se
+   perdía sin pasar a deuda. */
+console.log("\n  CASO 7 · debes y además cierras en rojo");
+const st7 = base({ cash: -8000, cartera: 0, deuda: 10000 });
+const int7Debido = 10000 * tasaPrestamo(st7);
+let r7 = correrCon(st7, NETO, 0);
+const int7 = r7.egr[0] ? r7.egr[0].v : NaN;
+console.log("    deuda 10.000, efectivo -8.000 -> deuda " + fmt(r7.st.deuda) + "   interés apuntado " + fmt(int7));
+ok("el interés apuntado no es negativo", int7 === 0);
+ok("el efectivo no queda negativo", r7.st.cash === 0);
+ok("el rojo pasa a deuda con recargo, y el interés impagado también", Math.abs(r7.st.deuda - (10000 + int7Debido + 8000 * 1.08)) < 1);
+ok("sale la nota del año en rojo", r7.notas.some((x) => x.indexOf("en rojo") >= 0));
+
+console.log("\n  CASO 8 · el rojo lo tapa la cartera y lo que sobra paga parte de la cuota");
+const st8 = base({ cash: -2000, cartera: 5000, deuda: 10000 });
+const int8 = 10000 * tasaPrestamo(st8);
+let r8 = correrCon(st8, NETO, 0);
+console.log("    deuda 10.000 -> " + fmt(r8.st.deuda) + "   efectivo " + fmt(r8.st.cash) + "   cartera " + fmt(r8.st.cartera));
+ok("se paga el interés entero", r8.egr[0] && Math.abs(r8.egr[0].v - int8) < 1);
+ok("lo que queda de los 3.000 va a capital", Math.abs(r8.st.deuda - (10000 - (3000 - int8))) < 1);
+ok("sin rojo pendiente", r8.st.cash === 0 && r8.st.cartera === 0 && !r8.notas.some((x) => x.indexOf("en rojo") >= 0));
+
 console.log("\n  CASO 6 · casos límite");
 [["deuda NaN", { deuda: NaN }], ["deuda negativa", { deuda: -5000 }], ["todo en cero", { cash: 0, cartera: 0, deuda: 0 }],
  ["bien sin valor", { deuda: 200000, bienes: ["apto"], valores: {} }]].forEach(([nom, over]) => {

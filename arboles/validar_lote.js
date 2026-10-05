@@ -62,7 +62,10 @@ const revisarLuego = (luego, donde, nivel) => {
     if (!Array.isArray(l.azar) || l.azar.length < 2 || l.azar.length > 4) { mal(donde + ": luego.azar tiene que tener entre 2 y 4 escenarios"); return; }
     const suma = l.azar.reduce((a, x) => a + (x && x.p || 0), 0);
     if (suma !== 100) mal(donde + ": las probabilidades suman " + suma + ", tienen que sumar 100");
-    if (l.s != null && ATRIB.concat([]).indexOf(l.s) < 0) mal(donde + ": s tiene que ser un atributo (mod, cri, red, rep, ene)");
+    /* s inclina las probabilidades con un atributo de 0 a 100. car no
+       vale: en la partida se guarda como «carrera», que no va de 0 a 100,
+       y st.car no existe, así que la inclinación salía siempre en cero. */
+    if (l.s != null && ["mod", "cri", "red", "rep", "ene"].indexOf(l.s) < 0) mal(donde + ": s tiene que ser un atributo (mod, cri, red, rep, ene)");
     l.azar.forEach((x) => {
       if (!ids.has(x.id)) mal(donde + ": el escenario " + x.id + " no existe en tus escenas");
       else usadas.add(x.id);

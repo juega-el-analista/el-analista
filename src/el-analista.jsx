@@ -30322,7 +30322,7 @@ const LOTES = {
     "luego": [
      {
       "en": 1,
-      "s": "car",
+      "s": "rep",
       "azar": [
        {
         "p": 55,
@@ -33655,6 +33655,10 @@ const TOPE_TITULARES = 60;
 const TOPE_VISTOS = 400;
 const TOPE_HISTO = 60;
 const TOPE_CURVA = 384;   /* 32 años de meses: el recorrido de la cartera */
+/* Los nudos de árbol que se recuerdan para «Tu camino». Con 40, una
+   partida de 30 años (unos 90 nudos) perdía los primeros: el rumor, la
+   startup, la bifurcación. 300 cubre los 55 años del tope con holgura. */
+const TOPE_CAMINO = 300;
 const TOPE_POSICIONES = 40;
 const TOPE_OFERTA = 6;
 
@@ -33795,12 +33799,15 @@ const sanear = (bruto) => {
   st.hitoLibre = r.hitoLibre === true;
   st.hitoRenta = r.hitoRenta === true;
   st.hitoCartera = r.hitoCartera === true;
-  st.huellas = unicos(listaDe(r.huellas, (x) => typeof x === "string" && !!HUELLAS[x], 40));
+  /* Las huellas no se repiten y son las de HUELLAS: ese es su tope. Con 40
+     las partidas largas olvidaban las primeras (una sanción, por ejemplo)
+     y volvían a abrirse escenas que esa huella cerraba. */
+  st.huellas = unicos(listaDe(r.huellas, (x) => typeof x === "string" && !!HUELLAS[x], Object.keys(HUELLAS).length));
   st.pendientes = listaDe(r.pendientes, (x) => x && typeof x === "object" && IDS_CONSEC.indexOf(x.id) >= 0, 24)
     .map((x) => ({ id: x.id, en: entero(x.en, 0, 0, 99), p: x.p == null ? null : clamp(numero(x.p, 0), 0, 1) }));
   st.patronAnt = texto(r.patronAnt, "", 48);
   st.startup = r.startup === true;
-  st.camino = listaDe(r.camino, (x) => x && typeof x === "object" && IDS_ARBOL.indexOf(x.id) >= 0, 40)
+  st.camino = listaDe(r.camino, (x) => x && typeof x === "object" && IDS_ARBOL.indexOf(x.id) >= 0, TOPE_CAMINO)
     .map((x) => ({ id: x.id, o: entero(x.o, 0, 0, 9), a: entero(x.a, 0, 0, 60),
       n: ["exito", "parcial", "fallo"].indexOf(x.n) >= 0 ? x.n : "exito", r: entero(x.r, -1, -1, 9) }));
   return st;
@@ -36260,7 +36267,8 @@ function CaminoFinal({ s }) {
     const e = escenaDeId(paso.id, s);
     if (!e) return null;
     const ops = (Array.isArray(e.o) ? e.o : []).filter((o) => o && o.t);
-    const retraso = (orden++) * 90;
+    /* con caminos largos, el último nudo no puede tardar medio minuto */
+    const retraso = Math.min(orden++, 24) * 90;
     /* lo que trajo la opción elegida: los pasos posteriores que cuelgan de ella */
     const hijosIds = luegosDe(ops[paso.o]);
     const hijos = [];
@@ -38304,7 +38312,7 @@ function Motor() {
     /* y si era un nudo de un árbol, qué rama tomaste y cómo salió */
     if (ev && o && IDS_ARBOL.indexOf(ev.id) >= 0) {
       const i = (Array.isArray(ev.o) ? ev.o : []).indexOf(o);
-      if (i >= 0) st.camino = (Array.isArray(st.camino) ? st.camino : []).concat({ id: ev.id, o: i, a: st.turno, n: nivel, r: azar && o.azar ? azar.i : -1 }).slice(-40);
+      if (i >= 0) st.camino = (Array.isArray(st.camino) ? st.camino : []).concat({ id: ev.id, o: i, a: st.turno, n: nivel, r: azar && o.azar ? azar.i : -1 }).slice(-TOPE_CAMINO);
       anotarArbol(ev.id);
     }
 
@@ -38479,9 +38487,15 @@ function Motor() {
       const tasa = tasaPrestamo(st);
       const interes = st.deuda * tasa;
       const amortiza = Math.min(st.deuda, st.deuda * CUOTA_DEUDA);
+      /* El rojo que el año ya traía no es parte de la cuota. Si se mezcla,
+         lo que «falta» incluye ese rojo, lo pagado sale negativo y el
+         informe apunta intereses negativos; y como la caja queda en 0, el
+         rojo se pierde sin pasar a deuda con su recargo. Se aparta antes y
+         se devuelve a la caja después, para que el cierre en rojo lo vea. */
+      const previo = cobrar(st, 0).falta;
       const r2 = cobrar(st, interes + amortiza);
-      st.cash = r2.cash; st.cartera = r2.cartera;
-      const pagado = interes + amortiza - r2.falta;
+      st.cash = r2.cash - previo; st.cartera = r2.cartera;
+      const pagado = clamp(interes + amortiza - (r2.falta - previo), 0, interes + amortiza);
       const interesPagado = Math.min(interes, pagado);
       const capitalPagado = Math.max(0, pagado - interes);
       /* el interés que no pudiste pagar se suma a lo que debes */

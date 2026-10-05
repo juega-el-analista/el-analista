@@ -746,7 +746,7 @@ module.exports = {
     "9007": {
       "0": { luego: [{ en: 1, s: "red", azar: [{ p: 55, id: 13001 }, { p: 45, id: 13002, bueno: true }] }] },
       "1": { luego: [{ en: 1, azar: [{ p: 40, id: 13004, bueno: false }, { p: 30, id: 13002, bueno: true }, { p: 30, id: 13001 }] }] },
-      "2": { luego: [{ en: 1, s: "car", azar: [{ p: 55, id: 13003, bueno: false }, { p: 45, id: 13005, bueno: true }] }] },
+      "2": { luego: [{ en: 1, s: "rep", azar: [{ p: 55, id: 13003, bueno: false }, { p: 45, id: 13005, bueno: true }] }] },
     },
     /* La conversación de los planes */
     "9008": {
