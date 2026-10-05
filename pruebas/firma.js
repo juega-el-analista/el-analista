@@ -39,7 +39,7 @@ const { cargar } = require(path.join(__dirname, "banco.js"));
 cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
 const tmp = path.join(__dirname, "probeFirma.js");
 fs.writeFileSync(tmp, fs.readFileSync(path.join(__dirname, "compilado.js"), "utf8").replace("module.exports = ElAnalista;",
-  "module.exports = { ElAnalista, E, D, LEGENDARIAS, DUENO, SOLO_EMPLEADO, ESCENAS_FIJAS, BASE, sanear, firma, VERSION, CLAVE };"));
+  "module.exports = { ElAnalista, E, D, LEGENDARIAS, DUENO, SOLO_EMPLEADO, CONSECUENCIAS, TRONCOS, ESCENAS_FIJAS, BASE, sanear, firma, VERSION, CLAVE };"));
 const M = require(tmp);
 try { fs.unlinkSync(tmp); } catch (e) {}
 
@@ -54,7 +54,8 @@ const norm = (s) => s.replace(/\s+/g, " ").trim();
 const ids = M.ESCENAS_FIJAS.map((e) => e.id);
 ok(ids.length === new Set(ids).size, "ningún número de escena repetido (" + ids.length + " escenas)");
 ok(M.DUENO.every((e) => ids.indexOf(e.id) >= 0), "las " + M.DUENO.length + " escenas de dueño están registradas y se recuperan al retomar");
-const todas = [].concat(M.E, M.D, M.LEGENDARIAS);
+/* las consecuencias con jefe tambien son de empleado */
+const todas = [].concat(M.E, M.D, M.LEGENDARIAS, M.CONSECUENCIAS || [], M.TRONCOS || []);
 ok(M.SOLO_EMPLEADO.every((id) => todas.some((e) => e.id === id)), "las " + M.SOLO_EMPLEADO.length + " escenas de empleado existen");
 const cuesta = (o) => !!o.j || Object.values(o.d || {}).some((v) => typeof v === "number" && v < 0);
 ok(M.DUENO.every((e) => e.o.every(cuesta)), "ninguna opción de dueño es gratis: todas cuestan algo");

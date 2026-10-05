@@ -103,7 +103,8 @@ const CASCARA = `<!doctype html>
 
      Ahora la regla se retira si el juego pone .ea-mov en #raiz, que es
      lo que hace cuando el jugador enciende el movimiento a mano desde su
-     Ficha. Por defecto, sin tocar nada, sigue mandando el sistema. */
+     Ficha. El juego enciende el movimiento por defecto, asi que esta
+     regla solo manda mientras carga y para quien lo apaga a mano. */
   @media (prefers-reduced-motion: reduce) {
     #raiz:not(.ea-mov) *, #raiz:not(.ea-mov) *::before, #raiz:not(.ea-mov) *::after {
       animation-duration: 1ms !important;
