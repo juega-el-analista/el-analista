@@ -1,0 +1,369 @@
+[
+ {
+  "grupo": "oficina",
+  "id": 30,
+  "titulo": "Corrección fuerte en la pantalla",
+  "texto": "El mercado abre 20% abajo. El teléfono no para y tu portafolio personal amanece flaco.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Comprar la caída en tramos",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Entrar bien en una caída es todo cuestión de momento."
+   },
+   {
+    "indice": 1,
+    "texto": "No mirar la pantalla en un mes",
+    "forma": "directa",
+    "efecto": "El pánico ajeno no es una estrategia y tampoco lo es el tuyo."
+   },
+   {
+    "indice": 2,
+    "texto": "Vender y refugiarte en efectivo",
+    "forma": "directa",
+    "efecto": "Cortas el dolor y también la recuperación."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 31,
+  "titulo": "Un fondo pide condiciones aparte",
+  "texto": "Quiere una side letter con derechos que los demás inversionistas no tendrán.",
+  "empleado": false,
+  "cargo": [
+   4,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Negarte y ofrecer los mismos términos a todos",
+    "forma": "directa",
+    "efecto": "El fondo entra igual, con menos ruido y más respeto."
+   },
+   {
+    "indice": 1,
+    "texto": "Concederlo y documentarlo con transparencia",
+    "forma": "directa",
+    "efecto": "Se hace, se documenta y se informa. Correcto, aunque incómodo."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 32,
+  "titulo": "Te piden explicar la cascada",
+  "texto": "Un LP nuevo no entiende cómo se reparte la plata y quiere que se lo expliques en voz alta.",
+  "empleado": false,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Explicárselo paso por paso",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Le pides una hoja y le dibujas el orden completo."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandarle el documento y que lo lea",
+    "forma": "directa",
+    "efecto": "Técnicamente correcto. El LP se queda con la duda y con la sensación."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 33,
+  "titulo": "Dos ofertas sobre la mesa",
+  "texto": "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ordenar los criterios y decidir con método",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Pones los criterios en orden de importancia antes de mirar los precios."
+   },
+   {
+    "indice": 1,
+    "texto": "Ir por el precio más alto y punto",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "El precio alto además cerró sin problemas. Suerte y criterio en la misma jugada.",
+     "mal": "El comprador no consigue el financiamiento y el proceso se cae en la recta final."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 34,
+  "titulo": "Alguien de la mesa te pregunta qué harías",
+  "texto": "Sin contexto, sin archivo, sin tiempo. Solo la pregunta y seis pares de ojos esperando.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Contestar en el momento",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Sin datos en pantalla, solo criterio y velocidad."
+   },
+   {
+    "indice": 1,
+    "texto": "Pedir el archivo y contestar después",
+    "forma": "directa",
+    "efecto": "Contestas bien y tarde. En algunas salas eso vale menos que contestar rápido."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 40,
+  "titulo": "Una sesión larga frente a la pantalla",
+  "texto": "Tienes el día libre y una cuenta propia. El mercado abre en cinco minutos y la tentación es operarlo todo.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Operar la sesión completa",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te sientas a operar de apertura a cierre."
+   },
+   {
+    "indice": 1,
+    "texto": "Comprar y apagar la pantalla",
+    "forma": "directa",
+    "efecto": "Compras, cierras la laptop y te vas a hacer otra cosa. Suele funcionar mejor de lo que uno acepta."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 41,
+  "titulo": "Un cliente quiere comprar apalancado",
+  "texto": "El comprador tiene el activo identificado y quiere saber cuánta deuda le puede meter sin ahorcarse.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Armarle la estructura tú mismo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te sientas a repartir el precio entre deuda y capital."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandarlo con el banco y quedarte fuera",
+    "forma": "directa",
+    "efecto": "El banco arma la estructura y se queda con la relación. Tú te quedas con el fee de asesoría y nada más."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 42,
+  "titulo": "Ocho hallazgos sobre la mesa",
+  "texto": "El equipo junior te deja una lista de hallazgos de la revisión. Tienes que decidir cuáles suben al comité y cuáles son ruido.",
+  "empleado": false,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Filtrar tú los hallazgos",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te sientas a separar lo que importa de lo que solo hace ruido."
+   },
+   {
+    "indice": 1,
+    "texto": "Subirlos todos al comité",
+    "forma": "directa",
+    "efecto": "El comité se pierde en detalles operativos y el caso pierde fuerza. Filtrar también es tu trabajo."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 43,
+  "titulo": "Te ofrecen invertir junto a un fondo",
+  "texto": "Un fondo amigo te deja entrar en coinversión con un ticket pequeño. Hay que revisar la compañía rápido.",
+  "empleado": false,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Revisar y decidir tú",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te dan tres días y un archivo comprimido."
+   },
+   {
+    "indice": 1,
+    "texto": "Entrar confiando en el fondo",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "El fondo hizo bien su trabajo y tú te montaste gratis en su análisis.",
+     "mal": "El fondo también se equivocó. Confiar en el análisis ajeno sale caro cuando sale mal."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 50,
+  "titulo": "Una cláusula que nadie leyó",
+  "texto": "El contrato de compraventa trae una cláusula de ajuste de precio redactada de una forma que no cuadra con lo que se negoció.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Leerla tú y reescribirla",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Abres el contrato en la página correcta antes de que lo haga el abogado del otro lado."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandarla a los abogados y esperar",
+    "forma": "directa",
+    "efecto": "Tres días y una factura después, confirman lo que ya sospechabas."
+   },
+   {
+    "indice": 2,
+    "texto": "Firmarla como está",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "No pasó nada. Esta vez.",
+     "mal": "El ajuste de precio se aplica en contra de tu cliente y la conversación es muy incómoda."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 51,
+  "titulo": "El modelo se rompió",
+  "texto": "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Escribir un script que lo reconstruya",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "En vez de arreglar celdas, automatizas la reconstrucción completa."
+   },
+   {
+    "indice": 1,
+    "texto": "Rehacerlo a mano desde cero",
+    "forma": "directa",
+    "efecto": "Catorce horas seguidas y un modelo limpio. El método más caro que existe."
+   },
+   {
+    "indice": 2,
+    "texto": "Entregar la versión vieja",
+    "forma": "directa",
+    "efecto": "Nadie compara las versiones hasta que alguien las compara."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 52,
+  "titulo": "Cierre contable de la compañía objetivo",
+  "texto": "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Revisar los ajustes uno por uno",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Sabes exactamente dónde se esconden los ajustes que maquillan un cierre."
+   },
+   {
+    "indice": 1,
+    "texto": "Pedir los estados auditados y esperar",
+    "forma": "directa",
+    "efecto": "Correcto y lento. El proceso se atrasa un mes."
+   },
+   {
+    "indice": 2,
+    "texto": "Trabajar con el EBITDA ajustado que te dieron",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "Los ajustes eran legítimos. Suerte más que método.",
+     "mal": "El EBITDA ajustado era humo y la valoración entera se cae en due diligence."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 53,
+  "titulo": "La pregunta de macro en la entrevista",
+  "texto": "Te preguntan qué pasa con el tipo de cambio si el banco central sube tasas y el fiscal sigue deficitario.",
+  "empleado": false,
+  "cargo": [
+   0,
+   4
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Desarrollarla con el marco completo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Es exactamente la pregunta para la que pasaste cuatro años."
+   },
+   {
+    "indice": 1,
+    "texto": "Contestar con intuición de mercado",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "No tienes el marco pero tienes calle."
+   },
+   {
+    "indice": 2,
+    "texto": "Admitir que no lo tienes claro",
+    "forma": "directa",
+    "efecto": "Honesto y poco memorable. Al menos no inventaste."
+   }
+  ]
+ }
+]

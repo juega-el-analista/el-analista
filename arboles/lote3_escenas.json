@@ -1,0 +1,446 @@
+[
+ {
+  "grupo": "vida",
+  "id": 9007,
+  "titulo": "No es la primera vez que empiezas esto",
+  "texto": "Aparece alguien otra vez. Ya sabes cómo va: los primeros meses no cuestan nada y los siguientes se te van en fines de semana, en vuelos y en dejar de decir que sí a todo en la oficina.",
+  "empleado": false,
+  "edad": [
+   25,
+   39
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Intentarlo en serio",
+    "forma": "directa",
+    "efecto": "Lo intentas otra vez. Duermes mejor y trabajas menos horas, que en este juego es a la vez bueno y caro."
+   },
+   {
+    "indice": 1,
+    "texto": "Verse sin prometer nada",
+    "forma": "directa",
+    "efecto": "Se ven sin poner nombre a nada. Funciona un tiempo, y un tiempo también es algo."
+   },
+   {
+    "indice": 2,
+    "texto": "No ahora, tienes el año partido en dos",
+    "forma": "directa",
+    "efecto": "Lo dejas pasar por trabajo. Vuelve a pasar, y la próxima vez no da tanta pereza decir que no."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9008,
+  "titulo": "La conversación de los planes",
+  "texto": "Llevan tiempo. Aparece la conversación de siempre: dónde van a vivir, si hay hijos en el plan, y quién de los dos va a bajar el pie del acelerador para que eso pase.",
+  "empleado": false,
+  "edad": [
+   27,
+   44
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Poner tú el pie en el freno",
+    "forma": "directa",
+    "efecto": "Reduces el ritmo tú. La relación va mejor y tu carrera avanza más lento: es el intercambio y lo estás eligiendo."
+   },
+   {
+    "indice": 1,
+    "texto": "Que sea el otro quien lo baje",
+    "forma": "directa",
+    "efecto": "Sigues a tope y el ajuste lo hace la otra persona. Funciona ahora y se cobra después."
+   },
+   {
+    "indice": 2,
+    "texto": "Buscar la manera de que quepan las dos cosas",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Reorganizan la vida entera para que quepan las dos cosas. Cuesta plata y coordinación."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9023,
+  "titulo": "Empezar otra vez",
+  "texto": "Conoces a alguien. A estas alturas tienes un historial, una idea bastante clara de lo que no quieres y bastante más patrimonio que la última vez que hiciste esto.",
+  "empleado": false,
+  "edad": [
+   36,
+   62
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ir en serio, y esta vez con las cuentas claras",
+    "forma": "directa",
+    "efecto": "Te vuelves a casar, con capitulaciones y conversaciones que la primera vez no tuviste."
+   },
+   {
+    "indice": 1,
+    "texto": "Sin etiquetas, cada uno con lo suyo",
+    "forma": "directa",
+    "efecto": "Van despacio. A esta edad la gente que ha visto un divorcio va despacio."
+   },
+   {
+    "indice": 2,
+    "texto": "Estás bien solo",
+    "forma": "directa",
+    "efecto": "Prefieres estar solo. Gastas menos, decides más rápido y algunos domingos se hacen largos."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9024,
+  "titulo": "La universidad de tus hijos",
+  "texto": "Entró donde quería y está fuera del país. Cuatro años, matrícula y manutención. Puedes pagarlo con lo que tienes invertido o puede pedir un préstamo y pagarlo él.",
+  "empleado": false,
+  "edad": [
+   40,
+   62
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Pagarlo todo tú",
+    "forma": "directa",
+    "efecto": "Lo pagas entero. Es un golpe grande a tu patrimonio y para muchos padres ni siquiera es una decisión."
+   },
+   {
+    "indice": 1,
+    "texto": "Pagar la mitad, la otra mitad la trabaja",
+    "forma": "directa",
+    "efecto": "Pagan a medias. Aprende lo que cuesta y tú no comprometes tu propia jubilación."
+   },
+   {
+    "indice": 2,
+    "texto": "Que pida crédito, tú ya pagaste doce años de colegio",
+    "forma": "directa",
+    "efecto": "Pide crédito. Tienes razón en los números y la conversación de Navidad va a ser incómoda un par de años."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9025,
+  "titulo": "El chequeo que llevabas años posponiendo",
+  "texto": "No es nada grave. Es tensión alta, colesterol y un médico que usa la palabra 'todavía' más veces de las que te gustaría.",
+  "empleado": false,
+  "edad": [
+   34,
+   64
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Cambiar de vida en serio",
+    "forma": "directa",
+    "efecto": "Cambias hábitos. Duermes, entrenas, y tu energía deja de ser el cuello de botella de todo lo demás."
+   },
+   {
+    "indice": 1,
+    "texto": "Tomar la pastilla y seguir igual",
+    "forma": "directa",
+    "efecto": "Medicas el síntoma. Funciona hasta que deja de funcionar."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9030,
+  "titulo": "Rendimiento garantizado",
+  "texto": "Un asesor con oficina bonita te ofrece un producto estructurado con capital garantizado y participación en la subida. Te habla veinte minutos sin decir cuánto cobra él.",
+  "empleado": false,
+  "edad": [
+   24,
+   66
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Preguntar directamente cuánto se lleva él y cómo",
+    "forma": "directa",
+    "efecto": "Preguntas por la comisión. Se pone incómodo, y en ese silencio está toda la información que necesitabas."
+   },
+   {
+    "indice": 1,
+    "texto": "Entrar, suena bien y el capital está garantizado",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "Lees la letra pequeña a tiempo: la garantía solo aplica a vencimiento y a diez años. Sales con una comisión de salida y una lección.",
+     "mal": "El producto rinde la mitad que un índice y te cobra tres veces más. La garantía era real y valía mucho menos de lo que costó."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9031,
+  "titulo": "Un negocio con un familiar",
+  "texto": "Tu cuñado tiene la oportunidad de su vida y le falta capital. Es familia, es de fiar, y no hay contrato porque para qué entre familia.",
+  "empleado": false,
+  "edad": [
+   26,
+   66
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Prestar con contrato, plazo y garantía",
+    "forma": "directa",
+    "efecto": "Prestas con papeles. Se ofende dos meses y te paga. Los papeles no protegen del riesgo, protegen la relación."
+   },
+   {
+    "indice": 1,
+    "texto": "Prestar sin papeles, es familia",
+    "forma": "escenarios inmediatos"
+   },
+   {
+    "indice": 2,
+    "texto": "No prestar, y ofrecer ayuda de otra forma",
+    "forma": "directa",
+    "efecto": "Dices que no al dinero y sí al tiempo. Es lo que sostiene la relación a diez años."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9032,
+  "titulo": "Te clonaron la identidad",
+  "texto": "Aparecen dos créditos a tu nombre que nunca pediste. El banco dice que investigará. Investigar, aquí, significa entre tres y nueve meses.",
+  "empleado": false,
+  "edad": [
+   25,
+   66
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Abogado y denuncia formal desde el día uno",
+    "forma": "directa",
+    "efecto": "Actúas rápido y formal. Recuperas casi todo y tu historial queda limpio antes de que te haga falta."
+   },
+   {
+    "indice": 1,
+    "texto": "Gestionarlo tú por teléfono para ahorrarte el abogado",
+    "forma": "directa",
+    "efecto": "Pierdes ocho meses en llamadas. Al final se resuelve y el ahorro en abogado se lo comió el tiempo."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9033,
+  "titulo": "La oportunidad que solo dura hoy",
+  "texto": "Un grupo cerrado, una preventa, una ventana de cuarenta y ocho horas y gente que ya está dentro publicando capturas de ganancias. Todo el diseño de la cosa está hecho para que no te dé tiempo de pensar.",
+  "empleado": false,
+  "edad": [
+   28,
+   66
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Dejarlo pasar: la prisa es parte del producto",
+    "forma": "directa",
+    "efecto": "No entras. Las oportunidades legítimas rara vez caducan en cuarenta y ocho horas, y las que caducan casi nunca son legítimas."
+   },
+   {
+    "indice": 1,
+    "texto": "Entrar con poco, por si acaso",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "Sales a tiempo con algo de ganancia. Confundir esto con habilidad es exactamente cómo se pierde más la próxima vez.",
+     "mal": "Entras cerca del máximo y no hay a quién venderle después. Así funciona la estructura desde el principio."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9034,
+  "titulo": "Un socio que firmaba por los dos",
+  "texto": "En un proyecto paralelo diste poder de firma a alguien de confianza. Aparecen obligaciones a nombre de la sociedad que tú nunca aprobaste y que, legalmente, también son tuyas.",
+  "empleado": false,
+  "edad": [
+   30,
+   66
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Asumir, pagar y disolver limpio",
+    "forma": "directa",
+    "efecto": "Pagas y cierras. Te cuesta caro y sales con el nombre intacto, que en esta industria vale más."
+   },
+   {
+    "indice": 1,
+    "texto": "Pelearlo en tribunales",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "Ganas parcialmente después de dos años. Recuperas dinero y pierdes dos años de foco.",
+     "mal": "Pierdes el caso y el proceso se hace público. En finanzas los procesos públicos se recuerdan más que las sentencias."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9040,
+  "titulo": "Una herencia pequeña",
+  "texto": "Una tía que veías poco te deja algo. No es una fortuna, es exactamente la cantidad que puede cambiar tu década o desaparecer en dieciocho meses sin dejar rastro.",
+  "empleado": false,
+  "edad": [
+   24,
+   66
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Invertirla entera y no tocarla",
+    "forma": "directa",
+    "efecto": "La inviertes completa. Es la decisión aburrida y es la que se nota veinte años después."
+   },
+   {
+    "indice": 1,
+    "texto": "Mitad invertida, mitad para vivir",
+    "forma": "directa",
+    "efecto": "Repartes. Disfrutas algo y conservas algo, que es la respuesta humana y no está mal."
+   },
+   {
+    "indice": 2,
+    "texto": "Cambiar el carro",
+    "forma": "directa",
+    "efecto": "Te compras el carro. Te dura tres años de alegría y el resto de la década de depreciación."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9041,
+  "titulo": "Tu hijo pregunta cómo funciona el dinero",
+  "texto": "Tiene ocho años y quiere saber por qué no puedes comprar todo lo que hay en la tienda si tienes una tarjeta que da dinero.",
+  "empleado": false,
+  "edad": [
+   30,
+   66
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Explicárselo de verdad, con una alcancía y porcentajes",
+    "forma": "directa",
+    "efecto": "Te sientas a explicárselo. Es probablemente la mejor inversión financiera que vas a hacer este año."
+   },
+   {
+    "indice": 1,
+    "texto": "\"Cuando seas grande lo entiendes\"",
+    "forma": "directa",
+    "efecto": "Lo dejas pasar. Es exactamente lo que hicieron contigo y por eso tuviste que aprender todo esto tarde."
+   }
+  ]
+ },
+ {
+  "grupo": "legendaria",
+  "id": 9801,
+  "titulo": "El mandato de tu vida",
+  "texto": "Llega a la firma el mandato del que se va a hablar durante diez años. Alguien tiene que llevarlo y todos miran hacia la misma silla. Si sale bien, tu nombre queda pegado a la operación para siempre. Si sale mal, también.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Pedirlo y llevarlo tú",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Cierra. Tu nombre queda pegado a la operación de la década y el bono lo dice todo."
+   },
+   {
+    "indice": 1,
+    "texto": "Apoyar desde atrás sin firmar nada",
+    "forma": "directa",
+    "efecto": "Ayudas sin exponerte. Sales entero y sin historia que contar."
+   }
+  ]
+ },
+ {
+  "grupo": "legendaria",
+  "id": 9802,
+  "titulo": "Te llama un fondo soberano",
+  "texto": "Un fondo soberano busca a alguien de fuera para sentarlo en su comité de inversiones. No es un trabajo: es un asiento. Pagan poco y abren todas las puertas del continente.",
+  "empleado": false,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aceptar el asiento",
+    "forma": "directa",
+    "efecto": "Te sientas en ese comité. A partir de aquí te devuelven las llamadas el mismo día."
+   },
+   {
+    "indice": 1,
+    "texto": "Declinar, no tienes las horas",
+    "forma": "directa",
+    "efecto": "Dices que no. Es defendible y te vas a acordar de esta conversación más de una vez."
+   }
+  ]
+ },
+ {
+  "grupo": "legendaria",
+  "id": 9803,
+  "titulo": "Lo que nadie quiere comprar",
+  "texto": "Un vendedor forzado necesita salir de un activo bueno esta semana. El precio es una fracción de lo que vale y el problema es exactamente ese: nadie regala nada y tú tienes tres días para entender por qué.",
+  "empleado": false,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Entrar fuerte",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Estaba barato de verdad y tú viste por qué. Esto no pasa dos veces."
+   },
+   {
+    "indice": 1,
+    "texto": "Mirarlo y dejarlo pasar",
+    "forma": "directa",
+    "efecto": "Lo estudias, no te cuadra y lo dejas. La mitad de las veces eso es la decisión correcta."
+   }
+  ]
+ },
+ {
+  "grupo": "legendaria",
+  "id": 9804,
+  "titulo": "Te ofrecen la silla",
+  "texto": "El comité te propone dirigir toda la mesa. Es el techo de lo que se puede llegar a ser trabajando para alguien, y viene con todo: el número, las horas y la responsabilidad de los errores de otros.",
+  "empleado": true,
+  "cargo": [
+   4,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aceptar y dirigir la mesa",
+    "forma": "directa",
+    "efecto": "Te sientas en la cabecera. El sueldo cambia de categoría y tu tiempo deja de ser tuyo."
+   },
+   {
+    "indice": 1,
+    "texto": "Proponer a otra persona y quedarte donde estás",
+    "forma": "directa",
+    "efecto": "Propones a alguien de tu equipo. Ganas un aliado para toda la vida y dejas pasar el techo."
+   }
+  ]
+ }
+]

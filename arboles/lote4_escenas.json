@@ -1,0 +1,476 @@
+[
+ {
+  "grupo": "dueño de firma",
+  "id": 9601,
+  "titulo": "Te quieren comprar la firma",
+  "texto": "Un grupo más grande te ofrece comprar tu firma. Buen precio, tres años de permanencia obligatoria y dejar de ser quien firma las decisiones.",
+  "empleado": true,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Vender una parte minoritaria y seguir al mando",
+    "forma": "directa",
+    "efecto": "Entra capital y un socio con voz. Sigues al mando, aunque ahora hay alguien más en la mesa."
+   },
+   {
+    "indice": 1,
+    "texto": "Pedir más y hacerlos esperar",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Pones tu número sobre la mesa y dejas que el silencio negocie."
+   },
+   {
+    "indice": 2,
+    "texto": "No vender",
+    "forma": "directa",
+    "efecto": "Lo que construiste no está a la venta. Todavía."
+   }
+  ]
+ },
+ {
+  "grupo": "dueño de firma",
+  "id": 9602,
+  "titulo": "Tu mejor socio quiere irse con clientes",
+  "texto": "La persona que trajo la mitad de tus clientes te avisa de que la tienta otra firma. Si se va, se lleva la agenda.",
+  "empleado": true,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Darle una parte de la firma",
+    "forma": "directa",
+    "efecto": "Ahora también es dueño de una parte. Se queda, y se queda por otra razón."
+   },
+   {
+    "indice": 1,
+    "texto": "Dejarlo ir y quedarte con lo que queda",
+    "forma": "directa",
+    "efecto": "Se va con dos clientes. Duele, pero la firma sigue siendo toda tuya."
+   }
+  ]
+ },
+ {
+  "grupo": "dueño de firma",
+  "id": 9603,
+  "titulo": "Los bonos de fin de año los pones tú",
+  "texto": "Cerró el año y el reparto depende de ti. Lo que te quedas tú es exactamente lo que no le das a tu equipo.",
+  "empleado": true,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Repartir con generosidad",
+    "forma": "directa",
+    "efecto": "El equipo lo nota. Este año nadie contesta a los headhunters."
+   },
+   {
+    "indice": 1,
+    "texto": "Quedarte con la mayor parte",
+    "forma": "directa",
+    "efecto": "Tu cuenta sube y la sala se enfría un poco."
+   }
+  ]
+ },
+ {
+  "grupo": "dueño de firma",
+  "id": 9604,
+  "titulo": "Un competidor propone fusionaros",
+  "texto": "Una firma parecida a la tuya quiere unir fuerzas: el doble de clientes y dos personas diciendo que mandan.",
+  "empleado": true,
+  "cargo": [
+   4,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Fusionaros",
+    "forma": "directa",
+    "efecto": "Más escala, más reuniones y un socio con el que discutirlo todo."
+   },
+   {
+    "indice": 1,
+    "texto": "Seguir por tu cuenta",
+    "forma": "directa",
+    "efecto": "Creces más lento, pero decides tú."
+   }
+  ]
+ },
+ {
+  "grupo": "dueño de firma",
+  "id": 9605,
+  "titulo": "Tu cliente grande te pide abrir en Miami",
+  "texto": "Tu cliente más importante se muda a Miami y te propone seguirlo. Abrir allá cuesta caro y te parte entre dos ciudades.",
+  "empleado": true,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Abrir una oficina allá",
+    "forma": "directa",
+    "efecto": "Dos oficinas, dos agendas y un cliente que ahora te debe una."
+   },
+   {
+    "indice": 1,
+    "texto": "Atenderlo desde aquí",
+    "forma": "directa",
+    "efecto": "Lo atiendes a distancia. Algo se pierde, pero no te partes en dos."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 1,
+  "titulo": "Un DCF para mañana a las ocho",
+  "texto": "Once de la noche. El VP deja una carpeta encima de tu teclado y dice que el cliente quiere el modelo antes del desayuno.",
+  "empleado": true,
+  "cargo": [
+   0,
+   2
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Amanecerte y entregarlo impecable",
+    "forma": "directa",
+    "efecto": "Entregas a las 7:40 con las tres sensibilidades corridas. El VP no dice nada, que aquí significa que quedó bien."
+   },
+   {
+    "indice": 1,
+    "texto": "Armarlo rápido y confiar en tu ojo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Corres los números de cabeza para no perder tiempo abriendo el modelo entero."
+   },
+   {
+    "indice": 2,
+    "texto": "Pedir ayuda y repartir el trabajo",
+    "forma": "directa",
+    "efecto": "Te consiguen apoyo. Tu jefe toma nota, aunque no queda claro de qué lado."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 2,
+  "titulo": "El error ya salió por correo",
+  "texto": "El modelo que se envió al cliente tiene la deuda neta mal sumada. La diferencia mueve el equity value casi 10%.",
+  "empleado": false,
+  "cargo": [
+   0,
+   3
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Avisar de inmediato, aunque duela",
+    "forma": "directa",
+    "efecto": "Incómodo durante una hora, respetado durante años. La corrección sale el mismo día."
+   },
+   {
+    "indice": 1,
+    "texto": "Encontrar todos los errores antes de que los encuentren ellos",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te encierras a revisar celda por celda antes de que alguien más lo note."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 3,
+  "titulo": "Café con el socio",
+  "texto": "El socio director te encuentra en la cafetería y se sienta contigo. Tienes doce minutos de su atención completa.",
+  "empleado": true,
+  "cargo": [
+   0,
+   2
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Preguntarle por el negocio y escuchar",
+    "forma": "directa",
+    "efecto": "Te cuenta cómo levantó su primer mandato. Aprendes más que en dos meses de Excel."
+   },
+   {
+    "indice": 1,
+    "texto": "Soltarle una idea de originación tuya",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Tienes una ventana de segundos para meter la idea sin que suene forzado."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 4,
+  "titulo": "Certificación de por medio",
+  "texto": "Se abre la inscripción. Cuesta plata, quita fines de semana y no garantiza nada.",
+  "empleado": false,
+  "cargo": [
+   0,
+   4
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Inscribirte y estudiar en serio",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Seis meses de sábados perdidos y el examen encima."
+   },
+   {
+    "indice": 1,
+    "texto": "Saltarlo, tu escuela es la mesa",
+    "forma": "directa",
+    "efecto": "Decides que el aprendizaje viene de los mandatos. Tampoco es mala tesis."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 5,
+  "titulo": "Cierre de operación, fiesta en el bar",
+  "texto": "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
+  "empleado": false,
+  "cargo": [
+   0,
+   3
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ir y quedarte hasta el final",
+    "forma": "directa",
+    "efecto": "Terminas hablando de mineras con un principal de un fondo. Se guarda tu número."
+   },
+   {
+    "indice": 1,
+    "texto": "Aparecerte una hora y dormir",
+    "forma": "directa",
+    "efecto": "Saludas, brindas, te vas. El equilibrio también es una habilidad."
+   },
+   {
+    "indice": 2,
+    "texto": "Quedarte a adelantar el próximo pitch",
+    "forma": "directa",
+    "efecto": "El lunes tienes ventaja. El viernes tuviste soledad."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 6,
+  "titulo": "El data room es un desastre",
+  "texto": "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
+  "empleado": true,
+  "cargo": [
+   0,
+   2
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Armar un índice maestro que sirva a todos",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Ordenas el desastre siguiendo la lógica del proceso."
+   },
+   {
+    "indice": 1,
+    "texto": "Revisar solo lo que te pidieron",
+    "forma": "directa",
+    "efecto": "Cumples. Nada más y nada menos."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 9,
+  "titulo": "Cien mensajes en frío",
+  "texto": "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
+  "empleado": false,
+  "cargo": [
+   1,
+   4
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Armar la base y escribir todos los días",
+    "forma": "directa",
+    "efecto": "De cien mensajes contestan siete. De esos siete sale una reunión que en dos años será un mandato."
+   },
+   {
+    "indice": 1,
+    "texto": "Enfocarte en diez contactos bien elegidos",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Menos volumen y mejor timing. Escribes justo cuando conviene escribir."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 10,
+  "titulo": "El teaser que vuelve marcado",
+  "texto": "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
+  "empleado": false,
+  "cargo": [
+   0,
+   3
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Rehacerlo entero y aprender el formato",
+    "forma": "directa",
+    "efecto": "La siguiente versión vuelve con cuatro comentarios. Progreso medible."
+   },
+   {
+    "indice": 1,
+    "texto": "Defender los puntos que no compartes",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Discutir un comentario técnico te obliga a tener razón de verdad."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 11,
+  "titulo": "Media hora antes del cierre",
+  "texto": "El mercado cierra en treinta minutos y tienes una orden a medio ejecutar en tu cuenta personal.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ejecutar tú mismo en el momento justo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te quedas mirando la pantalla esperando el momento."
+   },
+   {
+    "indice": 1,
+    "texto": "Dejar una orden limitada y apagar todo",
+    "forma": "directa",
+    "efecto": "Pones el precio al que estarías cómodo y te olvidas. Se ejecuta a medias."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 12,
+  "titulo": "Ruido en la pantalla",
+  "texto": "Seis titulares en una hora y tu portafolio reaccionando a cada uno. Alguien tiene que decidir qué es señal y qué es ruido.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Operar cada señal en el momento",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te sientas a operar los titulares uno por uno."
+   },
+   {
+    "indice": 1,
+    "texto": "Cerrar la pantalla y no hacer nada",
+    "forma": "directa",
+    "efecto": "El mejor movimiento del semestre fue no hacer ninguno."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 13,
+  "titulo": "Roadshow de tres ciudades",
+  "texto": "Bogotá el lunes, Asunción el miércoles, Buenos Aires el viernes. Ocho reuniones con fondos.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ir a todo y preparar cada reunión",
+    "forma": "directa",
+    "efecto": "Vuelves destruido y con dos cartas de interés."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandar a tu asociado a una de las plazas",
+    "forma": "directa",
+    "efecto": "Delegar también es señal de nivel. Tu asociado responde bien."
+   },
+   {
+    "indice": 2,
+    "texto": "Hacerlo por videollamada",
+    "forma": "directa",
+    "efecto": "Ahorras el pasaje. Los fondos toman menos en serio a quien no aterriza."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 14,
+  "titulo": "Tu mejor analista renuncia",
+  "texto": "Se va a un fondo. Te lo dice con dos semanas de aviso y cara de culpa.",
+  "empleado": false,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Desearle bien y mantener el puente",
+    "forma": "directa",
+    "efecto": "A los dos años ese fondo entra como comprador en un proceso tuyo."
+   },
+   {
+    "indice": 1,
+    "texto": "Contraofertar y retenerlo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Tienes que encontrar el número que lo convence sin romper la escala del equipo."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 15,
+  "titulo": "Te ofrecen una silla en el board",
+  "texto": "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
+  "empleado": false,
+  "cargo": [
+   4,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aceptar y tomarlo en serio",
+    "forma": "directa",
+    "efecto": "Cuatro juntas al año, mucha lectura y una visión del negocio que desde afuera no tenías."
+   },
+   {
+    "indice": 1,
+    "texto": "Declinar por conflicto de interés",
+    "forma": "directa",
+    "efecto": "El cliente entiende y confía más. Tu agenda respira."
+   }
+  ]
+ }
+]

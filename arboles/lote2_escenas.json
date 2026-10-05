@@ -1,0 +1,366 @@
+[
+ {
+  "grupo": "vida",
+  "id": 9001,
+  "titulo": "Alguien que te importa",
+  "texto": "Llevas meses viendo a alguien. No es una decisión financiera y aun así lo es: el tiempo que dedicas, la ciudad en la que decides quedarte y la cantidad de fines de semana que no pasas trabajando salen todos del mismo presupuesto.",
+  "empleado": false,
+  "edad": [
+   21,
+   34
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ir en serio con esta persona",
+    "forma": "directa",
+    "efecto": "Empiezas una relación seria. Ganas red de apoyo y pierdes fines de semana de oficina."
+   },
+   {
+    "indice": 1,
+    "texto": "Dejarlo estar, este año no es el año",
+    "forma": "directa",
+    "efecto": "Eliges la carrera. Funciona, y algunas noches te preguntas si valía la pena."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9002,
+  "titulo": "La boda de tu mejor amigo",
+  "texto": "Te pide que seas padrino. La boda es en otro país, hay despedida, hay traje, hay regalo. Nadie te está obligando y todo el mundo espera que vayas.",
+  "empleado": false,
+  "edad": [
+   22,
+   30
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ir a todo, es una vez en la vida",
+    "forma": "directa",
+    "efecto": "Vas a todo. Te cuesta un mes de ahorro y te llevas una red que te va a servir veinte años."
+   },
+   {
+    "indice": 1,
+    "texto": "Ir solo a la boda, saltarte la despedida",
+    "forma": "directa",
+    "efecto": "Vas a lo importante y te ahorras lo demás. Nadie te lo reprocha."
+   },
+   {
+    "indice": 2,
+    "texto": "No puedes permitírtelo y lo dices",
+    "forma": "directa",
+    "efecto": "Mandas el regalo y una nota. Es la decisión correcta y de todas formas duele."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9003,
+  "titulo": "Irte a vivir solo",
+  "texto": "Puedes seguir en casa de tus padres y ahorrar como nunca vas a poder ahorrar otra vez, o mudarte y empezar a pagar por tu propio espacio.",
+  "empleado": false,
+  "edad": [
+   22,
+   33
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Mudarte, necesitas tu espacio",
+    "forma": "directa",
+    "efecto": "Te mudas. Vives mejor y tu tasa de ahorro se desploma; las dos cosas son verdad a la vez."
+   },
+   {
+    "indice": 1,
+    "texto": "Quedarte dos años más y ahorrar",
+    "forma": "directa",
+    "efecto": "Te quedas. Es lo más rentable que vas a hacer en la década y no se lo cuentas a nadie."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9004,
+  "titulo": "El negocio de un conocido",
+  "texto": "Un amigo del gimnasio te habla de una importadora. Números redondos, márgenes que él llama conservadores y una urgencia que no termina de explicar. No hay estados financieros, hay un PDF con fotos.",
+  "empleado": false,
+  "edad": [
+   23,
+   40
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Meter un ticket pequeño, por la amistad",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "Contra todo pronóstico el negocio funciona y te devuelve con ganancia. No lo confundas con criterio.",
+     "mal": "El negocio nunca arrancó y tu amigo dejó de contestar. La lección costó lo que costó."
+    }
+   },
+   {
+    "indice": 1,
+    "texto": "Pedirle estados financieros auditados",
+    "forma": "directa",
+    "efecto": "Pides papeles. Se ofende, deja de insistir, y seis meses después el asunto se desinfla solo."
+   },
+   {
+    "indice": 2,
+    "texto": "No, y sin explicaciones largas",
+    "forma": "directa",
+    "efecto": "Dices que no. Es la respuesta correcta la mayoría de las veces y casi nadie la da."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9010,
+  "titulo": "La conversación",
+  "texto": "Llevan años. La pregunta ya no es si se quieren, es si van a construir algo en común: cuentas, casa, planes que no se pueden deshacer con una llamada.",
+  "empleado": false,
+  "edad": [
+   26,
+   42
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Casarte",
+    "forma": "directa",
+    "efecto": "Te casas. La boda cuesta lo que cuesta y el hogar de dos ingresos cambia tus números para bien."
+   },
+   {
+    "indice": 1,
+    "texto": "Seguir juntos sin firmar nada",
+    "forma": "directa",
+    "efecto": "Siguen igual. Funciona, y en algún momento uno de los dos va a volver a sacar el tema."
+   },
+   {
+    "indice": 2,
+    "texto": "Se acabó",
+    "forma": "directa",
+    "efecto": "Lo dejan. Te vuelcas en el trabajo, que es lo que hace todo el mundo y ayuda menos de lo que parece."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9011,
+  "titulo": "Se rompió",
+  "texto": "No hubo un motivo grande. Hubo dos años de horarios imposibles, viajes que no cancelaste y una conversación pendiente que nunca tuvo un buen momento.",
+  "empleado": false,
+  "edad": [
+   24,
+   45
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aceptarlo y seguir",
+    "forma": "directa",
+    "efecto": "Se termina. Trabajas más que nunca durante seis meses y tus números del año salen bien."
+   },
+   {
+    "indice": 1,
+    "texto": "Pelear por la relación: terapia, menos horas",
+    "forma": "directa",
+    "efecto": "Reduces el ritmo y arreglas lo que se podía arreglar. En la oficina lo notan y no todos lo entienden."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9012,
+  "titulo": "Un hijo",
+  "texto": "La decisión que más cambia un presupuesto y la que menos se analiza con una hoja de cálculo. Guardería, seguro, espacio, y una redefinición completa de qué significa una noche libre.",
+  "empleado": false,
+  "edad": [
+   27,
+   44
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Adelante",
+    "forma": "directa",
+    "efecto": "Nace tu primer hijo. Tus gastos fijos suben para siempre y tu escala de prioridades se reordena sola."
+   },
+   {
+    "indice": 1,
+    "texto": "Todavía no",
+    "forma": "directa",
+    "efecto": "Lo posponen. Es una decisión legítima y también es una decisión, aunque no lo parezca."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9013,
+  "titulo": "El segundo",
+  "texto": "El primero ya camina. La pregunta vuelve, y esta vez sabes exactamente lo que cuesta, en dinero y en horas de sueño.",
+  "empleado": false,
+  "edad": [
+   30,
+   46
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Otro más",
+    "forma": "directa",
+    "efecto": "Llega el segundo. La guardería ya no es un gasto, es una segunda hipoteca."
+   },
+   {
+    "indice": 1,
+    "texto": "Con uno está bien",
+    "forma": "directa",
+    "efecto": "Se quedan con uno. Menos gasto, menos ruido y una conversación que vuelve cada dos años."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9014,
+  "titulo": "El colegio",
+  "texto": "Toca elegir. El colegio bueno cuesta lo que un carro al año, cada año, durante doce años. El colegio normal es un colegio normal y probablemente esté bien.",
+  "empleado": false,
+  "edad": [
+   28,
+   50
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "El colegio caro, es su futuro",
+    "forma": "directa",
+    "efecto": "Los matriculas en el colegio caro. Es la decisión que más gente toma con el corazón y menos gente recalcula después."
+   },
+   {
+    "indice": 1,
+    "texto": "Colegio público bueno y el resto invertido para ellos",
+    "forma": "directa",
+    "efecto": "Eliges lo razonable e inviertes la diferencia a su nombre. En dieciocho años esa diferencia es una carrera universitaria pagada."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9015,
+  "titulo": "Una empresa que no existe",
+  "texto": "Te llega por un contacto de confianza: una empresa con rendimientos del 4% mensual, auditada por una firma que nadie conoce y con una web impecable. El contacto lleva dos años cobrando puntual y te enseña los recibos.",
+  "empleado": false,
+  "edad": [
+   29,
+   52
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Meter una parte seria, tu contacto lleva dos años cobrando",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "Algo te huele mal a última hora y solo metes una cantidad simbólica. Nueve meses después la empresa desaparece con el dinero de todos.",
+     "mal": "La empresa desaparece. Tu contacto cobraba puntual porque le pagaban con el dinero de los que entraban después, y tú fuiste de los últimos."
+    }
+   },
+   {
+    "indice": 1,
+    "texto": "Pedir el registro mercantil y el nombre del auditor",
+    "forma": "directa",
+    "efecto": "Pides papeles verificables. Las respuestas llegan tarde, vagas y con reproches. Eso ya es la respuesta."
+   },
+   {
+    "indice": 2,
+    "texto": "4% mensual no existe. No.",
+    "forma": "directa",
+    "efecto": "Dices que no y explicas por qué. Dos años después te llaman varios de los que sí entraron."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9020,
+  "titulo": "El desgaste",
+  "texto": "Llevan años funcionando como una sociedad logística: turnos, colegio, cuentas. Hace mucho que no hay una conversación que no sea sobre organización.",
+  "empleado": false,
+  "edad": [
+   33,
+   55
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Parar, terapia de pareja, reducir el ritmo laboral",
+    "forma": "directa",
+    "efecto": "Frenas. La relación aguanta y tu carrera pierde un año de impulso. Es un intercambio, no un error."
+   },
+   {
+    "indice": 1,
+    "texto": "Seguir así, ya se arreglará",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "Aguanta. No por lo que hiciste, sino porque la otra persona tuvo más paciencia de la que merecías.",
+     "mal": "Divorcio. Además del golpe, se reparte el patrimonio: es el evento que más riqueza destruye en una vida normal."
+    }
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9021,
+  "titulo": "Tu padre ya no puede solo",
+  "texto": "La llamada llega un martes. No es una emergencia médica, es algo peor de gestionar: alguien que siempre se ocupó de todo ahora necesita que alguien se ocupe de él.",
+  "empleado": false,
+  "edad": [
+   35,
+   58
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Traerlo a vivir contigo",
+    "forma": "directa",
+    "efecto": "Se muda contigo. Tus gastos suben, tu energía baja y no te arrepientes ni un día."
+   },
+   {
+    "indice": 1,
+    "texto": "Pagar una residencia buena",
+    "forma": "directa",
+    "efecto": "Pagas la residencia. Es la opción cara y la que te deja seguir trabajando, y la culpa no la cubre ningún seguro."
+   },
+   {
+    "indice": 2,
+    "texto": "Repartirlo entre los hermanos",
+    "forma": "directa",
+    "efecto": "Lo reparten. Funciona a medias y saca a la luz cuentas pendientes de hace treinta años."
+   }
+  ]
+ },
+ {
+  "grupo": "vida",
+  "id": 9022,
+  "titulo": "Se murió",
+  "texto": "Alguien cercano, de los que dabas por hecho que iban a estar siempre. No hay decisión financiera aquí, y aun así el año se rompe en dos.",
+  "empleado": false,
+  "edad": [
+   38,
+   60
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Parar todo y estar presente",
+    "forma": "directa",
+    "efecto": "Paras. Pierdes un trimestre de carrera y ganas una perspectiva que no se compra."
+   },
+   {
+    "indice": 1,
+    "texto": "Enterrarte en el trabajo",
+    "forma": "directa",
+    "efecto": "Trabajas más que nunca. Los números del año salen bien y el duelo te va a pasar factura más tarde."
+   }
+  ]
+ }
+]

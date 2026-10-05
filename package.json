@@ -23,7 +23,8 @@
     "firma": "node pruebas/firma.js",
     "catalogo": "node pruebas/catalogo.js",
     "sitio": "node pruebas/pwa.js",
-    "puertas": "node pruebas/puertas.js 12"
+    "puertas": "node pruebas/puertas.js 12",
+    "caminos": "node pruebas/caminos.js 16"
   },
   "devDependencies": {
     "@babel/core": "^7",

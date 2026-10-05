@@ -1,0 +1,348 @@
+[
+ {
+  "grupo": "oficina",
+  "id": 16,
+  "titulo": "Tu primo y la cripto del momento",
+  "texto": "Insiste todos los días. Dice que esta vez es distinto y que ya subió 300%.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Meter una parte que puedas perder",
+    "forma": "directa",
+    "efecto": "Defines de antemano cuánto estás dispuesto a perder. Eso ya es gestión de riesgo."
+   },
+   {
+    "indice": 1,
+    "texto": "Explicarle por qué no",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Le explicas con números, que es la única forma de que entienda."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 17,
+  "titulo": "El cuerpo pasa factura",
+  "texto": "Dolor de espalda, sueño malo, tres cafés antes del mediodía. El médico te da una lista de cosas que no vas a hacer.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Bloquear una hora diaria y cumplirla",
+    "forma": "directa",
+    "efecto": "Una hora menos de escritorio y bastante más cabeza."
+   },
+   {
+    "indice": 1,
+    "texto": "Ignorarlo, ya habrá tiempo",
+    "forma": "directa",
+    "efecto": "Aguantas. Todo el mundo aguanta hasta que no."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 18,
+  "titulo": "La boda es el mismo fin de semana del pitch",
+  "texto": "Tu mejor amigo se casa el sábado. El pitch al comité es el lunes a primera hora.",
+  "empleado": false,
+  "cargo": [
+   0,
+   5
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Ir a la boda y preparar el domingo",
+    "forma": "directa",
+    "efecto": "Llegas al lunes con menos horas y más humanidad. El pitch sale bien igual."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandar un regalo y quedarte trabajando",
+    "forma": "directa",
+    "efecto": "El pitch queda redondo. La amistad queda con una marca pequeña."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 19,
+  "titulo": "Prensa al teléfono",
+  "texto": "Un periodista quiere una cita tuya sobre el sector. Tu firma no tiene política clara al respecto.",
+  "empleado": false,
+  "cargo": [
+   1,
+   5
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Hablar solo de datos públicos",
+    "forma": "directa",
+    "efecto": "Sales citado con prudencia. Dos fondos te escriben esa semana."
+   },
+   {
+    "indice": 1,
+    "texto": "Aceptar la entrevista técnica en vivo",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "En vivo no hay forma de consultar nada."
+   },
+   {
+    "indice": 2,
+    "texto": "Declinar y pasarlo al socio",
+    "forma": "directa",
+    "efecto": "Correcto y aburrido. A veces es exactamente lo que toca."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 20,
+  "titulo": "Alguien se cuelga de tu trabajo",
+  "texto": "Un colega presenta al comité el análisis que armaste tú, sin mencionarte.",
+  "empleado": true,
+  "cargo": [
+   1,
+   4
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Hablarlo con él, en privado y directo",
+    "forma": "directa",
+    "efecto": "Se incomoda y corrige en la siguiente sesión. El límite queda puesto."
+   },
+   {
+    "indice": 1,
+    "texto": "Escalarlo al socio",
+    "forma": "chequeo de suerte (sale bien o mal): usa ok/no en raices",
+    "efecto": {
+     "bien": "El socio ya lo sospechaba. Ajustan la asignación de créditos del equipo.",
+     "mal": "Queda como conflicto de egos y tú como el que se queja."
+    }
+   },
+   {
+    "indice": 2,
+    "texto": "Dejarlo pasar y anotarlo",
+    "forma": "directa",
+    "efecto": "Sigues trabajando. La factura de estas cosas llega igual, solo que después."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 21,
+  "titulo": "Llega el bono",
+  "texto": "Sobre encima del escritorio. Menos de lo que esperabas y más de lo que temías.",
+  "empleado": true,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Mandarlo casi todo al portafolio",
+    "forma": "directa",
+    "efecto": "Lo inviertes antes de acostumbrarte a verlo en la cuenta."
+   },
+   {
+    "indice": 1,
+    "texto": "Repartir entre disfrute y ahorro",
+    "forma": "directa",
+    "efecto": "Un viaje corto y el resto invertido. Difícil discutirlo."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 22,
+  "titulo": "Fusión de tu firma",
+  "texto": "Anuncian la integración con una casa regional. Reorganizan equipos en sesenta días.",
+  "empleado": true,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Posicionarte temprano con los que llegan",
+    "forma": "directa",
+    "efecto": "Terminas liderando la integración de la cobertura sectorial."
+   },
+   {
+    "indice": 1,
+    "texto": "Bajar la cabeza y ejecutar",
+    "forma": "directa",
+    "efecto": "Sobrevives al recorte. Nadie te tiene muy presente."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 23,
+  "titulo": "Devaluación de la noche a la mañana",
+  "texto": "El tipo de cambio se mueve 40%. La mitad de tus supuestos quedaron viejos.",
+  "empleado": false,
+  "cargo": [
+   0,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Rehacer los modelos en dólares esa misma semana",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Conviertes todo a mano para tener números creíbles antes que nadie."
+   },
+   {
+    "indice": 1,
+    "texto": "Esperar a que se estabilice",
+    "forma": "directa",
+    "efecto": "Cuando reaccionas, otro ya mandó su nota al mercado."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 24,
+  "titulo": "Enseñarle al pasante nuevo",
+  "texto": "Llega alguien que no sabe usar buscarv y tiene todas las ganas del mundo.",
+  "empleado": false,
+  "cargo": [
+   0,
+   2
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Dedicarle dos horas por semana",
+    "forma": "directa",
+    "efecto": "En seis meses te libera un tercio de tu carga. La mejor inversión del año."
+   },
+   {
+    "indice": 1,
+    "texto": "Que aprenda como aprendiste tú",
+    "forma": "directa",
+    "efecto": "Sobrevive, pero no te busca cuando importa."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 26,
+  "titulo": "Comité de crédito difícil",
+  "texto": "Defiendes una estructura de factoring sobre un sector volátil. Dos miembros vienen buscando sangre.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Responder con los números en la cabeza",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te preguntan tasas y coberturas y no hay tiempo de abrir el archivo."
+   },
+   {
+    "indice": 1,
+    "texto": "Retirar el caso y volver el mes que viene",
+    "forma": "directa",
+    "efecto": "Preferible retirarse que perder. Vuelves mejor armado."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 27,
+  "titulo": "Reunión con la familia dueña",
+  "texto": "Tres hermanos, una empresa y ninguna intención de estar de acuerdo entre ellos.",
+  "empleado": false,
+  "cargo": [
+   1,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Aguantar el pulso y buscar el punto medio",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "La reunión se vuelve un juego de posiciones antes de hablar de precio."
+   },
+   {
+    "indice": 1,
+    "texto": "Mandar una propuesta por escrito y esperar",
+    "forma": "directa",
+    "efecto": "Ordenado y sin desgaste. También sin conexión personal."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 28,
+  "titulo": "Un cliente grande aprieta",
+  "texto": "Amenaza con llevarse la cuenta si no aceptas un fee contingente que castiga a tu equipo.",
+  "empleado": false,
+  "cargo": [
+   3,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Sostener el esquema de honorarios",
+    "forma": "directa",
+    "efecto": "Pierdes la cuenta este año y la recuperas en dos, con mejores términos."
+   },
+   {
+    "indice": 1,
+    "texto": "Negociar un esquema mixto",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Retainer bajo y éxito alto. Hay que encontrar el punto exacto."
+   },
+   {
+    "indice": 2,
+    "texto": "Ceder para proteger la facturación",
+    "forma": "directa",
+    "efecto": "El equipo trabaja igual por menos. Alguien renuncia en tres meses."
+   }
+  ]
+ },
+ {
+  "grupo": "oficina",
+  "id": 29,
+  "titulo": "Auditoría interna sobre tus expedientes",
+  "texto": "Revisan al azar cinco mandatos tuyos, papel por papel.",
+  "empleado": false,
+  "cargo": [
+   2,
+   6
+  ],
+  "opciones": [
+   {
+    "indice": 0,
+    "texto": "Reconstruir la cronología completa",
+    "forma": "minijuego (exito/parcial/fallo): luego a nivel de opcion",
+    "efecto": "Te sientan a explicar cada aprobación en orden."
+   },
+   {
+    "indice": 1,
+    "texto": "Pedir tiempo para ordenar antes de entregar",
+    "forma": "directa",
+    "efecto": "Ganas la semana y entregas impecable. El auditor se da cuenta igual."
+   }
+  ]
+ }
+]
