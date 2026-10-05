@@ -43,7 +43,8 @@ El sitio publicado se puede instalar como app: con su icono, a pantalla
 completa y jugable sin conexión.
 
 - **Android / Chrome / Edge:** botón «Instalar la app» abajo a la derecha,
-  o el menú del navegador → «Instalar».
+  o el menú del navegador → «Instalar». En Vercel el botón no sale (solo
+  el menú del navegador); `SIN_BOTON_INSTALAR=1` lo quita en otro sitio.
 - **iPhone / iPad:** en Safari, Compartir → «Añadir a pantalla de inicio».
 
 Lo arma `npm run sitio` (en `pruebas/pwa.js`): copia el juego a `sitio/` y
