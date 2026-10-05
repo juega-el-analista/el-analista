@@ -14,3 +14,7 @@ catalogo.html
 
 # la carpeta que publica Pages se arma con npm run sitio
 sitio/
+
+# variables locales; la plantilla es .env.example
+.env
+.env.local
