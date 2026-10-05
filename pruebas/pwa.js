@@ -168,9 +168,22 @@ const iHead = doc.indexOf("</head>");
 const iIsla = doc.indexOf('id="plantilla"');
 ok(iHead > 0, "el documento tiene cabecera");
 ok(iIsla < 0 || iHead < iIsla, "la primera cabecera es la viva, antes de la isla de plantilla");
-const sitioDoc = doc.slice(0, iHead) + cabecera + "\n" + conexion + "\n" + registro + "\n" + doc.slice(iHead);
+/* La barra final. El sitio puede vivir bajo una ruta de otro dominio
+   (tudominio.com/juego/, servido con un rewrite desde ese proyecto). Todo
+   lo de aquí se pide con rutas relativas, y sin la barra final esas rutas
+   saltan a la raíz del otro dominio: el trabajador, el manifiesto y los
+   iconos se piden donde no están. Va primero, antes de que se pida nada. */
+const barra = `<script>
+(function () {
+  var p = location.pathname;
+  if (p.charAt(p.length - 1) !== "/" && !/\\.[A-Za-z0-9]+$/.test(p)) location.replace(p + "/" + location.search + location.hash);
+})();
+${CIERRE}`;
+const inyeccion = [barra, cabecera, conexion, registro].join("\n") + "\n";
+const sitioDoc = doc.slice(0, iHead) + inyeccion + doc.slice(iHead);
 ok(sitioDoc.split('rel="manifest"').length - 1 === 1, "el manifiesto se enlaza una sola vez");
-ok(sitioDoc.slice(iHead + cabecera.length + conexion.length + registro.length + 3) === doc.slice(iHead), "todo lo que va después de la cabecera, islas incluidas, queda idéntico");
+ok(sitioDoc.indexOf(barra) < sitioDoc.indexOf('rel="manifest"'), "la barra final se arregla antes de pedir nada relativo");
+ok(sitioDoc.slice(iHead + inyeccion.length) === doc.slice(iHead), "todo lo que va después de la cabecera, islas incluidas, queda idéntico");
 ok(doc.indexOf("__API_URL") < 0, "index.html no sabe del backend (el del artifact y el quine)");
 console.log("  " + (apiUrl ? "backend en " + apiUrl : "sin VITE_API_URL: el sitio sale sin backend"));
 console.log("  " + (conBoton ? "con el botón de «Instalar la app»" : "sin el botón de «Instalar la app»"));
