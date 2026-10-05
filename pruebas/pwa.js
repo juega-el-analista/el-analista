@@ -47,10 +47,18 @@ const cabecera = [
 /* El registro del trabajador y un botón discreto de «Instalar». El botón
    solo aparece cuando el navegador dice que se puede instalar (Chrome,
    Edge, Android), se puede cerrar para siempre y desaparece al instalar.
-   En iPhone no existe ese aviso: allí se instala desde Compartir. */
+   En iPhone no existe ese aviso: allí se instala desde Compartir.
+
+   En Vercel no sale: Vercel define VERCEL=1 al construir, y ahí el sitio
+   se juega en el navegador. El aviso del navegador se sigue callando
+   (preventDefault), así que tampoco aparece la barra propia de Chrome;
+   quien quiera instalarla aún puede, desde el menú del navegador.
+   SIN_BOTON_INSTALAR=1 lo quita en cualquier otro sitio. */
+const conBoton = process.env.VERCEL !== "1" && process.env.SIN_BOTON_INSTALAR !== "1";
 const registro = `<script>
 (function () {
   try {
+    var BOTON = ${conBoton};
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker.register("sw.js").catch(function () {});
@@ -66,7 +74,7 @@ const registro = `<script>
     window.addEventListener("beforeinstallprompt", function (e) {
       e.preventDefault();
       aparcado = e;
-      if (yaDicho() || instalada() || document.getElementById("ea-instalar")) return;
+      if (!BOTON || yaDicho() || instalada() || document.getElementById("ea-instalar")) return;
       var caja = document.createElement("div");
       caja.id = "ea-instalar";
       caja.setAttribute("style", "position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;align-items:center;"
@@ -165,6 +173,8 @@ ok(sitioDoc.split('rel="manifest"').length - 1 === 1, "el manifiesto se enlaza u
 ok(sitioDoc.slice(iHead + cabecera.length + conexion.length + registro.length + 3) === doc.slice(iHead), "todo lo que va después de la cabecera, islas incluidas, queda idéntico");
 ok(doc.indexOf("__API_URL") < 0, "index.html no sabe del backend (el del artifact y el quine)");
 console.log("  " + (apiUrl ? "backend en " + apiUrl : "sin VITE_API_URL: el sitio sale sin backend"));
+console.log("  " + (conBoton ? "con el botón de «Instalar la app»" : "sin el botón de «Instalar la app»"));
+ok(sitioDoc.indexOf("var BOTON = " + conBoton + ";") > 0, "el botón de instalar sale solo donde toca");
 ok(doc.indexOf('rel="manifest"') < 0, "index.html sigue sin tocar (el del artifact y el quine)");
 
 /* ---- la carpeta ---- */
