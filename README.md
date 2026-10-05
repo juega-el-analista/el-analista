@@ -53,7 +53,7 @@ jugar sin conexión. Solo toca la copia de Pages; `index.html` sigue siendo
 el documento que sabe reconstruirse. `npm run sitio -- servir` lo sirve en
 http://localhost:5175 para probarlo.
 
-El juego está en vivo en **https://aleferrara1807.github.io/el-analista/**, y se
+El juego está en vivo en **https://juega-el-analista.github.io/el-analista/**, y se
 reconstruye y republica solo en cada push a `main` — pero solo si las pruebas
 pasan. Si fallan, el sitio se queda con la última versión buena.
 
