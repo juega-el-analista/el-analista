@@ -171,6 +171,15 @@ const CSS = `
 .ea-descubreB{height:8px;border-radius:99px;background:#EFE7F8;margin-top:8px;overflow:hidden}
 .ea-descubreB div{height:100%;border-radius:99px;background:#7A4FB0;animation:ea-camBarra 1.2s .3s ease-out backwards}
 @keyframes ea-camIn{from{opacity:0;transform:translateX(-10px)}}
+/* ---- el desglose del año ---- */
+.ea-desglose{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;margin-top:10px;font-size:12.5px;color:#5A5A55}
+.ea-desglose i{font-style:normal}
+.ea-desglose b{font-weight:800}
+.ea-desglose b.sube{color:#2E7A3D}
+.ea-desglose b.baja{color:#8A2E1E}
+.ea-desglose.oscuro{color:#BFD3C6;animation:ea-flash .4s 1.7s ease-out backwards}
+.ea-desglose.oscuro b.sube{color:#7BD18C}
+.ea-desglose.oscuro b.baja{color:#F08B78}
 /* ---- escenarios con probabilidad ---- */
 .ea-opAzar{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:10.5px;letter-spacing:.08em;
   color:#2D6FA3;background:#E6F0F8;border-radius:99px;padding:2px 8px;vertical-align:middle}
@@ -2431,44 +2440,44 @@ const EFECTO_TIPO = {
   mercados: "Un punto de modelaje cada semestre y un variable ligado al volumen.",
   pe: "Tu futuro fondo te pide la mitad de capital propio y sus salidas rinden más.",
   patrimonio: "Un punto extra de retorno en tu cartera y uno de red cada semestre.",
-  boutique: "Ingresos irregulares y más altos, más reputación y más desgaste.",
+  boutique: "Juntas clientes propios y ahorro para el día en que firmes la renuncia: la oferta de montarla llega antes.",
 };
 const RAMAS_CARRERA = {
   eco: [
     { id: "eco-mercados", tipo: "mercados", n: "Estrategia de mercados", d: "Tu lectura del ciclo, convertida en posiciones." },
     { id: "eco-mya", tipo: "mya", n: "Fusiones y adquisiciones", d: "El camino clásico de la banca de inversión." },
     { id: "eco-pe", tipo: "pe", n: "Private equity", d: "Te preparas para comprar empresas, no para venderlas." },
-    { id: "eco-propia", tipo: "boutique", n: "Tu propia consultora macro", d: "Vender tu lectura del ciclo con tu nombre en la puerta." },
+    { id: "eco-propia", tipo: "boutique", n: "Camino a tu propia consultora macro", d: "Vender tu lectura del ciclo con tu nombre en la puerta." },
   ],
   con: [
     { id: "con-socio", tipo: "mya", n: "Socio de auditoría", d: "La escalera larga y segura hasta firmar los estados de otros." },
     { id: "con-dd", tipo: "pe", n: "Due diligence de compras", d: "Eres quien encuentra lo que el vendedor escondió." },
     { id: "con-tesoreria", tipo: "mercados", n: "Tesorería de una multinacional", d: "La caja de una empresa grande, todos los días en el mercado." },
-    { id: "con-propia", tipo: "boutique", n: "Tu propia firma de auditoría", d: "Clientes que vuelven en cada cierre, y ahora te pagan a ti." },
+    { id: "con-propia", tipo: "boutique", n: "Camino a tu propia firma de auditoría", d: "Clientes que vuelven en cada cierre, y ahora te pagan a ti." },
   ],
   ing: [
     { id: "ing-pf", tipo: "mya", n: "Project finance", d: "Financiar puertos, plantas y carreteras." },
     { id: "ing-infra", tipo: "pe", n: "Fondo de infraestructura", d: "Comprar los activos que antes financiabas." },
     { id: "ing-energia", tipo: "mercados", n: "Energía y materias primas", d: "Petróleo, gas y metales: mercados que entiendes por dentro." },
-    { id: "ing-propia", tipo: "boutique", n: "Tu propia constructora", d: "Tus obras, tu balance y tu firma en cada contrato." },
+    { id: "ing-propia", tipo: "boutique", n: "Camino a tu propia constructora", d: "Tus obras, tu balance y tu firma en cada contrato." },
   ],
   der: [
     { id: "der-socio", tipo: "mya", n: "Socio de un gran bufete", d: "Horas facturables y la escalera hasta la mesa de socios." },
     { id: "der-fondos", tipo: "pe", n: "Estructuración de fondos", d: "Los contratos que hay detrás de cada compra." },
     { id: "der-sucesiones", tipo: "patrimonio", n: "Patrimonios y sucesiones", d: "Familias, herencias y el dinero de tres generaciones." },
-    { id: "der-propia", tipo: "boutique", n: "Tu propio bufete", d: "Tu nombre en la puerta. El sueño de casi todo abogado." },
+    { id: "der-propia", tipo: "boutique", n: "Camino a tu propio bufete", d: "Tu nombre en la puerta. El sueño de casi todo abogado." },
   ],
   adm: [
     { id: "adm-mya", tipo: "mya", n: "Fusiones y adquisiciones", d: "Tu red, puesta a cerrar operaciones." },
     { id: "adm-banca", tipo: "patrimonio", n: "Banca privada", d: "Las familias con dinero y su confianza." },
     { id: "adm-pe", tipo: "pe", n: "Private equity", d: "Comprar empresas y hacerlas mejores." },
-    { id: "adm-propia", tipo: "boutique", n: "Tu propia firma de asesoría", d: "La red de veinte años, trabajando para ti." },
+    { id: "adm-propia", tipo: "boutique", n: "Camino a tu propia firma de asesoría", d: "La red de veinte años, trabajando para ti." },
   ],
   sis: [
     { id: "sis-quant", tipo: "mercados", n: "Trading cuantitativo", d: "Modelos que compran y venden más rápido que nadie." },
     { id: "sis-vc", tipo: "pe", n: "Venture capital", d: "Apostar por empresas antes de que existan." },
     { id: "sis-banco", tipo: "mya", n: "Liderar datos e IA en un banco", d: "Subir rápido dentro de una institución que te necesita." },
-    { id: "sis-propia", tipo: "boutique", n: "Tu propia casa de IA", d: "Un producto que escala sin pedirte más horas." },
+    { id: "sis-propia", tipo: "boutique", n: "Camino a tu propia casa de IA", d: "Un producto que escala sin pedirte más horas." },
   ],
 };
 const RAMA_POR_ID = Object.keys(RAMAS_CARRERA).reduce((acc, k) => {
@@ -3101,7 +3110,7 @@ const E = [
 
 /* ---------- decisiones clave, cada dos años ---------- */
 const D = [
-  { id: 101, clave: true, min: 0, max: 6, t: "La cifra que va en la portada", x: "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
+  { id: 101, clave: true, min: 0, max: 3, t: "La cifra que va en la portada", x: "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
     o: [
       { t: "Calzar el precio con la señal del comprador", juego: "anclaje", stat: "red",
         res: { exito: { car: 7, rep: 8, cash: 5000, msg: "Tu número cae justo dentro del rango del comprador. Firman sin renegociar." },
@@ -3112,7 +3121,7 @@ const D = [
                parcial: { mod: 4, car: 2, ene: -6, msg: "Encuentras una y se te escapa otra. Nadie pregunta por esa, esta vez." },
                fallo: { rep: -9, ene: -8, msg: "El comprador encuentra el error en la primera llamada técnica." } } },
     ] },
-  { id: 102, clave: true, min: 0, max: 5, t: "Tres días de due diligence", x: "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
+  { id: 102, clave: true, min: 0, max: 3, t: "Tres días de due diligence", x: "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
     o: [
       { t: "Peinar el legajo completo en orden", juego: "memoria", stat: "cri", sigue: 601,
         res: { exito: { cri: 9, rep: 8, car: 6, ene: -9, msg: "Reconstruyes la cadena de contratos y aparece un pasivo laboral no declarado. Ajustan el precio." },
@@ -3189,7 +3198,7 @@ const D = [
                parcial: { cash: 5000, red: 4, msg: "Un fondo entra con un ticket menor al que buscabas." },
                fallo: { rep: -6, ene: -5, msg: "Nadie compra la tesis y quedas con seis semanas de trabajo sin factura." } } },
     ] },
-  { id: 109, clave: true, min: 2, max: 6, t: "Auditoría regulatoria sorpresa", x: "Llegan sin aviso a revisar expedientes de los últimos dos años. Te toca a ti acompañarlos.",
+  { id: 109, clave: true, min: 2, max: 4, t: "Auditoría regulatoria sorpresa", x: "Llegan sin aviso a revisar expedientes de los últimos dos años. Te toca a ti acompañarlos.",
     o: [
       { t: "Reconstruir la trazabilidad de memoria", juego: "memoria", stat: "cri",
         res: { exito: { rep: 10, cri: 6, msg: "Explicas cada aprobación en orden y sin dudar. El informe sale limpio." },
@@ -3241,7 +3250,7 @@ const D = [
                fallo: { cri: 3, mercado: -0.19, ene: -5, msg: "Te equivocas en la lectura de tasas y el portafolio se lleva el golpe completo." } } },
       { t: "Indexarte y no pensar más en eso", d: { mercado: 0.03, ene: 5, cri: 2, msg: "Compras el índice y te olvidas. Aburrido y bastante difícil de criticar." } },
     ] },
-  { id: 114, clave: true, min: 1, max: 6, t: "El director de inversiones del fondo te pone a prueba", x: "Los primeros quince minutos son preguntas técnicas. Si pasas, el fondo entra en tu proceso y te deja copiar la posición.",
+  { id: 114, clave: true, min: 1, max: 4, t: "El director de inversiones del fondo te pone a prueba", x: "Los primeros quince minutos son preguntas técnicas. Si pasas, el fondo entra en tu proceso y te deja copiar la posición.",
     o: [
       { t: "Entrar al examen sin red", juego: "quiz", stat: "cri",
         res: { exito: { red: 10, rep: 9, car: 6, mercado: 0.17, msg: "Respondes las tres sin dudar. Te comparte su lectura del ciclo y replicas la posición." },
@@ -3249,7 +3258,7 @@ const D = [
                fallo: { red: -4, rep: -8, mercado: -0.13, msg: "Fallas la pregunta de duración delante de él y encima replicas mal la idea." } } },
       { t: "Llevar a tu jefe y quedarte de apoyo", d: { red: 4, rep: 2, ene: -3, msg: "El fondo entra igual, por la puerta de tu jefe. Tú quedas como el que tomó notas." } },
     ] },
-  { id: 115, clave: true, min: 2, max: 6, t: "Examen de idoneidad del regulador", x: "Para firmar operaciones a tu nombre tienes que aprobarlo. Dos intentos y queda en registro público.",
+  { id: 115, clave: true, min: 2, max: 4, t: "Examen de idoneidad del regulador", x: "Para firmar operaciones a tu nombre tienes que aprobarlo. Dos intentos y queda en registro público.",
     o: [
       { t: "Presentarte y responder tú", juego: "quiz", stat: "mod",
         res: { exito: { rep: 11, car: 7, mod: 6, msg: "Aprobado a la primera. Ya puedes firmar operaciones a tu nombre." },
@@ -3344,12 +3353,14 @@ const DECISION_RAMA = {
 /* La escena que de verdad se juega: los cuatro caminos de TU titulo, y
    cada uno deja programada la primera escena de su propio arbol. La de
    arriba queda solo como plantilla y para validar ids guardados. */
-const SIGUE_RAMA = { mya: 7201, pe: 7211, patrimonio: 7221, mercados: 7231, boutique: 7241 };
+const SIGUE_RAMA = { mya: 7201, pe: 7211, patrimonio: 7221, mercados: 7231 };
+/* el de la firma propia no sale al elegir el camino sino al montarla */
+const SIGUE_PROPIA = 7241;
 const decisionRama = (st) => ({
   ...DECISION_RAMA,
   o: ramasDe(st).map((r) => ({
     t: r.n, ramaId: r.id,
-    d: { car: 3, cri: 2, msg: r.d + " " + EFECTO_TIPO[r.tipo], luego: [{ id: SIGUE_RAMA[r.tipo], en: 1 }] },
+    d: { car: 3, cri: 2, msg: r.d + " " + EFECTO_TIPO[r.tipo], luego: SIGUE_RAMA[r.tipo] ? [{ id: SIGUE_RAMA[r.tipo], en: 1 }] : undefined },
   })),
 });
 
@@ -3361,13 +3372,13 @@ const E3 = [
       { t: "Mandarla a los abogados y esperar", d: { cash: -2500, ene: -3, car: 1, msg: "Tres días y una factura después, confirman lo que ya sospechabas." } },
       { t: "Firmarla como está", chk: { s: "cri", dif: 70, ok: { car: 3, msg: "No pasó nada. Esta vez." }, no: { cash: -9000, rep: -8, msg: "El ajuste de precio se aplica en contra de tu cliente y la conversación es muy incómoda." } } },
     ] },
-  { id: 51, min: 0, max: 6, t: "El modelo se rompió", x: "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
+  { id: 51, min: 0, max: 3, t: "El modelo se rompió", x: "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
     o: [
       { t: "Escribir un script que lo reconstruya", req: { est: "sis" }, j: "calculo", stat: "mod", d: { mod: 9, car: 5, rep: 6, ene: -5, msg: "En vez de arreglar celdas, automatizas la reconstrucción completa." } },
       { t: "Rehacerlo a mano desde cero", d: { mod: 6, ene: -14, car: 3, msg: "Catorce horas seguidas y un modelo limpio. El método más caro que existe." } },
       { t: "Entregar la versión vieja", d: { rep: -7, ene: 3, msg: "Nadie compara las versiones hasta que alguien las compara." } },
     ] },
-  { id: 52, min: 0, max: 6, t: "Cierre contable de la compañía objetivo", x: "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
+  { id: 52, min: 0, max: 3, t: "Cierre contable de la compañía objetivo", x: "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
     o: [
       { t: "Revisar los ajustes uno por uno", req: { est: "con" }, j: "ojo", stat: "mod", d: { mod: 8, cri: 6, car: 5, rep: 5, msg: "Sabes exactamente dónde se esconden los ajustes que maquillan un cierre." } },
       { t: "Pedir los estados auditados y esperar", d: { ene: -4, car: 2, rep: 3, msg: "Correcto y lento. El proceso se atrasa un mes." } },
@@ -3652,7 +3663,7 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- tu camino: lo tuyo (tipo boutique) ---------- */
-  { id: 7241, min: 0, max: 6, por: POR_RAMA, t: "Tu primer cliente grande pide exclusividad",
+  { id: 7241, min: 0, max: 6, por: "Montaste tu propia firma", t: "Tu primer cliente grande pide exclusividad",
     x: "Te garantiza la mitad de tus ingresos a cambio de no trabajar nunca para su competencia.",
     o: [
       { t: "Aceptar la exclusividad", d: { cash: 8000, deja: "exclusiva", luego: [{ id: 7242, en: 2 }], msg: "Firmas. El primer año sale solo." } },
@@ -32130,6 +32141,7 @@ const ARBOLES = [
   { raices: [7310, 7317], n: "La startup", c: "#2D6FA3" },
   { raices: [7320, 7326], n: "La guerra en tu firma", c: "#8A6A12" },
   { raices: [7330], n: "El préstamo a tu primo", c: "#C2410C" },
+  { raices: [9720, 9721], n: "Tu propia firma", c: "#B9532A" },
   { raices: [25], n: "El negocio de tu amigo", c: "#0F766E" },
 ];
 const PALETA_ARBOL = ["#2D6FA3", "#B9532A", "#2F7D5B", "#7A4FB0", "#8A6A12", "#C2410C", "#0F766E", "#B23B27"];
@@ -32232,7 +32244,7 @@ E.push.apply(E, E4);
    contador de estudio, que es el que hace que los exámenes se pongan
    más difíciles. Estudiar dentro del juego tiene consecuencias. */
 const E5 = [
-  { id: 940, min: 0, max: 6, t: "Media hora antes de que llegue todo el mundo",
+  { id: 940, min: 0, max: 3, t: "Media hora antes de que llegue todo el mundo",
     x: "Llegas temprano y tienes la oficina para ti. Puedes adelantar el modelo que te pidieron para el viernes o abrir el manual que llevas semanas sin tocar.",
     o: [
       { t: "Sentarte a estudiar un tema a fondo", juego: "catedra", stat: "cri", res: {
@@ -32241,7 +32253,7 @@ const E5 = [
         fallo: { cri: 2, estudia: 4, ene: -2, msg: "Lees en diagonal pensando en otra cosa. Algo entra igual, poco." } } },
       { t: "Adelantar el trabajo del viernes", d: { car: 6, rep: 2, ene: -3, msg: "Entregas antes de tiempo. Te lo reconocen y el manual sigue sin abrirse." } },
     ] },
-  { id: 941, min: 1, max: 6, t: "La certificación",
+  { id: 941, min: 1, max: 3, t: "La certificación",
     x: "El equipo paga la mitad de un programa de formación. Son seis meses de clases los sábados y un examen que reprueba a la mitad.",
     o: [
       { t: "Presentarte al examen", juego: "catedra", stat: "cri", res: {
@@ -32250,7 +32262,7 @@ const E5 = [
         fallo: { cri: 2, estudia: 6, cash: -900, ene: -6, rep: -2, msg: "No apruebas. Pierdes seis sábados y el dinero, y sabes bastante más que antes." } } },
       { t: "Este año no, ya vas ahogado", d: { ene: 6, car: -3, msg: "Lo dejas para el año que viene. Como el año pasado." } },
     ] },
-  { id: 942, min: 2, max: 6, t: "Te toca explicarlo tú",
+  { id: 942, min: 2, max: 4, t: "Te toca explicarlo tú",
     x: "El socio te pide que le expliques a los pasantes cómo funciona lo que el equipo hace todos los días. No hay mejor forma de descubrir lo que no entiendes que tener que explicarlo.",
     o: [
       { t: "Preparártelo en serio y darlo tú", juego: "catedra", stat: "cri", res: {
@@ -33233,6 +33245,8 @@ const escenaFirma = (st, id) => {
     o: [
       {
         t: "Renunciar y montarla", firmaPropia: true, j: "estructura", stat: "cri",
+        /* y empieza el árbol de llevar lo tuyo */
+        luego: [{ id: SIGUE_PROPIA, en: 1 }],
         d: { car: 6, rep: 5, msg: "Presentas la renuncia y montas " + f.n.toLowerCase() + ". " + f.d },
       },
       {
@@ -33818,6 +33832,16 @@ const partidaJugable = (st) => !!(st && st.pais && st.estudio);
 
 /* consultas a las tablas que nunca devuelven undefined */
 const RANGO = (i) => RANGOS[entero(i, 0, 0, RANGOS.length - 1)] || RANGOS[0];
+/* El cargo que se ve. Con firma propia no eres «Analista» de nadie: la
+   escalera sigue contando por dentro (sueldo, escenas), pero el nombre es
+   el de un dueño. En la startup eres cofundador desde el primer día. */
+const CARGOS_PROPIA = ["Independiente", "Independiente", "Fundador", "Fundador", "Socio fundador", "Socio fundador", "Socio director"];
+const cargoDe = (st, r) => {
+  const i = entero(r == null ? st && st.rango : r, 0, 0, RANGOS.length - 1);
+  if (st && st.propia) return CARGOS_PROPIA[i] || CARGOS_PROPIA[0];
+  if (st && st.startup) return "Cofundador";
+  return RANGO(i).n;
+};
 const JUEGO = (k) => JUEGOS[k] || JUEGOS.suerte;
 
 const GUIA = [
@@ -36231,6 +36255,25 @@ function FinalHistoria({ s }) {
 /* Lo que pudo pasar y lo que pasó. Cada tramo mide su probabilidad; la
    aguja cae en el que salió. Enseña sin decirlo que una buena decisión
    puede salir mal y una mala, bien. */
+/* Las piezas del cambio del año. Suman exacto al «en el año» de arriba. */
+function Desglose({ partes, oscuro }) {
+  if (!partes) return null;
+  const filas = [
+    ["Tus decisiones", partes.decisiones],
+    ["Sueldo menos gastos", partes.sueldo],
+    ["Mercados", partes.mercados],
+    ["Compras y lo demás", partes.otros],
+  ].filter(([, v]) => Number.isFinite(v) && Math.abs(v) >= 1);
+  if (!filas.length) return null;
+  return (
+    <div className={"ea-desglose" + (oscuro ? " oscuro" : "")}>
+      {filas.map(([n, v]) => (
+        <span key={n}><i>{n}</i> <b className={"ea-mono " + (v >= 0 ? "sube" : "baja")}>{v >= 0 ? "+" : "−"}{fmt(Math.abs(v))}</b></span>
+      ))}
+    </div>
+  );
+}
+
 function BarraAzar({ azar }) {
   const ps = azar && Array.isArray(azar.ps) ? azar.ps : [];
   if (ps.length < 2) return null;
@@ -36547,6 +36590,22 @@ const DRAMA_IDS = [
   7202,   /* la votacion de socios */
 ];
 
+/* Cada escena de vida con su símbolo. Antes todas llevaban un corazón, y
+   un corazón encima de «Te clonaron la identidad» o «Tu padre ya no
+   puede solo» no tenía sentido. El corazón queda para las de pareja. */
+const ICONO_VIDA = {
+  9001: "corazon", 9007: "corazon", 9011: "corazon", 9020: "corazon", 9023: "corazon",
+  9008: "anillo", 9010: "anillo",
+  9012: "bebe", 9013: "bebe",
+  9014: "libro", 9024: "libro", 9041: "libro",
+  9002: "copa", 9003: "casa",
+  9021: "persona", 9022: "persona",
+  9025: "pesa",
+  9004: "moneda", 9031: "moneda", 9040: "moneda",
+  9015: "aviso", 9030: "aviso", 9033: "aviso",
+  9032: "escudo", 9034: "balanza",
+};
+
 /* El simbolo, el rotulo y el color de cada clase de escena. */
 const CLASE_ESCENA = (ev) => {
   if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
@@ -36554,7 +36613,7 @@ const CLASE_ESCENA = (ev) => {
   if (ev.rama) return { k: "bifurca", n: "Bifurcación", c: "var(--cobre)" };
   if (ev.por) return { k: "eco", n: "Consecuencia", c: "#7A4FB0" };
   /* las de vida traen ventana de edad; las de oficina, de rango */
-  if (ev.eMin != null || ev.eMax != null) return { k: "corazon", n: "Tu vida", c: "#B9532A" };
+  if (ev.eMin != null || ev.eMax != null) return { k: ICONO_VIDA[ev.id] || "persona", n: "Tu vida", c: "#B9532A" };
   if (ev.clave) return { k: "sello", n: "Decisión clave", c: "var(--tintaPapel)" };
   return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
 };
@@ -37556,6 +37615,11 @@ function Motor() {
      porque solo hace falta entre el arranque y el cierre del mismo año:
      no tiene sentido guardarlo en la partida. */
   const hitosAno = useRef([]);
+  /* El patrimonio con que arrancó el año. El cierre medía solo desde la
+     última decisión (sueldo, gastos, cartera), así que una escena daba
+     +8.000 y al cerrar el patrimonio saltaba mucho más sin decir por qué.
+     Con esto el cierre cuenta el año entero y lo desglosa. */
+  const patAno = useRef(null);
   const [tab, setTab] = useState(null);
   /* que grupo de Comprar se esta mirando */
   const [grupo, setGrupo] = useState("caprichos");
@@ -37679,6 +37743,12 @@ function Motor() {
     const c = bienDe(id);
     return a + (c && c.tipo !== "consumo" ? (st.valores[id] || 0) : 0);
   }, 0);
+  /* El patrimonio tal como lo enseña la cabecera, con el fondo dentro. El
+     cierre lo calculaba sin el fondo: con fondo, el rodillo decía una cifra
+     y la cabecera, al volver, otra más grande. */
+  const valorFondoDe = (st) => (st && st.fondo && Array.isArray(st.fondo.posiciones)
+    ? st.fondo.posiciones.reduce((a, q) => a + numero(q.ticket, 0) * numero(st.fondo.pct, 0), 0) : 0);
+  const patrimonioDe = (st) => st.cash + st.cartera + valorBienes(st) + valorFondoDe(st) - numero(st.deuda, 0);
   const vidaTotal = (st) => st.bienes.reduce((a, id) => a + ((bienDe(id) || {}).vida || 0), 0);
   const paisDe = (st) => NACIONES.find((x) => x.id === st.pais) || NACIONES[0];
   const salarioAnual = (st) =>
@@ -37772,7 +37842,7 @@ function Motor() {
     /* Montar lo tuyo se ofrece al llegar a Asociado y otra vez más
        arriba: decir «no ahora» no puede ser decir «no nunca». */
     if (!sinJefe(st)) {
-      const ofertas = [[3, 9720], [5, 9721]];
+      const ofertas = tipoRama(st) === "boutique" ? [[2, 9720], [4, 9721]] : [[3, 9720], [5, 9721]];
       for (let k = 0; k < ofertas.length; k++) {
         const rangoMin = ofertas[k][0], idEsc = ofertas[k][1];
         if (st.rango >= rangoMin && st.vistos.indexOf(idEsc) < 0 && usados.indexOf(idEsc) < 0) {
@@ -37827,6 +37897,15 @@ function Motor() {
       /* hay más árboles que años: desde el segundo, caben dos raíces */
       .slice(0, st.turno >= 2 ? 2 : 1);
     raiz.forEach((e) => { lista.push(e); usados.push(e.id); });
+    /* Con firma propia o startup, cada año trae una decisión de dueño que
+       no hayas vivido. Antes se mezclaban cinco escenas de dueño entre
+       cuarenta de oficina, y quien montaba lo suyo casi nunca vivía como
+       dueño: en ocho partidas de ocho años salía una. */
+    if (sinJefe(st)) {
+      const dueno = DUENO.find((e) => st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0
+        && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st));
+      if (dueno) { lista.push(dueno); usados.push(dueno.id); }
+    }
     if (esClave(st.turno)) {
       const k = sacar(D, st, usados);
       if (k) { lista.push(k); usados.push(k.id); }
@@ -37866,6 +37945,7 @@ function Motor() {
 
   const arrancarAno = (st) => {
     hitosAno.current = [];
+    try { patAno.current = patrimonioDe(st); } catch (e) { patAno.current = null; }
     let lista = [];
     try { lista = generarAno(st) || []; } catch (e) { lista = []; }
     lista = lista.filter(escenaValida);
@@ -38705,7 +38785,7 @@ function Motor() {
         st.rep = 28;
         st.carrera = Math.max(0, RANGO(st.rango).umbral - 4);
         notas.push("Te bajan de cargo. No es el final, y en esta industria esas cosas se recuerdan un par de años.");
-        st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Bajas a " + RANGO(st.rango).n });
+        st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Bajas a " + cargoDe(st) });
       }
     }
     /* el aviso que antes no existía */
@@ -38715,9 +38795,14 @@ function Motor() {
 
     let ascenso = null;
     if (st.rango < RANGOS.length - 1 && st.carrera >= RANGO(st.rango).umbral && st.rep >= 25) {
+      const antes = cargoDe(st);
       st.rango += 1;
-      ascenso = RANGO(st.rango).n;
-      st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Ascenso a " + ascenso });
+      /* sin jefe no te ascienden: crece lo tuyo, y solo se dice cuando
+         cambia de nombre */
+      if (cargoDe(st) !== antes) {
+        ascenso = cargoDe(st);
+        st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: (sinJefe(st) ? "Tu firma crece: " : "Ascenso a ") + ascenso });
+      }
     }
 
     /* ---- foto del año ---- */
@@ -38761,6 +38846,18 @@ function Motor() {
     st.histo = (st.histo || []).concat(patrimonio);
     st.gastoAnt = gastos;
 
+    /* De dónde salió el cambio del año, en piezas que suman exacto: lo
+       que dieron o quitaron tus decisiones, lo que te quedó del sueldo,
+       lo que hicieron los mercados y lo demás (compras, comisiones, lo que
+       cambió el valor de tus bienes o de tu fondo). */
+    const decisionesAno = hitosAno.current.reduce((a, x) => a + numero(x && x.cash, 0), 0);
+    const patVisible = patrimonio + valorFondoDe(st);
+    const patIni = patAno.current != null && Number.isFinite(patAno.current) ? patAno.current : patAntes - decisionesAno;
+    const mercadosAno = cartera.despues - cartera.antes;
+    const sueldoAno = neto - pagoDeuda;
+    const partes = { decisiones: decisionesAno, sueldo: sueldoAno, mercados: mercadosAno,
+      otros: (patVisible - patIni) - decisionesAno - sueldoAno - mercadosAno };
+
     const ano = 2026 + st.turno;
     st.turno += 1;
     st = sanear(st);
@@ -38768,6 +38865,7 @@ function Motor() {
     setCierre({
       ano, notis, ascenso, cartera, notas, ing, egr, ingreso, egreso: egreso + pagoDeuda, neto: neto - pagoDeuda, ahorro,
       patAntes, patrimonio, bienesV, histo: st.histo, leccion, hitos, deuda,
+      patVisible, patIni, partes,
       /* "hitos" ya lo usan los hitos de patrimonio; las decisiones del
          año van por su propia clave para que no se pisen */
       hitosDec: cartera.hitos,
@@ -39347,7 +39445,7 @@ function Motor() {
         <div className="ea-wrap">
           <div className="ea-placa">
             <div>
-              <div className="ea-nombre ea-dis">{s.nombre ? s.nombre : RANGO(s.rango).n}</div>
+              <div className="ea-nombre ea-dis">{s.nombre ? s.nombre : cargoDe(s)}</div>
               {/* Antes solo se veía la formación y la bandera. Dónde trabajas
                   era invisible, y es lo primero que define tu año. */}
               {/* Era una linea de texto con puntos: «Analista · Mercantil
@@ -39355,7 +39453,7 @@ function Motor() {
                   que se distingue de un vistazo donde trabajas de donde
                   vives sin tener que leerlo. */}
               <div className="ea-sub ea-dis ea-quien">
-                {s.nombre && <span><Icono k="escalera" tam={12} />{RANGO(s.rango).n}</span>}
+                {s.nombre && <span><Icono k="escalera" tam={12} />{cargoDe(s)}</span>}
                 <span><Icono k="edificio" tam={12} />{s.patron || estudio.n}</span>
                 <span><Icono k="pin" tam={12} />{nacion.n}</span>
                 {/* El camino que elegiste no se anuncia en la placa: se
@@ -39424,8 +39522,8 @@ function Motor() {
                 return (
                   <div className="ea-xp" title={tope ? "Cargo máximo" : "Hacia " + RANGO(r + 1).n}>
                     <div className="ea-xpTop ea-dis">
-                      <span><Icono k="escalera" tam={12} />{RANGO(r).n}</span>
-                      <span className="ea-xpSig">{tope ? "cargo máximo" : "→ " + RANGO(r + 1).n}</span>
+                      <span><Icono k="escalera" tam={12} />{cargoDe(s, r)}</span>
+                      <span className="ea-xpSig">{tope ? "cargo máximo" : cargoDe(s, r + 1) === cargoDe(s, r) ? "→ más experiencia" : "→ " + cargoDe(s, r + 1)}</span>
                     </div>
                     <div className="ea-xpBar"><div className="ea-xpFill" style={{ width: (p * 100).toFixed(1) + "%" }} /></div>
                   </div>
@@ -39501,7 +39599,7 @@ function Motor() {
                     <Plegable titulo="Tus atributos" resumen={"criterio " + Math.round(s.cri)}>
                     <Stat k="mod" v={s.mod} /><Stat k="cri" v={s.cri} /><Stat k="red" v={s.red} /><Stat k="rep" v={s.rep} /><Stat k="ene" v={s.ene} ene />
                     </Plegable>
-                    <Plegable titulo="Quién eres" resumen={RANGO(s.rango).n}>
+                    <Plegable titulo="Quién eres" resumen={cargoDe(s)}>
                     <div className="ea-fila" style={{ marginTop: 0 }}>
                       <span className="ea-dis" style={{ fontSize: 12 }}>Carrera</span>
                       <span className="ea-mono">{s.carrera} / {RANGO(s.rango).umbral === Infinity ? "máx" : RANGO(s.rango).umbral}</span>
@@ -40076,7 +40174,7 @@ function Motor() {
                       return (
                         <div>
                           <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Los años que se recuerdan</div>
-                          <div className="ea-fila"><span className="ea-dis" style={{ fontSize: 12 }}>Cargo alcanzado</span><span className="ea-mono">{RANGO(s.rango).n}</span></div>
+                          <div className="ea-fila"><span className="ea-dis" style={{ fontSize: 12 }}>Cargo alcanzado</span><span className="ea-mono">{cargoDe(s)}</span></div>
                           {mejor && mejor.dif > 0 && (
                             <div className="ea-fila">
                               <span className="ea-dis" style={{ fontSize: 12 }}>Tu mejor año</span>
@@ -40276,16 +40374,25 @@ function Motor() {
                       cubres. El resto vive en tres cajones, no en seis. */}
                   <div className="ea-titular">
                     <div className="ea-titularK ea-dis">Tu patrimonio</div>
-                    <div className="ea-titularV ea-mono" style={{ fontSize: 26 }}>USD {fmt(cierre.patrimonio)}</div>
-                    <div className="ea-titularL">
-                      <span className="ea-mono" style={{ color: cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E" }}>
-                        {cierre.patrimonio >= cierre.patAntes ? "+" : "−"}{fmt(Math.abs(cierre.patrimonio - cierre.patAntes))} en el año
-                      </span>
+                    {(() => {
+                      const fin = cierre.patVisible != null ? cierre.patVisible : cierre.patrimonio;
+                      const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
+                      return (
+                        <>
+                          <div className="ea-titularV ea-mono" style={{ fontSize: 26 }}>USD {fmt(fin)}</div>
+                          <div className="ea-titularL">
+                            <span className="ea-mono" style={{ color: fin >= ini ? "#2E7A3D" : "#8A2E1E" }}>
+                              {fin >= ini ? "+" : "−"}{fmt(Math.abs(fin - ini))} en el año
+                            </span>
                       <span className="ea-mono" style={{ color: cierre.ahorro >= 0 ? "#2E7A3D" : "#8A2E1E" }}>
                         ahorraste {Math.round(cierre.ahorro * 100)}%
                       </span>
                       <span className="ea-mono">cubres {Math.round(cierre.cobertura * 100)}% de tu vida</span>
-                    </div>
+                          </div>
+                          <Desglose partes={cierre.partes} />
+                        </>
+                      );
+                    })()}
                     {cierre.ascenso && <div className="ea-titularA ea-dis">Ascenso a {cierre.ascenso}</div>}
                     {/* la barra de independencia deja de ser un cajon propio:
                         era un numero y una barra, y ya estan aqui */}
@@ -40476,8 +40583,10 @@ function Motor() {
           grande girando y cuanto se movio. El informe espera debajo.
           ============================================================ */}
       {fase === "cierre" && cierre && anuncio && (() => {
-        const sube = cierre.patrimonio >= cierre.patAntes;
-        const dif = Math.abs(cierre.patrimonio - cierre.patAntes);
+        const fin = cierre.patVisible != null ? cierre.patVisible : cierre.patrimonio;
+        const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
+        const sube = fin >= ini;
+        const dif = Math.abs(fin - ini);
         return (
           <div className="ea-anuncio" onClick={() => setAnuncio(false)}>
             {/* Ojo al tocar esta linea: «Asi terminó» es lo que cuenta
@@ -40487,12 +40596,13 @@ function Motor() {
             <div className="ea-anuncioK ea-dis">Cierre de {cierre.ano}</div>
             <div className="ea-anuncioN ea-mono">
               <span className="ea-anuncioU ea-dis">USD</span>
-              <Rodillo v={cierre.patrimonio} />
+              <Rodillo v={fin} />
             </div>
             <div className={"ea-anuncioD ea-mono " + (sube ? "sube" : "baja")}
               style={{ animationDelay: "1.5s" }}>
               {sube ? "+" : "−"}{fmt(dif)} en el año
             </div>
+            <Desglose partes={cierre.partes} oscuro />
             {cierre.ascenso && (
               <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.8s", color: "var(--cobre)", fontSize: 16 }}>
                 Ascenso a {cierre.ascenso}
@@ -40559,7 +40669,7 @@ function Motor() {
           <FinalHistoria s={s} />
           <div className="ea-regla" />
           <div className="ea-cifras">
-            <div><div className="ea-cifraK">Cargo final</div><div className="ea-cifraV ea-dis">{RANGO(s.rango).n}</div></div>
+            <div><div className="ea-cifraK">Cargo final</div><div className="ea-cifraV ea-dis">{cargoDe(s)}</div></div>
             <div><div className="ea-cifraK">Rama</div><div className="ea-cifraV ea-dis">{ramaN || "sin definir"}</div></div>
             <div><div className="ea-cifraK">Patrimonio</div><div className="ea-cifraV ea-mono">USD {fmt(patrimonio)}</div></div>
             {s.deuda > 0 && <div><div className="ea-cifraK">Deuda pendiente</div><div className="ea-cifraV ea-mono">USD {fmt(s.deuda)}</div></div>}
@@ -40584,7 +40694,7 @@ function Motor() {
           {/* Los seis datos salen del estado: nada que copiar a mano. */}
           <BotonAnotar entrada={{
             n: s.nombre,
-            c: RANGO(s.rango).n,
+            c: cargoDe(s),
             e: edad(s.turno, s.edadIni),
             p: Math.round(patrimonio),
             m: (Array.isArray(s.premios) ? s.premios : []).length,

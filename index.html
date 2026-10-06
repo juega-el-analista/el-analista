@@ -832,6 +832,15 @@ const CSS = `
 .ea-descubreB{height:8px;border-radius:99px;background:#EFE7F8;margin-top:8px;overflow:hidden}
 .ea-descubreB div{height:100%;border-radius:99px;background:#7A4FB0;animation:ea-camBarra 1.2s .3s ease-out backwards}
 @keyframes ea-camIn{from{opacity:0;transform:translateX(-10px)}}
+/* ---- el desglose del año ---- */
+.ea-desglose{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;margin-top:10px;font-size:12.5px;color:#5A5A55}
+.ea-desglose i{font-style:normal}
+.ea-desglose b{font-weight:800}
+.ea-desglose b.sube{color:#2E7A3D}
+.ea-desglose b.baja{color:#8A2E1E}
+.ea-desglose.oscuro{color:#BFD3C6;animation:ea-flash .4s 1.7s ease-out backwards}
+.ea-desglose.oscuro b.sube{color:#7BD18C}
+.ea-desglose.oscuro b.baja{color:#F08B78}
 /* ---- escenarios con probabilidad ---- */
 .ea-opAzar{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:10.5px;letter-spacing:.08em;
   color:#2D6FA3;background:#E6F0F8;border-radius:99px;padding:2px 8px;vertical-align:middle}
@@ -4882,7 +4891,7 @@ const EFECTO_TIPO = {
   mercados: "Un punto de modelaje cada semestre y un variable ligado al volumen.",
   pe: "Tu futuro fondo te pide la mitad de capital propio y sus salidas rinden más.",
   patrimonio: "Un punto extra de retorno en tu cartera y uno de red cada semestre.",
-  boutique: "Ingresos irregulares y más altos, más reputación y más desgaste."
+  boutique: "Juntas clientes propios y ahorro para el día en que firmes la renuncia: la oferta de montarla llega antes."
 };
 const RAMAS_CARRERA = {
   eco: [{
@@ -4903,7 +4912,7 @@ const RAMAS_CARRERA = {
   }, {
     id: "eco-propia",
     tipo: "boutique",
-    n: "Tu propia consultora macro",
+    n: "Camino a tu propia consultora macro",
     d: "Vender tu lectura del ciclo con tu nombre en la puerta."
   }],
   con: [{
@@ -4924,7 +4933,7 @@ const RAMAS_CARRERA = {
   }, {
     id: "con-propia",
     tipo: "boutique",
-    n: "Tu propia firma de auditoría",
+    n: "Camino a tu propia firma de auditoría",
     d: "Clientes que vuelven en cada cierre, y ahora te pagan a ti."
   }],
   ing: [{
@@ -4945,7 +4954,7 @@ const RAMAS_CARRERA = {
   }, {
     id: "ing-propia",
     tipo: "boutique",
-    n: "Tu propia constructora",
+    n: "Camino a tu propia constructora",
     d: "Tus obras, tu balance y tu firma en cada contrato."
   }],
   der: [{
@@ -4966,7 +4975,7 @@ const RAMAS_CARRERA = {
   }, {
     id: "der-propia",
     tipo: "boutique",
-    n: "Tu propio bufete",
+    n: "Camino a tu propio bufete",
     d: "Tu nombre en la puerta. El sueño de casi todo abogado."
   }],
   adm: [{
@@ -4987,7 +4996,7 @@ const RAMAS_CARRERA = {
   }, {
     id: "adm-propia",
     tipo: "boutique",
-    n: "Tu propia firma de asesoría",
+    n: "Camino a tu propia firma de asesoría",
     d: "La red de veinte años, trabajando para ti."
   }],
   sis: [{
@@ -5008,7 +5017,7 @@ const RAMAS_CARRERA = {
   }, {
     id: "sis-propia",
     tipo: "boutique",
-    n: "Tu propia casa de IA",
+    n: "Camino a tu propia casa de IA",
     d: "Un producto que escala sin pedirte más horas."
   }]
 };
@@ -6960,7 +6969,7 @@ const D = [{
   id: 101,
   clave: true,
   min: 0,
-  max: 6,
+  max: 3,
   t: "La cifra que va en la portada",
   x: "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
   o: [{
@@ -7015,7 +7024,7 @@ const D = [{
   id: 102,
   clave: true,
   min: 0,
-  max: 5,
+  max: 3,
   t: "Tres días de due diligence",
   x: "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
   o: [{
@@ -7381,7 +7390,7 @@ const D = [{
   id: 109,
   clave: true,
   min: 2,
-  max: 6,
+  max: 4,
   t: "Auditoría regulatoria sorpresa",
   x: "Llegan sin aviso a revisar expedientes de los últimos dos años. Te toca a ti acompañarlos.",
   o: [{
@@ -7638,7 +7647,7 @@ const D = [{
   id: 114,
   clave: true,
   min: 1,
-  max: 6,
+  max: 4,
   t: "El director de inversiones del fondo te pone a prueba",
   x: "Los primeros quince minutos son preguntas técnicas. Si pasas, el fondo entra en tu proceso y te deja copiar la posición.",
   o: [{
@@ -7679,7 +7688,7 @@ const D = [{
   id: 115,
   clave: true,
   min: 2,
-  max: 6,
+  max: 4,
   t: "Examen de idoneidad del regulador",
   x: "Para firmar operaciones a tu nombre tienes que aprobarlo. Dos intentos y queda en registro público.",
   o: [{
@@ -8111,9 +8120,10 @@ const SIGUE_RAMA = {
   mya: 7201,
   pe: 7211,
   patrimonio: 7221,
-  mercados: 7231,
-  boutique: 7241
+  mercados: 7231
 };
+/* el de la firma propia no sale al elegir el camino sino al montarla */
+const SIGUE_PROPIA = 7241;
 const decisionRama = st => ({
   ...DECISION_RAMA,
   o: ramasDe(st).map(r => ({
@@ -8123,10 +8133,10 @@ const decisionRama = st => ({
       car: 3,
       cri: 2,
       msg: r.d + " " + EFECTO_TIPO[r.tipo],
-      luego: [{
+      luego: SIGUE_RAMA[r.tipo] ? [{
         id: SIGUE_RAMA[r.tipo],
         en: 1
-      }]
+      }] : undefined
     }
   }))
 });
@@ -8178,7 +8188,7 @@ const E3 = [{
 }, {
   id: 51,
   min: 0,
-  max: 6,
+  max: 3,
   t: "El modelo se rompió",
   x: "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
   o: [{
@@ -8214,7 +8224,7 @@ const E3 = [{
 }, {
   id: 52,
   min: 0,
-  max: 6,
+  max: 3,
   t: "Cierre contable de la compañía objetivo",
   x: "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
   o: [{
@@ -9246,7 +9256,7 @@ const CONSECUENCIAS = [/* ---------- el headhunter ---------- */
   id: 7241,
   min: 0,
   max: 6,
-  por: POR_RAMA,
+  por: "Montaste tu propia firma",
   t: "Tu primer cliente grande pide exclusividad",
   x: "Te garantiza la mitad de tus ingresos a cambio de no trabajar nunca para su competencia.",
   o: [{
@@ -33895,6 +33905,10 @@ const ARBOLES = [{
   n: "El préstamo a tu primo",
   c: "#C2410C"
 }, {
+  raices: [9720, 9721],
+  n: "Tu propia firma",
+  c: "#B9532A"
+}, {
   raices: [25],
   n: "El negocio de tu amigo",
   c: "#0F766E"
@@ -34110,7 +34124,7 @@ E.push.apply(E, E4);
 const E5 = [{
   id: 940,
   min: 0,
-  max: 6,
+  max: 3,
   t: "Media hora antes de que llegue todo el mundo",
   x: "Llegas temprano y tienes la oficina para ti. Puedes adelantar el modelo que te pidieron para el viernes o abrir el manual que llevas semanas sin tocar.",
   o: [{
@@ -34148,7 +34162,7 @@ const E5 = [{
 }, {
   id: 941,
   min: 1,
-  max: 6,
+  max: 3,
   t: "La certificación",
   x: "El equipo paga la mitad de un programa de formación. Son seis meses de clases los sábados y un examen que reprueba a la mitad.",
   o: [{
@@ -34191,7 +34205,7 @@ const E5 = [{
 }, {
   id: 942,
   min: 2,
-  max: 6,
+  max: 4,
   t: "Te toca explicarlo tú",
   x: "El socio te pide que le expliques a los pasantes cómo funciona lo que el equipo hace todos los días. No hay mejor forma de descubrir lo que no entiendes que tener que explicarlo.",
   o: [{
@@ -34506,7 +34520,6 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
   eMin: 26,
   eMax: 42,
   una: true,
-  clave: true,
   cuando: st => st.pareja === "noviazgo",
   t: "La conversación",
   clave: true,
@@ -34572,7 +34585,6 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
   eMin: 27,
   eMax: 44,
   una: true,
-  clave: true,
   cuando: st => st.pareja === "casado" && st.hijos === 0,
   t: "Un hijo",
   clave: true,
@@ -34689,7 +34701,6 @@ const VIDA = [/* ---------------- veinte y pico ---------------- */
   pri: 1,
   eMin: 33,
   eMax: 55,
-  clave: true,
   cuando: st => st.pareja === "casado",
   t: "El desgaste",
   clave: true,
@@ -36325,6 +36336,11 @@ const escenaFirma = (st, id) => {
       firmaPropia: true,
       j: "estructura",
       stat: "cri",
+      /* y empieza el árbol de llevar lo tuyo */
+      luego: [{
+        id: SIGUE_PROPIA,
+        en: 1
+      }],
       d: {
         car: 6,
         rep: 5,
@@ -37167,6 +37183,16 @@ const partidaJugable = st => !!(st && st.pais && st.estudio);
 
 /* consultas a las tablas que nunca devuelven undefined */
 const RANGO = i => RANGOS[entero(i, 0, 0, RANGOS.length - 1)] || RANGOS[0];
+/* El cargo que se ve. Con firma propia no eres «Analista» de nadie: la
+   escalera sigue contando por dentro (sueldo, escenas), pero el nombre es
+   el de un dueño. En la startup eres cofundador desde el primer día. */
+const CARGOS_PROPIA = ["Independiente", "Independiente", "Fundador", "Fundador", "Socio fundador", "Socio fundador", "Socio director"];
+const cargoDe = (st, r) => {
+  const i = entero(r == null ? st && st.rango : r, 0, 0, RANGOS.length - 1);
+  if (st && st.propia) return CARGOS_PROPIA[i] || CARGOS_PROPIA[0];
+  if (st && st.startup) return "Cofundador";
+  return RANGO(i).n;
+};
 const JUEGO = k => JUEGOS[k] || JUEGOS.suerte;
 const GUIA = [{
   id: "decidir",
@@ -40229,6 +40255,22 @@ function FinalHistoria({
 /* Lo que pudo pasar y lo que pasó. Cada tramo mide su probabilidad; la
    aguja cae en el que salió. Enseña sin decirlo que una buena decisión
    puede salir mal y una mala, bien. */
+/* Las piezas del cambio del año. Suman exacto al «en el año» de arriba. */
+function Desglose({
+  partes,
+  oscuro
+}) {
+  if (!partes) return null;
+  const filas = [["Tus decisiones", partes.decisiones], ["Sueldo menos gastos", partes.sueldo], ["Mercados", partes.mercados], ["Compras y lo demás", partes.otros]].filter(([, v]) => Number.isFinite(v) && Math.abs(v) >= 1);
+  if (!filas.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ea-desglose" + (oscuro ? " oscuro" : "")
+  }, filas.map(([n, v]) => /*#__PURE__*/React.createElement("span", {
+    key: n
+  }, /*#__PURE__*/React.createElement("i", null, n), " ", /*#__PURE__*/React.createElement("b", {
+    className: "ea-mono " + (v >= 0 ? "sube" : "baja")
+  }, v >= 0 ? "+" : "−", fmt(Math.abs(v))))));
+}
 function BarraAzar({
   azar
 }) {
@@ -40602,6 +40644,37 @@ const DRAMA_IDS = [/* te ofrecen otro trabajo, otro pais u otra silla */
 8104, /* la sancion es publica */
 7202 /* la votacion de socios */];
 
+/* Cada escena de vida con su símbolo. Antes todas llevaban un corazón, y
+   un corazón encima de «Te clonaron la identidad» o «Tu padre ya no
+   puede solo» no tenía sentido. El corazón queda para las de pareja. */
+const ICONO_VIDA = {
+  9001: "corazon",
+  9007: "corazon",
+  9011: "corazon",
+  9020: "corazon",
+  9023: "corazon",
+  9008: "anillo",
+  9010: "anillo",
+  9012: "bebe",
+  9013: "bebe",
+  9014: "libro",
+  9024: "libro",
+  9041: "libro",
+  9002: "copa",
+  9003: "casa",
+  9021: "persona",
+  9022: "persona",
+  9025: "pesa",
+  9004: "moneda",
+  9031: "moneda",
+  9040: "moneda",
+  9015: "aviso",
+  9030: "aviso",
+  9033: "aviso",
+  9032: "escudo",
+  9034: "balanza"
+};
+
 /* El simbolo, el rotulo y el color de cada clase de escena. */
 const CLASE_ESCENA = ev => {
   if (!ev) return {
@@ -40626,7 +40699,7 @@ const CLASE_ESCENA = ev => {
   };
   /* las de vida traen ventana de edad; las de oficina, de rango */
   if (ev.eMin != null || ev.eMax != null) return {
-    k: "corazon",
+    k: ICONO_VIDA[ev.id] || "persona",
     n: "Tu vida",
     c: "#B9532A"
   };
@@ -41417,13 +41490,26 @@ function PanelRegistro({
   })));
 }
 
+/* En sureconomics.com el registro es el ranking del sitio. Fuera de ahi
+   (la web propia, el artifact) se queda el texto de siempre. */
+const enSurEconomics = () => {
+  try {
+    return /(^|\.)sureconomics\.com$/i.test(window.location.hostname);
+  } catch (e) {
+    return false;
+  }
+};
+
 /* El boton que anota tu carrera. Los seis datos salen del estado, no de
-   un formulario: el jugador no tiene que copiar nada a mano. */
+   un formulario: el jugador no tiene que copiar nada a mano.
+   onAnotada avisa al padre para que repinte el registro: la lista nueva
+   ya esta en window.__REGISTRO, pero nadie lo vuelve a leer solo. */
 function BotonAnotar({
-  entrada
+  entrada,
+  onAnotada
 }) {
   const [puede, setPuede] = useState(null); /* null = comprobando */
-  const [estado, setEstado] = useState("listo"); /* listo · enviando · hecho · error */
+  const [estado, setEstado] = useState("listo"); /* listo · enviando · hecho · error · sin-sesion */
   const [motivo, setMotivo] = useState("");
   const [nombre, setNombre] = useState(texto(entrada && entrada.n, 24));
   useEffect(() => {
@@ -41458,7 +41544,7 @@ function BotonAnotar({
       style: {
         marginTop: 16
       }
-    }, "Anotada. La p\xE1gina se recarga para todo el mundo con tu carrera dentro.");
+    }, enSurEconomics() ? "Anotada en el ranking de SurEconomics." : "Anotada. La página se recarga para todo el mundo con tu carrera dentro.");
   }
   const anotar = () => {
     const n = texto(nombre, 24);
@@ -41481,6 +41567,17 @@ function BotonAnotar({
     p.then(err => {
       if (!err) {
         setEstado("hecho");
+        try {
+          if (typeof onAnotada === "function") onAnotada();
+        } catch (e) {}
+        return;
+      }
+      /* Sin cuenta, o sin el correo confirmado, y el jugador eligio "Ahora
+         no" en el aviso del sitio. No es un fallo: el boton vuelve a estar
+         disponible y el texto no va en rojo. */
+      if (err === "sin-sesion") {
+        setEstado("sin-sesion");
+        setMotivo("Para sumar al ranking necesitas una cuenta. Tu carrera queda guardada en este navegador mientras tanto.");
         return;
       }
       setEstado("error");
@@ -41530,7 +41627,7 @@ function BotonAnotar({
   }, estado === "enviando" ? "Anotando…" : "Anotar en el registro"), motivo && /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 13,
-      color: "var(--rojo)",
+      color: estado === "sin-sesion" ? "inherit" : "var(--rojo)",
       flex: 1,
       minWidth: 200
     }
@@ -42017,11 +42114,19 @@ function Motor() {
   };
   const enFase = f => puerta.current === f;
   const cerrando = useRef(false);
+  /* Sube cada vez que se anota una carrera, para que el registro de la
+     pantalla final se vuelva a pintar con la lista nueva. */
+  const [, setVueltaRegistro] = useState(0);
   /* Las decisiones que se van tomando dentro del año, para poder
      situarlas en el gráfico. Vive en una referencia y no en el estado
      porque solo hace falta entre el arranque y el cierre del mismo año:
      no tiene sentido guardarlo en la partida. */
   const hitosAno = useRef([]);
+  /* El patrimonio con que arrancó el año. El cierre medía solo desde la
+     última decisión (sueldo, gastos, cartera), así que una escena daba
+     +8.000 y al cerrar el patrimonio saltaba mucho más sin decir por qué.
+     Con esto el cierre cuenta el año entero y lo desglosa. */
+  const patAno = useRef(null);
   const [tab, setTab] = useState(null);
   /* que grupo de Comprar se esta mirando */
   const [grupo, setGrupo] = useState("caprichos");
@@ -42190,6 +42295,11 @@ function Motor() {
     const c = bienDe(id);
     return a + (c && c.tipo !== "consumo" ? st.valores[id] || 0 : 0);
   }, 0);
+  /* El patrimonio tal como lo enseña la cabecera, con el fondo dentro. El
+     cierre lo calculaba sin el fondo: con fondo, el rodillo decía una cifra
+     y la cabecera, al volver, otra más grande. */
+  const valorFondoDe = st => st && st.fondo && Array.isArray(st.fondo.posiciones) ? st.fondo.posiciones.reduce((a, q) => a + numero(q.ticket, 0) * numero(st.fondo.pct, 0), 0) : 0;
+  const patrimonioDe = st => st.cash + st.cartera + valorBienes(st) + valorFondoDe(st) - numero(st.deuda, 0);
   const vidaTotal = st => st.bienes.reduce((a, id) => a + ((bienDe(id) || {}).vida || 0), 0);
   const paisDe = st => NACIONES.find(x => x.id === st.pais) || NACIONES[0];
   const salarioAnual = st => RANGO(st.rango).salario * 12 * paisDe(st).sal * clamp(numero(st.sueldoMult, 1), 0.6, TOPE_MULT);
@@ -42286,7 +42396,7 @@ function Motor() {
     /* Montar lo tuyo se ofrece al llegar a Asociado y otra vez más
        arriba: decir «no ahora» no puede ser decir «no nunca». */
     if (!sinJefe(st)) {
-      const ofertas = [[3, 9720], [5, 9721]];
+      const ofertas = tipoRama(st) === "boutique" ? [[2, 9720], [4, 9721]] : [[3, 9720], [5, 9721]];
       for (let k = 0; k < ofertas.length; k++) {
         const rangoMin = ofertas[k][0],
           idEsc = ofertas[k][1];
@@ -42348,6 +42458,17 @@ function Motor() {
       lista.push(e);
       usados.push(e.id);
     });
+    /* Con firma propia o startup, cada año trae una decisión de dueño que
+       no hayas vivido. Antes se mezclaban cinco escenas de dueño entre
+       cuarenta de oficina, y quien montaba lo suyo casi nunca vivía como
+       dueño: en ocho partidas de ocho años salía una. */
+    if (sinJefe(st)) {
+      const dueno = DUENO.find(e => st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0 && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st));
+      if (dueno) {
+        lista.push(dueno);
+        usados.push(dueno.id);
+      }
+    }
     if (esClave(st.turno)) {
       const k = sacar(D, st, usados);
       if (k) {
@@ -42390,6 +42511,11 @@ function Motor() {
   };
   const arrancarAno = st => {
     hitosAno.current = [];
+    try {
+      patAno.current = patrimonioDe(st);
+    } catch (e) {
+      patAno.current = null;
+    }
     let lista = [];
     try {
       lista = generarAno(st) || [];
@@ -43542,7 +43668,7 @@ function Motor() {
         notas.push("Te bajan de cargo. No es el final, y en esta industria esas cosas se recuerdan un par de años.");
         st.titulares = st.titulares.concat({
           q: String(2026 + st.turno),
-          t: "Bajas a " + RANGO(st.rango).n
+          t: "Bajas a " + cargoDe(st)
         });
       }
     }
@@ -43552,12 +43678,17 @@ function Motor() {
     }
     let ascenso = null;
     if (st.rango < RANGOS.length - 1 && st.carrera >= RANGO(st.rango).umbral && st.rep >= 25) {
+      const antes = cargoDe(st);
       st.rango += 1;
-      ascenso = RANGO(st.rango).n;
-      st.titulares = st.titulares.concat({
-        q: String(2026 + st.turno),
-        t: "Ascenso a " + ascenso
-      });
+      /* sin jefe no te ascienden: crece lo tuyo, y solo se dice cuando
+         cambia de nombre */
+      if (cargoDe(st) !== antes) {
+        ascenso = cargoDe(st);
+        st.titulares = st.titulares.concat({
+          q: String(2026 + st.turno),
+          t: (sinJefe(st) ? "Tu firma crece: " : "Ascenso a ") + ascenso
+        });
+      }
     }
 
     /* ---- foto del año ---- */
@@ -43637,6 +43768,22 @@ function Motor() {
     });
     st.histo = (st.histo || []).concat(patrimonio);
     st.gastoAnt = gastos;
+
+    /* De dónde salió el cambio del año, en piezas que suman exacto: lo
+       que dieron o quitaron tus decisiones, lo que te quedó del sueldo,
+       lo que hicieron los mercados y lo demás (compras, comisiones, lo que
+       cambió el valor de tus bienes o de tu fondo). */
+    const decisionesAno = hitosAno.current.reduce((a, x) => a + numero(x && x.cash, 0), 0);
+    const patVisible = patrimonio + valorFondoDe(st);
+    const patIni = patAno.current != null && Number.isFinite(patAno.current) ? patAno.current : patAntes - decisionesAno;
+    const mercadosAno = cartera.despues - cartera.antes;
+    const sueldoAno = neto - pagoDeuda;
+    const partes = {
+      decisiones: decisionesAno,
+      sueldo: sueldoAno,
+      mercados: mercadosAno,
+      otros: patVisible - patIni - decisionesAno - sueldoAno - mercadosAno
+    };
     const ano = 2026 + st.turno;
     st.turno += 1;
     st = sanear(st);
@@ -43660,6 +43807,9 @@ function Motor() {
       leccion,
       hitos,
       deuda,
+      patVisible,
+      patIni,
+      partes,
       /* "hitos" ya lo usan los hitos de patrimonio; las decisiones del
          año van por su propia clave para que no se pisen */
       hitosDec: cartera.hitos,
@@ -44570,12 +44720,12 @@ function Motor() {
     className: "ea-placa"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-nombre ea-dis"
-  }, s.nombre ? s.nombre : RANGO(s.rango).n), /*#__PURE__*/React.createElement("div", {
+  }, s.nombre ? s.nombre : cargoDe(s)), /*#__PURE__*/React.createElement("div", {
     className: "ea-sub ea-dis ea-quien"
   }, s.nombre && /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
     k: "escalera",
     tam: 12
-  }), RANGO(s.rango).n), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
+  }), cargoDe(s)), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
     k: "edificio",
     tam: 12
   }), s.patron || estudio.n), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
@@ -44645,9 +44795,9 @@ function Motor() {
     }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
       k: "escalera",
       tam: 12
-    }), RANGO(r).n), /*#__PURE__*/React.createElement("span", {
+    }), cargoDe(s, r)), /*#__PURE__*/React.createElement("span", {
       className: "ea-xpSig"
-    }, tope ? "cargo máximo" : "→ " + RANGO(r + 1).n)), /*#__PURE__*/React.createElement("div", {
+    }, tope ? "cargo máximo" : cargoDe(s, r + 1) === cargoDe(s, r) ? "→ más experiencia" : "→ " + cargoDe(s, r + 1))), /*#__PURE__*/React.createElement("div", {
       className: "ea-xpBar"
     }, /*#__PURE__*/React.createElement("div", {
       className: "ea-xpFill",
@@ -44780,7 +44930,7 @@ function Motor() {
     ene: true
   })), /*#__PURE__*/React.createElement(Plegable, {
     titulo: "Qui\xE9n eres",
-    resumen: RANGO(s.rango).n
+    resumen: cargoDe(s)
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-fila",
     style: {
@@ -45706,7 +45856,7 @@ function Motor() {
       }
     }, "Cargo alcanzado"), /*#__PURE__*/React.createElement("span", {
       className: "ea-mono"
-    }, RANGO(s.rango).n)), mejor && mejor.dif > 0 && /*#__PURE__*/React.createElement("div", {
+    }, cargoDe(s))), mejor && mejor.dif > 0 && /*#__PURE__*/React.createElement("div", {
       className: "ea-fila"
     }, /*#__PURE__*/React.createElement("span", {
       className: "ea-dis",
@@ -45920,26 +46070,32 @@ function Motor() {
     className: "ea-titular"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-titularK ea-dis"
-  }, "Tu patrimonio"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-titularV ea-mono",
-    style: {
-      fontSize: 26
-    }
-  }, "USD ", fmt(cierre.patrimonio)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-titularL"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono",
-    style: {
-      color: cierre.patrimonio >= cierre.patAntes ? "#2E7A3D" : "#8A2E1E"
-    }
-  }, cierre.patrimonio >= cierre.patAntes ? "+" : "−", fmt(Math.abs(cierre.patrimonio - cierre.patAntes)), " en el a\xF1o"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono",
-    style: {
-      color: cierre.ahorro >= 0 ? "#2E7A3D" : "#8A2E1E"
-    }
-  }, "ahorraste ", Math.round(cierre.ahorro * 100), "%"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, "cubres ", Math.round(cierre.cobertura * 100), "% de tu vida")), cierre.ascenso && /*#__PURE__*/React.createElement("div", {
+  }, "Tu patrimonio"), (() => {
+    const fin = cierre.patVisible != null ? cierre.patVisible : cierre.patrimonio;
+    const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      className: "ea-titularV ea-mono",
+      style: {
+        fontSize: 26
+      }
+    }, "USD ", fmt(fin)), /*#__PURE__*/React.createElement("div", {
+      className: "ea-titularL"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-mono",
+      style: {
+        color: fin >= ini ? "#2E7A3D" : "#8A2E1E"
+      }
+    }, fin >= ini ? "+" : "−", fmt(Math.abs(fin - ini)), " en el a\xF1o"), /*#__PURE__*/React.createElement("span", {
+      className: "ea-mono",
+      style: {
+        color: cierre.ahorro >= 0 ? "#2E7A3D" : "#8A2E1E"
+      }
+    }, "ahorraste ", Math.round(cierre.ahorro * 100), "%"), /*#__PURE__*/React.createElement("span", {
+      className: "ea-mono"
+    }, "cubres ", Math.round(cierre.cobertura * 100), "% de tu vida")), /*#__PURE__*/React.createElement(Desglose, {
+      partes: cierre.partes
+    }));
+  })(), cierre.ascenso && /*#__PURE__*/React.createElement("div", {
     className: "ea-titularA ea-dis"
   }, "Ascenso a ", cierre.ascenso), /*#__PURE__*/React.createElement("div", {
     className: "ea-ind",
@@ -46225,8 +46381,10 @@ function Motor() {
     },
     onClick: seguirCinco
   }, "Seguir cinco a\xF1os m\xE1s")))))), fase === "cierre" && cierre && anuncio && (() => {
-    const sube = cierre.patrimonio >= cierre.patAntes;
-    const dif = Math.abs(cierre.patrimonio - cierre.patAntes);
+    const fin = cierre.patVisible != null ? cierre.patVisible : cierre.patrimonio;
+    const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
+    const sube = fin >= ini;
+    const dif = Math.abs(fin - ini);
     return /*#__PURE__*/React.createElement("div", {
       className: "ea-anuncio",
       onClick: () => setAnuncio(false)
@@ -46237,13 +46395,16 @@ function Motor() {
     }, /*#__PURE__*/React.createElement("span", {
       className: "ea-anuncioU ea-dis"
     }, "USD"), /*#__PURE__*/React.createElement(Rodillo, {
-      v: cierre.patrimonio
+      v: fin
     })), /*#__PURE__*/React.createElement("div", {
       className: "ea-anuncioD ea-mono " + (sube ? "sube" : "baja"),
       style: {
         animationDelay: "1.5s"
       }
-    }, sube ? "+" : "−", fmt(dif), " en el a\xF1o"), cierre.ascenso && /*#__PURE__*/React.createElement("div", {
+    }, sube ? "+" : "−", fmt(dif), " en el a\xF1o"), /*#__PURE__*/React.createElement(Desglose, {
+      partes: cierre.partes,
+      oscuro: true
+    }), cierre.ascenso && /*#__PURE__*/React.createElement("div", {
       className: "ea-anuncioL ea-dis",
       style: {
         animationDelay: "1.8s",
@@ -46353,7 +46514,7 @@ function Motor() {
     className: "ea-cifraK"
   }, "Cargo final"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
-  }, RANGO(s.rango).n)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, cargoDe(s))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraK"
   }, "Rama"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
@@ -46394,12 +46555,13 @@ function Motor() {
   }), /*#__PURE__*/React.createElement(BotonAnotar, {
     entrada: {
       n: s.nombre,
-      c: RANGO(s.rango).n,
+      c: cargoDe(s),
       e: edad(s.turno, s.edadIni),
       p: Math.round(patrimonio),
       m: (Array.isArray(s.premios) ? s.premios : []).length,
       v: texto(veredicto && veredicto.t, 60)
-    }
+    },
+    onAnotada: () => setVueltaRegistro(v => v + 1)
   }), /*#__PURE__*/React.createElement("div", {
     className: "ea-panel",
     style: {
