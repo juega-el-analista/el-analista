@@ -32356,7 +32356,7 @@ const VIDA = [
 
   /* ---------------- treinta ---------------- */
   {
-    id: 9010, pri: 3, eMin: 26, eMax: 42, una: true, clave: true, cuando: (st) => st.pareja === "noviazgo",
+    id: 9010, pri: 3, eMin: 26, eMax: 42, una: true, cuando: (st) => st.pareja === "noviazgo",
     t: "La conversación", clave: true,
     x: "Llevan años. La pregunta ya no es si se quieren, es si van a construir algo en común: cuentas, casa, planes que no se pueden deshacer con una llamada.",
     o: [
@@ -32375,7 +32375,7 @@ const VIDA = [
     ],
   },
   {
-    id: 9012, pri: 3, eMin: 27, eMax: 44, una: true, clave: true, cuando: (st) => st.pareja === "casado" && st.hijos === 0,
+    id: 9012, pri: 3, eMin: 27, eMax: 44, una: true, cuando: (st) => st.pareja === "casado" && st.hijos === 0,
     t: "Un hijo", clave: true,
     x: "La decisión que más cambia un presupuesto y la que menos se analiza con una hoja de cálculo. Guardería, seguro, espacio, y una redefinición completa de qué significa una noche libre.",
     o: [
@@ -32416,7 +32416,7 @@ const VIDA = [
 
   /* ---------------- cuarenta ---------------- */
   {
-    id: 9020, pri: 1, eMin: 33, eMax: 55, clave: true, cuando: (st) => st.pareja === "casado",
+    id: 9020, pri: 1, eMin: 33, eMax: 55, cuando: (st) => st.pareja === "casado",
     t: "El desgaste", clave: true,
     x: "Llevan años funcionando como una sociedad logística: turnos, colegio, cuentas. Hace mucho que no hay una conversación que no sea sobre organización.",
     o: [
@@ -37121,11 +37121,20 @@ function PanelRegistro({ tope, tuya, titulo }) {
   );
 }
 
+/* En sureconomics.com el registro es el ranking del sitio. Fuera de ahi
+   (la web propia, el artifact) se queda el texto de siempre. */
+const enSurEconomics = () => {
+  try { return /(^|\.)sureconomics\.com$/i.test(window.location.hostname); }
+  catch (e) { return false; }
+};
+
 /* El boton que anota tu carrera. Los seis datos salen del estado, no de
-   un formulario: el jugador no tiene que copiar nada a mano. */
-function BotonAnotar({ entrada }) {
+   un formulario: el jugador no tiene que copiar nada a mano.
+   onAnotada avisa al padre para que repinte el registro: la lista nueva
+   ya esta en window.__REGISTRO, pero nadie lo vuelve a leer solo. */
+function BotonAnotar({ entrada, onAnotada }) {
   const [puede, setPuede] = useState(null);      /* null = comprobando */
-  const [estado, setEstado] = useState("listo"); /* listo · enviando · hecho · error */
+  const [estado, setEstado] = useState("listo"); /* listo · enviando · hecho · error · sin-sesion */
   const [motivo, setMotivo] = useState("");
   const [nombre, setNombre] = useState(texto(entrada && entrada.n, 24));
 
@@ -37154,7 +37163,9 @@ function BotonAnotar({ entrada }) {
   if (estado === "hecho") {
     return (
       <div className="ea-ok2" style={{ marginTop: 16 }}>
-        Anotada. La página se recarga para todo el mundo con tu carrera dentro.
+        {enSurEconomics()
+          ? "Anotada en el ranking de SurEconomics."
+          : "Anotada. La página se recarga para todo el mundo con tu carrera dentro."}
       </div>
     );
   }
@@ -37167,7 +37178,19 @@ function BotonAnotar({ entrada }) {
     try { p = window.__anotarCarrera({ ...entrada, n }); }
     catch (e) { p = Promise.resolve("fallo"); }
     p.then((err) => {
-      if (!err) { setEstado("hecho"); return; }
+      if (!err) {
+        setEstado("hecho");
+        try { if (typeof onAnotada === "function") onAnotada(); } catch (e) {}
+        return;
+      }
+      /* Sin cuenta, o sin el correo confirmado, y el jugador eligio "Ahora
+         no" en el aviso del sitio. No es un fallo: el boton vuelve a estar
+         disponible y el texto no va en rojo. */
+      if (err === "sin-sesion") {
+        setEstado("sin-sesion");
+        setMotivo("Para sumar al ranking necesitas una cuenta. Tu carrera queda guardada en este navegador mientras tanto.");
+        return;
+      }
       setEstado("error");
       setMotivo(
         err === "conflicto" ? "Alguien anotó justo antes que tú. Recarga la página y vuelve a intentarlo."
@@ -37192,7 +37215,7 @@ function BotonAnotar({ entrada }) {
         <button className="ea-aplicar ea-dis" disabled={estado === "enviando"} onClick={anotar}>
           {estado === "enviando" ? "Anotando…" : "Anotar en el registro"}
         </button>
-        {motivo && <span style={{ fontSize: 13, color: "var(--rojo)", flex: 1, minWidth: 200 }}>{motivo}</span>}
+        {motivo && <span style={{ fontSize: 13, color: estado === "sin-sesion" ? "inherit" : "var(--rojo)", flex: 1, minWidth: 200 }}>{motivo}</span>}
       </div>
     </div>
   );
@@ -37525,6 +37548,9 @@ function Motor() {
   const irA = (f) => { puerta.current = f; setFaseBruto(f); };
   const enFase = (f) => puerta.current === f;
   const cerrando = useRef(false);
+  /* Sube cada vez que se anota una carrera, para que el registro de la
+     pantalla final se vuelva a pintar con la lista nueva. */
+  const [, setVueltaRegistro] = useState(0);
   /* Las decisiones que se van tomando dentro del año, para poder
      situarlas en el gráfico. Vive en una referencia y no en el estado
      porque solo hace falta entre el arranque y el cierre del mismo año:
@@ -40563,7 +40589,7 @@ function Motor() {
             p: Math.round(patrimonio),
             m: (Array.isArray(s.premios) ? s.premios : []).length,
             v: texto(veredicto && veredicto.t, 60),
-          }} />
+          }} onAnotada={() => setVueltaRegistro((v) => v + 1)} />
 
           <div className="ea-panel" style={{ marginTop: 16, textAlign: "left" }}>
             <PanelRegistro tope={20} titulo="El registro, por patrimonio" />
