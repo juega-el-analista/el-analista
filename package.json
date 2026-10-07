@@ -28,7 +28,8 @@
     "dia": "node pruebas/dia.js",
     "pretemporada": "node pruebas/pretemporada.js",
     "fallo": "node pruebas/fallo.js",
-    "cartera": "node pruebas/cartera.js"
+    "cartera": "node pruebas/cartera.js",
+    "negociacion": "node pruebas/negociacion.js"
   },
   "devDependencies": {
     "@babel/core": "^7",

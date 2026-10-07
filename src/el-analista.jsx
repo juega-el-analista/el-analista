@@ -777,15 +777,15 @@ const JUEGOS = {
     ensena: "En una revisión nadie te señala el error. El número raro está ahí y hay que verlo.",
   },
   anclaje: {
-    n: "Anclaje", tema: "Negociación", dur: "30 s",
-    i: "Hay un rango de acuerdo que no ves. Mueves tu oferta y lees la respuesta.",
+    n: "La negociación", tema: "Negociación", dur: "3 rondas",
+    i: "Enfrente hay alguien con un carácter que no ves. Léelo por lo que dice y juega tus cartas.",
     pasos: [
-      "La contraparte tiene un rango de aceptación oculto.",
-      "Mueves la oferta y te dice si está cerca, lejos o fuera.",
-      "Cierras cuando creas que estás dentro sin haber regalado dinero.",
+      "Puede estar apurado, ser duro u orgulloso. Cada ronda dice algo que lo delata, o no.",
+      "Juegas una carta: pedir más, ceder un poco, mostrar la competencia (una vez) o plantarte.",
+      "Cada carta le mueve el precio y la paciencia según quién sea. Sin paciencia, se levanta.",
     ],
-    gana: "Cerrar dentro del rango y en el borde que te conviene.",
-    ensena: "El primer número que se pone sobre la mesa ancla toda la conversación que viene después.",
+    gana: "Cerrar en 68 o más es éxito; desde 52, a medias. Si se levanta, no hay trato.",
+    ensena: "La misma jugada que funciona con uno espanta a otro: negociar es leer a la persona antes que el número.",
   },
   suerte: {
     n: "Aguantar la posición", tema: "Riesgo y disciplina", dur: "30 s",
@@ -1234,6 +1234,9 @@ const CSS4 = `
   padding:10px 0;cursor:pointer;border-radius:2px;transition:border-color .15s,background .15s}
 .ea-pct:hover{border-color:var(--cobre)}
 .ea-pct.on{border-color:var(--cobre);background:rgba(185,83,42,.1);color:var(--cobre)}
+/* la negociación: lo que dice la otra parte y tus cuatro cartas */
+.ea-negFrase{font-style:italic;margin:6px 0 10px}
+.ea-negCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
 
 /* ============================================================
    QUE SE SIENTA VIVO
@@ -48786,51 +48789,114 @@ function JuegoOjo({ ayuda, onFin }) {
   );
 }
 
-function JuegoAnclaje({ ayuda, onFin }) {
-  const ancho = clamp(8 + ayuda * 0.1, 8, 20);
-  const [centro] = useState(() => 18 + Math.random() * 64);
-  const [v, setV] = useState(50);
-  const [n, setN] = useState(0);
-  const [hist, setHist] = useState([]);
-  const [cerrado, setCerrado] = useState(false);
-
-  const ofrecer = () => {
-    const dif = v - centro;
-    const dentro = Math.abs(dif) <= ancho / 2;
-    const intento = n + 1;
-    let msg;
-    if (dentro) msg = "Acuerdo cerrado";
-    else if (Math.abs(dif) > 24) msg = dif > 0 ? "Muy por encima de lo que pagan" : "Muy por debajo, dejas valor en la mesa";
-    else msg = dif > 0 ? "Un poco alto, están cerca" : "Un poco bajo, están cerca";
-    setHist([...hist, { v, msg, dentro }]);
-    setN(intento);
-    if (dentro) { setCerrado(true); setTimeout(() => onFin(intento <= 2 ? "exito" : "parcial"), 750); }
-    else if (intento >= 4) { setCerrado(true); setTimeout(() => onFin("fallo"), 750); }
+/* ---- La negociación ----
+   Esto era una barra de 0 a 100 con un número escondido: adivinar, sin
+   nadie enfrente y sin nada que perder. Ahora enfrente hay alguien con
+   un carácter que no ves, y cada carta que juegas le mueve el precio y
+   la paciencia de forma distinta según quién sea. Leerlo bien gana;
+   leerlo mal hace que se levante y te quedes sin trato.
+   Se sigue llamando «anclaje» para que ninguna escena tenga que cambiar. */
+const TIPOS_NEG = ["apurado", "duro", "orgulloso"];
+/* [cuánto mueve el precio, cuánto mueve la paciencia] */
+const NEG_EFECTO = {
+  pedir: { apurado: [12, -1], duro: [6, -1], orgulloso: [10, -2] },
+  ceder: { apurado: [-6, 0], duro: [-4, 1], orgulloso: [-2, 2] },
+  competencia: { apurado: [15, 0], duro: [4, -2], orgulloso: [14, -1] },
+  plantarse: { apurado: [8, -1], duro: [10, 0], orgulloso: [0, -2] },
+};
+const CARTAS_NEG = [
+  { k: "pedir", n: "Pedir más" },
+  { k: "ceder", n: "Ceder un poco" },
+  { k: "competencia", n: "Mostrar la oferta de la competencia" },
+  { k: "plantarse", n: "Plantarte" },
+];
+const FRASES_NEG = {
+  apurado: ["Necesito cerrarlo hoy: mañana tengo comité.", "Si lo firmamos ahora nos ahorramos una semana de correos.", "Miro el reloj y te escucho. Dime tu número."],
+  duro: ["Esto lo hago todas las semanas. No me impresionas.", "Si me vienes con otra oferta, sé que es un farol.", "Respeto a quien sabe lo que vale y no se mueve."],
+  orgulloso: ["Nadie me había hablado así en esta mesa.", "Quiero salir de aquí sintiendo que también gané algo.", "Si me arrinconas, me levanto. Dame algo y hablamos."],
+  neutras: ["Bueno... veamos qué propones.", "Mmm. Sigue.", "Te escucho."],
+};
+const REVELA_NEG = {
+  apurado: "La otra parte estaba APURADA: quería cerrar ya, y presionar le sumaba.",
+  duro: "La otra parte era DURA: respetaba a quien se planta, y los faroles no le movían.",
+  orgulloso: "La otra parte era ORGULLOSA: necesitaba ganar algo antes de ceder.",
+};
+/* Con más ayuda, la frase es más a menudo una pista del carácter real. */
+const fraseRival = (c, rnd) => {
+  const pozo = rnd() < c.claridad ? FRASES_NEG[c.tipo] : FRASES_NEG.neutras;
+  return pozo[Math.min(pozo.length - 1, Math.floor(rnd() * pozo.length))];
+};
+const casoNegociacion = (ayuda, rnd = Math.random) => {
+  const tipo = TIPOS_NEG[Math.min(2, Math.floor(numero(rnd(), 0) * 3))];
+  const c = { tipo, precio: 50, paciencia: 3, ronda: 1, usada: false, jugadas: [], fin: null,
+    claridad: clamp(0.4 + numero(ayuda, 30) / 180, 0.4, 0.95) };
+  c.frases = [0, 1, 2].map(() => fraseRival(c, rnd));
+  return c;
+};
+const jugadaNegociacion = (c, carta, ruido = 0) => {
+  if (!c || c.fin || !NEG_EFECTO[carta]) return c;
+  if (carta === "competencia" && c.usada) return c;
+  const [dp, dq] = NEG_EFECTO[carta][c.tipo];
+  const n = {
+    ...c,
+    precio: clamp(c.precio + dp + (dp ? ruido : 0), 0, 100),
+    paciencia: clamp(c.paciencia + dq, 0, 5),
+    usada: c.usada || carta === "competencia",
+    jugadas: c.jugadas.concat(carta),
   };
+  if (n.paciencia <= 0) return { ...n, fin: "levanta" };
+  if (c.ronda >= 3) return { ...n, fin: "acuerdo" };
+  return { ...n, ronda: c.ronda + 1 };
+};
+const nivelNegociacion = (c) =>
+  !c || c.fin !== "acuerdo" ? "fallo" : c.precio >= 68 ? "exito" : c.precio >= 52 ? "parcial" : "fallo";
+
+function JuegoAnclaje({ ayuda, onFin }) {
+  const [c, setC] = useState(() => casoNegociacion(ayuda));
+  const jugar = (k) => {
+    if (c.fin) return;
+    setC(jugadaNegociacion(c, k, Math.round(Math.random() * 2) - 1));
+  };
+  const nombre = (k) => (CARTAS_NEG.find((x) => x.k === k) || {}).n || k;
+  const nivel = c.fin ? nivelNegociacion(c) : null;
 
   return (
     <div className="ea-jw">
-      <div className="ea-jinfo ea-dis"><span>Oferta {Math.min(n + 1, 4)} de 4</span><span>Te quedan {Math.max(0, 4 - n)}</span></div>
-      <p className="ea-memoTxt" style={{ marginTop: 0 }}>
-        Tu número es <strong>lo agresiva que es tu oferta</strong>, de 0 a 100. La otra parte acepta dentro
-        de una franja estrecha que no ves. Cada vez que pones un número te dicen si te quedaste corto, si te
-        pasaste o si estás cerca, y con eso vas cerrando el cerco.
-      </p>
-      <div className="ea-anclaN">{v}</div>
-      <input className="ea-slider" type="range" min="0" max="100" value={v} disabled={cerrado}
-        onChange={(e) => setV(entero(e.target.value, 50, 0, 100))} aria-label="Lo agresiva que es tu oferta" />
-      <div className="ea-anclaE ea-dis">
-        <span>0 · lo regalas</span>
-        <span>100 · te levantan de la mesa</span>
+      <div className="ea-jinfo ea-dis">
+        <span>{c.fin ? "Negociación cerrada" : "Ronda " + c.ronda + " de 3"}</span>
+        <span>Paciencia {"●".repeat(c.paciencia)}{"○".repeat(Math.max(0, 5 - c.paciencia))}</span>
       </div>
-      <div style={{ marginTop: 10 }}>
-        {hist.map((h, i) => (
-          <div key={i} style={{ fontSize: 13.5, color: h.dentro ? "#3D8A49" : "#6B6B6B" }}>
-            <span className="ea-mono">{h.v}</span> · {h.msg}
+      <div className="ea-anclaN">{c.precio}</div>
+      <div className="ea-anclaE ea-dis"><span>tu precio, de 0 a 100</span><span>éxito desde 68</span></div>
+      {!c.fin && (
+        <p className="ea-memoTxt ea-negFrase">«{c.frases[c.ronda - 1]}»</p>
+      )}
+      {!c.fin && (
+        <div className="ea-negCartas">
+          {CARTAS_NEG.map((x) => (
+            <button key={x.k} className="ea-mini" style={{ marginTop: 0 }}
+              disabled={x.k === "competencia" && c.usada}
+              onClick={() => jugar(x.k)}>{x.n}</button>
+          ))}
+        </div>
+      )}
+      {c.jugadas.length > 0 && (
+        <div style={{ marginTop: 10, fontSize: 13, color: "var(--gris)" }}>
+          {c.jugadas.map((k, i) => <div key={i}>{i + 1}. {nombre(k)}</div>)}
+        </div>
+      )}
+      {c.fin && (
+        <div style={{ marginTop: 12 }}>
+          <div className="ea-dis" style={{ fontSize: 15, color: nivel === "exito" ? "var(--verde)" : nivel === "parcial" ? "var(--cobre)" : "var(--rojo)" }}>
+            {c.fin === "levanta" ? "Se levantó de la mesa. No hay trato."
+              : nivel === "exito" ? "Cerraste en " + c.precio + ". Muy buen trato."
+              : nivel === "parcial" ? "Cerraste en " + c.precio + ". Trato justo, sin más."
+              : "Cerraste en " + c.precio + ". Dejaste demasiado sobre la mesa."}
           </div>
-        ))}
-      </div>
-      <button className="ea-btn" onClick={ofrecer} disabled={cerrado}>Poner el número sobre la mesa</button>
+          <p className="ea-memoTxt">{REVELA_NEG[c.tipo]}</p>
+          <button className="ea-btn" onClick={() => onFin(nivel)}>Continuar</button>
+        </div>
+      )}
     </div>
   );
 }

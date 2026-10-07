@@ -103,7 +103,7 @@ const MARCAS = {
   /* la ficha emergente que explica un sistema recien abierto */
   "ficha de sección nueva": "ACABAS DE ABRIR",
   /* que se entienda: escala del anclaje y la frase del gasto */
-  "anclaje: escala rotulada": "0 · lo regalas",
+  "negociación: paciencia a la vista": "Paciencia",
   "gasto: frase explicada": "el nivel de vida lo persigue",
   /* la vida no se apaga a los 24, y no se compra lo que no cuadra */
   "vida: volver a intentarlo": "No es la primera vez que empiezas esto",
