@@ -53930,12 +53930,15 @@ function PanelCartera({
   }, "\xBFCu\xE1nto inviertes?"), /*#__PURE__*/React.createElement("div", {
     className: "ea-pcts"
   }, [0, 25, 50, 75, 100].map(p => {
-    const on = Math.round(objAct * 100) === p;
+    /* se marca el más cercano: las partidas arrancan en 70% y los
+       guardados del modo experto pueden tener cualquier valor */
+    const on = Math.round(objAct * 4) * 25 === p;
+    const exacto = Math.abs(objAct - p / 100) < 0.001;
     return /*#__PURE__*/React.createElement("button", {
       key: p,
       className: "ea-pct ea-dis" + (on ? " on" : ""),
       onClick: () => {
-        if (!on) onAplicar({
+        if (!exacto) onAplicar({
           ...actual
         }, p / 100);
       }

@@ -51952,10 +51952,13 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
       <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>¿Cuánto inviertes?</div>
       <div className="ea-pcts">
         {[0, 25, 50, 75, 100].map((p) => {
-          const on = Math.round(objAct * 100) === p;
+          /* se marca el más cercano: las partidas arrancan en 70% y los
+             guardados del modo experto pueden tener cualquier valor */
+          const on = Math.round(objAct * 4) * 25 === p;
+          const exacto = Math.abs(objAct - p / 100) < 0.001;
           return (
             <button key={p} className={"ea-pct ea-dis" + (on ? " on" : "")}
-              onClick={() => { if (!on) onAplicar({ ...actual }, p / 100); }}>{p}%</button>
+              onClick={() => { if (!exacto) onAplicar({ ...actual }, p / 100); }}>{p}%</button>
           );
         })}
       </div>
