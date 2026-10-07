@@ -1957,7 +1957,9 @@ const CSS4 = `
    se case tu hermano y para la decision que parte la carrera en dos.
    Ahora cada clase trae su sello, su color y su borde.
    ============================================================ */
-.ea-selloClase{position:absolute;top:44px;right:22px;opacity:.9;
+/* debajo de la raya de la cabecera, a la altura del titulo: en 44px la
+   raya (que termina en 53) le pasaba por encima */
+.ea-selloClase{position:absolute;top:64px;right:22px;opacity:.9;
   animation:ea-sellar .5s cubic-bezier(.2,1.5,.4,1) backwards;animation-delay:.14s}
 @keyframes ea-sellar{
   0%{opacity:0;transform:rotate(-26deg) scale(.4)}
