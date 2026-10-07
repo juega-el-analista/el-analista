@@ -89,12 +89,14 @@ const MARCAS = {
   "apertura: vida": "La vida que estás pagando",
   "apertura: banco": "El banco te empieza a mirar",
   "apertura: inmuebles": "Un ladrillo con tu nombre",
-  "apertura: mejoras": "Dónde gastar el poco tiempo que queda",
+  "apertura: mejoras": "Tu primera inversión en ti",
+  "pretemporada": "Pretemporada",
   "apertura: fondo": "Del otro lado de la mesa",
 
-  /* cartera: lo real y el objetivo, que antes se confundian */
+  /* cartera: lo real, y las dos decisiones que se toman a la vista */
   "cartera: reparto real": "Cómo está repartido ahora mismo",
-  "cartera: objetivo": "Tu objetivo: cuánto de tu dinero trabaja",
+  "cartera: cuánto inviertes": "¿Cuánto inviertes?",
+  "cartera: modo experto": "Modo experto",
   /* compras y carril */
   "inmuebles: ya es tuyo": "Vale hoy USD",
   "mejoras: ya la tienes": "Ya la tienes",

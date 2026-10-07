@@ -1228,6 +1228,12 @@ const CSS4 = `
 .ea-perfilT{font-size:14px;letter-spacing:.05em;color:var(--tintaPapel)}
 .ea-perfilD{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.45}
 .ea-perfilN{font-size:11.5px;color:var(--cobre);margin-top:6px}
+/* cuánto inviertes, en cinco toques en vez de un slider */
+.ea-pcts{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:4px}
+.ea-pct{background:transparent;border:1px solid var(--borde);color:var(--tintaPapel);font-size:14px;
+  padding:10px 0;cursor:pointer;border-radius:2px;transition:border-color .15s,background .15s}
+.ea-pct:hover{border-color:var(--cobre)}
+.ea-pct.on{border-color:var(--cobre);background:rgba(185,83,42,.1);color:var(--cobre)}
 
 /* ============================================================
    QUE SE SIENTA VIVO
@@ -2826,6 +2832,15 @@ const CARRERAS = [
   { id: "der", n: "Derecho", d: "Negocias y lees contratos sin depender de nadie.", mods: { rep: 8, red: 4 }, juegos: ["anclaje", "tresraya", "cuatro"] },
   { id: "adm", n: "Administración", d: "Conoces a media promoción y a la promoción anterior también.", mods: { red: 9, rep: 3 }, juegos: ["reaccion", "memoria", "cuatro"] },
   { id: "sis", n: "Computación", d: "Automatizas en una tarde lo que otros hacen a mano toda la semana.", mods: { mod: 6, cri: 5 }, juegos: ["trading", "reaccion", "carril"] },
+];
+
+/* Los tres que se ofrecen a la vista. Cinco perfiles con su esperado y
+   su año malo eran ya una tabla; tres con una línea son una decisión.
+   Los cinco siguen en el modo experto. */
+const PERFILES_SIMPLES = [
+  { id: "conservador", e: "🛡️", n: "Prudente", d: "Casi no se mueve. Ganas poco y duermes tranquilo." },
+  { id: "balanceado", e: "⚖️", n: "Equilibrado", d: "Aguanta un mal año y aprovecha buena parte de los buenos." },
+  { id: "indexado", e: "🚀", n: "Agresivo", d: "Más acciones: más ganancia a largo plazo y años malos que duelen." },
 ];
 
 /* ---------- perfiles de portafolio: puntos de partida, no jaulas ----------
@@ -47627,9 +47642,9 @@ const APERTURAS = [
   { id: "cartera", rango: 1, ano: 3,
     guia: { t: "Cartera", x: "Aquí decides qué hace tu dinero mientras tú trabajas.",
       puntos: [
-        "La primera barra dice cómo está repartido ahora mismo. La segunda, cómo quieres que quede.",
-        "Debajo reparte entre tipos de activo: cada uno trae su retorno esperado y su volatilidad.",
-        "Nada se mueve hasta que pulsas Aplicar, y cada movimiento cuesta comisión.",
+        "Dos decisiones: cuánto inviertes y cómo (Prudente, Equilibrado o Agresivo).",
+        "Se aplica al tocar, y cada movimiento cuesta una pequeña comisión.",
+        "El reparto activo por activo y las medidas de riesgo están en Modo experto.",
       ] },
     escena: { id: 9701, min: 0, max: 6, apertura: true,
       t: "Lo que sobra a fin de mes",
@@ -48217,7 +48232,7 @@ const GUIA = [
     x: "Cosas para ti, inmuebles que te rentan cada año y mejoras que trabajan solas. Las tres salen del mismo bolsillo." },
   { id: "cartera", cuando: (c) => c.tab === "portafolio",
     t: "Aquí decides qué hace tu dinero",
-    x: "La barra de arriba dice cuánto está invertido y cuánto en efectivo. Debajo repartes entre tipos de activo. Nada se aplica hasta que confirmas." },
+    x: "Elige cuánto inviertes y cómo: se aplica al tocar. Lo técnico, activo por activo, está en Modo experto." },
   { id: "ficha", cuando: (c) => c.tab === "ficha",
     t: "Tus números y el banco",
     x: "Aquí ves sueldo, gastos y patrimonio. Al final de la sección puedes pedir un préstamo o pagar deuda." },
@@ -51650,6 +51665,9 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
   const [avanzado, setAvanzado] = useState(false);
   /* y las cinco medidas de riesgo que no se miran para decidir */
   const [detalle, setDetalle] = useState(false);
+  /* Todo lo fino (objetivo exacto, cinco perfiles, siete activos, riesgo)
+     vive aquí, plegado. Solo desde aquí puede quedar algo sin aplicar. */
+  const [experto, setExperto] = useState(false);
   /* si la cartera cambia por otra via (un evento, retomar partida), los
      controles se ponen al dia solos en vez de quedar mostrando lo viejo */
   const huella = JSON.stringify(actual) + "|" + objAct;
@@ -51714,6 +51732,56 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
         </div>
       )}
 
+      {/* Las dos decisiones de verdad, que se aplican al tocarlas. Antes
+          esto era una pantalla de cuarenta cifras que no dejaba avanzar el
+          año con cambios a medias. */}
+      <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>¿Cuánto inviertes?</div>
+      <div className="ea-pcts">
+        {[0, 25, 50, 75, 100].map((p) => {
+          const on = Math.round(objAct * 100) === p;
+          return (
+            <button key={p} className={"ea-pct ea-dis" + (on ? " on" : "")}
+              onClick={() => { if (!on) onAplicar({ ...actual }, p / 100); }}>{p}%</button>
+          );
+        })}
+      </div>
+      <div className="ea-itemD">Lo que no inviertes queda en efectivo, para los gastos y los imprevistos.</div>
+
+      <div className="ea-rot ea-dis" style={{ marginTop: 18 }}>¿Cómo lo inviertes?</div>
+      <div className="ea-perfiles">
+        {PERFILES_SIMPLES.map((ps) => {
+          const pf = PERFILES.find((x) => x.id === ps.id);
+          if (!pf) return null;
+          const on = rotacion({ ...pf.w, efectivo: Math.max(0, 1 - invertidoDe(pf.w)) }, conAct) < 0.02;
+          return (
+            <button key={ps.id} className={"ea-perfil" + (on ? " on" : "")}
+              onClick={() => { if (!on) onAplicar({ ...pf.w }, objAct); }}>
+              <div className="ea-perfilT ea-dis">{ps.e} {ps.n}{on ? " ✓" : ""}</div>
+              <div className="ea-perfilD">{ps.d}</div>
+            </button>
+          );
+        })}
+      </div>
+      {(() => {
+        const e2 = statsPesos(conAct);
+        return (
+          <div className="ea-caja">
+            <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Esperas ganar</span><span className="ea-mono">{(e2.mu * 100).toFixed(1)}% al año</span></div>
+            <div className="ea-fila"><span style={{ fontSize: 12.5 }}>Un año malo de verdad</span><span className="ea-mono" style={{ color: "var(--rojo)" }}>{((e2.mu - 2 * e2.sd) * 100).toFixed(0)}%</span></div>
+          </div>
+        );
+      })()}
+
+      <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }}
+        onClick={() => {
+          /* al plegar se descarta lo que quedó a medias: lo simple nunca deja nada pendiente */
+          if (experto) { setW({ ...actual }); setObj(objAct); }
+          setExperto((v) => !v);
+        }}>
+        {experto ? "↑ Cerrar el modo experto" : "↓ Modo experto"}
+      </button>
+
+      {experto && (<div className="ea-panelAb">
       <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Tu objetivo: cuánto de tu dinero trabaja</div>
       <div className="ea-mix">
         <div className="ea-mixSeg cart" style={{ width: (obj * 100).toFixed(1) + "%" }}>
@@ -51851,6 +51919,7 @@ function PanelCartera({ st, onAplicar, onPendiente }) {
       ) : (
         <div className="ea-tengo ea-dis" style={{ marginTop: 12 }}>Así está invertido tu dinero ahora</div>
       )}
+      </div>)}
       <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 12 }}>
         Cada movimiento cuesta 0,5% de lo que rotas. Perseguir al activo que rindió el año pasado es la
         forma más cara de perder dinero.

@@ -27,7 +27,8 @@
     "caminos": "node pruebas/caminos.js 16",
     "dia": "node pruebas/dia.js",
     "pretemporada": "node pruebas/pretemporada.js",
-    "fallo": "node pruebas/fallo.js"
+    "fallo": "node pruebas/fallo.js",
+    "cartera": "node pruebas/cartera.js"
   },
   "devDependencies": {
     "@babel/core": "^7",
