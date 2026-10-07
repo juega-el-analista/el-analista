@@ -25,7 +25,8 @@
     "sitio": "node pruebas/pwa.js",
     "puertas": "node pruebas/puertas.js 12",
     "caminos": "node pruebas/caminos.js 16",
-    "dia": "node pruebas/dia.js"
+    "dia": "node pruebas/dia.js",
+    "pretemporada": "node pruebas/pretemporada.js"
   },
   "devDependencies": {
     "@babel/core": "^7",

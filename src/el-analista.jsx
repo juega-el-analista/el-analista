@@ -1643,6 +1643,11 @@ const CSS4 = `
 
 /* ---------- mejoras que se compran una sola vez ---------- */
 const PERKS = [
+  /* las de pasante: baratas, para que invertir en ti empiece el primer año */
+  { id: "excel", n: "Curso online de Excel avanzado", c: 400, d: "Sumas un punto de modelaje cada año." },
+  { id: "diario", n: "Suscripción a un diario financiero", c: 500, d: "Sumas un punto de criterio cada año." },
+  { id: "zapas", n: "Zapatillas y un plan para correr", c: 600, d: "Recuperas dos puntos de energía cada año." },
+  { id: "after", n: "Afterwork con la gente del sector", c: 800, d: "Sumas un punto de red cada año." },
   { id: "research", n: "Suscripción a research institucional", c: 5000, d: "Sumas un punto de modelaje cada semestre." },
   { id: "gym", n: "Entrenador y nutricionista", c: 4500, d: "Recuperas tres puntos de energía cada semestre." },
   { id: "fiscal", n: "Asesor fiscal propio", c: 6500, d: "Tus gastos de vida bajan 15% para siempre." },
@@ -47592,6 +47597,25 @@ const ESCENA_CONTRATO = {
    entra, eso es el acontecimiento del año.
    ============================================================ */
 const APERTURAS = [
+  /* Mejoras iba quinta (rango 3 o año 11) y llegaba pasados los treinta:
+     invertir en ti es justo lo que más rinde al principio. Ahora es la
+     primera y llega el primer año, con mejoras que un pasante paga. */
+  { id: "mejoras", rango: 1, ano: 0,
+    guia: { t: "Mejoras", x: "Cosas que se compran una vez y rinden todos los años que te quedan.",
+      puntos: [
+        "No dan dinero directo: dan ventaja en los minijuegos y en tus atributos.",
+        "Cuanto antes las compras, más años tienen para pagarse solas.",
+        "Las primeras cuestan poco. Las grandes llegan cuando el sueldo acompaña.",
+      ] },
+    escena: { id: 9705, min: 0, max: 6, apertura: true,
+      t: "Tu primera inversión en ti",
+      x: "Cobras tu primer sueldo y te sobra poco. Pero ese poco puede ir a algo que te haga mejor cada año: un curso, un diario, unas zapatillas.",
+      o: [
+        { t: "Invertir en ti desde ya", abre: "mejoras",
+          d: { cri: 3, mod: 2, msg: "Se abre la sección Mejoras, dentro de Compras: cosas que se compran una vez y rinden todos los años. Las primeras cuestan poco." } },
+        { t: "Esperar a ganar más", abre: "mejoras",
+          d: { ene: 4, msg: "Por ahora no gastas nada. La sección Mejoras queda abierta en Compras para cuando quieras." } },
+      ] } },
   { id: "cartera", rango: 1, ano: 3,
     guia: { t: "Cartera", x: "Aquí decides qué hace tu dinero mientras tú trabajas.",
       puntos: [
@@ -47655,21 +47679,6 @@ const APERTURAS = [
           d: { cri: 5, mod: 3, msg: "Se abre la sección Inmuebles. Un ladrillo tiene renta, gastos y una salida lenta: son tres números, no uno." } },
         { t: "Escuchar por educación y no comprometerte", abre: "inmuebles",
           d: { red: 3, msg: "Agradeces sin cerrar la puerta. La sección Inmuebles queda abierta para cuando los números te cuadren." } },
-      ] } },
-  { id: "mejoras", rango: 3, ano: 11,
-    guia: { t: "Mejoras", x: "Cosas que se compran una vez y rinden todos los años que te quedan.",
-      puntos: [
-        "No dan dinero directo: dan ventaja en los minijuegos y en tus atributos.",
-        "Cuanto antes las compras, más años tienen para pagarse solas.",
-      ] },
-    escena: { id: 9705, min: 0, max: 6, apertura: true,
-      t: "Dónde gastar el poco tiempo que queda",
-      x: "Ya no puedes trabajar más horas: las horas se acabaron. Lo único que queda por mejorar es con qué las llenas.",
-      o: [
-        { t: "Invertir en ti de forma deliberada", abre: "mejoras",
-          d: { cri: 4, mod: 3, msg: "Se abre la sección Mejoras: cosas que se compran una vez y rinden todos los años que quedan." } },
-        { t: "Seguir con lo que ya te funciona", abre: "mejoras",
-          d: { ene: 5, msg: "No cambias nada por ahora. La sección Mejoras queda arriba para cuando lo consideres." } },
       ] } },
   { id: "fondo", rango: 4, ano: 14,
     guia: { t: "Fondo", x: "Dinero ajeno, decisiones tuyas. El otro lado de la mesa.",
@@ -47907,9 +47916,56 @@ const ESCENAS_FIJAS = [].concat(
 
 const IDS_FIRMA = [9720, 9721];
 
+/* ============================================================
+   LA PRETEMPORADA
+   Lo que El Ídolo hace bien y aquí faltaba: algo que se ve crecer desde
+   el primer clic. Cada año empieza con tres cartas y te quedas una. No
+   cuesta nada y no cuenta en el presupuesto del año.
+   Las cartas salen de la semilla de la partida y del año, con su propio
+   generador: una recarga a mitad de año rearma exactamente la misma
+   escena desde su id, y la carrera del día da las mismas a todos.
+   ============================================================ */
+const ID_PRE = 9790;
+const CARTAS_PRE = {
+  ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
+  cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto"],
+  mod: ["Curso de Excel avanzado", "Rehacer un modelo desde cero", "Atajos de teclado hasta dormido", "Copiar el modelo del mejor de la mesa"],
+  red: ["Café con el director", "El asado de la promoción", "Presentarte en el congreso", "Ayudar a alguien de otra área"],
+  rep: ["Entregar antes del plazo", "Firmar un informe que sale bien", "Dar una charla en la facultad", "Admitir un error a tiempo"],
+};
+const NOMBRE_ATRIB = { ene: "energía", cri: "criterio", mod: "modelaje", red: "red", rep: "reputación" };
+const escenaPretemporada = (st) => {
+  const rnd = generadorDe("pre:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + entero(st && st.turno, 0, 0, 99));
+  const claves = Object.keys(CARTAS_PRE);
+  /* tres atributos distintos: elegir dos veces lo mismo no es elegir */
+  const pozo = claves.slice();
+  const cartas = [];
+  for (let i = 0; i < 3; i++) {
+    const k = pozo.splice(Math.floor(rnd() * pozo.length), 1)[0];
+    const r = rnd();
+    const v = r < 0.05 ? 4 : r < 0.30 ? 3 : 2;
+    const lista = CARTAS_PRE[k];
+    const titulo = lista[Math.floor(rnd() * lista.length)];
+    const rareza = v === 4 ? "DORADA · " : v === 3 ? "RARA · " : "";
+    cartas.push({
+      t: rareza + titulo,
+      d: { [k]: v, msg: "Pretemporada: +" + v + " de " + NOMBRE_ATRIB[k] + "." },
+    });
+  }
+  return {
+    id: ID_PRE, min: 0, max: 6, pretemporada: true,
+    t: "Pretemporada",
+    x: "Arranca el año. Tienes tiempo para una sola cosa antes de que empiece el ruido: elige en qué lo pones.",
+    o: cartas,
+  };
+};
+
 /* Devuelve la escena de ese id, o null. Las de firma propia se generan
    al vuelo desde el titulo del jugador, asi que se reconstruyen. */
 const escenaDeId = (id, st) => {
+  if (id === ID_PRE) {
+    try { return escenaPretemporada(st); } catch (e) { return null; }
+  }
   if (IDS_FIRMA.indexOf(id) >= 0) {
     try { return escenaFirma(st, id); } catch (e) { return null; }
   }
@@ -47930,7 +47986,7 @@ const colaDeIds = (ids, st) =>
     /* una cola guardada justo al montar tu firma no trae escenas de empleado */
     .filter((e) => !(sinJefe(st) && esDeEmpleado(e)));
 
-const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA);
+const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA, [ID_PRE]);
 
 
 
@@ -48097,6 +48153,8 @@ const sanear = (bruto) => {
   st.premios = unicos(listaDe(r.premios, (x) => PREMIOS.some((p) => p.id === x), 20));
   st.cola = listaDe(r.cola, (x) => IDS_ESCENA_VALIDOS.indexOf(x) >= 0, 14).map((x) => entero(x, 0, 0, 99999));
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
+  /* la semilla de la pretemporada; un guardado viejo cae en 0 y sigue jugable */
+  st.semilla = entero(r.semilla, 0, 0, 2e9);
   st.contrato = (r.contrato && typeof r.contrato === "object")
     ? { anos: entero(r.contrato.anos, 3, 1, 10), desde: entero(r.contrato.desde, 0, 0, 60) }
     : null;
@@ -52230,6 +52288,9 @@ function Motor() {
       if (!e) break;
       lista.push(e); usados.push(e.id);
     }
+    /* La pretemporada abre el año y va por fuera del presupuesto: se pone
+       delante cuando todo lo demás ya está contado. */
+    lista.unshift(escenaPretemporada(st));
     return lista;
   };
 
@@ -52298,6 +52359,8 @@ function Motor() {
       titulares: [], vistos: [], histo: [], lecs: [],
     };
     st.modo = MODO(sel.modo).id;
+    /* de esta semilla salen las cartas de pretemporada de cada año */
+    st.semilla = Math.floor(azar() * 2e9);
     st.nombre = saneaNombre(sel.nombre);
     st.genero = GENEROS.some((g) => g.id === sel.genero) ? sel.genero : null;
     st.guia = sel.guia === true;
@@ -52790,6 +52853,10 @@ function Motor() {
     const patAntes = st.cash + st.cartera + valorBienes(st) - numero(st.deuda, 0);
     const gastoAnt = st.gastoAnt || 0;
 
+    if (tiene(st, "excel")) st.mod = clamp(st.mod + 1, 0, 100);
+    if (tiene(st, "diario")) st.cri = clamp(st.cri + 1, 0, 100);
+    if (tiene(st, "zapas")) st.ene = clamp(st.ene + 2, 0, 100);
+    if (tiene(st, "after")) st.red = clamp(st.red + 1, 0, 100);
     if (tiene(st, "research")) st.mod = clamp(st.mod + 2, 0, 100);
     if (tiene(st, "club")) st.red = clamp(st.red + 2, 0, 100);
     if (tiene(st, "prensa")) st.rep = clamp(st.rep + 2, 0, 100);
