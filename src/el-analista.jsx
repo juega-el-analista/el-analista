@@ -47720,6 +47720,20 @@ const SOLO_EMPLEADO = [
   7300, 7301, 7302, 7303, 7304, 7305, 7320, 7321, 7322, 7323, 7324, 7326,
 ];
 LOTES.escenas.concat(LOTES.propias || []).forEach((e) => { if (e.empleado) SOLO_EMPLEADO.push(e.id); });
+/* Escenas que dan por hecho que tienes jefe, encontradas leyendo una por
+   una las 947 que no estaban marcadas: el comité de tu firma que te
+   juzga, el bono o el ascenso que te dan, tu legajo, una entrevista de
+   trabajo... Sin esta lista, quien montaba su firma seguía recibiendo
+   preguntas de empleado, sobre todo como consecuencias de decisiones que
+   tomó cuando aún lo era. */
+const REVISION_JEFE = [
+  10, 19, 29, 53, 115, 116, 940, 941, 7232, 7233, 7311, 8104, 9801, 11050,
+  11093, 11160, 11161, 11163, 11164, 11165, 12001, 12004, 12254, 12261, 12601, 12610, 13601, 13604,
+  14551, 14605, 15033, 15091, 15100, 15102, 15105, 15106, 15131, 15135, 15136, 16070, 16071, 16075,
+  16076, 16124, 17306, 17352, 17404, 17551, 17552, 17553, 17554, 17557, 17603, 18110, 18114, 19105,
+  19201, 19203, 19205, 19206, 19305, 19306, 20400, 20613, 22113, 23311, 23315, 23713,
+];
+REVISION_JEFE.forEach((id) => { if (SOLO_EMPLEADO.indexOf(id) < 0) SOLO_EMPLEADO.push(id); });
 const esDeEmpleado = (e) => !!e && SOLO_EMPLEADO.indexOf(e.id) >= 0;
 
 /* ============================================================
@@ -47884,7 +47898,9 @@ const escenaDeId = (id, st) => {
 const colaDeIds = (ids, st) =>
   (Array.isArray(ids) ? ids : [])
     .map((id) => escenaDeId(id, st))
-    .filter((e) => e && e.t && Array.isArray(e.o) && e.o.length);
+    .filter((e) => e && e.t && Array.isArray(e.o) && e.o.length)
+    /* una cola guardada justo al montar tu firma no trae escenas de empleado */
+    .filter((e) => !(sinJefe(st) && esDeEmpleado(e)));
 
 const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA);
 
@@ -52680,6 +52696,16 @@ function Motor() {
       const i = (Array.isArray(ev.o) ? ev.o : []).indexOf(o);
       if (i >= 0) st.camino = (Array.isArray(st.camino) ? st.camino : []).concat({ id: ev.id, o: i, a: st.turno, n: nivel, r: azar && o.azar ? azar.i : -1 }).slice(-TOPE_CAMINO);
       anotarArbol(ev.id);
+    }
+
+    /* Si en esta decisión dejaste de tener jefe (montaste tu firma o te
+       fuiste con la startup), lo que quedaba del año se había elegido
+       cuando eras empleado. Sale de la cola todo lo que ya no te puede
+       pasar: escenas de empleado, la renovación del contrato, la otra
+       oferta de montar lo tuyo y la bifurcación que preguntan los socios. */
+    if (sinJefe(st) && !sinJefe(s)) {
+      setCola((c) => (Array.isArray(c) ? c : []).filter((e) => e && !esDeEmpleado(e)
+        && e.id !== ESCENA_CONTRATO.id && IDS_FIRMA.indexOf(e.id) < 0 && e.id !== DECISION_RAMA.id));
     }
 
     if (o && o.sigue && nivel === "exito" && CADENA[o.sigue]) {
