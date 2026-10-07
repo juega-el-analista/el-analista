@@ -1237,6 +1237,14 @@ const CSS4 = `
 /* la negociación: lo que dice la otra parte y tus cuatro cartas */
 .ea-negFrase{font-style:italic;margin:6px 0 10px}
 .ea-negCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+/* la carrera del día, en la portada */
+.ea-dia{border:1px solid var(--cobre);padding:14px 16px;margin:0 0 22px;text-align:left;border-radius:2px;
+  background:rgba(185,83,42,.05)}
+.ea-diaTop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;
+  letter-spacing:.18em;color:var(--cobre);text-transform:uppercase}
+.ea-diaQuien{font-size:19px;color:var(--tintaPapel);margin-top:6px}
+.ea-diaObjs{margin-top:8px}
+.ea-diaObj{font-size:13.5px;color:var(--tintaPapel);padding:3px 0}
 
 /* ============================================================
    QUE SE SIENTA VIVO
@@ -47073,6 +47081,79 @@ const anotarMovimiento = (v) => {
     else window.localStorage.setItem(CLAVE_MOV, v ? "1" : "0");
   } catch (e) { /* sin almacen, el ajuste dura lo que dure la pestaña */ }
 };
+
+/* ============================================================
+   LA CARRERA DEL DÍA
+   La misma para todos los que juegan esa fecha: país, carrera y edad
+   salen de la fecha, y el azar de cada año se siembra con fecha y año.
+   Es lo que hace volver a El Ídolo: hoy hay una carrera nueva y la de
+   ayer ya no vuelve. Lo jugado hoy vive en el navegador, en su propia
+   clave; el ranking del día necesitaría a SurEconomics y queda fuera.
+   ============================================================ */
+const CLAVE_DIA = "el-analista-dia";
+const fechaHoy = () => {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+};
+const esFecha = (x) => typeof x === "string" && /^\d{4}-\d{2}-\d{2}$/.test(x);
+const msHastaManana = () => {
+  const d = new Date();
+  const m = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+  return clamp(m.getTime() - d.getTime(), 1, 86400000);
+};
+const cuentaRegresiva = (ms) => {
+  const s = Math.floor(numero(ms, 0) / 1000);
+  const p = (n) => String(n).padStart(2, "0");
+  return p(Math.floor(s / 3600)) + ":" + p(Math.floor((s % 3600) / 60)) + ":" + p(s % 60);
+};
+/* x = { pat, gasto }: lo que la pantalla final ya calcula */
+const OBJETIVOS_DIA = [
+  { id: "analista", t: "Llega a Analista Senior", ok: (st) => st.rango >= 2 },
+  { id: "asociado", t: "Llega a Asociado", ok: (st) => st.rango >= 3 },
+  { id: "vp", t: "Llega a Vicepresidente", ok: (st) => st.rango >= 4 },
+  { id: "pat100", t: "Termina con USD 100.000", ok: (st, x) => numero(x && x.pat, 0) >= 100000 },
+  { id: "pat300", t: "Termina con USD 300.000", ok: (st, x) => numero(x && x.pat, 0) >= 300000 },
+  { id: "sindeuda", t: "Termina sin deber nada", ok: (st) => !(numero(st.deuda, 0) > 0) },
+  { id: "gana5", t: "Gana 5 minijuegos", ok: (st) => numero(st.ganados, 0) >= 5 },
+  { id: "premio", t: "Gana un reconocimiento", ok: (st) => Array.isArray(st.premios) && st.premios.length > 0 },
+  { id: "indep", t: "Junta la mitad de tu independencia", ok: (st, x) => numero(x && x.gasto, 0) > 0 && numero(x && x.pat, 0) >= x.gasto * 25 * 0.5 },
+  { id: "firma", t: "Monta algo propio", ok: (st) => !!(st.propia || st.startup) },
+];
+const IDS_OBJ_DIA = OBJETIVOS_DIA.map((o) => o.id);
+const eleccionDelDia = (fecha) => {
+  const rnd = generadorDe("dia:" + fecha);
+  const ed = EDADES[Math.floor(rnd() * EDADES.length)] || EDADES[0];
+  const na = NACIONES[Math.floor(rnd() * NACIONES.length)] || NACIONES[0];
+  const ca = CARRERAS[Math.floor(rnd() * CARRERAS.length)] || CARRERAS[0];
+  return { edad: ed.e, pais: na.id, estudio: ca.id };
+};
+const objetivosDelDia = (fecha) => {
+  const rnd = generadorDe("objetivos:" + fecha);
+  const pozo = IDS_OBJ_DIA.slice();
+  const out = [];
+  while (out.length < 3 && pozo.length) out.push(pozo.splice(Math.floor(rnd() * pozo.length), 1)[0]);
+  return out;
+};
+/* { fecha, hechos: [bool, bool, bool], p } o null */
+const leerDia = () => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return null;
+    const d = JSON.parse(window.localStorage.getItem(CLAVE_DIA) || "null");
+    if (!d || !esFecha(d.fecha) || !Array.isArray(d.hechos)) return null;
+    return { fecha: d.fecha, hechos: d.hechos.slice(0, 3).map((x) => x === true), p: Math.round(numero(d.p, 0)) };
+  } catch (e) { return null; }
+};
+const anotarDia = (d) => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return;
+    window.localStorage.setItem(CLAVE_DIA, JSON.stringify(d));
+  } catch (e) { /* sin almacén, la portada no recuerda que ya jugaste: no es grave */ }
+};
+/* qué objetivos del día se cumplieron, en el orden en que se mostraron */
+const hechosDelDia = (st, x) => (st && Array.isArray(st.objDia) ? st.objDia : []).map((id) => {
+  const o = OBJETIVOS_DIA.find((y) => y.id === id);
+  try { return !!(o && o.ok(st, x)); } catch (e) { return false; }
+});
 const VERSION = 5;
 
 const SAL = "el-analista-v5-firma";
@@ -48181,6 +48262,10 @@ const sanear = (bruto) => {
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
   /* la semilla de la pretemporada; un guardado viejo cae en 0 y sigue jugable */
   st.semilla = entero(r.semilla, 0, 0, 2e9);
+  /* la carrera del día: su fecha, sus tres objetivos y los minijuegos ganados */
+  st.dia = esFecha(r.dia) ? r.dia : null;
+  st.objDia = st.dia ? unicos(listaDe(r.objDia, (x) => IDS_OBJ_DIA.indexOf(x) >= 0, 3)) : [];
+  st.ganados = entero(r.ganados, 0, 0, 999);
   st.contrato = (r.contrato && typeof r.contrato === "object")
     ? { anos: entero(r.contrato.anos, 3, 1, 10), desde: entero(r.contrato.desde, 0, 0, 60) }
     : null;
@@ -52170,6 +52255,26 @@ function Motor() {
   const [elec, setElec] = useState(SETUP0);
   const aceptarAviso = () => { anotarAviso(); irA("portada"); };
 
+  /* la carrera del día: lo que ya jugaste hoy y cuánto falta para la próxima */
+  const [diaHecho, setDiaHecho] = useState(leerDia);
+  const [faltaMs, setFaltaMs] = useState(msHastaManana);
+  useEffect(() => {
+    if (fase !== "portada") return;
+    setFaltaMs(msHastaManana());
+    const t = setInterval(() => setFaltaMs(msHastaManana()), 1000);
+    return () => clearInterval(t);
+  }, [fase]);
+  /* al terminar la del día, queda anotado cómo te fue para la portada */
+  useEffect(() => {
+    if (fase !== "fin" || !s || !s.dia) return;
+    try {
+      const x = { pat: patrimonioDe(s), gasto: gastoAnual(s) };
+      const d = { fecha: s.dia, hechos: hechosDelDia(s, x), p: Math.round(x.pat) };
+      anotarDia(d);
+      setDiaHecho(d);
+    } catch (e) { /* si algo no cuadra, la portada simplemente no lo recuerda */ }
+  }, [fase]);
+
   const elige = (campo, valor, siguiente) => {
     setElec((x) => ({ ...x, [campo]: valor }));
     irA(siguiente);
@@ -52457,6 +52562,9 @@ function Motor() {
   const arrancarAno = (st) => {
     hitosAno.current = [];
     try { patAno.current = patrimonioDe(st); } catch (e) { patAno.current = null; }
+    /* En la del día, cada año se siembra con la fecha y el año: las mismas
+       decisiones traen los mismos acontecimientos para todo el mundo. */
+    if (st.dia) sembrarAzar(st.dia + ":" + st.turno); else soltarAzar();
     let lista = [];
     try { lista = generarAno(st) || []; } catch (e) { lista = []; }
     lista = lista.filter(escenaValida);
@@ -52502,8 +52610,11 @@ function Motor() {
       titulares: [], vistos: [], histo: [], lecs: [],
     };
     st.modo = MODO(sel.modo).id;
-    /* de esta semilla salen las cartas de pretemporada de cada año */
-    st.semilla = Math.floor(azar() * 2e9);
+    /* de esta semilla salen las cartas de pretemporada de cada año; en la
+       del día sale de la fecha, para que todos vean las mismas cartas */
+    st.dia = esFecha(sel.dia) ? sel.dia : null;
+    st.objDia = st.dia ? objetivosDelDia(st.dia) : [];
+    st.semilla = st.dia ? hashTexto("semilla:" + st.dia) % 2000000000 : Math.floor(azar() * 2e9);
     st.nombre = saneaNombre(sel.nombre);
     st.genero = GENEROS.some((g) => g.id === sel.genero) ? sel.genero : null;
     st.guia = sel.guia === true;
@@ -52570,6 +52681,26 @@ function Motor() {
     setS({ ...BASE, pesos: { ...PERFILES[0].w }, perks: [], bienes: [], valores: {}, titulares: [], vistos: [], histo: [], lecs: [] });
     setElec(SETUP0);
     setFin(null); setRes(null); setCierre(null); setTab(null); irA("identidad");
+  };
+
+  /* La del día arranca directo: la fecha ya eligió edad, país y carrera. */
+  const jugarDelDia = () => {
+    if (!enFase("portada")) return;
+    const f = fechaHoy();
+    tirarPartida();
+    setFin(null); setRes(null); setCierre(null); setTab(null);
+    arrancarPartida({ ...SETUP0, ...eleccionDelDia(f), dia: f });
+  };
+
+  /* «Al azar»: lo pidió Alessandro de vuelta el 7-oct-2026, después de
+     quitarlo el 28-sep. Con tu nombre, y el resto lo elige el juego. */
+  const alAzar = () => {
+    if (!enFase("identidad")) return;
+    soltarAzar();   /* si venías de la del día, este sorteo no puede salir igual que el de todos */
+    const ed = elegirAzar(EDADES) || EDADES[0];
+    const na = elegirAzar(NACIONES) || NACIONES[0];
+    const ca = elegirAzar(CARRERAS) || CARRERAS[0];
+    arrancarPartida({ ...elec, edad: ed.e, pais: na.id, estudio: ca.id });
   };
 
   /* el rastro de lo ya elegido, para que se vea qué hay detrás del Atrás */
@@ -52761,6 +52892,8 @@ function Motor() {
     const nivel = nivelBruto === "exito" || nivelBruto === "parcial" || nivelBruto === "fallo" ? nivelBruto : "parcial";
     let st = { ...s, valores: { ...s.valores } };
     const cambios = [];
+    /* los minijuegos ganados: uno de los objetivos del día los cuenta */
+    if (nivel === "exito" && o && (o.j || o.juego)) st.ganados = entero(numero(st.ganados, 0) + 1, 0, 0, 999);
     if (o && o.ramaId) st.rama = o.ramaId;
     if (o && o.firmaPropia && !st.propia) {
       const f = FIRMA_DE(st);
@@ -53773,6 +53906,45 @@ function Motor() {
             <div><div className="ea-cifraK">Los imprevistos</div><div className="ea-cifraV ea-dis">Crisis, familia y fraudes</div>
               <div className="ea-cifraD">Mercados que caen, decisiones de pareja e hijos, y ofertas demasiado buenas.</div></div>
           </div>
+          {/* La carrera del día: la misma para todos hoy, con tres objetivos
+              y una cuenta atrás. Es la razón para volver mañana. */}
+          {(() => {
+            const f = fechaHoy();
+            const e = eleccionDelDia(f);
+            const na = NACIONES.find((x) => x.id === e.pais) || NACIONES[0];
+            const ca = CARRERAS.find((x) => x.id === e.estudio) || CARRERAS[0];
+            const obs = objetivosDelDia(f).map((id) => OBJETIVOS_DIA.find((o) => o.id === id)).filter(Boolean);
+            const hecho = diaHecho && diaHecho.fecha === f ? diaHecho : null;
+            return (
+              <div className="ea-dia">
+                <div className="ea-diaTop ea-dis">
+                  <span>Carrera del día</span>
+                  <span className="ea-mono">Cambia en {cuentaRegresiva(faltaMs)}</span>
+                </div>
+                <div className="ea-diaQuien ea-dis">{e.edad} años · {na.n} · {ca.n}</div>
+                <div className="ea-diaObjs">
+                  {obs.map((o, i) => (
+                    <div key={o.id} className="ea-diaObj">
+                      <span>{hecho ? (hecho.hechos[i] ? "✅" : "❌") : "◻️"}</span> {o.t}
+                    </div>
+                  ))}
+                </div>
+                {hecho && (
+                  <div className="ea-itemD">
+                    Hoy ya la jugaste: {hecho.hechos.filter(Boolean).length} de 3, con USD {fmt(hecho.p)}. Puedes intentarlo otra vez.
+                  </div>
+                )}
+                <button className="ea-jugarYa ea-dis" style={{ marginTop: 12 }} onClick={jugarDelDia}>
+                  {hecho ? "Volver a jugar la del día" : "Jugar la del día"}
+                </button>
+                {guardado && (
+                  <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 8 }}>
+                    Empezar la del día borra tu partida guardada.
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           {guardado ? (
             <div>
               <div className="ea-guarda">
@@ -53795,9 +53967,8 @@ function Motor() {
             </div>
           ) : (
             <div>
-              {/* Una sola entrada: «Jugar ya» abre la configuración (nombre,
-                  edad, duración, país, carrera). Hubo un atajo que lo elegía
-                  todo al azar; se quitó el 28-sep-2026 a pedido de Alessandro. */}
+              {/* «Jugar ya» abre la configuración (nombre, edad, país,
+                  carrera). El atajo «Al azar» vive en el primer paso. */}
               <button className="ea-jugarYa ea-dis" onClick={empezar}>Jugar ya</button>
             </div>
           )}
@@ -53839,6 +54010,9 @@ function Motor() {
           <button className="ea-btnO" style={{ marginTop: 0 }}
             onClick={() => { if (enFase("identidad")) irA("edad"); }}>
             {elec.nombre.trim() ? "Seguir como " + elec.nombre.trim() : "Seguir sin nombre"}
+          </button>
+          <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }} onClick={alAzar}>
+            🎲 Al azar: que el juego elija edad, país y carrera
           </button>
         </div>
       )}
@@ -55216,6 +55390,21 @@ function Motor() {
               <div className="ea-cifraV ea-mono">USD {fmt(gastosAnuales)} al año</div>
             </div>
           </div>
+
+          {s.dia && (() => {
+            const h = hechosDelDia(s, { pat: patrimonio, gasto: gastosAnuales });
+            return (
+              <div className="ea-dia" style={{ marginTop: 22 }}>
+                <div className="ea-diaTop ea-dis"><span>Carrera del día · {s.dia}</span><span>{h.filter(Boolean).length} de 3</span></div>
+                <div className="ea-diaObjs">
+                  {s.objDia.map((id, i) => {
+                    const o = OBJETIVOS_DIA.find((y) => y.id === id);
+                    return o ? <div key={id} className="ea-diaObj"><span>{h[i] ? "✅" : "❌"}</span> {o.t}</div> : null;
+                  })}
+                </div>
+              </div>
+            );
+          })()}
 
           <CaminoFinal s={s} />
 
