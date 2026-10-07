@@ -51718,6 +51718,69 @@ const enSurEconomics = () => {
    un formulario: el jugador no tiene que copiar nada a mano.
    onAnotada avisa al padre para que repinte el registro: la lista nueva
    ya esta en window.__REGISTRO, pero nadie lo vuelve a leer solo. */
+/* ============================================================
+   COMPARTIR
+   El final no se podía enseñar a nadie. Un apodo según lo que más
+   trabajaste, las cifras que importan y, si fue la del día, la fila de
+   casillas: lo justo para que otro quiera jugarla.
+   ============================================================ */
+const APODOS = {
+  mod: "La planilla perfecta", cri: "Ojo para la crisis", red: "Agenda infinita",
+  rep: "Palabra de oro", ene: "Motor inagotable",
+};
+const apodoDe = (st) => {
+  const k = ["cri", "mod", "red", "rep", "ene"].reduce((a, x) => (numero(st && st[x], 0) > numero(st && st[a], 0) ? x : a), "cri");
+  const base = APODOS[k];
+  if (!(st && (st.propia || st.startup))) return base;
+  const pre = st.genero === "f" ? "Dueña de su firma" : st.genero === "m" ? "Dueño de su firma" : "Con firma propia";
+  return pre + " · " + base;
+};
+const textoCompartir = (st, pat, hechos) => {
+  const lineas = [
+    "El Analista · " + cargoDe(st) + " a los " + edad(st.turno, st.edadIni),
+    "USD " + fmt(pat) + " · «" + apodoDe(st) + "»",
+  ];
+  if (st && st.dia && Array.isArray(hechos)) {
+    lineas.push("Carrera del día " + st.dia + ": " + hechos.map((h) => (h ? "✅" : "❌")).join(""));
+  }
+  lineas.push("Juega en sureconomics.com/el-analista");
+  return lineas.join("\n");
+};
+function BotonCompartir({ texto: t }) {
+  /* null · compartido · copiado · manual */
+  const [estado, setEstado] = useState(null);
+  const vivo = useRef(true);
+  useEffect(() => () => { vivo.current = false; }, []);
+  const compartir = async () => {
+    const nav = typeof navigator !== "undefined" ? navigator : null;
+    try {
+      if (nav && typeof nav.share === "function") {
+        await nav.share({ text: t });
+        if (vivo.current) setEstado("compartido");
+        return;
+      }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    try {
+      if (nav && nav.clipboard && typeof nav.clipboard.writeText === "function") {
+        await nav.clipboard.writeText(t);
+        if (vivo.current) setEstado("copiado");
+        return;
+      }
+    } catch (e) { /* sin permiso para copiar: queda el texto a la vista */ }
+    if (vivo.current) setEstado("manual");
+  };
+  return (
+    <div style={{ marginTop: 18 }}>
+      <button className="ea-btnO" style={{ marginTop: 0 }} onClick={compartir}>Compartir mi carrera</button>
+      {estado === "copiado" && <div className="ea-itemD">Copiado. Pégalo donde quieras.</div>}
+      {estado === "manual" && (
+        <textarea className="ea-campo" readOnly rows={5} value={t} aria-label="Texto para compartir"
+          style={{ width: "100%", marginTop: 8 }} onFocus={(e) => { try { e.target.select(); } catch (err) {} }} />
+      )}
+    </div>
+  );
+}
+
 function BotonAnotar({ entrada, onAnotada }) {
   const [puede, setPuede] = useState(null);      /* null = comprobando */
   const [estado, setEstado] = useState("listo"); /* listo · enviando · hecho · error · sin-sesion */
@@ -55417,6 +55480,9 @@ function Motor() {
             m: (Array.isArray(s.premios) ? s.premios : []).length,
             v: texto(veredicto && veredicto.t, 60),
           }} onAnotada={() => setVueltaRegistro((v) => v + 1)} />
+
+          <BotonCompartir texto={textoCompartir(s, patrimonio,
+            s.dia ? hechosDelDia(s, { pat: patrimonio, gasto: gastosAnuales }) : null)} />
 
           <div className="ea-panel" style={{ marginTop: 16, textAlign: "left" }}>
             <PanelRegistro tope={20} titulo="El registro, por patrimonio" />
