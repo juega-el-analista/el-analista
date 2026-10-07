@@ -1,0 +1,1067 @@
+[
+ {
+  "id": 1,
+  "titulo": "Un DCF para mañana a las ocho",
+  "texto": "Once de la noche. El VP deja una carpeta encima de tu teclado y dice que el cliente quiere el modelo antes del desayuno.",
+  "cargo": [
+   0,
+   2
+  ],
+  "empleado": true,
+  "opciones": [
+   "Amanecerte y entregarlo impecable",
+   "Armarlo rápido y confiar en tu ojo",
+   "Pedir ayuda y repartir el trabajo"
+  ]
+ },
+ {
+  "id": 2,
+  "titulo": "El error ya salió por correo",
+  "texto": "El modelo que se envió al cliente tiene la deuda neta mal sumada. La diferencia mueve el equity value casi 10%.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Avisar de inmediato, aunque duela",
+   "Encontrar todos los errores antes de que los encuentren ellos"
+  ]
+ },
+ {
+  "id": 3,
+  "titulo": "Café con el socio",
+  "texto": "El socio director te encuentra en la cafetería y se sienta contigo. Tienes doce minutos de su atención completa.",
+  "cargo": [
+   0,
+   2
+  ],
+  "empleado": true,
+  "opciones": [
+   "Preguntarle por el negocio y escuchar",
+   "Soltarle una idea de originación tuya"
+  ]
+ },
+ {
+  "id": 4,
+  "titulo": "Certificación de por medio",
+  "texto": "Se abre la inscripción. Cuesta plata, quita fines de semana y no garantiza nada.",
+  "cargo": [
+   0,
+   4
+  ],
+  "empleado": false,
+  "opciones": [
+   "Inscribirte y estudiar en serio",
+   "Saltarlo, tu escuela es la mesa"
+  ]
+ },
+ {
+  "id": 5,
+  "titulo": "Cierre de operación, fiesta en el bar",
+  "texto": "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Ir y quedarte hasta el final",
+   "Aparecerte una hora y dormir",
+   "Quedarte a adelantar el próximo pitch"
+  ]
+ },
+ {
+  "id": 6,
+  "titulo": "El data room es un desastre",
+  "texto": "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
+  "cargo": [
+   0,
+   2
+  ],
+  "empleado": true,
+  "opciones": [
+   "Armar un índice maestro que sirva a todos",
+   "Revisar solo lo que te pidieron"
+  ]
+ },
+ {
+  "id": 7,
+  "titulo": "Te llama un headhunter",
+  "texto": "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
+  "cargo": [
+   1,
+   4
+  ],
+  "empleado": true,
+  "opciones": [
+   "Aceptar y mudarte de firma",
+   "Usarla para negociar donde estás",
+   "Decir que no y contarlo abiertamente"
+  ]
+ },
+ {
+  "id": 8,
+  "titulo": "Un rumor que vale plata",
+  "texto": "Escuchas en un pasillo que una empresa listada recibirá una oferta el mes que viene. Tu cuenta personal está a un clic.",
+  "cargo": [
+   0,
+   4
+  ],
+  "empleado": false,
+  "opciones": [
+   "No tocar nada y anotarlo en el registro",
+   "Comprar una posición pequeña"
+  ]
+ },
+ {
+  "id": 9,
+  "titulo": "Cien mensajes en frío",
+  "texto": "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
+  "cargo": [
+   1,
+   4
+  ],
+  "empleado": false,
+  "opciones": [
+   "Armar la base y escribir todos los días",
+   "Enfocarte en diez contactos bien elegidos"
+  ]
+ },
+ {
+  "id": 10,
+  "titulo": "El teaser que vuelve marcado",
+  "texto": "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Rehacerlo entero y aprender el formato",
+   "Defender los puntos que no compartes"
+  ]
+ },
+ {
+  "id": 11,
+  "titulo": "Media hora antes del cierre",
+  "texto": "El mercado cierra en treinta minutos y tienes una orden a medio ejecutar en tu cuenta personal.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Ejecutar tú mismo en el momento justo",
+   "Dejar una orden limitada y apagar todo"
+  ]
+ },
+ {
+  "id": 12,
+  "titulo": "Ruido en la pantalla",
+  "texto": "Seis titulares en una hora y tu portafolio reaccionando a cada uno. Alguien tiene que decidir qué es señal y qué es ruido.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Operar cada señal en el momento",
+   "Cerrar la pantalla y no hacer nada"
+  ]
+ },
+ {
+  "id": 13,
+  "titulo": "Roadshow de tres ciudades",
+  "texto": "Bogotá el lunes, Asunción el miércoles, Buenos Aires el viernes. Ocho reuniones con fondos.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Ir a todo y preparar cada reunión",
+   "Mandar a tu asociado a una de las plazas",
+   "Hacerlo por videollamada"
+  ]
+ },
+ {
+  "id": 14,
+  "titulo": "Tu mejor analista renuncia",
+  "texto": "Se va a un fondo. Te lo dice con dos semanas de aviso y cara de culpa.",
+  "cargo": [
+   3,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Desearle bien y mantener el puente",
+   "Contraofertar y retenerlo"
+  ]
+ },
+ {
+  "id": 15,
+  "titulo": "Te ofrecen una silla en el board",
+  "texto": "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
+  "cargo": [
+   4,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Aceptar y tomarlo en serio",
+   "Declinar por conflicto de interés"
+  ]
+ },
+ {
+  "id": 16,
+  "titulo": "Tu primo y la cripto del momento",
+  "texto": "Insiste todos los días. Dice que esta vez es distinto y que ya subió 300%.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Meter una parte que puedas perder",
+   "Explicarle por qué no"
+  ]
+ },
+ {
+  "id": 17,
+  "titulo": "El cuerpo pasa factura",
+  "texto": "Dolor de espalda, sueño malo, tres cafés antes del mediodía. El médico te da una lista de cosas que no vas a hacer.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Bloquear una hora diaria y cumplirla",
+   "Ignorarlo, ya habrá tiempo"
+  ]
+ },
+ {
+  "id": 18,
+  "titulo": "La boda es el mismo fin de semana del pitch",
+  "texto": "Tu mejor amigo se casa el sábado. El pitch al comité es el lunes a primera hora.",
+  "cargo": [
+   0,
+   5
+  ],
+  "empleado": false,
+  "opciones": [
+   "Ir a la boda y preparar el domingo",
+   "Mandar un regalo y quedarte trabajando"
+  ]
+ },
+ {
+  "id": 19,
+  "titulo": "Prensa al teléfono",
+  "texto": "Un periodista quiere una cita tuya sobre el sector. Tu firma no tiene política clara al respecto.",
+  "cargo": [
+   1,
+   5
+  ],
+  "empleado": false,
+  "opciones": [
+   "Hablar solo de datos públicos",
+   "Aceptar la entrevista técnica en vivo",
+   "Declinar y pasarlo al socio"
+  ]
+ },
+ {
+  "id": 20,
+  "titulo": "Alguien se cuelga de tu trabajo",
+  "texto": "Un colega presenta al comité el análisis que armaste tú, sin mencionarte.",
+  "cargo": [
+   1,
+   4
+  ],
+  "empleado": true,
+  "opciones": [
+   "Hablarlo con él, en privado y directo",
+   "Escalarlo al socio",
+   "Dejarlo pasar y anotarlo"
+  ]
+ },
+ {
+  "id": 21,
+  "titulo": "Llega el bono",
+  "texto": "Sobre encima del escritorio. Menos de lo que esperabas y más de lo que temías.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": true,
+  "opciones": [
+   "Mandarlo casi todo al portafolio",
+   "Repartir entre disfrute y ahorro"
+  ]
+ },
+ {
+  "id": 22,
+  "titulo": "Fusión de tu firma",
+  "texto": "Anuncian la integración con una casa regional. Reorganizan equipos en sesenta días.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": true,
+  "opciones": [
+   "Posicionarte temprano con los que llegan",
+   "Bajar la cabeza y ejecutar"
+  ]
+ },
+ {
+  "id": 23,
+  "titulo": "Devaluación de la noche a la mañana",
+  "texto": "El tipo de cambio se mueve 40%. La mitad de tus supuestos quedaron viejos.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Rehacer los modelos en dólares esa misma semana",
+   "Esperar a que se estabilice"
+  ]
+ },
+ {
+  "id": 24,
+  "titulo": "Enseñarle al pasante nuevo",
+  "texto": "Llega alguien que no sabe usar buscarv y tiene todas las ganas del mundo.",
+  "cargo": [
+   0,
+   2
+  ],
+  "empleado": false,
+  "opciones": [
+   "Dedicarle dos horas por semana",
+   "Que aprenda como aprendiste tú"
+  ]
+ },
+ {
+  "id": 25,
+  "titulo": "Un amigo levanta capital",
+  "texto": "Su startup necesita cierre y te ofrece entrar en la ronda como ángel.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Invertir un ticket que puedas perder",
+   "Revisarle el modelo antes de decidir",
+   "No invertir y seguir siendo su amigo"
+  ]
+ },
+ {
+  "id": 26,
+  "titulo": "Comité de crédito difícil",
+  "texto": "Defiendes una estructura de factoring sobre un sector volátil. Dos miembros vienen buscando sangre.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Responder con los números en la cabeza",
+   "Retirar el caso y volver el mes que viene"
+  ]
+ },
+ {
+  "id": 27,
+  "titulo": "Reunión con la familia dueña",
+  "texto": "Tres hermanos, una empresa y ninguna intención de estar de acuerdo entre ellos.",
+  "cargo": [
+   1,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Aguantar el pulso y buscar el punto medio",
+   "Mandar una propuesta por escrito y esperar"
+  ]
+ },
+ {
+  "id": 28,
+  "titulo": "Un cliente grande aprieta",
+  "texto": "Amenaza con llevarse la cuenta si no aceptas un fee contingente que castiga a tu equipo.",
+  "cargo": [
+   3,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Sostener el esquema de honorarios",
+   "Negociar un esquema mixto",
+   "Ceder para proteger la facturación"
+  ]
+ },
+ {
+  "id": 29,
+  "titulo": "Auditoría interna sobre tus expedientes",
+  "texto": "Revisan al azar cinco mandatos tuyos, papel por papel.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Reconstruir la cronología completa",
+   "Pedir tiempo para ordenar antes de entregar"
+  ]
+ },
+ {
+  "id": 30,
+  "titulo": "Corrección fuerte en la pantalla",
+  "texto": "El mercado abre 20% abajo. El teléfono no para y tu portafolio personal amanece flaco.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Comprar la caída en tramos",
+   "No mirar la pantalla en un mes",
+   "Vender y refugiarte en efectivo"
+  ]
+ },
+ {
+  "id": 31,
+  "titulo": "Un fondo pide condiciones aparte",
+  "texto": "Quiere una side letter con derechos que los demás inversionistas no tendrán.",
+  "cargo": [
+   4,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Negarte y ofrecer los mismos términos a todos",
+   "Concederlo y documentarlo con transparencia"
+  ]
+ },
+ {
+  "id": 32,
+  "titulo": "Te piden explicar la cascada",
+  "texto": "Un LP nuevo no entiende cómo se reparte la plata y quiere que se lo expliques en voz alta.",
+  "cargo": [
+   1,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Explicárselo paso por paso",
+   "Mandarle el documento y que lo lea"
+  ]
+ },
+ {
+  "id": 33,
+  "titulo": "Dos ofertas sobre la mesa",
+  "texto": "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Ordenar los criterios y decidir con método",
+   "Ir por el precio más alto y punto"
+  ]
+ },
+ {
+  "id": 34,
+  "titulo": "Alguien de la mesa te pregunta qué harías",
+  "texto": "Sin contexto, sin archivo, sin tiempo. Solo la pregunta y seis pares de ojos esperando.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Contestar en el momento",
+   "Pedir el archivo y contestar después"
+  ]
+ },
+ {
+  "id": 40,
+  "titulo": "Una sesión larga frente a la pantalla",
+  "texto": "Tienes el día libre y una cuenta propia. El mercado abre en cinco minutos y la tentación es operarlo todo.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Operar la sesión completa",
+   "Comprar y apagar la pantalla"
+  ]
+ },
+ {
+  "id": 41,
+  "titulo": "Un cliente quiere comprar apalancado",
+  "texto": "El comprador tiene el activo identificado y quiere saber cuánta deuda le puede meter sin ahorcarse.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Armarle la estructura tú mismo",
+   "Mandarlo con el banco y quedarte fuera"
+  ]
+ },
+ {
+  "id": 42,
+  "titulo": "Ocho hallazgos sobre la mesa",
+  "texto": "El equipo junior te deja una lista de hallazgos de la revisión. Tienes que decidir cuáles suben al comité y cuáles son ruido.",
+  "cargo": [
+   1,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Filtrar tú los hallazgos",
+   "Subirlos todos al comité"
+  ]
+ },
+ {
+  "id": 43,
+  "titulo": "Te ofrecen invertir junto a un fondo",
+  "texto": "Un fondo amigo te deja entrar en coinversión con un ticket pequeño. Hay que revisar la compañía rápido.",
+  "cargo": [
+   3,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Revisar y decidir tú",
+   "Entrar confiando en el fondo"
+  ]
+ },
+ {
+  "id": 50,
+  "titulo": "Una cláusula que nadie leyó",
+  "texto": "El contrato de compraventa trae una cláusula de ajuste de precio redactada de una forma que no cuadra con lo que se negoció.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Leerla tú y reescribirla  [solo der]",
+   "Mandarla a los abogados y esperar",
+   "Firmarla como está"
+  ]
+ },
+ {
+  "id": 51,
+  "titulo": "El modelo se rompió",
+  "texto": "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Escribir un script que lo reconstruya  [solo sis]",
+   "Rehacerlo a mano desde cero",
+   "Entregar la versión vieja"
+  ]
+ },
+ {
+  "id": 52,
+  "titulo": "Cierre contable de la compañía objetivo",
+  "texto": "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Revisar los ajustes uno por uno  [solo con]",
+   "Pedir los estados auditados y esperar",
+   "Trabajar con el EBITDA ajustado que te dieron"
+  ]
+ },
+ {
+  "id": 53,
+  "titulo": "La pregunta de macro en la entrevista",
+  "texto": "Te preguntan qué pasa con el tipo de cambio si el banco central sube tasas y el fiscal sigue deficitario.",
+  "cargo": [
+   0,
+   4
+  ],
+  "empleado": false,
+  "opciones": [
+   "Desarrollarla con el marco completo  [solo eco]",
+   "Contestar con intuición de mercado",
+   "Admitir que no lo tienes claro"
+  ]
+ },
+ {
+  "id": 54,
+  "titulo": "Controles de cambio de un día para otro",
+  "texto": "Amaneces con un control cambiario nuevo. Tus ahorros están en moneda local y el dólar oficial no existe en la práctica.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Moverlo todo antes del mediodía",
+   "Esperar a que se aclare la norma",
+   "Consultarlo con un abogado"
+  ]
+ },
+ {
+  "id": 55,
+  "titulo": "Te ofrecen una visa de trabajo",
+  "texto": "Una firma de Miami quiere contratarte. Sueldo en otra escala, costo de vida en otra escala y tu red se queda del otro lado del mar.",
+  "cargo": [
+   1,
+   6
+  ],
+  "empleado": true,
+  "opciones": [
+   "Aceptar y mudarte",
+   "Quedarte donde tu red vale algo"
+  ]
+ },
+ {
+  "id": 56,
+  "titulo": "Un socio del club te presenta a alguien",
+  "texto": "Cena de doce personas, todos con capital. La conversación es informal hasta que deja de serlo.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Aprovechar que conoces a media sala  [solo adm]",
+   "Quedarte con una conversación larga y buena",
+   "Irte temprano"
+  ]
+ },
+ {
+  "id": 60,
+  "titulo": "La pizarra del comité",
+  "texto": "El socio borra el pizarrón y escribe seis conceptos con sus definiciones cruzadas. Dice que si no los tienes automatizados, no puedes hablar en una reunión.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": true,
+  "opciones": [
+   "Resolverla en el momento",
+   "Pedir estudiarlo y volver mañana"
+  ]
+ },
+ {
+  "id": 61,
+  "titulo": "Rotar entre activos",
+  "texto": "Tienes un año movido por delante y la sensación de que quedarte quieto en una sola clase de activo es dejar plata en la mesa.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Rotar activamente durante el año",
+   "Quedarte quieto donde estás"
+  ]
+ },
+ {
+  "id": 62,
+  "titulo": "El tablero de la negociación",
+  "texto": "Cuatro sesiones de negociación, cada una con concesiones que se acumulan. Quien controle el centro del tablero al final se lleva los términos.",
+  "cargo": [
+   1,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Sentarte tú a llevar el tablero",
+   "Mandar la propuesta cerrada y no negociar"
+  ]
+ },
+ {
+  "id": 63,
+  "titulo": "Cuatro postores por el mismo activo",
+  "texto": "Sala llena, sobre cerrado y nadie sabe con certeza cuánto vale la compañía. Tu estimación es solo eso, una estimación.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Entrar a la puja",
+   "Quedarte fuera y esperar el próximo proceso"
+  ]
+ },
+ {
+  "id": 940,
+  "titulo": "Media hora antes de que llegue todo el mundo",
+  "texto": "Llegas temprano y tienes la oficina para ti. Puedes adelantar el modelo que te pidieron para el viernes o abrir el manual que llevas semanas sin tocar.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Sentarte a estudiar un tema a fondo",
+   "Adelantar el trabajo del viernes"
+  ]
+ },
+ {
+  "id": 941,
+  "titulo": "La certificación",
+  "texto": "El equipo paga la mitad de un programa de formación. Son seis meses de clases los sábados y un examen que reprueba a la mitad.",
+  "cargo": [
+   1,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Presentarte al examen",
+   "Este año no, ya vas ahogado"
+  ]
+ },
+ {
+  "id": 942,
+  "titulo": "Te toca explicarlo tú",
+  "texto": "El socio te pide que le expliques a los pasantes cómo funciona lo que el equipo hace todos los días. No hay mejor forma de descubrir lo que no entiendes que tener que explicarlo.",
+  "cargo": [
+   2,
+   4
+  ],
+  "empleado": true,
+  "opciones": [
+   "Preparártelo en serio y darlo tú",
+   "Pasárselo a otro del equipo"
+  ]
+ },
+ {
+  "id": 943,
+  "titulo": "Alguien te pregunta algo básico",
+  "texto": "Un amigo fuera del sector te pregunta dónde debería meter sus ahorros. Te das cuenta a media frase de que no sabes explicarlo sin usar palabras que él no entiende.",
+  "cargo": [
+   0,
+   4
+  ],
+  "empleado": false,
+  "opciones": [
+   "Repasarlo hasta poder explicarlo en cristiano",
+   "Mandarle el nombre de un fondo y ya"
+  ]
+ },
+ {
+  "id": 950,
+  "titulo": "Tres carpetas y un solo cheque",
+  "texto": "El comité tiene capital para una operación y tres candidatas sobre la mesa. Cada una brilla por un lado distinto y falla por otro. Te piden la recomendación.",
+  "cargo": [
+   3,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Estudiar los tres negocios y recomendar uno",
+   "Decir que ninguno vale la pena"
+  ]
+ },
+ {
+  "id": 951,
+  "titulo": "El nuevo analista quiere aprender",
+  "texto": "El más joven del equipo te pregunta cómo se sabe si un negocio es bueno. Lo más rápido es enseñárselo con tres carpetas encima de la mesa.",
+  "cargo": [
+   4,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Sentarte con él y decidir juntos",
+   "Mandarle un libro y volver a lo tuyo"
+  ]
+ },
+ {
+  "id": 101,
+  "titulo": "La cifra que va en la portada",
+  "texto": "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Calzar el precio con la señal del comprador",
+   "Blindar el modelo celda por celda"
+  ]
+ },
+ {
+  "id": 102,
+  "titulo": "Tres días de due diligence",
+  "texto": "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
+  "cargo": [
+   0,
+   3
+  ],
+  "empleado": false,
+  "opciones": [
+   "Peinar el legajo completo en orden",
+   "Ir directo a los números que suelen fallar"
+  ]
+ },
+ {
+  "id": 103,
+  "titulo": "Negociación de honorarios",
+  "texto": "El cliente quiere pagar por éxito y nada por retainer. Tu equipo trabaja ocho meses en cualquier escenario.",
+  "cargo": [
+   1,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Anclar alto y ceder despacio",
+   "Poner una sola cifra y sostenerla"
+  ]
+ },
+ {
+  "id": 104,
+  "titulo": "La posición que ya dio mucho",
+  "texto": "Una posición de tu portafolio va 70% arriba. Todos los indicadores dicen cosas distintas.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Aguantar y dejar correr",
+   "Salir por tramos con disciplina"
+  ]
+ },
+ {
+  "id": 105,
+  "titulo": "Comité de crédito",
+  "texto": "Presentas una estructura sobre facturas de un sector volátil. Dos miembros del comité vienen buscando sangre.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Ir con el análisis de contraparte hecho",
+   "Responder de memoria, sin papeles"
+  ]
+ },
+ {
+  "id": 106,
+  "titulo": "Subasta competitiva",
+  "texto": "Cinco postores, dos rondas. Tu cliente compra y tú decides la estrategia de precio.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Poner precio firme en la primera ronda",
+   "Guardar munición para la segunda vuelta"
+  ]
+ },
+ {
+  "id": 107,
+  "titulo": "El pitch al comité de inversión",
+  "texto": "Veinte minutos, siete personas y una tesis que tienes que defender sin leer la lámina.",
+  "cargo": [
+   1,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Ensayar hasta tenerlo memorizado",
+   "Improvisar sobre los números y cerrar en el punto justo"
+  ]
+ },
+ {
+  "id": 108,
+  "titulo": "Papel distressed a treinta centavos",
+  "texto": "Un bono corporativo cotiza a treinta. La reestructuración puede tardar dos años o no llegar nunca.",
+  "cargo": [
+   3,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Comprar y aguantar hasta el acuerdo",
+   "Armar el caso y venderlo a un fondo"
+  ]
+ },
+ {
+  "id": 109,
+  "titulo": "Auditoría regulatoria sorpresa",
+  "texto": "Llegan sin aviso a revisar expedientes de los últimos dos años. Te toca a ti acompañarlos.",
+  "cargo": [
+   2,
+   4
+  ],
+  "empleado": false,
+  "opciones": [
+   "Reconstruir la trazabilidad de memoria",
+   "Ordenar los expedientes antes de entregarlos"
+  ]
+ },
+ {
+  "id": 110,
+  "titulo": "Fijar el rango de precio de la colocación",
+  "texto": "Sale la emisión. Muy arriba no se coloca, muy abajo dejas plata del cliente en la mesa.",
+  "cargo": [
+   4,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Leer el libro y fijar el punto exacto",
+   "Sondear a los anclas uno por uno"
+  ]
+ },
+ {
+  "id": 111,
+  "titulo": "Primer cierre de tu fondo",
+  "texto": "Tienes la tesis, el track record y una lista de LPs. Falta convencerlos del tamaño del ticket.",
+  "cargo": [
+   4,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Negociar el ticket con el LP ancla",
+   "Aguantar la ronda hasta conseguir el tamaño"
+  ]
+ },
+ {
+  "id": 112,
+  "titulo": "Dos cierres el mismo viernes",
+  "texto": "Dos mandatos firman el mismo día en ciudades distintas. Los dos clientes creen que estás con ellos.",
+  "cargo": [
+   1,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Coordinar los tiempos al minuto",
+   "Delegar uno y jugarte la ejecución del equipo"
+  ]
+ },
+ {
+  "id": 113,
+  "titulo": "Reasignar tu portafolio antes del cierre de año",
+  "texto": "Tienes que decidir dónde queda parado tu patrimonio los próximos doce meses. Nadie va a revisar esto por ti.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Decidir tú, con tesis propia y convicción",
+   "Indexarte y no pensar más en eso"
+  ]
+ },
+ {
+  "id": 114,
+  "titulo": "El director de inversiones del fondo te pone a prueba",
+  "texto": "Los primeros quince minutos son preguntas técnicas. Si pasas, el fondo entra en tu proceso y te deja copiar la posición.",
+  "cargo": [
+   1,
+   4
+  ],
+  "empleado": true,
+  "opciones": [
+   "Entrar al examen sin red",
+   "Llevar a tu jefe y quedarte de apoyo"
+  ]
+ },
+ {
+  "id": 115,
+  "titulo": "Examen de idoneidad del regulador",
+  "texto": "Para firmar operaciones a tu nombre tienes que aprobarlo. Dos intentos y queda en registro público.",
+  "cargo": [
+   2,
+   4
+  ],
+  "empleado": false,
+  "opciones": [
+   "Presentarte y responder tú",
+   "Postergarlo un año más"
+  ]
+ },
+ {
+  "id": 116,
+  "titulo": "Tu propia tesis frente al comité",
+  "texto": "Propones sobreponderar un sector completo. Si te creen y aciertas, todos lo notan. Si te creen y fallas, también.",
+  "cargo": [
+   3,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Defender la tesis con todo el rigor",
+   "Proponerla como piloto pequeño"
+  ]
+ },
+ {
+  "id": 117,
+  "titulo": "El dominó antes del negocio",
+  "texto": "El dueño de la empresa familiar te recibe en su casa y saca la mesa antes de hablar de números. Dice que así conoce a la gente.",
+  "cargo": [
+   0,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Aceptar la partida y jugarla en serio",
+   "Ir directo a la propuesta"
+  ]
+ },
+ {
+  "id": 118,
+  "titulo": "Pulso con el comprador estratégico",
+  "texto": "Del otro lado hay un director de M&A con veinte años más que tú. Cada movimiento suyo busca una concesión tuya.",
+  "cargo": [
+   2,
+   6
+  ],
+  "empleado": false,
+  "opciones": [
+   "Aguantar el pulso movimiento por movimiento",
+   "Llevarlo a un proceso competitivo"
+  ]
+ },
+ {
+  "id": 119,
+  "titulo": "La silla del socio se decide en la mesa",
+  "texto": "Dos candidatos, una sola promoción, y el socio director los invita a jugar mientras conversan. Nadie dice que sea una prueba.",
+  "cargo": [
+   3,
+   6
+  ],
+  "empleado": true,
+  "opciones": [
+   "Jugar y dejar que te lea",
+   "Hablar de tu track record en vez de jugar"
+  ]
+ },
+ {
+  "id": 120,
+  "titulo": "Te ofrecen dirigir la oficina de otro país",
+  "texto": "Tres años afuera, equipo nuevo y un mercado que no conoces. Vuelves con galones o no vuelves.",
+  "cargo": [
+   4,
+   6
+  ],
+  "empleado": true,
+  "opciones": [
+   "Aceptar y armar el equipo desde cero",
+   "Quedarte y consolidar lo que ya tienes"
+  ]
+ }
+]

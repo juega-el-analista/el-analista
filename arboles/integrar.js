@@ -29,6 +29,45 @@ lotes.forEach((n) => {
   (L.finales || []).forEach((f) => todo.finales.push({ id: f.id, huellas: f.huellas, t: f.t, x: f.x }));
   console.log("lote " + n + ": " + (L.escenas || []).length + " escenas, " + Object.keys(L.raices || {}).length + " raíces");
 });
+
+/* ---------- las escenas propias de cada carrera (arboles/carrera_<id>.js) ----------
+   Entran todas las que existan. Sus raíces van a «propias», marcadas con la
+   carrera; sus opciones «solo tú», a «opciones». */
+todo.propias = [];
+todo.opciones = [];
+["eco", "con", "ing", "der", "adm", "sis"].forEach((est) => {
+  const f = path.join(dir, "carrera_" + est + ".js");
+  if (!fs.existsSync(f)) return;
+  delete require.cache[require.resolve(f)];
+  const C = require(f);
+  Object.keys(C.huellas || {}).forEach((k) => {
+    if (todo.huellas[k]) throw new Error("huella repetida: " + k);
+    todo.huellas[k] = C.huellas[k];
+  });
+  (C.propias || []).forEach((e) => {
+    const r = { id: e.id, est, min: e.min, max: e.max, t: e.t, x: e.x, o: e.o };
+    if (e.empleado) r.empleado = true;
+    todo.propias.push(r);
+  });
+  (C.escenas || []).forEach((e) => {
+    if (todo.escenas.some((x) => x.id === e.id)) throw new Error("id repetido: " + e.id);
+    const limpio = { id: e.id, por: e.por, t: e.t, x: e.x, o: e.o, est };
+    if (e.empleado) limpio.empleado = true;
+    todo.escenas.push(limpio);
+  });
+  (C.opciones || []).forEach((o) => todo.opciones.push({ escena: o.escena, est, t: o.t, d: o.d }));
+  (C.finales || []).forEach((x) => todo.finales.push({ id: x.id, huellas: x.huellas, t: x.t, x: x.x }));
+  console.log("carrera " + est + ": " + (C.propias || []).length + " propias, " + (C.escenas || []).length + " consecuencias, " + (C.opciones || []).length + " opciones solo tú");
+});
+/* ---------- parches de la revisión de las carreras ---------- */
+(() => {
+  const propia = (id) => todo.propias.find((e) => e.id === id);
+  /* habla de recursos humanos: da por hecho que tienes jefe */
+  if (propia(22200)) propia(22200).empleado = true;
+  /* tu mayor cliente te pide otro número: solo tiene sentido con tu consultora montada */
+  if (propia(18600)) propia(18600).soloPropia = true;
+})();
+
 /* ---------- parches de la revisión ---------- */
 const escena = (id) => todo.escenas.find((e) => e.id === id);
 /* las que dan por hecho que tienes pareja: solo llegan si la tienes */
@@ -60,5 +99,5 @@ const bloque = "/* @@LOTES@@ */\n/* Generado por arboles/integrar.js desde los l
   + JSON.stringify(todo, null, 1) + ";\n";
 s = s.slice(0, a) + bloque + s.slice(b);
 fs.writeFileSync(JUEGO, s);
-console.log("total: " + todo.escenas.length + " escenas, " + Object.keys(todo.raices).length + " raíces, "
+console.log("total: " + todo.escenas.length + " escenas, " + todo.propias.length + " propias de carrera, " + todo.opciones.length + " opciones solo tú, " + Object.keys(todo.raices).length + " raíces, "
   + Object.keys(todo.huellas).length + " huellas, " + todo.finales.length + " finales");
