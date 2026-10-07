@@ -47321,16 +47321,24 @@ const edad = (t, ini) => entero(ini, 20, 20, 50) + entero(t, 0, 0, 60);
 const esClave = (t) => t % 2 === 1;
 const tiene = (st, id) => st.perks.includes(id);
 
+/* Un fallo devolvía el 30% de lo bueno, y con el texto del éxito: fallar
+   salía casi gratis y nada tenía tensión. Ahora lo bueno no llega, lo
+   malo pega más y queda la marca en la reputación. */
 const escalar = (d, nivel) => {
-  const f = nivel === "exito" ? 1.6 : nivel === "parcial" ? 1 : 0.3;
+  const f = nivel === "exito" ? 1.6 : nivel === "parcial" ? 1 : 0;
   const g = nivel === "fallo" ? 1.6 : 1;
   const out = { ...d };
   ["mod", "cri", "red", "rep", "ene", "car", "cash"].forEach((k) => {
     if (!out[k]) return;
     out[k] = Math.round(out[k] > 0 ? out[k] * f : out[k] * g);
+    if (!out[k]) delete out[k];   /* sin «+0» en la pantalla de resultado */
   });
+  if (nivel === "fallo") out.rep = (out.rep || 0) - 2;
   return out;
 };
+/* el texto de un fallo no puede ser el del éxito */
+const msgFallo = (op) =>
+  "No salió como querías. «" + texto(op && op.t, "La jugada", 80) + "» se te fue de las manos y se notó.";
 
 /* ============================================================
    RECONOCIMIENTOS
@@ -53309,6 +53317,7 @@ function Motor() {
   const finJuego = (nivel) => {
     if (!enFase("minijuego") || !op) return;
     const base = op.res ? op.res[nivel] : escalar(op.d || {}, nivel);
+    if (nivel === "fallo" && !op.res && base) base.msg = msgFallo(op);
     resolverEscena(base || {}, nivel, op);
   };
 

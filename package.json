@@ -26,7 +26,8 @@
     "puertas": "node pruebas/puertas.js 12",
     "caminos": "node pruebas/caminos.js 16",
     "dia": "node pruebas/dia.js",
-    "pretemporada": "node pruebas/pretemporada.js"
+    "pretemporada": "node pruebas/pretemporada.js",
+    "fallo": "node pruebas/fallo.js"
   },
   "devDependencies": {
     "@babel/core": "^7",
