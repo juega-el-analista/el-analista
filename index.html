@@ -1501,13 +1501,13 @@ const JUEGOS = {
     ensena: "En una revisión nadie te señala el error. El número raro está ahí y hay que verlo."
   },
   anclaje: {
-    n: "Anclaje",
+    n: "La negociación",
     tema: "Negociación",
-    dur: "30 s",
-    i: "Hay un rango de acuerdo que no ves. Mueves tu oferta y lees la respuesta.",
-    pasos: ["La contraparte tiene un rango de aceptación oculto.", "Mueves la oferta y te dice si está cerca, lejos o fuera.", "Cierras cuando creas que estás dentro sin haber regalado dinero."],
-    gana: "Cerrar dentro del rango y en el borde que te conviene.",
-    ensena: "El primer número que se pone sobre la mesa ancla toda la conversación que viene después."
+    dur: "3 rondas",
+    i: "Enfrente hay alguien con un carácter que no ves. Léelo por lo que dice y juega tus cartas.",
+    pasos: ["Puede estar apurado, ser duro u orgulloso. Cada ronda dice algo que lo delata, o no.", "Juegas una carta: pedir más, ceder un poco, mostrar la competencia (una vez) o plantarte.", "Cada carta le mueve el precio y la paciencia según quién sea. Sin paciencia, se levanta."],
+    gana: "Cerrar en 68 o más es éxito; desde 52, a medias. Si se levanta, no hay trato.",
+    ensena: "La misma jugada que funciona con uno espanta a otro: negociar es leer a la persona antes que el número."
   },
   suerte: {
     n: "Aguantar la posición",
@@ -1684,8 +1684,8 @@ const gauss = () => {
   let u = 0,
     v = 0,
     vueltas = 0;
-  while (u === 0 && vueltas++ < 12) u = numero(Math.random(), 0.5);
-  while (v === 0 && vueltas++ < 24) v = numero(Math.random(), 0.5);
+  while (u === 0 && vueltas++ < 12) u = numero(azar(), 0.5);
+  while (v === 0 && vueltas++ < 24) v = numero(azar(), 0.5);
   if (u <= 0) u = 1e-9;
   const g = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   return Number.isFinite(g) ? Math.max(-5, Math.min(5, g)) : 0;
@@ -1705,9 +1705,42 @@ const fmt = n => {
   }
 };
 
+/* El azar del motor. Sin semilla es Math.random de siempre (las pruebas
+   que lo secuestran siguen valiendo); con semilla, la carrera del día
+   sale igual para todos. Nunca se toca el Math.random global: el juego
+   vive dentro de SurEconomics y el resto del sitio lo usa. */
+let azarSembrado = null;
+const hashTexto = s => {
+  let h = 2166136261 >>> 0;
+  const t = String(s);
+  for (let i = 0; i < t.length; i++) {
+    h ^= t.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h >>> 0;
+};
+/* mulberry32: corto, rápido y de sobra para sortear escenas */
+const generadorDe = semilla => {
+  let a = hashTexto(semilla) || 1;
+  return () => {
+    a = a + 0x6D2B79F5 >>> 0;
+    let t = a;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+};
+const sembrarAzar = semilla => {
+  azarSembrado = generadorDe(semilla);
+};
+const soltarAzar = () => {
+  azarSembrado = null;
+};
+const azar = () => azarSembrado ? azarSembrado() : Math.random();
+
 /* índice al azar siempre dentro del arreglo, pase lo que pase con Math.random */
 const indiceAzar = largo => {
-  const i = Math.floor(numero(Math.random(), 0) * largo);
+  const i = Math.floor(numero(azar(), 0) * largo);
   return Number.isFinite(i) ? Math.min(largo - 1, Math.max(0, i)) : 0;
 };
 const elegirAzar = arr => Array.isArray(arr) && arr.length ? arr[indiceAzar(arr.length)] : null;
@@ -1899,6 +1932,23 @@ const CSS4 = `
 .ea-perfilT{font-size:14px;letter-spacing:.05em;color:var(--tintaPapel)}
 .ea-perfilD{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.45}
 .ea-perfilN{font-size:11.5px;color:var(--cobre);margin-top:6px}
+/* cuánto inviertes, en cinco toques en vez de un slider */
+.ea-pcts{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:4px}
+.ea-pct{background:transparent;border:1px solid var(--borde);color:var(--tintaPapel);font-size:14px;
+  padding:10px 0;cursor:pointer;border-radius:2px;transition:border-color .15s,background .15s}
+.ea-pct:hover{border-color:var(--cobre)}
+.ea-pct.on{border-color:var(--cobre);background:rgba(185,83,42,.1);color:var(--cobre)}
+/* la negociación: lo que dice la otra parte y tus cuatro cartas */
+.ea-negFrase{font-style:italic;margin:6px 0 10px}
+.ea-negCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+/* la carrera del día, en la portada */
+.ea-dia{border:1px solid var(--cobre);padding:14px 16px;margin:0 0 22px;text-align:left;border-radius:2px;
+  background:rgba(185,83,42,.05)}
+.ea-diaTop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;
+  letter-spacing:.18em;color:var(--cobre);text-transform:uppercase}
+.ea-diaQuien{font-size:19px;color:var(--tintaPapel);margin-top:6px}
+.ea-diaObjs{margin-top:8px}
+.ea-diaObj{font-size:13.5px;color:var(--tintaPapel);padding:3px 0}
 
 /* ============================================================
    QUE SE SIENTA VIVO
@@ -2313,7 +2363,28 @@ const CSS4 = `
 `;
 
 /* ---------- mejoras que se compran una sola vez ---------- */
-const PERKS = [{
+const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el primer año */
+{
+  id: "excel",
+  n: "Curso online de Excel avanzado",
+  c: 400,
+  d: "Sumas un punto de modelaje cada año."
+}, {
+  id: "diario",
+  n: "Suscripción a un diario financiero",
+  c: 500,
+  d: "Sumas un punto de criterio cada año."
+}, {
+  id: "zapas",
+  n: "Zapatillas y un plan para correr",
+  c: 600,
+  d: "Recuperas dos puntos de energía cada año."
+}, {
+  id: "after",
+  n: "Afterwork con la gente del sector",
+  c: 800,
+  d: "Sumas un punto de red cada año."
+}, {
   id: "research",
   n: "Suscripción a research institucional",
   c: 5000,
@@ -5741,6 +5812,26 @@ const CARRERAS = [{
     cri: 5
   },
   juegos: ["trading", "reaccion", "carril"]
+}];
+
+/* Los tres que se ofrecen a la vista. Cinco perfiles con su esperado y
+   su año malo eran ya una tabla; tres con una línea son una decisión.
+   Los cinco siguen en el modo experto. */
+const PERFILES_SIMPLES = [{
+  id: "conservador",
+  e: "🛡️",
+  n: "Prudente",
+  d: "Casi no se mueve. Ganas poco y duermes tranquilo."
+}, {
+  id: "balanceado",
+  e: "⚖️",
+  n: "Equilibrado",
+  d: "Aguanta un mal año y aprovecha buena parte de los buenos."
+}, {
+  id: "indexado",
+  e: "🚀",
+  n: "Agresivo",
+  d: "Más acciones: más ganancia a largo plazo y años malos que duelen."
 }];
 
 /* ---------- perfiles de portafolio: puntos de partida, no jaulas ----------
@@ -47213,6 +47304,122 @@ const anotarMovimiento = v => {
     if (v === null) window.localStorage.removeItem(CLAVE_MOV);else window.localStorage.setItem(CLAVE_MOV, v ? "1" : "0");
   } catch (e) {/* sin almacen, el ajuste dura lo que dure la pestaña */}
 };
+
+/* ============================================================
+   LA CARRERA DEL DÍA
+   La misma para todos los que juegan esa fecha: país, carrera y edad
+   salen de la fecha, y el azar de cada año se siembra con fecha y año.
+   Es lo que hace volver a El Ídolo: hoy hay una carrera nueva y la de
+   ayer ya no vuelve. Lo jugado hoy vive en el navegador, en su propia
+   clave; el ranking del día necesitaría a SurEconomics y queda fuera.
+   ============================================================ */
+const CLAVE_DIA = "el-analista-dia";
+const fechaHoy = () => {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+};
+const esFecha = x => typeof x === "string" && /^\d{4}-\d{2}-\d{2}$/.test(x);
+const msHastaManana = () => {
+  const d = new Date();
+  const m = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+  return clamp(m.getTime() - d.getTime(), 1, 86400000);
+};
+const cuentaRegresiva = ms => {
+  const s = Math.floor(numero(ms, 0) / 1000);
+  const p = n => String(n).padStart(2, "0");
+  return p(Math.floor(s / 3600)) + ":" + p(Math.floor(s % 3600 / 60)) + ":" + p(s % 60);
+};
+/* x = { pat, gasto }: lo que la pantalla final ya calcula */
+const OBJETIVOS_DIA = [{
+  id: "analista",
+  t: "Llega a Analista Senior",
+  ok: st => st.rango >= 2
+}, {
+  id: "asociado",
+  t: "Llega a Asociado",
+  ok: st => st.rango >= 3
+}, {
+  id: "vp",
+  t: "Llega a Vicepresidente",
+  ok: st => st.rango >= 4
+}, {
+  id: "pat100",
+  t: "Termina con USD 100.000",
+  ok: (st, x) => numero(x && x.pat, 0) >= 100000
+}, {
+  id: "pat300",
+  t: "Termina con USD 300.000",
+  ok: (st, x) => numero(x && x.pat, 0) >= 300000
+}, {
+  id: "sindeuda",
+  t: "Termina sin deber nada",
+  ok: st => !(numero(st.deuda, 0) > 0)
+}, {
+  id: "gana5",
+  t: "Gana 5 minijuegos",
+  ok: st => numero(st.ganados, 0) >= 5
+}, {
+  id: "premio",
+  t: "Gana un reconocimiento",
+  ok: st => Array.isArray(st.premios) && st.premios.length > 0
+}, {
+  id: "indep",
+  t: "Junta la mitad de tu independencia",
+  ok: (st, x) => numero(x && x.gasto, 0) > 0 && numero(x && x.pat, 0) >= x.gasto * 25 * 0.5
+}, {
+  id: "firma",
+  t: "Monta algo propio",
+  ok: st => !!(st.propia || st.startup)
+}];
+const IDS_OBJ_DIA = OBJETIVOS_DIA.map(o => o.id);
+const eleccionDelDia = fecha => {
+  const rnd = generadorDe("dia:" + fecha);
+  const ed = EDADES[Math.floor(rnd() * EDADES.length)] || EDADES[0];
+  const na = NACIONES[Math.floor(rnd() * NACIONES.length)] || NACIONES[0];
+  const ca = CARRERAS[Math.floor(rnd() * CARRERAS.length)] || CARRERAS[0];
+  return {
+    edad: ed.e,
+    pais: na.id,
+    estudio: ca.id
+  };
+};
+const objetivosDelDia = fecha => {
+  const rnd = generadorDe("objetivos:" + fecha);
+  const pozo = IDS_OBJ_DIA.slice();
+  const out = [];
+  while (out.length < 3 && pozo.length) out.push(pozo.splice(Math.floor(rnd() * pozo.length), 1)[0]);
+  return out;
+};
+/* { fecha, hechos: [bool, bool, bool], p } o null */
+const leerDia = () => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return null;
+    const d = JSON.parse(window.localStorage.getItem(CLAVE_DIA) || "null");
+    if (!d || !esFecha(d.fecha) || !Array.isArray(d.hechos)) return null;
+    return {
+      fecha: d.fecha,
+      hechos: d.hechos.slice(0, 3).map(x => x === true),
+      p: Math.round(numero(d.p, 0))
+    };
+  } catch (e) {
+    return null;
+  }
+};
+const anotarDia = d => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return;
+    window.localStorage.setItem(CLAVE_DIA, JSON.stringify(d));
+  } catch (e) {/* sin almacén, la portada no recuerda que ya jugaste: no es grave */}
+};
+/* qué objetivos del día se cumplieron, en el orden en que se mostraron */
+const hechosDelDia = (st, x) => (st && Array.isArray(st.objDia) ? st.objDia : []).map(id => {
+  const o = OBJETIVOS_DIA.find(y => y.id === id);
+  try {
+    return !!(o && o.ok(st, x));
+  } catch (e) {
+    return false;
+  }
+});
 const VERSION = 5;
 const SAL = "el-analista-v5-firma";
 const TOPE_GUARDADO = 262144; /* 256 KB: por encima de eso algo anda mal */
@@ -47649,8 +47856,12 @@ const semestre = t => String(2026 + t);
 const edad = (t, ini) => entero(ini, 20, 20, 50) + entero(t, 0, 0, 60);
 const esClave = t => t % 2 === 1;
 const tiene = (st, id) => st.perks.includes(id);
+
+/* Un fallo devolvía el 30% de lo bueno, y con el texto del éxito: fallar
+   salía casi gratis y nada tenía tensión. Ahora lo bueno no llega, lo
+   malo pega más y queda la marca en la reputación. */
 const escalar = (d, nivel) => {
-  const f = nivel === "exito" ? 1.6 : nivel === "parcial" ? 1 : 0.3;
+  const f = nivel === "exito" ? 1.6 : nivel === "parcial" ? 1 : 0;
   const g = nivel === "fallo" ? 1.6 : 1;
   const out = {
     ...d
@@ -47658,9 +47869,13 @@ const escalar = (d, nivel) => {
   ["mod", "cri", "red", "rep", "ene", "car", "cash"].forEach(k => {
     if (!out[k]) return;
     out[k] = Math.round(out[k] > 0 ? out[k] * f : out[k] * g);
+    if (!out[k]) delete out[k]; /* sin «+0» en la pantalla de resultado */
   });
+  if (nivel === "fallo") out.rep = (out.rep || 0) - 2;
   return out;
 };
+/* el texto de un fallo no puede ser el del éxito */
+const msgFallo = op => "No salió como querías. «" + texto(op && op.t, "La jugada", 80) + "» se te fue de las manos y se notó.";
 
 /* ============================================================
    RECONOCIMIENTOS
@@ -48146,14 +48361,51 @@ const ESCENA_CONTRATO = {
    y nunca se abre más de un sistema por año: el año en que algo nuevo
    entra, eso es el acontecimiento del año.
    ============================================================ */
-const APERTURAS = [{
+const APERTURAS = [
+/* Mejoras iba quinta (rango 3 o año 11) y llegaba pasados los treinta:
+   invertir en ti es justo lo que más rinde al principio. Ahora es la
+   primera y llega el primer año, con mejoras que un pasante paga. */
+{
+  id: "mejoras",
+  rango: 1,
+  ano: 0,
+  guia: {
+    t: "Mejoras",
+    x: "Cosas que se compran una vez y rinden todos los años que te quedan.",
+    puntos: ["No dan dinero directo: dan ventaja en los minijuegos y en tus atributos.", "Cuanto antes las compras, más años tienen para pagarse solas.", "Las primeras cuestan poco. Las grandes llegan cuando el sueldo acompaña."]
+  },
+  escena: {
+    id: 9705,
+    min: 0,
+    max: 6,
+    apertura: true,
+    t: "Tu primera inversión en ti",
+    x: "Cobras tu primer sueldo y te sobra poco. Pero ese poco puede ir a algo que te haga mejor cada año: un curso, un diario, unas zapatillas.",
+    o: [{
+      t: "Invertir en ti desde ya",
+      abre: "mejoras",
+      d: {
+        cri: 3,
+        mod: 2,
+        msg: "Se abre la sección Mejoras, dentro de Compras: cosas que se compran una vez y rinden todos los años. Las primeras cuestan poco."
+      }
+    }, {
+      t: "Esperar a ganar más",
+      abre: "mejoras",
+      d: {
+        ene: 4,
+        msg: "Por ahora no gastas nada. La sección Mejoras queda abierta en Compras para cuando quieras."
+      }
+    }]
+  }
+}, {
   id: "cartera",
   rango: 1,
   ano: 3,
   guia: {
     t: "Cartera",
     x: "Aquí decides qué hace tu dinero mientras tú trabajas.",
-    puntos: ["La primera barra dice cómo está repartido ahora mismo. La segunda, cómo quieres que quede.", "Debajo reparte entre tipos de activo: cada uno trae su retorno esperado y su volatilidad.", "Nada se mueve hasta que pulsas Aplicar, y cada movimiento cuesta comisión."]
+    puntos: ["Dos decisiones: cuánto inviertes y cómo (Prudente, Equilibrado o Agresivo).", "Se aplica al tocar, y cada movimiento cuesta una pequeña comisión.", "El reparto activo por activo y las medidas de riesgo están en Modo experto."]
   },
   escena: {
     id: 9701,
@@ -48273,39 +48525,6 @@ const APERTURAS = [{
       d: {
         red: 3,
         msg: "Agradeces sin cerrar la puerta. La sección Inmuebles queda abierta para cuando los números te cuadren."
-      }
-    }]
-  }
-}, {
-  id: "mejoras",
-  rango: 3,
-  ano: 11,
-  guia: {
-    t: "Mejoras",
-    x: "Cosas que se compran una vez y rinden todos los años que te quedan.",
-    puntos: ["No dan dinero directo: dan ventaja en los minijuegos y en tus atributos.", "Cuanto antes las compras, más años tienen para pagarse solas."]
-  },
-  escena: {
-    id: 9705,
-    min: 0,
-    max: 6,
-    apertura: true,
-    t: "Dónde gastar el poco tiempo que queda",
-    x: "Ya no puedes trabajar más horas: las horas se acabaron. Lo único que queda por mejorar es con qué las llenas.",
-    o: [{
-      t: "Invertir en ti de forma deliberada",
-      abre: "mejoras",
-      d: {
-        cri: 4,
-        mod: 3,
-        msg: "Se abre la sección Mejoras: cosas que se compran una vez y rinden todos los años que quedan."
-      }
-    }, {
-      t: "Seguir con lo que ya te funciona",
-      abre: "mejoras",
-      d: {
-        ene: 5,
-        msg: "No cambias nada por ahora. La sección Mejoras queda arriba para cuando lo consideres."
       }
     }]
   }
@@ -48457,7 +48676,7 @@ const probsLuego = (x, st) => {
   return w.map(v => v / total);
 };
 const tirarAzar = ps => {
-  let r = Math.random(),
+  let r = azar(),
     i = 0;
   for (; i < ps.length - 1; i++) {
     r -= ps[i];
@@ -48676,9 +48895,72 @@ const DUENO = [{
 const ESCENAS_FIJAS = [].concat(E, D, VIDA, LEGENDARIAS, DUENO, CONSECUENCIAS, TRONCOS, [DECISION_RAMA, ESCENA_CONTRATO], APERTURAS.map(a => a.escena)).filter(e => e && e.id != null);
 const IDS_FIRMA = [9720, 9721];
 
+/* ============================================================
+   LA PRETEMPORADA
+   Lo que El Ídolo hace bien y aquí faltaba: algo que se ve crecer desde
+   el primer clic. Cada año empieza con tres cartas y te quedas una. No
+   cuesta nada y no cuenta en el presupuesto del año.
+   Las cartas salen de la semilla de la partida y del año, con su propio
+   generador: una recarga a mitad de año rearma exactamente la misma
+   escena desde su id, y la carrera del día da las mismas a todos.
+   ============================================================ */
+const ID_PRE = 9790;
+const CARTAS_PRE = {
+  ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
+  cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto"],
+  mod: ["Curso de Excel avanzado", "Rehacer un modelo desde cero", "Atajos de teclado hasta dormido", "Copiar el modelo del mejor de la mesa"],
+  red: ["Café con el director", "El asado de la promoción", "Presentarte en el congreso", "Ayudar a alguien de otra área"],
+  rep: ["Entregar antes del plazo", "Firmar un informe que sale bien", "Dar una charla en la facultad", "Admitir un error a tiempo"]
+};
+const NOMBRE_ATRIB = {
+  ene: "energía",
+  cri: "criterio",
+  mod: "modelaje",
+  red: "red",
+  rep: "reputación"
+};
+const escenaPretemporada = st => {
+  const rnd = generadorDe("pre:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + entero(st && st.turno, 0, 0, 99));
+  const claves = Object.keys(CARTAS_PRE);
+  /* tres atributos distintos: elegir dos veces lo mismo no es elegir */
+  const pozo = claves.slice();
+  const cartas = [];
+  for (let i = 0; i < 3; i++) {
+    const k = pozo.splice(Math.floor(rnd() * pozo.length), 1)[0];
+    const r = rnd();
+    const v = r < 0.05 ? 4 : r < 0.30 ? 3 : 2;
+    const lista = CARTAS_PRE[k];
+    const titulo = lista[Math.floor(rnd() * lista.length)];
+    const rareza = v === 4 ? "DORADA · " : v === 3 ? "RARA · " : "";
+    cartas.push({
+      t: rareza + titulo,
+      d: {
+        [k]: v,
+        msg: "Pretemporada: +" + v + " de " + NOMBRE_ATRIB[k] + "."
+      }
+    });
+  }
+  return {
+    id: ID_PRE,
+    min: 0,
+    max: 6,
+    pretemporada: true,
+    t: "Pretemporada",
+    x: "Arranca el año. Tienes tiempo para una sola cosa antes de que empiece el ruido: elige en qué lo pones.",
+    o: cartas
+  };
+};
+
 /* Devuelve la escena de ese id, o null. Las de firma propia se generan
    al vuelo desde el titulo del jugador, asi que se reconstruyen. */
 const escenaDeId = (id, st) => {
+  if (id === ID_PRE) {
+    try {
+      return escenaPretemporada(st);
+    } catch (e) {
+      return null;
+    }
+  }
   if (IDS_FIRMA.indexOf(id) >= 0) {
     try {
       return escenaFirma(st, id);
@@ -48702,7 +48984,7 @@ const escenaDeId = (id, st) => {
    no exista se descarta en silencio: el juego sigue con lo que quede. */
 const colaDeIds = (ids, st) => (Array.isArray(ids) ? ids : []).map(id => escenaDeId(id, st)).filter(e => e && e.t && Array.isArray(e.o) && e.o.length)
 /* una cola guardada justo al montar tu firma no trae escenas de empleado */.filter(e => !(sinJefe(st) && esDeEmpleado(e)));
-const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map(e => e.id).concat(IDS_FIRMA);
+const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map(e => e.id).concat(IDS_FIRMA, [ID_PRE]);
 
 /* si a un sistema ya le toca, por rango alcanzado o por año cumplido */
 const tocaAbrir = (st, a) => entero(st && st.rango, 0, 0, 99) >= a.rango || entero(st && st.turno, 0, 0, 99) >= a.ano;
@@ -48869,6 +49151,12 @@ const sanear = bruto => {
   st.premios = unicos(listaDe(r.premios, x => PREMIOS.some(p => p.id === x), 20));
   st.cola = listaDe(r.cola, x => IDS_ESCENA_VALIDOS.indexOf(x) >= 0, 14).map(x => entero(x, 0, 0, 99999));
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
+  /* la semilla de la pretemporada; un guardado viejo cae en 0 y sigue jugable */
+  st.semilla = entero(r.semilla, 0, 0, 2e9);
+  /* la carrera del día: su fecha, sus tres objetivos y los minijuegos ganados */
+  st.dia = esFecha(r.dia) ? r.dia : null;
+  st.objDia = st.dia ? unicos(listaDe(r.objDia, x => IDS_OBJ_DIA.indexOf(x) >= 0, 3)) : [];
+  st.ganados = entero(r.ganados, 0, 0, 999);
   st.contrato = r.contrato && typeof r.contrato === "object" ? {
     anos: entero(r.contrato.anos, 3, 1, 10),
     desde: entero(r.contrato.desde, 0, 0, 60)
@@ -48935,7 +49223,7 @@ const GUIA = [{
   id: "cartera",
   cuando: c => c.tab === "portafolio",
   t: "Aquí decides qué hace tu dinero",
-  x: "La barra de arriba dice cuánto está invertido y cuánto en efectivo. Debajo repartes entre tipos de activo. Nada se aplica hasta que confirmas."
+  x: "Elige cuánto inviertes y cómo: se aplica al tocar. Lo técnico, activo por activo, está en Modo experto."
 }, {
   id: "ficha",
   cuando: c => c.tab === "ficha",
@@ -49541,75 +49829,162 @@ function JuegoOjo({
     }
   }, aviso));
 }
+
+/* ---- La negociación ----
+   Esto era una barra de 0 a 100 con un número escondido: adivinar, sin
+   nadie enfrente y sin nada que perder. Ahora enfrente hay alguien con
+   un carácter que no ves, y cada carta que juegas le mueve el precio y
+   la paciencia de forma distinta según quién sea. Leerlo bien gana;
+   leerlo mal hace que se levante y te quedes sin trato.
+   Se sigue llamando «anclaje» para que ninguna escena tenga que cambiar. */
+const TIPOS_NEG = ["apurado", "duro", "orgulloso"];
+/* [cuánto mueve el precio, cuánto mueve la paciencia] */
+const NEG_EFECTO = {
+  pedir: {
+    apurado: [12, -1],
+    duro: [6, -1],
+    orgulloso: [10, -2]
+  },
+  ceder: {
+    apurado: [-6, 0],
+    duro: [-4, 1],
+    orgulloso: [-2, 2]
+  },
+  competencia: {
+    apurado: [15, 0],
+    duro: [4, -2],
+    orgulloso: [14, -1]
+  },
+  plantarse: {
+    apurado: [8, -1],
+    duro: [10, 0],
+    orgulloso: [0, -2]
+  }
+};
+const CARTAS_NEG = [{
+  k: "pedir",
+  n: "Pedir más"
+}, {
+  k: "ceder",
+  n: "Ceder un poco"
+}, {
+  k: "competencia",
+  n: "Mostrar la oferta de la competencia"
+}, {
+  k: "plantarse",
+  n: "Plantarte"
+}];
+const FRASES_NEG = {
+  apurado: ["Necesito cerrarlo hoy: mañana tengo comité.", "Si lo firmamos ahora nos ahorramos una semana de correos.", "Miro el reloj y te escucho. Dime tu número."],
+  duro: ["Esto lo hago todas las semanas. No me impresionas.", "Si me vienes con otra oferta, sé que es un farol.", "Respeto a quien sabe lo que vale y no se mueve."],
+  orgulloso: ["Nadie me había hablado así en esta mesa.", "Quiero salir de aquí sintiendo que también gané algo.", "Si me arrinconas, me levanto. Dame algo y hablamos."],
+  neutras: ["Bueno... veamos qué propones.", "Mmm. Sigue.", "Te escucho."]
+};
+const REVELA_NEG = {
+  apurado: "La otra parte estaba APURADA: quería cerrar ya, y presionar le sumaba.",
+  duro: "La otra parte era DURA: respetaba a quien se planta, y los faroles no le movían.",
+  orgulloso: "La otra parte era ORGULLOSA: necesitaba ganar algo antes de ceder."
+};
+/* Con más ayuda, la frase es más a menudo una pista del carácter real. */
+const fraseRival = (c, rnd) => {
+  const pozo = rnd() < c.claridad ? FRASES_NEG[c.tipo] : FRASES_NEG.neutras;
+  return pozo[Math.min(pozo.length - 1, Math.floor(rnd() * pozo.length))];
+};
+const casoNegociacion = (ayuda, rnd = Math.random) => {
+  const tipo = TIPOS_NEG[Math.min(2, Math.floor(numero(rnd(), 0) * 3))];
+  const c = {
+    tipo,
+    precio: 50,
+    paciencia: 3,
+    ronda: 1,
+    usada: false,
+    jugadas: [],
+    fin: null,
+    claridad: clamp(0.4 + numero(ayuda, 30) / 180, 0.4, 0.95)
+  };
+  c.frases = [0, 1, 2].map(() => fraseRival(c, rnd));
+  return c;
+};
+const jugadaNegociacion = (c, carta, ruido = 0) => {
+  if (!c || c.fin || !NEG_EFECTO[carta]) return c;
+  if (carta === "competencia" && c.usada) return c;
+  const [dp, dq] = NEG_EFECTO[carta][c.tipo];
+  const n = {
+    ...c,
+    precio: clamp(c.precio + dp + (dp ? ruido : 0), 0, 100),
+    paciencia: clamp(c.paciencia + dq, 0, 5),
+    usada: c.usada || carta === "competencia",
+    jugadas: c.jugadas.concat(carta)
+  };
+  if (n.paciencia <= 0) return {
+    ...n,
+    fin: "levanta"
+  };
+  if (c.ronda >= 3) return {
+    ...n,
+    fin: "acuerdo"
+  };
+  return {
+    ...n,
+    ronda: c.ronda + 1
+  };
+};
+const nivelNegociacion = c => !c || c.fin !== "acuerdo" ? "fallo" : c.precio >= 68 ? "exito" : c.precio >= 52 ? "parcial" : "fallo";
 function JuegoAnclaje({
   ayuda,
   onFin
 }) {
-  const ancho = clamp(8 + ayuda * 0.1, 8, 20);
-  const [centro] = useState(() => 18 + Math.random() * 64);
-  const [v, setV] = useState(50);
-  const [n, setN] = useState(0);
-  const [hist, setHist] = useState([]);
-  const [cerrado, setCerrado] = useState(false);
-  const ofrecer = () => {
-    const dif = v - centro;
-    const dentro = Math.abs(dif) <= ancho / 2;
-    const intento = n + 1;
-    let msg;
-    if (dentro) msg = "Acuerdo cerrado";else if (Math.abs(dif) > 24) msg = dif > 0 ? "Muy por encima de lo que pagan" : "Muy por debajo, dejas valor en la mesa";else msg = dif > 0 ? "Un poco alto, están cerca" : "Un poco bajo, están cerca";
-    setHist([...hist, {
-      v,
-      msg,
-      dentro
-    }]);
-    setN(intento);
-    if (dentro) {
-      setCerrado(true);
-      setTimeout(() => onFin(intento <= 2 ? "exito" : "parcial"), 750);
-    } else if (intento >= 4) {
-      setCerrado(true);
-      setTimeout(() => onFin("fallo"), 750);
-    }
+  const [c, setC] = useState(() => casoNegociacion(ayuda));
+  const jugar = k => {
+    if (c.fin) return;
+    setC(jugadaNegociacion(c, k, Math.round(Math.random() * 2) - 1));
   };
+  const nombre = k => (CARTAS_NEG.find(x => x.k === k) || {}).n || k;
+  const nivel = c.fin ? nivelNegociacion(c) : null;
   return /*#__PURE__*/React.createElement("div", {
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Oferta ", Math.min(n + 1, 4), " de 4"), /*#__PURE__*/React.createElement("span", null, "Te quedan ", Math.max(0, 4 - n))), /*#__PURE__*/React.createElement("p", {
-    className: "ea-memoTxt",
+  }, /*#__PURE__*/React.createElement("span", null, c.fin ? "Negociación cerrada" : "Ronda " + c.ronda + " de 3"), /*#__PURE__*/React.createElement("span", null, "Paciencia ", "●".repeat(c.paciencia), "○".repeat(Math.max(0, 5 - c.paciencia)))), /*#__PURE__*/React.createElement("div", {
+    className: "ea-anclaN"
+  }, c.precio), /*#__PURE__*/React.createElement("div", {
+    className: "ea-anclaE ea-dis"
+  }, /*#__PURE__*/React.createElement("span", null, "tu precio, de 0 a 100"), /*#__PURE__*/React.createElement("span", null, "\xE9xito desde 68")), !c.fin && /*#__PURE__*/React.createElement("p", {
+    className: "ea-memoTxt ea-negFrase"
+  }, "\xAB", c.frases[c.ronda - 1], "\xBB"), !c.fin && /*#__PURE__*/React.createElement("div", {
+    className: "ea-negCartas"
+  }, CARTAS_NEG.map(x => /*#__PURE__*/React.createElement("button", {
+    key: x.k,
+    className: "ea-mini",
     style: {
       marginTop: 0
-    }
-  }, "Tu n\xFAmero es ", /*#__PURE__*/React.createElement("strong", null, "lo agresiva que es tu oferta"), ", de 0 a 100. La otra parte acepta dentro de una franja estrecha que no ves. Cada vez que pones un n\xFAmero te dicen si te quedaste corto, si te pasaste o si est\xE1s cerca, y con eso vas cerrando el cerco."), /*#__PURE__*/React.createElement("div", {
-    className: "ea-anclaN"
-  }, v), /*#__PURE__*/React.createElement("input", {
-    className: "ea-slider",
-    type: "range",
-    min: "0",
-    max: "100",
-    value: v,
-    disabled: cerrado,
-    onChange: e => setV(entero(e.target.value, 50, 0, 100)),
-    "aria-label": "Lo agresiva que es tu oferta"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-anclaE ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "0 \xB7 lo regalas"), /*#__PURE__*/React.createElement("span", null, "100 \xB7 te levantan de la mesa")), /*#__PURE__*/React.createElement("div", {
+    },
+    disabled: x.k === "competencia" && c.usada,
+    onClick: () => jugar(x.k)
+  }, x.n))), c.jugadas.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 10
+      marginTop: 10,
+      fontSize: 13,
+      color: "var(--gris)"
     }
-  }, hist.map((h, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
+  }, c.jugadas.map((k, i) => /*#__PURE__*/React.createElement("div", {
+    key: i
+  }, i + 1, ". ", nombre(k)))), c.fin && /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13.5,
-      color: h.dentro ? "#3D8A49" : "#6B6B6B"
+      marginTop: 12
     }
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, h.v), " \xB7 ", h.msg))), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-dis",
+    style: {
+      fontSize: 15,
+      color: nivel === "exito" ? "var(--verde)" : nivel === "parcial" ? "var(--cobre)" : "var(--rojo)"
+    }
+  }, c.fin === "levanta" ? "Se levantó de la mesa. No hay trato." : nivel === "exito" ? "Cerraste en " + c.precio + ". Muy buen trato." : nivel === "parcial" ? "Cerraste en " + c.precio + ". Trato justo, sin más." : "Cerraste en " + c.precio + ". Dejaste demasiado sobre la mesa."), /*#__PURE__*/React.createElement("p", {
+    className: "ea-memoTxt"
+  }, REVELA_NEG[c.tipo]), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn",
-    onClick: ofrecer,
-    disabled: cerrado
-  }, "Poner el n\xFAmero sobre la mesa"));
+    onClick: () => onFin(nivel)
+  }, "Continuar")));
 }
 
 /* ---- Aguantar la posición: el múltiplo sube solo hasta que se da vuelta ----
@@ -53226,6 +53601,94 @@ const enSurEconomics = () => {
    un formulario: el jugador no tiene que copiar nada a mano.
    onAnotada avisa al padre para que repinte el registro: la lista nueva
    ya esta en window.__REGISTRO, pero nadie lo vuelve a leer solo. */
+/* ============================================================
+   COMPARTIR
+   El final no se podía enseñar a nadie. Un apodo según lo que más
+   trabajaste, las cifras que importan y, si fue la del día, la fila de
+   casillas: lo justo para que otro quiera jugarla.
+   ============================================================ */
+const APODOS = {
+  mod: "La planilla perfecta",
+  cri: "Ojo para la crisis",
+  red: "Agenda infinita",
+  rep: "Palabra de oro",
+  ene: "Motor inagotable"
+};
+const apodoDe = st => {
+  const k = ["cri", "mod", "red", "rep", "ene"].reduce((a, x) => numero(st && st[x], 0) > numero(st && st[a], 0) ? x : a, "cri");
+  const base = APODOS[k];
+  if (!(st && (st.propia || st.startup))) return base;
+  const pre = st.genero === "f" ? "Dueña de su firma" : st.genero === "m" ? "Dueño de su firma" : "Con firma propia";
+  return pre + " · " + base;
+};
+const textoCompartir = (st, pat, hechos) => {
+  const lineas = ["El Analista · " + cargoDe(st) + " a los " + edad(st.turno, st.edadIni), "USD " + fmt(pat) + " · «" + apodoDe(st) + "»"];
+  if (st && st.dia && Array.isArray(hechos)) {
+    lineas.push("Carrera del día " + st.dia + ": " + hechos.map(h => h ? "✅" : "❌").join(""));
+  }
+  lineas.push("Juega en sureconomics.com/el-analista");
+  return lineas.join("\n");
+};
+function BotonCompartir({
+  texto: t
+}) {
+  /* null · compartido · copiado · manual */
+  const [estado, setEstado] = useState(null);
+  const vivo = useRef(true);
+  useEffect(() => () => {
+    vivo.current = false;
+  }, []);
+  const compartir = async () => {
+    const nav = typeof navigator !== "undefined" ? navigator : null;
+    try {
+      if (nav && typeof nav.share === "function") {
+        await nav.share({
+          text: t
+        });
+        if (vivo.current) setEstado("compartido");
+        return;
+      }
+    } catch (e) {
+      if (e && e.name === "AbortError") return;
+    }
+    try {
+      if (nav && nav.clipboard && typeof nav.clipboard.writeText === "function") {
+        await nav.clipboard.writeText(t);
+        if (vivo.current) setEstado("copiado");
+        return;
+      }
+    } catch (e) {/* sin permiso para copiar: queda el texto a la vista */}
+    if (vivo.current) setEstado("manual");
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 18
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "ea-btnO",
+    style: {
+      marginTop: 0
+    },
+    onClick: compartir
+  }, "Compartir mi carrera"), estado === "copiado" && /*#__PURE__*/React.createElement("div", {
+    className: "ea-itemD"
+  }, "Copiado. P\xE9galo donde quieras."), estado === "manual" && /*#__PURE__*/React.createElement("textarea", {
+    className: "ea-campo",
+    readOnly: true,
+    rows: 5,
+    value: t,
+    "aria-label": "Texto para compartir",
+    style: {
+      width: "100%",
+      marginTop: 8
+    },
+    onFocus: e => {
+      try {
+        e.target.select();
+      } catch (err) {}
+    }
+  }));
+}
 function BotonAnotar({
   entrada,
   onAnotada
@@ -53370,6 +53833,9 @@ function PanelCartera({
   const [avanzado, setAvanzado] = useState(false);
   /* y las cinco medidas de riesgo que no se miran para decidir */
   const [detalle, setDetalle] = useState(false);
+  /* Todo lo fino (objetivo exacto, cinco perfiles, siete activos, riesgo)
+     vive aquí, plegado. Solo desde aquí puede quedar algo sin aplicar. */
+  const [experto, setExperto] = useState(false);
   /* si la cartera cambia por otra via (un evento, retomar partida), los
      controles se ponen al dia solos en vez de quedar mostrando lo viejo */
   const huella = JSON.stringify(actual) + "|" + objAct;
@@ -53457,6 +53923,95 @@ function PanelCartera({
   }, "USD ", fmt(st.cash))), desvia && /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD"
   }, "Va ", invReal > objAct ? "por encima" : "por debajo", " de tu objetivo. Es normal: los gastos del a\xF1o salen del efectivo. Al cerrar el a\xF1o se acomoda solo."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-rot ea-dis",
+    style: {
+      marginTop: 20
+    }
+  }, "\xBFCu\xE1nto inviertes?"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-pcts"
+  }, [0, 25, 50, 75, 100].map(p => {
+    const on = Math.round(objAct * 100) === p;
+    return /*#__PURE__*/React.createElement("button", {
+      key: p,
+      className: "ea-pct ea-dis" + (on ? " on" : ""),
+      onClick: () => {
+        if (!on) onAplicar({
+          ...actual
+        }, p / 100);
+      }
+    }, p, "%");
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ea-itemD"
+  }, "Lo que no inviertes queda en efectivo, para los gastos y los imprevistos."), /*#__PURE__*/React.createElement("div", {
+    className: "ea-rot ea-dis",
+    style: {
+      marginTop: 18
+    }
+  }, "\xBFC\xF3mo lo inviertes?"), /*#__PURE__*/React.createElement("div", {
+    className: "ea-perfiles"
+  }, PERFILES_SIMPLES.map(ps => {
+    const pf = PERFILES.find(x => x.id === ps.id);
+    if (!pf) return null;
+    const on = rotacion({
+      ...pf.w,
+      efectivo: Math.max(0, 1 - invertidoDe(pf.w))
+    }, conAct) < 0.02;
+    return /*#__PURE__*/React.createElement("button", {
+      key: ps.id,
+      className: "ea-perfil" + (on ? " on" : ""),
+      onClick: () => {
+        if (!on) onAplicar({
+          ...pf.w
+        }, objAct);
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-perfilT ea-dis"
+    }, ps.e, " ", ps.n, on ? " ✓" : ""), /*#__PURE__*/React.createElement("div", {
+      className: "ea-perfilD"
+    }, ps.d));
+  })), (() => {
+    const e2 = statsPesos(conAct);
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-caja"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-fila"
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12.5
+      }
+    }, "Esperas ganar"), /*#__PURE__*/React.createElement("span", {
+      className: "ea-mono"
+    }, (e2.mu * 100).toFixed(1), "% al a\xF1o")), /*#__PURE__*/React.createElement("div", {
+      className: "ea-fila"
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12.5
+      }
+    }, "Un a\xF1o malo de verdad"), /*#__PURE__*/React.createElement("span", {
+      className: "ea-mono",
+      style: {
+        color: "var(--rojo)"
+      }
+    }, ((e2.mu - 2 * e2.sd) * 100).toFixed(0), "%")));
+  })(), /*#__PURE__*/React.createElement("button", {
+    className: "ea-atras ea-dis",
+    style: {
+      marginTop: 14,
+      marginBottom: 0
+    },
+    onClick: () => {
+      /* al plegar se descarta lo que quedó a medias: lo simple nunca deja nada pendiente */
+      if (experto) {
+        setW({
+          ...actual
+        });
+        setObj(objAct);
+      }
+      setExperto(v => !v);
+    }
+  }, experto ? "↑ Cerrar el modo experto" : "↓ Modo experto"), experto && /*#__PURE__*/React.createElement("div", {
+    className: "ea-panelAb"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis",
     style: {
       marginTop: 20
@@ -53692,7 +54247,7 @@ function PanelCartera({
     style: {
       marginTop: 12
     }
-  }, "As\xED est\xE1 invertido tu dinero ahora"), /*#__PURE__*/React.createElement("div", {
+  }, "As\xED est\xE1 invertido tu dinero ahora")), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 11.5,
       color: "var(--gris)",
@@ -53924,6 +54479,33 @@ function Motor() {
     anotarAviso();
     irA("portada");
   };
+
+  /* la carrera del día: lo que ya jugaste hoy y cuánto falta para la próxima */
+  const [diaHecho, setDiaHecho] = useState(leerDia);
+  const [faltaMs, setFaltaMs] = useState(msHastaManana);
+  useEffect(() => {
+    if (fase !== "portada") return;
+    setFaltaMs(msHastaManana());
+    const t = setInterval(() => setFaltaMs(msHastaManana()), 1000);
+    return () => clearInterval(t);
+  }, [fase]);
+  /* al terminar la del día, queda anotado cómo te fue para la portada */
+  useEffect(() => {
+    if (fase !== "fin" || !s || !s.dia) return;
+    try {
+      const x = {
+        pat: patrimonioDe(s),
+        gasto: gastoAnual(s)
+      };
+      const d = {
+        fecha: s.dia,
+        hechos: hechosDelDia(s, x),
+        p: Math.round(x.pat)
+      };
+      anotarDia(d);
+      setDiaHecho(d);
+    } catch (e) {/* si algo no cuadra, la portada simplemente no lo recuerda */}
+  }, [fase]);
   const elige = (campo, valor, siguiente) => {
     setElec(x => ({
       ...x,
@@ -53931,6 +54513,9 @@ function Motor() {
     }));
     irA(siguiente);
   };
+
+  /* la semilla de la carrera del día no sobrevive al juego */
+  useEffect(() => () => soltarAzar(), []);
 
   /* al abrir, mira si hay una partida a medio camino */
   useEffect(() => {
@@ -54106,7 +54691,7 @@ function Motor() {
     /* Una sola tirada al año, y solo pasados los primeros años: una
        legendaria en el año uno no significaría nada porque todavía no hay
        carrera que partir en dos. */
-    if (st.turno >= 4 && Math.random() < 0.11) {
+    if (st.turno >= 4 && azar() < 0.11) {
       const posibles = LEGENDARIAS.filter(e => st.rango >= e.min && st.rango <= e.max && !(sinJefe(st) && esDeEmpleado(e)) && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0 && huellasOk(e, st));
       const leg = elegirAzar(posibles);
       if (leg) {
@@ -54144,13 +54729,13 @@ function Motor() {
     /* Subida de 0,62 a 0,78: con 0,62 y las escenas de pareja limitadas,
        una vida entera podía pasar sin una sola decisión personal después
        de los veinte. */
-    if (vidas.length && Math.random() < 0.78) {
+    if (vidas.length && azar() < 0.78) {
       /* Las escenas con condición de estado (tienes pareja, tienes hijos)
          solo existen mientras dure ese estado, así que si están sobre la
          mesa tienen prioridad. Si no, la cadena noviazgo-matrimonio-hijos
          casi nunca llegaría a completarse antes de que se acabe la vida. */
       const encadenadas = vidas.filter(v => typeof v.cuando === "function");
-      const pozo = encadenadas.length && Math.random() < 0.7 ? encadenadas : vidas;
+      const pozo = encadenadas.length && azar() < 0.7 ? encadenadas : vidas;
       /* dentro del pozo mandan las de mayor prioridad: primero te
          preguntan si te casas y solo después aparece la ruptura */
       const maxPri = Math.max.apply(null, pozo.map(v => numero(v.pri, 2)));
@@ -54215,13 +54800,16 @@ function Motor() {
        propia, legendaria) se SUMA al año en vez de ocupar el sitio de un
        evento normal. Ya me costó una vez: descontar la apertura hacía que
        se dejara de ver el minijuego de trading. */
-    const objetivo = Math.min(forzadas + 2 + (Math.random() < 0.45 ? 1 : 0), 5);
+    const objetivo = Math.min(forzadas + 2 + (azar() < 0.45 ? 1 : 0), 5);
     while (lista.length < objetivo) {
       const e = sacar(sinJefe(st) ? E.concat(DUENO) : E, st, usados);
       if (!e) break;
       lista.push(e);
       usados.push(e.id);
     }
+    /* La pretemporada abre el año y va por fuera del presupuesto: se pone
+       delante cuando todo lo demás ya está contado. */
+    lista.unshift(escenaPretemporada(st));
     return lista;
   };
 
@@ -54248,6 +54836,9 @@ function Motor() {
     } catch (e) {
       patAno.current = null;
     }
+    /* En la del día, cada año se siembra con la fecha y el año: las mismas
+       decisiones traen los mismos acontecimientos para todo el mundo. */
+    if (st.dia) sembrarAzar(st.dia + ":" + st.turno);else soltarAzar();
     let lista = [];
     try {
       lista = generarAno(st) || [];
@@ -54316,6 +54907,11 @@ function Motor() {
       lecs: []
     };
     st.modo = MODO(sel.modo).id;
+    /* de esta semilla salen las cartas de pretemporada de cada año; en la
+       del día sale de la fecha, para que todos vean las mismas cartas */
+    st.dia = esFecha(sel.dia) ? sel.dia : null;
+    st.objDia = st.dia ? objetivosDelDia(st.dia) : [];
+    st.semilla = st.dia ? hashTexto("semilla:" + st.dia) % 2000000000 : Math.floor(azar() * 2e9);
     st.nombre = saneaNombre(sel.nombre);
     st.genero = GENEROS.some(g => g.id === sel.genero) ? sel.genero : null;
     st.guia = sel.guia === true;
@@ -54403,6 +54999,38 @@ function Motor() {
     setCierre(null);
     setTab(null);
     irA("identidad");
+  };
+
+  /* La del día arranca directo: la fecha ya eligió edad, país y carrera. */
+  const jugarDelDia = () => {
+    if (!enFase("portada")) return;
+    const f = fechaHoy();
+    tirarPartida();
+    setFin(null);
+    setRes(null);
+    setCierre(null);
+    setTab(null);
+    arrancarPartida({
+      ...SETUP0,
+      ...eleccionDelDia(f),
+      dia: f
+    });
+  };
+
+  /* «Al azar»: lo pidió Alessandro de vuelta el 7-oct-2026, después de
+     quitarlo el 28-sep. Con tu nombre, y el resto lo elige el juego. */
+  const alAzar = () => {
+    if (!enFase("identidad")) return;
+    soltarAzar(); /* si venías de la del día, este sorteo no puede salir igual que el de todos */
+    const ed = elegirAzar(EDADES) || EDADES[0];
+    const na = elegirAzar(NACIONES) || NACIONES[0];
+    const ca = elegirAzar(CARRERAS) || CARRERAS[0];
+    arrancarPartida({
+      ...elec,
+      edad: ed.e,
+      pais: na.id,
+      estudio: ca.id
+    });
   };
 
   /* el rastro de lo ya elegido, para que se vea qué hay detrás del Atrás */
@@ -54544,7 +55172,7 @@ function Motor() {
        reductor. El reductor los vuelve a comprobar de todas formas. */
     if (s.cash + s.cartera < c.c || s.bienes.indexOf(c.id) >= 0) return;
     if (!puedeComprar(c, s)) return;
-    const dado = Math.random();
+    const dado = azar();
     const sor = dado < 0.22 ? elegirAzar(SORPRESAS_BUENAS) : dado < 0.44 ? elegirAzar(SORPRESAS_MALAS) : null;
     aplicarCompra(c, sor);
     if (sor) setAviso(sor.msg);
@@ -54673,7 +55301,7 @@ function Motor() {
       ticket,
       riesgo: deal.riesgo,
       base: deal.base,
-      salida: st.turno + 3 + Math.floor(Math.random() * 3)
+      salida: st.turno + 3 + Math.floor(azar() * 3)
     });
     return {
       ...st,
@@ -54697,6 +55325,8 @@ function Motor() {
       }
     };
     const cambios = [];
+    /* los minijuegos ganados: uno de los objetivos del día los cuenta */
+    if (nivel === "exito" && o && (o.j || o.juego)) st.ganados = entero(numero(st.ganados, 0) + 1, 0, 0, 999);
     if (o && o.ramaId) st.rama = o.ramaId;
     if (o && o.firmaPropia && !st.propia) {
       const f = FIRMA_DE(st);
@@ -55012,6 +55642,10 @@ function Motor() {
     const na = NACIONES.find(x => x.id === st.pais) || NACIONES[0];
     const patAntes = st.cash + st.cartera + valorBienes(st) - numero(st.deuda, 0);
     const gastoAnt = st.gastoAnt || 0;
+    if (tiene(st, "excel")) st.mod = clamp(st.mod + 1, 0, 100);
+    if (tiene(st, "diario")) st.cri = clamp(st.cri + 1, 0, 100);
+    if (tiene(st, "zapas")) st.ene = clamp(st.ene + 2, 0, 100);
+    if (tiene(st, "after")) st.red = clamp(st.red + 1, 0, 100);
     if (tiene(st, "research")) st.mod = clamp(st.mod + 2, 0, 100);
     if (tiene(st, "club")) st.red = clamp(st.red + 2, 0, 100);
     if (tiene(st, "prensa")) st.rep = clamp(st.rep + 2, 0, 100);
@@ -55039,7 +55673,7 @@ function Motor() {
       v: bono
     });
     if (tipoRama(st) === "boutique") {
-      const v = salario * (Math.random() * 0.8 - 0.2);
+      const v = salario * (azar() * 0.8 - 0.2);
       if (v >= 0) ing.push({
         n: "Variable de la boutique",
         v
@@ -55110,7 +55744,7 @@ function Motor() {
       /* cuantas más ganas, más deal flow te llega: tres o cuatro nombres
          en vez de dos, para que haya de dónde elegir */
       const cuantasOfertas = f.realizado > f.tam * 0.25 ? 4 : 3;
-      f.oferta = libre > capacidadFondo(f) * 0.04 ? EMPRESAS.slice().sort(() => Math.random() - 0.5).slice(0, cuantasOfertas).map(e => ({
+      f.oferta = libre > capacidadFondo(f) * 0.04 ? EMPRESAS.slice().sort(() => azar() - 0.5).slice(0, cuantasOfertas).map(e => ({
         n: e.n,
         s: e.s,
         riesgo: e.riesgo,
@@ -55122,7 +55756,7 @@ function Motor() {
         deuda: e.deuda,
         foso: e.foso,
         d: e.d,
-        ticket: Math.max(100000, Math.round(Math.min(libre * 0.45, capacidadFondo(f) * (0.07 + numero(Math.random(), 0.5) * 0.08)) / 100000) * 100000)
+        ticket: Math.max(100000, Math.round(Math.min(libre * 0.45, capacidadFondo(f) * (0.07 + numero(azar(), 0.5) * 0.08)) / 100000) * 100000)
       })) : [];
       st.fondo = f;
     }
@@ -55148,8 +55782,8 @@ function Motor() {
     /* ---- noticias del año, sesgadas por el país ---- */
     let notis = [];
     const conSesgo = NOTICIAS.filter(x => x.k === na.sesgo);
-    notis.push(Math.random() < 0.4 && conSesgo.length ? elegirAzar(conSesgo) : elegirAzar(NOTICIAS));
-    if (Math.random() < 0.45) {
+    notis.push(azar() < 0.4 && conSesgo.length ? elegirAzar(conSesgo) : elegirAzar(NOTICIAS));
+    if (azar() < 0.45) {
       const seg = elegirAzar(NOTICIAS);
       if (seg && notis[0] && seg.t !== notis[0].t) notis.push(seg);
     }
@@ -55609,7 +56243,7 @@ function Motor() {
          primera, y ocho opciones —«Prestar sin papeles, es familia»,
          «Meter un ticket pequeño, por la amistad»...— no hacían nada. */
       const p = clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5, 0.12, 0.9);
-      const ok = Math.random() < p;
+      const ok = azar() < p;
       resolverEscena(ok ? o.chk.ok || o.ok : o.chk.no || o.no, ok ? "exito" : "fallo", o, {
         i: ok ? 0 : 1,
         ps: [p, 1 - p],
@@ -55621,6 +56255,7 @@ function Motor() {
   const finJuego = nivel => {
     if (!enFase("minijuego") || !op) return;
     const base = op.res ? op.res[nivel] : escalar(op.d || {}, nivel);
+    if (nivel === "fallo" && !op.res && base) base.msg = msgFallo(op);
     resolverEscena(base || {}, nivel, op);
   };
   const siguienteEscena = () => {
@@ -56076,7 +56711,42 @@ function Motor() {
     className: "ea-cifraV ea-dis"
   }, "Crisis, familia y fraudes"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraD"
-  }, "Mercados que caen, decisiones de pareja e hijos, y ofertas demasiado buenas."))), guardado ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "Mercados que caen, decisiones de pareja e hijos, y ofertas demasiado buenas."))), (() => {
+    const f = fechaHoy();
+    const e = eleccionDelDia(f);
+    const na = NACIONES.find(x => x.id === e.pais) || NACIONES[0];
+    const ca = CARRERAS.find(x => x.id === e.estudio) || CARRERAS[0];
+    const obs = objetivosDelDia(f).map(id => OBJETIVOS_DIA.find(o => o.id === id)).filter(Boolean);
+    const hecho = diaHecho && diaHecho.fecha === f ? diaHecho : null;
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-dia"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-diaTop ea-dis"
+    }, /*#__PURE__*/React.createElement("span", null, "Carrera del d\xEDa"), /*#__PURE__*/React.createElement("span", {
+      className: "ea-mono"
+    }, "Cambia en ", cuentaRegresiva(faltaMs))), /*#__PURE__*/React.createElement("div", {
+      className: "ea-diaQuien ea-dis"
+    }, e.edad, " a\xF1os \xB7 ", na.n, " \xB7 ", ca.n), /*#__PURE__*/React.createElement("div", {
+      className: "ea-diaObjs"
+    }, obs.map((o, i) => /*#__PURE__*/React.createElement("div", {
+      key: o.id,
+      className: "ea-diaObj"
+    }, /*#__PURE__*/React.createElement("span", null, hecho ? hecho.hechos[i] ? "✅" : "❌" : "◻️"), " ", o.t))), hecho && /*#__PURE__*/React.createElement("div", {
+      className: "ea-itemD"
+    }, "Hoy ya la jugaste: ", hecho.hechos.filter(Boolean).length, " de 3, con USD ", fmt(hecho.p), ". Puedes intentarlo otra vez."), /*#__PURE__*/React.createElement("button", {
+      className: "ea-jugarYa ea-dis",
+      style: {
+        marginTop: 12
+      },
+      onClick: jugarDelDia
+    }, hecho ? "Volver a jugar la del día" : "Jugar la del día"), guardado && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11.5,
+        color: "var(--gris)",
+        marginTop: 8
+      }
+    }, "Empezar la del d\xEDa borra tu partida guardada."));
+  })(), guardado ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-guarda"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-lecK",
@@ -56211,7 +56881,14 @@ function Motor() {
     onClick: () => {
       if (enFase("identidad")) irA("edad");
     }
-  }, elec.nombre.trim() ? "Seguir como " + elec.nombre.trim() : "Seguir sin nombre")), fase === "edad" && /*#__PURE__*/React.createElement("div", {
+  }, elec.nombre.trim() ? "Seguir como " + elec.nombre.trim() : "Seguir sin nombre"), /*#__PURE__*/React.createElement("button", {
+    className: "ea-atras ea-dis",
+    style: {
+      marginTop: 14,
+      marginBottom: 0
+    },
+    onClick: alAzar
+  }, "\uD83C\uDFB2 Al azar: que el juego elija edad, pa\xEDs y carrera")), fase === "edad" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
@@ -58291,7 +58968,28 @@ function Motor() {
     className: "ea-cifraK"
   }, "Cu\xE1nto cuesta sostenerlo"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-mono"
-  }, "USD ", fmt(gastosAnuales), " al a\xF1o"))), /*#__PURE__*/React.createElement(CaminoFinal, {
+  }, "USD ", fmt(gastosAnuales), " al a\xF1o"))), s.dia && (() => {
+    const h = hechosDelDia(s, {
+      pat: patrimonio,
+      gasto: gastosAnuales
+    });
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-dia",
+      style: {
+        marginTop: 22
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-diaTop ea-dis"
+    }, /*#__PURE__*/React.createElement("span", null, "Carrera del d\xEDa \xB7 ", s.dia), /*#__PURE__*/React.createElement("span", null, h.filter(Boolean).length, " de 3")), /*#__PURE__*/React.createElement("div", {
+      className: "ea-diaObjs"
+    }, s.objDia.map((id, i) => {
+      const o = OBJETIVOS_DIA.find(y => y.id === id);
+      return o ? /*#__PURE__*/React.createElement("div", {
+        key: id,
+        className: "ea-diaObj"
+      }, /*#__PURE__*/React.createElement("span", null, h[i] ? "✅" : "❌"), " ", o.t) : null;
+    })));
+  })(), /*#__PURE__*/React.createElement(CaminoFinal, {
     s: s
   }), /*#__PURE__*/React.createElement(BotonAnotar, {
     entrada: {
@@ -58303,6 +59001,11 @@ function Motor() {
       v: texto(veredicto && veredicto.t, 60)
     },
     onAnotada: () => setVueltaRegistro(v => v + 1)
+  }), /*#__PURE__*/React.createElement(BotonCompartir, {
+    texto: textoCompartir(s, patrimonio, s.dia ? hechosDelDia(s, {
+      pat: patrimonio,
+      gasto: gastosAnuales
+    }) : null)
   }), /*#__PURE__*/React.createElement("div", {
     className: "ea-panel",
     style: {
