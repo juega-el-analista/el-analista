@@ -988,8 +988,8 @@ const clamp = (v, a, b) => {
    función que siempre devuelve cero, esto no se cuelga. */
 const gauss = () => {
   let u = 0, v = 0, vueltas = 0;
-  while (u === 0 && vueltas++ < 12) u = numero(Math.random(), 0.5);
-  while (v === 0 && vueltas++ < 24) v = numero(Math.random(), 0.5);
+  while (u === 0 && vueltas++ < 12) u = numero(azar(), 0.5);
+  while (v === 0 && vueltas++ < 24) v = numero(azar(), 0.5);
   if (u <= 0) u = 1e-9;
   const g = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   return Number.isFinite(g) ? Math.max(-5, Math.min(5, g)) : 0;
@@ -1004,9 +1004,35 @@ const fmt = (n) => {
   catch (e) { return String(Math.round(x)); }
 };
 
+/* El azar del motor. Sin semilla es Math.random de siempre (las pruebas
+   que lo secuestran siguen valiendo); con semilla, la carrera del día
+   sale igual para todos. Nunca se toca el Math.random global: el juego
+   vive dentro de SurEconomics y el resto del sitio lo usa. */
+let azarSembrado = null;
+const hashTexto = (s) => {
+  let h = 2166136261 >>> 0;
+  const t = String(s);
+  for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  return h >>> 0;
+};
+/* mulberry32: corto, rápido y de sobra para sortear escenas */
+const generadorDe = (semilla) => {
+  let a = hashTexto(semilla) || 1;
+  return () => {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+const sembrarAzar = (semilla) => { azarSembrado = generadorDe(semilla); };
+const soltarAzar = () => { azarSembrado = null; };
+const azar = () => (azarSembrado ? azarSembrado() : Math.random());
+
 /* índice al azar siempre dentro del arreglo, pase lo que pase con Math.random */
 const indiceAzar = (largo) => {
-  const i = Math.floor(numero(Math.random(), 0) * largo);
+  const i = Math.floor(numero(azar(), 0) * largo);
   return Number.isFinite(i) ? Math.min(largo - 1, Math.max(0, i)) : 0;
 };
 const elegirAzar = (arr) => (Array.isArray(arr) && arr.length ? arr[indiceAzar(arr.length)] : null);
@@ -47767,7 +47793,7 @@ const probsLuego = (x, st) => {
   return w.map((v) => v / total);
 };
 const tirarAzar = (ps) => {
-  let r = Math.random(), i = 0;
+  let r = azar(), i = 0;
   for (; i < ps.length - 1; i++) { r -= ps[i]; if (r < 0) break; }
   return i;
 };
@@ -51948,6 +51974,9 @@ function Motor() {
     irA(siguiente);
   };
 
+  /* la semilla de la carrera del día no sobrevive al juego */
+  useEffect(() => () => soltarAzar(), []);
+
   /* al abrir, mira si hay una partida a medio camino */
   useEffect(() => {
     let vivo = true;
@@ -52100,7 +52129,7 @@ function Motor() {
     /* Una sola tirada al año, y solo pasados los primeros años: una
        legendaria en el año uno no significaría nada porque todavía no hay
        carrera que partir en dos. */
-    if (st.turno >= 4 && Math.random() < 0.11) {
+    if (st.turno >= 4 && azar() < 0.11) {
       const posibles = LEGENDARIAS.filter((e) =>
         st.rango >= e.min && st.rango <= e.max && !(sinJefe(st) && esDeEmpleado(e))
         && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0 && huellasOk(e, st));
@@ -52134,13 +52163,13 @@ function Motor() {
     /* Subida de 0,62 a 0,78: con 0,62 y las escenas de pareja limitadas,
        una vida entera podía pasar sin una sola decisión personal después
        de los veinte. */
-    if (vidas.length && Math.random() < 0.78) {
+    if (vidas.length && azar() < 0.78) {
       /* Las escenas con condición de estado (tienes pareja, tienes hijos)
          solo existen mientras dure ese estado, así que si están sobre la
          mesa tienen prioridad. Si no, la cadena noviazgo-matrimonio-hijos
          casi nunca llegaría a completarse antes de que se acabe la vida. */
       const encadenadas = vidas.filter((v) => typeof v.cuando === "function");
-      const pozo = encadenadas.length && Math.random() < 0.7 ? encadenadas : vidas;
+      const pozo = encadenadas.length && azar() < 0.7 ? encadenadas : vidas;
       /* dentro del pozo mandan las de mayor prioridad: primero te
          preguntan si te casas y solo después aparece la ruptura */
       const maxPri = Math.max.apply(null, pozo.map((v) => numero(v.pri, 2)));
@@ -52195,7 +52224,7 @@ function Motor() {
        propia, legendaria) se SUMA al año en vez de ocupar el sitio de un
        evento normal. Ya me costó una vez: descontar la apertura hacía que
        se dejara de ver el minijuego de trading. */
-    const objetivo = Math.min(forzadas + 2 + (Math.random() < 0.45 ? 1 : 0), 5);
+    const objetivo = Math.min(forzadas + 2 + (azar() < 0.45 ? 1 : 0), 5);
     while (lista.length < objetivo) {
       const e = sacar(sinJefe(st) ? E.concat(DUENO) : E, st, usados);
       if (!e) break;
@@ -52431,7 +52460,7 @@ function Motor() {
        reductor. El reductor los vuelve a comprobar de todas formas. */
     if (s.cash + s.cartera < c.c || s.bienes.indexOf(c.id) >= 0) return;
     if (!puedeComprar(c, s)) return;
-    const dado = Math.random();
+    const dado = azar();
     const sor = dado < 0.22 ? elegirAzar(SORPRESAS_BUENAS)
       : dado < 0.44 ? elegirAzar(SORPRESAS_MALAS) : null;
     aplicarCompra(c, sor);
@@ -52515,7 +52544,7 @@ function Motor() {
     oferta[i] = { ...deal, tomado: true };
     const pos = f.posiciones.concat({
       n: deal.n, s: deal.s, ticket, riesgo: deal.riesgo, base: deal.base,
-      salida: st.turno + 3 + Math.floor(Math.random() * 3),
+      salida: st.turno + 3 + Math.floor(azar() * 3),
     });
     return { ...st, fondo: { ...f, invertido: f.invertido + ticket, posiciones: pos, oferta } };
   });
@@ -52780,7 +52809,7 @@ function Motor() {
     ing.push({ n: "Bono por desempeño", v: bono });
 
     if (tipoRama(st) === "boutique") {
-      const v = salario * (Math.random() * 0.8 - 0.2);
+      const v = salario * (azar() * 0.8 - 0.2);
       if (v >= 0) ing.push({ n: "Variable de la boutique", v });
       else egr.push({ n: "Año flojo de la boutique", v: -v });
     }
@@ -52829,10 +52858,10 @@ function Motor() {
          en vez de dos, para que haya de dónde elegir */
       const cuantasOfertas = f.realizado > f.tam * 0.25 ? 4 : 3;
       f.oferta = libre > capacidadFondo(f) * 0.04
-        ? EMPRESAS.slice().sort(() => Math.random() - 0.5).slice(0, cuantasOfertas).map((e) => ({
+        ? EMPRESAS.slice().sort(() => azar() - 0.5).slice(0, cuantasOfertas).map((e) => ({
             n: e.n, s: e.s, riesgo: e.riesgo, base: baseDeal(e), tomado: false,
             crec: e.crec, mar: e.mar, conc: e.conc, deuda: e.deuda, foso: e.foso, d: e.d,
-            ticket: Math.max(100000, Math.round(Math.min(libre * 0.45, capacidadFondo(f) * (0.07 + numero(Math.random(), 0.5) * 0.08)) / 100000) * 100000),
+            ticket: Math.max(100000, Math.round(Math.min(libre * 0.45, capacidadFondo(f) * (0.07 + numero(azar(), 0.5) * 0.08)) / 100000) * 100000),
           }))
         : [];
       st.fondo = f;
@@ -52853,8 +52882,8 @@ function Motor() {
     /* ---- noticias del año, sesgadas por el país ---- */
     let notis = [];
     const conSesgo = NOTICIAS.filter((x) => x.k === na.sesgo);
-    notis.push(Math.random() < 0.4 && conSesgo.length ? elegirAzar(conSesgo) : elegirAzar(NOTICIAS));
-    if (Math.random() < 0.45) {
+    notis.push(azar() < 0.4 && conSesgo.length ? elegirAzar(conSesgo) : elegirAzar(NOTICIAS));
+    if (azar() < 0.45) {
       const seg = elegirAzar(NOTICIAS);
       if (seg && notis[0] && seg.t !== notis[0].t) notis.push(seg);
     }
@@ -53204,7 +53233,7 @@ function Motor() {
          primera, y ocho opciones —«Prestar sin papeles, es familia»,
          «Meter un ticket pequeño, por la amistad»...— no hacían nada. */
       const p = clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5, 0.12, 0.9);
-      const ok = Math.random() < p;
+      const ok = azar() < p;
       resolverEscena(ok ? (o.chk.ok || o.ok) : (o.chk.no || o.no), ok ? "exito" : "fallo", o,
         { i: ok ? 0 : 1, ps: [p, 1 - p], rots: ["Sale bien", "Sale mal"], tonos: ["exito", "fallo"] });
     } else resolverEscena(o.d, "exito", o);
