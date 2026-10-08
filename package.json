@@ -33,7 +33,8 @@
     "compartir": "node pruebas/compartir.js",
     "oportunidades": "node pruebas/oportunidades.js",
     "cierre": "node pruebas/cierre.js",
-    "contrato": "node pruebas/contrato.js"
+    "contrato": "node pruebas/contrato.js",
+    "boosts": "node pruebas/boosts.js"
   },
   "devDependencies": {
     "@babel/core": "^7",

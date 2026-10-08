@@ -229,6 +229,9 @@ const CSS = `
 .ea-op.dorada:hover:not(:disabled){border-color:#C29A1E;background:rgba(214,170,40,.22)}
 .ea-opRareza{display:inline-block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
   padding:1px 7px;margin-right:8px;vertical-align:middle;border-radius:2px;color:#fff}
+/* emojis en Compras: en las pestañas y en cada cosa */
+.ea-grupoE{font-size:15px;line-height:1;margin-right:2px}
+.ea-itemEmoji{font-size:19px;line-height:1;width:24px;text-align:center;flex-shrink:0}
 /* el contrato: la etiqueta de la oferta y el sueldo nuevo, bien a la vista */
 .ea-opSueldo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:14px;color:var(--tintaPapel)}
 .ea-opSueldo .ea-mono{font-weight:600}
@@ -1699,6 +1702,58 @@ const PERKS = [
   { id: "colchon", n: "Colchón de emergencia bien estructurado", c: 20000, d: "Los golpes negativos de mercado te pegan a la mitad." },
   { id: "mba", n: "MBA ejecutivo de fin de semana", c: 45000, d: "Ocho puntos de criterio de entrada y un punto de carrera cada semestre." },
 ];
+
+/* ============================================================
+   LOS BOOSTS
+   Potenciadores baratos que vencen: uno o dos años de ventaja, como los
+   consumibles de El Ídolo (Alessandro, 8-oct-2026). Se guardan como
+   { id, hasta }: activo mientras turno < hasta. Al cerrar el último año
+   hacen efecto y se van, y el informe lo avisa.
+   ============================================================ */
+const BOOSTS = [
+  { id: "cafe", e: "☕", n: "Café de especialidad todo el año", c: 300, anos: 1, cierre: { ene: 6 },
+    d: "Recuperas 6 de energía al cerrar el año." },
+  { id: "cabala", e: "🍀", n: "Cábala del analista", c: 250, anos: 1, suerte: 0.12,
+    d: "Las tiradas a la suerte se inclinan un poco a tu favor." },
+  { id: "energia", e: "⚡", n: "Bebidas energéticas y siesta programada", c: 400, anos: 1, ayuda: 15,
+    juegos: ["reaccion", "precision", "carril", "trading", "memoria", "pares"],
+    d: "Más reflejos en los minijuegos contra reloj." },
+  { id: "profe", e: "📚", n: "Clases con un profesor particular", c: 700, anos: 1, ayuda: 20,
+    juegos: ["quiz", "catedra", "semaforo", "comite"],
+    d: "Llegas mejor preparado a exámenes, cátedras y comités." },
+  { id: "negocia", e: "🎤", n: "Taller intensivo de negociación", c: 900, anos: 2, ayuda: 20,
+    juegos: ["anclaje", "subasta", "cuatro", "tresraya"],
+    d: "Lees mejor a la otra parte en negociaciones y subastas." },
+  { id: "modelos", e: "📊", n: "Licencia de software de modelos", c: 1200, anos: 2, ayuda: 20,
+    juegos: ["ojo", "calculo", "estructura", "banderas", "orden"],
+    d: "Los números salen más rápido y con menos errores." },
+  { id: "prensa2", e: "📣", n: "Agente de prensa por una temporada", c: 1500, anos: 2, cierre: { rep: 3 },
+    d: "Sumas 3 de reputación cada año que dure." },
+];
+const IDS_BOOST = BOOSTS.map((b) => b.id);
+const BOOST_DE = (id) => BOOSTS.find((b) => b.id === id) || null;
+const boostActivo = (st, id) => (st && Array.isArray(st.boosts) ? st.boosts : [])
+  .some((b) => b && b.id === id && entero(st.turno, 0, 0, 99) < entero(b.hasta, 0, 0, 99));
+const quedaBoost = (st, id) => {
+  const b = (st && Array.isArray(st.boosts) ? st.boosts : []).find((x) => x && x.id === id);
+  return b ? Math.max(0, entero(b.hasta, 0, 0, 99) - entero(st.turno, 0, 0, 99)) : 0;
+};
+/* lo que suman los boosts activos a la ayuda de un minijuego */
+const ayudaBoosts = (st, tipo) => BOOSTS
+  .filter((b) => b.ayuda && (b.juegos || []).indexOf(tipo) >= 0 && boostActivo(st, b.id))
+  .reduce((a, b) => a + b.ayuda, 0);
+const suerteBoosts = (st) => BOOSTS
+  .filter((b) => b.suerte && boostActivo(st, b.id)).reduce((a, b) => a + b.suerte, 0);
+
+/* Un emoji por cosa que se compra (Alessandro, 8-oct-2026) */
+const EMOJI_COMPRA = {
+  viaje: "✈️", moto: "🏍️", reloj: "⌚", palco: "🏟️", carro: "🏎️", arte: "🖼️", boda: "💒",
+  apto: "🏠", finca: "🌿", playa: "🏖️", barco: "⛵", hijos: "🎓",
+  local: "🏪", ofi: "🏢", galpon: "🏭", edificio: "🏘️", terreno: "🗺️", hotel: "🏨", centro: "🛍️", isla: "🏝️",
+  excel: "📗", diario: "📰", zapas: "👟", after: "🍻", research: "🔬", gym: "🏋️", fiscal: "🧾", coach: "🧑‍🏫",
+  asistente: "🗂️", prensa: "🗞️", terminal: "🖥️", abogado: "⚖️", broker: "💹", club: "🥂", colchon: "🛟", mba: "🏛️",
+};
+BOOSTS.forEach((b) => { EMOJI_COMPRA[b.id] = b.e; });
 
 /* ---------- los escalones del tren de vida ----------
    El índice de vida era un número suelto en una esquina y no significaba
@@ -47987,7 +48042,8 @@ const esDeEmpleado = (e) => !!e && SOLO_EMPLEADO.indexOf(e.id) >= 0;
 const probsAzar = (o, st) => {
   const esc = o && o.azar && Array.isArray(o.azar.esc) ? o.azar.esc : [];
   const k = o && o.azar && o.azar.s;
-  const tilt = k ? clamp((numero(st && st[k], 45) - 45) / 90, -0.45, 0.45) : 0;
+  /* la cábala (un boost) suma su inclinación a la del atributo */
+  const tilt = clamp((k ? (numero(st && st[k], 45) - 45) / 90 : 0) + suerteBoosts(st), -0.45, 0.45);
   const w = esc.map((e) => Math.max(0.01, numero(e.p, 0)) * (1 + (e.nivel === "exito" ? tilt : e.nivel === "fallo" ? -tilt : 0)));
   const total = w.reduce((a, x) => a + x, 0) || 1;
   return w.map((x) => x / total);
@@ -48359,6 +48415,8 @@ const sanear = (bruto) => {
   st.objetivo = clamp(numero(r.objetivo, 0.7), 0, 1);
   st.perfil = texto(r.perfil, "medida", 24);
   st.perks = unicos(listaDe(r.perks, (x) => IDS_PERK.indexOf(x) >= 0, 40));
+  st.boosts = listaDe(r.boosts, (x) => x && typeof x === "object" && IDS_BOOST.indexOf(x.id) >= 0, 12)
+    .map((x) => ({ id: x.id, hasta: entero(x.hasta, 0, 0, 99) }));
   st.bienes = unicos(listaDe(r.bienes, (x) => IDS_BIEN.indexOf(x) >= 0, 40));
   st.valores = {};
   st.bienes.forEach((id) => {
@@ -52923,6 +52981,18 @@ function Motor() {
     return { ...st, cash: st.cash - m, deuda: clamp(numero(st.deuda, 0) - m, 0, TOPE_PLATA) };
   });
 
+  /* un boost: se paga ahora y dura sus años desde este */
+  const comprarBoost = (b) => setS((st) => {
+    if (!b || st.cash + st.cartera < b.c || boostActivo(st, b.id)) return st;
+    const r = cobrar(st, b.c);
+    const otros = (Array.isArray(st.boosts) ? st.boosts : []).filter((x) => x.id !== b.id);
+    return {
+      ...st, cash: r.cash, cartera: r.cartera,
+      boosts: otros.concat({ id: b.id, hasta: st.turno + b.anos }),
+      titulares: st.titulares.concat({ q: String(2026 + st.turno), t: "Activas " + b.n.toLowerCase() }),
+    };
+  });
+
   const comprarPerk = (p) => setS((st) => {
     if (st.cash + st.cartera < p.c || tiene(st, p.id)) return st;
     const r = cobrar(st, p.c);
@@ -53288,6 +53358,10 @@ function Motor() {
     const patAntes = st.cash + st.cartera + valorBienes(st) - numero(st.deuda, 0);
     const gastoAnt = st.gastoAnt || 0;
 
+    /* los boosts de cierre (energía, reputación) de los que siguen activos */
+    BOOSTS.filter((b) => b.cierre && boostActivo(st, b.id)).forEach((b) => {
+      Object.keys(b.cierre).forEach((k) => { st[k] = clamp(numero(st[k], 0) + b.cierre[k], 0, 100); });
+    });
     if (tiene(st, "excel")) st.mod = clamp(st.mod + 1, 0, 100);
     if (tiene(st, "diario")) st.cri = clamp(st.cri + 1, 0, 100);
     if (tiene(st, "zapas")) st.ene = clamp(st.ene + 2, 0, 100);
@@ -53678,6 +53752,13 @@ function Motor() {
       otros: (patVisible - patIni) - decisionesAno - sueldoAno - mercadosAno };
 
     const ano = 2026 + st.turno;
+    /* los boosts que vencen con este año se avisan y se van */
+    const vencen = (Array.isArray(st.boosts) ? st.boosts : []).filter((b) => b.hasta <= st.turno + 1);
+    vencen.forEach((b) => {
+      const x = BOOST_DE(b.id);
+      if (x) notas.push("Se terminó tu boost «" + x.n + "». Lo puedes volver a activar en Compras.");
+    });
+    st.boosts = (Array.isArray(st.boosts) ? st.boosts : []).filter((b) => b.hasta > st.turno + 1);
     st.turno += 1;
     st = sanear(st);
     setS(st);
@@ -53706,6 +53787,7 @@ function Motor() {
     if (tipoRama(s) === "pe" && ["estructura", "banderas"].indexOf(tipo) >= 0) a += 15;
     if (tipoRama(s) === "mercados" && ["trading", "calculo"].indexOf(tipo) >= 0) a += 15;
     a += MODO(s.modo).ayuda;   /* el modo aprendiz perdona más */
+    a += ayudaBoosts(s, tipo); /* los boosts activos */
     return clamp(a, 0, 100);
   };
 
@@ -53742,7 +53824,7 @@ function Motor() {
          opción): las dos formas existen en las tablas. Solo se leía la
          primera, y ocho opciones —«Prestar sin papeles, es familia»,
          «Meter un ticket pequeño, por la amistad»...— no hacían nada. */
-      const p = clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5, 0.12, 0.9);
+      const p = clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5 + suerteBoosts(s) / 2, 0.12, 0.9);
       const ok = azar() < p;
       resolverEscena(ok ? (o.chk.ok || o.ok) : (o.chk.no || o.no), ok ? "exito" : "fallo", o,
         { i: ok ? 0 : 1, ps: [p, 1 - p], rots: ["Sale bien", "Sale mal"], tonos: ["exito", "fallo"] });
@@ -53897,12 +53979,15 @@ function Motor() {
   const hayCompras = abierto(s, "inmuebles") || abierto(s, "mejoras") || abierto(s, "vida");
   /* los tres grupos de Comprar, con lo que cada uno hace en una linea */
   const GRUPOS_COMPRA = [
-    { id: "caprichos", n: "Para ti", ico: "copa", lista: CAPRICHOS, abierto: abierto(s, "vida"),
-      d: "Sube tu tren de vida. Unos conservan valor y otros no; casi todos cobran mantenimiento." },
-    { id: "inmuebles", n: "Rentan", ico: "edificio", lista: PROPIEDADES, abierto: abierto(s, "inmuebles"),
+    { id: "caprichos", n: "Para ti", e: "🎁", lista: CAPRICHOS, abierto: abierto(s, "vida"),
+      d: "Cosas para disfrutar. Unas conservan valor y otras no; casi todas cobran mantenimiento." },
+    { id: "inmuebles", n: "Rentan", e: "🏢", lista: PROPIEDADES, abierto: abierto(s, "inmuebles"),
       d: "Existen para pagarte algo cada año. La renta y el mantenimiento salen en el cierre." },
-    { id: "mejoras", n: "Te mejoran", ico: "grafico", lista: PERKS, abierto: abierto(s, "mejoras"),
+    { id: "mejoras", n: "Te mejoran", e: "📈", lista: PERKS, abierto: abierto(s, "mejoras"),
       d: "Se compran una vez y trabajan para ti todos los años que queden." },
+    /* se abren junto con las mejoras: los dos son invertir en ti */
+    { id: "boosts", n: "Boosts", e: "⚡", lista: BOOSTS, abierto: abierto(s, "mejoras"),
+      d: "Potenciadores baratos que duran uno o dos años. Cuando vencen, se pueden volver a activar." },
   ];
   const GRUPO_ACT = GRUPOS_COMPRA.filter((g) => g.abierto).find((g) => g.id === grupo)
     || GRUPOS_COMPRA.filter((g) => g.abierto)[0]
@@ -54697,13 +54782,38 @@ function Motor() {
                       {GRUPOS_COMPRA.filter((g) => g.abierto).map((g) => (
                         <button key={g.id} className={"ea-grupo" + (grupo === g.id ? " on" : "")}
                           onClick={() => setGrupo(g.id)}>
-                          <Icono k={g.ico} tam={15} />{g.n}
+                          <span className="ea-grupoE" aria-hidden="true">{g.e}</span>{g.n}
                         </button>
                       ))}
                     </div>
                     <div className="ea-itemD" style={{ margin: "4px 0 12px" }}>{GRUPO_ACT.d}</div>
 
-                    {GRUPO_ACT.lista.map((c) => {
+                    {GRUPO_ACT.id === "boosts" && BOOSTS.map((b) => {
+                      const activo = boostActivo(s, b.id);
+                      const queda = quedaBoost(s, b.id);
+                      const caro = s.cash + s.cartera < b.c;
+                      return (
+                        <div className={"ea-item" + (activo ? " tuyo" : "")} key={b.id}>
+                          <div className="ea-itemTop">
+                            <span className="ea-itemN ea-itemConIco">
+                              <span className="ea-itemEmoji" aria-hidden="true">{b.e}</span>{b.n}
+                            </span>
+                            <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(b.c)}</span>
+                          </div>
+                          <div className="ea-etqs">
+                            <span className="ea-etq act">dura {b.anos === 1 ? "un año" : b.anos + " años"}</span>
+                          </div>
+                          <div className="ea-itemD">{b.d}</div>
+                          {activo
+                            ? <span className="ea-tengo ea-dis">Activo · te queda{queda === 1 ? " este año" : "n " + queda + " años"}</span>
+                            : <button className={caro ? "ea-mini" : "ea-comprar ea-dis"} disabled={caro}
+                                onClick={() => comprarBoost(b)}>
+                                {caro ? "No te alcanza" : "Activar"}
+                              </button>}
+                        </div>
+                      );
+                    })}
+                    {GRUPO_ACT.id !== "boosts" && GRUPO_ACT.lista.map((c) => {
                       const esPerk = GRUPO_ACT.id === "mejoras";
                       const ya = esPerk ? tiene(s, c.id) : s.bienes.indexOf(c.id) >= 0;
                       const caro = s.cash + s.cartera < c.c;
@@ -54712,7 +54822,10 @@ function Motor() {
                         <div className={"ea-item" + (ya ? " tuyo" : "")} key={c.id}>
                           <div className="ea-itemTop">
                             <span className="ea-itemN ea-itemConIco">
-                              <Icono k={ICONO_BIEN[c.id] || "moneda"} tam={19} />{c.n}
+                              {EMOJI_COMPRA[c.id]
+                                ? <span className="ea-itemEmoji" aria-hidden="true">{EMOJI_COMPRA[c.id]}</span>
+                                : <Icono k={ICONO_BIEN[c.id] || "moneda"} tam={19} />}
+                              {c.n}
                             </span>
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(c.c)}</span>
                           </div>
