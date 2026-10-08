@@ -34,7 +34,8 @@
     "oportunidades": "node pruebas/oportunidades.js",
     "cierre": "node pruebas/cierre.js",
     "contrato": "node pruebas/contrato.js",
-    "boosts": "node pruebas/boosts.js"
+    "boosts": "node pruebas/boosts.js",
+    "gala": "node pruebas/gala.js"
   },
   "devDependencies": {
     "@babel/core": "^7",

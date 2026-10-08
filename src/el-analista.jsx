@@ -1653,6 +1653,19 @@ const CSS4 = `
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:24px;text-align:center;animation:ea-entra .3s ease-out;cursor:pointer}
 @keyframes ea-entra{from{opacity:0}to{opacity:1}}
+/* la gala de un premio: dorado, a pantalla completa, por debajo de la capa 100 */
+.ea-gala{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;text-align:center;animation:ea-entra .35s ease-out;
+  background:radial-gradient(circle at 50% 35%,#3a2a08 0%,#120c03 70%);color:#F7EBC8}
+.ea-gala.mundial{background:radial-gradient(circle at 50% 35%,#5a4210 0%,#140d02 72%)}
+.ea-galaK{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#D9B54A}
+.ea-galaTrofeo{font-size:84px;line-height:1;margin:18px 0 8px;animation:ea-galaSube 1s cubic-bezier(.2,.8,.3,1) both;
+  filter:drop-shadow(0 0 22px rgba(217,181,74,.55))}
+@keyframes ea-galaSube{from{transform:translateY(30px) scale(.6);opacity:0}to{transform:none;opacity:1}}
+.ea-galaTipo{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#D9B54A;margin-top:6px}
+.ea-galaN{font-size:30px;line-height:1.15;margin:8px 0 10px;color:#FFF6DA;max-width:560px}
+.ea-galaX{font-size:15px;line-height:1.5;max-width:480px;color:#E9DDB8;margin:0}
+.ea-galaP{font-size:13px;color:#D9B54A;margin-top:14px}
 .ea-anuncioK{font-size:12px;letter-spacing:.3em;color:var(--tenue);margin-bottom:10px}
 .ea-anuncioN{font-size:clamp(38px,12vw,86px);color:var(--papel);line-height:1;
   display:flex;align-items:center;gap:.12em}
@@ -52073,6 +52086,29 @@ function BotonCompartir({ texto: t }) {
   );
 }
 
+/* La gala de un premio, a pantalla completa (Alessandro, 8-oct-2026,
+   pensando en el Balón de Oro de El Ídolo). Muestra el premio número
+   «vista» de la lista; con cada «seguir» pasa al siguiente y al final
+   desaparece. */
+function GalaPremio({ ids, ano, vista, onSeguir }) {
+  const lista = (Array.isArray(ids) ? ids : []).map(PREMIO_DE).filter(Boolean);
+  const p = lista[entero(vista, 0, 0, 99)];
+  if (!p) return null;
+  return (
+    <div className={"ea-gala" + (p.mundial ? " mundial" : "")}>
+      <div className="ea-galaK ea-dis">La gala · {ano}</div>
+      <div className="ea-galaTrofeo" aria-hidden="true">{p.mundial ? "🏆" : "🥇"}</div>
+      <div className="ea-galaTipo ea-dis">{p.mundial ? "Reconocimiento mundial" : "Reconocimiento nacional"}</div>
+      <h2 className="ea-galaN ea-dis">{p.n}</h2>
+      <p className="ea-galaX">{p.x}</p>
+      <div className="ea-galaP ea-mono">+{p.mundial ? 14 : 7} reputación · +{p.mundial ? 10 : 5} red</div>
+      <button className="ea-jugarYa ea-dis" style={{ marginTop: 22 }} onClick={onSeguir}>
+        {entero(vista, 0, 0, 99) + 1 < lista.length ? "Recibirlo y seguir" : "Subir a recibirlo"}
+      </button>
+    </div>
+  );
+}
+
 function BotonAnotar({ entrada, onAnotada }) {
   const [puede, setPuede] = useState(null);      /* null = comprobando */
   const [estado, setEstado] = useState("listo"); /* listo · enviando · hecho · error · sin-sesion */
@@ -52463,6 +52499,9 @@ function Motor() {
   /* la pantalla del rodillo, que tapa el informe hasta que el jugador
      ha visto cuanto tiene ahora */
   const [anuncio, setAnuncio] = useState(false);
+  /* cuántas galas de este cierre ya se vieron */
+  const [galaVista, setGalaVista] = useState(0);
+  useEffect(() => { setGalaVista(0); }, [cierre]);
   /* la segunda mitad de la leccion del año, la de las cifras propias */
   const [verLeccion, setVerLeccion] = useState(false);
   /* el movimiento: del navegador, no de la partida */
@@ -53768,7 +53807,9 @@ function Motor() {
     if (leccion) st.lecs = (st.lecs || []).concat(leccion.id).slice(-20);
 
     /* Los reconocimientos se conceden solos: si ya te toca, te toca. */
+    const galas = [];
     premiosNuevos(st).forEach((p) => {
+      galas.push(p.id);   /* para su gala, a pantalla completa */
       st.premios = (Array.isArray(st.premios) ? st.premios : []).concat(p.id);
       st.rep = clamp(numero(st.rep, 0) + (p.mundial ? 14 : 7), 0, 100);
       st.red = clamp(numero(st.red, 0) + (p.mundial ? 10 : 5), 0, 100);
@@ -53818,7 +53859,7 @@ function Motor() {
     st = sanear(st);
     setS(st);
     setCierre({
-      logros,
+      logros, galas,
       ano, notis, ascenso, cartera, notas, ing, egr, ingreso, egreso: egreso + pagoDeuda, neto: neto - pagoDeuda, ahorro,
       patAntes, patrimonio, bienesV, histo: st.histo, leccion, hitos, deuda,
       patVisible, patIni, partes,
@@ -55651,6 +55692,16 @@ function Motor() {
           </div>
         );
       })()}
+
+      {/* ============================================================
+          LA GALA
+          Un premio no puede ser una línea en el informe (Alessandro,
+          8-oct-2026, pensando en el Balón de Oro de El Ídolo): sale a
+          pantalla completa después del rodillo, uno por uno.
+          ============================================================ */}
+      {fase === "cierre" && cierre && !anuncio && (
+        <GalaPremio ids={cierre.galas} ano={cierre.ano} vista={galaVista} onSeguir={() => setGalaVista((v) => v + 1)} />
+      )}
 
       {nuevoSistema && (() => {
         const ap = APERTURAS.find((a) => a.id === nuevoSistema);
