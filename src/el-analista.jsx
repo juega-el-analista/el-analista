@@ -48295,11 +48295,13 @@ const escenaPretemporada = (st) => {
   for (let i = 0; i < 3; i++) {
     const k = pozo.splice(Math.floor(rnd() * pozo.length), 1)[0];
     const r = rnd();
-    const v = r < 0.05 ? 4 : r < 0.30 ? 3 : 2;
+    /* Raras y doradas salen poco pero se notan muchísimo (Alessandro,
+       8-oct-2026): dorada 3% (+15), rara 10% (+8), común +2. */
+    const v = r < 0.03 ? 15 : r < 0.13 ? 8 : 2;
     const lista = CARTAS_PRE[k];
     const titulo = lista[Math.floor(rnd() * lista.length)];
     /* la rareza va aparte, para pintarla: rara en morado, dorada en dorado */
-    const rareza = v === 4 ? "dorada" : v === 3 ? "rara" : null;
+    const rareza = v === 15 ? "dorada" : v === 8 ? "rara" : null;
     cartas.push({
       t: titulo, rareza,
       d: { [k]: v, msg: VACACIONES_OPCIONES.indexOf(titulo) >= 0
