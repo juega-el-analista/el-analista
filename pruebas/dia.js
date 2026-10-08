@@ -116,6 +116,33 @@ const tiradas = (n) => { const r = []; for (let i = 0; i < n; i++) r.push(J.azar
   }
   ok(Math.random === original, "y el Math.random de la página queda como estaba");
 
+  /* ---- una por día: empezada cuenta como jugada ---- */
+  {
+    const mem = new Map();
+    mem.set("el-analista-aviso-leido", "1");
+    global.window = { localStorage: { getItem: (k) => (mem.has(k) ? mem.get(k) : null), setItem: (k, v) => mem.set(k, String(v)), removeItem: (k) => mem.delete(k) } };
+    const botonDia = (r) => r.root.findAll((n) => n.type === "button" && /^Jugar la del día$/.test(JSON.stringify(n.props.children || "").replace(/"/g, "")))[0];
+    let r;
+    await act(async () => { r = TR.create(React.createElement(J.ElAnalista)); });
+    for (let i = 0; i < 6; i++) await act(async () => { await Promise.resolve(); });
+    const b = botonDia(r);
+    ok(!!b, "antes de jugarla, está el botón «Jugar la del día»");
+    await act(async () => { b.props.onClick(); });
+    for (let i = 0; i < 6; i++) await act(async () => { await Promise.resolve(); });
+    const marca = JSON.parse(mem.get(J.CLAVE_DIA) || "null");
+    ok(marca && marca.fecha === J.fechaHoy(), "al empezarla queda anotado que hoy ya se usó");
+    await act(async () => { r.unmount(); });
+    /* abandonarla: se borra la partida y se vuelve a abrir el juego */
+    mem.delete(J.CLAVE);
+    let r2;
+    await act(async () => { r2 = TR.create(React.createElement(J.ElAnalista)); });
+    for (let i = 0; i < 6; i++) await act(async () => { await Promise.resolve(); });
+    ok(!botonDia(r2), "al volver el mismo día ya no se puede jugar otra vez");
+    const t2 = JSON.stringify(r2.toJSON());
+    ok(/Vuelve mañana/.test(t2), "y la portada dice que vuelva mañana");
+    await act(async () => { r2.unmount(); });
+  }
+
   try { fs.unlinkSync(tmp); } catch (e) {}
   console.log("\n  " + (fallos ? fallos + " FALLO(S)" : "todo en verde"));
   process.exit(fallos ? 1 : 0);

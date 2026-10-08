@@ -47243,8 +47243,10 @@ const leerDia = () => {
   try {
     if (typeof window === "undefined" || !window.localStorage) return null;
     const d = JSON.parse(window.localStorage.getItem(CLAVE_DIA) || "null");
-    if (!d || !esFecha(d.fecha) || !Array.isArray(d.hechos)) return null;
-    return { fecha: d.fecha, hechos: d.hechos.slice(0, 3).map((x) => x === true), p: Math.round(numero(d.p, 0)) };
+    if (!d || !esFecha(d.fecha)) return null;
+    /* hechos null = empezada y todavía sin terminar */
+    return { fecha: d.fecha, hechos: Array.isArray(d.hechos) ? d.hechos.slice(0, 3).map((x) => x === true) : null,
+      p: Math.round(numero(d.p, 0)) };
   } catch (e) { return null; }
 };
 const anotarDia = (d) => {
@@ -52972,6 +52974,12 @@ function Motor() {
   const jugarDelDia = () => {
     if (!enFase("portada")) return;
     const f = fechaHoy();
+    /* Una por día (Alessandro, 8-oct-2026). Cuenta como jugada desde que
+       empieza: abandonarla para volver a tirar no es otra oportunidad. */
+    if (diaHecho && diaHecho.fecha === f) return;
+    const marca = { fecha: f, hechos: null, p: 0 };
+    anotarDia(marca);
+    setDiaHecho(marca);
     tirarPartida();
     setFin(null); setRes(null); setCierre(null); setTab(null);
     arrancarPartida({ ...SETUP0, ...eleccionDelDia(f), dia: f });
@@ -54277,7 +54285,9 @@ function Motor() {
             const na = NACIONES.find((x) => x.id === e.pais) || NACIONES[0];
             const ca = CARRERAS.find((x) => x.id === e.estudio) || CARRERAS[0];
             const obs = objetivosDelDia(f).map((id) => OBJETIVOS_DIA.find((o) => o.id === id)).filter(Boolean);
-            const hecho = diaHecho && diaHecho.fecha === f ? diaHecho : null;
+            const usada = diaHecho && diaHecho.fecha === f ? diaHecho : null;
+            const hecho = usada && usada.hechos ? usada : null;   /* terminada */
+            const enCurso = !!(usada && !hecho && guardado && guardado.s && guardado.s.dia === f);
             return (
               <div className="ea-dia">
                 <div className="ea-diaTop ea-dis">
@@ -54292,15 +54302,23 @@ function Motor() {
                     </div>
                   ))}
                 </div>
+                {/* una por día: jugada, a medias o abandonada, hoy ya no se repite */}
                 {hecho && (
                   <div className="ea-itemD">
-                    Hoy ya la jugaste: {hecho.hechos.filter(Boolean).length} de 3, con USD {fmt(hecho.p)}. Puedes intentarlo otra vez.
+                    Hoy ya la jugaste: {hecho.hechos.filter(Boolean).length} de 3, con USD {fmt(hecho.p)}.
+                    Vuelve mañana por la siguiente.
                   </div>
                 )}
-                <button className="ea-jugarYa ea-dis" style={{ marginTop: 12 }} onClick={jugarDelDia}>
-                  {hecho ? "Volver a jugar la del día" : "Jugar la del día"}
-                </button>
-                {guardado && (
+                {!usada && (
+                  <button className="ea-jugarYa ea-dis" style={{ marginTop: 12 }} onClick={jugarDelDia}>Jugar la del día</button>
+                )}
+                {enCurso && (
+                  <button className="ea-jugarYa ea-dis" style={{ marginTop: 12 }} onClick={retomar}>Retomar la del día</button>
+                )}
+                {usada && !hecho && !enCurso && (
+                  <div className="ea-itemD">Ya usaste la de hoy. Vuelve mañana por la siguiente.</div>
+                )}
+                {!usada && guardado && (
                   <div style={{ fontSize: 11.5, color: "var(--gris)", marginTop: 8 }}>
                     Empezar la del día borra tu partida guardada.
                   </div>
