@@ -890,6 +890,11 @@ const CSS = `
 .ea-op.dorada:hover:not(:disabled){border-color:#C29A1E;background:rgba(214,170,40,.22)}
 .ea-opRareza{display:inline-block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
   padding:1px 7px;margin-right:8px;vertical-align:middle;border-radius:2px;color:#fff}
+/* el contrato: la etiqueta de la oferta y el sueldo nuevo, bien a la vista */
+.ea-opSueldo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:14px;color:var(--tintaPapel)}
+.ea-opSueldo .ea-mono{font-weight:600}
+.ea-opEtq{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--cobre);
+  border:1px solid var(--cobre);padding:1px 7px;border-radius:2px}
 .ea-opRareza.rara{background:#8A5CC7}
 .ea-opRareza.dorada{background:#B8901C}
 
@@ -48367,13 +48372,14 @@ const escenaFirma = (st, id) => {
    del titulo que estudiaste; el contrato es lo que se renegocia.
    Todas las firmas son inventadas.
    ============================================================ */
+/* seis por carrera: al vencer el contrato llegan tres ofertas y no pueden repetirse */
 const PATRONES = {
-  eco: ["Andes Macro Partners", "Consultora Cardinal", "Meridiano Estudios Económicos"],
-  con: ["Vargas & Prieto Auditores", "Contable Atlántico", "Revisoría Solano"],
-  ing: ["Cordillera Project Finance", "Proyecta Capital", "Infraestructura del Sur"],
-  der: ["Larrea Structuring", "Salazar Mendoza Abogados", "Estudio Fondevila"],
-  adm: ["Grupo Corporativo Ávila", "Nexo Asesores", "Mercantil Praga"],
-  sis: ["Quantum Datos Financieros", "Nodo Capital Tech", "Delta Sistemas Bursátiles"]
+  eco: ["Andes Macro Partners", "Consultora Cardinal", "Meridiano Estudios Económicos", "Pampa Research", "Ciclo Asesores", "Brújula Macro"],
+  con: ["Vargas & Prieto Auditores", "Contable Atlántico", "Revisoría Solano", "Balance Sur", "Auditores del Pacífico", "Rivas & Ochoa"],
+  ing: ["Cordillera Project Finance", "Proyecta Capital", "Infraestructura del Sur", "Puentes Financieros", "Altiplano Energía Capital", "Obra Fiduciaria"],
+  der: ["Larrea Structuring", "Salazar Mendoza Abogados", "Estudio Fondevila", "Iturbe & Asociados", "Cámara Legal Andina", "Estudio Mirasol"],
+  adm: ["Grupo Corporativo Ávila", "Nexo Asesores", "Mercantil Praga", "Holding Costanera", "Gestión Albatros", "Corporación Lince"],
+  sis: ["Quantum Datos Financieros", "Nodo Capital Tech", "Delta Sistemas Bursátiles", "Algoritmo Austral", "Byte Capital", "Señal Cuantitativa"]
 };
 const PATRONES_TODOS = Object.keys(PATRONES).reduce((a, k) => a.concat(PATRONES[k]), []);
 
@@ -48404,8 +48410,124 @@ const CONTRATOS = [{
 }];
 const TOPE_MULT = 2.2;
 
+/* El sueldo anual con un multiplicador nuevo: la misma cuenta que
+   salarioAnual en el motor, para poder decirlo antes de firmar. */
+const sueldoCon = (st, mult) => {
+  const na = NACIONES.find(x => x.id === (st && st.pais)) || NACIONES[0];
+  return RANGO(st && st.rango).salario * 12 * na.sal * clamp(numero(st && st.sueldoMult, 1) * numero(mult, 1), 0.6, TOPE_MULT);
+};
+
+/* ============================================================
+   EL CONTRATO, COMO UN MERCADO DE PASES
+   Antes eran tres renovaciones casi iguales y ningún sueldo a la vista.
+   Ahora (Alessandro, 8-oct-2026, mirando El Ídolo): renovar donde estás,
+   tres ofertas de firmas distintas, cada una con su carácter, y negociar
+   con tu firma. En cada opción, el sueldo que vas a cobrar.
+   Las ofertas salen de la semilla y del año: una recarga no las cambia.
+   ============================================================ */
+const OFERTAS_CONTRATO = [{
+  k: "bombazo",
+  etq: "Bombazo",
+  mult: [1.28, 1.38],
+  d: {
+    ene: -6,
+    car: 3
+  },
+  msg: "Pagan mucho más y lo cobran en horas."
+}, {
+  k: "prestigio",
+  etq: "Más prestigio",
+  mult: [1.06, 1.12],
+  d: {
+    rep: 5,
+    car: 4
+  },
+  msg: "El nombre de la firma te abre puertas solo."
+}, {
+  k: "crecer",
+  etq: "Crecimiento",
+  mult: [1.12, 1.20],
+  d: {
+    cri: 3,
+    mod: 3
+  },
+  msg: "Te sientan al lado de los mejores y se te pega."
+}, {
+  k: "baja",
+  etq: "A la baja",
+  mult: [0.90, 0.97],
+  d: {
+    ene: 8,
+    rep: -1
+  },
+  msg: "Ganas menos, sales a tu hora y vuelves a dormir."
+}];
+const escenaContrato = st => {
+  const rnd = generadorDe("contrato:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + entero(st && st.turno, 0, 0, 99));
+  const actual = texto(st && st.patron, "", 48) || "tu firma";
+  const lista = (PATRONES[st && st.estudio] || PATRONES_TODOS).filter(n => n !== actual);
+  const firmas = [];
+  while (firmas.length < 3 && lista.length) firmas.push(lista.splice(Math.floor(rnd() * lista.length), 1)[0]);
+  const perfiles = OFERTAS_CONTRATO.slice();
+  perfiles.splice(Math.floor(rnd() * perfiles.length), 1); /* tres de los cuatro caracteres */
+  const ofertas = firmas.map((f, i) => {
+    const p = perfiles[i];
+    const mult = Math.round((p.mult[0] + rnd() * (p.mult[1] - p.mult[0])) * 100) / 100;
+    const anos = 2 + Math.floor(rnd() * 4);
+    return {
+      t: "Firmar con " + f + " · " + anos + " años",
+      contrato: {
+        anos,
+        mult
+      },
+      patronNuevo: f,
+      etq: p.etq,
+      sueldo: Math.round(sueldoCon(st, mult)),
+      d: {
+        ...p.d,
+        msg: "Te vas a " + f + ". " + p.msg
+      }
+    };
+  });
+  const renovar = {
+    t: "Renovar en " + actual + " · 3 años",
+    contrato: {
+      anos: 3,
+      mult: 1.06
+    },
+    etq: "Te quedas",
+    sueldo: Math.round(sueldoCon(st, 1.06)),
+    d: {
+      rep: 2,
+      cri: 1,
+      msg: "Renuevas tres años donde ya te conocen. Un aumento chico y ninguna sorpresa."
+    }
+  };
+  const negociar = {
+    t: "Negociar un aumento con " + actual,
+    contrato: {
+      anos: 3,
+      mult: 1.22
+    },
+    j: "anclaje",
+    stat: "red",
+    etq: "Si negocias bien",
+    sueldo: Math.round(sueldoCon(st, 1.22)),
+    d: {
+      car: 3,
+      red: 2,
+      msg: "Te sientas con tu jefe y pones tu número sobre la mesa."
+    }
+  };
+  return {
+    ...ESCENA_CONTRATO,
+    o: [renovar].concat(ofertas, [negociar])
+  };
+};
+
 /* La escena que se dispara cuando el contrato llega a su fin. Se empuja
-   a mano desde generarAno, asi que puede repetirse toda la partida. */
+   a mano desde generarAno, asi que puede repetirse toda la partida. Esta
+   versión fija solo sirve de respaldo: la que se juega es escenaContrato. */
 const ESCENA_CONTRATO = {
   id: 9710,
   min: 0,
@@ -49114,6 +49236,14 @@ const escenaDeId = (id, st) => {
       return escenaPretemporada(st);
     } catch (e) {
       return null;
+    }
+  }
+  /* el contrato trae ofertas de otras firmas, armadas con la semilla del año */
+  if (id === ESCENA_CONTRATO.id) {
+    try {
+      return escenaContrato(st);
+    } catch (e) {
+      return ESCENA_CONTRATO;
     }
   }
   if (IDS_FIRMA.indexOf(id) >= 0) {
@@ -54651,7 +54781,7 @@ function Motor() {
        para que pueda repetirse toda la partida. */
     const con = st.contrato;
     if (con && st.turno >= numero(con.desde, 0) + numero(con.anos, 3)) {
-      lista.push(ESCENA_CONTRATO);
+      lista.push(escenaContrato(st));
       usados.push(ESCENA_CONTRATO.id);
     }
     /* Lo que decidiste hace uno, dos o tres años y vuelve ahora. Antes se
@@ -55350,6 +55480,16 @@ function Motor() {
       st.sueldoMult = clamp(numero(st.sueldoMult, 1) * mult, 0.6, TOPE_MULT);
       /* Y si la negociación se cayó del todo, tampoco te mudas de firma:
          te quedas donde estabas, con el plazo nuevo y sin subida. */
+      /* una oferta del mercado: te mudas a esa firma, con su nombre */
+      if (o.patronNuevo && parte > 0 && o.patronNuevo !== st.patron) {
+        const antes = st.patron;
+        st.patronAnt = antes || "";
+        st.patron = texto(o.patronNuevo, st.patron, 48);
+        st.titulares = st.titulares.concat({
+          q: String(2026 + st.turno),
+          t: "Te vas de " + (antes || "tu firma") + " a " + st.patron
+        });
+      }
       if (o.cambiaPatron && parte > 0) {
         const antes = st.patron;
         st.patron = otroPatron(st);
@@ -58346,7 +58486,13 @@ function Motor() {
           className: "ea-opN ea-mono"
         }, String.fromCharCode(65 + i % 26)), o.rareza && /*#__PURE__*/React.createElement("span", {
           className: "ea-opRareza ea-dis " + o.rareza
-        }, o.rareza === "dorada" ? "Dorada" : "Rara"), o.t, o.req && !falta && /*#__PURE__*/React.createElement("span", {
+        }, o.rareza === "dorada" ? "Dorada" : "Rara"), o.t, o.sueldo > 0 && /*#__PURE__*/React.createElement("span", {
+          className: "ea-opSueldo"
+        }, o.etq && /*#__PURE__*/React.createElement("span", {
+          className: "ea-opEtq ea-dis"
+        }, o.etq), /*#__PURE__*/React.createElement("span", {
+          className: "ea-mono"
+        }, o.j ? "hasta " : "", "USD ", fmt(o.sueldo), " al a\xF1o")), o.req && !falta && /*#__PURE__*/React.createElement("span", {
           className: "ea-opSolo ea-dis"
         }, "solo t\xFA"), o.azar && /*#__PURE__*/React.createElement("span", {
           className: "ea-opAzar ea-dis"

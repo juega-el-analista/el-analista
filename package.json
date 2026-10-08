@@ -32,7 +32,8 @@
     "negociacion": "node pruebas/negociacion.js",
     "compartir": "node pruebas/compartir.js",
     "oportunidades": "node pruebas/oportunidades.js",
-    "cierre": "node pruebas/cierre.js"
+    "cierre": "node pruebas/cierre.js",
+    "contrato": "node pruebas/contrato.js"
   },
   "devDependencies": {
     "@babel/core": "^7",
