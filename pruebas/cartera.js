@@ -19,7 +19,7 @@ cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
 const comp = path.join(__dirname, "compilado.js");
 const tmp = path.join(__dirname, "probeCartera.js");
 fs.writeFileSync(tmp, fs.readFileSync(comp, "utf8").replace("module.exports = ElAnalista;",
-  "module.exports = { PanelCartera, PERFILES, PERFILES_SIMPLES };"));
+  "module.exports = { PanelCartera, PERFILES, PERFILES_SIMPLES, PERFILES_EXPERTO };"));
 const J = require(tmp);
 
 let fallos = 0;
@@ -61,9 +61,18 @@ const txt = (j) => (j == null ? "" : typeof j === "string" || typeof j === "numb
     "tocar Equilibrado aplica sus pesos y respeta cuánto inviertes");
   ok(pendientes.every((v) => v === false), "la vista simple nunca deja cambios a medias");
 
+  ok(!/Así está invertido tu dinero ahora|detalle del riesgo|Volatilidad/i.test(pantalla()), "sin el cartel final ni el detalle del riesgo");
+
+  /* el modo experto: otras formas de invertir, ninguna repetida */
+  const simples = J.PERFILES_SIMPLES.map((p) => p.id);
+  ok(J.PERFILES_EXPERTO.length === 5 && J.PERFILES_EXPERTO.every((p) => simples.indexOf(p.id) < 0 && p.w && p.n),
+    "el modo experto trae cinco perfiles que no están arriba (" + J.PERFILES_EXPERTO.map((p) => p.n).join(", ") + ")");
   await act(async () => { botones(/Modo experto/)[0].props.onClick(); });
-  ok(sliders().length >= 1, "el modo experto trae los controles finos");
-  ok(/Cómo quieres invertirlo/.test(pantalla()), "y los cinco perfiles de siempre");
+  ok(J.PERFILES_EXPERTO.every((p) => botones(new RegExp(p.n)).length === 1), "y se ven al abrirlo");
+  ok(sliders().length === 0 && !/beta|Sharpe|volatilidad|activo por activo/i.test(pantalla()), "sin sliders ni jerga tampoco en el experto");
+  const oro = J.PERFILES_EXPERTO.find((p) => p.id === "refugio");
+  await act(async () => { botones(new RegExp(oro.n))[0].props.onClick(); });
+  ok(aplicados.length === 3 && JSON.stringify(aplicados[2].w) === JSON.stringify(oro.w), "tocar un perfil del experto también se aplica al momento");
 
   try { fs.unlinkSync(tmp); } catch (e) {}
   console.log("\n  " + (fallos ? fallos + " FALLO(S)" : "todo en verde"));
