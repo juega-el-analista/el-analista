@@ -72,7 +72,7 @@ async function unaVida(semilla, vistos, hitos) {
   await act(async () => { reloj(400); await micro(); });
   await pulsa(porRot(/acepto y quiero/i));
   await pulsa(porRot(/^Jugar ya$/));
-  await pulsa(porRot(/^Seguir sin nombre|^Seguir como/));
+  await pulsa(porRot(/^Elegir yo/));
   await pulsa(porRot(/^Empezar a los 20/));
   const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
   await pulsa(p[semilla % Math.max(1, p.length)] || p[0]);

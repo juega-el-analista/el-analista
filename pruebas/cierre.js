@@ -42,7 +42,7 @@ async function primerAno(semilla, edad) {
     return h ? txt(h) : null;
   };
   await pulsa(/^Jugar ya$/);
-  await pulsa(/^Seguir sin nombre/);
+  await pulsa(/^Elegir yo/);
   await pulsa(new RegExp("^Empezar a los " + edad));
   await pulsa(/^Elegir$/);
   await pulsa(/^Graduarte de esto$/);

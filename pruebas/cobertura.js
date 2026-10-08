@@ -140,7 +140,7 @@ const MARCAS = {
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });
 
-const GUIA = ["Entendido, acepto", "Retomar", "Jugar ya", "Seguir sin nombre", "Aprendiz", "Empezar a los", "Elegir", "Graduarte de esto", "Empezar con esto", "Entendido, empezar",
+const GUIA = ["Entendido, acepto", "Retomar", "Jugar ya", "Elegir yo", "Aprendiz", "Empezar a los", "Elegir", "Graduarte de esto", "Empezar con esto", "Entendido, empezar",
   "Ya lo tengo", "Siguiente", "Terminar", "Empezar", "Lo siguiente", "Cerrar el año", "Continuar",
   "Sentarte a hacer cuentas", "Seguir cinco años", "Retirarme ahora", "Ver el balance final",
   "Fijar", "Poner el número", "Cerrar posición", "Cerrar el trato"];

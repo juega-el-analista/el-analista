@@ -57381,17 +57381,23 @@ function Motor() {
     style: {
       marginTop: 0
     },
-    onClick: () => {
-      if (enFase("identidad")) irA("edad");
+    onClick: alAzar
+  }, "\uD83C\uDFB2 Al azar", elec.nombre.trim() ? ", como " + elec.nombre.trim() : ""), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      color: "var(--gris)",
+      marginTop: 6
     }
-  }, elec.nombre.trim() ? "Seguir como " + elec.nombre.trim() : "Seguir sin nombre"), /*#__PURE__*/React.createElement("button", {
+  }, "El juego elige tu edad, tu pa\xEDs y tu carrera, y empiezas."), /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
       marginTop: 14,
       marginBottom: 0
     },
-    onClick: alAzar
-  }, "\uD83C\uDFB2 Al azar: que el juego elija edad, pa\xEDs y carrera")), fase === "edad" && /*#__PURE__*/React.createElement("div", {
+    onClick: () => {
+      if (enFase("identidad")) irA("edad");
+    }
+  }, "Elegir yo edad, pa\xEDs y carrera")), fase === "edad" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
