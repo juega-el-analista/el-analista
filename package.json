@@ -30,7 +30,8 @@
     "fallo": "node pruebas/fallo.js",
     "cartera": "node pruebas/cartera.js",
     "negociacion": "node pruebas/negociacion.js",
-    "compartir": "node pruebas/compartir.js"
+    "compartir": "node pruebas/compartir.js",
+    "oportunidades": "node pruebas/oportunidades.js"
   },
   "devDependencies": {
     "@babel/core": "^7",

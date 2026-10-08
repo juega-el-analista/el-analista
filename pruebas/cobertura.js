@@ -97,6 +97,7 @@ const MARCAS = {
   "cartera: reparto real": "Cómo está repartido ahora mismo",
   "cartera: cuánto inviertes": "¿Cuánto inviertes?",
   "cartera: modo experto": "Modo experto",
+  "oportunidad de mercado": "de tu cartera en",
   /* compras y carril */
   "inmuebles: ya es tuyo": "Vale hoy USD",
   "mejoras: ya la tienes": "Ya la tienes",

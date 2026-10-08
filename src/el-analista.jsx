@@ -48023,7 +48023,59 @@ const DUENO = [
   });
 })();
 
+/* ============================================================
+   LAS OPORTUNIDADES DE MERCADO
+   El reparto activo por activo eran siete sliders que nadie entendía.
+   Ahora llega así: muy de vez en cuando, un rumor o una noticia con
+   nombre, y tú decides cuánto de tu cartera meter ahí. Sale bien o mal
+   según su probabilidad, y lo que pase vuelve a tu cartera ese mismo día.
+   Pocas: como mucho dos por carrera, y en muchas partidas ninguna.
+   ============================================================ */
+const OPORT_MAX = 2;
+const OPORT_PROB = 0.08;
+const oportunidad = (id, t, x, lo, p, sube, baja, quieto) => ({
+  id, min: 0, max: 6, oportunidad: true, t, x,
+  o: [
+    { t: "Meter un 10% de tu cartera en " + lo, apuesta: { pct: 0.10, p, sube, baja, lo } },
+    { t: "Meter un 25% de tu cartera en " + lo, apuesta: { pct: 0.25, p, sube, baja, lo } },
+    { t: "No tocar nada", d: { cri: 2, msg: quieto } },
+  ],
+});
+const OPORTUNIDADES = [
+  oportunidad(9850, "El oro que nadie mira",
+    "En la oficina corre un rumor: un banco central estaría comprando oro a escondidas. Si es verdad, el precio salta. Si no, te quedas con un metal que no paga nada.",
+    "oro", 0.55, 0.30, 0.12, "Lo dejas pasar. Los rumores de pasillo son eso: rumores."),
+  oportunidad(9851, "Dicen que bajan las tasas",
+    "Un conocido del banco central suelta, entre café y café, que el mes que viene bajan las tasas. Cuando bajan, los bonos que ya existen suben de precio.",
+    "bonos", 0.60, 0.15, 0.08, "No te mueves. Si fuera tan fácil adivinar al banco central, nadie trabajaría."),
+  oportunidad(9852, "Pánico en la bolsa",
+    "La bolsa cae un 15% en una semana por un susto que nadie termina de explicar. Los que saben dicen que estas caídas son para comprar. Los que perdieron dijeron lo mismo de la anterior.",
+    "acciones", 0.65, 0.25, 0.18, "Te quedas quieto mientras todos gritan. A veces eso también es una decisión."),
+  oportunidad(9853, "Una ley para los alquileres",
+    "Se discute una ley que haría más fácil alquilar. Si sale, los inmuebles que cotizan en bolsa suben. Si se cae en el Congreso, bajan.",
+    "inmuebles", 0.45, 0.28, 0.15, "Esperas a ver qué vota el Congreso. Sin apuro."),
+  oportunidad(9854, "La cripto de tu primo",
+    "Tu primo jura que una criptomoneda nueva se va a multiplicar por diez. Tiene capturas de pantalla y muchísima seguridad. Ningún dato.",
+    "esa cripto", 0.20, 1.50, 0.70, "Le dices a tu primo que suerte. No es la primera que te recomienda."),
+  oportunidad(9855, "Una empresa a precio de remate",
+    "Una empresa quebrada se vende por lo que valen sus máquinas. Si alguien la reflota, vale tres veces más. Si no, se rematan las máquinas y poco más.",
+    "la empresa en remate", 0.40, 0.80, 0.45, "Lo miras de lejos. Comprar quiebras es un oficio en sí mismo."),
+];
+/* lo que pasa con la parte que metiste: gana o pierde, y vuelve a la cartera */
+const aplicarApuesta = (cartera, ap, salio) => {
+  const base = Math.max(0, numero(cartera, 0));
+  const monto = base * clamp(numero(ap && ap.pct, 0), 0, 1);
+  const delta = Math.round(salio ? monto * numero(ap.sube, 0) : -monto * numero(ap.baja, 0));
+  const lo = texto(ap && ap.lo, "eso", 40);
+  const msg = monto <= 0 ? "No tenías nada invertido que meter."
+    : salio
+      ? "Salió bien: lo que metiste en " + lo + " subió un " + Math.round(ap.sube * 100) + "% y ganó USD " + fmt(delta) + ". Vuelve a tu cartera."
+      : "Salió mal: lo que metiste en " + lo + " cayó un " + Math.round(ap.baja * 100) + "%. Perdiste USD " + fmt(-delta) + " de tu cartera.";
+  return { cartera: Math.max(0, base + delta), delta, msg };
+};
+
 const ESCENAS_FIJAS = [].concat(
+  OPORTUNIDADES,
   E, D, VIDA, LEGENDARIAS, DUENO, CONSECUENCIAS, TRONCOS,
   [DECISION_RAMA, ESCENA_CONTRATO],
   APERTURAS.map((a) => a.escena)
@@ -52415,6 +52467,13 @@ function Motor() {
     /* Una sola tirada al año, y solo pasados los primeros años: una
        legendaria en el año uno no significaría nada porque todavía no hay
        carrera que partir en dos. */
+    /* Una oportunidad de mercado, muy de vez en cuando: solo con dinero
+       invertido, desde el tercer año, y como mucho dos por carrera. */
+    if (st.turno >= 2 && abierto(st, "cartera") && numero(st.cartera, 0) >= 2000
+      && OPORTUNIDADES.filter((e) => st.vistos.indexOf(e.id) >= 0).length < OPORT_MAX && azar() < OPORT_PROB) {
+      const opo = elegirAzar(OPORTUNIDADES.filter((e) => st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0));
+      if (opo) { lista.push(opo); usados.push(opo.id); }
+    }
     if (st.turno >= 4 && azar() < 0.11) {
       const posibles = LEGENDARIAS.filter((e) =>
         st.rango >= e.min && st.rango <= e.max && !(sinJefe(st) && esDeEmpleado(e))
@@ -53004,6 +53063,14 @@ function Motor() {
       }
       cambios.push({ k: "cash", v: monto });
     }
+    /* lo que pasó con la parte de la cartera que metiste en la oportunidad */
+    if (d.apuesta) {
+      const r = aplicarApuesta(st.cartera, d.apuesta, d.salio === true);
+      st.cartera = r.cartera;
+      d.msg = r.msg;
+      cambios.push({ k: "cash", v: r.delta });
+      if (r.delta) cambios.push({ k: "cartera", v: 0, neg: r.delta < 0, nota: r.delta > 0 ? "a tu cartera" : "de tu cartera" });
+    }
     if (d.mercado) st.shock = (st.shock || 0) + d.mercado;
     if (d.msg) st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: d.msg.split(".")[0] });
     if (ev && ev.id != null) st.vistos = st.vistos.concat(ev.id);
@@ -53548,6 +53615,14 @@ function Motor() {
       const i = tirarAzar(ps);
       const e = o.azar.esc[i] || {};
       resolverEscena(e.d || {}, e.nivel || "parcial", o, { i, ps, rots: o.azar.esc.map((x) => x.r || "") , tonos: o.azar.esc.map((x) => x.nivel || "parcial") });
+      return;
+    }
+    /* una oportunidad de mercado: sale o no según su probabilidad */
+    if (o.apuesta) {
+      const p = clamp(numero(o.apuesta.p, 0.5), 0.01, 0.99);
+      const salio = azar() < p;
+      resolverEscena({ apuesta: o.apuesta, salio }, salio ? "exito" : "fallo", o,
+        { i: salio ? 0 : 1, ps: [p, 1 - p], rots: ["Sale bien", "Sale mal"], tonos: ["exito", "fallo"] });
       return;
     }
     if (o.chk) {
@@ -55031,7 +55106,7 @@ function Motor() {
                   {res.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").length > 0 && (
                     <div className="ea-cambios">
                       {res.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").map((c, i) => (
-                        <span className={"ea-chip ea-mono " + (c.k === "deuda" ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}
+                        <span className={"ea-chip ea-mono " + (c.k === "deuda" || c.neg ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}
                           style={{ animationDelay: (260 + i * 90) + "ms" }}>
                           {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v)}
                         </span>

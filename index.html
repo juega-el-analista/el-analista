@@ -5910,7 +5910,71 @@ const PERFILES = [
     efectivo: 0
   },
   d: "Vas por el rendimiento alto y asumes que habrá años en los que pierdas casi la mitad."
+}, /* tres más para el modo experto, con mezclas que no se parecen a las de arriba */
+{
+  id: "renta",
+  n: "Renta fija",
+  w: {
+    bonos: 0.45,
+    corp: 0.40,
+    acciones: 0,
+    reits: 0,
+    oro: 0.05,
+    distressed: 0,
+    cripto: 0,
+    efectivo: 0.10
+  },
+  d: "Bonos y deuda de empresas: cobras intereses, sube poco y baja poco."
+}, {
+  id: "refugio",
+  n: "Refugio en oro",
+  w: {
+    bonos: 0.25,
+    corp: 0,
+    acciones: 0.10,
+    reits: 0,
+    oro: 0.45,
+    distressed: 0,
+    cripto: 0,
+    efectivo: 0.20
+  },
+  d: "Para quien no se fía del sistema. Brilla en las crisis y se queda quieto en los años buenos."
+}, {
+  id: "ladrillo",
+  n: "Ladrillo",
+  w: {
+    bonos: 0.20,
+    corp: 0,
+    acciones: 0.15,
+    reits: 0.50,
+    oro: 0,
+    distressed: 0,
+    cripto: 0,
+    efectivo: 0.15
+  },
+  d: "Inmuebles que cotizan en bolsa: rentas cada año y sustos cuando suben las tasas."
 }];
+/* El modo experto trae solo lo que no está arriba (Alessandro, 8-oct):
+   repetir Prudente, Equilibrado y Agresivo con otro nombre confundía. */
+const PERFILES_EXPERTO = [{
+  id: "renta",
+  e: "🏦"
+}, {
+  id: "todoterreno",
+  e: "🧭"
+}, {
+  id: "refugio",
+  e: "🪙"
+}, {
+  id: "ladrillo",
+  e: "🏢"
+}, {
+  id: "arriesgado",
+  e: "🎲"
+}].map(x => ({
+  ...PERFILES.find(p => p.id === x.id),
+  e: x.e
+}));
 
 /* Media y desviación de una combinación cualquiera de pesos.
    La varianza se parte en dos: la parte de mercado, que se suma entre activos
@@ -48396,7 +48460,7 @@ const APERTURAS = [
   guia: {
     t: "Cartera",
     x: "Aquí decides qué hace tu dinero mientras tú trabajas.",
-    puntos: ["Dos decisiones: cuánto inviertes y cómo (Prudente, Equilibrado o Agresivo).", "Se aplica al tocar, y cada movimiento cuesta una pequeña comisión.", "El reparto activo por activo y las medidas de riesgo están en Modo experto."]
+    puntos: ["Dos decisiones: cuánto inviertes y cómo (Prudente, Equilibrado o Agresivo).", "Se aplica al tocar, y cada movimiento cuesta una pequeña comisión.", "En Modo experto hay otras formas de invertir: renta fija, oro, ladrillo y más."]
   },
   escena: {
     id: 9701,
@@ -48883,7 +48947,65 @@ const DUENO = [{
     });
   });
 })();
-const ESCENAS_FIJAS = [].concat(E, D, VIDA, LEGENDARIAS, DUENO, CONSECUENCIAS, TRONCOS, [DECISION_RAMA, ESCENA_CONTRATO], APERTURAS.map(a => a.escena)).filter(e => e && e.id != null);
+
+/* ============================================================
+   LAS OPORTUNIDADES DE MERCADO
+   El reparto activo por activo eran siete sliders que nadie entendía.
+   Ahora llega así: muy de vez en cuando, un rumor o una noticia con
+   nombre, y tú decides cuánto de tu cartera meter ahí. Sale bien o mal
+   según su probabilidad, y lo que pase vuelve a tu cartera ese mismo día.
+   Pocas: como mucho dos por carrera, y en muchas partidas ninguna.
+   ============================================================ */
+const OPORT_MAX = 2;
+const OPORT_PROB = 0.08;
+const oportunidad = (id, t, x, lo, p, sube, baja, quieto) => ({
+  id,
+  min: 0,
+  max: 6,
+  oportunidad: true,
+  t,
+  x,
+  o: [{
+    t: "Meter un 10% de tu cartera en " + lo,
+    apuesta: {
+      pct: 0.10,
+      p,
+      sube,
+      baja,
+      lo
+    }
+  }, {
+    t: "Meter un 25% de tu cartera en " + lo,
+    apuesta: {
+      pct: 0.25,
+      p,
+      sube,
+      baja,
+      lo
+    }
+  }, {
+    t: "No tocar nada",
+    d: {
+      cri: 2,
+      msg: quieto
+    }
+  }]
+});
+const OPORTUNIDADES = [oportunidad(9850, "El oro que nadie mira", "En la oficina corre un rumor: un banco central estaría comprando oro a escondidas. Si es verdad, el precio salta. Si no, te quedas con un metal que no paga nada.", "oro", 0.55, 0.30, 0.12, "Lo dejas pasar. Los rumores de pasillo son eso: rumores."), oportunidad(9851, "Dicen que bajan las tasas", "Un conocido del banco central suelta, entre café y café, que el mes que viene bajan las tasas. Cuando bajan, los bonos que ya existen suben de precio.", "bonos", 0.60, 0.15, 0.08, "No te mueves. Si fuera tan fácil adivinar al banco central, nadie trabajaría."), oportunidad(9852, "Pánico en la bolsa", "La bolsa cae un 15% en una semana por un susto que nadie termina de explicar. Los que saben dicen que estas caídas son para comprar. Los que perdieron dijeron lo mismo de la anterior.", "acciones", 0.65, 0.25, 0.18, "Te quedas quieto mientras todos gritan. A veces eso también es una decisión."), oportunidad(9853, "Una ley para los alquileres", "Se discute una ley que haría más fácil alquilar. Si sale, los inmuebles que cotizan en bolsa suben. Si se cae en el Congreso, bajan.", "inmuebles", 0.45, 0.28, 0.15, "Esperas a ver qué vota el Congreso. Sin apuro."), oportunidad(9854, "La cripto de tu primo", "Tu primo jura que una criptomoneda nueva se va a multiplicar por diez. Tiene capturas de pantalla y muchísima seguridad. Ningún dato.", "esa cripto", 0.20, 1.50, 0.70, "Le dices a tu primo que suerte. No es la primera que te recomienda."), oportunidad(9855, "Una empresa a precio de remate", "Una empresa quebrada se vende por lo que valen sus máquinas. Si alguien la reflota, vale tres veces más. Si no, se rematan las máquinas y poco más.", "la empresa en remate", 0.40, 0.80, 0.45, "Lo miras de lejos. Comprar quiebras es un oficio en sí mismo.")];
+/* lo que pasa con la parte que metiste: gana o pierde, y vuelve a la cartera */
+const aplicarApuesta = (cartera, ap, salio) => {
+  const base = Math.max(0, numero(cartera, 0));
+  const monto = base * clamp(numero(ap && ap.pct, 0), 0, 1);
+  const delta = Math.round(salio ? monto * numero(ap.sube, 0) : -monto * numero(ap.baja, 0));
+  const lo = texto(ap && ap.lo, "eso", 40);
+  const msg = monto <= 0 ? "No tenías nada invertido que meter." : salio ? "Salió bien: lo que metiste en " + lo + " subió un " + Math.round(ap.sube * 100) + "% y ganó USD " + fmt(delta) + ". Vuelve a tu cartera." : "Salió mal: lo que metiste en " + lo + " cayó un " + Math.round(ap.baja * 100) + "%. Perdiste USD " + fmt(-delta) + " de tu cartera.";
+  return {
+    cartera: Math.max(0, base + delta),
+    delta,
+    msg
+  };
+};
+const ESCENAS_FIJAS = [].concat(OPORTUNIDADES, E, D, VIDA, LEGENDARIAS, DUENO, CONSECUENCIAS, TRONCOS, [DECISION_RAMA, ESCENA_CONTRATO], APERTURAS.map(a => a.escena)).filter(e => e && e.id != null);
 const IDS_FIRMA = [9720, 9721];
 
 /* ============================================================
@@ -49214,7 +49336,7 @@ const GUIA = [{
   id: "cartera",
   cuando: c => c.tab === "portafolio",
   t: "Aquí decides qué hace tu dinero",
-  x: "Elige cuánto inviertes y cómo: se aplica al tocar. Lo técnico, activo por activo, está en Modo experto."
+  x: "Elige cuánto inviertes y cómo: se aplica al tocar. En Modo experto hay otras formas de invertir."
 }, {
   id: "ficha",
   cuando: c => c.tab === "ficha",
@@ -53871,76 +53993,42 @@ function BotonAnotar({
 }
 function PanelCartera({
   st,
-  onAplicar,
-  onPendiente
+  onAplicar
 }) {
+  /* (8-oct-2026, Alessandro) Todo se decide tocando, nada queda a medias:
+     arriba cuánto inviertes y uno de tres perfiles; el modo experto solo
+     trae perfiles que no están arriba. El reparto activo por activo salió
+     de aquí: ahora llega como oportunidad de mercado, muy de vez en
+     cuando. Y el «detalle del riesgo» (volatilidad, Sharpe, beta...) no lo
+     entendía nadie, así que quedan dos cifras: lo que esperas y un año malo. */
   const actual = st.pesos || PERFILES[0].w;
   const objAct = st.objetivo == null ? 0.7 : st.objetivo;
-  const [w, setW] = useState(() => ({
-    ...actual
-  }));
-  const [obj, setObj] = useState(objAct);
-  /* el reparto activo por activo, plegado salvo que lo pidas */
-  const [avanzado, setAvanzado] = useState(false);
-  /* y las cinco medidas de riesgo que no se miran para decidir */
-  const [detalle, setDetalle] = useState(false);
-  /* Todo lo fino (objetivo exacto, cinco perfiles, siete activos, riesgo)
-     vive aquí, plegado. Solo desde aquí puede quedar algo sin aplicar. */
   const [experto, setExperto] = useState(false);
-  /* si la cartera cambia por otra via (un evento, retomar partida), los
-     controles se ponen al dia solos en vez de quedar mostrando lo viejo */
-  const huella = JSON.stringify(actual) + "|" + objAct;
-  const huellaAnt = useRef(huella);
-  useEffect(() => {
-    if (huellaAnt.current === huella) return;
-    huellaAnt.current = huella;
-    setW({
-      ...actual
-    });
-    setObj(objAct);
-  }, [huella]);
   const liq = st.cash + st.cartera;
-  const ef = Math.max(0, 1 - invertidoDe(w));
-  const mezcla = {
-    ...w,
-    efectivo: ef
-  };
-  const est = statsPesos(mezcla);
   const conAct = {
     ...actual,
     efectivo: Math.max(0, 1 - invertidoDe(actual))
   };
-  const rot = rotacion(conAct, mezcla);
-  const movObj = Math.abs(liq * obj - st.cartera);
-  const costo = st.cartera * rot * COSTO_CAMBIO + movObj * COSTO_CAMBIO * 0.5;
-  const cambio = rot > 0.005 || Math.abs(obj - objAct) > 0.005;
-  const conc = concentracion(w);
-  const beta = ACTIVOS.reduce((a, x) => a + (w[x.k] || 0) * x.b, 0);
-  let sdSuma = 0;
-  ACTIVOS.forEach(a => {
-    sdSuma += (w[a.k] || 0) * a.sd;
-  });
-  const ahorra = sdSuma > 0 ? 1 - est.sd / sdSuma : 0;
-  const sharpe = est.sd > 0 ? (est.mu - EFECTIVO_MU) / est.sd : 0;
-  const preset = PERFILES.find(x => rotacion(x.w, mezcla) < 0.02);
+  const est = statsPesos(conAct);
+  const conc = concentracion(actual);
+  const ef = conAct.efectivo;
+  const esActual = pf => rotacion({
+    ...pf.w,
+    efectivo: Math.max(0, 1 - invertidoDe(pf.w))
+  }, conAct) < 0.02;
+  const malo = w => {
+    const e = statsPesos({
+      ...w,
+      efectivo: Math.max(0, 1 - invertidoDe(w))
+    });
+    return Math.round((e.mu - 2 * e.sd) * 100);
+  };
 
-  /* Lo que se ve AHORA MISMO, que no es lo mismo que el objetivo: el
-     reparto se aplica al cerrar el año y después los gastos salen del
-     efectivo, así que durante el año la parte invertida queda por encima
-     de la que pediste. Esa diferencia confundía y ahora se explica. */
+  /* Lo que se ve AHORA MISMO, que no es lo mismo que el objetivo: los
+     gastos del año salen del efectivo, así que durante el año la parte
+     invertida queda por encima de la que pediste. Se acomoda al cerrar. */
   const invReal = liq > 0 ? clamp(st.cartera / liq, 0, 1) : 0;
   const desvia = Math.abs(invReal - objAct) > 0.03;
-
-  /* El motor necesita saber que hay cambios a medias para no dejar
-     avanzar el año y perderlos por el camino. */
-  const avisar = useRef(onPendiente);
-  avisar.current = onPendiente;
-  useEffect(() => {
-    if (avisar.current) avisar.current(cambio);
-  }, [cambio]);
-  useEffect(() => () => {
-    if (avisar.current) avisar.current(false);
-  }, []);
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis"
   }, "C\xF3mo est\xE1 repartido ahora mismo"), /*#__PURE__*/React.createElement("div", {
@@ -53973,7 +54061,7 @@ function PanelCartera({
     className: "ea-mono"
   }, "USD ", fmt(st.cash))), desvia && /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD"
-  }, "Va ", invReal > objAct ? "por encima" : "por debajo", " de tu objetivo. Es normal: los gastos del a\xF1o salen del efectivo. Al cerrar el a\xF1o se acomoda solo."), /*#__PURE__*/React.createElement("div", {
+  }, "Va ", invReal > objAct ? "por encima" : "por debajo", " de lo que elegiste. Es normal: los gastos del a\xF1o salen del efectivo. Al cerrar el a\xF1o se acomoda solo."), /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis",
     style: {
       marginTop: 20
@@ -53981,8 +54069,7 @@ function PanelCartera({
   }, "\xBFCu\xE1nto inviertes?"), /*#__PURE__*/React.createElement("div", {
     className: "ea-pcts"
   }, [0, 25, 50, 75, 100].map(p => {
-    /* se marca el más cercano: las partidas arrancan en 70% y los
-       guardados del modo experto pueden tener cualquier valor */
+    /* se marca el más cercano: las partidas arrancan en 70% */
     const on = Math.round(objAct * 4) * 25 === p;
     const exacto = Math.abs(objAct - p / 100) < 0.001;
     return /*#__PURE__*/React.createElement("button", {
@@ -54006,10 +54093,7 @@ function PanelCartera({
   }, PERFILES_SIMPLES.map(ps => {
     const pf = PERFILES.find(x => x.id === ps.id);
     if (!pf) return null;
-    const on = rotacion({
-      ...pf.w,
-      efectivo: Math.max(0, 1 - invertidoDe(pf.w))
-    }, conAct) < 0.02;
+    const on = esActual(pf);
     return /*#__PURE__*/React.createElement("button", {
       key: ps.id,
       className: "ea-perfil" + (on ? " on" : ""),
@@ -54023,168 +54107,7 @@ function PanelCartera({
     }, ps.e, " ", ps.n, on ? " ✓" : ""), /*#__PURE__*/React.createElement("div", {
       className: "ea-perfilD"
     }, ps.d));
-  })), (() => {
-    const e2 = statsPesos(conAct);
-    return /*#__PURE__*/React.createElement("div", {
-      className: "ea-caja"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "ea-fila"
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 12.5
-      }
-    }, "Esperas ganar"), /*#__PURE__*/React.createElement("span", {
-      className: "ea-mono"
-    }, (e2.mu * 100).toFixed(1), "% al a\xF1o")), /*#__PURE__*/React.createElement("div", {
-      className: "ea-fila"
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 12.5
-      }
-    }, "Un a\xF1o malo de verdad"), /*#__PURE__*/React.createElement("span", {
-      className: "ea-mono",
-      style: {
-        color: "var(--rojo)"
-      }
-    }, ((e2.mu - 2 * e2.sd) * 100).toFixed(0), "%")));
-  })(), /*#__PURE__*/React.createElement("button", {
-    className: "ea-atras ea-dis",
-    style: {
-      marginTop: 14,
-      marginBottom: 0
-    },
-    onClick: () => {
-      /* al plegar se descarta lo que quedó a medias: lo simple nunca deja nada pendiente */
-      if (experto) {
-        setW({
-          ...actual
-        });
-        setObj(objAct);
-      }
-      setExperto(v => !v);
-    }
-  }, experto ? "↑ Cerrar el modo experto" : "↓ Modo experto"), experto && /*#__PURE__*/React.createElement("div", {
-    className: "ea-panelAb"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-rot ea-dis",
-    style: {
-      marginTop: 20
-    }
-  }, "Tu objetivo: cu\xE1nto de tu dinero trabaja"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mix"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-mixSeg cart",
-    style: {
-      width: (obj * 100).toFixed(1) + "%"
-    }
-  }, obj >= 0.16 ? "cartera " + Math.round(obj * 100) + "%" : ""), /*#__PURE__*/React.createElement("div", {
-    className: "ea-mixSeg efe",
-    style: {
-      width: ((1 - obj) * 100).toFixed(1) + "%"
-    }
-  }, 1 - obj >= 0.16 ? "efectivo " + Math.round((1 - obj) * 100) + "%" : "")), /*#__PURE__*/React.createElement("input", {
-    className: "ea-slider",
-    type: "range",
-    min: "0",
-    max: "100",
-    step: "5",
-    value: Math.round(obj * 100),
-    "aria-label": "Reparto entre cartera y efectivo",
-    onChange: e => setObj(clamp(numero(e.target.value, 70) / 100, 0, 1))
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "Ir\xEDa a la cartera"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, "USD ", fmt(liq * obj))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "Quedar\xEDa en efectivo"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, "USD ", fmt(liq * (1 - obj)))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-itemD"
-  }, "Tener algo en efectivo no es cobard\xEDa: es lo que evita vender la cartera en el peor momento."), /*#__PURE__*/React.createElement("div", {
-    className: "ea-rot ea-dis",
-    style: {
-      marginTop: 20
-    }
-  }, "C\xF3mo quieres invertirlo"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-perfiles"
-  }, PERFILES.map(pf => {
-    const est2 = statsPesos({
-      ...pf.w,
-      efectivo: Math.max(0, 1 - invertidoDe(pf.w))
-    });
-    const on = preset && preset.id === pf.id;
-    return /*#__PURE__*/React.createElement("button", {
-      key: pf.id,
-      className: "ea-perfil" + (on ? " on" : ""),
-      onClick: () => setW({
-        ...pf.w
-      })
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "ea-perfilT ea-dis"
-    }, pf.n, on ? " ✓" : ""), /*#__PURE__*/React.createElement("div", {
-      className: "ea-perfilD"
-    }, pf.d), /*#__PURE__*/React.createElement("div", {
-      className: "ea-perfilN ea-mono"
-    }, "esperado ", (est2.mu * 100).toFixed(1), "% \xB7 un a\xF1o malo ", ((est2.mu - 2 * est2.sd) * 100).toFixed(0), "%"));
-  })), !preset && /*#__PURE__*/React.createElement("div", {
-    className: "ea-itemD",
-    style: {
-      marginTop: 8
-    }
-  }, "Combinaci\xF3n tuya. No se parece a ninguno de los cinco."), /*#__PURE__*/React.createElement("button", {
-    className: "ea-atras ea-dis",
-    style: {
-      marginTop: 14,
-      marginBottom: 0
-    },
-    onClick: () => setAvanzado(v => !v)
-  }, avanzado ? "↑ Ocultar el reparto activo por activo" : "↓ Repartir activo por activo"), avanzado && /*#__PURE__*/React.createElement("div", {
-    className: "ea-panelAb"
-  }, ACTIVOS.map(a => {
-    const x = Math.round((w[a.k] || 0) * 100);
-    return /*#__PURE__*/React.createElement("div", {
-      className: "ea-wrow",
-      key: a.k
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "ea-wtop"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "ea-wname"
-    }, a.n), /*#__PURE__*/React.createElement("span", {
-      className: "ea-wnum ea-mono"
-    }, x, "%")), /*#__PURE__*/React.createElement("input", {
-      className: "ea-slider",
-      type: "range",
-      min: "0",
-      max: "100",
-      step: "5",
-      value: x,
-      "aria-label": a.n,
-      onChange: e => setW(ajustarPesos(w, a.k, clamp(numero(e.target.value, 0) / 100, 0, 1)))
-    }), /*#__PURE__*/React.createElement("div", {
-      className: "ea-wsub"
-    }, "esperado ", (a.mu * 100).toFixed(1), " \xB7 volatilidad ", (a.sd * 100).toFixed(0), " \xB7 ", a.d));
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila",
-    style: {
-      marginTop: 6
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-dis",
-    style: {
-      fontSize: 12
-    }
-  }, "Efectivo dentro de la cartera"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, Math.round(ef * 100), "%"))), /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("div", {
     className: "ea-caja"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
@@ -54205,109 +54128,50 @@ function PanelCartera({
     style: {
       color: "var(--rojo)"
     }
-  }, ((est.mu - 2 * est.sd) * 100).toFixed(0), "%"))), /*#__PURE__*/React.createElement("button", {
+  }, Math.round((est.mu - 2 * est.sd) * 100), "%"))), conc.max >= 0.5 && /*#__PURE__*/React.createElement("div", {
+    className: "ea-avis"
+  }, "Tienes ", Math.round(conc.max * 100), "% en ", conc.activo.n.toLowerCase(), ". Si eso cae a la mitad, tu cartera pierde ", Math.round(conc.max * 50), "%."), (actual.cripto || 0) >= 0.25 && /*#__PURE__*/React.createElement("div", {
+    className: "ea-avis"
+  }, "Con tanta cripto, un a\xF1o malo se lleva un tercio de todo."), ef >= 0.4 && /*#__PURE__*/React.createElement("div", {
+    className: "ea-avis"
+  }, "Casi la mitad de tu cartera est\xE1 quieta en efectivo, rindiendo ", (EFECTIVO_MU * 100).toFixed(1), "%."), /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
-      marginTop: 10,
+      marginTop: 14,
       marginBottom: 0
     },
-    onClick: () => setDetalle(v => !v)
-  }, detalle ? "↑ Cerrar" : "↓ El detalle del riesgo"), detalle && /*#__PURE__*/React.createElement("div", {
-    className: "ea-caja ea-panelAb",
-    style: {
-      marginTop: 8
-    }
+    onClick: () => setExperto(v => !v)
+  }, experto ? "↑ Cerrar el modo experto" : "↓ Modo experto: otras formas de invertir"), experto && /*#__PURE__*/React.createElement("div", {
+    className: "ea-panelAb"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-perfiles",
     style: {
-      fontSize: 12.5
-    }
-  }, "Volatilidad"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, (est.sd * 100).toFixed(1), " puntos")), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "A\xF1o normal, entre"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, ((est.mu - est.sd) * 100).toFixed(0), " y ", ((est.mu + est.sd) * 100).toFixed(0))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "Retorno por unidad de riesgo"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, sharpe.toFixed(2))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "Sensibilidad al mercado"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, "beta ", beta.toFixed(2))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "Ahorro por diversificar"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, (ahorra * 100).toFixed(0), "%")), ahorra > 0.14 && /*#__PURE__*/React.createElement("div", {
-    className: "ea-ok2"
-  }, "Por separado dar\xEDan ", (sdSuma * 100).toFixed(0), " puntos de volatilidad; juntos, ", (est.sd * 100).toFixed(0), ". Esa diferencia es lo \xFAnico gratis que hay en finanzas.")), conc.max >= 0.5 && /*#__PURE__*/React.createElement("div", {
-    className: "ea-avis"
-  }, Math.round(conc.max * 100), "% en ", conc.activo.n.toLowerCase(), ". Si eso cae la mitad, pierdes", " ", Math.round(conc.max * 50), "%."), (w.cripto || 0) >= 0.25 && /*#__PURE__*/React.createElement("div", {
-    className: "ea-avis"
-  }, "Con esta cripto, un a\xF1o malo se lleva un tercio de todo."), beta >= 0.95 && /*#__PURE__*/React.createElement("div", {
-    className: "ea-avis"
-  }, "Beta cerca de uno: varias l\xEDneas, un solo mercado. Eso no es diversificar."), ef >= 0.4 && /*#__PURE__*/React.createElement("div", {
-    className: "ea-avis"
-  }, "Media cartera en efectivo, rindiendo ", (EFECTIVO_MU * 100).toFixed(1), "%."), cambio ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-pend",
-    style: {
-      marginTop: 14
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-pendK ea-dis"
-  }, "SIN APLICAR"), "Has movido la cartera pero todav\xEDa no has confirmado. Nada se mueve, y el a\xF1o no avanza, hasta que decidas."), /*#__PURE__*/React.createElement("div", {
-    className: "ea-itemD",
-    style: {
-      marginTop: 0
-    }
-  }, "Rotar\xEDas ", Math.round(rot * 100), "% de la cartera", movObj > 1 ? " y moverías USD " + fmt(movObj) + " entre efectivo e inversión" : "", ". Comisi\xF3n estimada USD ", fmt(costo), "."), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 8,
       marginTop: 10
     }
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "ea-aplicar ea-dis",
-    onClick: () => onAplicar(w, obj)
-  }, "Aplicar el cambio"), /*#__PURE__*/React.createElement("button", {
-    className: "ea-descartar ea-dis",
-    onClick: () => {
-      setW({
-        ...actual
-      });
-      setObj(objAct);
-    }
-  }, "Dejarlo como est\xE1"))) : /*#__PURE__*/React.createElement("div", {
-    className: "ea-tengo ea-dis",
-    style: {
-      marginTop: 12
-    }
-  }, "As\xED est\xE1 invertido tu dinero ahora")), /*#__PURE__*/React.createElement("div", {
+  }, PERFILES_EXPERTO.map(pf => {
+    const on = esActual(pf);
+    return /*#__PURE__*/React.createElement("button", {
+      key: pf.id,
+      className: "ea-perfil" + (on ? " on" : ""),
+      onClick: () => {
+        if (!on) onAplicar({
+          ...pf.w
+        }, objAct);
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-perfilT ea-dis"
+    }, pf.e, " ", pf.n, on ? " ✓" : ""), /*#__PURE__*/React.createElement("div", {
+      className: "ea-perfilD"
+    }, pf.d), /*#__PURE__*/React.createElement("div", {
+      className: "ea-perfilN ea-mono"
+    }, "un a\xF1o malo: ", malo(pf.w), "%"));
+  }))), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 11.5,
       color: "var(--gris)",
       marginTop: 12
     }
-  }, "Cada movimiento cuesta 0,5% de lo que rotas. Perseguir al activo que rindi\xF3 el a\xF1o pasado es la forma m\xE1s cara de perder dinero."));
+  }, "Cada cambio cuesta 0,5% de lo que mueves. Perseguir lo que rindi\xF3 el a\xF1o pasado es la forma m\xE1s cara de perder dinero."));
 }
 
 /* ============================ JUEGO ============================ */
@@ -54757,6 +54621,15 @@ function Motor() {
     /* Una sola tirada al año, y solo pasados los primeros años: una
        legendaria en el año uno no significaría nada porque todavía no hay
        carrera que partir en dos. */
+    /* Una oportunidad de mercado, muy de vez en cuando: solo con dinero
+       invertido, desde el tercer año, y como mucho dos por carrera. */
+    if (st.turno >= 2 && abierto(st, "cartera") && numero(st.cartera, 0) >= 2000 && OPORTUNIDADES.filter(e => st.vistos.indexOf(e.id) >= 0).length < OPORT_MAX && azar() < OPORT_PROB) {
+      const opo = elegirAzar(OPORTUNIDADES.filter(e => st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0));
+      if (opo) {
+        lista.push(opo);
+        usados.push(opo.id);
+      }
+    }
     if (st.turno >= 4 && azar() < 0.11) {
       const posibles = LEGENDARIAS.filter(e => st.rango >= e.min && st.rango <= e.max && !(sinJefe(st) && esDeEmpleado(e)) && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0 && huellasOk(e, st));
       const leg = elegirAzar(posibles);
@@ -55558,6 +55431,22 @@ function Motor() {
         v: monto
       });
     }
+    /* lo que pasó con la parte de la cartera que metiste en la oportunidad */
+    if (d.apuesta) {
+      const r = aplicarApuesta(st.cartera, d.apuesta, d.salio === true);
+      st.cartera = r.cartera;
+      d.msg = r.msg;
+      cambios.push({
+        k: "cash",
+        v: r.delta
+      });
+      if (r.delta) cambios.push({
+        k: "cartera",
+        v: 0,
+        neg: r.delta < 0,
+        nota: r.delta > 0 ? "a tu cartera" : "de tu cartera"
+      });
+    }
     if (d.mercado) st.shock = (st.shock || 0) + d.mercado;
     if (d.msg) st.titulares = st.titulares.concat({
       q: String(2026 + st.turno),
@@ -56300,6 +56189,21 @@ function Motor() {
         ps,
         rots: o.azar.esc.map(x => x.r || ""),
         tonos: o.azar.esc.map(x => x.nivel || "parcial")
+      });
+      return;
+    }
+    /* una oportunidad de mercado: sale o no según su probabilidad */
+    if (o.apuesta) {
+      const p = clamp(numero(o.apuesta.p, 0.5), 0.01, 0.99);
+      const salio = azar() < p;
+      resolverEscena({
+        apuesta: o.apuesta,
+        salio
+      }, salio ? "exito" : "fallo", o, {
+        i: salio ? 0 : 1,
+        ps: [p, 1 - p],
+        rots: ["Sale bien", "Sale mal"],
+        tonos: ["exito", "fallo"]
       });
       return;
     }
@@ -58534,7 +58438,7 @@ function Motor() {
   })(), res.cambios.filter(c => (c.nota || c.v) && c.k !== "cash").length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "ea-cambios"
   }, res.cambios.filter(c => (c.nota || c.v) && c.k !== "cash").map((c, i) => /*#__PURE__*/React.createElement("span", {
-    className: "ea-chip ea-mono " + (c.k === "deuda" ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg"),
+    className: "ea-chip ea-mono " + (c.k === "deuda" || c.neg ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg"),
     key: i,
     style: {
       animationDelay: 260 + i * 90 + "ms"
