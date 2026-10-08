@@ -57,7 +57,8 @@ const MARCAS = {
   "memoria con colores": "Cada casilla tiene su color",
   "orden con intentos": "Equivocarte cuesta un intento",
   "pestaña de términos": "El diccionario",
-  "vida: medidor del tren": "Cómo vives",
+  "vida: lo que cuesta": "Lo que cuesta tu vida",
+  "vida: tu gente explicada": "Esto no se compra",
   "vida: caprichos dentro": "Ninguno de estos es un error",
   "vida: peso del tren": "por ciento de lo que entra",
   "inmuebles: solo rentas": "Inmuebles que rentan",
@@ -73,7 +74,6 @@ const MARCAS = {
   "final: lo que conservo valor": "Lo que conservó valor",
   "final: lo que no volvio": "Lo que se disfrutó y no volvió",
   "final: cuesta sostenerlo": "Cuánto cuesta sostenerlo",
-  "final: tren de vida": "Tren de vida",
 
   "curva del año: pie": "Por el camino llegaste a estar",
   "curva del año: sin sobresaltos": "Un año sin sobresaltos dentro de la cartera",
@@ -89,19 +89,23 @@ const MARCAS = {
   "apertura: vida": "La vida que estás pagando",
   "apertura: banco": "El banco te empieza a mirar",
   "apertura: inmuebles": "Un ladrillo con tu nombre",
-  "apertura: mejoras": "Dónde gastar el poco tiempo que queda",
+  "apertura: mejoras": "Tu primera inversión en ti",
+  "inicio de año": "Inicio de año",
+  "cierre de año": "Cierre de año",
   "apertura: fondo": "Del otro lado de la mesa",
 
-  /* cartera: lo real y el objetivo, que antes se confundian */
+  /* cartera: lo real, y las dos decisiones que se toman a la vista */
   "cartera: reparto real": "Cómo está repartido ahora mismo",
-  "cartera: objetivo": "Tu objetivo: cuánto de tu dinero trabaja",
+  "cartera: cuánto inviertes": "¿Cuánto inviertes?",
+  "cartera: modo experto": "Modo experto",
+  "oportunidad de mercado": "de tu cartera en",
   /* compras y carril */
   "inmuebles: ya es tuyo": "Vale hoy USD",
   "mejoras: ya la tienes": "Ya la tienes",
   /* la ficha emergente que explica un sistema recien abierto */
   "ficha de sección nueva": "ACABAS DE ABRIR",
   /* que se entienda: escala del anclaje y la frase del gasto */
-  "anclaje: escala rotulada": "0 · lo regalas",
+  "negociación: paciencia a la vista": "Paciencia",
   "gasto: frase explicada": "el nivel de vida lo persigue",
   /* la vida no se apaga a los 24, y no se compra lo que no cuadra */
   "vida: volver a intentarlo": "No es la primera vez que empiezas esto",
@@ -136,7 +140,7 @@ const MARCAS = {
 const visto = {};
 Object.keys(MARCAS).forEach((k) => { visto[k] = 0; });
 
-const GUIA = ["Entendido, acepto", "Retomar", "Jugar ya", "Seguir sin nombre", "Aprendiz", "Empezar a los", "Elegir", "Graduarte de esto", "Empezar con esto", "Entendido, empezar",
+const GUIA = ["Entendido, acepto", "Retomar", "Jugar ya", "Elegir yo", "Aprendiz", "Empezar a los", "Elegir", "Graduarte de esto", "Empezar con esto", "Entendido, empezar",
   "Ya lo tengo", "Siguiente", "Terminar", "Empezar", "Lo siguiente", "Cerrar el año", "Continuar",
   "Sentarte a hacer cuentas", "Seguir cinco años", "Retirarme ahora", "Ver el balance final",
   "Fijar", "Poner el número", "Cerrar posición", "Cerrar el trato"];

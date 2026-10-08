@@ -1,0 +1,134 @@
+[
+ {
+  "id": "eco",
+  "nombre": "Economía",
+  "descripcion": "Lees el ciclo antes que el resto de la mesa.",
+  "minijuegos_faciles": [
+   "quiz",
+   "semaforo",
+   "pares"
+  ],
+  "empleadores": [
+   "Andes Macro Partners",
+   "Consultora Cardinal",
+   "Meridiano Estudios Económicos"
+  ],
+  "caminos": [
+   "Estrategia de mercados: Tu lectura del ciclo, convertida en posiciones.",
+   "Fusiones y adquisiciones: El camino clásico de la banca de inversión.",
+   "Private equity: Te preparas para comprar empresas, no para venderlas.",
+   "Camino a tu propia consultora macro: Vender tu lectura del ciclo con tu nombre en la puerta."
+  ],
+  "firma_propia": "Tu propia consultora macro: Vendes lectura de ciclo a fondos y a empresas. Ingresos irregulares y un nombre que empieza a circular solo."
+ },
+ {
+  "id": "con",
+  "nombre": "Contaduría",
+  "descripcion": "Encuentras el número que no cuadra sin buscarlo.",
+  "minijuegos_faciles": [
+   "ojo",
+   "banderas",
+   "pares"
+  ],
+  "empleadores": [
+   "Vargas & Prieto Auditores",
+   "Contable Atlántico",
+   "Revisoría Solano"
+  ],
+  "caminos": [
+   "Socio de auditoría: La escalera larga y segura hasta firmar los estados de otros.",
+   "Due diligence de compras: Eres quien encuentra lo que el vendedor escondió.",
+   "Tesorería de una multinacional: La caja de una empresa grande, todos los días en el mercado.",
+   "Camino a tu propia firma de auditoría: Clientes que vuelven en cada cierre, y ahora te pagan a ti."
+  ],
+  "firma_propia": "Tu propia firma de auditoría: Aburrida, recurrente y difícil de matar: los clientes vuelven en cada cierre porque cambiar de auditor cuesta más que pagarte."
+ },
+ {
+  "id": "ing",
+  "nombre": "Ingeniería",
+  "descripcion": "Las cuentas de cabeza y las estructuras son tu terreno.",
+  "minijuegos_faciles": [
+   "calculo",
+   "estructura",
+   "carril"
+  ],
+  "empleadores": [
+   "Cordillera Project Finance",
+   "Proyecta Capital",
+   "Infraestructura del Sur"
+  ],
+  "caminos": [
+   "Project finance: Financiar puertos, plantas y carreteras.",
+   "Fondo de infraestructura: Comprar los activos que antes financiabas.",
+   "Energía y materias primas: Petróleo, gas y metales: mercados que entiendes por dentro.",
+   "Camino a tu propia constructora: Tus obras, tu balance y tu firma en cada contrato."
+  ],
+  "firma_propia": "Tu propia constructora: Obras, márgenes finos y un balance lleno de maquinaria. Cuando una obra sale bien, sale muy bien; cuando sale mal, te la llevas puesta."
+ },
+ {
+  "id": "der",
+  "nombre": "Derecho",
+  "descripcion": "Negocias y lees contratos sin depender de nadie.",
+  "minijuegos_faciles": [
+   "anclaje",
+   "tresraya",
+   "cuatro"
+  ],
+  "empleadores": [
+   "Larrea Structuring",
+   "Salazar Mendoza Abogados",
+   "Estudio Fondevila"
+  ],
+  "caminos": [
+   "Socio de un gran bufete: Horas facturables y la escalera hasta la mesa de socios.",
+   "Estructuración de fondos: Los contratos que hay detrás de cada compra.",
+   "Patrimonios y sucesiones: Familias, herencias y el dinero de tres generaciones.",
+   "Camino a tu propio bufete: Tu nombre en la puerta. El sueño de casi todo abogado."
+  ],
+  "firma_propia": "Tu propio bufete: Horas facturables y un socio que eres tú. Aquí la reputación vale más que el capital, y tú ya la traes."
+ },
+ {
+  "id": "adm",
+  "nombre": "Administración",
+  "descripcion": "Conoces a media promoción y a la promoción anterior también.",
+  "minijuegos_faciles": [
+   "reaccion",
+   "memoria",
+   "cuatro"
+  ],
+  "empleadores": [
+   "Grupo Corporativo Ávila",
+   "Nexo Asesores",
+   "Mercantil Praga"
+  ],
+  "caminos": [
+   "Fusiones y adquisiciones: Tu red, puesta a cerrar operaciones.",
+   "Banca privada: Las familias con dinero y su confianza.",
+   "Private equity: Comprar empresas y hacerlas mejores.",
+   "Camino a tu propia firma de asesoría: La red de veinte años, trabajando para ti."
+  ],
+  "firma_propia": "Tu propia firma de asesoría: Vives de la red que llevas veinte años armando. Es tu activo principal y también tu único riesgo real."
+ },
+ {
+  "id": "sis",
+  "nombre": "Computación",
+  "descripcion": "Automatizas en una tarde lo que otros hacen a mano toda la semana.",
+  "minijuegos_faciles": [
+   "trading",
+   "reaccion",
+   "carril"
+  ],
+  "empleadores": [
+   "Quantum Datos Financieros",
+   "Nodo Capital Tech",
+   "Delta Sistemas Bursátiles"
+  ],
+  "caminos": [
+   "Trading cuantitativo: Modelos que compran y venden más rápido que nadie.",
+   "Venture capital: Apostar por empresas antes de que existan.",
+   "Liderar datos e IA en un banco: Subir rápido dentro de una institución que te necesita.",
+   "Camino a tu propia casa de IA: Un producto que escala sin pedirte más horas."
+  ],
+  "firma_propia": "Tu propia casa de IA aplicada a finanzas: Poca gente, mucho código y un producto que escala sin pedirte más horas. Es el único de la lista que puede crecer mientras duermes."
+ }
+]

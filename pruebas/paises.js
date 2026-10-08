@@ -96,7 +96,7 @@ async function unaVida(semilla, iPais) {
   await act(async () => { reloj(400); await micro(); });
   await pulsa(porRot(/acepto y quiero jugar/i));
   await pulsa(porRot(/^Jugar ya$/));
-  await pulsa(porRot(/^Seguir sin nombre$/));
+  await pulsa(porRot(/^Elegir yo/));
   await pulsa(porRot(/^Empezar a los 20/));
   const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
   await pulsa(p[iPais]);

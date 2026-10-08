@@ -24,7 +24,18 @@
     "catalogo": "node pruebas/catalogo.js",
     "sitio": "node pruebas/pwa.js",
     "puertas": "node pruebas/puertas.js 12",
-    "caminos": "node pruebas/caminos.js 16"
+    "caminos": "node pruebas/caminos.js 16",
+    "dia": "node pruebas/dia.js",
+    "pretemporada": "node pruebas/pretemporada.js",
+    "fallo": "node pruebas/fallo.js",
+    "cartera": "node pruebas/cartera.js",
+    "negociacion": "node pruebas/negociacion.js",
+    "compartir": "node pruebas/compartir.js",
+    "oportunidades": "node pruebas/oportunidades.js",
+    "cierre": "node pruebas/cierre.js",
+    "contrato": "node pruebas/contrato.js",
+    "boosts": "node pruebas/boosts.js",
+    "gala": "node pruebas/gala.js"
   },
   "devDependencies": {
     "@babel/core": "^7",

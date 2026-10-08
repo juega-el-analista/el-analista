@@ -75,7 +75,7 @@ async function unaVida(semilla, cuenta) {
     await pulsa(porRot(/acepto y quiero jugar/i));
     await pulsa(porRot(/^Jugar ya$/));
     /* «Jugar ya» abre la configuración: se pasa con lo que venga por defecto */
-    await pulsa(porRot(/^Seguir sin nombre$/));
+    await pulsa(porRot(/^Elegir yo/));
     await pulsa(porRot(/^Empezar a los 20/));
     await pulsa(libres().filter((b) => /^Elegir$/.test(rot(b)))[1] || libres().filter((b) => /^Elegir$/.test(rot(b)))[0]);
     await pulsa(libres().filter((b) => /^(Graduarte de esto|Empezar con esto)$/.test(rot(b)))[0]);
