@@ -877,13 +877,13 @@ const JUEGOS = {
   },
   estructura: {
     n: "Armar la estructura", tema: "Apalancamiento", dur: "40 s",
-    i: "Compras una empresa de 100 millones. Tú pones una parte y el banco te presta el resto.",
+    i: "Hay que pagar una compra o montar algo. Una parte se pone de bolsillo y el banco presta el resto.",
     pasos: [
-      "Con la barra decides cuánto te presta el banco. Lo que falta lo pones tú.",
-      "Debajo ves qué pasa con tu dinero si a la empresa le va bien y si le va mal.",
-      "Más préstamo: ganas más si va bien, pero pierdes más si va mal. Busca el punto medio.",
+      "Con la barra decides cuánto presta el banco. Lo que falta se pone de bolsillo.",
+      "Debajo ves qué pasa con ese dinero si le va bien y si le va mal.",
+      "Más préstamo: se gana más si va bien, pero se pierde más si va mal. Busca el punto medio.",
     ],
-    gana: "Cumplir las dos metas es éxito. Una sola, resultado a medias.",
+    gana: "Cada vez hay dos metas distintas. Cumplir las dos es éxito; una sola, resultado a medias.",
     ensena: "La deuda multiplica el retorno del capital y también el riesgo de perderlo todo. Pasado cierto punto el banco manda, no tú.",
   },
   banderas: {
@@ -49610,7 +49610,7 @@ function JuegoSemaforo({ ayuda, nivel, onFin }) {
   );
 }
 
-function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
+function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema, ctx }) {
   if (tipo === "precision") return <JuegoPrecision ayuda={ayuda} onFin={onFin} />;
   if (tipo === "memoria") return <JuegoMemoria ayuda={ayuda} onFin={onFin} />;
   if (tipo === "ojo") return <JuegoOjo ayuda={ayuda} onFin={onFin} />;
@@ -49624,7 +49624,7 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
   if (tipo === "orden") return <JuegoOrden ayuda={ayuda} onFin={onFin} />;
   if (tipo === "semaforo") return <JuegoSemaforo ayuda={ayuda} nivel={nivel} onFin={onFin} />;
   if (tipo === "trading") return <JuegoTrading ayuda={ayuda} onFin={onFin} />;
-  if (tipo === "estructura") return <JuegoEstructura ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "estructura") return <JuegoEstructura ayuda={ayuda} onFin={onFin} ctx={ctx} />;
   if (tipo === "banderas") return <JuegoBanderas ayuda={ayuda} onFin={onFin} modo={modo} />;
   if (tipo === "pares") return <JuegoPares ayuda={ayuda} onFin={onFin} />;
   if (tipo === "carril") return <JuegoCarril ayuda={ayuda} onFin={onFin} />;
@@ -49636,7 +49636,7 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema }) {
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
-function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, visto, onVisto }) {
+function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, visto, onVisto, ctx }) {
   /* Tres pasos, no uno. Antes el minijuego aparecia dentro del
      memorando, con la ficha y las pestañas alrededor, y no se notaba
      que cambiabas de actividad. Ahora: el anuncio —una pantalla de
@@ -49671,11 +49671,11 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
     try { onFin(nv); } catch (e) { try { console.error("[El Analista] fin de juego", e); } catch (_) {} }
   };
   const j = JUEGOS[tipo];
-  if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />;
+  if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} ctx={ctx} />;
   if (listo) {
     return (
       <div className="ea-juegoPleno">
-        <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} />
+        <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} ctx={ctx} />
       </div>
     );
   }
@@ -50005,84 +50005,129 @@ function JuegoTrading({ ayuda, onFin }) {
    se sortea primero la franja y de ella salen cuánto sube y cuánto baja la
    empresa, así que siempre existe y nunca está en el mismo sitio. Con
    mejor atributo la franja es más ancha. */
-const EST_PRECIO = 100;
-const EST_META_BIEN = 2;      /* multiplicar tu dinero por esto si va bien */
-const EST_META_MAL = 0.3;     /* conservar al menos esta parte si va mal */
+/* (8-oct-2026) Las metas eran siempre 2,0x y 30%, y la compra siempre de
+   100 millones: también cuando la escena era montar tu propia firma por
+   26.000. Ahora cada caso sortea sus dos metas, y el monto y quién compra
+   salen de la escena (contextoEstructura). Por dentro todo sigue en
+   porcentajes del precio, así que la franja buena existe siempre. */
+const EST_PRECIO = 100;       /* el precio, en porcentaje: la cuenta no depende del monto */
+const EST_METAS_BIEN = [1.6, 1.8, 2, 2.2, 2.5];   /* multiplicar el dinero propio si va bien */
+const EST_METAS_MAL = [0.2, 0.25, 0.3, 0.35, 0.4]; /* conservar al menos esta parte si va mal */
 const EST_AMORTIZA = 10;      /* lo que la empresa devuelve de deuda si va bien */
 const EST_TOPE = 80;          /* ningún banco presta más del 80% */
 const casoEstructura = (ayuda) => {
+  const metaBien = EST_METAS_BIEN[indiceAzar(EST_METAS_BIEN.length)];
+  const metaMal = EST_METAS_MAL[indiceAzar(EST_METAS_MAL.length)];
   const lo = 30 + 5 * indiceAzar(5);                       /* de 30 a 50 */
   const ancho = numero(ayuda, 0) >= 60 ? 15 : 10;
   const hi = Math.min(EST_TOPE - 10, lo + ancho);
-  /* bien: (100·(1+sube) − (d − 10)) / (100 − d) = 2    justo en d = lo */
-  const sube = (EST_PRECIO * EST_META_BIEN - EST_META_BIEN * lo + lo - EST_AMORTIZA) / EST_PRECIO - 1;
-  /* mal:  (100·(1−baja) − d) / (100 − d) = 0,3          justo en d = hi */
-  const baja = 1 - (EST_META_MAL * (EST_PRECIO - hi) + hi) / EST_PRECIO;
-  return { lo, hi, sube, baja,
+  /* bien: (100·(1+sube) − (d − 10)) / (100 − d) = metaBien    justo en d = lo */
+  const sube = (EST_PRECIO * metaBien - metaBien * lo + lo - EST_AMORTIZA) / EST_PRECIO - 1;
+  /* mal:  (100·(1−baja) − d) / (100 − d) = metaMal            justo en d = hi */
+  const baja = 1 - (metaMal * (EST_PRECIO - hi) + hi) / EST_PRECIO;
+  return { lo, hi, sube, baja, metaBien, metaMal,
     nombre: elegirAzar(["Envases del Sur", "Clínica Aurora", "Transportes Bolívar", "Alimentos Real", "Química Andina"]) || "la compañía" };
 };
 const resultadoEstructura = (c, deuda) => {
   const tuyo = EST_PRECIO - deuda;
   const bien = tuyo > 0 ? (EST_PRECIO * (1 + c.sube) - Math.max(0, deuda - EST_AMORTIZA)) / tuyo : 0;
   const mal = tuyo > 0 ? Math.max(0, EST_PRECIO * (1 - c.baja) - deuda) / tuyo : 0;
-  const okBien = bien >= EST_META_BIEN - 1e-9, okMal = mal >= EST_META_MAL - 1e-9;
+  const okBien = bien >= c.metaBien - 1e-9, okMal = mal >= c.metaMal - 1e-9;
   return { tuyo, bien, mal, okBien, okMal, nivel: okBien && okMal ? "exito" : okBien || okMal ? "parcial" : "fallo" };
 };
+/* Quién compra qué y por cuánto, según la escena:
+   · montar tu firma: es tu dinero y cuesta lo que la escena dice;
+   · el resto son operaciones de clientes, del tamaño que maneja tu cargo
+     (un analista senior no lleva compras de 100 millones). */
+const EST_TAMANO = [500000, 1000000, 3000000, 8000000, 20000000, 50000000, 120000000];
+const contextoEstructura = (op, st) => {
+  if (op && op.firmaPropia) {
+    const f = FIRMA_DE(st);
+    return { precio: numero(f.costo, 20000), que: "Montas " + f.n.toLowerCase(), propio: true };
+  }
+  const base = EST_TAMANO[entero(st && st.rango, 2, 0, EST_TAMANO.length - 1)];
+  const grande = op && op.res && op.res.exito && numero(op.res.exito.cash, 0) >= 100000 ? 4 : 1;
+  const crudo = base * grande * (0.6 + azar() * 0.8);
+  /* redondeado a algo que se diga en voz alta */
+  const paso = crudo >= 1e7 ? 1e6 : crudo >= 1e6 ? 1e5 : 1e4;
+  return { precio: Math.max(paso, Math.round(crudo / paso) * paso), que: "Tu cliente compra", propio: false };
+};
+/* «USD 26.000», «USD 3,5 millones» */
+const plataCorta = (v) => {
+  const n = numero(v, 0);
+  if (Math.abs(n) >= 1e6) {
+    const m = n / 1e6;
+    return "USD " + (Math.round(m * 10) / 10).toString().replace(".", ",") + (Math.abs(m) === 1 ? " millón" : " millones");
+  }
+  return "USD " + fmt(n);
+};
 
-function JuegoEstructura({ ayuda, onFin }) {
+function JuegoEstructura({ ayuda, onFin, ctx }) {
   const [caso] = useState(() => casoEstructura(ayuda));
+  const c = ctx && numero(ctx.precio, 0) > 0 ? ctx
+    : { precio: 100000000, que: "Compras", propio: true };
   const [deuda, setDeuda] = useState(0);
   const [cerrado, setCerrado] = useState(null);
   const r = resultadoEstructura(caso, deuda);
   const x = (v) => v.toFixed(1).replace(".", ",") + "x";
+  const monto = (pct) => plataCorta(c.precio * pct / 100);
+  /* montar lo tuyo no es comprar una empresa con nombre */
+  const objeto = /^Montas/.test(c.que) ? null : caso.nombre;
+  const dinero = c.propio ? "tu dinero" : "el dinero de tu cliente";
+  const quien = c.propio ? "Tú pones" : "Tu cliente pone";
 
   const cierre = {
-    exito: "Punto justo. Con esa deuda tu dinero rinde de verdad si sale bien, y si sale mal te queda con qué volver a empezar.",
+    exito: "Punto justo. Con esa deuda " + dinero + " rinde de verdad si sale bien, y si sale mal queda con qué volver a empezar.",
     parcial: r.okBien
-      ? "Si sale bien ganas mucho, pero pediste tanto que un mal año se lleva casi todo lo que pusiste."
-      : "Estás a salvo si sale mal, pero pusiste tanto de tu bolsillo que si sale bien tu dinero apenas rinde.",
-    fallo: "No cumples ninguna de las dos metas: ni ganas lo suficiente si sale bien, ni aguantas si sale mal.",
+      ? "Si sale bien se gana mucho, pero pediste tanto que un mal año se lleva casi todo lo que se puso."
+      : "Está a salvo si sale mal, pero se puso tanto de bolsillo propio que si sale bien " + dinero + " apenas rinde.",
+    fallo: "No se cumple ninguna de las dos metas: ni se gana lo suficiente si sale bien, ni se aguanta si sale mal.",
   };
+  const situacion = (
+    <span>
+      {c.que} {objeto ? <span><strong>{objeto}</strong> por </span> : <span>por </span>}<strong>{plataCorta(c.precio)}</strong>
+    </span>
+  );
 
   return (
     <div className="ea-jw">
       <Pista>
-        Compras <strong>{caso.nombre}</strong> por <strong>{EST_PRECIO} millones</strong>. Tú pones una parte y
-        el banco te presta el resto. Pedir prestado hace que ganes más si sale bien… y que pierdas más si sale mal.
+        {situacion}. {quien} una parte y el banco presta el resto. Pedir prestado hace que se gane más si sale
+        bien… y que se pierda más si sale mal.
       </Pista>
 
       {/* la situación, siempre a la vista: la Pista de arriba se pliega */}
       <div className="ea-estCaso">
-        Compras <strong>{caso.nombre}</strong> por <strong>{EST_PRECIO} millones</strong>. ¿Cuánto le pides al banco?
+        {situacion}. ¿Cuánto se le pide al banco?
       </div>
 
       <div className="ea-est">
         <div className="ea-estL">
-          <span>El banco te presta</span>
-          <span className="ea-mono">{deuda} millones</span>
+          <span>El banco presta</span>
+          <span className="ea-mono">{monto(deuda)} · {deuda}%</span>
         </div>
         <input className="ea-slider" type="range" min="0" max={EST_TOPE} step="5" value={deuda} disabled={!!cerrado}
-          onChange={(e) => setDeuda(entero(e.target.value, 0, 0, EST_TOPE))} aria-label="Cuánto te presta el banco" />
+          onChange={(e) => setDeuda(entero(e.target.value, 0, 0, EST_TOPE))} aria-label="Cuánto presta el banco" />
       </div>
 
       {/* quién pone qué */}
       <div className="ea-mix" style={{ marginTop: 6 }}>
-        <div className="ea-mixSeg efe" style={{ width: r.tuyo + "%" }}>{r.tuyo >= 18 ? "tú " + r.tuyo : ""}</div>
-        <div className="ea-mixSeg cart" style={{ width: deuda + "%" }}>{deuda >= 18 ? "banco " + deuda : ""}</div>
+        <div className="ea-mixSeg efe" style={{ width: r.tuyo + "%" }}>{r.tuyo >= 18 ? (c.propio ? "tú " : "cliente ") + r.tuyo + "%" : ""}</div>
+        <div className="ea-mixSeg cart" style={{ width: deuda + "%" }}>{deuda >= 18 ? "banco " + deuda + "%" : ""}</div>
       </div>
 
       <div className="ea-escen">
         <div className={"ea-escenC " + (r.okBien ? "bien" : "mal")}>
-          <div className="ea-lecK">Si le va bien · vale {Math.round(caso.sube * 100)}% más</div>
+          <div className="ea-lecK">Si va bien · vale {Math.round(caso.sube * 100)}% más</div>
           <div className="ea-escenV ea-mono">{x(r.bien)}</div>
-          <div className="ea-escenX">tu dinero se multiplica por {x(r.bien)}</div>
-          <div className="ea-estMeta">{r.okBien ? "✓" : "✗"} Meta: {x(EST_META_BIEN)} o más</div>
+          <div className="ea-escenX">{dinero} se multiplica por {x(r.bien)}</div>
+          <div className="ea-estMeta">{r.okBien ? "✓" : "✗"} Meta: {x(caso.metaBien)} o más</div>
         </div>
         <div className={"ea-escenC " + (r.okMal ? "bien" : "mal")}>
-          <div className="ea-lecK">Si le va mal · vale {Math.round(caso.baja * 100)}% menos</div>
+          <div className="ea-lecK">Si va mal · vale {Math.round(caso.baja * 100)}% menos</div>
           <div className="ea-escenV ea-mono">{Math.round(r.mal * 100)}%</div>
-          <div className="ea-escenX">{r.mal <= 0.005 ? "lo pierdes todo: el banco cobra primero" : "de tu dinero te queda el " + Math.round(r.mal * 100) + "%"}</div>
-          <div className="ea-estMeta">{r.okMal ? "✓" : "✗"} Meta: conservar {Math.round(EST_META_MAL * 100)}% o más</div>
+          <div className="ea-escenX">{r.mal <= 0.005 ? "se pierde todo: el banco cobra primero" : "de " + dinero + " queda el " + Math.round(r.mal * 100) + "%"}</div>
+          <div className="ea-estMeta">{r.okMal ? "✓" : "✗"} Meta: conservar {Math.round(caso.metaMal * 100)}% o más</div>
         </div>
       </div>
 
@@ -52288,6 +52333,12 @@ function Motor() {
   });
   const [ev, setEv] = useState(null);
   const [op, setOp] = useState(null);
+  /* el monto de «Armar la estructura» se sortea una vez por opción elegida:
+     calcularlo en cada pintado lo haría cambiar solo */
+  const ctxJuego = useMemo(() => {
+    if (!op || (op.juego || op.j) !== "estructura") return null;
+    try { return contextoEstructura(op, s); } catch (e) { return null; }
+  }, [op]);
   const [res, setRes] = useState(null);
   const [cierre, setCierre] = useState(null);
   const [fin, setFin] = useState(null);
@@ -55084,7 +55135,7 @@ function Motor() {
                   statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo}
                   temas={s.temas} onTema={apuntarTema}
                   visto={(Array.isArray(s.jugados) ? s.jugados : []).indexOf(op.juego || op.j) >= 0}
-                  onVisto={apuntarJuego} />
+                  onVisto={apuntarJuego} ctx={ctxJuego} />
               )}
 
               {fase === "resultado" && res && (

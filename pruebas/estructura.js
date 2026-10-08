@@ -19,8 +19,8 @@ cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
 const comp = path.join(__dirname, "compilado.js");
 const tmp = path.join(__dirname, "probeEst.js");
 fs.writeFileSync(tmp, fs.readFileSync(comp, "utf8").replace("module.exports = ElAnalista;",
-  "module.exports = { JuegoEstructura, casoEstructura, resultadoEstructura, EST_TOPE, JUEGOS };"));
-const { JuegoEstructura, casoEstructura, resultadoEstructura, EST_TOPE, JUEGOS } = require(tmp);
+  "module.exports = { JuegoEstructura, casoEstructura, resultadoEstructura, contextoEstructura, EST_TOPE, JUEGOS };"));
+const { JuegoEstructura, casoEstructura, resultadoEstructura, contextoEstructura, EST_TOPE, JUEGOS } = require(tmp);
 
 let fallos = 0;
 const ok = (c, m) => { console.log("  " + (c ? "ok   " : "FALLO") + "  " + m); if (!c) fallos++; };
@@ -48,6 +48,32 @@ const txt = (j) => (j == null ? "" : typeof j === "string" || typeof j === "numb
   ok(ganables === N, "en las " + N + " empresas probadas hay al menos dos puntos de la barra que ganan (" + ganables + ")");
   ok(franjas.size >= 4, "la franja buena cambia de sitio entre partidas (" + [...franjas].sort((a, b) => a - b).join(", ") + ")");
 
+  /* ---- las metas cambian de partida en partida, y siempre se pueden ganar ---- */
+  const metasBien = new Set(), metasMal = new Set();
+  let siempre = true;
+  for (let i = 0; i < 200; i++) {
+    let k = i;
+    Math.random = () => { k = (k * 9301 + 49297) % 233280; return k / 233280; };
+    const c = casoEstructura(i % 100);
+    metasBien.add(c.metaBien); metasMal.add(c.metaMal);
+    let gana = 0;
+    for (let d = 0; d <= EST_TOPE; d += 5) if (resultadoEstructura(c, d).nivel === "exito") gana++;
+    if (gana < 2 || c.sube <= 0 || c.baja <= 0 || c.baja >= 1) siempre = false;
+  }
+  ok(metasBien.size >= 4 && metasMal.size >= 4, "las metas varían (bien: " + [...metasBien].sort().join(", ") + " · mal: " + [...metasMal].sort().join(", ") + ")");
+  ok(siempre, "con cualquier par de metas sigue habiendo una franja que gana");
+
+  /* ---- el monto va con la situación ---- */
+  const firma = contextoEstructura({ firmaPropia: true }, { estudio: "eco", rango: 3, cash: 40000, cartera: 0 });
+  ok(firma.propio && firma.precio > 1000 && firma.precio < 1e6, "montar tu firma usa lo que cuesta montarla (USD " + firma.precio + "), no 100 millones");
+  ok(/firma|bufete|boutique|consultora|estudio|gestora|despacho/i.test(firma.que), "y dice que montas lo tuyo («" + firma.que + "»)");
+  Math.random = () => 0.5;
+  const jr = contextoEstructura({ j: "estructura" }, { rango: 2 });
+  const sr = contextoEstructura({ j: "estructura" }, { rango: 5 });
+  ok(!jr.propio && /cliente/i.test(jr.que), "en la escena del cliente, compra tu cliente («" + jr.que + "»)");
+  ok(sr.precio > jr.precio * 3, "un director maneja operaciones más grandes que un analista (" + jr.precio + " → " + sr.precio + ")");
+  ok(jr.precio < 100e6, "y un analista senior no maneja 100 millones (" + jr.precio + ")");
+
   /* ---- las dos metas tiran en sentidos contrarios ---- */
   Math.random = () => 0.5;
   const c = casoEstructura(72);
@@ -62,10 +88,17 @@ const txt = (j) => (j == null ? "" : typeof j === "string" || typeof j === "numb
 
   /* ---- el componente ---- */
   let fin = null, r;
-  await act(async () => { r = TR.create(React.createElement(JuegoEstructura, { ayuda: 72, onFin: (n) => { fin = n; } })); });
+  const ctx = { precio: 26000, que: "Montas tu consultora", propio: true };
+  Math.random = () => 0.5;
+  const esperado = casoEstructura(72);
+  await act(async () => { r = TR.create(React.createElement(JuegoEstructura, { ayuda: 72, ctx, onFin: (n) => { fin = n; } })); });
   const pantalla = () => txt(r.toJSON());
   ok(!/EBITDA|covenant|cobertura/i.test(pantalla()), "la pantalla no usa jerga");
-  ok(/Meta: 2,0x o más/.test(pantalla()) && /Meta: conservar 30% o más/.test(pantalla()), "las dos metas se ven");
+  const mb = esperado.metaBien.toFixed(1).replace(".", ","), mm = Math.round(esperado.metaMal * 100);
+  ok(pantalla().indexOf("Meta: " + mb + "x o más") >= 0 && pantalla().indexOf("Meta: conservar " + mm + "% o más") >= 0,
+    "las dos metas del caso se ven (" + mb + "x y " + mm + "%)");
+  ok(/Montas tu consultora/.test(pantalla()) && /USD 26\.000/.test(pantalla()) && !/100 millones/.test(pantalla()),
+    "la pantalla cuenta la situación real con su monto");
   const barra = r.root.findByType("input");
   const boton = (re) => r.root.findAll((n) => n.type === "button" && re.test(txt(n)))[0];
   /* buscar un punto ganador moviendo la barra, como haría el jugador */
