@@ -54210,7 +54210,11 @@ function PanelCartera({
      gastos del año salen del efectivo, así que durante el año la parte
      invertida queda por encima de la que pediste. Se acomoda al cerrar. */
   const invReal = liq > 0 ? clamp(st.cartera / liq, 0, 1) : 0;
-  const desvia = Math.abs(invReal - objAct) > 0.03;
+  /* Se explica siempre que no coincida a la vista, no solo pasados tres
+     puntos: un 78% con el 75% marcado parecía un error (Alessandro, 8-oct). */
+  const pctReal = Math.round(invReal * 100),
+    pctObj = Math.round(objAct * 100);
+  const desvia = liq > 0 && pctReal !== pctObj;
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis"
   }, "C\xF3mo est\xE1 repartido ahora mismo"), /*#__PURE__*/React.createElement("div", {
@@ -54243,7 +54247,7 @@ function PanelCartera({
     className: "ea-mono"
   }, "USD ", fmt(st.cash))), desvia && /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD"
-  }, "Va ", invReal > objAct ? "por encima" : "por debajo", " de lo que elegiste. Es normal: los gastos del a\xF1o salen del efectivo. Al cerrar el a\xF1o se acomoda solo."), /*#__PURE__*/React.createElement("div", {
+  }, "Elegiste ", pctObj, "%. Ahora est\xE1 en ", pctReal, "% porque", pctReal > pctObj ? " tu cartera subió con el mercado o gastaste parte del efectivo." : " tu cartera bajó con el mercado o te entró efectivo nuevo.", " ", "Al cerrar el a\xF1o vuelve a ", pctObj, "% sola."), /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis",
     style: {
       marginTop: 20

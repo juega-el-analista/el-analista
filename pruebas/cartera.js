@@ -49,6 +49,9 @@ const txt = (j) => (j == null ? "" : typeof j === "string" || typeof j === "numb
   ok(J.PERFILES_SIMPLES.every((p) => botones(new RegExp(p.n)).length === 1), "los tres perfiles están a la vista");
   ok(!/beta|Retorno por unidad de riesgo|Sharpe/i.test(pantalla()), "sin jerga en la vista simple");
   ok(sliders().length === 0, "sin sliders en la vista simple");
+  /* 20.000 de 30.000 es 67%, con el 70% elegido: se explica por qué no coincide */
+  ok(/Elegiste 70%\. Ahora está en 67% porque/.test(pantalla()) && /vuelve a 70% sola/.test(pantalla()),
+    "si lo de ahora no coincide con lo elegido, dice por qué y que se acomoda al cerrar el año");
 
   await act(async () => { botones(/^50%$/)[0].props.onClick(); });
   ok(aplicados.length === 1 && aplicados[0].o === 0.5 && JSON.stringify(aplicados[0].w) === JSON.stringify(pesos),

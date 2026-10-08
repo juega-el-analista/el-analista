@@ -52097,7 +52097,10 @@ function PanelCartera({ st, onAplicar }) {
      gastos del año salen del efectivo, así que durante el año la parte
      invertida queda por encima de la que pediste. Se acomoda al cerrar. */
   const invReal = liq > 0 ? clamp(st.cartera / liq, 0, 1) : 0;
-  const desvia = Math.abs(invReal - objAct) > 0.03;
+  /* Se explica siempre que no coincida a la vista, no solo pasados tres
+     puntos: un 78% con el 75% marcado parecía un error (Alessandro, 8-oct). */
+  const pctReal = Math.round(invReal * 100), pctObj = Math.round(objAct * 100);
+  const desvia = liq > 0 && pctReal !== pctObj;
 
   return (
     <div>
@@ -52114,8 +52117,11 @@ function PanelCartera({ st, onAplicar }) {
       <div className="ea-fila"><span style={{ fontSize: 12.5 }}>En efectivo</span><span className="ea-mono">USD {fmt(st.cash)}</span></div>
       {desvia && (
         <div className="ea-itemD">
-          Va {invReal > objAct ? "por encima" : "por debajo"} de lo que elegiste. Es normal: los gastos del año
-          salen del efectivo. Al cerrar el año se acomoda solo.
+          Elegiste {pctObj}%. Ahora está en {pctReal}% porque
+          {pctReal > pctObj
+            ? " tu cartera subió con el mercado o gastaste parte del efectivo."
+            : " tu cartera bajó con el mercado o te entró efectivo nuevo."}
+          {" "}Al cerrar el año vuelve a {pctObj}% sola.
         </div>
       )}
 
