@@ -49344,6 +49344,8 @@ const IDS_FIRMA = [9720, 9721];
    escena desde su id, y la carrera del día da las mismas a todos.
    ============================================================ */
 const ID_PRE = 9790;
+/* cuántas escenas con minijuego trae cada año, como mínimo */
+const MIN_JUEGOS_ANO = 2;
 const CARTAS_PRE = {
   ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
   cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto"],
@@ -54965,11 +54967,11 @@ function Motor() {
     if (o.req.noPais && o.req.noPais === st.pais) return false;
     return true;
   };
-  const sacar = (fuente, st, usados) => {
+  const sacar = (fuente, st, usados, sinRepetir) => {
     /* con firma propia no salen las de empleado, y sin ella no salen las de dueño */
     const cabe = e => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0 && !(sinJefe(st) && esDeEmpleado(e)) && !(e.dueno && !sinJefe(st)) && huellasOk(e, st);
     let pool = fuente.filter(e => cabe(e) && st.vistos.indexOf(e.id) < 0);
-    if (pool.length === 0) pool = fuente.filter(cabe);
+    if (pool.length === 0 && !sinRepetir) pool = fuente.filter(cabe);
     return pool.length ? elegirAzar(pool) : null;
   };
 
@@ -55142,11 +55144,27 @@ function Motor() {
        evento normal. Ya me costó una vez: descontar la apertura hacía que
        se dejara de ver el minijuego de trading. */
     const objetivo = Math.min(forzadas + 2 + (azar() < 0.45 ? 1 : 0), 5);
+    /* Al menos dos escenas con minijuego por año (Alessandro, 8-oct-2026:
+       «los minijuegos salen mucho menos»). Al rellenar se eligen primero
+       las que traen minijuego, sin repetir escenas ya vistas; si el año
+       quedó corto de juegos, se suma una más. */
+    const fuente = sinJefe(st) ? E.concat(DUENO) : E;
+    const conJuego = e => !!(e && Array.isArray(e.o) && e.o.some(o => o && (o.j || o.juego)));
+    const fuenteJuego = fuente.filter(conJuego);
+    let juegos = lista.filter(conJuego).length;
     while (lista.length < objetivo) {
-      const e = sacar(sinJefe(st) ? E.concat(DUENO) : E, st, usados);
+      const e = juegos < MIN_JUEGOS_ANO && sacar(fuenteJuego, st, usados, true) || sacar(fuente, st, usados);
       if (!e) break;
       lista.push(e);
       usados.push(e.id);
+      if (conJuego(e)) juegos += 1;
+    }
+    if (juegos < MIN_JUEGOS_ANO) {
+      const e = sacar(fuenteJuego, st, usados, true);
+      if (e) {
+        lista.push(e);
+        usados.push(e.id);
+      }
     }
     /* La pretemporada abre el año y va por fuera del presupuesto: se pone
        delante cuando todo lo demás ya está contado. */
