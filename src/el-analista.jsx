@@ -52504,9 +52504,6 @@ function Motor() {
   useEffect(() => { setGalaVista(0); }, [cierre]);
   /* la segunda mitad de la leccion del año, la de las cifras propias */
   const [verLeccion, setVerLeccion] = useState(false);
-  /* el movimiento: del navegador, no de la partida */
-  const [animar, setAnimarBruto] = useState(leerMovimiento);
-  const setAnimar = (v) => { anotarMovimiento(v); setAnimarBruto(v); };
   /* Las cuatro decisiones de partida viven aquí y NO tocan el estado del
      juego hasta que la partida arranca de verdad. Por eso se puede volver
      atrás sin deshacer nada, y por eso pulsar dos veces un país ya no
@@ -54105,8 +54102,10 @@ function Motor() {
   const ramaN = s.rama ? nombreRama(s, s.rama) : null;
   const ano = 2026 + s.turno;
 
-  /* el interruptor global, al dia en cada render */
-  MOVIMIENTO = animar;
+  /* Las animaciones van siempre (Alessandro, 8-oct-2026). Se ignora a
+     propósito lo que haya quedado guardado del interruptor viejo: quien lo
+     apagó antes no puede quedarse con el juego quieto. */
+  MOVIMIENTO = true;
   const quietoAhora = sinMovimiento();
 
   /* El latido de la cifra de arriba cuando el patrimonio se mueve. Se
@@ -54769,25 +54768,8 @@ function Motor() {
                     {/* Con el retomar automático el jugador ya no pasa por la
                         portada, así que hace falta una puerta de vuelta. No
                         borra nada: la partida queda guardada. */}
-                    {/* El movimiento, encendible a mano. Windows con los
-                        efectos de animacion apagados le dice a Chrome que
-                        quiere menos movimiento, y eso apagaba el rodillo
-                        del cierre y las cifras que cuentan sin que hubiera
-                        forma de encenderlos. */}
-                    <Plegable titulo="Movimiento"
-                      resumen={animar === false ? "apagado" : "encendido"}>
-                      <div className="ea-itemD" style={{ marginBottom: 8 }}>
-                        Las cifras que cuentan, el rodillo del cierre de año y todo lo que se mueve.
-                        Si te marea, apágalo: se queda así para todas tus partidas.
-                      </div>
-                      <div className="ea-generos">
-                        {[[true, "Encendido"], [false, "Apagado"]].map((par) => (
-                          <button key={String(par[0])} style={{ marginTop: 0 }}
-                            className={"ea-mini" + ((animar === false) === (par[0] === false) ? " on" : "")}
-                            onClick={() => setAnimar(par[0])}>{par[1]}</button>
-                        ))}
-                      </div>
-                    </Plegable>
+                    {/* El interruptor de Movimiento salió el 8-oct-2026
+                        (Alessandro): las animaciones van siempre. */}
 
                     {/* El diccionario era una pestaña fija. Es una
                         consulta, no una accion: vive aqui dentro y se
