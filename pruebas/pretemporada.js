@@ -16,7 +16,7 @@ cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
 const comp = path.join(__dirname, "compilado.js");
 const tmp = path.join(__dirname, "probePre.js");
 fs.writeFileSync(tmp, fs.readFileSync(comp, "utf8").replace("module.exports = ElAnalista;",
-  "module.exports = { escenaPretemporada, escenaDeId, IDS_ESCENA_VALIDOS, APERTURAS, PERKS, sanear, ID_PRE };"));
+  "module.exports = { escenaPretemporada, escenaDeId, IDS_ESCENA_VALIDOS, APERTURAS, PERKS, sanear, ID_PRE, esVacacion, VACACIONES_COMPRA };"));
 const J = require(tmp);
 
 let fallos = 0;
@@ -58,6 +58,17 @@ const efecto = (o) => ATR.filter((k) => o.d && o.d[k]);
     ok(!!p && p.c <= 800, "existe la mejora barata «" + id + "»" + (p ? " (USD " + p.c + ")" : ""));
   });
   ok(J.sanear({ semilla: 12345 }).semilla === 12345, "la semilla sobrevive al guardado");
+
+  /* las vacaciones de verdad recargan la energía al 100% */
+  ok(["Tomarte unas vacaciones de verdad", "Tomarte las vacaciones que debes", "Tomarlas, y sin teléfono", "Vacaciones de verdad, sin correo"]
+    .every((t) => J.esVacacion({ t })), "las opciones de vacaciones se reconocen");
+  ok(!J.esVacacion({ t: "Una semana, con el teléfono encendido" }), "una semana con el teléfono encendido no son vacaciones");
+  ok(J.VACACIONES_COMPRA.indexOf("viaje") >= 0, "el viaje por Europa también cuenta");
+  let cartaVac = null;
+  for (let s = 0; s < 400 && !cartaVac; s++) {
+    cartaVac = J.escenaPretemporada({ turno: s % 9, semilla: s }).o.find((o) => o.t === "Vacaciones de verdad, sin correo") || null;
+  }
+  ok(cartaVac && /energía al 100%/.test(cartaVac.d.msg), "la carta de vacaciones dice que vuelves al 100%");
 })();
 
 try { fs.unlinkSync(tmp); } catch (e) {}

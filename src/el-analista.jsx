@@ -48260,6 +48260,19 @@ const CARTAS_PRE = {
   rep: ["Entregar antes del plazo", "Firmar un informe que sale bien", "Dar una charla en la facultad", "Admitir un error a tiempo"],
 };
 const NOMBRE_ATRIB = { ene: "energía", cri: "criterio", mod: "modelaje", red: "red", rep: "reputación" };
+/* Las vacaciones de verdad te devuelven la energía al 100% (Alessandro,
+   8-oct-2026): es el atributo que más gastan las decisiones, y unas
+   semanas lejos tienen que notarse. Van por nombre para no tocar los
+   árboles de escenas, que se generan aparte. «Una semana con el teléfono
+   encendido» no cuenta: eso no son vacaciones. */
+const VACACIONES_OPCIONES = [
+  "Tomarte unas vacaciones de verdad",
+  "Tomarte las vacaciones que debes",
+  "Tomarlas, y sin teléfono",
+  "Vacaciones de verdad, sin correo",
+];
+const VACACIONES_COMPRA = ["viaje"];
+const esVacacion = (o) => !!(o && (o.vacaciones || VACACIONES_OPCIONES.indexOf(o.t) >= 0));
 const escenaPretemporada = (st) => {
   const rnd = generadorDe("pre:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + entero(st && st.turno, 0, 0, 99));
   const claves = Object.keys(CARTAS_PRE);
@@ -48276,7 +48289,9 @@ const escenaPretemporada = (st) => {
     const rareza = v === 4 ? "dorada" : v === 3 ? "rara" : null;
     cartas.push({
       t: titulo, rareza,
-      d: { [k]: v, msg: "Inicio de año: +" + v + " de " + NOMBRE_ATRIB[k] + "." },
+      d: { [k]: v, msg: VACACIONES_OPCIONES.indexOf(titulo) >= 0
+        ? "Inicio de año: vuelves de las vacaciones con la energía al 100%."
+        : "Inicio de año: +" + v + " de " + NOMBRE_ATRIB[k] + "." },
     });
   }
   return {
@@ -53039,6 +53054,7 @@ function Motor() {
     const r = cobrar(st, c.c);
     const n = { ...st, cash: r.cash, cartera: r.cartera, bienes: st.bienes.concat(c.id), valores: { ...st.valores, [c.id]: c.c } };
     if (c.ene) n.ene = clamp(n.ene + c.ene, 0, 100);
+    if (VACACIONES_COMPRA.indexOf(c.id) >= 0) n.ene = 100;   /* unas vacaciones de verdad recargan todo */
     if (c.red) n.red = clamp(n.red + c.red, 0, 100);
     if (c.rep) n.rep = clamp(n.rep + c.rep, 0, 100);
     /* Si pagas la boda estando de novios, te casas: no tendria sentido
@@ -53270,6 +53286,12 @@ function Motor() {
       d.msg = r.msg;
       cambios.push({ k: "cash", v: r.delta });
       if (r.delta) cambios.push({ k: "cartera", v: 0, neg: r.delta < 0, nota: r.delta > 0 ? "a tu cartera" : "de tu cartera" });
+    }
+    /* unas vacaciones de verdad: vuelves con las pilas al 100% */
+    if (esVacacion(o) && nivel !== "fallo") {
+      const sube = 100 - numero(st.ene, 0);
+      st.ene = 100;
+      if (sube > 0) cambios.push({ k: "ene", v: 0, nota: "Energía al 100%" });
     }
     if (d.mercado) st.shock = (st.shock || 0) + d.mercado;
     if (d.msg) st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: d.msg.split(".")[0] });
