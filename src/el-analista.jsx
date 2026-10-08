@@ -221,6 +221,16 @@ const CSS = `
 .ea-opTag{display:block;font-size:11px;letter-spacing:.14em;color:var(--gris);margin-top:5px}
 .ea-opSolo{display:inline-block;font-size:9.5px;letter-spacing:.14em;color:var(--cobre);
   border:1px solid var(--cobre);padding:1px 6px;margin-left:8px;vertical-align:middle}
+/* La rareza tiene color propio, como el verde y el rojo: rara en morado,
+   dorada (y legendaria) en dorado. */
+.ea-op.rara{border-color:#8A5CC7;background:rgba(138,92,199,.08)}
+.ea-op.rara:hover:not(:disabled){border-color:#8A5CC7;background:rgba(138,92,199,.16)}
+.ea-op.dorada{border-color:#C29A1E;background:rgba(214,170,40,.12)}
+.ea-op.dorada:hover:not(:disabled){border-color:#C29A1E;background:rgba(214,170,40,.22)}
+.ea-opRareza{display:inline-block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  padding:1px 7px;margin-right:8px;vertical-align:middle;border-radius:2px;color:#fff}
+.ea-opRareza.rara{background:#8A5CC7}
+.ea-opRareza.dorada{background:#B8901C}
 
 /* Una opcion que no te alcanza se ve, y se ve POR QUE no te alcanza. No
    se esconde: enterarte de lo que te estas perdiendo es justo lo que
@@ -1142,8 +1152,8 @@ const CSS4 = `
   font-family:var(--f-dis);text-transform:uppercase;font-weight:700}
 .ea-descartar:hover{border-color:var(--cobre);color:var(--cobre)}
 /* Una legendaria tiene que verse distinta antes de leerla. */
-.ea-memoHead.legend{background:linear-gradient(90deg,rgba(185,83,42,.22),transparent);
-  border-color:var(--cobre);color:var(--cobre)}
+.ea-memoHead.legend{background:linear-gradient(90deg,rgba(214,170,40,.28),transparent);
+  border-color:#B8901C;color:#9A7614}
 
 .ea-pend{border:1px solid var(--cobre);border-left-width:4px;background:rgba(185,83,42,.13);
   padding:10px 13px;font-size:12.5px;color:var(--tintaPapel);margin-bottom:12px}
@@ -48127,9 +48137,10 @@ const escenaPretemporada = (st) => {
     const v = r < 0.05 ? 4 : r < 0.30 ? 3 : 2;
     const lista = CARTAS_PRE[k];
     const titulo = lista[Math.floor(rnd() * lista.length)];
-    const rareza = v === 4 ? "DORADA · " : v === 3 ? "RARA · " : "";
+    /* la rareza va aparte, para pintarla: rara en morado, dorada en dorado */
+    const rareza = v === 4 ? "dorada" : v === 3 ? "rara" : null;
     cartas.push({
-      t: rareza + titulo,
+      t: titulo, rareza,
       d: { [k]: v, msg: "Inicio de año: +" + v + " de " + NOMBRE_ATRIB[k] + "." },
     });
   }
@@ -51256,7 +51267,7 @@ const ICONO_VIDA = {
 const CLASE_ESCENA = (ev) => {
   if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
   if (ev.pretemporada) return { k: "documento", n: "Inicio de año", c: "var(--cobre)" };
-  if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "var(--cobre)" };
+  if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "#B8901C" };   /* dorado, como las cartas doradas */
   if (ev.rama) return { k: "bifurca", n: "Bifurcación", c: "var(--cobre)" };
   if (ev.por) return { k: "eco", n: "Consecuencia", c: "#7A4FB0" };
   /* las de vida traen ventana de edad; las de oficina, de rango */
@@ -55012,12 +55023,14 @@ function Motor() {
                         const bits = [];
                         if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
                         return (
-                          <button className={"ea-op" + (falta ? " sinfuerza" : "")} key={i}
+                          <button className={"ea-op" + (falta ? " sinfuerza" : "") + (o.rareza ? " " + o.rareza : "")} key={i}
                             style={{ "--i": i }}
                             disabled={carteraPend || !!falta}
                             title={falta ? "Te falta " + (ETIQ[falta.k] || falta.k).toLowerCase() : undefined}
                             onClick={() => elegir(o)}>
-                            <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>{o.t}
+                            <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>
+                            {o.rareza && <span className={"ea-opRareza ea-dis " + o.rareza}>{o.rareza === "dorada" ? "Dorada" : "Rara"}</span>}
+                            {o.t}
                             {o.req && !falta && <span className="ea-opSolo ea-dis">solo tú</span>}
                             {o.azar && <span className="ea-opAzar ea-dis"><Icono k="dado" tam={12} />{(o.azar.esc || []).length} escenarios</span>}
                             {/* Con el nombre del atributo, no solo el icono:

@@ -32,6 +32,13 @@ const efecto = (o) => ATR.filter((k) => o.d && o.d[k]);
   ok(e.o.every((o) => efecto(o).length === 1), "cada carta mueve exactamente un atributo");
   ok(e.o.every((o) => [2, 3, 4].indexOf(o.d[efecto(o)[0]]) >= 0), "cada carta suma 2, 3 o 4");
   ok(e.o.every((o) => typeof o.d.msg === "string" && o.d.msg.length > 0), "cada carta dice lo que dio");
+  let rarezaBien = true;
+  for (let s = 0; s < 300; s++) J.escenaPretemporada({ turno: s % 9, semilla: s }).o.forEach((o) => {
+    const v = o.d[efecto(o)[0]];
+    if ((v === 4) !== (o.rareza === "dorada") || (v === 3) !== (o.rareza === "rara") || (v === 2) !== !o.rareza) rarezaBien = false;
+    if (/RARA|DORADA/.test(o.t)) rarezaBien = false;
+  });
+  ok(rarezaBien, "la rareza va aparte (rara = +3, dorada = +4) y no ensucia el texto");
   ok(JSON.stringify(J.escenaPretemporada(st)) === JSON.stringify(e), "mismo año y semilla, mismas cartas");
   ok(JSON.stringify(J.escenaPretemporada({ turno: 4, semilla: 77 })) !== JSON.stringify(e), "otro año, otras cartas");
   ok(JSON.stringify(J.escenaDeId(9790, st)) === JSON.stringify(e), "una recarga la rearma desde su id");
