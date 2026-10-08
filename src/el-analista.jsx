@@ -54387,19 +54387,20 @@ function Motor() {
             ))}
           </div>
 
+          {/* Dos caminos (Alessandro, 8-oct-2026): «Continuar» lleva a elegir
+              edad, país y carrera; «Al azar» lo elige el juego y arranca. */}
+          <button className="ea-btnO" style={{ marginTop: 18 }}
+            onClick={() => { if (enFase("identidad")) irA("edad"); }}>
+            Continuar
+          </button>
+
           <div className="ea-regla" style={{ marginTop: 26 }} />
-          {/* El camino rápido es el grande (Alessandro, 8-oct-2026): «Al azar»
-              arranca ya. Armarla a mano queda como enlace. */}
           <button className="ea-btnO" style={{ marginTop: 0 }} onClick={alAzar}>
             🎲 Al azar{elec.nombre.trim() ? ", como " + elec.nombre.trim() : ""}
           </button>
           <div style={{ fontSize: 12.5, color: "var(--gris)", marginTop: 6 }}>
             El juego elige tu edad, tu país y tu carrera, y empiezas.
           </div>
-          <button className="ea-atras ea-dis" style={{ marginTop: 14, marginBottom: 0 }}
-            onClick={() => { if (enFase("identidad")) irA("edad"); }}>
-            Elegir yo edad, país y carrera
-          </button>
         </div>
       )}
 

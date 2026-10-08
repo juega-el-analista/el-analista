@@ -57371,7 +57371,15 @@ function Motor() {
       ...x,
       genero: g.id
     }))
-  }, g.n))), /*#__PURE__*/React.createElement("div", {
+  }, g.n))), /*#__PURE__*/React.createElement("button", {
+    className: "ea-btnO",
+    style: {
+      marginTop: 18
+    },
+    onClick: () => {
+      if (enFase("identidad")) irA("edad");
+    }
+  }, "Continuar"), /*#__PURE__*/React.createElement("div", {
     className: "ea-regla",
     style: {
       marginTop: 26
@@ -57388,16 +57396,7 @@ function Motor() {
       color: "var(--gris)",
       marginTop: 6
     }
-  }, "El juego elige tu edad, tu pa\xEDs y tu carrera, y empiezas."), /*#__PURE__*/React.createElement("button", {
-    className: "ea-atras ea-dis",
-    style: {
-      marginTop: 14,
-      marginBottom: 0
-    },
-    onClick: () => {
-      if (enFase("identidad")) irA("edad");
-    }
-  }, "Elegir yo edad, pa\xEDs y carrera")), fase === "edad" && /*#__PURE__*/React.createElement("div", {
+  }, "El juego elige tu edad, tu pa\xEDs y tu carrera, y empiezas.")), fase === "edad" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
