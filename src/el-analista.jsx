@@ -48130,12 +48130,12 @@ const escenaPretemporada = (st) => {
     const rareza = v === 4 ? "DORADA · " : v === 3 ? "RARA · " : "";
     cartas.push({
       t: rareza + titulo,
-      d: { [k]: v, msg: "Pretemporada: +" + v + " de " + NOMBRE_ATRIB[k] + "." },
+      d: { [k]: v, msg: "Inicio de año: +" + v + " de " + NOMBRE_ATRIB[k] + "." },
     });
   }
   return {
     id: ID_PRE, min: 0, max: 6, pretemporada: true,
-    t: "Pretemporada",
+    t: "Inicio de año",   /* se llamaba «Pretemporada»; Alessandro, 8-oct */
     x: "Arranca el año. Tienes tiempo para una sola cosa antes de que empiece el ruido: elige en qué lo pones.",
     o: cartas,
   };
@@ -51255,6 +51255,7 @@ const ICONO_VIDA = {
 /* El simbolo, el rotulo y el color de cada clase de escena. */
 const CLASE_ESCENA = (ev) => {
   if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
+  if (ev.pretemporada) return { k: "documento", n: "Inicio de año", c: "var(--cobre)" };
   if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "var(--cobre)" };
   if (ev.rama) return { k: "bifurca", n: "Bifurcación", c: "var(--cobre)" };
   if (ev.por) return { k: "eco", n: "Consecuencia", c: "#7A4FB0" };
@@ -54962,7 +54963,12 @@ function Motor() {
                   candados —un solo camino de pintado—, solo que dentro de
                   un marco que se lleva la pantalla. */}
               {fase === "evento" && ev && (() => {
-                const cl = CLASE_ESCENA(ev);
+                const cl0 = CLASE_ESCENA(ev);
+                /* La última del año lleva «Cierre de año» (Alessandro, 8-oct):
+                   si ya era especial, se dice también qué era. */
+                const ultima = !ev.pretemporada && !(Array.isArray(cola) ? cola : []).filter(escenaValida).length;
+                const cl = !ultima ? cl0
+                  : { ...cl0, n: cl0.n === "Memorando interno" ? "Cierre de año" : "Cierre de año · " + cl0.n };
                 return (
                 <Marco drama={pesada(ev)} tono={cl.c} ico={cl.k} clase={cl.n} ano={ano}>
                 <div className={"ea-memo ea-memo-" + cl.k + (pesada(ev) ? " ea-memoDrama" : "")} key={ev.id}>
@@ -55101,7 +55107,7 @@ function Motor() {
                   )}
                   {res.azar && <BarraAzar azar={res.azar} />}
                   <button className="ea-btn" disabled={carteraPend} onClick={siguienteEscena}>
-                    {cola.length > 0 ? "Lo siguiente que pasó" : "Cerrar el año"}
+                    {(Array.isArray(cola) ? cola : []).filter(escenaValida).length > 0 ? "Lo siguiente que pasó" : "Cerrar el año"}
                   </button>
                 </div>
               )}

@@ -49078,7 +49078,7 @@ const escenaPretemporada = st => {
       t: rareza + titulo,
       d: {
         [k]: v,
-        msg: "Pretemporada: +" + v + " de " + NOMBRE_ATRIB[k] + "."
+        msg: "Inicio de año: +" + v + " de " + NOMBRE_ATRIB[k] + "."
       }
     });
   }
@@ -49087,7 +49087,8 @@ const escenaPretemporada = st => {
     min: 0,
     max: 6,
     pretemporada: true,
-    t: "Pretemporada",
+    t: "Inicio de año",
+    /* se llamaba «Pretemporada»; Alessandro, 8-oct */
     x: "Arranca el año. Tienes tiempo para una sola cosa antes de que empiece el ruido: elige en qué lo pones.",
     o: cartas
   };
@@ -52980,6 +52981,11 @@ const CLASE_ESCENA = ev => {
     k: "documento",
     n: "Memorando interno",
     c: "var(--gris)"
+  };
+  if (ev.pretemporada) return {
+    k: "documento",
+    n: "Inicio de año",
+    c: "var(--cobre)"
   };
   if (ev.legendaria) return {
     k: "corona",
@@ -58254,7 +58260,14 @@ function Motor() {
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-titQ ea-mono"
   }, t.q), /*#__PURE__*/React.createElement("span", null, t.t))))))), /*#__PURE__*/React.createElement("div", null, fase === "evento" && ev && (() => {
-    const cl = CLASE_ESCENA(ev);
+    const cl0 = CLASE_ESCENA(ev);
+    /* La última del año lleva «Cierre de año» (Alessandro, 8-oct):
+       si ya era especial, se dice también qué era. */
+    const ultima = !ev.pretemporada && !(Array.isArray(cola) ? cola : []).filter(escenaValida).length;
+    const cl = !ultima ? cl0 : {
+      ...cl0,
+      n: cl0.n === "Memorando interno" ? "Cierre de año" : "Cierre de año · " + cl0.n
+    };
     return /*#__PURE__*/React.createElement(Marco, {
       drama: pesada(ev),
       tono: cl.c,
@@ -58412,7 +58425,7 @@ function Motor() {
     className: "ea-btn",
     disabled: carteraPend,
     onClick: siguienteEscena
-  }, cola.length > 0 ? "Lo siguiente que pasó" : "Cerrar el año")), fase === "cierre" && cierre && /*#__PURE__*/React.createElement("div", {
+  }, (Array.isArray(cola) ? cola : []).filter(escenaValida).length > 0 ? "Lo siguiente que pasó" : "Cerrar el año")), fase === "cierre" && cierre && /*#__PURE__*/React.createElement("div", {
     className: "ea-memo"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-memoHead ea-dis clave"

@@ -31,7 +31,8 @@
     "cartera": "node pruebas/cartera.js",
     "negociacion": "node pruebas/negociacion.js",
     "compartir": "node pruebas/compartir.js",
-    "oportunidades": "node pruebas/oportunidades.js"
+    "oportunidades": "node pruebas/oportunidades.js",
+    "cierre": "node pruebas/cierre.js"
   },
   "devDependencies": {
     "@babel/core": "^7",

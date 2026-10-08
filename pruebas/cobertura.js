@@ -90,7 +90,8 @@ const MARCAS = {
   "apertura: banco": "El banco te empieza a mirar",
   "apertura: inmuebles": "Un ladrillo con tu nombre",
   "apertura: mejoras": "Tu primera inversión en ti",
-  "pretemporada": "Pretemporada",
+  "inicio de año": "Inicio de año",
+  "cierre de año": "Cierre de año",
   "apertura: fondo": "Del otro lado de la mesa",
 
   /* cartera: lo real, y las dos decisiones que se toman a la vista */
