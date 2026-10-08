@@ -47266,17 +47266,8 @@ const HITOS = [{
 const CLAVE = "el-analista-partida";
 const CLAVE_AVISO = "el-analista-aviso-leido";
 
-/* El aviso se muestra la primera vez que alguien abre el juego en su
-   navegador. Se lee de forma sincrónica y sin promesas, para que no
-   haya un parpadeo del aviso a quien ya lo aceptó. Si no hay
-   almacenamiento disponible, se muestra siempre: es el lado seguro. */
-const yaAceptoAviso = () => {
-  try {
-    return typeof window !== "undefined" && !!window.localStorage && window.localStorage.getItem(CLAVE_AVISO) === "1";
-  } catch (e) {
-    return false;
-  }
-};
+/* El aviso ya no es una puerta: se lee desde la portada si se quiere.
+   Se sigue anotando que alguien lo leyó, por si vuelve a hacer falta. */
 const anotarAviso = () => {
   try {
     if (typeof window !== "undefined" && window.localStorage) window.localStorage.setItem(CLAVE_AVISO, "1");
@@ -54386,8 +54377,11 @@ function Motor() {
      seguidos ven el mismo valor viejo y la accion corre dos veces. La
      referencia se actualiza de inmediato, y con eso no hay doble cobro
      de resultados, doble cierre de ano ni doble ascenso. */
-  const [fase, setFaseBruto] = useState(() => yaAceptoAviso() ? "portada" : "aviso");
-  const puerta = useRef(yaAceptoAviso() ? "portada" : "aviso");
+  /* Se entra directo a la portada. La pantalla «Esto es un juego» ya no
+     hace de puerta (Alessandro, 8-oct-2026): el aviso sigue a un clic,
+     desde la portada, para quien quiera leerlo. */
+  const [fase, setFaseBruto] = useState("portada");
+  const puerta = useRef("portada");
   const irA = f => {
     puerta.current = f;
     setFaseBruto(f);
@@ -54534,9 +54528,8 @@ function Motor() {
       });
       /* Y se entra directo donde estaba. Antes la recarga te dejaba en la
          portada teniendo que pulsar «Retomar», que es exactamente lo que
-         convierte una recarga ajena en una interrupción. El aviso legal
-         sigue mandando: si no se ha aceptado, no se entra a nada. */
-      if (yaAceptoAviso() && colaDeIds(st.cola, st).length) {
+         convierte una recarga ajena en una interrupción. */
+      if (colaDeIds(st.cola, st).length) {
         entrarEnPartida(st, "Vuelves donde estabas");
       }
     }).catch(() => {});
@@ -56683,7 +56676,7 @@ function Motor() {
     onClick: () => {
       if (enFase("portada")) irA("aviso");
     }
-  }, "Volver a leer el aviso"), /*#__PURE__*/React.createElement("div", {
+  }, "Leer el aviso"), /*#__PURE__*/React.createElement("div", {
     className: "ea-regla"
   }), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifras ea-cifrasPortada",

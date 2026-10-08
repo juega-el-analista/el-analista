@@ -47046,16 +47046,8 @@ const HITOS = [
 const CLAVE = "el-analista-partida";
 const CLAVE_AVISO = "el-analista-aviso-leido";
 
-/* El aviso se muestra la primera vez que alguien abre el juego en su
-   navegador. Se lee de forma sincrónica y sin promesas, para que no
-   haya un parpadeo del aviso a quien ya lo aceptó. Si no hay
-   almacenamiento disponible, se muestra siempre: es el lado seguro. */
-const yaAceptoAviso = () => {
-  try {
-    return typeof window !== "undefined" && !!window.localStorage
-      && window.localStorage.getItem(CLAVE_AVISO) === "1";
-  } catch (e) { return false; }
-};
+/* El aviso ya no es una puerta: se lee desde la portada si se quiere.
+   Se sigue anotando que alguien lo leyó, por si vuelve a hacer falta. */
 const anotarAviso = () => {
   try { if (typeof window !== "undefined" && window.localStorage) window.localStorage.setItem(CLAVE_AVISO, "1"); }
   catch (e) { /* si no se puede guardar, el aviso volverá a salir. No es grave. */ }
@@ -52249,8 +52241,11 @@ function Motor() {
      seguidos ven el mismo valor viejo y la accion corre dos veces. La
      referencia se actualiza de inmediato, y con eso no hay doble cobro
      de resultados, doble cierre de ano ni doble ascenso. */
-  const [fase, setFaseBruto] = useState(() => (yaAceptoAviso() ? "portada" : "aviso"));
-  const puerta = useRef(yaAceptoAviso() ? "portada" : "aviso");
+  /* Se entra directo a la portada. La pantalla «Esto es un juego» ya no
+     hace de puerta (Alessandro, 8-oct-2026): el aviso sigue a un clic,
+     desde la portada, para quien quiera leerlo. */
+  const [fase, setFaseBruto] = useState("portada");
+  const puerta = useRef("portada");
   const irA = (f) => { puerta.current = f; setFaseBruto(f); };
   const enFase = (f) => puerta.current === f;
   const cerrando = useRef(false);
@@ -52360,9 +52355,8 @@ function Motor() {
         setGuardado({ v: VERSION, ts: numero(d.ts, 0), s: st });
         /* Y se entra directo donde estaba. Antes la recarga te dejaba en la
            portada teniendo que pulsar «Retomar», que es exactamente lo que
-           convierte una recarga ajena en una interrupción. El aviso legal
-           sigue mandando: si no se ha aceptado, no se entra a nada. */
-        if (yaAceptoAviso() && colaDeIds(st.cola, st).length) {
+           convierte una recarga ajena en una interrupción. */
+        if (colaDeIds(st.cola, st).length) {
           entrarEnPartida(st, "Vuelves donde estabas");
         }
       })
@@ -53960,7 +53954,7 @@ function Motor() {
             Un año por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
           </p>
           <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
-            onClick={() => { if (enFase("portada")) irA("aviso"); }}>Volver a leer el aviso</button>
+            onClick={() => { if (enFase("portada")) irA("aviso"); }}>Leer el aviso</button>
           <div className="ea-regla" />
           <div className="ea-cifras ea-cifrasPortada" style={{ marginBottom: 26 }}>
             <div><div className="ea-cifraK">La carrera</div><div className="ea-cifraV ea-dis">De pasante a socio</div>
