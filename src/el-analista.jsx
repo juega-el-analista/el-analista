@@ -771,11 +771,11 @@ const JUEGOS = {
   },
   memoria: {
     n: "Peinar el legajo", tema: "Memoria de trabajo", dur: "30 s",
-    i: "Tres rondas. Las casillas se encienden en un orden y tienes que repetirlo, y cada ronda alarga la anterior.",
+    i: "Tres rondas. Las casillas se encienden en un orden y tienes que repetirlo. Cada ronda es un recorrido nuevo.",
     pasos: [
       "Ronda uno: se encienden 3 casillas. Tócalas en el mismo orden.",
-      "Ronda dos: las mismas 3 y una más al final.",
-      "Ronda tres: esas 4 y dos más al final.",
+      "Ronda dos: un recorrido nuevo de 4.",
+      "Ronda tres: otro recorrido nuevo, de 6.",
     ],
     gana: "Las tres rondas es éxito. Dos rondas, resultado parcial.",
     ensena: "Retener detalle sin apuntar nada: quién dijo qué, en qué cláusula y en qué página.",
@@ -48788,10 +48788,10 @@ const COLORES_MEM = [
    Antes era una sola secuencia de cuatro a siete casillas, disparada de
    golpe desde el primer momento: dificil antes de haber entendido nada.
 
-   Ahora son tres rondas, y cada una repite la anterior ENTERA y añade al
-   final. Tres casillas, despues esas mismas tres y una mas, despues esas
-   cuatro y dos mas. Lo que ya memorizaste sirve en la ronda siguiente,
-   que es lo que hace que se aprenda jugando en vez de fallando.
+   Tres rondas de 3, 4 y 6 casillas. Al principio cada una repetía la
+   anterior entera y añadía al final, como el Simón; desde el 8-oct-2026
+   (Alessandro) cada ronda es un recorrido nuevo: memorizar de cero tres
+   veces es más juego que alargar el mismo.
    ============================================================ */
 const RONDAS_MEM = [3, 4, 6];
 
@@ -48806,21 +48806,26 @@ const vidasMemDe = (ayuda) => (numero(ayuda, 0) >= 55 ? 2 : 1);
 const ESPERA_MEM = 4;
 
 function JuegoMemoria({ ayuda, onFin }) {
-  /* La secuencia entera se decide al empezar y cada ronda enseña un trozo
-     mas largo de la MISMA: por eso lo memorizado no se tira.
+  /* Un recorrido distinto por ronda, decidido al empezar. Ninguna ronda
+     arranca como la anterior, para que no se lea como «la misma, más larga».
      Sin la misma casilla dos veces seguidas, que se lee como un parpadeo y
-     no como dos pasos. El reemplazo es aritmetico y no un bucle de
+     no como dos pasos. Los reemplazos son aritmeticos y no un bucle de
      reintento: con un Math.random que devuelva siempre lo mismo —que es lo
      que prueba robustez— un «vuelve a tirar» no terminaria nunca. */
-  const [seq] = useState(() => {
-    const total = RONDAS_MEM[RONDAS_MEM.length - 1];
-    const out = [];
-    for (let i = 0; i < total; i++) {
-      let c = indiceAzar(9);
-      if (i > 0 && c === out[i - 1]) c = (c + 1 + indiceAzar(8)) % 9;
-      out.push(c);
-    }
-    return out;
+  const [seqs] = useState(() => {
+    const todas = [];
+    RONDAS_MEM.forEach((largoR, r) => {
+      const out = [];
+      for (let i = 0; i < largoR; i++) {
+        let c = indiceAzar(9);
+        if (i > 0 && c === out[i - 1]) c = (c + 1 + indiceAzar(8)) % 9;
+        /* la primera casilla nunca es la misma con la que empezó la ronda anterior */
+        if (i === 0 && r > 0 && c === todas[r - 1][0]) c = (c + 1 + indiceAzar(8)) % 9;
+        out.push(c);
+      }
+      todas.push(out);
+    });
+    return todas;
   });
   const VIDAS = vidasMemDe(ayuda);
   const [ronda, setRonda] = useState(0);
@@ -48833,6 +48838,7 @@ function JuegoMemoria({ ayuda, onFin }) {
   const [vidas, setVidas] = useState(VIDAS);
   const [aviso, setAviso] = useState(null);
   const largo = RONDAS_MEM[ronda];
+  const seq = seqs[ronda] || seqs[0];
 
   /* la espera de cortesia, solo al principio */
   useEffect(() => {
@@ -48877,9 +48883,8 @@ function JuegoMemoria({ ayuda, onFin }) {
           setAviso("Las tres rondas");
           setTimeout(() => onFin("exito"), 600);
         } else {
-          const extra = RONDAS_MEM[ronda + 1] - largo;
           setModo("entre");
-          setAviso("Bien. Ahora " + (extra === 1 ? "una más" : extra + " más") + " al final.");
+          setAviso("Bien. Ahora un recorrido nuevo de " + RONDAS_MEM[ronda + 1] + ".");
         }
       }
       return;
@@ -48930,8 +48935,7 @@ function JuegoMemoria({ ayuda, onFin }) {
 
       <Pista>
         Cada casilla tiene su color. Tres rondas: se encienden 3, luego 4 y luego 6.
-        Cada ronda repite la anterior entera y añade al final, así que lo que ya
-        memorizaste te sirve.
+        Cada ronda es un recorrido nuevo: mira bien, que no se parece al anterior.
       </Pista>
 
       <div className="ea-celdas">

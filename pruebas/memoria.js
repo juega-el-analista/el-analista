@@ -1,8 +1,8 @@
 /* ============================================================
-   EL JUEGO DE MEMORIA, COMO SIMON
+   EL JUEGO DE MEMORIA
    Monta solo JuegoMemoria, con el reloj bajo control, y comprueba lo que
-   se pidio para el: tres rondas de 3, 4 y 6 casillas, cada una empezando
-   exactamente como la anterior, y que completarlas cierre en exito.
+   se pidio para el: tres rondas de 3, 4 y 6 casillas, cada una con un
+   recorrido nuevo (Alessandro, 8-oct-2026), y que completarlas cierre en exito.
 
    Se corre con:  npm run memoria
    ============================================================ */
@@ -96,8 +96,11 @@ const ok = (c, m) => { console.log("  " + (c ? "ok   " : "FALLO") + "  " + m); i
   ok(vistas.length === 3, "hay tres rondas");
   ok(vistas.map((v) => v.length).join(",") === RONDAS_MEM.join(","),
     "se encienden " + RONDAS_MEM.join(", ") + " casillas (salieron " + vistas.map((v) => v.length).join(", ") + ")");
-  ok(vistas.every((v, k) => k === 0 || vistas[k - 1].every((x, j) => v[j] === x)),
-    "cada ronda empieza exactamente como la anterior");
+  /* desde el 8-oct-2026 cada ronda es un recorrido nuevo (antes repetía la anterior, como el Simón) */
+  ok(vistas.every((v, k) => k === 0 || v[0] !== vistas[k - 1][0]),
+    "cada ronda es un recorrido nuevo: ninguna arranca como la anterior");
+  ok(vistas.every((v, k) => k === 0 || !vistas[k - 1].every((x, j) => v[j] === x)),
+    "ninguna ronda es la anterior alargada");
   ok(vistas.every((v) => v.every((x, j) => j === 0 || x !== v[j - 1])),
     "nunca la misma casilla dos veces seguidas");
   ok(fin === "exito", "completar las tres rondas cierra en exito (cerro en «" + fin + "»)");
