@@ -57,7 +57,8 @@ const MARCAS = {
   "memoria con colores": "Cada casilla tiene su color",
   "orden con intentos": "Equivocarte cuesta un intento",
   "pestaña de términos": "El diccionario",
-  "vida: medidor del tren": "Cómo vives",
+  "vida: lo que cuesta": "Lo que cuesta tu vida",
+  "vida: tu gente explicada": "Esto no se compra",
   "vida: caprichos dentro": "Ninguno de estos es un error",
   "vida: peso del tren": "por ciento de lo que entra",
   "inmuebles: solo rentas": "Inmuebles que rentan",
@@ -73,7 +74,6 @@ const MARCAS = {
   "final: lo que conservo valor": "Lo que conservó valor",
   "final: lo que no volvio": "Lo que se disfrutó y no volvió",
   "final: cuesta sostenerlo": "Cuánto cuesta sostenerlo",
-  "final: tren de vida": "Tren de vida",
 
   "curva del año: pie": "Por el camino llegaste a estar",
   "curva del año: sin sobresaltos": "Un año sin sobresaltos dentro de la cartera",

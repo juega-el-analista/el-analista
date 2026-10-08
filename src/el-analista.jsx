@@ -1238,6 +1238,12 @@ const CSS4 = `
 .ea-negFrase{font-style:italic;margin:6px 0 10px}
 .ea-negCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
 /* la carrera del día, en la portada */
+/* tu gente, en la pestaña Vida */
+.ea-gente{display:grid;gap:8px;margin-top:4px}
+.ea-genteC{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--borde);padding:10px 12px;border-radius:2px}
+.ea-genteE{font-size:22px;line-height:1}
+.ea-genteT{font-size:14px;color:var(--tintaPapel)}
+.ea-genteD{font-size:12.5px;color:var(--gris);margin-top:3px;line-height:1.45}
 .ea-dia{border:1px solid var(--cobre);padding:14px 16px;margin:0 0 22px;text-align:left;border-radius:2px;
   background:rgba(185,83,42,.05)}
 .ea-diaTop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;
@@ -47305,6 +47311,14 @@ const BASE = {
 /* cuánto cuesta al año cada persona que depende de ti, antes de país */
 const COSTO_HIJO = 4200;
 const PAREJAS = ["solo", "noviazgo", "casado", "divorciado", "viudo"];
+/* «Tu gente», dicho en lo que cambia: los porcentajes son los de gastoAnual */
+const GENTE_PAREJA = {
+  solo: { e: "🙋", d: "Vas por tu cuenta: tus gastos son solo tuyos." },
+  noviazgo: { e: "💞", d: "En pareja: salidas, viajes y regalos suben tu gasto un 8%." },
+  casado: { e: "💍", d: "Vivir de a dos sube el gasto un 28%. No es el doble, pero se nota." },
+  divorciado: { e: "📄", d: "Dos casas y una pensión: tu gasto queda un 12% más alto." },
+  viudo: { e: "🕊️", d: "Sigues adelante. Los gastos vuelven a ser solo tuyos." },
+};
 
 /* ---------- quién eres ----------
    El nombre es solo tuyo: se guarda en tu navegador y no sale de ahí.
@@ -47743,16 +47757,16 @@ const APERTURAS = [
       x: "Con el sueldo nuevo aparece una pregunta que antes no tenías. Hasta ahora el dinero entraba y salía el mismo mes; de aquí en adelante hay una parte que no tiene tarea asignada, y dejarla quieta también es una decisión.",
       o: [
         { t: "Repartirlo entre varios tipos de activo", abre: "cartera",
-          d: { cri: 4, msg: "Abres tu primera cartera. Arriba aparece la sección Cartera: ahí decides qué parte de tu dinero trabaja y en qué. Nada se aplica hasta que confirmas." } },
+          d: { cri: 4, msg: "Abres tu primera cartera. Arriba aparece la sección Cartera: ahí decides cuánto inviertes y cómo, con un toque." } },
         { t: "Empezar prudente, casi todo en efectivo", abre: "cartera",
-          d: { cri: 2, ene: 3, msg: "Prefieres mojarte los pies antes de nadar. La cartera queda abierta en conservador y puedes mover los pesos cuando quieras." } },
+          d: { cri: 2, ene: 3, msg: "Prefieres mojarte los pies antes de nadar. La cartera queda en Prudente y puedes cambiarla cuando quieras." } },
       ] } },
   { id: "vida", rango: 1, ano: 4,
     guia: { t: "Vida", x: "Lo que te cuesta vivir como vives, y cuánto necesitas para no depender del sueldo.",
       puntos: [
-        "El índice de tren de vida sube con lo que compras. La meta sube con él.",
+        "Lo que gastas al año, y cuánto te queda de lo que entra.",
         "Necesitas 25 veces tu gasto anual para que el patrimonio te mantenga sin trabajar.",
-        "Los caprichos suben el índice; algunos además rentan algo cada año.",
+        "Tu gente: pareja e hijos, y lo que cambian en tus números.",
       ] },
     escena: { id: 9702, min: 0, max: 6, apertura: true,
       t: "La vida que estás pagando",
@@ -48392,7 +48406,7 @@ const GUIA = [
     x: "Lo que entró, lo que salió y cómo se movió tu cartera. Al final hay una lección sacada de tus propios números: es la parte que enseña." },
   { id: "vida", cuando: (c) => c.tab === "expediente",
     t: "Cómo vives",
-    x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo." },
+    x: "Lo que gastas y lo que te queda. Para no depender del sueldo necesitas juntar 25 veces tu gasto anual." },
 ];
 
 /* Algunos bienes solo tienen sentido en cierta vida: una boda sin pareja
@@ -53692,8 +53706,6 @@ function Motor() {
   const cobertura = gastosAnuales > 0 ? (retiroAnual + rentaProps * 0.5) / gastosAnuales : 0;
 
   /* lo que hace falta para contar cómo vives, no solo cuánto tienes */
-  const indiceVida = vidaTotal(s);
-  const nivelVida = nivelDeVida(indiceVida);
   const mantenimientoAnual = s.bienes.reduce((a, id) => a + ((bienDe(id) || {}).up || 0) * 2, 0);
   const costoHijos = s.hijos * COSTO_HIJO * nacion.gas;
   const netoDelAno = netoAnual(s);
@@ -54384,10 +54396,6 @@ function Motor() {
                       <span className="ea-mono">{parejaTxt}{s.hijos > 0 ? " · " + s.hijos + (s.hijos === 1 ? " hijo" : " hijos") : ""}</span>
                     </div>
                     <div className="ea-fila">
-                      <span className="ea-dis" style={{ fontSize: 12 }}>Tren de vida</span>
-                      <span className="ea-mono">{nivelDeVida(vidaTotal(s)).n.toLowerCase()}</span>
-                    </div>
-                    <div className="ea-fila">
                       <span className="ea-dis" style={{ fontSize: 12 }}>Formación acumulada</span>
                       <span className="ea-mono">{Math.round(s.estudia)} · temario nivel {nivelDe(s.turno, s.estudia)}</span>
                     </div>
@@ -54616,7 +54624,6 @@ function Motor() {
                               {c.ap ? <span className="ea-etq act">aprecia {(c.ap * 200).toFixed(1)}%</span> : null}
                               {c.dep ? <span className="ea-etq con">pierde {(c.dep * 200).toFixed(1)}% al año</span> : null}
                               {c.up ? <span className="ea-etq cost">mantener {fmt(c.up * 2)} al año</span> : null}
-                              {c.vida ? <span className="ea-etq vida">+{c.vida} de tren de vida</span> : null}
                             </div>
                           )}
                           <div className="ea-itemD">{c.d}</div>
@@ -54779,42 +54786,13 @@ function Motor() {
 
                 {tab === "expediente" && (
                   <div>
-                    {/* ---- cómo vives: el índice, pero legible ---- */}
-                    <div className="ea-rot ea-dis">Cómo vives</div>
-                    <div className="ea-vidaCab">
-                      <div>
-                        <div className="ea-vidaN ea-dis">{nivelVida.n}</div>
-                        <div className="ea-vidaD">{nivelVida.d}</div>
-                      </div>
-                      {/* el índice a solas no dice nada: va con su tope y su nombre */}
-                      <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <div className="ea-vidaCifra ea-mono">
-                          {indiceVida}<span style={{ fontSize: 15, color: "var(--gris)" }}> de {TOPE_VIDA}</span>
-                        </div>
-                        <div className="ea-dis" style={{ fontSize: 10, letterSpacing: ".14em", color: "var(--gris)", marginTop: 5 }}>
-                          ÍNDICE DE TREN DE VIDA
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* el medidor, con las marcas de cada escalón para que se vea
-                        cuánto falta para el siguiente y cuánto llevas */}
-                    <div className="ea-medidor">
-                      <div className="ea-medidorF" style={{ width: (Math.min(1, indiceVida / TOPE_VIDA) * 100).toFixed(1) + "%" }} />
-                      {NIVELES_VIDA.slice(1).map((x) => (
-                        <div key={x.min} className="ea-medidorT" style={{ left: (Math.min(1, x.min / TOPE_VIDA) * 100).toFixed(1) + "%" }} />
-                      ))}
-                    </div>
-                    <div className="ea-medidorE">
-                      {NIVELES_VIDA.map((x) => (
-                        <span key={x.min} className={x.n === nivelVida.n ? "on" : ""}>{x.n}</span>
-                      ))}
-                    </div>
-
-                    {/* ---- lo que cuesta vivir así ---- */}
-                    <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Lo que cuesta</div>
+                    {/* «Cómo vives» (Austero, Sencillo... y su índice de 0 a 28)
+                        salió el 8-oct-2026 a pedido de Alessandro: no movía
+                        ningún número y no se entendía. Lo que importa es lo
+                        que gastas y lo que te queda. */}
+                    <div className="ea-rot ea-dis">Lo que cuesta tu vida</div>
                     <div className="ea-fila">
-                      <span style={{ fontSize: 12.5 }}>Tu tren de vida al año</span>
+                      <span style={{ fontSize: 12.5 }}>Lo que gastas al año</span>
                       <span className="ea-mono">USD {fmt(gastosAnuales)}</span>
                     </div>
                     <div className="ea-fila">
@@ -54841,38 +54819,46 @@ function Motor() {
                       {pesoTren > 0.95
                         ? "Gastas más de lo que ganas. Cada año que sigas así se financia vendiendo cartera, y esa es la forma más silenciosa de no llegar nunca."
                         : pesoTren > 0.75
-                          ? "Te queda algo, pero poco. Subir un escalón más de tren de vida aquí significa dejar de acumular."
+                          ? "Te queda algo, pero poco. Gastar un poco más aquí significa dejar de acumular."
                           : "Tienes margen real para ahorrar. Es exactamente el momento en que la mayoría lo gasta."}
                     </div>
                     <div className="ea-itemD" style={{ marginTop: 6 }}>
-                      Cada punto de índice sube tu meta de independencia: necesitas 25 veces tu gasto anual,
-                      o sea USD {fmt(gastosAnuales * 25)}. Vivir mejor es legítimo; solo conviene saber lo que mueve la meta.
+                      Para vivir sin trabajar necesitas juntar 25 veces lo que gastas al año: hoy, USD {fmt(gastosAnuales * 25)}.
+                      Cuanto más gastas, más lejos queda.
                     </div>
 
-                    {/* ---- tu gente ---- */}
+                    {/* ---- tu gente: quién está y qué cambia en tus números ---- */}
                     <div className="ea-rot ea-dis" style={{ marginTop: 20 }}>Tu gente</div>
-                    <div className="ea-fila">
-                      <span style={{ fontSize: 12.5 }}>Pareja</span>
-                      <span className="ea-mono">{parejaTxt}</span>
-                    </div>
-                    <div className="ea-fila">
-                      <span style={{ fontSize: 12.5 }}>Hijos</span>
-                      <span className="ea-mono">{s.hijos}</span>
-                    </div>
+                    {(() => {
+                      const pj = GENTE_PAREJA[s.pareja] || GENTE_PAREJA.solo;
+                      return (
+                        <div className="ea-gente">
+                          <div className="ea-genteC">
+                            <div className="ea-genteE">{pj.e}</div>
+                            <div>
+                              <div className="ea-genteT ea-dis">{parejaTxt}</div>
+                              <div className="ea-genteD">{pj.d}</div>
+                            </div>
+                          </div>
+                          <div className="ea-genteC">
+                            <div className="ea-genteE">{s.hijos > 0 ? "👶" : "🏠"}</div>
+                            <div>
+                              <div className="ea-genteT ea-dis">
+                                {s.hijos === 0 ? "Sin hijos" : s.hijos === 1 ? "Un hijo" : s.hijos + " hijos"}
+                              </div>
+                              <div className="ea-genteD">
+                                {s.hijos === 0
+                                  ? "Si llegan, cada uno cuesta del orden de USD " + fmt(COSTO_HIJO * nacion.gas) + " al año."
+                                  : "Te cuesta" + (s.hijos === 1 ? "" : "n") + " USD " + fmt(costoHijos) + " al año. Lo vale, y también se nota en lo que ahorras."}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                     <div className="ea-itemD" style={{ marginTop: 6 }}>
-                      Esto no se compra en ninguna lista: sale de lo que decides cuando la vida te lo pregunta.
-                      Y sí cambia los números, para bien y para mal.
+                      Esto no se compra: llega cuando la vida te lo pregunta, y lo que decidas cambia tus números.
                     </div>
-
-                    {/* Los caprichos se mudaron a Comprar, con los
-                        inmuebles y las mejoras: las tres eran la misma
-                        accion en tres pestañas distintas. Aqui queda el
-                        atajo, que es donde uno mira su tren de vida y
-                        piensa en subirlo. */}
-                    <button className="ea-comprar ea-dis" style={{ marginTop: 18 }}
-                      onClick={() => { setGrupo("caprichos"); setTab("comprar"); }}>
-                      Comprar algo para ti
-                    </button>
 
                     {/* ---- el legado: premios ---- */}
                     {(Array.isArray(s.premios) ? s.premios : []).length > 0 && (
@@ -55433,7 +55419,6 @@ function Motor() {
             {s.quiebras > 0 && <div><div className="ea-cifraK">Quiebras</div><div className="ea-cifraV ea-mono">{s.quiebras}</div></div>}
             <div><div className="ea-cifraK">Renta anual al 4%</div><div className="ea-cifraV ea-mono">USD {fmt(retiroAnual)}</div></div>
             <div><div className="ea-cifraK">Gasto anual</div><div className="ea-cifraV ea-mono">USD {fmt(gastosAnuales)}</div></div>
-            <div><div className="ea-cifraK">Tren de vida</div><div className="ea-cifraV ea-dis">{nivelDeVida(vidaTotal(s)).n}</div></div>
             {(Array.isArray(s.premios) ? s.premios : []).length > 0 && (
               <div>
                 <div className="ea-cifraK">Reconocimientos</div>

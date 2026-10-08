@@ -1942,6 +1942,12 @@ const CSS4 = `
 .ea-negFrase{font-style:italic;margin:6px 0 10px}
 .ea-negCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
 /* la carrera del día, en la portada */
+/* tu gente, en la pestaña Vida */
+.ea-gente{display:grid;gap:8px;margin-top:4px}
+.ea-genteC{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--borde);padding:10px 12px;border-radius:2px}
+.ea-genteE{font-size:22px;line-height:1}
+.ea-genteT{font-size:14px;color:var(--tintaPapel)}
+.ea-genteD{font-size:12.5px;color:var(--gris);margin-top:3px;line-height:1.45}
 .ea-dia{border:1px solid var(--cobre);padding:14px 16px;margin:0 0 22px;text-align:left;border-radius:2px;
   background:rgba(185,83,42,.05)}
 .ea-diaTop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;
@@ -47685,6 +47691,29 @@ const BASE = {
 /* cuánto cuesta al año cada persona que depende de ti, antes de país */
 const COSTO_HIJO = 4200;
 const PAREJAS = ["solo", "noviazgo", "casado", "divorciado", "viudo"];
+/* «Tu gente», dicho en lo que cambia: los porcentajes son los de gastoAnual */
+const GENTE_PAREJA = {
+  solo: {
+    e: "🙋",
+    d: "Vas por tu cuenta: tus gastos son solo tuyos."
+  },
+  noviazgo: {
+    e: "💞",
+    d: "En pareja: salidas, viajes y regalos suben tu gasto un 8%."
+  },
+  casado: {
+    e: "💍",
+    d: "Vivir de a dos sube el gasto un 28%. No es el doble, pero se nota."
+  },
+  divorciado: {
+    e: "📄",
+    d: "Dos casas y una pensión: tu gasto queda un 12% más alto."
+  },
+  viudo: {
+    e: "🕊️",
+    d: "Sigues adelante. Los gastos vuelven a ser solo tuyos."
+  }
+};
 
 /* ---------- quién eres ----------
    El nombre es solo tuyo: se guarda en tu navegador y no sale de ahí.
@@ -48474,7 +48503,7 @@ const APERTURAS = [
       abre: "cartera",
       d: {
         cri: 4,
-        msg: "Abres tu primera cartera. Arriba aparece la sección Cartera: ahí decides qué parte de tu dinero trabaja y en qué. Nada se aplica hasta que confirmas."
+        msg: "Abres tu primera cartera. Arriba aparece la sección Cartera: ahí decides cuánto inviertes y cómo, con un toque."
       }
     }, {
       t: "Empezar prudente, casi todo en efectivo",
@@ -48482,7 +48511,7 @@ const APERTURAS = [
       d: {
         cri: 2,
         ene: 3,
-        msg: "Prefieres mojarte los pies antes de nadar. La cartera queda abierta en conservador y puedes mover los pesos cuando quieras."
+        msg: "Prefieres mojarte los pies antes de nadar. La cartera queda en Prudente y puedes cambiarla cuando quieras."
       }
     }]
   }
@@ -48493,7 +48522,7 @@ const APERTURAS = [
   guia: {
     t: "Vida",
     x: "Lo que te cuesta vivir como vives, y cuánto necesitas para no depender del sueldo.",
-    puntos: ["El índice de tren de vida sube con lo que compras. La meta sube con él.", "Necesitas 25 veces tu gasto anual para que el patrimonio te mantenga sin trabajar.", "Los caprichos suben el índice; algunos además rentan algo cada año."]
+    puntos: ["Lo que gastas al año, y cuánto te queda de lo que entra.", "Necesitas 25 veces tu gasto anual para que el patrimonio te mantenga sin trabajar.", "Tu gente: pareja e hijos, y lo que cambian en tus números."]
   },
   escena: {
     id: 9702,
@@ -49356,7 +49385,7 @@ const GUIA = [{
   id: "vida",
   cuando: c => c.tab === "expediente",
   t: "Cómo vives",
-  x: "Tu tren de vida sube con lo que compras y sube también la meta: necesitas 25 veces tu gasto anual para no depender del sueldo."
+  x: "Lo que gastas y lo que te queda. Para no depender del sueldo necesitas juntar 25 veces tu gasto anual."
 }];
 
 /* Algunos bienes solo tienen sentido en cierta vida: una boda sin pareja
@@ -56298,8 +56327,6 @@ function Motor() {
   const cobertura = gastosAnuales > 0 ? (retiroAnual + rentaProps * 0.5) / gastosAnuales : 0;
 
   /* lo que hace falta para contar cómo vives, no solo cuánto tienes */
-  const indiceVida = vidaTotal(s);
-  const nivelVida = nivelDeVida(indiceVida);
   const mantenimientoAnual = s.bienes.reduce((a, id) => a + ((bienDe(id) || {}).up || 0) * 2, 0);
   const costoHijos = s.hijos * COSTO_HIJO * nacion.gas;
   const netoDelAno = netoAnual(s);
@@ -57386,15 +57413,6 @@ function Motor() {
     style: {
       fontSize: 12
     }
-  }, "Tren de vida"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, nivelDeVida(vidaTotal(s)).n.toLowerCase())), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-dis",
-    style: {
-      fontSize: 12
-    }
   }, "Formaci\xF3n acumulada"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
   }, Math.round(s.estudia), " \xB7 temario nivel ", nivelDe(s.turno, s.estudia)))), /*#__PURE__*/React.createElement(Plegable, {
@@ -57773,9 +57791,7 @@ function Motor() {
       className: "ea-etq con"
     }, "pierde ", (c.dep * 200).toFixed(1), "% al a\xF1o") : null, c.up ? /*#__PURE__*/React.createElement("span", {
       className: "ea-etq cost"
-    }, "mantener ", fmt(c.up * 2), " al a\xF1o") : null, c.vida ? /*#__PURE__*/React.createElement("span", {
-      className: "ea-etq vida"
-    }, "+", c.vida, " de tren de vida") : null), /*#__PURE__*/React.createElement("div", {
+    }, "mantener ", fmt(c.up * 2), " al a\xF1o") : null), /*#__PURE__*/React.createElement("div", {
       className: "ea-itemD"
     }, c.d), ya ? /*#__PURE__*/React.createElement("span", {
       className: "ea-tengo ea-dis"
@@ -58028,62 +58044,13 @@ function Motor() {
     onClick: () => invertirEn(k, 0.25)
   }, "Un cuarto")))))), tab === "expediente" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis"
-  }, "C\xF3mo vives"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-vidaCab"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-vidaN ea-dis"
-  }, nivelVida.n), /*#__PURE__*/React.createElement("div", {
-    className: "ea-vidaD"
-  }, nivelVida.d)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "right",
-      flexShrink: 0
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-vidaCifra ea-mono"
-  }, indiceVida, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 15,
-      color: "var(--gris)"
-    }
-  }, " de ", TOPE_VIDA)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-dis",
-    style: {
-      fontSize: 10,
-      letterSpacing: ".14em",
-      color: "var(--gris)",
-      marginTop: 5
-    }
-  }, "\xCDNDICE DE TREN DE VIDA"))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-medidor"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-medidorF",
-    style: {
-      width: (Math.min(1, indiceVida / TOPE_VIDA) * 100).toFixed(1) + "%"
-    }
-  }), NIVELES_VIDA.slice(1).map(x => /*#__PURE__*/React.createElement("div", {
-    key: x.min,
-    className: "ea-medidorT",
-    style: {
-      left: (Math.min(1, x.min / TOPE_VIDA) * 100).toFixed(1) + "%"
-    }
-  }))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-medidorE"
-  }, NIVELES_VIDA.map(x => /*#__PURE__*/React.createElement("span", {
-    key: x.min,
-    className: x.n === nivelVida.n ? "on" : ""
-  }, x.n))), /*#__PURE__*/React.createElement("div", {
-    className: "ea-rot ea-dis",
-    style: {
-      marginTop: 20
-    }
-  }, "Lo que cuesta"), /*#__PURE__*/React.createElement("div", {
+  }, "Lo que cuesta tu vida"), /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
   }, /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 12.5
     }
-  }, "Tu tren de vida al a\xF1o"), /*#__PURE__*/React.createElement("span", {
+  }, "Lo que gastas al a\xF1o"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
   }, "USD ", fmt(gastosAnuales))), /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
@@ -58126,47 +58093,43 @@ function Motor() {
     style: {
       marginTop: 8
     }
-  }, pesoTren > 0.95 ? "Gastas más de lo que ganas. Cada año que sigas así se financia vendiendo cartera, y esa es la forma más silenciosa de no llegar nunca." : pesoTren > 0.75 ? "Te queda algo, pero poco. Subir un escalón más de tren de vida aquí significa dejar de acumular." : "Tienes margen real para ahorrar. Es exactamente el momento en que la mayoría lo gasta."), /*#__PURE__*/React.createElement("div", {
+  }, pesoTren > 0.95 ? "Gastas más de lo que ganas. Cada año que sigas así se financia vendiendo cartera, y esa es la forma más silenciosa de no llegar nunca." : pesoTren > 0.75 ? "Te queda algo, pero poco. Gastar un poco más aquí significa dejar de acumular." : "Tienes margen real para ahorrar. Es exactamente el momento en que la mayoría lo gasta."), /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD",
     style: {
       marginTop: 6
     }
-  }, "Cada punto de \xEDndice sube tu meta de independencia: necesitas 25 veces tu gasto anual, o sea USD ", fmt(gastosAnuales * 25), ". Vivir mejor es leg\xEDtimo; solo conviene saber lo que mueve la meta."), /*#__PURE__*/React.createElement("div", {
+  }, "Para vivir sin trabajar necesitas juntar 25 veces lo que gastas al a\xF1o: hoy, USD ", fmt(gastosAnuales * 25), ". Cuanto m\xE1s gastas, m\xE1s lejos queda."), /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis",
     style: {
       marginTop: 20
     }
-  }, "Tu gente"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "Pareja"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, parejaTxt)), /*#__PURE__*/React.createElement("div", {
-    className: "ea-fila"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 12.5
-    }
-  }, "Hijos"), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono"
-  }, s.hijos)), /*#__PURE__*/React.createElement("div", {
+  }, "Tu gente"), (() => {
+    const pj = GENTE_PAREJA[s.pareja] || GENTE_PAREJA.solo;
+    return /*#__PURE__*/React.createElement("div", {
+      className: "ea-gente"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-genteC"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-genteE"
+    }, pj.e), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "ea-genteT ea-dis"
+    }, parejaTxt), /*#__PURE__*/React.createElement("div", {
+      className: "ea-genteD"
+    }, pj.d))), /*#__PURE__*/React.createElement("div", {
+      className: "ea-genteC"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ea-genteE"
+    }, s.hijos > 0 ? "👶" : "🏠"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "ea-genteT ea-dis"
+    }, s.hijos === 0 ? "Sin hijos" : s.hijos === 1 ? "Un hijo" : s.hijos + " hijos"), /*#__PURE__*/React.createElement("div", {
+      className: "ea-genteD"
+    }, s.hijos === 0 ? "Si llegan, cada uno cuesta del orden de USD " + fmt(COSTO_HIJO * nacion.gas) + " al año." : "Te cuesta" + (s.hijos === 1 ? "" : "n") + " USD " + fmt(costoHijos) + " al año. Lo vale, y también se nota en lo que ahorras."))));
+  })(), /*#__PURE__*/React.createElement("div", {
     className: "ea-itemD",
     style: {
       marginTop: 6
     }
-  }, "Esto no se compra en ninguna lista: sale de lo que decides cuando la vida te lo pregunta. Y s\xED cambia los n\xFAmeros, para bien y para mal."), /*#__PURE__*/React.createElement("button", {
-    className: "ea-comprar ea-dis",
-    style: {
-      marginTop: 18
-    },
-    onClick: () => {
-      setGrupo("caprichos");
-      setTab("comprar");
-    }
-  }, "Comprar algo para ti"), (Array.isArray(s.premios) ? s.premios : []).length > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "Esto no se compra: llega cuando la vida te lo pregunta, y lo que decidas cambia tus n\xFAmeros."), (Array.isArray(s.premios) ? s.premios : []).length > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-rot ea-dis",
     style: {
       marginTop: 20
@@ -58927,11 +58890,7 @@ function Motor() {
     className: "ea-cifraK"
   }, "Gasto anual"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-mono"
-  }, "USD ", fmt(gastosAnuales))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "ea-cifraK"
-  }, "Tren de vida"), /*#__PURE__*/React.createElement("div", {
-    className: "ea-cifraV ea-dis"
-  }, nivelDeVida(vidaTotal(s)).n)), (Array.isArray(s.premios) ? s.premios : []).length > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "USD ", fmt(gastosAnuales))), (Array.isArray(s.premios) ? s.premios : []).length > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraK"
   }, "Reconocimientos"), /*#__PURE__*/React.createElement("div", {
     className: "ea-cifraV ea-dis"
