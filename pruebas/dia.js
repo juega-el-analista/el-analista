@@ -19,7 +19,7 @@ const comp = path.join(__dirname, "compilado.js");
 const tmp = path.join(__dirname, "probeDia.js");
 fs.writeFileSync(tmp, fs.readFileSync(comp, "utf8").replace("module.exports = ElAnalista;",
   "module.exports = { azar, sembrarAzar, soltarAzar, hashTexto, ElAnalista, eleccionDelDia, objetivosDelDia,"
-  + " OBJETIVOS_DIA, fechaHoy, msHastaManana, sanear, EDADES, NACIONES, CARRERAS, CLAVE, CLAVE_DIA };"));
+  + " OBJETIVOS_DIA, fechaHoy, msHastaManana, sanear, EDADES, NACIONES, CARRERAS, CLAVE, CLAVE_DIA, hechosDelDia, nuevosLogrosDia };"));
 const J = require(tmp);
 
 let fallos = 0;
@@ -69,6 +69,19 @@ const tiradas = (n) => { const r = []; for (let i = 0; i < n; i++) r.push(J.azar
   ok(sa.dia === "2026-10-07" && JSON.stringify(sa.objDia) === JSON.stringify(ob) && sa.ganados === 4, "la del día sobrevive al guardado");
   const sb = J.sanear({ dia: "<script>", objDia: ["inventado"], ganados: -3 });
   ok(sb.dia === null && sb.objDia.length === 0 && sb.ganados === 0, "y un guardado manipulado se limpia");
+
+  /* ---- lo que se cumple por el camino se premia y queda ---- */
+  const base = { dia: "2026-10-08", objDia: ["pat300", "sindeuda", "vp"], objLogrados: [], rango: 2, deuda: 5000 };
+  ok(J.nuevosLogrosDia(base, { pat: 389912, gasto: 30000 }).join() === "pat300",
+    "llegar a USD 300.000 a mitad de carrera cuenta en ese mismo cierre");
+  ok(J.nuevosLogrosDia({ ...base, deuda: 0 }, { pat: 0, gasto: 1 }).indexOf("sindeuda") < 0,
+    "«Termina sin deber nada» no se da por cumplido a mitad de carrera");
+  const despues = { ...base, objLogrados: ["pat300"] };
+  ok(J.hechosDelDia(despues, { pat: 120000, gasto: 30000 })[0] === true, "y aunque después baje el patrimonio, queda cumplido");
+  ok(J.nuevosLogrosDia(despues, { pat: 400000, gasto: 1 }).length === 0, "y no se premia dos veces");
+  ok(J.OBJETIVOS_DIA.find((o) => o.id === "pat300").t === "Junta USD 300.000", "el texto dice «Junta», no «Termina»");
+  const sg = J.sanear({ dia: "2026-10-08", objDia: ["pat300", "vp", "gana5"], objLogrados: ["pat300", "inventado"] });
+  ok(JSON.stringify(sg.objLogrados) === JSON.stringify(["pat300"]), "lo logrado sobrevive al guardado y lo inventado se limpia");
 
   /* ---- dos jugadores, la misma mañana ---- */
   const jugarLaDelDia = async (rnd) => {

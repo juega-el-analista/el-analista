@@ -229,6 +229,12 @@ const CSS = `
 .ea-op.dorada:hover:not(:disabled){border-color:#C29A1E;background:rgba(214,170,40,.22)}
 .ea-opRareza{display:inline-block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
   padding:1px 7px;margin-right:8px;vertical-align:middle;border-radius:2px;color:#fff}
+/* un objetivo del día cumplido, arriba del informe del año */
+.ea-logro{border:1px solid #2F7A3D;background:rgba(62,140,73,.10);padding:12px 14px;margin:10px 0 14px;border-radius:2px;
+  animation:ea-sube .4s cubic-bezier(.2,.8,.3,1) backwards}
+.ea-logroK{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#2F7A3D}
+.ea-logroT{font-size:18px;color:var(--tintaPapel);margin-top:4px}
+.ea-logroP{font-size:12.5px;color:var(--gris);margin-top:3px}
 /* emojis en Compras: en las pestañas y en cada cosa */
 .ea-grupoE{font-size:15px;line-height:1;margin-right:2px}
 .ea-itemEmoji{font-size:19px;line-height:1;width:24px;text-align:center;flex-shrink:0}
@@ -47195,9 +47201,10 @@ const OBJETIVOS_DIA = [
   { id: "analista", t: "Llega a Analista Senior", ok: (st) => st.rango >= 2 },
   { id: "asociado", t: "Llega a Asociado", ok: (st) => st.rango >= 3 },
   { id: "vp", t: "Llega a Vicepresidente", ok: (st) => st.rango >= 4 },
-  { id: "pat100", t: "Termina con USD 100.000", ok: (st, x) => numero(x && x.pat, 0) >= 100000 },
-  { id: "pat300", t: "Termina con USD 300.000", ok: (st, x) => numero(x && x.pat, 0) >= 300000 },
-  { id: "sindeuda", t: "Termina sin deber nada", ok: (st) => !(numero(st.deuda, 0) > 0) },
+  { id: "pat100", t: "Junta USD 100.000", ok: (st, x) => numero(x && x.pat, 0) >= 100000 },
+  { id: "pat300", t: "Junta USD 300.000", ok: (st, x) => numero(x && x.pat, 0) >= 300000 },
+  /* el único que solo se puede juzgar al final */
+  { id: "sindeuda", t: "Termina sin deber nada", fin: true, ok: (st) => !(numero(st.deuda, 0) > 0) },
   { id: "gana5", t: "Gana 5 minijuegos", ok: (st) => numero(st.ganados, 0) >= 5 },
   { id: "premio", t: "Gana un reconocimiento", ok: (st) => Array.isArray(st.premios) && st.premios.length > 0 },
   { id: "indep", t: "Junta la mitad de tu independencia", ok: (st, x) => numero(x && x.gasto, 0) > 0 && numero(x && x.pat, 0) >= x.gasto * 25 * 0.5 },
@@ -47233,10 +47240,20 @@ const anotarDia = (d) => {
     window.localStorage.setItem(CLAVE_DIA, JSON.stringify(d));
   } catch (e) { /* sin almacén, la portada no recuerda que ya jugaste: no es grave */ }
 };
-/* qué objetivos del día se cumplieron, en el orden en que se mostraron */
+/* qué objetivos del día se cumplieron, en el orden en que se mostraron.
+   Los que se cumplen por el camino quedan logrados aunque después se
+   pierdan (Alessandro, 8-oct: «llegué a 300 mil y no me dieron nada»). */
 const hechosDelDia = (st, x) => (st && Array.isArray(st.objDia) ? st.objDia : []).map((id) => {
   const o = OBJETIVOS_DIA.find((y) => y.id === id);
-  try { return !!(o && o.ok(st, x)); } catch (e) { return false; }
+  if (!o) return false;
+  if (!o.fin && Array.isArray(st.objLogrados) && st.objLogrados.indexOf(id) >= 0) return true;
+  try { return !!o.ok(st, x); } catch (e) { return false; }
+});
+/* los que se acaban de cumplir este año (nunca los de juzgar al final) */
+const nuevosLogrosDia = (st, x) => (st && st.dia && Array.isArray(st.objDia) ? st.objDia : []).filter((id) => {
+  const o = OBJETIVOS_DIA.find((y) => y.id === id);
+  if (!o || o.fin || (Array.isArray(st.objLogrados) && st.objLogrados.indexOf(id) >= 0)) return false;
+  try { return !!o.ok(st, x); } catch (e) { return false; }
 });
 const VERSION = 5;
 
@@ -48475,6 +48492,7 @@ const sanear = (bruto) => {
   st.dia = esFecha(r.dia) ? r.dia : null;
   st.objDia = st.dia ? unicos(listaDe(r.objDia, (x) => IDS_OBJ_DIA.indexOf(x) >= 0, 3)) : [];
   st.ganados = entero(r.ganados, 0, 0, 999);
+  st.objLogrados = st.dia ? unicos(listaDe(r.objLogrados, (x) => st.objDia.indexOf(x) >= 0, 3)) : [];
   st.contrato = (r.contrato && typeof r.contrato === "object")
     ? { anos: entero(r.contrato.anos, 3, 1, 10), desde: entero(r.contrato.desde, 0, 0, 60) }
     : null;
@@ -53751,6 +53769,21 @@ function Motor() {
     const partes = { decisiones: decisionesAno, sueldo: sueldoAno, mercados: mercadosAno,
       otros: (patVisible - patIni) - decisionesAno - sueldoAno - mercadosAno };
 
+    /* La del día: lo que se cumplió este año queda logrado y se premia ya,
+       no al final de la carrera. Un mes de sueldo y algo de nombre. */
+    const logros = [];
+    try {
+      nuevosLogrosDia(st, { pat: patrimonio, gasto: gastoAnual(st) }).forEach((id) => {
+        const o = OBJETIVOS_DIA.find((y) => y.id === id);
+        const bono = Math.round(salarioAnual(st) / 12);
+        st.cash += bono;
+        st.rep = clamp(numero(st.rep, 0) + 3, 0, 100);
+        st.objLogrados = (Array.isArray(st.objLogrados) ? st.objLogrados : []).concat(id);
+        st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Objetivo del día: " + o.t.toLowerCase() });
+        logros.push({ t: o.t, bono });
+      });
+    } catch (e) { /* un objetivo raro no puede tumbar el cierre */ }
+
     const ano = 2026 + st.turno;
     /* los boosts que vencen con este año se avisan y se van */
     const vencen = (Array.isArray(st.boosts) ? st.boosts : []).filter((b) => b.hasta <= st.turno + 1);
@@ -53763,6 +53796,7 @@ function Motor() {
     st = sanear(st);
     setS(st);
     setCierre({
+      logros,
       ano, notis, ascenso, cartera, notas, ing, egr, ingreso, egreso: egreso + pagoDeuda, neto: neto - pagoDeuda, ahorro,
       patAntes, patrimonio, bienesV, histo: st.histo, leccion, hitos, deuda,
       patVisible, patIni, partes,
@@ -55335,6 +55369,13 @@ function Motor() {
                 <div className="ea-memo">
                   <div className="ea-memoHead ea-dis clave"><span>Cierre del año</span><span>{cierre.ano}</span></div>
                   <h2 className="ea-memoTit ea-dis">Así terminó {cierre.ano}</h2>
+                  {(Array.isArray(cierre.logros) ? cierre.logros : []).map((l, i) => (
+                    <div className="ea-logro" key={i}>
+                      <div className="ea-logroK ea-dis">🎯 ¡Objetivo del día cumplido!</div>
+                      <div className="ea-logroT ea-dis">{l.t}</div>
+                      <div className="ea-logroP">Premio: USD {fmt(l.bono)} y +3 de reputación.</div>
+                    </div>
+                  ))}
 
                   {/* El numero grande ya se vio a pantalla completa en el
                       rodillo, asi que aqui la cabecera es una linea: como
