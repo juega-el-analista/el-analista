@@ -73,7 +73,7 @@ async function unaVida(semilla) {
        a ella y se quedaba clavada justo aqui, con las 20 partidas en
        duracion 0 y sin llegar nunca a una pantalla final. */
     await pulsa(porRot(/^(Femenino|Masculino|Prefiero no decirlo)$/));
-    await pulsa(porRot(/^Elegir yo/));
+    await pulsa(porRot(/^Continuar$/));
     /* la duracion vive en esta misma pantalla; por defecto es la decada */
     await pulsa(porRot(/^Empezar a los 20/));
     const p = bs().filter((b) => /^Elegir$/.test(rot(b)));

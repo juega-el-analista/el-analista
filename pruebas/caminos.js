@@ -88,7 +88,7 @@ async function unaVida(semilla) {
   await pulsa(porRot(/acepto y quiero jugar/i));
   await pulsa(porRot(/^Jugar ya$/));
   await pulsa(porRot(/^(Femenino|Masculino|Prefiero no decirlo)$/));
-  await pulsa(porRot(/^Elegir yo/));
+  await pulsa(porRot(/^Continuar$/));
   await pulsa(porRot(/^Empezar a los 20/));
   const p = bs().filter((b) => /^Elegir$/.test(rot(b)));
   await pulsa(p[semilla % Math.max(1, p.length)] || p[0]);
