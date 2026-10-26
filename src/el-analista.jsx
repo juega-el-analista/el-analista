@@ -4066,10 +4066,13 @@ const CONSECUENCIAS = [
         ok: { rep: -2, msg: "No pueden probarlo. Te queda un expediente abierto que nadie cierra." },
         no: { cash: -18000, rep: -30, car: -10, deja: "sancionado", luego: [{ id: 8104, en: 1 }], msg: "Tenían los chats. Mentir fue peor que comprar." } } },
     ] },
+  /* No da por hecho que te echaron: puede llegarte recién cambiado de
+     firma, y la sanción te sigue igual a donde vayas. */
   { id: 8104, min: 0, max: 6, por: HUELLAS.sancionado, t: "Nadie te devuelve las llamadas",
-    x: "La sanción es pública. Tu nombre es lo primero que sale cuando alguien te busca.",
+    x: "La sanción es pública. Tu nombre es lo primero que sale cuando alguien te busca, y donde trabajas ya lo saben.",
     o: [
-      { t: "Empezar de nuevo en una firma pequeña", mudaFirma: true, d: { car: -8, rep: 6, ene: -6, msg: "Menos sueldo, menos cargo y gente que no pregunta. Por algo se empieza." } },
+      { t: "Dar la cara y aguantar las miradas", d: { car: -6, rep: 5, ene: -8, msg: "Pides perdón en voz alta y trabajas el doble. Algunos dejan de mirarte; otros no." } },
+      { t: "Irte a una firma pequeña donde nadie pregunta", mudaFirma: true, d: { car: -8, rep: 6, ene: -6, msg: "Menos sueldo, menos cargo y gente que no pregunta. Por algo se empieza." } },
       { t: "Pasarte a compliance: conoces el error por dentro", d: { cri: 9, rep: 4, car: -4, deja: "converso", msg: "Nadie detecta un abuso de mercado como quien cometió uno." } },
     ] },
 
@@ -48560,6 +48563,9 @@ const SOLO_EMPLEADO = [
   /* consecuencias que solo tienen sentido con jefe */
   7101, 7102, 7103, 7104, 7105, 7106, 7201, 7202, 7203, 7204, 8101,
   7300, 7301, 7302, 7303, 7304, 7305, 7320, 7321, 7322, 7323, 7324, 7326,
+  /* la ruta del novato: la jefa del domingo, las horas extra, quedarte
+     tras el período de prueba, y lo que vuelve de eso */
+  24030, 24060, 24080, 24130, 24131, 24132, 24133, 24150, 24160, 24161, 24162, 24163,
 ];
 LOTES.escenas.concat(LOTES.propias || []).forEach((e) => { if (e.empleado) SOLO_EMPLEADO.push(e.id); });
 /* Escenas que dan por hecho que tienes jefe, encontradas leyendo una por
@@ -48577,6 +48583,14 @@ const REVISION_JEFE = [
 ];
 REVISION_JEFE.forEach((id) => { if (SOLO_EMPLEADO.indexOf(id) < 0) SOLO_EMPLEADO.push(id); });
 const esDeEmpleado = (e) => !!e && SOLO_EMPLEADO.indexOf(e.id) >= 0;
+/* Una consecuencia que pasa dentro de tu firma (tu jefe, tu equipo, su
+   comité) no te sigue cuando te cambias de firma. Las de esta lista sí:
+   le pasan a la persona, no a la firma. */
+const SIGUEN_AL_JUGADOR = [8104];   /* la sanción es pública */
+const esDeLaFirmaAnterior = (id, st) => {
+  if (IDS_CONSEC.indexOf(id) < 0 || SIGUEN_AL_JUGADOR.indexOf(id) >= 0) return false;
+  try { return esDeEmpleado(escenaDeId(id, st)); } catch (e) { return false; }
+};
 
 /* ============================================================
    ESCENARIOS CON PROBABILIDAD
@@ -54055,6 +54069,13 @@ function Motor() {
     const dejar = [].concat((o && o.deja) || [], d.deja || []).filter((h) => !!HUELLAS[h]);
     if (dejar.length) st.huellas = unicos((Array.isArray(st.huellas) ? st.huellas : []).concat(dejar));
     let pend = (Array.isArray(st.pendientes) ? st.pendientes : []).filter((p) => !(ev && p.id === ev.id));
+    /* Si con esta decisión cambiaste de firma, lo que quedaba pendiente
+       de la anterior (tu jefe de allí, tu equipo, su compliance) ya no te
+       puede pasar: sale de la cola. Lo que trae el cambio en sí se pone
+       en la cola justo debajo, así que se queda. Las que siguen al
+       jugador y no a la firma (la sanción pública) no salen. */
+    const mudoDeFirma = !sinJefe(st) && !!s.patron && st.patron !== s.patron;
+    if (mudoDeFirma) pend = pend.filter((p) => !esDeLaFirmaAnterior(p.id, st));
     [].concat((o && o.luego) || [], d.luego || []).forEach((x) => {
       if (!x) return;
       /* hay futuros que dan por hecho que el minijuego salió bien */
@@ -54094,6 +54115,9 @@ function Motor() {
        cuando eras empleado. Sale de la cola todo lo que ya no te puede
        pasar: escenas de empleado, la renovación del contrato, la otra
        oferta de montar lo tuyo y la bifurcación que preguntan los socios. */
+    /* lo mismo con lo que quedaba de este año: las consecuencias de la
+       firma que acabas de dejar no te llegan en la nueva */
+    if (mudoDeFirma) setCola((c) => (Array.isArray(c) ? c : []).filter((e) => !(e && esDeLaFirmaAnterior(e.id, st))));
     if (sinJefe(st) && !sinJefe(s)) {
       setCola((c) => (Array.isArray(c) ? c : []).filter((e) => e && !esDeEmpleado(e)
         && e.id !== ESCENA_CONTRATO.id && IDS_FIRMA.indexOf(e.id) < 0 && e.id !== DECISION_RAMA.id));
