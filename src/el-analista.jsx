@@ -9,7 +9,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
    ============================================================ */
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400..900&family=Nunito:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Nunito:wght@400..800&display=swap');
 
 .ea-root{
   /* Las tres voces del juego, en un solo sitio. Antes eran Archivo Narrow
@@ -70,7 +70,7 @@ const CSS = `
 .ea-plata{font-size:23px;color:var(--papel)}
 .ea-plata.neg{color:var(--rojo)}
 
-.ea-cinta{border:1px solid var(--borde);border-top:none;background:#04220F;padding:8px 20px;
+.ea-cinta{border:1px solid var(--borde);border-top:none;background:#3B3358;padding:8px 20px;
   font-size:12px;color:var(--tenue);display:flex;gap:10px;align-items:baseline;border-radius:0 0 3px 3px}
 .ea-cintaK{color:var(--cobre);flex-shrink:0;font-size:11px;letter-spacing:.14em}
 
@@ -89,7 +89,7 @@ const CSS = `
 
 .ea-stat{margin-bottom:10px}
 .ea-statTop{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.08em;margin-bottom:4px}
-.ea-bar{height:5px;background:#041F0E;position:relative;overflow:hidden}
+.ea-bar{height:5px;background:#2A2440;position:relative;overflow:hidden}
 .ea-fill{height:100%;background:var(--cobre);transition:width .5s ease}
 .ea-fill.ene{background:var(--verde)}
 .ea-fill.baja{background:var(--rojo)}
@@ -97,7 +97,7 @@ const CSS = `
 .ea-fila{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:5px 0;border-bottom:1px dotted var(--borde)}
 .ea-fila:last-child{border-bottom:none}
 
-.ea-slider{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:#041F0E;outline:none;margin:7px 0 2px}
+.ea-slider{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:#2A2440;outline:none;margin:7px 0 2px}
 .ea-slider::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;background:var(--cobre);cursor:pointer;border-radius:0}
 .ea-slider::-moz-range-thumb{width:13px;height:13px;background:var(--cobre);cursor:pointer;border:none;border-radius:0}
 
@@ -134,7 +134,7 @@ const CSS = `
 
 .ea-memo{background:var(--papel);color:var(--tintaPapel);padding:26px 26px 22px;position:relative;
   border-radius:4px;
-  box-shadow:0 18px 40px rgba(0,51,24,.28), 0 2px 0 var(--papel2);
+  box-shadow:0 18px 40px rgba(42,36,64,.28), 0 2px 0 var(--papel2);
   animation:ea-in .4s cubic-bezier(.2,.7,.3,1)}
 @keyframes ea-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .ea-memoHead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
@@ -448,7 +448,7 @@ const CSS5 = `
 .ea-vidaN{font-size:21px;color:var(--tintaPapel);line-height:1.05}
 .ea-vidaD{font-size:12.5px;color:var(--gris);margin-top:5px;line-height:1.5}
 .ea-vidaCifra{font-size:30px;color:var(--cobre);line-height:1;flex-shrink:0}
-.ea-medidor{position:relative;height:8px;background:#041F0E;margin-top:12px;overflow:hidden}
+.ea-medidor{position:relative;height:8px;background:#2A2440;margin-top:12px;overflow:hidden}
 .ea-medidorF{height:100%;background:var(--cobre);transition:width .5s ease}
 .ea-medidorT{position:absolute;top:0;bottom:0;width:1px;background:rgba(237,237,232,.35)}
 .ea-medidorE{display:flex;justify-content:space-between;gap:4px;margin-top:5px;font-size:9.5px;
@@ -609,7 +609,7 @@ const CSS5 = `
   display:flex;align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto}
 .ea-modal{background:var(--papel);border:1px solid var(--borde);width:100%;max-width:580px;
   border-radius:4px;overflow:hidden;
-  box-shadow:0 20px 64px rgba(0,51,24,.45)}
+  box-shadow:0 20px 64px rgba(42,36,64,.45)}
 .ea-modalCab{display:flex;justify-content:space-between;align-items:center;gap:12px;
   padding:12px 15px;border-bottom:1px solid var(--borde);position:sticky;top:0;
   background:var(--papel);z-index:2}
@@ -697,6 +697,215 @@ const CSS5 = `
 /* --- la ficha de familia --- */
 .ea-fam{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .ea-famC{border:1px solid var(--borde);padding:4px 9px;font-size:11.5px;color:var(--gris)}
+`;
+
+/* ============================================================
+   CSS6 · LA IDENTIDAD «ATARDECER» (octubre 2026)
+   El juego vive dentro de SurEconomics, y su sección de juegos ya
+   tiene un idioma: el de «Vuela, guacamaya», ilustrado y cálido. Esto
+   lo trae aquí. Va al final para mandar sobre lo anterior sin
+   reescribirlo: tinta morada, crema y mostaza; Bricolage Grotesque para
+   titulares y cifras, Nunito para leer; formas redondas y un color por
+   atributo (energía mostaza, habilidad azul, contactos verde,
+   reputación coral) que se repite en los anillos, en las barras y en
+   lo que mueve cada opción.
+   Todo bajo .ea-: nada toca html, body ni etiquetas sueltas.
+   ============================================================ */
+const CSS6 = `
+.ea-root{
+  --f-dis:'Bricolage Grotesque','Nunito',system-ui,sans-serif;
+  --f-num:'Bricolage Grotesque','Nunito',system-ui,sans-serif;
+  --tinta:#2A2440; --tinta2:#3B3358; --fieltro:#2A2440; --borde:#E2CFA8;
+  --papel:#FFF8EA; --papel2:#F6E6C4; --tintaPapel:#2A2440; --crema:#FFF4DC;
+  --arena:#F3E2BF; --mostaza:#F2B632; --naranja:#E9875A; --terracota:#D9643A;
+  --cobre:#B24E27; --lila:#8C6BB1; --lila2:#5B4785;
+  --verde:#2F8A54; --rojo:#B0321F; --gris:#665C7A; --hueso:#FFF4DC; --tenue:#CFC4EA;
+  /* un color por atributo: fuerte sobre la tinta, suave para fondos claros */
+  --a-ene:#F2B632; --a-ene-t:#7A5600; --a-ene-f:#FCE9B6;
+  --a-hab:#8DB2FF; --a-hab-t:#1F4A99; --a-hab-f:#DCE6FA;
+  --a-red:#7FD6A0; --a-red-t:#1B6A42; --a-red-f:#D3F0DD;
+  --a-rep:#FF8F7A; --a-rep-t:#A3301F; --a-rep-f:#FBDAD3;
+  --a-cash-t:#4E3A7A; --a-cash-f:#E7DDF5;
+  --a-car-t:#8E3A1B; --a-car-f:#F7DCCD;
+  background:var(--arena); color:var(--tinta)}
+.ea-root{background-image:none}
+.ea-dis{letter-spacing:.06em}
+.ea-h1,.ea-memoTit,.ea-final,.ea-nombre,.ea-claseT,.ea-jnombre,.ea-opcionN,
+.ea-anuncioJN,.ea-anuncioEscT,.ea-nuevoT,.ea-vidaN,.ea-titularV,.ea-finTit,
+.ea-itemN,.ea-perfilT,.ea-lecT,.ea-guiaT,.ea-notiT,.ea-glosT,.ea-cifraV,.ea-fondoN,.ea-wname{letter-spacing:-.02em}
+
+/* ---- la cabecera: el atardecer arriba, la tinta debajo ---- */
+.ea-placa{position:relative;background:var(--tinta);border:none;border-radius:22px 22px 0 0;
+  padding:74px 20px 16px;overflow:hidden}
+.ea-placa::before{content:"";position:absolute;left:0;right:0;top:0;height:64px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 64' preserveAspectRatio='xMidYMax slice'%3E%3Crect width='400' height='64' fill='%23E9875A'/%3E%3Crect y='26' width='400' height='38' fill='%23D9643A'/%3E%3Ccircle cx='318' cy='40' r='22' fill='%23F2B632'/%3E%3Cpath d='M0 46 C70 30 140 34 200 42 S330 32 400 40 L400 64 L0 64Z' fill='%238C6BB1'/%3E%3Cpath d='M0 56 C90 46 170 52 250 54 S350 48 400 52 L400 64 L0 64Z' fill='%235B4785'/%3E%3Crect x='26' y='44' width='12' height='20' fill='%233B2F5C'/%3E%3Crect x='42' y='38' width='14' height='26' fill='%233B2F5C'/%3E%3Crect x='60' y='48' width='10' height='16' fill='%233B2F5C'/%3E%3Crect x='352' y='42' width='13' height='22' fill='%233B2F5C'/%3E%3Crect x='369' y='50' width='11' height='14' fill='%233B2F5C'/%3E%3C/svg%3E") center bottom / cover no-repeat}
+.ea-nombre{color:var(--crema);font-family:var(--f-dis)}
+.ea-sub,.ea-reloj{color:var(--tenue)}
+.ea-plata{color:var(--crema);font-family:var(--f-num);font-weight:800}
+.ea-plata.neg{color:#FF9A85}
+.ea-cinta{background:var(--tinta2);border:none;border-radius:0 0 22px 22px;color:var(--tenue)}
+.ea-cintaK{color:var(--mostaza)}
+.ea-anilloFondo{fill:rgba(255,244,220,.06);stroke:rgba(255,244,220,.14)}
+.ea-anilloArco{filter:none}
+.ea-anilloK{color:var(--crema)}
+.ea-anilloN{color:var(--crema)}
+
+/* ---- las pestañas: pastillas, la activa en mostaza ---- */
+.ea-tabs{background:var(--tinta);border:none;border-radius:16px;padding:5px;gap:4px}
+.ea-tab{color:var(--crema);border:none;border-radius:12px;padding:10px 4px;font-size:11.5px;letter-spacing:.08em}
+.ea-tab:hover{color:#FFFFFF;background:rgba(255,244,220,.08)}
+.ea-tab.on{color:var(--tinta);background:var(--mostaza);border:none}
+
+/* ---- paneles y memorandos: crema, redondos, con sombra morada ---- */
+.ea-panel{background:var(--papel);border:none;border-radius:18px;color:var(--tinta);
+  box-shadow:0 1px 0 rgba(42,36,64,.06),0 10px 26px rgba(42,36,64,.10)}
+.ea-memo{background:var(--papel);color:var(--tinta);border-radius:22px;
+  box-shadow:0 2px 0 rgba(42,36,64,.06),0 18px 40px rgba(42,36,64,.16)}
+.ea-memoHead{border-bottom:2px solid rgba(42,36,64,.85);color:var(--cobre)}
+.ea-memoHead.clave{border-bottom:4px double rgba(42,36,64,.85)}
+.ea-memoTit{color:var(--tinta);font-size:27px}
+.ea-memoTxt{color:#4A4366}
+.ea-porQue{background:#EBE3F6;color:var(--lila2)}
+
+/* ---- las opciones: botones de tinta, que invitan a tocar ---- */
+.ea-ops{gap:10px}
+.ea-op{background:var(--tinta2);color:var(--crema);border:none;border-radius:16px;padding:13px 15px;
+  font-weight:700;box-shadow:0 3px 0 rgba(42,36,64,.35)}
+.ea-op:hover:not(:disabled){background:#4A4170;transform:translateY(-1px);border:none}
+.ea-op:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 rgba(42,36,64,.35)}
+.ea-op:focus-visible{outline:3px solid var(--mostaza);outline-offset:2px}
+.ea-opN{color:var(--mostaza);font-weight:800}
+.ea-opTag{color:var(--tenue)}
+.ea-opSolo,.ea-opEtq{color:var(--mostaza);border-color:var(--mostaza);border-radius:999px}
+.ea-opSueldo{color:var(--crema)}
+.ea-opAzar{background:rgba(255,244,220,.12);color:var(--crema)}
+.ea-op.rara{background:#4B3A78;box-shadow:0 3px 0 #2E2350, inset 0 0 0 2px #A88BE0}
+.ea-op.dorada{background:#4A3A20;box-shadow:0 3px 0 #2C2210, inset 0 0 0 2px var(--mostaza)}
+.ea-op.sinfuerza{background:rgba(42,36,64,.07);color:rgba(42,36,64,.55);box-shadow:inset 0 0 0 2px rgba(176,50,31,.35);border:none}
+.ea-op.sinfuerza:hover{background:rgba(42,36,64,.07)}
+.ea-op.sinfuerza .ea-opN{color:rgba(176,50,31,.7)}
+.ea-op.ok{background:#2E5E44;border:none}
+.ea-op.no{background:#6E2B22;border:none}
+.ea-opCandado{background:rgba(176,50,31,.12);color:#A3301F;border-color:rgba(176,50,31,.4)}
+.ea-opRiesgo{font-weight:800;letter-spacing:.06em}
+.ea-opRiesgo.alto{color:#FF9A85}
+.ea-opRiesgo.medio{color:#FFD27A}
+.ea-opRiesgo.bajo{color:#9FE3B8}
+
+/* ---- lo que mueve cada opción: el color del atributo, el signo dice
+   cuánto; lo que cuesta va en contorno, para no confundirlo ---- */
+.ea-ef{border:none;border-radius:999px;font-weight:800;padding:3px 10px}
+.ea-ef .ea-efN{font-weight:800}
+.ea-ef.k-ene{color:var(--a-ene-t);background:var(--a-ene-f)}
+.ea-ef.k-cri,.ea-ef.k-mod{color:var(--a-hab-t);background:var(--a-hab-f)}
+.ea-ef.k-red{color:var(--a-red-t);background:var(--a-red-f)}
+.ea-ef.k-rep{color:var(--a-rep-t);background:var(--a-rep-f)}
+.ea-ef.k-cash{color:var(--a-cash-t);background:var(--a-cash-f)}
+.ea-ef.k-car{color:var(--a-car-t);background:var(--a-car-f)}
+.ea-ef.neg{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
+.ea-ef.neg.k-ene{color:var(--a-ene)}
+.ea-ef.neg.k-cri,.ea-ef.neg.k-mod{color:var(--a-hab)}
+.ea-ef.neg.k-red{color:var(--a-red)}
+.ea-ef.neg.k-rep{color:var(--a-rep)}
+.ea-ef.neg.k-cash{color:#C9B3F2}
+.ea-ef.neg.k-car{color:#F4A47E}
+.ea-op.sinfuerza .ea-ef{filter:grayscale(.4);opacity:.7}
+
+/* ---- las barras de la Ficha, del color de su atributo ---- */
+.ea-bar{background:rgba(42,36,64,.12);border-radius:99px;height:7px}
+.ea-fill{border-radius:99px;background:var(--cobre)}
+.ea-fill.k-ene,.ea-fill.ene{background:var(--a-ene)}
+.ea-fill.k-cri{background:#4A7BD0}
+.ea-fill.k-red{background:#3FA36B}
+.ea-fill.k-rep{background:#E8654F}
+.ea-fill.baja{background:var(--rojo)}
+
+/* ---- botones ---- */
+.ea-btn{background:var(--tinta);color:var(--crema);border-radius:14px;font-family:var(--f-dis)}
+.ea-btn:hover:not(:disabled){background:var(--tinta2)}
+.ea-jugarYa,.ea-comprar,.ea-guiaB{background:var(--mostaza);color:var(--tinta);border-color:var(--mostaza);border-radius:14px;
+  box-shadow:0 3px 0 #B98510}
+.ea-jugarYa:hover,.ea-comprar:hover:not(:disabled),.ea-guiaB:hover{background:#FFC94D;border-color:#FFC94D}
+.ea-mini,.ea-btnO{border-radius:12px;border-color:rgba(42,36,64,.25);color:var(--tinta)}
+.ea-mini:hover:not(:disabled){border-color:var(--tinta)}
+.ea-atras{color:var(--gris)}
+.ea-atras:hover{color:var(--cobre)}
+
+/* ---- guía, glosario, hilo del año ---- */
+.ea-guia{background:var(--crema);border:none;border-radius:16px;box-shadow:inset 0 0 0 2px rgba(242,182,50,.7)}
+.ea-guiaK{color:var(--cobre)}
+.ea-guiaT{color:var(--tinta)}
+.ea-guiaX{color:#4A4366}
+.ea-jerga details{border:none;border-radius:999px;background:#EBE3F6;padding:4px 12px}
+.ea-jerga details[open]{border-radius:14px}
+.ea-jerga summary{color:var(--lila2);font-weight:800}
+.ea-jerga p{color:var(--tinta)}
+.ea-hilo{background:var(--crema);border-left:none;border-radius:16px;box-shadow:inset 4px 0 0 var(--naranja)}
+.ea-hiloK{color:var(--cobre)}
+.ea-lec{background:var(--crema);border:none;border-radius:16px;box-shadow:inset 4px 0 0 var(--lila)}
+.ea-item{border-bottom-color:rgba(42,36,64,.14)}
+.ea-itemN{color:var(--tinta)}
+.ea-titular{border-top-color:var(--tinta)}
+.ea-logro{border:none;border-radius:14px;background:#DDF2E3;box-shadow:inset 0 0 0 2px #7FC79A}
+
+/* ---- la barra del ascenso y el reparto del patrimonio, sobre la tinta ---- */
+.ea-xpBar,.ea-repartoBar{background:rgba(255,244,220,.12)}
+.ea-xpFill{background:var(--mostaza);box-shadow:none}
+.ea-repEf,.ea-punto2.ef{background:var(--tenue)}
+.ea-repCa,.ea-punto2.ca{background:var(--naranja)}
+.ea-signos .ojo{color:var(--mostaza)}
+.ea-signos .mal{color:#FF9A85}
+.ea-quienRama{color:var(--mostaza)}
+
+/* ---- la portada: una tarjeta con el atardecer grande ---- */
+.ea-heroPortada{position:relative;background:var(--tinta);border-radius:26px;overflow:hidden;
+  padding:168px 22px 22px;margin-bottom:18px;box-shadow:0 18px 40px rgba(42,36,64,.22)}
+.ea-heroPortada::before{content:"";position:absolute;left:0;right:0;top:0;height:156px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 156' preserveAspectRatio='xMidYMax slice'%3E%3Crect width='400' height='156' fill='%23E9875A'/%3E%3Crect y='62' width='400' height='94' fill='%23D9643A'/%3E%3Ccircle cx='300' cy='92' r='40' fill='%23F2B632'/%3E%3Cpath d='M0 112 C70 82 140 90 200 104 S330 84 400 98 L400 156 L0 156Z' fill='%238C6BB1'/%3E%3Cpath d='M0 134 C90 116 170 126 250 130 S350 120 400 126 L400 156 L0 156Z' fill='%235B4785'/%3E%3Crect x='24' y='112' width='18' height='44' fill='%233B2F5C'/%3E%3Crect x='46' y='98' width='22' height='58' fill='%233B2F5C'/%3E%3Crect x='72' y='120' width='14' height='36' fill='%233B2F5C'/%3E%3Crect x='330' y='108' width='20' height='48' fill='%233B2F5C'/%3E%3Crect x='354' y='122' width='17' height='34' fill='%233B2F5C'/%3E%3C/svg%3E") center bottom / cover no-repeat}
+.ea-heroK{font-size:12px;letter-spacing:.14em;color:var(--mostaza)}
+.ea-heroPortada .ea-h1{color:var(--crema)}
+.ea-heroPortada .ea-lede{color:var(--tenue);margin-bottom:0}
+.ea-heroPortada .ea-paBase,.ea-heroPortada .ea-paTick{stroke:rgba(255,244,220,.25)}
+.ea-heroPortada .ea-paCurva{stroke:var(--mostaza)}
+.ea-heroPortada .ea-paPunto{fill:var(--naranja)}
+.ea-regla{border-color:rgba(42,36,64,.18)}
+.ea-cifraK{color:var(--cobre)}
+.ea-cifraV{color:var(--tinta)}
+.ea-dia{background:var(--papel);border:none;border-radius:20px;box-shadow:0 10px 26px rgba(42,36,64,.10)}
+
+/* ---- el resultado: los cambios con el color de su atributo ---- */
+.ea-chip{border:none;border-radius:999px;padding:4px 11px;font-weight:800}
+.ea-chip.pos{color:var(--verde);background:#DDF2E3}
+.ea-chip.neg{color:var(--rojo);background:#FBDAD3}
+.ea-chip.k-ene{color:var(--a-ene-t);background:var(--a-ene-f)}
+.ea-chip.k-cri,.ea-chip.k-mod{color:var(--a-hab-t);background:var(--a-hab-f)}
+.ea-chip.k-red{color:var(--a-red-t);background:var(--a-red-f)}
+.ea-chip.k-rep{color:var(--a-rep-t);background:var(--a-rep-f)}
+.ea-chip.k-car{color:var(--a-car-t);background:var(--a-car-f)}
+.ea-chip.neg.k-ene,.ea-chip.neg.k-cri,.ea-chip.neg.k-mod,.ea-chip.neg.k-red,.ea-chip.neg.k-rep,.ea-chip.neg.k-car{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
+/* el sello va debajo de la cabecera del memo, no encima del año */
+.ea-sello{top:44px;border-color:var(--cobre);color:var(--cobre);border-radius:8px}
+
+/* ---- la barra de independencia y las ventanas ---- */
+.ea-ind{background:rgba(42,36,64,.10);border-radius:99px;overflow:visible}
+.ea-indF{background:var(--naranja);border-radius:99px}
+.ea-indM{background:var(--tinta);width:2px;border-radius:1px}
+.ea-modal{background:var(--papel);border:none;border-radius:22px;box-shadow:0 24px 60px rgba(20,16,36,.45)}
+.ea-nuevoK{color:var(--cobre)}
+.ea-nuevoT{color:var(--tinta)}
+.ea-nuevoX{color:#4A4366}
+.ea-nuevoP li:before{background:var(--mostaza);border-radius:50%}
+
+/* ---- los minijuegos: el anuncio y las reglas, sobre la tinta ---- */
+.ea-reglasPleno{background:rgba(42,36,64,.97)}
+.ea-reglasCaja .ea-jnombre span,.ea-pasosG .ea-pasoN{color:var(--mostaza)}
+.ea-reglasGana{border-left-color:var(--mostaza)}
+.ea-reglasCaja .ea-atras:hover{color:var(--mostaza)}
+.ea-btnJugar{background:var(--mostaza);color:var(--tinta);border-radius:14px;box-shadow:0 3px 0 #B98510}
+.ea-btnJugar:hover:not(:disabled){background:#FFC94D}
+.ea-anuncioJK,.ea-anuncioJT{color:var(--mostaza)}
+.ea-anuncio{background:var(--tinta)}
+.ea-juegoPleno{background:var(--arena)}
 `;
 
 /* ---------- escala de la carrera ---------- */
@@ -1202,7 +1411,7 @@ const CSS4 = `
   font-family:var(--f-dis);text-transform:uppercase;font-weight:700;
   overflow:hidden;white-space:nowrap;transition:width .25s ease}
 .ea-mixSeg.cart{background:var(--cobre);color:#20120A}
-.ea-mixSeg.efe{background:#041F0E;color:var(--tenue)}
+.ea-mixSeg.efe{background:#2A2440;color:var(--tenue)}
 
 .ea-wrow{margin:11px 0}
 .ea-wtop{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;align-items:baseline}
@@ -1371,7 +1580,7 @@ const CSS4 = `
 .ea-memo-documento{border-left-color:rgba(61,61,61,.16)}
 .ea-memo-corazon{border-left-color:rgba(185,83,42,.75)}
 .ea-memo-corona{border-left-color:var(--cobre);
-  box-shadow:0 18px 40px rgba(0,51,24,.28), 0 2px 0 var(--papel2), inset 0 0 0 1px rgba(185,83,42,.22)}
+  box-shadow:0 18px 40px rgba(42,36,64,.28), 0 2px 0 var(--papel2), inset 0 0 0 1px rgba(185,83,42,.22)}
 .ea-memo-bifurca{border-left-color:var(--cobre)}
 .ea-memo-sello{border-left-color:var(--tintaPapel)}
 /* el titulo deja sitio al sello para no chocar con el */
@@ -1420,19 +1629,19 @@ const CSS4 = `
   font-size:10.5px;letter-spacing:.16em;color:var(--papel);margin-bottom:5px}
 .ea-xpTop span{display:inline-flex;align-items:center;gap:6px}
 .ea-xpSig{color:var(--tenue)}
-.ea-xpBar{height:7px;background:#041F0E;border-radius:4px;overflow:hidden;
+.ea-xpBar{height:7px;background:#2A2440;border-radius:4px;overflow:hidden;
   box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
 .ea-xpFill{height:100%;border-radius:4px;
   background:linear-gradient(90deg,#8A6A28,#F2B441);
   box-shadow:0 0 10px rgba(242,180,65,.45);
   transition:width .8s cubic-bezier(.2,.8,.3,1)}
 
-/* los cinco anillos */
-.ea-anillos{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+/* los cuatro anillos */
+.ea-anillos{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
 .ea-anillo{display:flex;flex-direction:column;align-items:center;gap:1px;position:relative}
 .ea-anilloDisco{position:relative;width:40px;height:40px}
 .ea-anilloDisco svg{display:block;overflow:visible}
-.ea-anilloFondo{fill:rgba(4,31,14,.7);stroke:rgba(159,184,168,.14);stroke-width:3.4}
+.ea-anilloFondo{fill:rgba(42,36,64,.7);stroke:rgba(159,184,168,.14);stroke-width:3.4}
 .ea-anilloArco{fill:none;stroke-width:3.4;stroke-linecap:round;
   transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.3,1), stroke .3s ease;
   filter:drop-shadow(0 0 3px currentColor)}
@@ -1537,7 +1746,7 @@ const CSS4 = `
    numeros. Ahora lleva rotulo y el reparto se VE. */
 .ea-patK{font-size:9.5px;letter-spacing:.26em;color:var(--tenue);margin-bottom:1px}
 .ea-reparto{margin-top:7px;min-width:172px}
-.ea-repartoBar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:#041F0E}
+.ea-repartoBar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:#2A2440}
 .ea-repEf{background:var(--tenue);transition:width .5s cubic-bezier(.2,.8,.3,1)}
 .ea-repCa{background:var(--cobre);transition:width .5s cubic-bezier(.2,.8,.3,1)}
 .ea-repartoL{display:flex;gap:12px;justify-content:flex-end;font-size:10.5px;
@@ -1627,7 +1836,7 @@ const CSS4 = `
   animation:ea-flash .4s ease-out backwards;animation-delay:.34s}
 
 /* dos · las instrucciones, grandes y sobre fondo oscurecido */
-.ea-reglasPleno{position:fixed;inset:0;z-index:70;background:rgba(6,23,13,.93);
+.ea-reglasPleno{position:fixed;inset:0;z-index:70;background:rgba(42,36,64,.93);
   display:flex;align-items:flex-start;justify-content:center;
   padding:22px 16px;overflow-y:auto;animation:ea-entra .25s ease-out}
 .ea-reglasCaja{width:100%;max-width:560px;margin:auto;color:var(--hueso);
@@ -50919,7 +51128,7 @@ function JuegoBanderas({ ayuda, onFin, modo }) {
     <div className="ea-jw">
       <div className="ea-jinfo ea-dis">
         <span>Marcadas {sel.length} de {CUANTAS}</span>
-        <span>{caso.quitar > 0 ? "Tu criterio descartó " + caso.quitar + (caso.quitar === 1 ? " señuelo" : " señuelos") : "Sin descartes"}</span>
+        <span>{caso.quitar > 0 ? "Tu habilidad descartó " + caso.quitar + (caso.quitar === 1 ? " señuelo" : " señuelos") : "Sin descartes"}</span>
       </div>
 
       {caso.doc && (
@@ -51292,7 +51501,7 @@ function JuegoComite({ ayuda, onFin }) {
     <div className="ea-jw">
       <div className="ea-jinfo ea-dis">
         <span>Tres negocios · capital para uno</span>
-        <span>{ayuda >= 60 ? "Tu criterio ya descarta lo obvio" : "Sin pistas"}</span>
+        <span>{ayuda >= 60 ? "Tu habilidad ya descarta lo obvio" : "Sin pistas"}</span>
       </div>
       <Pista>
         Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman;
@@ -51993,11 +52202,12 @@ function Pista({ children }) {
    en que lo ganas, no tres pantallas despues.
    ============================================================ */
 const TONO_ATRIB = {
-  ene: "#7FD08C",   /* verde: lo que te queda en el cuerpo */
-  cri: "#7FB8E6",   /* azul: lo que ves que otros no */
-  mod: "#C9A6F0",   /* lila: lo que sabes montar */
-  red: "#F2B441",   /* oro: a quien conoces */
-  rep: "#F08A6C",   /* coral: lo que dicen de ti */
+  /* la paleta Atardecer: los mismos colores que las fichas de efecto */
+  ene: "#F2B632",   /* mostaza: lo que te queda en el cuerpo */
+  cri: "#8DB2FF",   /* azul: tu habilidad */
+  mod: "#8DB2FF",   /* modelaje es habilidad: el mismo azul */
+  red: "#7FD6A0",   /* verde: a quién conoces */
+  rep: "#FF8F7A",   /* coral: lo que dicen de ti */
 };
 const ANILLO_R = 15;
 const ANILLO_C = 2 * Math.PI * ANILLO_R;
@@ -52019,7 +52229,7 @@ function Anillo({ k, v }) {
 
   /* por debajo de 25 el anillo se pone rojo, sea el que sea: es el aviso */
   const bajo = val < 25;
-  const tono = bajo ? "#E0897B" : TONO_ATRIB[k];
+  const tono = bajo ? "#FF5A47" : TONO_ATRIB[k];
   return (
     <div className={"ea-anillo" + (bajo ? " bajo" : "")} title={(ETIQ[k] || k) + " " + Math.round(val) + " de 100"}>
       <div className="ea-anilloDisco">
@@ -53807,7 +54017,7 @@ function Motor() {
         const ahorrado = Math.round(-monto * amortigua);
         if (ahorrado > 0) {
           monto += ahorrado;
-          cambios.push({ k: "cri", v: 0, nota: "tu criterio te ahorró " + fmt(ahorrado) });
+          cambios.push({ k: "cri", v: 0, nota: "tu habilidad te ahorró " + fmt(ahorrado) });
         }
       }
       if (monto >= 0) st.cash += monto;
@@ -54590,7 +54800,7 @@ function Motor() {
         <span className="ea-dis ea-statN"><Icono k={ICONO_ATRIB[k]} tam={13} />{ETIQ[k]}</span>
         <span className="ea-mono">{Math.round(v)}</span>
       </div>
-      <div className="ea-bar"><div className={"ea-fill" + (ene ? " ene" : "") + (v < 25 ? " baja" : "")} style={{ width: v + "%" }} /></div>
+      <div className="ea-bar"><div className={"ea-fill k-" + k + (ene ? " ene" : "") + (v < 25 ? " baja" : "")} style={{ width: v + "%" }} /></div>
     </div>
   );
 
@@ -54675,7 +54885,7 @@ function Motor() {
 
   return (
     <div className={"ea-root" + (quietoAhora ? " ea-quieto" : "")}>
-      <style>{CSS}{CSS2}{CSS3}{CSS4}{CSS5}</style>
+      <style>{CSS}{CSS2}{CSS3}{CSS4}{CSS5}{CSS6}</style>
 
       {fase === "aviso" && (
         <div className="ea-wrap ea-portada">
@@ -54761,7 +54971,10 @@ function Motor() {
 
       {fase === "portada" && (
         <div className="ea-wrap ea-portada">
-          <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Simulador de carrera e inversión</div>
+          {/* La tarjeta de entrada, con el atardecer: el mismo idioma que
+              los juegos de SurEconomics, para que se reconozca de la casa. */}
+          <div className="ea-heroPortada">
+          <div className="ea-dis ea-heroK">Simulador de carrera e inversión</div>
           <h1 className="ea-h1 ea-dis">El Analista</h1>
           {/* La curva que sube, dibujandose. Es de lo que va el juego, y
               la portada era texto sobre blanco. Se dibuja con
@@ -54778,6 +54991,7 @@ function Motor() {
           <p className="ea-lede">
             Un año por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
           </p>
+          </div>
           <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
             onClick={() => { if (enFase("portada")) irA("aviso"); }}>Leer el aviso</button>
           <div className="ea-regla" />
@@ -55920,7 +56134,7 @@ function Motor() {
                                   const fuerza = fuerzaDe(e.k, e.v);
                                   const signo = (e.v > 0 ? "+" : "−").repeat(fuerza);
                                   return (
-                                    <span key={n} className={"ea-ef " + (e.v > 0 ? "pos" : "neg")}
+                                    <span key={n} className={"ea-ef k-" + e.k + " " + (e.v > 0 ? "pos" : "neg")}
                                       title={(ETIQ[e.k] || e.k) + ", " + (e.v > 0 ? "sube" : "baja")
                                         + " " + (fuerza === 3 ? "mucho" : fuerza === 2 ? "bastante" : "un poco")}>
                                       <span className="ea-efS ea-mono" aria-hidden="true">{signo}</span>
@@ -55985,7 +56199,7 @@ function Motor() {
                   {res.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").length > 0 && (
                     <div className="ea-cambios">
                       {res.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").map((c, i) => (
-                        <span className={"ea-chip ea-mono " + (c.k === "deuda" || c.neg ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}
+                        <span className={"ea-chip ea-mono k-" + c.k + " " + (c.k === "deuda" || c.neg ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}
                           style={{ animationDelay: (260 + i * 90) + "ms" }}>
                           {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v)}
                         </span>
@@ -56578,7 +56792,7 @@ class Blindaje extends React.Component {
     })();
     return (
       <div className="ea-root">
-        <style>{CSS}{CSS2}{CSS3}{CSS4}{CSS5}</style>
+        <style>{CSS}{CSS2}{CSS3}{CSS4}{CSS5}{CSS6}</style>
         <div className="ea-wrap ea-portada">
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Incidencia</div>
           <h2 className="ea-final ea-dis">Algo se rompió, no tu partida</h2>
