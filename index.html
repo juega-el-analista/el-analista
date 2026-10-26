@@ -1516,6 +1516,9 @@ const CSS6 = `
 .ea-signos .ojo{color:var(--mostaza)}
 .ea-signos .mal{color:#FF9A85}
 .ea-quienRama{color:var(--mostaza)}
+/* la cultura de la firma, en la placa junto a su nombre */
+.ea-cultura{font-style:normal;margin-left:7px;padding:1px 8px;border-radius:999px;
+  background:rgba(242,182,50,.18);color:var(--mostaza);font-size:11px;letter-spacing:.04em}
 
 /* ---- la portada: una tarjeta con el atardecer grande ---- */
 .ea-heroPortada{position:relative;background:var(--tinta);border-radius:26px;overflow:hidden;
@@ -7909,6 +7912,212 @@ const E = [{
       msg: "Analgésicos y esperar. Tienes cosas más urgentes, piensas."
     }
   }]
+},
+/* ---------- el carácter de cada firma ----------
+   Solo salen si tu firma tiene esa cultura (ver CULTURAS). */
+{
+  id: 24210,
+  cultura: "exigente",
+  min: 0,
+  max: 5,
+  t: "Te piden el fin de semana",
+  x: "Viernes a las siete: el cliente adelantó la reunión y el equipo entero trabaja sábado y domingo. Nadie pregunta si tenías planes.",
+  o: [{
+    t: "Quedarte todo el fin de semana",
+    d: {
+      car: 3,
+      rep: 2,
+      ene: -9,
+      msg: "Entregas el lunes a las ocho. Te lo agradecen con otro proyecto."
+    }
+  }, {
+    t: "Trabajar el sábado y guardar el domingo",
+    d: {
+      car: 1,
+      ene: -4,
+      msg: "Haces tu parte el sábado y desapareces el domingo. Nadie lo comenta; todos lo notan."
+    }
+  }, {
+    t: "Decir que tienes un compromiso",
+    d: {
+      ene: 3,
+      rep: -3,
+      msg: "Lo entienden en voz alta. En la evaluación del año, se acuerdan."
+    }
+  }]
+}, {
+  id: 24211,
+  cultura: "exigente",
+  min: 0,
+  max: 5,
+  t: "El bono depende del ranking",
+  x: "Aquí cada año se ordena al equipo de mejor a peor. Los primeros cobran el doble; los últimos, se van.",
+  o: [{
+    t: "Ir a por el primer puesto",
+    d: {
+      car: 4,
+      cash: 2000,
+      ene: -8,
+      red: -3,
+      msg: "Llegas primero. Dos compañeros dejan de hablarte."
+    }
+  }, {
+    t: "Quedarte en la mitad, sin pelear",
+    d: {
+      ene: 3,
+      msg: "Cobras lo normal y duermes bien. En esta firma, eso es casi una rareza."
+    }
+  }]
+}, {
+  id: 24212,
+  cultura: "prestigio",
+  min: 0,
+  max: 6,
+  t: "Tu análisis va en la portada",
+  x: "La firma publica su informe anual y tu análisis va en la portada. Si tiene un error, lo verá todo el sector.",
+  o: [{
+    t: "Revisarlo tres veces más",
+    d: {
+      rep: 4,
+      ene: -5,
+      msg: "Sale limpio. Te llaman de dos firmas para felicitarte."
+    }
+  }, {
+    t: "Entregarlo como está",
+    chk: {
+      s: "cri",
+      dif: 55,
+      ok: {
+        rep: 6,
+        msg: "Sale perfecto y con tu nombre. Ahora te conocen fuera."
+      },
+      no: {
+        rep: -8,
+        msg: "Un número mal puesto, en la portada. El sector entero lo comenta."
+      }
+    }
+  }]
+}, {
+  id: 24213,
+  cultura: "prestigio",
+  min: 1,
+  max: 6,
+  t: "Un cliente famoso pide por ti",
+  x: "Un cliente conocido quiere que lleves su cuenta. Es una gran vitrina, y un error con él saldría en la prensa.",
+  o: [{
+    t: "Aceptar la cuenta",
+    d: {
+      rep: 5,
+      car: 3,
+      ene: -6,
+      msg: "Lo atiendes de cerca. Tu nombre empieza a sonar con el suyo."
+    }
+  }, {
+    t: "Recomendar a alguien con más experiencia",
+    d: {
+      red: 3,
+      rep: 1,
+      msg: "Tu jefe agradece la prudencia. La vitrina, esta vez, es para otro."
+    }
+  }]
+}, {
+  id: 24214,
+  cultura: "escuela",
+  min: 1,
+  max: 5,
+  t: "Te toca dar la clase de los jueves",
+  x: "En esta firma los de un año enseñan a los recién llegados. Esta semana te toca explicar cómo se arma un presupuesto.",
+  o: [{
+    t: "Prepararla a fondo",
+    d: {
+      mod: 4,
+      rep: 2,
+      ene: -4,
+      msg: "Al explicarlo entiendes cosas que hacías de memoria."
+    }
+  }, {
+    t: "Improvisar con lo que sabes",
+    d: {
+      rep: -1,
+      ene: 2,
+      msg: "Sale correcta, sin más. Los nuevos toman notas igual."
+    }
+  }]
+}, {
+  id: 24215,
+  cultura: "escuela",
+  min: 0,
+  max: 5,
+  t: "Te pagan un curso, con una condición",
+  x: "La firma te paga un curso caro si te quedas dos años más. Es buena formación; también es una cadena.",
+  o: [{
+    t: "Aceptar el curso y la condición",
+    d: {
+      cri: 5,
+      mod: 3,
+      ene: -3,
+      msg: "Aprendes mucho. Durante dos años, las ofertas de fuera las miras de lejos."
+    }
+  }, {
+    t: "Rechazarlo: quieres la puerta abierta",
+    d: {
+      red: 2,
+      msg: "Sigues con la puerta abierta. El curso se lo lleva otro."
+    }
+  }]
+}, {
+  id: 24216,
+  cultura: "tranquila",
+  min: 0,
+  max: 6,
+  t: "«Aquí no hace falta correr»",
+  x: "Un compañero veterano te ve trabajar hasta tarde y te dice que no te esfuerces tanto: aquí nadie asciende más rápido por eso.",
+  o: [{
+    t: "Hacerle caso y bajar el ritmo",
+    d: {
+      ene: 5,
+      car: -1,
+      msg: "Sales a las seis. Descubres que la vida tenía tardes."
+    }
+  }, {
+    t: "Seguir a tu ritmo igual",
+    d: {
+      car: 2,
+      ene: -4,
+      rep: 1,
+      msg: "Sigues. Te miran raro, y tu jefe empieza a darte lo difícil."
+    }
+  }]
+}, {
+  id: 24217,
+  cultura: "tranquila",
+  min: 1,
+  max: 6,
+  t: "Una oferta para ganar más",
+  x: "Una firma más exigente te ofrece bastante más sueldo. Aquí se vive bien, pero la carrera va despacio.",
+  o: [{
+    t: "Quedarte: la calma vale",
+    d: {
+      ene: 3,
+      rep: 1,
+      msg: "Le dices que no. Esa noche cenas en casa, como todas."
+    }
+  }, {
+    t: "Usar la oferta para pedir un aumento",
+    chk: {
+      s: "red",
+      dif: 50,
+      ok: {
+        cash: 2500,
+        car: 2,
+        msg: "Te igualan una parte. Sigues con tu calma y cobras mejor."
+      },
+      no: {
+        rep: -2,
+        msg: "Te dicen que aquí no se negocia así. Te quedas, con la conversación incómoda a cuestas."
+      }
+    }
+  }]
 }];
 
 /* ---------- decisiones clave, cada dos años ---------- */
@@ -12441,6 +12650,97 @@ const CONSECUENCIAS = [/* ---------- el headhunter ---------- */
       ene: 6,
       cri: 1,
       msg: "Lo pausas. No es rendirse: es elegir cuándo."
+    }
+  }]
+}, /* ---------- el primer día en una firma nueva, según su cultura ---------- */
+{
+  id: 24200,
+  min: 0,
+  max: 6,
+  por: "Te cambiaste de firma",
+  t: "Tu primer día en una firma que no para",
+  x: "Te dan computadora, clave y un proyecto que vence el viernes. Nadie te pregunta si te instalaste: aquí se aprende corriendo.",
+  o: [{
+    t: "Seguirles el ritmo desde el primer día",
+    d: {
+      car: 3,
+      rep: 2,
+      ene: -6,
+      msg: "Entregas el viernes y el lunes ya te dan otro. Así se gana el respeto aquí."
+    }
+  }, {
+    t: "Pedir una semana para ver cómo trabajan",
+    d: {
+      cri: 3,
+      rep: -1,
+      ene: 2,
+      msg: "Te la dan, de mala gana. Cuando arrancas, no fallas en lo básico."
+    }
+  }]
+}, {
+  id: 24201,
+  min: 0,
+  max: 6,
+  por: "Te cambiaste de firma",
+  t: "Tu primer día en una firma con nombre",
+  x: "Recepción de mármol, tarjeta con el logo y una advertencia amable: aquí un error se cuenta en el sector entero.",
+  o: [{
+    t: "Revisar todo dos veces, aunque tardes",
+    d: {
+      rep: 3,
+      ene: -3,
+      msg: "Lento pero sin errores. En una firma así, eso es lo que se recuerda."
+    }
+  }, {
+    t: "Usar el nombre de la firma para abrir puertas",
+    d: {
+      red: 4,
+      rep: 1,
+      msg: "Llamas y te contestan a la primera. El nombre abre puertas; lo de dentro es cosa tuya."
+    }
+  }]
+}, {
+  id: 24202,
+  min: 0,
+  max: 6,
+  por: "Te cambiaste de firma",
+  t: "Tu primer día en una firma que enseña",
+  x: "Te asignan una mentora y un plan de formación. Aquí los nuevos aprenden unos meses antes de que les confíen un cliente.",
+  o: [{
+    t: "Aprovechar a la mentora al máximo",
+    d: {
+      mod: 4,
+      cri: 3,
+      ene: -3,
+      msg: "Le preguntas todo. En tres meses sabes lo que en otro sitio te habría llevado un año."
+    }
+  }, {
+    t: "Pedir un cliente ya: aprendes haciendo",
+    d: {
+      car: 2,
+      rep: -1,
+      msg: "Te dan uno pequeño. Aprendes rápido y con algún tropiezo a la vista de todos."
+    }
+  }]
+}, {
+  id: 24203,
+  min: 0,
+  max: 6,
+  por: "Te cambiaste de firma",
+  t: "Tu primer día en una firma sin prisa",
+  x: "Se almuerza a la una, se sale a las seis y nadie escribe los fines de semana. Después de lo que viste antes, cuesta creerlo.",
+  o: [{
+    t: "Disfrutarlo: también se trabaja bien así",
+    d: {
+      ene: 6,
+      msg: "Duermes ocho horas por primera vez en años. El trabajo sale igual de bien."
+    }
+  }, {
+    t: "Proponer proyectos para no estancarte",
+    d: {
+      car: 2,
+      ene: -2,
+      msg: "Tu jefe acepta con una ceja levantada. Aquí nadie pide más trabajo."
     }
   }]
 }];
@@ -49963,6 +50263,89 @@ const PATRONES = {
 };
 const PATRONES_TODOS = Object.keys(PATRONES).reduce((a, k) => a.concat(PATRONES[k]), []);
 
+/* ============================================================
+   CADA FIRMA TIENE CARÁCTER
+   Antes la firma era un nombre en la placa: cambiar de trabajo no
+   cambiaba nada, y se notaba. Ahora cada firma tiene una cultura que
+   pesa todos los años que trabajas ahí, y la eliges al cambiarte.
+   La cultura sale del lugar de la firma en su lista de PATRONES (la
+   primera es exigente, la segunda de prestigio...), así que no hay que
+   guardarla: una partida vieja ya la tiene. Firma propia, startup o
+   «por tu cuenta» no tienen cultura de nadie más.
+   - desgaste: energía de más (o de menos) que se va cada año
+   - car: ascenso de más (o de menos) cada año
+   - aprende: lo que se multiplica la habilidad que ganas
+   - rep / repPierde: lo que se multiplica la reputación que ganas o pierdes
+   - ayuda: lo que ayuda en los minijuegos
+   ============================================================ */
+const CULTURAS = {
+  exigente: {
+    n: "Exigente",
+    desgaste: 5,
+    car: 2,
+    aprende: 1,
+    rep: 1,
+    repPierde: 1,
+    ayuda: 0,
+    d: "Pagan bien y se asciende rápido. Lo cobran en horas: cada año te deja más cansancio."
+  },
+  prestigio: {
+    n: "De prestigio",
+    desgaste: 1,
+    car: 0,
+    aprende: 1,
+    rep: 1.4,
+    repPierde: 1.3,
+    ayuda: 0,
+    d: "El nombre de la firma te abre puertas y lo que haces bien se nota el doble. Los errores, también."
+  },
+  escuela: {
+    n: "Escuela",
+    desgaste: 0,
+    car: 0,
+    aprende: 1.5,
+    rep: 1,
+    repPierde: 1,
+    ayuda: 8,
+    d: "Te enseñan: la habilidad crece más rápido y tienes quien te explique. Pagan algo menos."
+  },
+  tranquila: {
+    n: "Tranquila",
+    desgaste: -5,
+    car: -1,
+    aprende: 1,
+    rep: 1,
+    repPierde: 1,
+    ayuda: 0,
+    d: "Se sale a las seis y nadie escribe el domingo. La carrera va más despacio."
+  }
+};
+const ORDEN_CULTURAS = ["exigente", "prestigio", "escuela", "tranquila", "exigente", "escuela"];
+/* la cultura de una firma por su nombre (null si no es una de la lista) */
+const culturaDeFirma = nombre => {
+  for (const k of Object.keys(PATRONES)) {
+    const i = PATRONES[k].indexOf(nombre);
+    if (i >= 0) return ORDEN_CULTURAS[i % ORDEN_CULTURAS.length];
+  }
+  return null;
+};
+/* la de donde trabajas hoy, con sus números; null si no tienes jefe */
+const culturaDe = st => {
+  if (!st || st.propia || st.startup) return null;
+  const k = culturaDeFirma(st.patron);
+  return k ? {
+    k,
+    ...CULTURAS[k]
+  } : null;
+};
+/* la escena del primer día en una firma de cada cultura */
+const PRIMER_DIA = {
+  exigente: 24200,
+  prestigio: 24201,
+  escuela: 24202,
+  tranquila: 24203
+};
+
 /* Una firma distinta a la tuya, para cuando te vas a la competencia. */
 const otroPatron = st => {
   const lista = PATRONES[st && st.estudio] || PATRONES_TODOS;
@@ -50005,9 +50388,12 @@ const sueldoCon = (st, mult) => {
    con tu firma. En cada opción, el sueldo que vas a cobrar.
    Las ofertas salen de la semilla y del año: una recarga no las cambia.
    ============================================================ */
+/* Una oferta por cultura: la etiqueta ya no es del día, es de la firma.
+   Si «Mercantil Praga» es exigente, lo es en todas sus ofertas. */
 const OFERTAS_CONTRATO = [{
   k: "bombazo",
-  etq: "Bombazo",
+  cultura: "exigente",
+  etq: "Exigente",
   mult: [1.28, 1.38],
   d: {
     ene: -6,
@@ -50016,7 +50402,8 @@ const OFERTAS_CONTRATO = [{
   msg: "Pagan mucho más y lo cobran en horas."
 }, {
   k: "prestigio",
-  etq: "Más prestigio",
+  cultura: "prestigio",
+  etq: "De prestigio",
   mult: [1.06, 1.12],
   d: {
     rep: 5,
@@ -50025,8 +50412,9 @@ const OFERTAS_CONTRATO = [{
   msg: "El nombre de la firma te abre puertas solo."
 }, {
   k: "crecer",
-  etq: "Crecimiento",
-  mult: [1.12, 1.20],
+  cultura: "escuela",
+  etq: "Escuela",
+  mult: [1.02, 1.08],
   d: {
     cri: 3,
     mod: 3
@@ -50034,7 +50422,8 @@ const OFERTAS_CONTRATO = [{
   msg: "Te sientan al lado de los mejores y se te pega."
 }, {
   k: "baja",
-  etq: "A la baja",
+  cultura: "tranquila",
+  etq: "Tranquila",
   mult: [0.90, 0.97],
   d: {
     ene: 8,
@@ -50046,12 +50435,20 @@ const escenaContrato = st => {
   const rnd = generadorDe("contrato:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + entero(st && st.turno, 0, 0, 99));
   const actual = texto(st && st.patron, "", 48) || "tu firma";
   const lista = (PATRONES[st && st.estudio] || PATRONES_TODOS).filter(n => n !== actual);
+  /* tres firmas de culturas distintas cuando se puede: elegir entre
+     tres exigentes no es elegir */
   const firmas = [];
-  while (firmas.length < 3 && lista.length) firmas.push(lista.splice(Math.floor(rnd() * lista.length), 1)[0]);
-  const perfiles = OFERTAS_CONTRATO.slice();
-  perfiles.splice(Math.floor(rnd() * perfiles.length), 1); /* tres de los cuatro caracteres */
-  const ofertas = firmas.map((f, i) => {
-    const p = perfiles[i];
+  const vistas = [];
+  while (firmas.length < 3 && lista.length) {
+    const distintas = lista.filter(n => vistas.indexOf(culturaDeFirma(n)) < 0);
+    const pozo = distintas.length ? distintas : lista;
+    const f = pozo[Math.floor(rnd() * pozo.length)];
+    lista.splice(lista.indexOf(f), 1);
+    firmas.push(f);
+    vistas.push(culturaDeFirma(f));
+  }
+  const ofertas = firmas.map(f => {
+    const p = OFERTAS_CONTRATO.find(x => x.cultura === culturaDeFirma(f)) || OFERTAS_CONTRATO[1];
     const mult = Math.round((p.mult[0] + rnd() * (p.mult[1] - p.mult[0])) * 100) / 100;
     const anos = 2 + Math.floor(rnd() * 4);
     return {
@@ -50430,7 +50827,8 @@ const SOLO_EMPLEADO = [7, /* te llama un headhunter */
 7101, 7102, 7103, 7104, 7105, 7106, 7201, 7202, 7203, 7204, 8101, 7300, 7301, 7302, 7303, 7304, 7305, 7320, 7321, 7322, 7323, 7324, 7326,
 /* la ruta del novato: la jefa del domingo, las horas extra, quedarte
    tras el período de prueba, y lo que vuelve de eso */
-24030, 24060, 24080, 24130, 24131, 24132, 24133, 24150, 24160, 24161, 24162, 24163];
+24030, 24060, 24080, 24130, 24131, 24132, 24133, 24150, 24160, 24161, 24162, 24163, /* el carácter de las firmas: su primer día y sus escenas */
+24200, 24201, 24202, 24203, 24210, 24211, 24212, 24213, 24214, 24215, 24216, 24217];
 LOTES.escenas.concat(LOTES.propias || []).forEach(e => {
   if (e.empleado) SOLO_EMPLEADO.push(e.id);
 });
@@ -56588,7 +56986,7 @@ function Motor() {
   };
   const sacar = (fuente, st, usados, sinRepetir) => {
     /* con firma propia no salen las de empleado, y sin ella no salen las de dueño */
-    const cabe = e => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0 && !(sinJefe(st) && esDeEmpleado(e)) && !(e.dueno && !sinJefe(st)) && huellasOk(e, st);
+    const cabe = e => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0 && !(e.cultura && (!culturaDe(st) || culturaDe(st).k !== e.cultura)) && !(sinJefe(st) && esDeEmpleado(e)) && !(e.dueno && !sinJefe(st)) && huellasOk(e, st);
     let pool = fuente.filter(e => cabe(e) && st.vistos.indexOf(e.id) < 0);
     if (pool.length === 0 && !sinRepetir) pool = fuente.filter(cabe);
     return pool.length ? elegirAzar(pool) : null;
@@ -56778,6 +57176,16 @@ function Motor() {
       for (let k = 0; k < 2 && lista.length < objetivo; k++) {
         const e = sacar(novato, st, usados, true);
         if (!e) break;
+        lista.push(e);
+        usados.push(e.id);
+      }
+    }
+    /* Una escena de la cultura de tu firma, si quedan por ver: es lo que
+       hace que trabajar en una firma exigente no se viva igual que en una
+       tranquila. Más o menos un año de cada dos, dentro del presupuesto. */
+    if (culturaDe(st) && lista.length < objetivo && azar() < 0.55) {
+      const e = sacar(E.filter(x => x.cultura), st, usados, true);
+      if (e) {
         lista.push(e);
         usados.push(e.id);
       }
@@ -57504,6 +57912,8 @@ function Motor() {
       }
       if (k === "hab") {
         v = cuesta(st.cri, v);
+        /* en una firma escuela se aprende más rápido */
+        if (v > 0 && culturaDe(st)) v = Math.round(v * culturaDe(st).aprende);
         if (!v) return;
         st.cri = clamp(st.cri + v, 0, 100);
         st.mod = st.cri;
@@ -57514,6 +57924,8 @@ function Motor() {
         return;
       }
       if (k !== "ene") v = cuesta(st[k], v, DESDE_ATRIB[k]);
+      /* en una firma de prestigio lo que haces se nota más, para bien y para mal */
+      if (k === "rep" && culturaDe(st)) v = Math.round(v * (v > 0 ? culturaDe(st).rep : culturaDe(st).repPierde));
       if (!v) return;
       st[k] = clamp(st[k] + v, 0, 100);
       cambios.push({
@@ -57601,6 +58013,16 @@ function Motor() {
        jugador y no a la firma (la sanción pública) no salen. */
     const mudoDeFirma = !sinJefe(st) && !!s.patron && st.patron !== s.patron;
     if (mudoDeFirma) pend = pend.filter(p => !esDeLaFirmaAnterior(p.id, st));
+    /* y el primer día en la nueva, que te dice cómo se trabaja ahí */
+    if (mudoDeFirma && culturaDe(st) && PRIMER_DIA[culturaDe(st).k]) {
+      const idDia = PRIMER_DIA[culturaDe(st).k];
+      pend = pend.filter(p => Object.values(PRIMER_DIA).indexOf(p.id) < 0);
+      pend.push({
+        id: idDia,
+        en: st.turno + 1,
+        p: null
+      });
+    }
     [].concat(o && o.luego || [], d.luego || []).forEach(x => {
       if (!x) return;
       /* hay futuros que dan por hecho que el minijuego salió bien */
@@ -58113,6 +58535,13 @@ function Motor() {
       notas.push("Este año fuiste a ritmo " + rt.n.toLowerCase() + " y viviste de forma " + gv.n.toLowerCase() + ": " + (rt.car ? "+" + rt.car + " de carrera" : "sin empujar la carrera") + " y un gasto " + (gv.f > 1 ? Math.round((gv.f - 1) * 100) + "% por encima" : gv.f < 1 ? Math.round((1 - gv.f) * 100) + "% por debajo" : "en su nivel") + " de lo normal.");
     }
     let desgaste = (tiene(st, "coach") ? 2 : 4) + (tipoRama(st) === "boutique" ? 3 : 0);
+    /* la cultura de la firma: cansa más o menos y empuja más o menos */
+    const cul = culturaDe(st);
+    if (cul) {
+      desgaste += cul.desgaste;
+      st.carrera = Math.max(0, st.carrera + cul.car);
+      if (cul.desgaste || cul.car) notas.push("Trabajar en " + st.patron + " (" + cul.n.toLowerCase() + ")" + (cul.desgaste > 0 ? " te costó energía de más" : cul.desgaste < 0 ? " te dejó energía de sobra" : "") + (cul.car > 0 ? " y empujó tu carrera." : cul.car < 0 ? " y frenó un poco tu carrera." : "."));
+    }
     desgaste += -rt.ene - gv.ene; /* el ritmo cansa, vivir bien descansa */
     if (st.pareja === "casado" || st.pareja === "noviazgo") desgaste -= 3; /* alguien con quien contar */
     desgaste += Math.min(6, entero(st.hijos, 0, 0, 8) * 2); /* y alguien a quien cuidar */
@@ -58363,6 +58792,7 @@ function Motor() {
     if (tipoRama(s) === "pe" && ["estructura", "banderas"].indexOf(tipo) >= 0) a += 15;
     if (tipoRama(s) === "mercados" && ["trading", "calculo"].indexOf(tipo) >= 0) a += 15;
     a += MODO(s.modo).ayuda; /* el modo aprendiz perdona más */
+    if (culturaDe(s)) a += culturaDe(s).ayuda; /* en una firma escuela te explican */
     a += ayudaBoosts(s, tipo); /* los boosts activos */
     return clamp(a, 0, 100);
   };
@@ -59373,7 +59803,10 @@ function Motor() {
   }), cargoDe(s)), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
     k: "edificio",
     tam: 12
-  }), s.patron || estudio.n), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
+  }), s.patron || estudio.n, culturaDe(s) && /*#__PURE__*/React.createElement("em", {
+    className: "ea-cultura",
+    title: culturaDe(s).d
+  }, culturaDe(s).n)), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icono, {
     k: "pin",
     tam: 12
   }), nacion.n))), /*#__PURE__*/React.createElement("div", {
@@ -59594,7 +60027,12 @@ function Motor() {
     }
   }, "Trabajas en"), /*#__PURE__*/React.createElement("span", {
     className: "ea-mono"
-  }, s.patron || "—")), /*#__PURE__*/React.createElement("div", {
+  }, s.patron || "—")), culturaDe(s) && /*#__PURE__*/React.createElement("div", {
+    className: "ea-itemD",
+    style: {
+      margin: "2px 0 8px"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, culturaDe(s).n, "."), " ", culturaDe(s).d), /*#__PURE__*/React.createElement("div", {
     className: "ea-fila"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-dis",

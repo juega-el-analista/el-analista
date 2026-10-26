@@ -53,6 +53,8 @@ const MARCAS = {
   "informe: lo que volvió": "Lo que volvió de tus decisiones",
   "informe: lo que sigue abierto": "Lo que sigue abierto",
   "escena: ¿qué es?": "¿Qué es ",
+  "firma: primer día": "Tu primer día en una firma",
+  "firma: la cultura en el informe": "Trabajar en ",
   "modo aprendiz elegido": "Palabras que vas a ver",
   "recordatorio en el quiz": "Antes de responder, el recordatorio",
   "minijuego Cátedra (clase)": "Ya lo tengo, pregúntame",
