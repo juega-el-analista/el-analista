@@ -265,6 +265,20 @@ const CSS = `
   padding:3px 9px;border-radius:11px;border:1px solid;line-height:1.5}
 /* los signos mandan sobre el icono: son los que dicen cuanto */
 .ea-efS{font-size:13.5px;font-weight:700;letter-spacing:-.06em}
+/* el nombre va escrito: en el celular no hay tooltip y el icono solo
+   no se adivina */
+.ea-efN{font-size:11.5px;font-weight:600;margin-left:2px}
+/* las palabras de oficio de una escena, a un toque */
+.ea-jerga{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 12px}
+.ea-jerga details{font-size:12.5px;border:1px dashed rgba(0,0,0,.18);border-radius:10px;padding:3px 10px;background:rgba(255,255,255,.5)}
+.ea-jerga details[open]{flex-basis:100%}
+.ea-jerga summary{cursor:pointer;font-weight:600;color:var(--cobre)}
+.ea-jerga p{margin:6px 0 4px;line-height:1.45}
+/* el riesgo, antes de elegir: rojo si lo normal es que salga mal */
+.ea-opRiesgo{display:block;margin-top:6px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.ea-opRiesgo.alto{color:#9B3826}
+.ea-opRiesgo.medio{color:#8A5A12}
+.ea-opRiesgo.bajo{color:#2E7A3D}
 .ea-ef.pos{color:#2E7A3D;border-color:rgba(62,138,73,.45);background:rgba(79,160,92,.1)}
 .ea-ef.neg{color:#9B3826;border-color:rgba(178,59,39,.4);background:rgba(178,59,39,.08)}
 .ea-op:disabled .ea-ef{filter:grayscale(.55)}
@@ -740,7 +754,7 @@ const impactoActivo = (k, notis) => {
    quien no viene de finanzas eran dos palabras para lo mismo. Las
    claves internas siguen siendo dos para no romper las escenas ni las
    partidas guardadas; sanear las mantiene iguales. */
-const ETIQ = { mod: "Habilidad", cri: "Habilidad", red: "Contactos", rep: "Reputación", ene: "Energía", car: "Carrera", cash: "Efectivo" };
+const ETIQ = { mod: "Habilidad", cri: "Habilidad", red: "Contactos", rep: "Reputación", ene: "Energía", car: "Ascenso", cash: "Efectivo" };
 
 /* ============================================================
    LOS DIECIOCHO MODOS
@@ -1708,22 +1722,22 @@ const CSS4 = `
 /* ---------- mejoras que se compran una sola vez ---------- */
 const PERKS = [
   /* las de pasante: baratas, para que invertir en ti empiece el primer año */
-  { id: "excel", n: "Curso online de Excel avanzado", c: 400, d: "Sumas un punto de modelaje cada año." },
-  { id: "diario", n: "Suscripción a un diario financiero", c: 500, d: "Sumas un punto de criterio cada año." },
+  { id: "excel", n: "Curso online de Excel avanzado", c: 400, d: "Sumas un punto de habilidad cada año." },
+  { id: "diario", n: "Suscripción a un diario financiero", c: 500, d: "Sumas un punto de habilidad cada año." },
   { id: "zapas", n: "Zapatillas y un plan para correr", c: 600, d: "Recuperas dos puntos de energía cada año." },
-  { id: "after", n: "Afterwork con la gente del sector", c: 800, d: "Sumas un punto de red cada año." },
-  { id: "research", n: "Suscripción a research institucional", c: 5000, d: "Sumas un punto de modelaje cada semestre." },
-  { id: "gym", n: "Entrenador y nutricionista", c: 4500, d: "Recuperas tres puntos de energía cada semestre." },
+  { id: "after", n: "Afterwork con la gente del sector", c: 800, d: "Sumas un punto de contactos cada año." },
+  { id: "research", n: "Suscripción a research institucional", c: 5000, d: "Sumas un punto de habilidad cada año." },
+  { id: "gym", n: "Entrenador y nutricionista", c: 4500, d: "Recuperas seis puntos de energía cada año." },
   { id: "fiscal", n: "Asesor fiscal propio", c: 6500, d: "Tus gastos de vida bajan 15% para siempre." },
-  { id: "coach", n: "Coach ejecutivo", c: 8000, d: "El desgaste semestral baja de nueve a cinco puntos." },
-  { id: "asistente", n: "Asistente ejecutivo", c: 9000, d: "Un punto de carrera y dos de energía cada semestre." },
-  { id: "prensa", n: "Columna fija en un medio del sector", c: 9500, d: "Un punto de reputación cada semestre." },
+  { id: "coach", n: "Coach ejecutivo", c: 8000, d: "El desgaste fijo de cada año baja a la mitad." },
+  { id: "asistente", n: "Asistente ejecutivo", c: 9000, d: "Dos puntos de ascenso y cuatro de energía cada año." },
+  { id: "prensa", n: "Columna fija en un medio del sector", c: 9500, d: "Dos puntos de reputación cada año." },
   { id: "terminal", n: "Terminal de mercado en casa", c: 12000, d: "Medio punto extra de retorno cada semestre y más tiempo en los juegos contra reloj." },
   { id: "abogado", n: "Abogado personal", c: 13000, d: "Los golpes a tu reputación se amortiguan 40%." },
   { id: "broker", n: "Bróker institucional con mejor ejecución", c: 15000, d: "La volatilidad de tu portafolio baja un cuarto." },
-  { id: "club", n: "Membresía del club de negocios", c: 17000, d: "Un punto de red cada semestre y mejor lectura en las negociaciones." },
+  { id: "club", n: "Membresía del club de negocios", c: 17000, d: "Dos puntos de contactos cada año y mejor lectura en las negociaciones." },
   { id: "colchon", n: "Colchón de emergencia bien estructurado", c: 20000, d: "Los golpes negativos de mercado te pegan a la mitad." },
-  { id: "mba", n: "MBA ejecutivo de fin de semana", c: 45000, d: "Ocho puntos de criterio de entrada y un punto de carrera cada semestre." },
+  { id: "mba", n: "MBA ejecutivo de fin de semana", c: 45000, d: "Cuatro puntos de habilidad de entrada y dos de ascenso cada año." },
 ];
 
 /* ============================================================
@@ -2564,11 +2578,11 @@ const PROPIEDADES = [
 
 /* ---------- ramas de carrera ---------- */
 const RAMAS = [
-  { id: "mya", n: "Fusiones y adquisiciones", d: "El camino clásico. Un punto extra de carrera cada semestre y honorarios más altos en los cierres." },
-  { id: "mercados", n: "Mercados de capitales", d: "Emisiones y colocaciones. Un punto de modelaje cada semestre y un ingreso variable ligado al volumen." },
+  { id: "mya", n: "Fusiones y adquisiciones", d: "El camino clásico. Dos puntos extra de ascenso cada año y honorarios más altos en los cierres." },
+  { id: "mercados", n: "Mercados de capitales", d: "Emisiones y colocaciones. Un punto de habilidad cada año y un ingreso variable ligado al volumen." },
   { id: "pe", n: "Private equity", d: "Te preparas para el lado comprador. Tu futuro fondo pide la mitad de capital propio y sus salidas rinden más." },
-  { id: "patrimonio", n: "Gestión de patrimonios", d: "Menos adrenalina, más composición. Un punto extra de retorno en tu portafolio cada semestre y un punto de red." },
-  { id: "boutique", n: "Tu propia boutique", d: "Te independizas. Ingresos irregulares y más altos en promedio, un punto de reputación por semestre y más desgaste." },
+  { id: "patrimonio", n: "Gestión de patrimonios", d: "Menos adrenalina, más composición. Un punto extra de retorno en tu portafolio cada año y dos puntos de contactos." },
+  { id: "boutique", n: "Tu propia boutique", d: "Te independizas. Ingresos irregulares y más altos en promedio, dos puntos de reputación al año y más desgaste." },
 ];
 
 /* ============================================================
@@ -2585,10 +2599,10 @@ const RAMAS = [
    el tipo a secas en st.rama y siguen valiendo.
    ============================================================ */
 const EFECTO_TIPO = {
-  mya: "Un punto extra de carrera cada semestre.",
-  mercados: "Un punto de modelaje cada semestre y un variable ligado al volumen.",
+  mya: "Dos puntos extra de ascenso cada año.",
+  mercados: "Un punto de habilidad cada año y un variable ligado al volumen.",
   pe: "Tu futuro fondo te pide la mitad de capital propio y sus salidas rinden más.",
-  patrimonio: "Un punto extra de retorno en tu cartera y uno de red cada semestre.",
+  patrimonio: "Un punto extra de retorno en tu cartera y dos de contactos cada año.",
   boutique: "Juntas clientes propios y ahorro para el día en que firmes la renuncia: la oferta de montarla llega antes.",
 };
 const RAMAS_CARRERA = {
@@ -48664,6 +48678,14 @@ const modsTxt = (mods) => {
   return out.join(" · ");
 };
 
+/* El país en palabras: sueldos bajos / medios / altos, vida barata /
+   media / cara. Los cortes van sobre el índice de NACIONES (España = 1). */
+const nivelPais = (x, gasto) => {
+  const v = numero(x, 1);
+  const n = v < 0.55 ? 0 : v < 0.8 ? 1 : v < 1.2 ? 2 : 3;
+  return (gasto ? ["barata", "más bien barata", "media", "cara"] : ["bajos", "medios", "altos", "muy altos"])[n];
+};
+
 /* Lo que cuesta subir. De 25 a 40 se sube casi entero; de 70 a 80,
    a la quinta parte; por encima de 85, casi nada. Así llegar arriba
    lleva una carrera y no tres años, como en la vida. Las pérdidas no
@@ -48812,6 +48834,59 @@ const GLOS_EN_TEXTO = [
   [/\bcartera\b|\bportafolio\b/i, "cartera"],
   [/\briesgo\b/i, "riesgo"],
 ];
+
+/* La jerga de las escenas. El modo aprendiz promete que «cada término
+   se explica antes de usarse», pero el glosario solo llegaba a las
+   preguntas: una pasante de veinte años leía «el EBITDA cambia un 12%»
+   en su segunda escena sin ninguna ayuda. Aquí van las palabras de
+   oficio que salen en las escenas y no estaban en el glosario, en el
+   mismo tono llano; las que ya estaban se reutilizan por su clave. */
+const JERGA_ESCENA = [
+  [/\bdcf\b|descuento de flujos/i, { n: "DCF", x: "Una forma de calcular cuánto vale una empresa: sumas el dinero que va a ganar en los próximos años y lo traes a valor de hoy, porque un dólar dentro de cinco años vale menos que uno ahora." }],
+  [/due diligence/i, { n: "Due diligence", x: "La revisión a fondo que se hace antes de comprar una empresa: cuentas, contratos, deudas, juicios. Es buscar lo que el vendedor no te contó." }],
+  [/data room/i, { n: "Data room", x: "La carpeta, casi siempre digital, donde el vendedor deja todos los documentos de la empresa para que el comprador los revise." }],
+  [/\blps?\b/, { n: "LP", x: "Los inversionistas que ponen el dinero en un fondo. Confían en que el gestor lo invierta bien y esperan recibirlo de vuelta con ganancia." }],
+  [/\bteaser\b/i, { n: "Teaser", x: "Un resumen corto de una empresa en venta, sin su nombre, que se manda a posibles compradores para ver quién se interesa." }],
+  [/\bpitch\b/i, { n: "Pitch", x: "La presentación con la que intentas convencer a alguien: a un cliente de que te contrate, o a un comité de que apruebe una inversión." }],
+  [/\bmandatos?\b/i, { n: "Mandato", x: "El encargo formal de un cliente: «véndeme esta empresa» o «consígueme este dinero». Para una firma, cada mandato es trabajo y comisión." }],
+  [/\bvp\b/, { n: "VP", x: "Vicepresidente: en banca es un cargo intermedio, el jefe directo de los analistas. No dirige la firma: dirige el trabajo del día." }],
+  [/\bcompliance\b/i, { n: "Compliance", x: "El área que vigila que la firma y su gente cumplan las reglas: nada de usar información secreta, nada de conflictos de interés." }],
+  [/\bposici[óo]n(es)?\b/i, { n: "Posición", x: "Lo que tienes comprado de algo. «Una posición que sube 70%» es una inversión tuya que ya vale 70% más de lo que pagaste." }],
+  [/headhunter|cazatalentos/i, { n: "Headhunter", x: "Alguien a quien las empresas pagan para encontrar y convencer a gente que ya trabaja en otro sitio." }],
+  [/roadshow/i, { n: "Roadshow", x: "Una gira de reuniones con inversionistas, ciudad por ciudad, para venderles una emisión o una empresa." }],
+  [/colocaci[óo]n/i, { n: "Colocación", x: "Vender acciones o bonos nuevos de una empresa a inversionistas para que la empresa consiga dinero." }],
+  [/retainer/i, { n: "Retainer", x: "Un pago fijo cada mes por estar disponible para un cliente, aparte de lo que se cobra si la operación sale." }],
+  [/\bcascada\b/i, { n: "Cascada", x: "El orden en que se reparte la ganancia de un fondo: primero recuperan su dinero los inversionistas, luego cobra el gestor." }],
+  [/track record/i, { n: "Track record", x: "Tu historial de resultados. Lo que has hecho antes es lo primero que mira quien te va a confiar dinero." }],
+  [/\bdeal\b/i, { n: "Deal", x: "Una operación: una compra, una venta, una inversión. «Cerrar el deal» es firmarla." }],
+  [/\bfees?\b/i, { n: "Fee", x: "Honorario o comisión: lo que cobra la firma por su trabajo." }],
+  [/orden limitada/i, { n: "Orden limitada", x: "Una orden de compra o venta con un precio tope. Solo se ejecuta si el mercado llega a ese precio: no compras más caro de lo que decidiste." }],
+  [/deuda neta/i, { n: "Deuda neta", x: "Lo que una empresa debe menos el efectivo que tiene. Es la deuda que de verdad le pesa." }],
+  [/\bebitda\b/i, "ebitda"],
+  [/apalanca/i, "apalancamiento"],
+  [/devalua/i, "devaluacion"],
+  [/distressed/i, "distressed"],
+  [/\bm[úu]ltiplo/i, "multiplo"],
+  [/diluci[óo]n|dilu(ye|ir)/i, "dilucion"],
+  [/earn ?out/i, "earnout"],
+  [/capital de trabajo/i, "capitalTrabajo"],
+  [/\bportafolio\b|\bcartera\b/i, "cartera"],
+];
+/* hasta tres palabras de una escena, en el orden en que aparecen */
+const jergaDe = (ev) => {
+  if (!ev) return [];
+  const txt = String(ev.t || "") + " " + String(ev.x || "") + " "
+    + (Array.isArray(ev.o) ? ev.o.map((o) => (o && o.t) || "").join(" ") : "");
+  const out = [];
+  JERGA_ESCENA.forEach(([re, v]) => {
+    const m = txt.match(re);
+    if (!m) return;
+    const g = typeof v === "string" ? GLOSARIO[v] : v;
+    if (!g || out.some((x) => x.n === g.n)) return;
+    out.push({ n: g.n, x: g.x, en: txt.search(re) });
+  });
+  return out.sort((a, b) => a.en - b.en).slice(0, 3);
+};
 
 /* El contexto de una pregunta, por orden: el tema del que salió, la
    pista escrita a mano, o el término del glosario que aparezca en el
@@ -51174,7 +51249,10 @@ function BarraAzar({ azar }) {
   const pct = (x) => Math.round(x * 100);
   return (
     <div className="ea-azar">
-      <div className="ea-azarK ea-dis">Tenía un {pct(ps[i])}% de pasar</div>
+      {/* «Tenía un 88% de pasar» se leía como «tenías un 88% de que
+          saliera bien», justo encima de un «sale mal 88%». Lo que se
+          cuenta es cuántas veces pasa lo que te pasó. */}
+      <div className="ea-azarK ea-dis">Esto pasa {pct(ps[i])} de cada 100 veces</div>
       <div className="ea-azarB">
         {ps.map((x, k) => (
           <span key={k} className={"ea-azarT " + ((azar.tonos || [])[k] || "parcial") + (k === i ? " sale" : "")} style={{ width: (x * 100) + "%" }} />
@@ -53145,7 +53223,7 @@ function Motor() {
     if (st.cash + st.cartera < p.c || tiene(st, p.id)) return st;
     const r = cobrar(st, p.c);
     const n = { ...st, cash: r.cash, cartera: r.cartera, perks: st.perks.concat(p.id) };
-    if (p.id === "mba") n.cri = clamp(n.cri + 8, 0, 100);
+    if (p.id === "mba") { n.cri = clamp(n.cri + 4, 0, 100); n.mod = n.cri; }
     n.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Compras " + p.n.toLowerCase() });
     return n;
   });
@@ -53531,18 +53609,20 @@ function Motor() {
     BOOSTS.filter((b) => b.cierre && boostActivo(st, b.id)).forEach((b) => {
       Object.keys(b.cierre).forEach((k) => { st[k] = clamp(numero(st[k], 0) + b.cierre[k], 0, 100); });
     });
-    if (tiene(st, "excel")) st.mod = clamp(st.mod + 1, 0, 100);
-    if (tiene(st, "diario")) st.cri = clamp(st.cri + 1, 0, 100);
+    /* habilidad: modelaje y criterio suben juntos, un punto por mejora */
+    const masHab = (n) => { st.cri = clamp(st.cri + n, 0, 100); st.mod = st.cri; };
+    if (tiene(st, "excel")) masHab(1);
+    if (tiene(st, "diario")) masHab(1);
     if (tiene(st, "zapas")) st.ene = clamp(st.ene + 2, 0, 100);
     if (tiene(st, "after")) st.red = clamp(st.red + 1, 0, 100);
-    if (tiene(st, "research")) st.mod = clamp(st.mod + 2, 0, 100);
+    if (tiene(st, "research")) masHab(1);
     if (tiene(st, "club")) st.red = clamp(st.red + 2, 0, 100);
     if (tiene(st, "prensa")) st.rep = clamp(st.rep + 2, 0, 100);
     if (tiene(st, "gym")) st.ene = clamp(st.ene + 6, 0, 100);
     if (tiene(st, "asistente")) { st.carrera += 2; st.ene = clamp(st.ene + 4, 0, 100); }
     if (tiene(st, "mba")) st.carrera += 2;
     if (tipoRama(st) === "mya") st.carrera += 2;
-    if (tipoRama(st) === "mercados") st.mod = clamp(st.mod + 2, 0, 100);
+    if (tipoRama(st) === "mercados") masHab(1);
     if (tipoRama(st) === "patrimonio") st.red = clamp(st.red + 2, 0, 100);
     if (tipoRama(st) === "boutique") st.rep = clamp(st.rep + 2, 0, 100);
 
@@ -53982,6 +54062,30 @@ function Motor() {
     a += MODO(s.modo).ayuda;   /* el modo aprendiz perdona más */
     a += ayudaBoosts(s, tipo); /* los boosts activos */
     return clamp(a, 0, 100);
+  };
+
+  /* Cuánto puede salir mal una opción, dicho antes de elegir. Usa las
+     mismas cuentas que la resolución de abajo. Antes el azar castigaba
+     sin avisar: «Trabajar con el EBITDA que te dieron» fallaba 88 de
+     cada 100 veces y la escena no lo dejaba ver. Con minijuego no se
+     dice nada: ahí depende de cómo juegues. */
+  const riesgoDe = (o) => {
+    if (!o || o.juego || o.j) return null;
+    let mal = null;
+    try {
+      if (o.azar && Array.isArray(o.azar.esc) && o.azar.esc.length) {
+        const ps = probsAzar(o, s);
+        mal = o.azar.esc.reduce((a, x, k) => a + (x && x.nivel === "fallo" ? numero(ps[k], 0) : 0), 0);
+      } else if (o.apuesta) {
+        mal = 1 - clamp(numero(o.apuesta.p, 0.5), 0.01, 0.99);
+      } else if (o.chk) {
+        mal = 1 - clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5 + suerteBoosts(s) / 2, 0.12, 0.9);
+      }
+    } catch (e) { return null; }
+    if (mal == null || mal < 0.15) return null;
+    if (mal >= 0.6) return { t: "Arriesgado: lo normal es que salga mal", c: "alto" };
+    if (mal >= 0.35) return { t: "Puede salir mal", c: "medio" };
+    return { t: "Suele salir bien", c: "bajo" };
   };
 
   const elegir = (o) => {
@@ -54484,7 +54588,7 @@ function Motor() {
           <div className="ea-dis" style={{ fontSize: 12, letterSpacing: ".26em", color: "var(--cobre)" }}>Paso dos de cuatro</div>
           <h2 className="ea-final ea-dis" style={{ marginTop: 8 }}>¿A qué edad empiezas?</h2>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            Nadie está fuera de tiempo. Más tarde es menos años y más criterio, red y dinero.
+            Nadie está fuera de tiempo. Más tarde es menos años y más habilidad, contactos y dinero.
           </p>
 
           {/* Sin elegir cuánto jugar: siempre es una década y al llegar se
@@ -54560,7 +54664,9 @@ function Motor() {
               </div>
               <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "8px 0" }}>{p.d}</div>
               <div style={{ fontSize: 12, color: "var(--cobre)" }}>
-                Sueldos {Math.round(p.sal * 100)} · costo de vida {Math.round(p.gas * 100)} · impuesto {Math.round(p.tax * 100)}% · empiezas con USD {fmt(p.cash)}
+                {/* «Sueldos 46» era un índice contra España = 100 que nadie
+                    sabía leer. En palabras se entiende sin la tabla. */}
+                Sueldos {nivelPais(p.sal)} · vida {nivelPais(p.gas, true)} · impuestos del {Math.round(p.tax * 100)}% · {p.cash >= 0 ? "empiezas con USD " + fmt(p.cash) : "empiezas debiendo USD " + fmt(-p.cash)}
               </div>
               <div style={{ fontSize: 12, color: "var(--gris)", marginTop: 3 }}>{p.nota}</div>
               <button className="ea-mini" onClick={() => { if (enFase("pais")) elige("pais", p.id, "estudio"); }}>
@@ -55396,6 +55502,19 @@ function Motor() {
                   )}
                   <h2 className="ea-memoTit ea-dis">{ev.t}</h2>
                   <p className="ea-memoTxt">{ev.x}</p>
+                  {/* Las palabras de oficio de la escena, explicadas a un
+                      toque y cerradas por defecto: quien las sabe no las
+                      abre, y quien no las sabe no se queda fuera. */}
+                  {(() => {
+                    const jg = jergaDe(ev);
+                    return jg.length ? (
+                      <div className="ea-jerga">
+                        {jg.map((g) => (
+                          <details key={g.n}><summary>¿Qué es {g.n}?</summary><p>{g.x}</p></details>
+                        ))}
+                      </div>
+                    ) : null;
+                  })()}
                   <div className="ea-ops">
                     {/* Una sola linea de letra chica por opcion. Antes cada
                         opcion podia arrastrar cuatro: el minijuego con su tema,
@@ -55456,12 +55575,17 @@ function Motor() {
                                         + " " + (fuerza === 3 ? "mucho" : fuerza === 2 ? "bastante" : "un poco")}>
                                       <span className="ea-efS ea-mono" aria-hidden="true">{signo}</span>
                                       <Icono k={ICONO_ATRIB[e.k]} tam={13} />
+                                      <span className="ea-efN">{e.k === "cash" ? "Dinero" : (ETIQ[e.k] || e.k)}</span>
                                     </span>
                                   );
                                 })}
                               </span>
                             )}
                             {bits.length > 0 && <span className="ea-opTag">{bits.join(" · ")}</span>}
+                            {(() => {
+                              const rg = falta ? null : riesgoDe(o);
+                              return rg ? <span className={"ea-opRiesgo ea-dis " + rg.c}>{rg.t}</span> : null;
+                            })()}
                           </button>
                         );
                       });
