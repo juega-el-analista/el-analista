@@ -736,7 +736,11 @@ const impactoActivo = (k, notis) => {
   return x;
 };
 
-const ETIQ = { mod: "Modelaje", cri: "Criterio", red: "Red", rep: "Reputación", ene: "Energía", car: "Carrera", cash: "Efectivo" };
+/* Modelaje y criterio se ven como una sola cosa, la habilidad: para
+   quien no viene de finanzas eran dos palabras para lo mismo. Las
+   claves internas siguen siendo dos para no romper las escenas ni las
+   partidas guardadas; sanear las mantiene iguales. */
+const ETIQ = { mod: "Habilidad", cri: "Habilidad", red: "Contactos", rep: "Reputación", ene: "Energía", car: "Carrera", cash: "Efectivo" };
 
 /* ============================================================
    LOS DIECIOCHO MODOS
@@ -47434,9 +47438,9 @@ const GENEROS = [
 /* Cuánto te dejas en la oficina. Sube la carrera y baja la energía,
    que es el intercambio de verdad y el que nadie hace consciente. */
 const RITMOS = [
-  { id: "tranquilo", n: "Tranquilo", car: 0, ene: -4, rep: -1,
+  { id: "tranquilo", n: "Tranquilo", car: 0, ene: 0, rep: -1,
     d: "Sales a tu hora. La carrera avanza sola y despacio; llegas entero a los cincuenta." },
-  { id: "normal", n: "Normal", car: 2, ene: -8, rep: 0,
+  { id: "normal", n: "Normal", car: 2, ene: -5, rep: 0,
     d: "Lo que se espera de ti y poco más. El punto medio." },
   { id: "tope", n: "A tope", car: 6, ene: -14, rep: 2,
     d: "Sales de últimos. Asciendes antes y pagas la diferencia en salud y en vida." },
@@ -48271,12 +48275,14 @@ const ID_PRE = 9790;
 const MIN_JUEGOS_ANO = 2;
 const CARTAS_PRE = {
   ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
-  cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto"],
-  mod: ["Curso de Excel avanzado", "Rehacer un modelo desde cero", "Atajos de teclado hasta dormido", "Copiar el modelo del mejor de la mesa"],
+  /* modelaje y criterio son ya una sola habilidad: un solo mazo, para
+     que no salgan dos cartas de lo mismo con distinto nombre */
+  cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto",
+    "Curso de Excel avanzado", "Rehacer un modelo desde cero", "Atajos de teclado hasta dormido", "Copiar el modelo del mejor de la mesa"],
   red: ["Café con el director", "El asado de la promoción", "Presentarte en el congreso", "Ayudar a alguien de otra área"],
   rep: ["Entregar antes del plazo", "Firmar un informe que sale bien", "Dar una charla en la facultad", "Admitir un error a tiempo"],
 };
-const NOMBRE_ATRIB = { ene: "energía", cri: "criterio", mod: "modelaje", red: "red", rep: "reputación" };
+const NOMBRE_ATRIB = { ene: "energía", cri: "habilidad", mod: "habilidad", red: "contactos", rep: "reputación" };
 /* Las vacaciones de verdad te devuelven la energía al 100% (Alessandro,
    8-oct-2026): es el atributo que más gastan las decisiones, y unas
    semanas lejos tienen que notarse. Van por nombre para no tocar los
@@ -48310,7 +48316,9 @@ const escenaPretemporada = (st) => {
       t: titulo, rareza,
       d: { [k]: v, msg: VACACIONES_OPCIONES.indexOf(titulo) >= 0
         ? "Inicio de año: vuelves de las vacaciones con la energía al 100%."
-        : "Inicio de año: +" + v + " de " + NOMBRE_ATRIB[k] + "." },
+        /* sin la cifra: lo que sube de verdad depende de dónde estés,
+           y la pantalla de resultado ya enseña el número exacto */
+        : "Inicio de año: " + (v >= 8 ? "un empujón grande de " : "ganas algo de ") + NOMBRE_ATRIB[k] + "." },
     });
   }
   return {
@@ -48457,6 +48465,10 @@ const sanear = (bruto) => {
   st.rango = entero(r.rango, 0, 0, RANGOS.length - 1);
   st.carrera = clamp(numero(r.carrera, 0), 0, 100000);
   ["mod", "cri", "red", "rep", "ene"].forEach((k) => { st[k] = clamp(numero(r[k], BASE[k]), 0, 100); });
+  /* Una sola habilidad: si llegan distintos (una partida de antes de
+     juntarlos, o algo que subió solo uno de los dos) quedan en su
+     media, y desde ahí se mueven juntos. */
+  if (st.mod !== st.cri) { st.cri = Math.round((st.mod + st.cri) / 2); st.mod = st.cri; }
   st.cash = clamp(numero(r.cash, 0), -TOPE_PLATA, TOPE_PLATA);
   st.cartera = clamp(numero(r.cartera, 0), 0, TOPE_PLATA);
   st.pais = IDS_PAIS.indexOf(r.pais) >= 0 ? r.pais : null;
@@ -48627,6 +48639,46 @@ const fuerzaDe = (k, v) => {
   return x >= 9 ? 3 : x >= 4 ? 2 : 1;
 };
 
+/* La habilidad junta modelaje y criterio. Si una opción sube los dos,
+   cuenta entero el mayor y la mitad del otro: aprender dos cosas a la
+   vez no es aprender el doble. Con signos distintos se compensan. */
+const juntarHab = (a, b) => {
+  const x = numero(a, 0), y = numero(b, 0);
+  if (!x || !y || (x > 0) !== (y > 0)) return x + y;
+  const mayor = Math.abs(x) >= Math.abs(y) ? x : y;
+  const menor = mayor === x ? y : x;
+  return Math.round(mayor + menor / 2);
+};
+
+/* «Habilidad +10 · Contactos +4»: los bonos de edad o de carrera en
+   una línea, con modelaje y criterio ya juntos. */
+const modsTxt = (mods) => {
+  const m = mods && typeof mods === "object" ? mods : {};
+  const out = [];
+  const hab = juntarHab(m.mod, m.cri);
+  if (hab) out.push("Habilidad " + (hab > 0 ? "+" : "") + hab);
+  ["red", "rep", "ene", "car"].forEach((k) => {
+    const v = numero(m[k], 0);
+    if (v) out.push(ETIQ[k] + " " + (v > 0 ? "+" : "") + v);
+  });
+  return out.join(" · ");
+};
+
+/* Lo que cuesta subir. De 25 a 40 se sube casi entero; de 70 a 80,
+   a la quinta parte; por encima de 85, casi nada. Así llegar arriba
+   lleva una carrera y no tres años, como en la vida. Las pérdidas no
+   se atenúan: caer siempre es fácil. */
+const cuesta = (actual, v, desde) => {
+  const n = numero(v, 0);
+  if (n <= 0) return n;
+  const base = numero(desde, 20);
+  const f = Math.pow(clamp((100 - numero(actual, 0)) / (100 - base), 0.05, 1), 1.6);
+  return Math.round(n * f);
+};
+/* La reputación decide ascensos y despidos: hasta cincuenta se gana
+   entera, para no empujar a nadie al despido; arriba cuesta igual. */
+const DESDE_ATRIB = { rep: 50 };
+
 /* Lo que mueve una opcion: la clave y cuanto, para pintarlo en signos */
 const efectosDe = (o) => {
   if (!o || typeof o !== "object") return [];
@@ -48637,7 +48689,8 @@ const efectosDe = (o) => {
   if (!d || typeof d !== "object") return [];
   const out = [];
   CLAVES_ATRIB.forEach((k) => {
-    const v = numero(d[k], 0);
+    if (k === "mod") return;   /* va junto con criterio, como habilidad */
+    const v = k === "cri" ? juntarHab(d.mod, d.cri) : numero(d[k], 0);
     if (v) out.push({ k, v });
   });
   return out;
@@ -48649,14 +48702,15 @@ const efectoDe = (o) => {
     || (o.chk && (o.chk.ok || o.ok))
     || null;
   if (!d || typeof d !== "object") return null;
-  const sube = [], cuesta = [];
+  const sube = [], baja = [];
   CLAVES_ATRIB.forEach((k) => {
-    const v = numero(d[k], 0);
+    if (k === "mod") return;
+    const v = k === "cri" ? juntarHab(d.mod, d.cri) : numero(d[k], 0);
     if (v > 0) sube.push((ETIQ[k] || k).toLowerCase());
-    else if (v < 0) cuesta.push((ETIQ[k] || k).toLowerCase());
+    else if (v < 0) baja.push((ETIQ[k] || k).toLowerCase());
   });
-  if (!sube.length && !cuesta.length) return null;
-  return { sube, cuesta };
+  if (!sube.length && !baja.length) return null;
+  return { sube, cuesta: baja };
 };
 
 /* ============================================================
@@ -53309,12 +53363,26 @@ function Motor() {
       cambios.push({ k: "cash", v: -Math.round(quita) });
     }
 
-    ["mod", "cri", "red", "rep", "ene", "car"].forEach((k) => {
-      if (!d[k]) return;
-      let v = d[k];
+    /* Modelaje y criterio son una sola cosa para el jugador: la
+       habilidad. Las escenas siguen escribiendo mod y cri por separado,
+       así que aquí se juntan en un solo cambio y se aplica a los dos. */
+    const dHab = juntarHab(numero(d.mod, 0), numero(d.cri, 0));
+    ["hab", "red", "rep", "ene", "car"].forEach((k) => {
+      let v = k === "hab" ? dHab : numero(d[k], 0);
+      if (!v) return;
       if (k === "rep" && v < 0 && tiene(st, "abogado")) v = Math.round(v * 0.6);
-      if (k === "car") st.carrera += v;
-      else st[k] = clamp(st[k] + v, 0, 100);
+      if (k === "car") { st.carrera += v; cambios.push({ k, v }); return; }
+      if (k === "hab") {
+        v = cuesta(st.cri, v);
+        if (!v) return;
+        st.cri = clamp(st.cri + v, 0, 100);
+        st.mod = st.cri;
+        cambios.push({ k: "cri", v });
+        return;
+      }
+      if (k !== "ene") v = cuesta(st[k], v, DESDE_ATRIB[k]);
+      if (!v) return;
+      st[k] = clamp(st[k] + v, 0, 100);
       cambios.push({ k, v });
     });
     if (d.cash) {
@@ -53745,18 +53813,24 @@ function Motor() {
           : gv.f < 1 ? Math.round((1 - gv.f) * 100) + "% por debajo" : "en su nivel") + " de lo normal.");
     }
 
-    let desgaste = (tiene(st, "coach") ? 5 : 8) + (tipoRama(st) === "boutique" ? 3 : 0);
+    let desgaste = (tiene(st, "coach") ? 2 : 4) + (tipoRama(st) === "boutique" ? 3 : 0);
     desgaste += -(rt.ene) - gv.ene;   /* el ritmo cansa, vivir bien descansa */
     if (st.pareja === "casado" || st.pareja === "noviazgo") desgaste -= 3;   /* alguien con quien contar */
     desgaste += Math.min(6, entero(st.hijos, 0, 0, 8) * 2);                  /* y alguien a quien cuidar */
     st.ene = clamp(st.ene - desgaste, 0, 100);
-    /* Por debajo de la mitad el cuerpo se impone: duermes, cancelas, bajas
-       el ritmo. No te devuelve a ochenta, pero rompe la caída libre que
-       hacía imposible pasar del año diez. */
-    if (st.ene < 50) {
-      st.ene = clamp(st.ene + 6, 0, 100);
+    /* La energía va y viene, como en la vida: los fines de semana, las
+       vacaciones y dormir devuelven algo cada año, más cuanto más bajo
+       estás. Por debajo de sesenta recuperas un tercio de lo que te
+       falta para llegar ahí. A ritmo normal eso deja la energía entre
+       cuarenta y setenta; a tope, el ritmo gana y acabas quemado. */
+    if (st.ene < 60) {
+      st.ene = clamp(st.ene + Math.round((60 - st.ene) * 0.33), 0, 100);
       if (st.ene < 35) notas.push("Estás funcionando a media máquina. El cuerpo te está cobrando las horas.");
     }
+    /* Lo que no se practica se oxida, y los contactos que no se llaman
+       se enfrían. Poco, y solo arriba: mantenerse en lo alto cuesta. */
+    if (st.cri > 60) { st.cri = clamp(st.cri - 1, 0, 100); st.mod = st.cri; }
+    if (st.red > 60) st.red = clamp(st.red - 1, 0, 100);
     let terminar = null;
     if (st.ene <= 0) {
       st.burnouts += 1;
@@ -54425,7 +54499,7 @@ function Motor() {
               <div className="ea-opcionM">
                 Te preguntan si te retiras a los {e.e + DURACION(elec.duracion).meta}, y ahí decides si sigues
                 {e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado"}
-                {Object.keys(e.mods || {}).length ? " · " + Object.keys(e.mods).map((k) => ETIQ[k] + " " + (e.mods[k] > 0 ? "+" : "") + e.mods[k]).join(" · ") : ""}
+                {modsTxt(e.mods) ? " · " + modsTxt(e.mods) : ""}
               </div>
             </button>
           ))}
@@ -54513,7 +54587,7 @@ function Motor() {
               <div className="ea-nombre ea-dis" style={{ fontSize: 19, color: "var(--tinta)" }}>{c.n}</div>
               <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "7px 0" }}>{c.d}</div>
               <div style={{ fontSize: 12, color: "var(--cobre)" }}>
-                {Object.keys(c.mods).map((k) => ETIQ[k] + " +" + c.mods[k]).join(" · ")} · mejor en {c.juegos.map((j) => JUEGO(j).n.toLowerCase()).join(" y ")}
+                {modsTxt(c.mods)} · mejor en {c.juegos.map((j) => JUEGO(j).n.toLowerCase()).join(" y ")}
               </div>
               <button className="ea-mini" onClick={() => {
                 if (!enFase("estudio")) return;
@@ -54619,7 +54693,7 @@ function Motor() {
                 );
               })()}
               <div className="ea-anillos">
-                {["ene", "cri", "mod", "red", "rep"].map((k) => <Anillo key={k} k={k} v={s[k]} />)}
+                {["ene", "cri", "red", "rep"].map((k) => <Anillo key={k} k={k} v={s[k]} />)}
               </div>
             </div>
           </div>
@@ -54686,7 +54760,7 @@ function Motor() {
                     </div>
                     <div className="ea-plegs">
                     <Plegable titulo="Tus atributos" resumen={"criterio " + Math.round(s.cri)}>
-                    <Stat k="mod" v={s.mod} /><Stat k="cri" v={s.cri} /><Stat k="red" v={s.red} /><Stat k="rep" v={s.rep} /><Stat k="ene" v={s.ene} ene />
+                    <Stat k="cri" v={s.cri} /><Stat k="red" v={s.red} /><Stat k="rep" v={s.rep} /><Stat k="ene" v={s.ene} ene />
                     </Plegable>
                     <Plegable titulo="Quién eres" resumen={cargoDe(s)}>
                     <div className="ea-fila" style={{ marginTop: 0 }}>
@@ -55340,7 +55414,7 @@ function Motor() {
                         const efs = efectosDe(o);
                         const falta = faltas[i];
                         const bits = [];
-                        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
+                        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Habilidad") + " " + Math.round(ayudaDe(o)));
                         return (
                           <button className={"ea-op" + (falta ? " sinfuerza" : "") + (o.rareza ? " " + o.rareza : "")} key={i}
                             style={{ "--i": i }}
@@ -55407,7 +55481,7 @@ function Motor() {
                   entera ella sola, en sus tres pasos. */}
               {fase === "minijuego" && op && (
                 <TarjetaJuego tipo={op.juego || op.j} ayuda={ayudaDe(op)} nivel={nivelDe(s.turno, s.estudia)}
-                  statN={ETIQ[op.stat] || "Criterio"} onFin={finJuego} modo={s.modo}
+                  statN={ETIQ[op.stat] || "Habilidad"} onFin={finJuego} modo={s.modo}
                   temas={s.temas} onTema={apuntarTema}
                   visto={(Array.isArray(s.jugados) ? s.jugados : []).indexOf(op.juego || op.j) >= 0}
                   onVisto={apuntarJuego} ctx={ctxJuego} />
