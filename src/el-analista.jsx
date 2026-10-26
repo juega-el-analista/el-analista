@@ -3117,13 +3117,13 @@ const CARRILES = [
 
 /* ---------- eventos de semestre, muchos con juego rápido ---------- */
 const E = [
-  { id: 1, min: 0, max: 2, t: "Un DCF para mañana a las ocho", x: "Once de la noche. El VP deja una carpeta encima de tu teclado y dice que el cliente quiere el modelo antes del desayuno.",
+  { id: 1, min: 2, max: 3, t: "Un DCF para mañana a las ocho", x: "Once de la noche. El VP deja una carpeta encima de tu teclado y dice que el cliente quiere el modelo antes del desayuno.",
     o: [
       { t: "Amanecerte y entregarlo impecable", d: { mod: 6, car: 3, ene: -18, rep: 3, msg: "Entregas a las 7:40 con las tres sensibilidades corridas. El VP no dice nada, que aquí significa que quedó bien." } },
       { t: "Armarlo rápido y confiar en tu ojo", j: "calculo", stat: "mod", d: { mod: 4, car: 2, ene: -6, msg: "Corres los números de cabeza para no perder tiempo abriendo el modelo entero." } },
       { t: "Pedir ayuda y repartir el trabajo", d: { red: 4, rep: -2, ene: -4, cri: 2, msg: "Te consiguen apoyo. Tu jefe toma nota, aunque no queda claro de qué lado." } },
     ] },
-  { id: 2, min: 0, max: 3, t: "El error ya salió por correo", x: "El modelo que se envió al cliente tiene la deuda neta mal sumada. La diferencia mueve el equity value casi 10%.",
+  { id: 2, min: 2, max: 3, t: "El error ya salió por correo", x: "El modelo que se envió al cliente tiene la deuda neta mal sumada. La diferencia mueve el equity value casi 10%.",
     o: [
       { t: "Avisar de inmediato, aunque duela", d: { rep: 7, cri: 6, ene: -5, car: 2, msg: "Incómodo durante una hora, respetado durante años. La corrección sale el mismo día." } },
       { t: "Encontrar todos los errores antes de que los encuentren ellos", j: "ojo", stat: "mod", d: { mod: 5, rep: 4, cri: 3, msg: "Te encierras a revisar celda por celda antes de que alguien más lo note." } },
@@ -3138,15 +3138,15 @@ const E = [
       { t: "Inscribirte y estudiar en serio", min: { cri: 18 }, j: "quiz", stat: "cri", d: { cash: -1600, mod: 7, cri: 5, ene: -10, car: 3, msg: "Seis meses de sábados perdidos y el examen encima." } },
       { t: "Saltarlo, tu escuela es la mesa", d: { ene: 4, msg: "Decides que el aprendizaje viene de los mandatos. Tampoco es mala tesis." } },
     ] },
-  { id: 5, min: 0, max: 3, t: "Cierre de operación, fiesta en el bar", x: "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
+  { id: 5, min: 2, max: 3, t: "Cierre de operación, fiesta en el bar", x: "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
     o: [
       { t: "Ir y quedarte hasta el final", d: { red: 8, ene: -9, rep: 2, msg: "Terminas hablando de mineras con un principal de un fondo. Se guarda tu número." } },
       { t: "Aparecerte una hora y dormir", d: { red: 3, ene: 6, msg: "Saludas, brindas, te vas. El equilibrio también es una habilidad." } },
       { t: "Quedarte a adelantar el próximo pitch", d: { mod: 4, car: 2, ene: -7, red: -3, msg: "El lunes tienes ventaja. El viernes tuviste soledad." } },
     ] },
-  { id: 6, min: 0, max: 2, t: "El data room es un desastre", x: "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
+  { id: 6, min: 2, max: 3, t: "El data room es un desastre", x: "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
     o: [
-      { t: "Armar un índice maestro que sirva a todos", min: { mod: 28 }, j: "orden", stat: "cri", d: { mod: 5, rep: 5, ene: -10, car: 3, msg: "Ordenas el desastre siguiendo la lógica del proceso." } },
+      { t: "Armar un índice maestro que sirva a todos", min: { mod: 27 }, j: "orden", stat: "cri", d: { mod: 5, rep: 5, ene: -10, car: 3, msg: "Ordenas el desastre siguiendo la lógica del proceso." } },
       { t: "Revisar solo lo que te pidieron", d: { ene: -3, car: 1, msg: "Cumples. Nada más y nada menos." } },
     ] },
   { id: 7, clave: true, min: 1, max: 4, sin: ["sancionado"], t: "Te llama un headhunter", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
@@ -3162,15 +3162,15 @@ const E = [
         ok: { cash: 11000, rep: -6, deja: "privilegiada", luego: [{ id: 8102, en: 1 }, { id: 8103, en: 3 }], msg: "Ganas plata y una ansiedad crónica que no aparece en el estado de cuenta." },
         no: { cash: -8000, rep: -30, deja: "sancionado", luego: [{ id: 8104, en: 1 }], msg: "El regulador cruza operaciones. Tu nombre queda en una lista que no se borra." } } },
     ] },
-  { id: 9, min: 1, max: 4, t: "Cien mensajes en frío", x: "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
+  { id: 9, min: 2, max: 4, t: "Cien mensajes en frío", x: "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
     o: [
       { t: "Armar la base y escribir todos los días", d: { red: 11, car: 5, ene: -11, msg: "De cien mensajes contestan siete. De esos siete sale una reunión que en dos años será un mandato." } },
       { t: "Enfocarte en diez contactos bien elegidos", min: { red: 20 }, j: "reaccion", stat: "red", d: { red: 7, cri: 4, ene: -4, msg: "Menos volumen y mejor timing. Escribes justo cuando conviene escribir." } },
     ] },
-  { id: 10, min: 0, max: 3, t: "El teaser que vuelve marcado", x: "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
+  { id: 10, min: 2, max: 3, t: "El teaser que vuelve marcado", x: "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
     o: [
       { t: "Rehacerlo entero y aprender el formato", d: { mod: 6, rep: 4, ene: -8, car: 2, msg: "La siguiente versión vuelve con cuatro comentarios. Progreso medible." } },
-      { t: "Defender los puntos que no compartes", min: { cri: 30 }, j: "quiz", stat: "cri", d: { rep: 5, cri: 5, car: 2, msg: "Discutir un comentario técnico te obliga a tener razón de verdad." } },
+      { t: "Defender los puntos que no compartes", min: { cri: 28 }, j: "quiz", stat: "cri", d: { rep: 5, cri: 5, car: 2, msg: "Discutir un comentario técnico te obliga a tener razón de verdad." } },
     ] },
   { id: 11, min: 0, max: 6, t: "Media hora antes del cierre", x: "El mercado cierra en treinta minutos y tienes una orden a medio ejecutar en tu cuenta personal.",
     o: [
@@ -3216,7 +3216,7 @@ const E = [
   { id: 19, min: 1, max: 5, t: "Prensa al teléfono", x: "Un periodista quiere una cita tuya sobre el sector. Tu firma no tiene política clara al respecto.",
     o: [
       { t: "Hablar solo de datos públicos", d: { rep: 6, red: 4, cri: 3, msg: "Sales citado con prudencia. Dos fondos te escriben esa semana." } },
-      { t: "Aceptar la entrevista técnica en vivo", min: { cri: 34 }, j: "quiz", stat: "cri", d: { rep: 7, red: 6, msg: "En vivo no hay forma de consultar nada." } },
+      { t: "Aceptar la entrevista técnica en vivo", min: { cri: 30 }, j: "quiz", stat: "cri", d: { rep: 7, red: 6, msg: "En vivo no hay forma de consultar nada." } },
       { t: "Declinar y pasarlo al socio", d: { rep: 2, red: 2, msg: "Correcto y aburrido. A veces es exactamente lo que toca." } },
     ] },
   { id: 20, min: 1, max: 4, t: "Alguien se cuelga de tu trabajo", x: "Un colega presenta al comité el análisis que armaste tú, sin mencionarte.",
@@ -3250,12 +3250,12 @@ const E = [
       { t: "Invertir un ticket que puedas perder", d: { cash: -3000, red: 3, deja: "ticket",
         luego: [{ en: 2, s: "cri", azar: [{ p: 45, id: 7371, bueno: false }, { p: 30, id: 7341 }, { p: 20, id: 7342, bueno: true }, { p: 5, id: 7372, bueno: true }] }],
         msg: "Entras por un monto que no te cambia la vida si se pierde. Papeles en orden." } },
-      { t: "Revisarle el modelo antes de decidir", min: { mod: 34 }, j: "ojo", stat: "mod", d: { red: 6, cri: 4, deja: "revisaste", luego: [{ id: 7343, en: 1 }], msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
+      { t: "Revisarle el modelo antes de decidir", min: { mod: 30 }, j: "ojo", stat: "mod", d: { red: 6, cri: 4, deja: "revisaste", luego: [{ id: 7343, en: 1 }], msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
       { t: "No invertir y seguir siendo su amigo", d: { ene: 2, red: 2, msg: "Le dices que no con cariño. El dinero y la amistad se quedan cada uno en su sitio." } },
     ] },
   { id: 26, min: 2, max: 6, t: "Comité de crédito difícil", x: "Defiendes una estructura de factoring sobre un sector volátil. Dos miembros vienen buscando sangre.",
     o: [
-      { t: "Responder con los números en la cabeza", min: { mod: 30 }, j: "calculo", stat: "mod", d: { car: 6, rep: 7, cri: 4, msg: "Te preguntan tasas y coberturas y no hay tiempo de abrir el archivo." } },
+      { t: "Responder con los números en la cabeza", min: { mod: 28 }, j: "calculo", stat: "mod", d: { car: 6, rep: 7, cri: 4, msg: "Te preguntan tasas y coberturas y no hay tiempo de abrir el archivo." } },
       { t: "Retirar el caso y volver el mes que viene", d: { cri: 6, rep: 2, ene: -3, msg: "Preferible retirarse que perder. Vuelves mejor armado." } },
     ] },
   { id: 27, min: 1, max: 6, t: "Reunión con la familia dueña", x: "Tres hermanos, una empresa y ninguna intención de estar de acuerdo entre ellos.",
@@ -3285,14 +3285,14 @@ const E = [
       { t: "Negarte y ofrecer los mismos términos a todos", d: { rep: 9, cri: 6, cash: -3000, msg: "El fondo entra igual, con menos ruido y más respeto." } },
       { t: "Concederlo y documentarlo con transparencia", d: { cri: 5, red: 5, car: 3, rep: -3, msg: "Se hace, se documenta y se informa. Correcto, aunque incómodo." } },
     ] },
-  { id: 32, min: 1, max: 6, t: "Te piden explicar la cascada", x: "Un LP nuevo no entiende cómo se reparte la plata y quiere que se lo expliques en voz alta.",
+  { id: 32, min: 2, max: 6, t: "Te piden explicar la cascada", x: "Un LP nuevo no entiende cómo se reparte la plata y quiere que se lo expliques en voz alta.",
     o: [
       { t: "Explicárselo paso por paso", j: "orden", stat: "cri", d: { red: 6, rep: 6, cri: 4, msg: "Le pides una hoja y le dibujas el orden completo." } },
       { t: "Mandarle el documento y que lo lea", d: { rep: -2, ene: 3, msg: "Técnicamente correcto. El LP se queda con la duda y con la sensación." } },
     ] },
   { id: 33, clave: true, min: 2, max: 6, t: "Dos ofertas sobre la mesa", x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
     o: [
-      { t: "Ordenar los criterios y decidir con método", min: { cri: 38 }, j: "orden", stat: "cri", d: { cri: 7, car: 5, rep: 5, msg: "Pones los criterios en orden de importancia antes de mirar los precios." } },
+      { t: "Ordenar los criterios y decidir con método", min: { cri: 33 }, j: "orden", stat: "cri", d: { cri: 7, car: 5, rep: 5, msg: "Pones los criterios en orden de importancia antes de mirar los precios." } },
       { t: "Ir por el precio más alto y punto", chk: { s: "cri", dif: 55, ok: { cash: 6000, car: 4, msg: "El precio alto además cerró sin problemas. Suerte y criterio en la misma jugada." }, no: { rep: -8, ene: -6, msg: "El comprador no consigue el financiamiento y el proceso se cae en la recta final." } } },
     ] },
   { id: 34, min: 0, max: 6, t: "Alguien de la mesa te pregunta qué harías", x: "Sin contexto, sin archivo, sin tiempo. Solo la pregunta y seis pares de ojos esperando.",
@@ -3300,11 +3300,71 @@ const E = [
       { t: "Contestar en el momento", j: "semaforo", stat: "cri", d: { rep: 6, cri: 4, car: 3, msg: "Sin datos en pantalla, solo criterio y velocidad." } },
       { t: "Pedir el archivo y contestar después", d: { rep: -2, mod: 3, msg: "Contestas bien y tarde. En algunas salas eso vale menos que contestar rápido." } },
     ] },
+  /* ---------- la ruta del novato ----------
+     Los primeros años de cualquiera, sepa o no de finanzas: el primer
+     sueldo, la tarjeta, dónde vivir, el jefe que escribe un domingo.
+     Antes una pasante de veinte años abría el juego con un DCF y un
+     EBITDA; ahora la banca llega desde Analista Senior y esto la
+     precede. Cada decisión tiene futuro (24100 en adelante). */
+  { id: 24000, novato: true, min: 0, max: 1, t: "Tu primer sueldo",
+    x: "Te llega el primer sueldo completo. Después del alquiler y la comida sobra un poco, y es la primera vez que decides tú qué hacer con eso.",
+    o: [
+      { t: "Apartar una parte apenas llega", d: { cri: 3, ene: -1, deja: "nov_ahorro", luego: [{ en: 2, azar: [{ p: 60, id: 24100 }, { p: 40, id: 24101 }] }], msg: "Pasas un pedazo a otra cuenta el mismo día. Lo que no ves, no lo gastas." } },
+      { t: "Darte un gusto: te lo ganaste", d: { ene: 6, cash: -800, deja: "nov_gusto", luego: [{ en: 1, azar: [{ p: 55, id: 24102 }, { p: 45, id: 24103 }] }], msg: "Cena buena, zapatillas nuevas y la sensación de que por fin trabajas." } },
+      { t: "Mandarle una parte a tu familia", d: { red: 4, cash: -600, deja: "nov_familia", luego: [{ en: 1, azar: [{ p: 65, id: 24104 }, { p: 35, id: 24105 }] }], msg: "Tu familia no te lo pidió. Igual lo agradecen más de lo que dicen." } },
+    ] },
+  { id: 24010, novato: true, min: 0, max: 1, t: "Te ofrecen una tarjeta de crédito",
+    x: "El banco te ofrece una tarjeta con un cupo de tres sueldos. El vendedor dice que sirve para construir historial.",
+    o: [
+      { t: "Usarla y pagarla entera cada mes", d: { cri: 3, deja: "nov_tarjeta_bien", luego: [{ en: 2, azar: [{ p: 70, id: 24110 }, { p: 30, id: 24111 }] }], msg: "La usas como si fuera débito. A fin de mes, la pagas toda." } },
+      { t: "Usarla y pagar solo el mínimo", d: { ene: 4, cash: 1000, deja: "nov_tarjeta_minimo", luego: [{ en: 1, azar: [{ p: 75, id: 24112 }, { p: 25, id: 24111 }] }], msg: "Compras lo que tenías pendiente. El mínimo es tan bajo que casi no se nota." } },
+      { t: "No sacarla", d: { ene: 1, msg: "Le dices que no. Sin tarjeta no hay deuda, aunque tampoco historial." } },
+    ] },
+  { id: 24020, novato: true, min: 0, max: 1, t: "¿Compartir piso o vivir por tu cuenta?",
+    x: "Necesitas dónde vivir cerca del trabajo. Compartir sale a la mitad; un lugar propio te da silencio.",
+    o: [
+      { t: "Compartir con dos amigos", d: { cash: 1500, red: 3, ene: -3, deja: "nov_piso", luego: [{ en: 1, azar: [{ p: 65, id: 24120 }, { p: 35, id: 24121 }] }], msg: "Casa con ruido, nevera compartida y un alquiler que te deja respirar." } },
+      { t: "Alquilar un lugar para ti", d: { ene: 5, cash: -1500, deja: "nov_solo", luego: [{ en: 1, azar: [{ p: 60, id: 24122 }, { p: 40, id: 24123 }] }], msg: "Silencio, tus cosas en su sitio y un alquiler que se lleva buena parte del sueldo." } },
+    ] },
+  { id: 24030, novato: true, min: 0, max: 1, t: "Tu jefa te escribe un domingo",
+    x: "Domingo a las cuatro. Un mensaje: «¿Puedes revisar esto antes del lunes?». No dice que sea urgente.",
+    o: [
+      { t: "Contestar y resolverlo ya", d: { rep: 3, car: 2, ene: -6, deja: "nov_domingo", luego: [{ en: 1, azar: [{ p: 60, id: 24130 }, { p: 40, id: 24131 }] }], msg: "Lo resuelves en dos horas. A las siete te llega un «gracias» con emoji." } },
+      { t: "Contestarle el lunes temprano", d: { ene: 3, rep: -1, deja: "nov_lunes", luego: [{ en: 1, azar: [{ p: 70, id: 24132 }, { p: 30, id: 24133 }] }], msg: "El lunes a las ocho ya está hecho. El domingo fue tuyo." } },
+    ] },
+  { id: 24040, novato: true, min: 0, max: 1, t: "El celular nuevo, a doce cuotas",
+    x: "Tu celular ya no aguanta y la tienda te ofrece el modelo nuevo en doce cuotas «sin intereses».",
+    o: [
+      { t: "Comprarlo a cuotas", d: { ene: 3, cash: -400, deja: "nov_cuotas", luego: [{ en: 1, azar: [{ p: 60, id: 24140 }, { p: 40, id: 24141 }] }], msg: "Sales con el teléfono nuevo y doce pagos por delante." } },
+      { t: "Ahorrar y pagarlo de una vez", d: { cri: 3, ene: -2, deja: "nov_esperar", luego: [{ en: 1, azar: [{ p: 70, id: 24142 }, { p: 30, id: 24143 }] }], msg: "Tres meses con el viejo. Cuando lo compras, es tuyo desde el primer día." } },
+      /* las banderas rojas, en su versión de todos los días: la letra chica */
+      { t: "Leer el contrato antes de firmar", j: "banderas", stat: "cri", d: { cri: 4, ene: -2, msg: "Lees las condiciones con calma y encuentras el seguro escondido. Lo compras sin él." } },
+    ] },
+  { id: 24050, novato: true, min: 0, max: 1, t: "Clases de hojas de cálculo los sábados",
+    x: "Un compañero que domina las hojas de cálculo ofrece enseñarles a los nuevos, los sábados por la mañana y gratis.",
+    o: [
+      { t: "Ir todos los sábados", d: { mod: 5, red: 2, ene: -5, deja: "nov_sabados", luego: [{ en: 1, azar: [{ p: 65, id: 24150 }, { p: 35, id: 24151 }] }], msg: "Cuatro sábados seguidos. Lo que antes te llevaba una tarde ahora te lleva una hora." } },
+      { t: "Aprender por tu cuenta con videos", d: { mod: 3, ene: -2, msg: "Videos de diez minutos antes de dormir. Avanzas a tu ritmo y sin compañía." } },
+      { t: "Los sábados son para descansar", d: { ene: 4, msg: "Duermes hasta tarde. El lunes, el resto habla de atajos de teclado que no conoces." } },
+    ] },
+  { id: 24060, novato: true, min: 0, max: 1, t: "Horas extra que nadie paga",
+    x: "Es viernes y el equipo se queda hasta tarde. Nadie lo pide en voz alta, pero todos miran quién se va.",
+    o: [
+      { t: "Quedarte con el equipo", d: { car: 3, rep: 2, ene: -7, deja: "nov_extra_si", luego: [{ en: 1, azar: [{ p: 55, id: 24160 }, { p: 45, id: 24161 }] }], msg: "Sales a las once. El lunes, la jefa del área ya sabe tu nombre." } },
+      { t: "Irte a tu hora, sin disculparte", d: { ene: 4, rep: -1, deja: "nov_extra_no", luego: [{ en: 1, azar: [{ p: 60, id: 24162 }, { p: 40, id: 24163 }] }], msg: "Terminas lo tuyo y te vas. Alguien levanta la vista; nadie dice nada." } },
+    ] },
+  { id: 24070, novato: true, min: 0, max: 1, t: "Te duele una muela",
+    x: "Hace semanas que te molesta una muela. El dentista dice que es mejor tratarla ya, antes de que se complique.",
+    o: [
+      { t: "Tratarla ya, con tus ahorros", d: { cash: -900, cri: 2, ene: 2, msg: "Una tarde incómoda y una cuenta que duele. Pero ya pasó." } },
+      { t: "Pagarla con la tarjeta, en cuotas", d: { cash: -1000, ene: 2, msg: "La tratas hoy y la pagas en seis meses, con un poco de interés." } },
+      { t: "Dejarlo para más adelante", d: { ene: -3, deja: "nov_dentista", luego: [{ en: 1, azar: [{ p: 70, id: 24170 }, { p: 30, id: 24171 }] }], msg: "Analgésicos y esperar. Tienes cosas más urgentes, piensas." } },
+    ] },
 ];
 
 /* ---------- decisiones clave, cada dos años ---------- */
 const D = [
-  { id: 101, clave: true, min: 0, max: 3, t: "La cifra que va en la portada", x: "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
+  { id: 101, clave: true, min: 2, max: 3, t: "La cifra que va en la portada", x: "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
     o: [
       { t: "Calzar el precio con la señal del comprador", juego: "anclaje", stat: "red",
         res: { exito: { car: 7, rep: 8, cash: 5000, msg: "Tu número cae justo dentro del rango del comprador. Firman sin renegociar." },
@@ -3315,7 +3375,7 @@ const D = [
                parcial: { mod: 4, car: 2, ene: -6, msg: "Encuentras una y se te escapa otra. Nadie pregunta por esa, esta vez." },
                fallo: { rep: -9, ene: -8, msg: "El comprador encuentra el error en la primera llamada técnica." } } },
     ] },
-  { id: 102, clave: true, min: 0, max: 3, t: "Tres días de due diligence", x: "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
+  { id: 102, clave: true, min: 2, max: 3, t: "Tres días de due diligence", x: "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
     o: [
       { t: "Peinar el legajo completo en orden", juego: "memoria", stat: "cri", sigue: 601,
         res: { exito: { cri: 9, rep: 8, car: 6, ene: -9, msg: "Reconstruyes la cadena de contratos y aparece un pasivo laboral no declarado. Ajustan el precio." },
@@ -3326,7 +3386,7 @@ const D = [
                parcial: { mod: 3, car: 2, msg: "Encuentras algo menor. Suficiente para justificar el viaje." },
                fallo: { rep: -7, msg: "Apostaste por el atajo y el atajo no estaba ahí." } } },
     ] },
-  { id: 103, clave: true, min: 1, max: 6, t: "Negociación de honorarios", x: "El cliente quiere pagar por éxito y nada por retainer. Tu equipo trabaja ocho meses en cualquier escenario.",
+  { id: 103, clave: true, min: 2, max: 6, t: "Negociación de honorarios", x: "El cliente quiere pagar por éxito y nada por retainer. Tu equipo trabaja ocho meses en cualquier escenario.",
     o: [
       { t: "Anclar alto y ceder despacio", juego: "anclaje", stat: "red",
         res: { exito: { cash: 11000, rep: 7, car: 6, msg: "Cierras retainer y éxito. El cliente cree que ganó la negociación, que es la mejor señal." },
@@ -3337,7 +3397,7 @@ const D = [
                parcial: { cash: 2500, rep: 3, msg: "Aceptan con condiciones. Sales empatado." },
                fallo: { cash: -1200, rep: -5, msg: "El número quedó fuera de mercado y te dejó sin margen para moverte." } } },
     ] },
-  { id: 104, clave: true, min: 0, max: 6, t: "La posición que ya dio mucho", x: "Una posición de tu portafolio va 70% arriba. Todos los indicadores dicen cosas distintas.",
+  { id: 104, clave: true, min: 2, max: 6, t: "La posición que ya dio mucho", x: "Una posición de tu portafolio va 70% arriba. Todos los indicadores dicen cosas distintas.",
     o: [
       { t: "Aguantar y dejar correr", juego: "suerte", stat: "cri",
         res: { exito: { cash: 20000, cri: 6, msg: "Sales cerca del pico. No se puede pedir más." },
@@ -3370,7 +3430,7 @@ const D = [
                parcial: { car: 3, cash: 2000, msg: "Llegas a la final y pierdes por poco." },
                fallo: { rep: -8, cash: -4500, ene: -6, msg: "Los eliminan antes de la segunda ronda por no mostrar seriedad temprano." } } },
     ] },
-  { id: 107, clave: true, min: 1, max: 6, t: "El pitch al comité de inversión", x: "Veinte minutos, siete personas y una tesis que tienes que defender sin leer la lámina.",
+  { id: 107, clave: true, min: 2, max: 6, t: "El pitch al comité de inversión", x: "Veinte minutos, siete personas y una tesis que tienes que defender sin leer la lámina.",
     o: [
       { t: "Ensayar hasta tenerlo memorizado", juego: "memoria", stat: "red",
         res: { exito: { car: 8, rep: 9, red: 6, msg: "Hablas sin mirar la pantalla veinte minutos. Aprueban el mandato ese mismo día." },
@@ -3425,7 +3485,7 @@ const D = [
                parcial: { cash: 18000, car: 6, msg: "Cierras algo menor de lo planeado después de mucho desgaste." },
                fallo: { cash: -22000, ene: -15, rep: -8, msg: "Se te pasó el momento del mercado. La ventana se cerró con el fondo abierto." } } },
     ] },
-  { id: 112, clave: true, min: 1, max: 6, t: "Dos cierres el mismo viernes", x: "Dos mandatos firman el mismo día en ciudades distintas. Los dos clientes creen que estás con ellos.",
+  { id: 112, clave: true, min: 2, max: 6, t: "Dos cierres el mismo viernes", x: "Dos mandatos firman el mismo día en ciudades distintas. Los dos clientes creen que estás con ellos.",
     o: [
       { t: "Coordinar los tiempos al minuto", juego: "precision", stat: "cri",
         res: { exito: { car: 10, rep: 9, cash: 10000, ene: -11, msg: "Los dos cierran sin fricción y ninguno se entera del otro." },
@@ -3436,7 +3496,7 @@ const D = [
                parcial: { car: 3, ene: -5, msg: "Sale, con dos llamadas tuyas de emergencia en el medio." },
                fallo: { rep: -8, red: -4, ene: -7, msg: "El equipo se traba en un detalle registral y el cierre se cae al lunes." } } },
     ] },
-  { id: 113, clave: true, min: 0, max: 6, t: "Reasignar tu portafolio antes del cierre de año", x: "Tienes que decidir dónde queda parado tu patrimonio los próximos doce meses. Nadie va a revisar esto por ti.",
+  { id: 113, clave: true, min: 2, max: 6, t: "Reasignar tu portafolio antes del cierre de año", x: "Tienes que decidir dónde queda parado tu patrimonio los próximos doce meses. Nadie va a revisar esto por ti.",
     o: [
       { t: "Decidir tú, con tesis propia y convicción", juego: "quiz", stat: "cri",
         res: { exito: { cri: 9, mercado: 0.24, msg: "Lees bien el ciclo y la reasignación funciona. El portafolio se dispara." },
@@ -3444,7 +3504,7 @@ const D = [
                fallo: { cri: 3, mercado: -0.19, ene: -5, msg: "Te equivocas en la lectura de tasas y el portafolio se lleva el golpe completo." } } },
       { t: "Indexarte y no pensar más en eso", d: { mercado: 0.03, ene: 5, cri: 2, msg: "Compras el índice y te olvidas. Aburrido y bastante difícil de criticar." } },
     ] },
-  { id: 114, clave: true, min: 1, max: 4, t: "El director de inversiones del fondo te pone a prueba", x: "Los primeros quince minutos son preguntas técnicas. Si pasas, el fondo entra en tu proceso y te deja copiar la posición.",
+  { id: 114, clave: true, min: 2, max: 4, t: "El director de inversiones del fondo te pone a prueba", x: "Los primeros quince minutos son preguntas técnicas. Si pasas, el fondo entra en tu proceso y te deja copiar la posición.",
     o: [
       { t: "Entrar al examen sin red", juego: "quiz", stat: "cri",
         res: { exito: { red: 10, rep: 9, car: 6, mercado: 0.17, msg: "Respondes las tres sin dudar. Te comparte su lectura del ciclo y replicas la posición." },
@@ -3509,23 +3569,42 @@ const D = [
                fallo: { car: 2, rep: -8, ene: -14, cash: -8000, msg: "Te apuras en contratar antes de tener clientes y la oficina cierra en dieciocho meses." } } },
       { t: "Quedarte y consolidar lo que ya tienes", d: { car: 5, rep: 4, ene: 3, msg: "Menos riesgo, menos historia. La franquicia local sigue creciendo contigo dentro." } },
     ] },
+  /* las dos decisiones clave del novato: lo que se decide antes de saber
+     nada de mercados, y que igual marca la carrera */
+  { id: 24080, clave: true, min: 0, max: 1, t: "Te ofrecen quedarte",
+    x: "Termina tu período de prueba y te ofrecen quedarte con un sueldo fijo. Puedes aceptarlo tal cual o pedir más.",
+    o: [
+      { t: "Aceptar lo que ofrecen", d: { ene: 2, msg: "Firmas con alivio. Lo importante era entrar." } },
+      { t: "Pedir un poco más, con argumentos", chk: { s: "rep", dif: 40,
+        ok: { cash: 1500, rep: 2, deja: "nov_negociaste", msg: "Les muestras lo que pagan otras firmas. Te suben un poco y te respetan más." },
+        no: { rep: -1, msg: "Dicen que no hay margen. Firmas igual, con la sensación de haberlo intentado." } } },
+      { t: "Pedir mucho más", chk: { s: "rep", dif: 75,
+        ok: { cash: 3500, rep: 3, deja: "nov_negociaste", msg: "Aceptan sin pestañear. Te queda la duda de si podías haber pedido aún más." },
+        no: { rep: -4, msg: "Les parece demasiado y se nota en su cara. Firmas lo de antes, con mal sabor." } } },
+    ] },
+  { id: 24085, clave: true, min: 0, max: 2, t: "Un posgrado de noche",
+    x: "La universidad abre un posgrado por las noches. Son dos años, cuesta varios sueldos y dicen que abre puertas.",
+    o: [
+      { t: "Inscribirte", d: { mod: 5, cri: 4, ene: -10, cash: -3000, deja: "nov_posgrado", luego: [{ en: 2, azar: [{ p: 60, id: 24180 }, { p: 40, id: 24181 }] }], msg: "Clases tres noches por semana. Cansa, y aprendes cosas que en la oficina nadie explica." } },
+      { t: "Esperar a tener claro qué quieres", d: { ene: 3, cri: 1, msg: "Lo dejas para más adelante. Estudiar sin rumbo también sale caro." } },
+    ] },
 ];
 
 /* ---------- eventos que usan los juegos interactivos nuevos ---------- */
 const E2 = [
   { id: 40, min: 0, max: 6, t: "Una sesión larga frente a la pantalla", x: "Tienes el día libre y una cuenta propia. El mercado abre en cinco minutos y la tentación es operarlo todo.",
     o: [
-      { t: "Operar la sesión completa", min: { cri: 48 }, j: "trading", stat: "cri", d: { cash: 3000, cri: 4, ene: -6, msg: "Te sientas a operar de apertura a cierre." } },
+      { t: "Operar la sesión completa", min: { cri: 39 }, j: "trading", stat: "cri", d: { cash: 3000, cri: 4, ene: -6, msg: "Te sientas a operar de apertura a cierre." } },
       { t: "Comprar y apagar la pantalla", d: { cri: 4, ene: 5, cash: 900, msg: "Compras, cierras la laptop y te vas a hacer otra cosa. Suele funcionar mejor de lo que uno acepta." } },
     ] },
   { id: 41, min: 2, max: 6, t: "Un cliente quiere comprar apalancado", x: "El comprador tiene el activo identificado y quiere saber cuánta deuda le puede meter sin ahorcarse.",
     o: [
-      { t: "Armarle la estructura tú mismo", min: { mod: 46 }, j: "estructura", stat: "mod", d: { car: 6, rep: 6, cash: 5000, mod: 5, msg: "Te sientas a repartir el precio entre deuda y capital." } },
+      { t: "Armarle la estructura tú mismo", min: { mod: 38 }, j: "estructura", stat: "mod", d: { car: 6, rep: 6, cash: 5000, mod: 5, msg: "Te sientas a repartir el precio entre deuda y capital." } },
       { t: "Mandarlo con el banco y quedarte fuera", d: { rep: -2, ene: 3, msg: "El banco arma la estructura y se queda con la relación. Tú te quedas con el fee de asesoría y nada más." } },
     ] },
   { id: 42, min: 1, max: 6, t: "Ocho hallazgos sobre la mesa", x: "El equipo junior te deja una lista de hallazgos de la revisión. Tienes que decidir cuáles suben al comité y cuáles son ruido.",
     o: [
-      { t: "Filtrar tú los hallazgos", min: { cri: 44 }, j: "banderas", stat: "cri", d: { cri: 7, rep: 6, car: 4, msg: "Te sientas a separar lo que importa de lo que solo hace ruido." } },
+      { t: "Filtrar tú los hallazgos", min: { cri: 36 }, j: "banderas", stat: "cri", d: { cri: 7, rep: 6, car: 4, msg: "Te sientas a separar lo que importa de lo que solo hace ruido." } },
       { t: "Subirlos todos al comité", d: { rep: -4, ene: -3, cri: 2, msg: "El comité se pierde en detalles operativos y el caso pierde fuerza. Filtrar también es tu trabajo." } },
     ] },
   { id: 43, clave: true, min: 3, max: 6, t: "Te ofrecen invertir junto a un fondo", x: "Un fondo amigo te deja entrar en coinversión con un ticket pequeño. Hay que revisar la compañía rápido.",
@@ -3566,19 +3645,19 @@ const E3 = [
       { t: "Mandarla a los abogados y esperar", d: { cash: -2500, ene: -3, car: 1, msg: "Tres días y una factura después, confirman lo que ya sospechabas." } },
       { t: "Firmarla como está", chk: { s: "cri", dif: 70, ok: { car: 3, msg: "No pasó nada. Esta vez." }, no: { cash: -9000, rep: -8, msg: "El ajuste de precio se aplica en contra de tu cliente y la conversación es muy incómoda." } } },
     ] },
-  { id: 51, min: 0, max: 3, t: "El modelo se rompió", x: "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
+  { id: 51, min: 2, max: 3, t: "El modelo se rompió", x: "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
     o: [
       { t: "Escribir un script que lo reconstruya", req: { est: "sis" }, j: "calculo", stat: "mod", d: { mod: 9, car: 5, rep: 6, ene: -5, msg: "En vez de arreglar celdas, automatizas la reconstrucción completa." } },
       { t: "Rehacerlo a mano desde cero", d: { mod: 6, ene: -14, car: 3, msg: "Catorce horas seguidas y un modelo limpio. El método más caro que existe." } },
       { t: "Entregar la versión vieja", d: { rep: -7, ene: 3, msg: "Nadie compara las versiones hasta que alguien las compara." } },
     ] },
-  { id: 52, min: 0, max: 3, t: "Cierre contable de la compañía objetivo", x: "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
+  { id: 52, min: 2, max: 3, t: "Cierre contable de la compañía objetivo", x: "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
     o: [
       { t: "Revisar los ajustes uno por uno", req: { est: "con" }, j: "ojo", stat: "mod", d: { mod: 8, cri: 6, car: 5, rep: 5, msg: "Sabes exactamente dónde se esconden los ajustes que maquillan un cierre." } },
       { t: "Pedir los estados auditados y esperar", d: { ene: -4, car: 2, rep: 3, msg: "Correcto y lento. El proceso se atrasa un mes." } },
       { t: "Trabajar con el EBITDA ajustado que te dieron", chk: { s: "mod", dif: 65, ok: { car: 3, msg: "Los ajustes eran legítimos. Suerte más que método." }, no: { rep: -9, msg: "El EBITDA ajustado era humo y la valoración entera se cae en due diligence." } } },
     ] },
-  { id: 53, min: 0, max: 4, t: "La pregunta de macro en la entrevista", x: "Te preguntan qué pasa con el tipo de cambio si el banco central sube tasas y el fiscal sigue deficitario.",
+  { id: 53, min: 2, max: 4, t: "La pregunta de macro en la entrevista", x: "Te preguntan qué pasa con el tipo de cambio si el banco central sube tasas y el fiscal sigue deficitario.",
     o: [
       { t: "Desarrollarla con el marco completo", req: { est: "eco" }, j: "quiz", stat: "cri", d: { car: 6, rep: 7, red: 5, msg: "Es exactamente la pregunta para la que pasaste cuatro años." } },
       { t: "Contestar con intuición de mercado", j: "semaforo", stat: "cri", d: { car: 3, rep: 4, msg: "No tienes el marco pero tienes calle." } },
@@ -3642,6 +3721,24 @@ const CADENA = {
    Estas escenas no se sortean nunca: solo llegan si las llamaste.
    ============================================================ */
 const HUELLAS = {
+  /* la ruta del novato: el primer sueldo, la tarjeta, el piso, el jefe */
+  nov_ahorro: "Apartaste parte de tu primer sueldo",
+  nov_gusto: "Te gastaste tu primer sueldo en un gusto",
+  nov_familia: "Mandaste parte de tu sueldo a tu familia",
+  nov_tarjeta_bien: "Usaste la tarjeta y la pagaste entera cada mes",
+  nov_tarjeta_minimo: "Pagaste solo el mínimo de la tarjeta",
+  nov_piso: "Compartiste piso para ahorrar",
+  nov_solo: "Alquilaste un lugar para ti",
+  nov_domingo: "Le contestaste a tu jefa un domingo",
+  nov_lunes: "Dejaste para el lunes el mensaje del domingo",
+  nov_cuotas: "Compraste el celular a cuotas",
+  nov_esperar: "Ahorraste para pagar el celular de una vez",
+  nov_sabados: "Aprendiste hojas de cálculo los sábados",
+  nov_extra_si: "Te quedaste a hacer horas extra sin pago",
+  nov_extra_no: "Dijiste que no a las horas extra sin pago",
+  nov_dentista: "Dejaste para después el dentista",
+  nov_negociaste: "Negociaste tu primer sueldo",
+  nov_posgrado: "Te inscribiste en un posgrado de noche",
   saltaste: "Te fuiste con el headhunter",
   negociaste: "Usaste la oferta para negociar",
   leal: "Rechazaste la oferta y lo dijiste",
@@ -4196,6 +4293,193 @@ const CONSECUENCIAS = [
     o: [
       { t: "Ganarte la confianza con trabajo", d: { mod: 6, rep: 4, ene: -8, msg: "Dos años de trabajo impecable. Poco a poco vuelven a llamarte." } },
       { t: "Cambiar de firma y empezar limpio", mudaFirma: true, d: { car: 3, red: -4, msg: "Empiezas en otra firma, donde nadie sabe nada." } },
+    ] },
+  /* ---------- lo que vuelve de la ruta del novato ---------- */
+  { id: 24100, min: 0, max: 6, por: HUELLAS.nov_ahorro, t: "El ahorro te salvó el mes",
+    x: "Se te rompió la computadora justo antes de una entrega. Lo que apartaste alcanza para otra sin pedirle nada a nadie.",
+    o: [
+      { t: "Comprar una igual de buena", d: { cash: -1200, ene: 2, msg: "Pagas y sigues trabajando. Ahorrar era esto: que un problema sea solo un problema." } },
+      { t: "Una más barata y reponer el ahorro", d: { cash: -600, cri: 3, msg: "Te arreglas con menos y vuelves a llenar el colchón en dos meses." } },
+    ] },
+  { id: 24101, min: 0, max: 6, por: HUELLAS.nov_ahorro, t: "Ahorras, pero ya no sales",
+    x: "Tus amigos dejaron de invitarte: siempre dices que no. Tu cuenta crece y tu sábado está vacío.",
+    o: [
+      { t: "Seguir igual: ya llegará el momento", d: { cri: 2, red: -4, msg: "El ahorro sube. El grupo de amigos sigue sin ti." } },
+      { t: "Ahorrar un poco menos y volver a salir", d: { red: 4, ene: 4, cash: -400, msg: "Bajas lo que apartas y recuperas los sábados. Las dos cosas valen." } },
+    ] },
+  { id: 24102, min: 0, max: 6, por: HUELLAS.nov_gusto, t: "Llegas justo a fin de mes",
+    x: "Faltan diez días para el sueldo y la cuenta está casi en cero. Un imprevisto ahora sería un problema.",
+    o: [
+      { t: "Apretarte hasta el próximo sueldo", d: { ene: -4, cri: 3, msg: "Arroz, transporte público y nada de planes. Aprendes lo que dura un sueldo." } },
+      { t: "Pedirle prestado a un amigo", d: { red: -2, msg: "Te presta sin preguntar. Le devuelves con el próximo sueldo y un poco de vergüenza." } },
+    ] },
+  { id: 24103, min: 0, max: 6, por: HUELLAS.nov_gusto, t: "El gusto se volvió costumbre",
+    x: "Lo que fue una vez ahora es cada mes: la cena, la ropa, la comida a domicilio. El sueldo sube y lo que sobra no.",
+    o: [
+      { t: "Revisar en qué se va el dinero", d: { cri: 4, ene: -2, msg: "Haces la lista. La mitad son cosas que ni recordabas haber comprado." } },
+      { t: "No pasa nada: para eso trabajas", d: { ene: 3, cash: -600, msg: "Disfrutas. El ahorro puede esperar, piensas, y el mes siguiente piensas lo mismo." } },
+    ] },
+  { id: 24104, min: 0, max: 6, por: HUELLAS.nov_familia, t: "Tu familia te devuelve el favor",
+    x: "Tu tía se entera de lo que hiciste y te presenta a un conocido que busca gente joven para un proyecto.",
+    o: [
+      { t: "Ir a la reunión", d: { red: 6, ene: -2, msg: "Un café que no lleva a nada inmediato, pero ahora alguien más sabe quién eres." } },
+      { t: "Agradecer y dejarlo pasar", d: { ene: 2, msg: "Le das las gracias. Tu tía insiste dos veces más y después se olvida." } },
+    ] },
+  { id: 24105, min: 0, max: 6, por: HUELLAS.nov_familia, t: "Ahora cuentan con eso cada mes",
+    x: "Lo que fue una ayuda se volvió parte del presupuesto de la casa. Nadie lo dijo, pero ya cuentan con eso.",
+    o: [
+      { t: "Seguir ayudando", d: { red: 3, cash: -600, ene: -2, msg: "Lo sigues mandando. Es tu familia, y el ahorro tendrá que esperar." } },
+      { t: "Hablarlo y poner un límite", d: { cri: 3, red: -2, msg: "Una conversación incómoda. Acuerdan una ayuda fija, más pequeña y sin sorpresas." } },
+    ] },
+  { id: 24110, min: 0, max: 6, por: HUELLAS.nov_tarjeta_bien, t: "Tu historial empieza a contar",
+    x: "Dos años pagando a tiempo se notan. El banco te sube el cupo y te ofrece un préstamo a buena tasa, por si lo necesitas.",
+    o: [
+      { t: "Dejarlo ahí por si hace falta", d: { cri: 3, msg: "No lo usas, pero sabes que está. Tu historial ya trabaja por ti." } },
+      { t: "Usarlo para un curso que querías", d: { mod: 5, cash: -1500, ene: -3, msg: "Lo usas en ti. El curso vale la pena; la cuota también se nota." } },
+    ] },
+  { id: 24111, min: 0, max: 6, por: "Sacaste tu primera tarjeta de crédito", t: "Un mes se te olvidó pagar",
+    x: "Llega el estado de cuenta con intereses y un cargo por pagar tarde. Fue un mes complicado y se te pasó la fecha.",
+    o: [
+      { t: "Pagar todo y poner el pago automático", d: { cri: 4, cash: -300, msg: "Pagas el error y lo arreglas para que no vuelva a pasar." } },
+      { t: "Pagar el mínimo y ver el mes siguiente", d: { cash: -500, cri: -2, msg: "El cargo se suma al siguiente. La deuda empieza a tener vida propia." } },
+    ] },
+  { id: 24112, min: 0, max: 6, por: HUELLAS.nov_tarjeta_minimo, t: "La deuda de la tarjeta no baja",
+    x: "Pagas el mínimo cada mes y la deuda no baja: los intereses se comen casi todo lo que pones.",
+    o: [
+      { t: "Guardar la tarjeta y pagarla en serio", d: { cash: -2000, cri: 5, ene: -4, msg: "Seis meses de apretarte. Cuando llega a cero, entiendes el interés compuesto, pero al revés." } },
+      { t: "Seguir pagando el mínimo", d: { cash: -1200, ene: -3, msg: "Pagas y no avanzas. La deuda te sigue a todas partes, como una sombra cara." } },
+    ] },
+  { id: 24120, min: 0, max: 6, por: HUELLAS.nov_piso, t: "La casa se volvió tu gente",
+    x: "Tus compañeros de piso te presentan a medio mundo. Uno trabaja en una empresa que busca a alguien como tú.",
+    o: [
+      { t: "Pedirle que te recomiende", d: { red: 5, car: 2, msg: "Te pasa el contacto. No sale nada este año, pero ya estás en una lista." } },
+      { t: "Disfrutar la casa sin mezclar", d: { ene: 4, red: 2, msg: "Cenas largas y nada de trabajo. También es una forma de descansar." } },
+    ] },
+  { id: 24121, min: 0, max: 6, por: HUELLAS.nov_piso, t: "Un compañero deja de pagar",
+    x: "Uno de tus compañeros de piso se quedó sin trabajo y no puede pagar su parte del alquiler este mes.",
+    o: [
+      { t: "Cubrirlo tú este mes", d: { cash: -700, red: 4, msg: "Pagas su parte. Te lo devuelve en tres meses y no se le olvida." } },
+      { t: "Pedirle que busque otro lugar", d: { red: -4, cri: 2, msg: "Tienes razón y se va. La casa queda más tranquila y un poco más fría." } },
+    ] },
+  { id: 24122, min: 0, max: 6, por: HUELLAS.nov_solo, t: "El alquiler se lleva el ahorro",
+    x: "Cada mes, después del alquiler, sobra casi nada. Vivir por tu cuenta tiene un precio fijo.",
+    o: [
+      { t: "Buscar algo más barato", d: { cash: 800, ene: -3, msg: "Te mudas a un lugar más chico y más lejos. El ahorro vuelve a aparecer." } },
+      { t: "Quedarte: tu espacio vale", d: { ene: 3, cash: -500, msg: "Te quedas. Es caro, pero llegas a casa y descansas de verdad." } },
+    ] },
+  { id: 24123, min: 0, max: 6, por: HUELLAS.nov_solo, t: "Tu casa, tu ritmo",
+    x: "Vivir por tu cuenta te ordenó: cocinas, duermes bien y llegas temprano. En el trabajo se nota.",
+    o: [
+      { t: "Aprovechar para estudiar de noche", d: { mod: 4, ene: -2, msg: "Tienes silencio y lo usas. Una hora al día suma más de lo que parece." } },
+      { t: "Disfrutarlo sin culpa", d: { ene: 5, msg: "Lees, cocinas, duermes. La energía también es algo que se cuida." } },
+    ] },
+  { id: 24130, min: 0, max: 6, por: HUELLAS.nov_domingo, t: "Ahora te escribe todos los domingos",
+    x: "Desde aquella vez, tu jefa te escribe casi cada fin de semana. Ya da por hecho que contestas.",
+    o: [
+      { t: "Poner un límite con educación", d: { ene: 5, rep: -2, msg: "Le dices que los domingos los guardas para ti. Le sorprende, y lo respeta a medias." } },
+      { t: "Seguir contestando", d: { car: 3, ene: -8, msg: "Contestas siempre. Te ganas su confianza y pierdes los domingos, todos." } },
+    ] },
+  { id: 24131, min: 0, max: 6, por: HUELLAS.nov_domingo, t: "Te ven como alguien de confianza",
+    x: "Tu jefa te nombra en la reunión del equipo: «cuando hay algo urgente, es la persona que responde».",
+    o: [
+      { t: "Pedir algo a cambio: un proyecto mejor", d: { car: 3, rep: 2, msg: "Lo pides y te lo dan. Aquella tarde de domingo empezó a pagar." } },
+      { t: "Agradecer y seguir igual", d: { rep: 2, msg: "Sonríes. La fama de confiable se gana lento y se pierde rápido." } },
+    ] },
+  { id: 24132, min: 0, max: 6, por: HUELLAS.nov_lunes, t: "Nadie dijo nada",
+    x: "El lunes entregaste temprano y tu jefa no comentó nada del domingo. Parece que no era tan urgente.",
+    o: [
+      { t: "Hacerlo costumbre: el fin de semana es tuyo", d: { ene: 5, msg: "Descubres que casi nada es urgente un domingo. Llegas al lunes con ganas." } },
+      { t: "Por si acaso, mirar el correo los domingos", d: { ene: -2, rep: 1, msg: "Lo miras sin contestar. Medio descanso es peor que uno entero." } },
+    ] },
+  { id: 24133, min: 0, max: 6, por: HUELLAS.nov_lunes, t: "Era urgente, después de todo",
+    x: "Resulta que el cliente quería el documento el domingo. Tu jefa lo resolvió sola y te lo recuerda.",
+    o: [
+      { t: "Disculparte y pedir que avise cuando urja", d: { cri: 3, rep: 1, msg: "Le pides una señal clara para lo urgente. Le parece justo." } },
+      { t: "Defender que era domingo", d: { rep: -3, ene: 2, msg: "Tienes razón en el fondo. En la forma, tu jefa se queda con la duda." } },
+    ] },
+  { id: 24140, min: 0, max: 6, por: HUELLAS.nov_cuotas, t: "Las cuotas se juntaron",
+    x: "Al celular se sumaron la computadora y un sofá, también a cuotas. Cada una es poca cosa; juntas son buena parte del sueldo.",
+    o: [
+      { t: "No sumar ninguna cuota más", d: { cri: 4, ene: -2, msg: "Haces la cuenta y te asustas. Hasta que terminen, nada más a cuotas." } },
+      { t: "Seguir: total, son pequeñas", d: { ene: 2, cash: -800, msg: "Una más no se nota. El problema es que nunca es solo una más." } },
+    ] },
+  { id: 24141, min: 0, max: 6, por: HUELLAS.nov_cuotas, t: "«Sin intereses» tenía letra chica",
+    x: "En el estado de cuenta aparecen un seguro y un cargo de administración que nadie mencionó en la tienda.",
+    o: [
+      { t: "Reclamar y cancelar los cargos", d: { cri: 4, ene: -3, cash: 200, msg: "Tres llamadas y un correo. Te devuelven una parte y aprendes a leer antes de firmar." } },
+      { t: "Pagarlos y olvidarlo", d: { cash: -300, msg: "No vale la pena la pelea, piensas. La tienda piensa lo mismo, con todo el mundo." } },
+    ] },
+  { id: 24142, min: 0, max: 6, por: HUELLAS.nov_esperar, t: "Esperar salió más barato",
+    x: "Cuando juntaste el dinero, el modelo había bajado de precio. Te sobra para una funda y algo más.",
+    o: [
+      { t: "Guardar lo que sobró", d: { cri: 3, cash: 300, msg: "Lo que sobró va al ahorro. Esperar también es una forma de ganar." } },
+      { t: "Darte un pequeño gusto", d: { ene: 3, msg: "Unos audífonos con lo que sobró. Comprar sin deber se siente distinto." } },
+    ] },
+  { id: 24143, min: 0, max: 6, por: HUELLAS.nov_esperar, t: "El viejo se rompió antes",
+    x: "Tu celular viejo murió a mitad de mes y te quedaste sin teléfono justo cuando tu jefa te buscaba.",
+    o: [
+      { t: "Comprar uno barato de transición", d: { cash: -300, ene: -2, msg: "Un teléfono simple por unas semanas. Funciona, aunque las fotos dan pena." } },
+      { t: "Adelantar la compra con lo que juntaste", d: { cash: -200, cri: 1, msg: "Te faltaba poco. Lo compras ahora y completas el ahorro después." } },
+    ] },
+  { id: 24150, min: 0, max: 6, por: HUELLAS.nov_sabados, t: "Te piden el informe a ti",
+    x: "Tu jefa necesita un análisis rápido y piensa en quien sabe usar las hojas de cálculo. Piensa en ti.",
+    o: [
+      { t: "Hacerlo y explicar cómo lo hiciste", d: { rep: 4, car: 2, ene: -3, msg: "Entregas en una tarde y enseñas el truco. Ahora te preguntan a ti." } },
+      { t: "Hacerlo rápido y sin contar cómo", d: { car: 3, ene: -2, msg: "Lo entregas antes de tiempo. Nadie sabe cómo; eso también tiene su valor." } },
+    ] },
+  { id: 24151, min: 0, max: 6, por: HUELLAS.nov_sabados, t: "El grupo de los sábados",
+    x: "De las clases salió un grupo de compañeros que se ayudan y se pasan datos. Te proponen seguir viéndose.",
+    o: [
+      { t: "Seguir con el grupo", d: { red: 5, ene: -2, msg: "Un sábado al mes y un chat que no para. Es tu primera red de contactos, y la armaste tú." } },
+      { t: "Agradecer y volver a tus sábados", d: { ene: 3, msg: "Te despides con cariño. Lo aprendido se queda; el grupo sigue sin ti." } },
+    ] },
+  { id: 24160, min: 0, max: 6, por: HUELLAS.nov_extra_si, t: "Quedarse se volvió obligación",
+    x: "Desde aquel viernes, quedarte tarde ya no es un gesto: es lo que se espera de ti, todas las semanas.",
+    o: [
+      { t: "Hablar con tu jefa del horario", d: { ene: 4, rep: -1, cri: 2, msg: "Le explicas que así no rindes. Acuerdan quedarte solo cuando de verdad haga falta." } },
+      { t: "Aguantar: ya vendrá el ascenso", d: { car: 3, ene: -8, msg: "Aguantas. El ascenso quizá llegue; el cansancio llegó primero." } },
+    ] },
+  { id: 24161, min: 0, max: 6, por: HUELLAS.nov_extra_si, t: "Las horas se notaron",
+    x: "En la evaluación del año, tu jefa menciona tu compromiso y te propone para un proyecto más visible.",
+    o: [
+      { t: "Aceptar el proyecto", d: { car: 4, ene: -4, msg: "Más visible, más trabajo y tu nombre en la presentación final." } },
+      { t: "Aceptar, con un horario claro", d: { car: 3, ene: -1, cri: 2, msg: "Dices que sí y pones tus condiciones. Te las aceptan: ya demostraste que cumples." } },
+    ] },
+  { id: 24162, min: 0, max: 6, por: HUELLAS.nov_extra_no, t: "Te pasaron por alto",
+    x: "Un proyecto interesante le tocó a alguien que siempre se queda hasta tarde. Nadie te dijo que fuera por eso.",
+    o: [
+      { t: "Preguntar qué hace falta para el próximo", d: { cri: 3, rep: 1, msg: "Preguntas directo. Te dicen que el próximo es tuyo si muestras iniciativa." } },
+      { t: "Aceptarlo: tu tiempo vale", d: { ene: 3, car: -1, msg: "Lo dejas pasar. No todos los proyectos valen tus noches." } },
+    ] },
+  { id: 24163, min: 0, max: 6, por: HUELLAS.nov_extra_no, t: "Rendir en horario también cuenta",
+    x: "Tu jefa nota que entregas todo a tiempo sin quedarte tarde y te pregunta cómo te organizas.",
+    o: [
+      { t: "Contarle tu método", d: { rep: 4, cri: 2, msg: "Le explicas cómo planificas la semana. Lo copia para el equipo." } },
+      { t: "Restarle importancia", d: { rep: 2, msg: "«Nada especial», dices. Ella sabe que sí." } },
+    ] },
+  { id: 24170, min: 0, max: 6, por: HUELLAS.nov_dentista, t: "Ahora duele de verdad",
+    x: "La muela se complicó un fin de semana. Urgencias, un tratamiento más largo y una cuenta tres veces mayor.",
+    o: [
+      { t: "Pagarlo todo de una vez", d: { cash: -2500, ene: -4, msg: "Lo pagas y aprendes que lo barato de esperar sale caro." } },
+      { t: "Pedir un plan de pagos", d: { cash: -2800, ene: -2, msg: "Te dan un plan. Vas a recordar esta muela cada mes durante un año." } },
+    ] },
+  { id: 24171, min: 0, max: 6, por: HUELLAS.nov_dentista, t: "Se te pasó sin hacer nada",
+    x: "La molestia se fue sola. En la siguiente revisión, el dentista dice que tuviste suerte.",
+    o: [
+      { t: "Ir a revisión cada año", d: { cri: 2, cash: -200, msg: "Agendas una revisión anual. La suerte no es un plan." } },
+      { t: "Seguir igual", d: { ene: 1, msg: "Salió bien. La próxima, quién sabe." } },
+    ] },
+  { id: 24180, min: 0, max: 6, por: HUELLAS.nov_posgrado, t: "El posgrado abrió una puerta",
+    x: "Un profesor del posgrado dirige un área en otra firma y te ofrece una entrevista.",
+    o: [
+      { t: "Ir a la entrevista", d: { red: 5, car: 2, msg: "Vas, te va bien y te quedas con un contacto que vale más que el diploma." } },
+      { t: "Agradecer: estás bien donde estás", d: { red: 2, rep: 1, msg: "Le das las gracias. Saber que hay puertas afuera también tranquiliza." } },
+    ] },
+  { id: 24181, min: 0, max: 6, por: HUELLAS.nov_posgrado, t: "El posgrado te está ganando",
+    x: "Entre el trabajo y las clases duermes cinco horas. Te queda un semestre y no sabes si llegas.",
+    o: [
+      { t: "Terminarlo como sea", d: { mod: 3, ene: -8, rep: 2, msg: "Llegas al final a rastras. El diploma pesa menos que el cansancio, por ahora." } },
+      { t: "Congelarlo un semestre", d: { ene: 6, cri: 1, msg: "Lo pausas. No es rendirse: es elegir cuándo." } },
     ] },
 ];
 /* ============================================================
@@ -52971,6 +53255,19 @@ function Motor() {
        «los minijuegos salen mucho menos»). Al rellenar se eligen primero
        las que traen minijuego, sin repetir escenas ya vistas; si el año
        quedó corto de juegos, se suma una más. */
+    /* La ruta del novato: los tres primeros años guardan hasta dos huecos
+       para la vida laboral común (el primer sueldo, la tarjeta, el piso).
+       Ocupan el sitio de escenas al azar, así que el año no se alarga; y
+       van antes del relleno porque el relleno elige primero las que traen
+       minijuego, y estas no traen ninguno: sin el hueco no salían nunca. */
+    if (st.turno <= 2) {
+      const novato = E.filter((e) => e.novato);
+      for (let k = 0; k < 2 && lista.length < objetivo; k++) {
+        const e = sacar(novato, st, usados, true);
+        if (!e) break;
+        lista.push(e); usados.push(e.id);
+      }
+    }
     const fuente = sinJefe(st) ? E.concat(DUENO) : E;
     const conJuego = (e) => !!(e && Array.isArray(e.o) && e.o.some((o) => o && (o.j || o.juego)));
     const fuenteJuego = fuente.filter(conJuego);

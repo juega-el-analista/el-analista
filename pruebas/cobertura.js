@@ -46,6 +46,13 @@ function texto(j) {
 /* marcadores: qué buscamos que aparezca alguna vez */
 const MARCAS = {
   "pantalla de edad": "¿A qué edad empiezas?",
+  "novato: primer sueldo": "Tu primer sueldo",
+  "novato: tarjeta de crédito": "Te ofrecen una tarjeta de crédito",
+  "novato: dónde vivir": "¿Compartir piso o vivir por tu cuenta?",
+  "novato: decisión clave": "Te ofrecen quedarte",
+  "informe: lo que volvió": "Lo que volvió de tus decisiones",
+  "informe: lo que sigue abierto": "Lo que sigue abierto",
+  "escena: ¿qué es?": "¿Qué es ",
   "modo aprendiz elegido": "Palabras que vas a ver",
   "recordatorio en el quiz": "Antes de responder, el recordatorio",
   "minijuego Cátedra (clase)": "Ya lo tengo, pregúntame",
