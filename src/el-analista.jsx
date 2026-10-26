@@ -856,6 +856,39 @@ const CSS6 = `
 .ea-signos .ojo{color:var(--mostaza)}
 .ea-signos .mal{color:#FF9A85}
 .ea-quienRama{color:var(--mostaza)}
+/* ---- elegir edad, país y carrera: tarjetas enteras que se tocan ---- */
+.ea-elige{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;cursor:pointer;
+  background:var(--papel);color:var(--tinta);border:none;border-radius:20px;padding:16px;margin-bottom:10px;
+  font:inherit;box-shadow:0 2px 0 rgba(42,36,64,.08),0 8px 20px rgba(42,36,64,.08);
+  transition:transform .12s, box-shadow .12s}
+.ea-elige:hover{transform:translateY(-2px);box-shadow:0 2px 0 rgba(42,36,64,.08),0 12px 26px rgba(42,36,64,.14)}
+.ea-elige:active{transform:translateY(1px)}
+.ea-elige:focus-visible{outline:3px solid var(--mostaza);outline-offset:2px}
+.ea-elige.on{box-shadow:inset 0 0 0 3px var(--mostaza),0 8px 20px rgba(42,36,64,.08)}
+.ea-eligeMarca{flex:none;width:52px;height:52px;border-radius:14px}
+.ea-eligeNum{display:flex;align-items:center;justify-content:center;background:var(--tinta);color:var(--mostaza);
+  font-family:var(--f-dis);font-weight:800;font-size:22px;letter-spacing:-.02em}
+.ea-bandera{height:36px;margin-top:6px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(42,36,64,.15)}
+.ea-eligeCuerpo{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.ea-eligeNum{order:-1}
+/* el botón de verdad (teclado y lectores de pantalla), dibujado como una
+   flecha: la tarjeta entera ya se toca y el rótulo le robaba ancho al
+   texto en el celular. El rótulo sigue ahí para quien no ve. */
+.ea-elige .ea-eligeBtn{flex:none;align-self:center;width:40px;height:40px;padding:0;border:none;border-radius:50%;
+  background:var(--mostaza);color:var(--tinta);cursor:pointer;box-shadow:0 2px 0 #B98510;
+  font-size:0;line-height:0;display:flex;align-items:center;justify-content:center}
+.ea-elige .ea-eligeBtn::after{content:"→";font-size:19px;line-height:1;font-weight:800}
+.ea-elige .ea-eligeBtn:hover{background:#FFC94D}
+.ea-eligeN{font-family:var(--f-dis);font-weight:800;font-size:21px;line-height:1.1;letter-spacing:-.02em}
+.ea-eligeN small{font-family:var(--f-txt);font-weight:700;font-size:13px;color:var(--gris);margin-left:8px;letter-spacing:0}
+.ea-eligeG{font-size:14.5px;line-height:1.45;color:#4A4366}
+.ea-eligeEtqs{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.ea-eligeEtqs .ea-ef.neg{box-shadow:inset 0 0 0 1.5px currentColor;background:transparent}
+.ea-eligeEtqs .ea-ef.neg.k-ene{color:var(--a-ene-t)}
+.ea-eligeEtqs .ea-ef.neg.k-cri{color:var(--a-hab-t)}
+.ea-eligeEtqs .ea-ef.neg.k-red{color:var(--a-red-t)}
+.ea-eligeEtqs .ea-ef.neg.k-rep{color:var(--a-rep-t)}
+.ea-eligeEtqs .ea-ef.neg.k-cash{color:var(--a-cash-t)}
 /* la cultura de la firma, en la placa junto a su nombre */
 .ea-cultura{font-style:normal;margin-left:7px;padding:1px 8px;border-radius:999px;
   background:rgba(242,182,50,.18);color:var(--mostaza);font-size:11px;letter-spacing:.04em}
@@ -3141,26 +3174,38 @@ const BANDERAS = [
        para toda la partida. Florida no cobra impuesto estatal. */
 const NACIONES = [
   { id: "ve", n: "Venezuela", ban: "Caracas",
+    gancho: "Entiendes el dinero antes que nadie: creciste con la inflación.",
+    bandera: "linear-gradient(#FFCC00 0 33.4%, #00247D 0 66.7%, #CF142B 0)",
     d: "Creciste viendo inflación de tres dígitos, así que entiendes el dinero antes que nadie. El mercado local es pequeño y todo se resuelve por quién conoces a quién.",
     mods: { red: 7, cri: 7 }, cash: 1200, sal: 0.46, gas: 0.62, tax: 0.12, sesgo: "Emergentes",
     nota: "Sueldos bajos, costo de vida bajo, impuestos bajos, todo el mundo se conoce." },
   { id: "co", n: "Colombia", ban: "Bogotá",
+    gancho: "Banca de verdad y competencia por cada puesto.",
+    bandera: "linear-gradient(#FCD116 0 50%, #003893 0 75%, #CE1126 0)",
     d: "Mercado mediano y ordenado, con banca de inversión de verdad y competencia por los puestos.",
     mods: { red: 4, rep: 3 }, cash: 3000, sal: 0.6, gas: 0.66, tax: 0.17, sesgo: "Emergentes",
     nota: "Punto de equilibrio entre oportunidad y estabilidad." },
   { id: "ar", n: "Argentina", ban: "Buenos Aires",
+    gancho: "Cada década una crisis, y aprendes a leerlas todas.",
+    bandera: "linear-gradient(#74ACDF 0 33.4%, #FFFFFF 0 66.7%, #74ACDF 0)",
     d: "El país que te enseña macro a la fuerza. Cada década trae una crisis y cada crisis deja una generación que sabe leer una curva.",
     mods: { cri: 9, mod: 2 }, cash: 1800, sal: 0.54, gas: 0.59, tax: 0.24, sesgo: "Tasas",
     nota: "Criterio macro altísimo, ingresos volátiles." },
   { id: "mx", n: "México", ban: "Ciudad de México",
+    gancho: "El mercado más grande en español, pegado al norte.",
+    bandera: "linear-gradient(90deg, #006847 0 33.4%, #FFFFFF 0 66.7%, #CE1126 0)",
     d: "El mercado más grande de habla hispana y la puerta de entrada al capital estadounidense.",
     mods: { red: 4, mod: 3 }, cash: 4500, sal: 0.72, gas: 0.85, tax: 0.21, sesgo: "Comercio",
     nota: "Volumen de operaciones alto y cercanía con el norte." },
   { id: "es", n: "España", ban: "Madrid",
+    gancho: "Carrera más lenta, sueldos más altos y toda Europa cerca.",
+    bandera: "linear-gradient(#AA151B 0 25%, #F1BF00 0 75%, #AA151B 0)",
     d: "Acceso a Europa, instituciones sólidas y una carrera más lenta pero más predecible.",
     mods: { rep: 5, mod: 3 }, cash: 7000, sal: 1, gas: 1, tax: 0.31, sesgo: "Mercados",
     nota: "Estabilidad y la carga fiscal más alta de la lista." },
   { id: "us", n: "Estados Unidos", ban: "Miami",
+    gancho: "Sueldos de otra escala. Empiezas debiendo la universidad.",
+    bandera: "linear-gradient(#3C3B6E, #3C3B6E) 0 0 / 42% 54% no-repeat, repeating-linear-gradient(#B22234 0 7.7%, #FFFFFF 0 15.4%)",
     d: "La capital financiera de América Latina en Estados Unidos. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
     mods: { mod: 7 }, cash: -16000, sal: 1.7, gas: 1.52, tax: 0.22, sesgo: "Mercados",
     nota: "Empiezas debiendo dieciséis mil dólares de la universidad." },
@@ -48109,10 +48154,10 @@ const MODOS = [
 ];
 const MODO = () => MODOS[0];
 const EDADES = [
-  { e: 20, n: "20 años", d: "Recién graduado, sin nada ahorrado y con todo el tiempo del mundo a favor.", cash: 0, car: 0, mods: {} },
-  { e: 30, n: "30 años", d: "Ya trabajaste unos años. Empiezas con algo de dinero, algo de red y menos años por delante.", cash: 9000, car: 14, mods: { cri: 6, red: 8, rep: 5 } },
-  { e: 40, n: "40 años", d: "Media carrera hecha. Más patrimonio y más responsabilidades; el interés compuesto ya no te regala tanto.", cash: 30000, car: 42, mods: { cri: 12, red: 16, rep: 10, ene: -6 } },
-  { e: 50, n: "50 años", d: "Empezar tarde no es no empezar. Menos tiempo, más recursos y una idea mucho más clara de lo que quieres.", cash: 65000, car: 62, mods: { cri: 18, red: 22, rep: 14, ene: -12 } },
+  { e: 20, n: "20 años", gancho: "Con el título recién salido y todo el tiempo del mundo.", d: "Recién salido de la universidad, sin nada ahorrado y con todo el tiempo del mundo a favor.", cash: 0, car: 0, mods: {} },
+  { e: 30, n: "30 años", gancho: "Ya sabes cómo funciona una oficina, y tienes algo ahorrado.", d: "Ya trabajaste unos años. Empiezas con algo de dinero, algo de red y menos años por delante.", cash: 9000, car: 14, mods: { cri: 6, red: 8, rep: 5 } },
+  { e: 40, n: "40 años", gancho: "Media carrera hecha y responsabilidades encima.", d: "Media carrera hecha. Más patrimonio y más responsabilidades; el interés compuesto ya no te regala tanto.", cash: 30000, car: 42, mods: { cri: 12, red: 16, rep: 10, ene: -6 } },
+  { e: 50, n: "50 años", gancho: "Menos tiempo, más recursos y las ideas claras.", d: "Empezar tarde no es no empezar. Menos tiempo, más recursos y una idea mucho más clara de lo que quieres.", cash: 65000, car: 62, mods: { cri: 18, red: 22, rep: 14, ene: -12 } },
 ];
 const EDAD_DE = (e) => EDADES.find((x) => x.e === e) || EDADES[0];
 
@@ -49351,12 +49396,35 @@ const hiloDelAno = (st, turno) => {
   return { ecos: ecos.slice(0, 4), abiertos: abiertos.slice(0, 3), masAbiertos: Math.max(0, abiertos.length - 3) };
 };
 
+/* Lo que trae una edad o una carrera, en etiquetas de color y sin
+   cifras: «Habilidad», «Contactos»... Las cifras («Habilidad +11») no
+   decían nada a quien todavía no jugó, y llenaban la tarjeta de letra
+   chica. Lo que suma va lleno; lo que resta, en contorno. */
+const etiquetasDe = (mods) => {
+  const m = mods && typeof mods === "object" ? mods : {};
+  const out = [];
+  const hab = juntarHab(m.mod, m.cri);
+  if (hab) out.push({ k: "cri", n: "Habilidad", sube: hab > 0 });
+  [["red", "Contactos"], ["rep", "Reputación"], ["ene", "Energía"]].forEach(([k, n]) => {
+    const v = numero(m[k], 0);
+    if (v) out.push({ k, n: v > 0 ? n : "Menos " + n.toLowerCase(), sube: v > 0 });
+  });
+  return out;
+};
+const Etiquetas = ({ lista }) => (
+  <span className="ea-eligeEtqs">
+    {lista.map((x, i) => (
+      <span key={i} className={"ea-ef k-" + (x.k || "cash") + (x.sube === false ? " neg" : " pos")}>{x.n}</span>
+    ))}
+  </span>
+);
+
 /* El país en palabras: sueldos bajos / medios / altos, vida barata /
    media / cara. Los cortes van sobre el índice de NACIONES (España = 1). */
 const nivelPais = (x, gasto) => {
   const v = numero(x, 1);
   const n = v < 0.55 ? 0 : v < 0.8 ? 1 : v < 1.2 ? 2 : 3;
-  return (gasto ? ["barata", "más bien barata", "media", "cara"] : ["bajos", "medios", "altos", "muy altos"])[n];
+  return (gasto ? ["muy barata", "barata", "media", "cara"] : ["bajos", "medios", "altos", "muy altos"])[n];
 };
 
 /* Lo que cuesta subir. De 25 a 40 se sube casi entero; de 70 a 80,
@@ -55334,16 +55402,18 @@ function Motor() {
               ofrece seguir de cinco en cinco. Hubo un selector «Una década /
               La carrera entera»; se quitó el 28-sep-2026. */}
 
+          {/* Una tarjeta entera es el botón: el número grande, una frase
+              y lo que trae, en etiquetas. Sin cifras ni letra chica. */}
           {EDADES.map((e) => (
-            <button className={"ea-opcion" + (elec.edad === e.e ? " on" : "")} key={e.e}
+            <button className={"ea-elige" + (elec.edad === e.e ? " on" : "")} key={e.e}
               onClick={() => { if (enFase("edad")) elige("edad", e.e, e.e >= 30 ? "familia" : "pais"); }}>
-              <div className="ea-opcionN">Empezar a los {e.e}</div>
-              <div className="ea-opcionD">{e.d}</div>
-              <div className="ea-opcionM">
-                Te preguntan si te retiras a los {e.e + DURACION(elec.duracion).meta}, y ahí decides si sigues
-                {e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado"}
-                {modsTxt(e.mods) ? " · " + modsTxt(e.mods) : ""}
-              </div>
+              <span className="ea-eligeCuerpo">
+                <span className="ea-eligeN">Empezar a los {e.e}</span>
+                <span className="ea-eligeG">{e.gancho}</span>
+                <Etiquetas lista={[{ k: "cash", n: e.cash >= 30000 ? "Buen colchón" : e.cash > 0 ? "Algo ahorrado" : "Sin ahorros", sube: e.cash > 0 }].concat(etiquetasDe(e.mods))} />
+              </span>
+              {/* va después en el texto y delante en pantalla (order:-1) */}
+              <span className="ea-eligeMarca ea-eligeNum" aria-hidden="true">{e.e}</span>
             </button>
           ))}
         </div>
@@ -55395,22 +55465,23 @@ function Motor() {
           <p className="ea-lede" style={{ marginBottom: 18 }}>
             Define tu sueldo, tu costo de vida y con qué instintos empiezas.
           </p>
+          {/* La bandera, el país en grande, una frase y tres etiquetas.
+              Antes eran cuatro líneas de letra chica con impuestos y
+              dólares, y se leía como una ficha técnica. */}
           {NACIONES.map((p) => (
-            <div className="ea-panel" key={p.id} style={{ marginBottom: 10 }}>
-              <div className="ea-itemTop">
-                <span className="ea-nombre ea-dis" style={{ fontSize: 19, color: "var(--tinta)" }}>{p.n}</span>
-                <span className="ea-mono" style={{ fontSize: 12.5, color: "var(--gris)" }}>{p.ban}</span>
-              </div>
-              <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "8px 0" }}>{p.d}</div>
-              <div style={{ fontSize: 12, color: "var(--cobre)" }}>
-                {/* «Sueldos 46» era un índice contra España = 100 que nadie
-                    sabía leer. En palabras se entiende sin la tabla. */}
-                Sueldos {nivelPais(p.sal)} · vida {nivelPais(p.gas, true)} · impuestos del {Math.round(p.tax * 100)}% · {p.cash >= 0 ? "empiezas con USD " + fmt(p.cash) : "empiezas debiendo USD " + fmt(-p.cash)}
-              </div>
-              <div style={{ fontSize: 12, color: "var(--gris)", marginTop: 3 }}>{p.nota}</div>
-              <button className="ea-mini" onClick={() => { if (enFase("pais")) elige("pais", p.id, "estudio"); }}>
-                {elec.pais === p.id ? "Elegido" : "Elegir"}
-              </button>
+            <div className={"ea-elige" + (elec.pais === p.id ? " on" : "")} key={p.id}
+              onClick={() => { if (enFase("pais")) elige("pais", p.id, "estudio"); }}>
+              <span className="ea-eligeMarca ea-bandera" style={{ background: p.bandera }} aria-hidden="true" />
+              <span className="ea-eligeCuerpo">
+                <span className="ea-eligeN">{p.n}<small>{p.ban}</small></span>
+                <span className="ea-eligeG">{p.gancho}</span>
+                <Etiquetas lista={[
+                  { k: "cash", n: "Sueldos " + nivelPais(p.sal), sube: p.sal >= 0.8 },
+                  { k: "ene", n: "Vida " + nivelPais(p.gas, true), sube: p.gas < 0.8 },
+                  p.cash < 0 ? { k: "rep", n: "Empiezas con deuda", sube: false } : null,
+                ].filter(Boolean)} />
+              </span>
+              <button className="ea-eligeBtn ea-dis" onClick={(ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); if (enFase("pais")) elige("pais", p.id, "estudio"); }}>Elegir</button>
             </div>
           ))}
         </div>
@@ -55425,27 +55496,33 @@ function Motor() {
           </h2>
           <div className="ea-rastro ea-mono">{rastro()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            Te da atributos y opciones que solo tú vas a poder tomar. Al elegir, empieza la partida.
+            Decide en qué eres bueno y te abre decisiones que nadie más tiene. Al elegir, empieza la partida.
           </p>
-          {CARRERAS.map((c) => (
-            <div className="ea-panel" key={c.id} style={{ marginBottom: 10 }}>
-              <div className="ea-nombre ea-dis" style={{ fontSize: 19, color: "var(--tinta)" }}>{c.n}</div>
-              <div style={{ fontSize: 13.5, color: "var(--gris)", margin: "7px 0" }}>{c.d}</div>
-              <div style={{ fontSize: 12, color: "var(--cobre)" }}>
-                {modsTxt(c.mods)} · mejor en {c.juegos.map((j) => JUEGO(j).n.toLowerCase()).join(" y ")}
+          {(() => {
+            /* Al elegir la carrera empieza la partida. Sin las ventanas de
+               guía («Esto es una decisión», «Arriba están tus secciones»...):
+               salían en cada partida, cortaban el hilo y explicaban cosas
+               que se entienden jugando. Las de «Sección nueva», que avisan
+               cuando se abre algo, siguen. */
+            const elegirCarrera = (c) => {
+              if (!enFase("estudio")) return;
+              setElec((x) => ({ ...x, estudio: c.id }));
+              arrancarPartida({ ...elec, estudio: c.id, guia: false });
+            };
+            return CARRERAS.map((c) => (
+              <div className="ea-elige" key={c.id} onClick={() => elegirCarrera(c)}>
+                <span className="ea-eligeMarca ea-eligeNum" style={{ fontSize: 15 }} aria-hidden="true">{c.n.slice(0, 3)}</span>
+                <span className="ea-eligeCuerpo">
+                  <span className="ea-eligeN">{c.n}</span>
+                  <span className="ea-eligeG">{c.d}</span>
+                  <Etiquetas lista={etiquetasDe(c.mods)} />
+                </span>
+                <button className="ea-eligeBtn ea-dis" onClick={(ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); elegirCarrera(c); }}>
+                  {EDAD_DE(elec.edad).e <= 20 ? "Graduarte de esto" : "Empezar con esto"}
+                </button>
               </div>
-              <button className="ea-mini" onClick={() => {
-                if (!enFase("estudio")) return;
-                /* Al elegir la carrera empieza la partida, con los avisos de
-                   guía siempre puestos. Había una pantalla más («¿Te vas
-                   guiando o vas solo?») y se quitó el 28-sep-2026: los
-                   avisos son cortos y salen una sola vez, no hace falta
-                   preguntar por ellos. */
-                setElec((x) => ({ ...x, estudio: c.id }));
-                arrancarPartida({ ...elec, estudio: c.id, guia: true });
-              }}>{EDAD_DE(elec.edad).e <= 20 ? "Graduarte de esto" : "Empezar con esto"}</button>
-            </div>
-          ))}
+            ));
+          })()}
         </div>
       )}
 

@@ -1516,6 +1516,39 @@ const CSS6 = `
 .ea-signos .ojo{color:var(--mostaza)}
 .ea-signos .mal{color:#FF9A85}
 .ea-quienRama{color:var(--mostaza)}
+/* ---- elegir edad, país y carrera: tarjetas enteras que se tocan ---- */
+.ea-elige{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;cursor:pointer;
+  background:var(--papel);color:var(--tinta);border:none;border-radius:20px;padding:16px;margin-bottom:10px;
+  font:inherit;box-shadow:0 2px 0 rgba(42,36,64,.08),0 8px 20px rgba(42,36,64,.08);
+  transition:transform .12s, box-shadow .12s}
+.ea-elige:hover{transform:translateY(-2px);box-shadow:0 2px 0 rgba(42,36,64,.08),0 12px 26px rgba(42,36,64,.14)}
+.ea-elige:active{transform:translateY(1px)}
+.ea-elige:focus-visible{outline:3px solid var(--mostaza);outline-offset:2px}
+.ea-elige.on{box-shadow:inset 0 0 0 3px var(--mostaza),0 8px 20px rgba(42,36,64,.08)}
+.ea-eligeMarca{flex:none;width:52px;height:52px;border-radius:14px}
+.ea-eligeNum{display:flex;align-items:center;justify-content:center;background:var(--tinta);color:var(--mostaza);
+  font-family:var(--f-dis);font-weight:800;font-size:22px;letter-spacing:-.02em}
+.ea-bandera{height:36px;margin-top:6px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(42,36,64,.15)}
+.ea-eligeCuerpo{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.ea-eligeNum{order:-1}
+/* el botón de verdad (teclado y lectores de pantalla), dibujado como una
+   flecha: la tarjeta entera ya se toca y el rótulo le robaba ancho al
+   texto en el celular. El rótulo sigue ahí para quien no ve. */
+.ea-elige .ea-eligeBtn{flex:none;align-self:center;width:40px;height:40px;padding:0;border:none;border-radius:50%;
+  background:var(--mostaza);color:var(--tinta);cursor:pointer;box-shadow:0 2px 0 #B98510;
+  font-size:0;line-height:0;display:flex;align-items:center;justify-content:center}
+.ea-elige .ea-eligeBtn::after{content:"→";font-size:19px;line-height:1;font-weight:800}
+.ea-elige .ea-eligeBtn:hover{background:#FFC94D}
+.ea-eligeN{font-family:var(--f-dis);font-weight:800;font-size:21px;line-height:1.1;letter-spacing:-.02em}
+.ea-eligeN small{font-family:var(--f-txt);font-weight:700;font-size:13px;color:var(--gris);margin-left:8px;letter-spacing:0}
+.ea-eligeG{font-size:14.5px;line-height:1.45;color:#4A4366}
+.ea-eligeEtqs{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.ea-eligeEtqs .ea-ef.neg{box-shadow:inset 0 0 0 1.5px currentColor;background:transparent}
+.ea-eligeEtqs .ea-ef.neg.k-ene{color:var(--a-ene-t)}
+.ea-eligeEtqs .ea-ef.neg.k-cri{color:var(--a-hab-t)}
+.ea-eligeEtqs .ea-ef.neg.k-red{color:var(--a-red-t)}
+.ea-eligeEtqs .ea-ef.neg.k-rep{color:var(--a-rep-t)}
+.ea-eligeEtqs .ea-ef.neg.k-cash{color:var(--a-cash-t)}
 /* la cultura de la firma, en la placa junto a su nombre */
 .ea-cultura{font-style:normal;margin-left:7px;padding:1px 8px;border-radius:999px;
   background:rgba(242,182,50,.18);color:var(--mostaza);font-size:11px;letter-spacing:.04em}
@@ -6076,6 +6109,8 @@ const NACIONES = [{
   id: "ve",
   n: "Venezuela",
   ban: "Caracas",
+  gancho: "Entiendes el dinero antes que nadie: creciste con la inflación.",
+  bandera: "linear-gradient(#FFCC00 0 33.4%, #00247D 0 66.7%, #CF142B 0)",
   d: "Creciste viendo inflación de tres dígitos, así que entiendes el dinero antes que nadie. El mercado local es pequeño y todo se resuelve por quién conoces a quién.",
   mods: {
     red: 7,
@@ -6091,6 +6126,8 @@ const NACIONES = [{
   id: "co",
   n: "Colombia",
   ban: "Bogotá",
+  gancho: "Banca de verdad y competencia por cada puesto.",
+  bandera: "linear-gradient(#FCD116 0 50%, #003893 0 75%, #CE1126 0)",
   d: "Mercado mediano y ordenado, con banca de inversión de verdad y competencia por los puestos.",
   mods: {
     red: 4,
@@ -6106,6 +6143,8 @@ const NACIONES = [{
   id: "ar",
   n: "Argentina",
   ban: "Buenos Aires",
+  gancho: "Cada década una crisis, y aprendes a leerlas todas.",
+  bandera: "linear-gradient(#74ACDF 0 33.4%, #FFFFFF 0 66.7%, #74ACDF 0)",
   d: "El país que te enseña macro a la fuerza. Cada década trae una crisis y cada crisis deja una generación que sabe leer una curva.",
   mods: {
     cri: 9,
@@ -6121,6 +6160,8 @@ const NACIONES = [{
   id: "mx",
   n: "México",
   ban: "Ciudad de México",
+  gancho: "El mercado más grande en español, pegado al norte.",
+  bandera: "linear-gradient(90deg, #006847 0 33.4%, #FFFFFF 0 66.7%, #CE1126 0)",
   d: "El mercado más grande de habla hispana y la puerta de entrada al capital estadounidense.",
   mods: {
     red: 4,
@@ -6136,6 +6177,8 @@ const NACIONES = [{
   id: "es",
   n: "España",
   ban: "Madrid",
+  gancho: "Carrera más lenta, sueldos más altos y toda Europa cerca.",
+  bandera: "linear-gradient(#AA151B 0 25%, #F1BF00 0 75%, #AA151B 0)",
   d: "Acceso a Europa, instituciones sólidas y una carrera más lenta pero más predecible.",
   mods: {
     rep: 5,
@@ -6151,6 +6194,8 @@ const NACIONES = [{
   id: "us",
   n: "Estados Unidos",
   ban: "Miami",
+  gancho: "Sueldos de otra escala. Empiezas debiendo la universidad.",
+  bandera: "linear-gradient(#3C3B6E, #3C3B6E) 0 0 / 42% 54% no-repeat, repeating-linear-gradient(#B22234 0 7.7%, #FFFFFF 0 15.4%)",
   d: "La capital financiera de América Latina en Estados Unidos. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
   mods: {
     mod: 7
@@ -49758,13 +49803,15 @@ const MODO = () => MODOS[0];
 const EDADES = [{
   e: 20,
   n: "20 años",
-  d: "Recién graduado, sin nada ahorrado y con todo el tiempo del mundo a favor.",
+  gancho: "Con el título recién salido y todo el tiempo del mundo.",
+  d: "Recién salido de la universidad, sin nada ahorrado y con todo el tiempo del mundo a favor.",
   cash: 0,
   car: 0,
   mods: {}
 }, {
   e: 30,
   n: "30 años",
+  gancho: "Ya sabes cómo funciona una oficina, y tienes algo ahorrado.",
   d: "Ya trabajaste unos años. Empiezas con algo de dinero, algo de red y menos años por delante.",
   cash: 9000,
   car: 14,
@@ -49776,6 +49823,7 @@ const EDADES = [{
 }, {
   e: 40,
   n: "40 años",
+  gancho: "Media carrera hecha y responsabilidades encima.",
   d: "Media carrera hecha. Más patrimonio y más responsabilidades; el interés compuesto ya no te regala tanto.",
   cash: 30000,
   car: 42,
@@ -49788,6 +49836,7 @@ const EDADES = [{
 }, {
   e: 50,
   n: "50 años",
+  gancho: "Menos tiempo, más recursos y las ideas claras.",
   d: "Empezar tarde no es no empezar. Menos tiempo, más recursos y una idea mucho más clara de lo que quieres.",
   cash: 65000,
   car: 62,
@@ -51651,12 +51700,44 @@ const hiloDelAno = (st, turno) => {
   };
 };
 
+/* Lo que trae una edad o una carrera, en etiquetas de color y sin
+   cifras: «Habilidad», «Contactos»... Las cifras («Habilidad +11») no
+   decían nada a quien todavía no jugó, y llenaban la tarjeta de letra
+   chica. Lo que suma va lleno; lo que resta, en contorno. */
+const etiquetasDe = mods => {
+  const m = mods && typeof mods === "object" ? mods : {};
+  const out = [];
+  const hab = juntarHab(m.mod, m.cri);
+  if (hab) out.push({
+    k: "cri",
+    n: "Habilidad",
+    sube: hab > 0
+  });
+  [["red", "Contactos"], ["rep", "Reputación"], ["ene", "Energía"]].forEach(([k, n]) => {
+    const v = numero(m[k], 0);
+    if (v) out.push({
+      k,
+      n: v > 0 ? n : "Menos " + n.toLowerCase(),
+      sube: v > 0
+    });
+  });
+  return out;
+};
+const Etiquetas = ({
+  lista
+}) => /*#__PURE__*/React.createElement("span", {
+  className: "ea-eligeEtqs"
+}, lista.map((x, i) => /*#__PURE__*/React.createElement("span", {
+  key: i,
+  className: "ea-ef k-" + (x.k || "cash") + (x.sube === false ? " neg" : " pos")
+}, x.n)));
+
 /* El país en palabras: sueldos bajos / medios / altos, vida barata /
    media / cara. Los cortes van sobre el índice de NACIONES (España = 1). */
 const nivelPais = (x, gasto) => {
   const v = numero(x, 1);
   const n = v < 0.55 ? 0 : v < 0.8 ? 1 : v < 1.2 ? 2 : 3;
-  return (gasto ? ["barata", "más bien barata", "media", "cara"] : ["bajos", "medios", "altos", "muy altos"])[n];
+  return (gasto ? ["muy barata", "barata", "media", "cara"] : ["bajos", "medios", "altos", "muy altos"])[n];
 };
 
 /* Lo que cuesta subir. De 25 a 40 se sube casi entero; de 70 a 80,
@@ -59572,18 +59653,27 @@ function Motor() {
       marginBottom: 18
     }
   }, "Nadie est\xE1 fuera de tiempo. M\xE1s tarde es menos a\xF1os y m\xE1s habilidad, contactos y dinero."), EDADES.map(e => /*#__PURE__*/React.createElement("button", {
-    className: "ea-opcion" + (elec.edad === e.e ? " on" : ""),
+    className: "ea-elige" + (elec.edad === e.e ? " on" : ""),
     key: e.e,
     onClick: () => {
       if (enFase("edad")) elige("edad", e.e, e.e >= 30 ? "familia" : "pais");
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionN"
-  }, "Empezar a los ", e.e), /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionD"
-  }, e.d), /*#__PURE__*/React.createElement("div", {
-    className: "ea-opcionM"
-  }, "Te preguntan si te retiras a los ", e.e + DURACION(elec.duracion).meta, ", y ah\xED decides si sigues", e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado", modsTxt(e.mods) ? " · " + modsTxt(e.mods) : "")))), fase === "familia" && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-eligeCuerpo"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-eligeN"
+  }, "Empezar a los ", e.e), /*#__PURE__*/React.createElement("span", {
+    className: "ea-eligeG"
+  }, e.gancho), /*#__PURE__*/React.createElement(Etiquetas, {
+    lista: [{
+      k: "cash",
+      n: e.cash >= 30000 ? "Buen colchón" : e.cash > 0 ? "Algo ahorrado" : "Sin ahorros",
+      sube: e.cash > 0
+    }].concat(etiquetasDe(e.mods))
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "ea-eligeMarca ea-eligeNum",
+    "aria-hidden": "true"
+  }, e.e)))), fase === "familia" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
@@ -59678,48 +59768,44 @@ function Motor() {
       marginBottom: 18
     }
   }, "Define tu sueldo, tu costo de vida y con qu\xE9 instintos empiezas."), NACIONES.map(p => /*#__PURE__*/React.createElement("div", {
-    className: "ea-panel",
+    className: "ea-elige" + (elec.pais === p.id ? " on" : ""),
     key: p.id,
-    style: {
-      marginBottom: 10
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-itemTop"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ea-nombre ea-dis",
-    style: {
-      fontSize: 19,
-      color: "var(--tinta)"
-    }
-  }, p.n), /*#__PURE__*/React.createElement("span", {
-    className: "ea-mono",
-    style: {
-      fontSize: 12.5,
-      color: "var(--gris)"
-    }
-  }, p.ban)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13.5,
-      color: "var(--gris)",
-      margin: "8px 0"
-    }
-  }, p.d), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: "var(--cobre)"
-    }
-  }, "Sueldos ", nivelPais(p.sal), " \xB7 vida ", nivelPais(p.gas, true), " \xB7 impuestos del ", Math.round(p.tax * 100), "% \xB7 ", p.cash >= 0 ? "empiezas con USD " + fmt(p.cash) : "empiezas debiendo USD " + fmt(-p.cash)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: "var(--gris)",
-      marginTop: 3
-    }
-  }, p.nota), /*#__PURE__*/React.createElement("button", {
-    className: "ea-mini",
     onClick: () => {
       if (enFase("pais")) elige("pais", p.id, "estudio");
     }
-  }, elec.pais === p.id ? "Elegido" : "Elegir")))), fase === "estudio" && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-eligeMarca ea-bandera",
+    style: {
+      background: p.bandera
+    },
+    "aria-hidden": "true"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "ea-eligeCuerpo"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ea-eligeN"
+  }, p.n, /*#__PURE__*/React.createElement("small", null, p.ban)), /*#__PURE__*/React.createElement("span", {
+    className: "ea-eligeG"
+  }, p.gancho), /*#__PURE__*/React.createElement(Etiquetas, {
+    lista: [{
+      k: "cash",
+      n: "Sueldos " + nivelPais(p.sal),
+      sube: p.sal >= 0.8
+    }, {
+      k: "ene",
+      n: "Vida " + nivelPais(p.gas, true),
+      sube: p.gas < 0.8
+    }, p.cash < 0 ? {
+      k: "rep",
+      n: "Empiezas con deuda",
+      sube: false
+    } : null].filter(Boolean)
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "ea-eligeBtn ea-dis",
+    onClick: ev => {
+      if (ev && ev.stopPropagation) ev.stopPropagation();
+      if (enFase("pais")) elige("pais", p.id, "estudio");
+    }
+  }, "Elegir")))), fase === "estudio" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
@@ -59747,38 +59833,14 @@ function Motor() {
     style: {
       marginBottom: 18
     }
-  }, "Te da atributos y opciones que solo t\xFA vas a poder tomar. Al elegir, empieza la partida."), CARRERAS.map(c => /*#__PURE__*/React.createElement("div", {
-    className: "ea-panel",
-    key: c.id,
-    style: {
-      marginBottom: 10
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "ea-nombre ea-dis",
-    style: {
-      fontSize: 19,
-      color: "var(--tinta)"
-    }
-  }, c.n), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13.5,
-      color: "var(--gris)",
-      margin: "7px 0"
-    }
-  }, c.d), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: "var(--cobre)"
-    }
-  }, modsTxt(c.mods), " \xB7 mejor en ", c.juegos.map(j => JUEGO(j).n.toLowerCase()).join(" y ")), /*#__PURE__*/React.createElement("button", {
-    className: "ea-mini",
-    onClick: () => {
+  }, "Decide en qu\xE9 eres bueno y te abre decisiones que nadie m\xE1s tiene. Al elegir, empieza la partida."), (() => {
+    /* Al elegir la carrera empieza la partida. Sin las ventanas de
+       guía («Esto es una decisión», «Arriba están tus secciones»...):
+       salían en cada partida, cortaban el hilo y explicaban cosas
+       que se entienden jugando. Las de «Sección nueva», que avisan
+       cuando se abre algo, siguen. */
+    const elegirCarrera = c => {
       if (!enFase("estudio")) return;
-      /* Al elegir la carrera empieza la partida, con los avisos de
-         guía siempre puestos. Había una pantalla más («¿Te vas
-         guiando o vas solo?») y se quitó el 28-sep-2026: los
-         avisos son cortos y salen una sola vez, no hace falta
-         preguntar por ellos. */
       setElec(x => ({
         ...x,
         estudio: c.id
@@ -59786,10 +59848,35 @@ function Motor() {
       arrancarPartida({
         ...elec,
         estudio: c.id,
-        guia: true
+        guia: false
       });
-    }
-  }, EDAD_DE(elec.edad).e <= 20 ? "Graduarte de esto" : "Empezar con esto")))), (fase === "evento" || fase === "minijuego" || fase === "resultado" || fase === "cierre" || fase === "retiro") && /*#__PURE__*/React.createElement("div", {
+    };
+    return CARRERAS.map(c => /*#__PURE__*/React.createElement("div", {
+      className: "ea-elige",
+      key: c.id,
+      onClick: () => elegirCarrera(c)
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-eligeMarca ea-eligeNum",
+      style: {
+        fontSize: 15
+      },
+      "aria-hidden": "true"
+    }, c.n.slice(0, 3)), /*#__PURE__*/React.createElement("span", {
+      className: "ea-eligeCuerpo"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "ea-eligeN"
+    }, c.n), /*#__PURE__*/React.createElement("span", {
+      className: "ea-eligeG"
+    }, c.d), /*#__PURE__*/React.createElement(Etiquetas, {
+      lista: etiquetasDe(c.mods)
+    })), /*#__PURE__*/React.createElement("button", {
+      className: "ea-eligeBtn ea-dis",
+      onClick: ev => {
+        if (ev && ev.stopPropagation) ev.stopPropagation();
+        elegirCarrera(c);
+      }
+    }, EDAD_DE(elec.edad).e <= 20 ? "Graduarte de esto" : "Empezar con esto")));
+  })()), (fase === "evento" || fase === "minijuego" || fase === "resultado" || fase === "cierre" || fase === "retiro") && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-placa"
