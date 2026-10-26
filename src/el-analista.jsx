@@ -268,6 +268,12 @@ const CSS = `
 /* el nombre va escrito: en el celular no hay tooltip y el icono solo
    no se adivina */
 .ea-efN{font-size:11.5px;font-weight:600;margin-left:2px}
+/* el hilo del año en el informe: lo que volvió y lo que sigue abierto */
+.ea-hilo{margin-top:14px;padding:12px 14px;border-left:3px solid var(--cobre);background:rgba(0,0,0,.03);border-radius:0 10px 10px 0}
+.ea-hiloK{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--cobre);margin-bottom:6px}
+.ea-hiloL{font-size:13.5px;line-height:1.4;margin:4px 0}
+.ea-hiloL b{display:block;font-weight:700}
+.ea-hiloL span{color:var(--gris)}
 /* las palabras de oficio de una escena, a un toque */
 .ea-jerga{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 12px}
 .ea-jerga details{font-size:12.5px;border:1px dashed rgba(0,0,0,.18);border-radius:10px;padding:3px 10px;background:rgba(255,255,255,.5)}
@@ -48678,6 +48684,29 @@ const modsTxt = (mods) => {
   return out.join(" · ");
 };
 
+/* El hilo del año, para el informe de cierre. Lo que más se echaba en
+   falta era ver que lo que decides cuenta: las consecuencias llegaban
+   con su «Viene de» y luego nadie las volvía a nombrar, y lo que aún
+   podía volver no se veía en ninguna parte.
+   - ecos: las consecuencias que viviste este año y de qué venían.
+   - abiertos: lo que dejaste en marcha y todavía puede volver. */
+const hiloDelAno = (st, turno) => {
+  const ecos = [], abiertos = [];
+  try {
+    (Array.isArray(st.camino) ? st.camino : []).forEach((c) => {
+      if (!c || c.a !== turno || IDS_CONSEC.indexOf(c.id) < 0) return;
+      const e = escenaDeId(c.id, st);
+      if (e && e.por && e.por !== POR_RAMA && !ecos.some((x) => x.t === e.t)) ecos.push({ t: e.t, por: e.por });
+    });
+    (Array.isArray(st.pendientes) ? st.pendientes : []).forEach((p) => {
+      if (!p || p.en <= turno) return;
+      const e = escenaDeId(p.id, st);
+      if (e && e.por && e.por !== POR_RAMA && abiertos.indexOf(e.por) < 0) abiertos.push(e.por);
+    });
+  } catch (e) { /* el informe sale igual, sin el hilo */ }
+  return { ecos: ecos.slice(0, 4), abiertos: abiertos.slice(0, 3), masAbiertos: Math.max(0, abiertos.length - 3) };
+};
+
 /* El país en palabras: sueldos bajos / medios / altos, vida barata /
    media / cara. Los cortes van sobre el índice de NACIONES (España = 1). */
 const nivelPais = (x, gasto) => {
@@ -52823,13 +52852,14 @@ function Motor() {
        se alargaban sin fin. Ahora ocupa el sitio de las escenas al azar:
        cuanto más tuya es la historia, menos sorteo, y el año dura lo
        mismo. Se apartan aquí y entran después de contar las forzadas.
-       Dos como mucho; si coinciden más, las otras esperan al año
-       siguiente. */
+       Tres como mucho; si coinciden más, las otras esperan al año
+       siguiente. Eran dos, y con tres a cinco decisiones al año la cola
+       crecía sin parar y las más viejas se perdían sin haber vuelto. */
     const vuelven = (Array.isArray(st.pendientes) ? st.pendientes : [])
       .filter((p) => p.en <= st.turno && pendienteVivo(p, st))
       .map((p) => escenaDeId(p.id, st))
       .filter((e) => e && usados.indexOf(e.id) < 0 && huellasOk(e, st))
-      .slice(0, 2);
+      .slice(0, 3);
     vuelven.forEach((e) => { usados.push(e.id); });
     /* Una sola tirada al año, y solo pasados los primeros años: una
        legendaria en el año uno no significaría nada porque todavía no hay
@@ -54043,6 +54073,7 @@ function Motor() {
          año van por su propia clave para que no se pisen */
       hitosDec: cartera.hitos,
       cobertura, gastos, indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0,
+      ...hiloDelAno(st, ano - 2026),
     });
     if (terminar) setFin(terminar);
     setAnuncio(true);       /* primero el rodillo, y despues el informe */
@@ -54995,6 +55026,20 @@ function Motor() {
                     {/* El diccionario era una pestaña fija. Es una
                         consulta, no una accion: vive aqui dentro y se
                         abre cuando hace falta. */}
+                    {/* Tus huellas en frases: lo que hiciste y el juego
+                        recuerda. Había 255 y no se veían en ninguna parte
+                        hasta el final; aquí se ve que cada una queda. */}
+                    {(Array.isArray(s.huellas) ? s.huellas : []).some((h) => HUELLAS[h]) && (
+                      <Plegable titulo="Tu historia" resumen={s.huellas.filter((h) => HUELLAS[h]).length + " cosas que el juego recuerda"}>
+                        <div className="ea-itemD" style={{ marginBottom: 10 }}>
+                          Lo que hiciste y no se olvida. Algunas de estas cosas vuelven más adelante y deciden cómo termina tu historia.
+                        </div>
+                        {s.huellas.filter((h) => HUELLAS[h]).slice().reverse().map((h) => (
+                          <div className="ea-item" key={h}><div className="ea-itemD">{HUELLAS[h]}</div></div>
+                        ))}
+                      </Plegable>
+                    )}
+
                     <Plegable titulo="El diccionario" resumen={Object.keys(GLOSARIO).length + " palabras"}>
                       <div className="ea-itemD" style={{ marginBottom: 10 }}>
                         Todas las palabras que usa el juego, sin jerga.
@@ -55694,6 +55739,32 @@ function Motor() {
                       <div className="ea-indM" style={{ left: "71.4%" }} />
                     </div>
                   </div>
+
+                  {/* Tu historia del año: lo que volvió de decisiones
+                      anteriores y lo que dejaste en marcha. Es lo que
+                      hace que una partida se lea como una vida y no como
+                      escenas sueltas. */}
+                  {((cierre.ecos || []).length > 0 || (cierre.abiertos || []).length > 0) && (
+                    <div className="ea-hilo">
+                      {(cierre.ecos || []).length > 0 && (
+                        <>
+                          <div className="ea-hiloK ea-dis">Lo que volvió de tus decisiones</div>
+                          {cierre.ecos.map((e, i) => (
+                            <div className="ea-hiloL" key={"e" + i}><b>{e.t}</b><span>porque {e.por.charAt(0).toLowerCase() + e.por.slice(1)}</span></div>
+                          ))}
+                        </>
+                      )}
+                      {(cierre.abiertos || []).length > 0 && (
+                        <>
+                          <div className="ea-hiloK ea-dis" style={{ marginTop: (cierre.ecos || []).length ? 10 : 0 }}>Lo que sigue abierto</div>
+                          {cierre.abiertos.map((t, i) => (
+                            <div className="ea-hiloL" key={"a" + i}><span>{t}: puede volver en los próximos años.</span></div>
+                          ))}
+                          {cierre.masAbiertos > 0 && <div className="ea-hiloL"><span>Y {cierre.masAbiertos} cosa{cierre.masAbiertos > 1 ? "s" : ""} más.</span></div>}
+                        </>
+                      )}
+                    </div>
+                  )}
 
                   {/* La leccion era un parrafo de siete lineas, y es lo
                       primero que se ve al cerrar el año. Ahora se lee el
