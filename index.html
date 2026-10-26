@@ -926,6 +926,26 @@ const CSS = `
   padding:3px 9px;border-radius:11px;border:1px solid;line-height:1.5}
 /* los signos mandan sobre el icono: son los que dicen cuanto */
 .ea-efS{font-size:13.5px;font-weight:700;letter-spacing:-.06em}
+/* el nombre va escrito: en el celular no hay tooltip y el icono solo
+   no se adivina */
+.ea-efN{font-size:11.5px;font-weight:600;margin-left:2px}
+/* el hilo del año en el informe: lo que volvió y lo que sigue abierto */
+.ea-hilo{margin-top:14px;padding:12px 14px;border-left:3px solid var(--cobre);background:rgba(0,0,0,.03);border-radius:0 10px 10px 0}
+.ea-hiloK{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--cobre);margin-bottom:6px}
+.ea-hiloL{font-size:13.5px;line-height:1.4;margin:4px 0}
+.ea-hiloL b{display:block;font-weight:700}
+.ea-hiloL span{color:var(--gris)}
+/* las palabras de oficio de una escena, a un toque */
+.ea-jerga{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 12px}
+.ea-jerga details{font-size:12.5px;border:1px dashed rgba(0,0,0,.18);border-radius:10px;padding:3px 10px;background:rgba(255,255,255,.5)}
+.ea-jerga details[open]{flex-basis:100%}
+.ea-jerga summary{cursor:pointer;font-weight:600;color:var(--cobre)}
+.ea-jerga p{margin:6px 0 4px;line-height:1.45}
+/* el riesgo, antes de elegir: rojo si lo normal es que salga mal */
+.ea-opRiesgo{display:block;margin-top:6px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.ea-opRiesgo.alto{color:#9B3826}
+.ea-opRiesgo.medio{color:#8A5A12}
+.ea-opRiesgo.bajo{color:#2E7A3D}
 .ea-ef.pos{color:#2E7A3D;border-color:rgba(62,138,73,.45);background:rgba(79,160,92,.1)}
 .ea-ef.neg{color:#9B3826;border-color:rgba(178,59,39,.4);background:rgba(178,59,39,.08)}
 .ea-op:disabled .ea-ef{filter:grayscale(.55)}
@@ -1462,13 +1482,18 @@ const impactoActivo = (k, notis) => {
   });
   return x;
 };
+
+/* Modelaje y criterio se ven como una sola cosa, la habilidad: para
+   quien no viene de finanzas eran dos palabras para lo mismo. Las
+   claves internas siguen siendo dos para no romper las escenas ni las
+   partidas guardadas; sanear las mantiene iguales. */
 const ETIQ = {
-  mod: "Modelaje",
-  cri: "Criterio",
-  red: "Red",
+  mod: "Habilidad",
+  cri: "Habilidad",
+  red: "Contactos",
   rep: "Reputación",
   ene: "Energía",
-  car: "Carrera",
+  car: "Ascenso",
   cash: "Efectivo"
 };
 
@@ -2411,12 +2436,12 @@ const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el pr
   id: "excel",
   n: "Curso online de Excel avanzado",
   c: 400,
-  d: "Sumas un punto de modelaje cada año."
+  d: "Sumas un punto de habilidad cada año."
 }, {
   id: "diario",
   n: "Suscripción a un diario financiero",
   c: 500,
-  d: "Sumas un punto de criterio cada año."
+  d: "Sumas un punto de habilidad cada año."
 }, {
   id: "zapas",
   n: "Zapatillas y un plan para correr",
@@ -2426,17 +2451,17 @@ const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el pr
   id: "after",
   n: "Afterwork con la gente del sector",
   c: 800,
-  d: "Sumas un punto de red cada año."
+  d: "Sumas un punto de contactos cada año."
 }, {
   id: "research",
   n: "Suscripción a research institucional",
   c: 5000,
-  d: "Sumas un punto de modelaje cada semestre."
+  d: "Sumas un punto de habilidad cada año."
 }, {
   id: "gym",
   n: "Entrenador y nutricionista",
   c: 4500,
-  d: "Recuperas tres puntos de energía cada semestre."
+  d: "Recuperas seis puntos de energía cada año."
 }, {
   id: "fiscal",
   n: "Asesor fiscal propio",
@@ -2446,17 +2471,17 @@ const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el pr
   id: "coach",
   n: "Coach ejecutivo",
   c: 8000,
-  d: "El desgaste semestral baja de nueve a cinco puntos."
+  d: "El desgaste fijo de cada año baja a la mitad."
 }, {
   id: "asistente",
   n: "Asistente ejecutivo",
   c: 9000,
-  d: "Un punto de carrera y dos de energía cada semestre."
+  d: "Dos puntos de ascenso y cuatro de energía cada año."
 }, {
   id: "prensa",
   n: "Columna fija en un medio del sector",
   c: 9500,
-  d: "Un punto de reputación cada semestre."
+  d: "Dos puntos de reputación cada año."
 }, {
   id: "terminal",
   n: "Terminal de mercado en casa",
@@ -2476,7 +2501,7 @@ const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el pr
   id: "club",
   n: "Membresía del club de negocios",
   c: 17000,
-  d: "Un punto de red cada semestre y mejor lectura en las negociaciones."
+  d: "Dos puntos de contactos cada año y mejor lectura en las negociaciones."
 }, {
   id: "colchon",
   n: "Colchón de emergencia bien estructurado",
@@ -2486,7 +2511,7 @@ const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el pr
   id: "mba",
   n: "MBA ejecutivo de fin de semana",
   c: 45000,
-  d: "Ocho puntos de criterio de entrada y un punto de carrera cada semestre."
+  d: "Cuatro puntos de habilidad de entrada y dos de ascenso cada año."
 }];
 
 /* ============================================================
@@ -5096,11 +5121,11 @@ const PROPIEDADES = [{
 const RAMAS = [{
   id: "mya",
   n: "Fusiones y adquisiciones",
-  d: "El camino clásico. Un punto extra de carrera cada semestre y honorarios más altos en los cierres."
+  d: "El camino clásico. Dos puntos extra de ascenso cada año y honorarios más altos en los cierres."
 }, {
   id: "mercados",
   n: "Mercados de capitales",
-  d: "Emisiones y colocaciones. Un punto de modelaje cada semestre y un ingreso variable ligado al volumen."
+  d: "Emisiones y colocaciones. Un punto de habilidad cada año y un ingreso variable ligado al volumen."
 }, {
   id: "pe",
   n: "Private equity",
@@ -5108,11 +5133,11 @@ const RAMAS = [{
 }, {
   id: "patrimonio",
   n: "Gestión de patrimonios",
-  d: "Menos adrenalina, más composición. Un punto extra de retorno en tu portafolio cada semestre y un punto de red."
+  d: "Menos adrenalina, más composición. Un punto extra de retorno en tu portafolio cada año y dos puntos de contactos."
 }, {
   id: "boutique",
   n: "Tu propia boutique",
-  d: "Te independizas. Ingresos irregulares y más altos en promedio, un punto de reputación por semestre y más desgaste."
+  d: "Te independizas. Ingresos irregulares y más altos en promedio, dos puntos de reputación al año y más desgaste."
 }];
 
 /* ============================================================
@@ -5129,10 +5154,10 @@ const RAMAS = [{
    el tipo a secas en st.rama y siguen valiendo.
    ============================================================ */
 const EFECTO_TIPO = {
-  mya: "Un punto extra de carrera cada semestre.",
-  mercados: "Un punto de modelaje cada semestre y un variable ligado al volumen.",
+  mya: "Dos puntos extra de ascenso cada año.",
+  mercados: "Un punto de habilidad cada año y un variable ligado al volumen.",
   pe: "Tu futuro fondo te pide la mitad de capital propio y sus salidas rinden más.",
-  patrimonio: "Un punto extra de retorno en tu cartera y uno de red cada semestre.",
+  patrimonio: "Un punto extra de retorno en tu cartera y dos de contactos cada año.",
   boutique: "Juntas clientes propios y ahorro para el día en que firmes la renuncia: la oferta de montarla llega antes."
 };
 const RAMAS_CARRERA = {
@@ -6262,8 +6287,8 @@ const CARRILES = [{
 /* ---------- eventos de semestre, muchos con juego rápido ---------- */
 const E = [{
   id: 1,
-  min: 0,
-  max: 2,
+  min: 2,
+  max: 3,
   t: "Un DCF para mañana a las ocho",
   x: "Once de la noche. El VP deja una carpeta encima de tu teclado y dice que el cliente quiere el modelo antes del desayuno.",
   o: [{
@@ -6297,7 +6322,7 @@ const E = [{
   }]
 }, {
   id: 2,
-  min: 0,
+  min: 2,
   max: 3,
   t: "El error ya salió por correo",
   x: "El modelo que se envió al cliente tiene la deuda neta mal sumada. La diferencia mueve el equity value casi 10%.",
@@ -6378,7 +6403,7 @@ const E = [{
   }]
 }, {
   id: 5,
-  min: 0,
+  min: 2,
   max: 3,
   t: "Cierre de operación, fiesta en el bar",
   x: "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
@@ -6409,14 +6434,14 @@ const E = [{
   }]
 }, {
   id: 6,
-  min: 0,
-  max: 2,
+  min: 2,
+  max: 3,
   t: "El data room es un desastre",
   x: "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
   o: [{
     t: "Armar un índice maestro que sirva a todos",
     min: {
-      mod: 28
+      mod: 27
     },
     j: "orden",
     stat: "cri",
@@ -6546,7 +6571,7 @@ const E = [{
   }]
 }, {
   id: 9,
-  min: 1,
+  min: 2,
   max: 4,
   t: "Cien mensajes en frío",
   x: "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
@@ -6574,7 +6599,7 @@ const E = [{
   }]
 }, {
   id: 10,
-  min: 0,
+  min: 2,
   max: 3,
   t: "El teaser que vuelve marcado",
   x: "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
@@ -6590,7 +6615,7 @@ const E = [{
   }, {
     t: "Defender los puntos que no compartes",
     min: {
-      cri: 30
+      cri: 28
     },
     j: "quiz",
     stat: "cri",
@@ -6824,7 +6849,7 @@ const E = [{
   }, {
     t: "Aceptar la entrevista técnica en vivo",
     min: {
-      cri: 34
+      cri: 30
     },
     j: "quiz",
     stat: "cri",
@@ -7010,7 +7035,7 @@ const E = [{
   }, {
     t: "Revisarle el modelo antes de decidir",
     min: {
-      mod: 34
+      mod: 30
     },
     j: "ojo",
     stat: "mod",
@@ -7041,7 +7066,7 @@ const E = [{
   o: [{
     t: "Responder con los números en la cabeza",
     min: {
-      mod: 30
+      mod: 28
     },
     j: "calculo",
     stat: "mod",
@@ -7205,7 +7230,7 @@ const E = [{
   }]
 }, {
   id: 32,
-  min: 1,
+  min: 2,
   max: 6,
   t: "Te piden explicar la cascada",
   x: "Un LP nuevo no entiende cómo se reparte la plata y quiere que se lo expliques en voz alta.",
@@ -7237,7 +7262,7 @@ const E = [{
   o: [{
     t: "Ordenar los criterios y decidir con método",
     min: {
-      cri: 38
+      cri: 33
     },
     j: "orden",
     stat: "cri",
@@ -7288,13 +7313,400 @@ const E = [{
       msg: "Contestas bien y tarde. En algunas salas eso vale menos que contestar rápido."
     }
   }]
+},
+/* ---------- la ruta del novato ----------
+   Los primeros años de cualquiera, sepa o no de finanzas: el primer
+   sueldo, la tarjeta, dónde vivir, el jefe que escribe un domingo.
+   Antes una pasante de veinte años abría el juego con un DCF y un
+   EBITDA; ahora la banca llega desde Analista Senior y esto la
+   precede. Cada decisión tiene futuro (24100 en adelante). */
+{
+  id: 24000,
+  novato: true,
+  min: 0,
+  max: 1,
+  t: "Tu primer sueldo",
+  x: "Te llega el primer sueldo completo. Después del alquiler y la comida sobra un poco, y es la primera vez que decides tú qué hacer con eso.",
+  o: [{
+    t: "Apartar una parte apenas llega",
+    d: {
+      cri: 3,
+      ene: -1,
+      deja: "nov_ahorro",
+      luego: [{
+        en: 2,
+        azar: [{
+          p: 60,
+          id: 24100
+        }, {
+          p: 40,
+          id: 24101
+        }]
+      }],
+      msg: "Pasas un pedazo a otra cuenta el mismo día. Lo que no ves, no lo gastas."
+    }
+  }, {
+    t: "Darte un gusto: te lo ganaste",
+    d: {
+      ene: 6,
+      cash: -800,
+      deja: "nov_gusto",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 55,
+          id: 24102
+        }, {
+          p: 45,
+          id: 24103
+        }]
+      }],
+      msg: "Cena buena, zapatillas nuevas y la sensación de que por fin trabajas."
+    }
+  }, {
+    t: "Mandarle una parte a tu familia",
+    d: {
+      red: 4,
+      cash: -600,
+      deja: "nov_familia",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 65,
+          id: 24104
+        }, {
+          p: 35,
+          id: 24105
+        }]
+      }],
+      msg: "Tu familia no te lo pidió. Igual lo agradecen más de lo que dicen."
+    }
+  }]
+}, {
+  id: 24010,
+  novato: true,
+  min: 0,
+  max: 1,
+  t: "Te ofrecen una tarjeta de crédito",
+  x: "El banco te ofrece una tarjeta con un cupo de tres sueldos. El vendedor dice que sirve para construir historial.",
+  o: [{
+    t: "Usarla y pagarla entera cada mes",
+    d: {
+      cri: 3,
+      deja: "nov_tarjeta_bien",
+      luego: [{
+        en: 2,
+        azar: [{
+          p: 70,
+          id: 24110
+        }, {
+          p: 30,
+          id: 24111
+        }]
+      }],
+      msg: "La usas como si fuera débito. A fin de mes, la pagas toda."
+    }
+  }, {
+    t: "Usarla y pagar solo el mínimo",
+    d: {
+      ene: 4,
+      cash: 1000,
+      deja: "nov_tarjeta_minimo",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 75,
+          id: 24112
+        }, {
+          p: 25,
+          id: 24111
+        }]
+      }],
+      msg: "Compras lo que tenías pendiente. El mínimo es tan bajo que casi no se nota."
+    }
+  }, {
+    t: "No sacarla",
+    d: {
+      ene: 1,
+      msg: "Le dices que no. Sin tarjeta no hay deuda, aunque tampoco historial."
+    }
+  }]
+}, {
+  id: 24020,
+  novato: true,
+  min: 0,
+  max: 1,
+  t: "¿Compartir piso o vivir por tu cuenta?",
+  x: "Necesitas dónde vivir cerca del trabajo. Compartir sale a la mitad; un lugar propio te da silencio.",
+  o: [{
+    t: "Compartir con dos amigos",
+    d: {
+      cash: 1500,
+      red: 3,
+      ene: -3,
+      deja: "nov_piso",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 65,
+          id: 24120
+        }, {
+          p: 35,
+          id: 24121
+        }]
+      }],
+      msg: "Casa con ruido, nevera compartida y un alquiler que te deja respirar."
+    }
+  }, {
+    t: "Alquilar un lugar para ti",
+    d: {
+      ene: 5,
+      cash: -1500,
+      deja: "nov_solo",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 60,
+          id: 24122
+        }, {
+          p: 40,
+          id: 24123
+        }]
+      }],
+      msg: "Silencio, tus cosas en su sitio y un alquiler que se lleva buena parte del sueldo."
+    }
+  }]
+}, {
+  id: 24030,
+  novato: true,
+  min: 0,
+  max: 1,
+  t: "Tu jefa te escribe un domingo",
+  x: "Domingo a las cuatro. Un mensaje: «¿Puedes revisar esto antes del lunes?». No dice que sea urgente.",
+  o: [{
+    t: "Contestar y resolverlo ya",
+    d: {
+      rep: 3,
+      car: 2,
+      ene: -6,
+      deja: "nov_domingo",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 60,
+          id: 24130
+        }, {
+          p: 40,
+          id: 24131
+        }]
+      }],
+      msg: "Lo resuelves en dos horas. A las siete te llega un «gracias» con emoji."
+    }
+  }, {
+    t: "Contestarle el lunes temprano",
+    d: {
+      ene: 3,
+      rep: -1,
+      deja: "nov_lunes",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 70,
+          id: 24132
+        }, {
+          p: 30,
+          id: 24133
+        }]
+      }],
+      msg: "El lunes a las ocho ya está hecho. El domingo fue tuyo."
+    }
+  }]
+}, {
+  id: 24040,
+  novato: true,
+  min: 0,
+  max: 1,
+  t: "El celular nuevo, a doce cuotas",
+  x: "Tu celular ya no aguanta y la tienda te ofrece el modelo nuevo en doce cuotas «sin intereses».",
+  o: [{
+    t: "Comprarlo a cuotas",
+    d: {
+      ene: 3,
+      cash: -400,
+      deja: "nov_cuotas",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 60,
+          id: 24140
+        }, {
+          p: 40,
+          id: 24141
+        }]
+      }],
+      msg: "Sales con el teléfono nuevo y doce pagos por delante."
+    }
+  }, {
+    t: "Ahorrar y pagarlo de una vez",
+    d: {
+      cri: 3,
+      ene: -2,
+      deja: "nov_esperar",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 70,
+          id: 24142
+        }, {
+          p: 30,
+          id: 24143
+        }]
+      }],
+      msg: "Tres meses con el viejo. Cuando lo compras, es tuyo desde el primer día."
+    }
+  }, /* las banderas rojas, en su versión de todos los días: la letra chica */
+  {
+    t: "Leer el contrato antes de firmar",
+    j: "banderas",
+    stat: "cri",
+    d: {
+      cri: 4,
+      ene: -2,
+      msg: "Lees las condiciones con calma y encuentras el seguro escondido. Lo compras sin él."
+    }
+  }]
+}, {
+  id: 24050,
+  novato: true,
+  min: 0,
+  max: 1,
+  t: "Clases de hojas de cálculo los sábados",
+  x: "Un compañero que domina las hojas de cálculo ofrece enseñarles a los nuevos, los sábados por la mañana y gratis.",
+  o: [{
+    t: "Ir todos los sábados",
+    d: {
+      mod: 5,
+      red: 2,
+      ene: -5,
+      deja: "nov_sabados",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 65,
+          id: 24150
+        }, {
+          p: 35,
+          id: 24151
+        }]
+      }],
+      msg: "Cuatro sábados seguidos. Lo que antes te llevaba una tarde ahora te lleva una hora."
+    }
+  }, {
+    t: "Aprender por tu cuenta con videos",
+    d: {
+      mod: 3,
+      ene: -2,
+      msg: "Videos de diez minutos antes de dormir. Avanzas a tu ritmo y sin compañía."
+    }
+  }, {
+    t: "Los sábados son para descansar",
+    d: {
+      ene: 4,
+      msg: "Duermes hasta tarde. El lunes, el resto habla de atajos de teclado que no conoces."
+    }
+  }]
+}, {
+  id: 24060,
+  novato: true,
+  min: 0,
+  max: 1,
+  t: "Horas extra que nadie paga",
+  x: "Es viernes y el equipo se queda hasta tarde. Nadie lo pide en voz alta, pero todos miran quién se va.",
+  o: [{
+    t: "Quedarte con el equipo",
+    d: {
+      car: 3,
+      rep: 2,
+      ene: -7,
+      deja: "nov_extra_si",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 55,
+          id: 24160
+        }, {
+          p: 45,
+          id: 24161
+        }]
+      }],
+      msg: "Sales a las once. El lunes, la jefa del área ya sabe tu nombre."
+    }
+  }, {
+    t: "Irte a tu hora, sin disculparte",
+    d: {
+      ene: 4,
+      rep: -1,
+      deja: "nov_extra_no",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 60,
+          id: 24162
+        }, {
+          p: 40,
+          id: 24163
+        }]
+      }],
+      msg: "Terminas lo tuyo y te vas. Alguien levanta la vista; nadie dice nada."
+    }
+  }]
+}, {
+  id: 24070,
+  novato: true,
+  min: 0,
+  max: 1,
+  t: "Te duele una muela",
+  x: "Hace semanas que te molesta una muela. El dentista dice que es mejor tratarla ya, antes de que se complique.",
+  o: [{
+    t: "Tratarla ya, con tus ahorros",
+    d: {
+      cash: -900,
+      cri: 2,
+      ene: 2,
+      msg: "Una tarde incómoda y una cuenta que duele. Pero ya pasó."
+    }
+  }, {
+    t: "Pagarla con la tarjeta, en cuotas",
+    d: {
+      cash: -1000,
+      ene: 2,
+      msg: "La tratas hoy y la pagas en seis meses, con un poco de interés."
+    }
+  }, {
+    t: "Dejarlo para más adelante",
+    d: {
+      ene: -3,
+      deja: "nov_dentista",
+      luego: [{
+        en: 1,
+        azar: [{
+          p: 70,
+          id: 24170
+        }, {
+          p: 30,
+          id: 24171
+        }]
+      }],
+      msg: "Analgésicos y esperar. Tienes cosas más urgentes, piensas."
+    }
+  }]
 }];
 
 /* ---------- decisiones clave, cada dos años ---------- */
 const D = [{
   id: 101,
   clave: true,
-  min: 0,
+  min: 2,
   max: 3,
   t: "La cifra que va en la portada",
   x: "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
@@ -7349,7 +7761,7 @@ const D = [{
 }, {
   id: 102,
   clave: true,
-  min: 0,
+  min: 2,
   max: 3,
   t: "Tres días de due diligence",
   x: "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
@@ -7403,7 +7815,7 @@ const D = [{
 }, {
   id: 103,
   clave: true,
-  min: 1,
+  min: 2,
   max: 6,
   t: "Negociación de honorarios",
   x: "El cliente quiere pagar por éxito y nada por retainer. Tu equipo trabaja ocho meses en cualquier escenario.",
@@ -7456,7 +7868,7 @@ const D = [{
 }, {
   id: 104,
   clave: true,
-  min: 0,
+  min: 2,
   max: 6,
   t: "La posición que ya dio mucho",
   x: "Una posición de tu portafolio va 70% arriba. Todos los indicadores dicen cosas distintas.",
@@ -7610,7 +8022,7 @@ const D = [{
 }, {
   id: 107,
   clave: true,
-  min: 1,
+  min: 2,
   max: 6,
   t: "El pitch al comité de inversión",
   x: "Veinte minutos, siete personas y una tesis que tienes que defender sin leer la lámina.",
@@ -7876,7 +8288,7 @@ const D = [{
 }, {
   id: 112,
   clave: true,
-  min: 1,
+  min: 2,
   max: 6,
   t: "Dos cierres el mismo viernes",
   x: "Dos mandatos firman el mismo día en ciudades distintas. Los dos clientes creen que estás con ellos.",
@@ -7934,7 +8346,7 @@ const D = [{
 }, {
   id: 113,
   clave: true,
-  min: 0,
+  min: 2,
   max: 6,
   t: "Reasignar tu portafolio antes del cierre de año",
   x: "Tienes que decidir dónde queda parado tu patrimonio los próximos doce meses. Nadie va a revisar esto por ti.",
@@ -7972,7 +8384,7 @@ const D = [{
 }, {
   id: 114,
   clave: true,
-  min: 1,
+  min: 2,
   max: 4,
   t: "El director de inversiones del fondo te pone a prueba",
   x: "Los primeros quince minutos son preguntas técnicas. Si pasas, el fondo entra en tu proceso y te deja copiar la posición.",
@@ -8295,6 +8707,90 @@ const D = [{
       msg: "Menos riesgo, menos historia. La franquicia local sigue creciendo contigo dentro."
     }
   }]
+},
+/* las dos decisiones clave del novato: lo que se decide antes de saber
+   nada de mercados, y que igual marca la carrera */
+{
+  id: 24080,
+  clave: true,
+  min: 0,
+  max: 1,
+  t: "Te ofrecen quedarte",
+  x: "Termina tu período de prueba y te ofrecen quedarte con un sueldo fijo. Puedes aceptarlo tal cual o pedir más.",
+  o: [{
+    t: "Aceptar lo que ofrecen",
+    d: {
+      ene: 2,
+      msg: "Firmas con alivio. Lo importante era entrar."
+    }
+  }, {
+    t: "Pedir un poco más, con argumentos",
+    chk: {
+      s: "rep",
+      dif: 40,
+      ok: {
+        cash: 1500,
+        rep: 2,
+        deja: "nov_negociaste",
+        msg: "Les muestras lo que pagan otras firmas. Te suben un poco y te respetan más."
+      },
+      no: {
+        rep: -1,
+        msg: "Dicen que no hay margen. Firmas igual, con la sensación de haberlo intentado."
+      }
+    }
+  }, {
+    t: "Pedir mucho más",
+    chk: {
+      s: "rep",
+      dif: 75,
+      ok: {
+        cash: 3500,
+        rep: 3,
+        deja: "nov_negociaste",
+        msg: "Aceptan sin pestañear. Te queda la duda de si podías haber pedido aún más."
+      },
+      no: {
+        rep: -4,
+        msg: "Les parece demasiado y se nota en su cara. Firmas lo de antes, con mal sabor."
+      }
+    }
+  }]
+}, {
+  id: 24085,
+  clave: true,
+  min: 0,
+  max: 2,
+  t: "Un posgrado de noche",
+  x: "La universidad abre un posgrado por las noches. Son dos años, cuesta varios sueldos y dicen que abre puertas.",
+  o: [{
+    t: "Inscribirte",
+    d: {
+      mod: 5,
+      cri: 4,
+      ene: -10,
+      cash: -3000,
+      deja: "nov_posgrado",
+      luego: [{
+        en: 2,
+        azar: [{
+          p: 60,
+          id: 24180
+        }, {
+          p: 40,
+          id: 24181
+        }]
+      }],
+      msg: "Clases tres noches por semana. Cansa, y aprendes cosas que en la oficina nadie explica."
+    }
+  }, {
+    t: "Esperar a tener claro qué quieres",
+    d: {
+      ene: 3,
+      cri: 1,
+      msg: "Lo dejas para más adelante. Estudiar sin rumbo también sale caro."
+    }
+  }]
 }];
 
 /* ---------- eventos que usan los juegos interactivos nuevos ---------- */
@@ -8307,7 +8803,7 @@ const E2 = [{
   o: [{
     t: "Operar la sesión completa",
     min: {
-      cri: 48
+      cri: 39
     },
     j: "trading",
     stat: "cri",
@@ -8335,7 +8831,7 @@ const E2 = [{
   o: [{
     t: "Armarle la estructura tú mismo",
     min: {
-      mod: 46
+      mod: 38
     },
     j: "estructura",
     stat: "mod",
@@ -8363,7 +8859,7 @@ const E2 = [{
   o: [{
     t: "Filtrar tú los hallazgos",
     min: {
-      cri: 44
+      cri: 36
     },
     j: "banderas",
     stat: "cri",
@@ -8513,7 +9009,7 @@ const E3 = [{
   }]
 }, {
   id: 51,
-  min: 0,
+  min: 2,
   max: 3,
   t: "El modelo se rompió",
   x: "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
@@ -8549,7 +9045,7 @@ const E3 = [{
   }]
 }, {
   id: 52,
-  min: 0,
+  min: 2,
   max: 3,
   t: "Cierre contable de la compañía objetivo",
   x: "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
@@ -8592,7 +9088,7 @@ const E3 = [{
   }]
 }, {
   id: 53,
-  min: 0,
+  min: 2,
   max: 4,
   t: "La pregunta de macro en la entrevista",
   x: "Te preguntan qué pasa con el tipo de cambio si el banco central sube tasas y el fiscal sigue deficitario.",
@@ -8828,6 +9324,24 @@ const CADENA = {
    Estas escenas no se sortean nunca: solo llegan si las llamaste.
    ============================================================ */
 const HUELLAS = {
+  /* la ruta del novato: el primer sueldo, la tarjeta, el piso, el jefe */
+  nov_ahorro: "Apartaste parte de tu primer sueldo",
+  nov_gusto: "Te gastaste tu primer sueldo en un gusto",
+  nov_familia: "Mandaste parte de tu sueldo a tu familia",
+  nov_tarjeta_bien: "Usaste la tarjeta y la pagaste entera cada mes",
+  nov_tarjeta_minimo: "Pagaste solo el mínimo de la tarjeta",
+  nov_piso: "Compartiste piso para ahorrar",
+  nov_solo: "Alquilaste un lugar para ti",
+  nov_domingo: "Le contestaste a tu jefa un domingo",
+  nov_lunes: "Dejaste para el lunes el mensaje del domingo",
+  nov_cuotas: "Compraste el celular a cuotas",
+  nov_esperar: "Ahorraste para pagar el celular de una vez",
+  nov_sabados: "Aprendiste hojas de cálculo los sábados",
+  nov_extra_si: "Te quedaste a hacer horas extra sin pago",
+  nov_extra_no: "Dijiste que no a las horas extra sin pago",
+  nov_dentista: "Dejaste para después el dentista",
+  nov_negociaste: "Negociaste tu primer sueldo",
+  nov_posgrado: "Te inscribiste en un posgrado de noche",
   saltaste: "Te fuiste con el headhunter",
   negociaste: "Usaste la oferta para negociar",
   leal: "Rechazaste la oferta y lo dijiste",
@@ -11026,6 +11540,687 @@ const CONSECUENCIAS = [/* ---------- el headhunter ---------- */
       car: 3,
       red: -4,
       msg: "Empiezas en otra firma, donde nadie sabe nada."
+    }
+  }]
+}, /* ---------- lo que vuelve de la ruta del novato ---------- */
+{
+  id: 24100,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_ahorro,
+  t: "El ahorro te salvó el mes",
+  x: "Se te rompió la computadora justo antes de una entrega. Lo que apartaste alcanza para otra sin pedirle nada a nadie.",
+  o: [{
+    t: "Comprar una igual de buena",
+    d: {
+      cash: -1200,
+      ene: 2,
+      msg: "Pagas y sigues trabajando. Ahorrar era esto: que un problema sea solo un problema."
+    }
+  }, {
+    t: "Una más barata y reponer el ahorro",
+    d: {
+      cash: -600,
+      cri: 3,
+      msg: "Te arreglas con menos y vuelves a llenar el colchón en dos meses."
+    }
+  }]
+}, {
+  id: 24101,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_ahorro,
+  t: "Ahorras, pero ya no sales",
+  x: "Tus amigos dejaron de invitarte: siempre dices que no. Tu cuenta crece y tu sábado está vacío.",
+  o: [{
+    t: "Seguir igual: ya llegará el momento",
+    d: {
+      cri: 2,
+      red: -4,
+      msg: "El ahorro sube. El grupo de amigos sigue sin ti."
+    }
+  }, {
+    t: "Ahorrar un poco menos y volver a salir",
+    d: {
+      red: 4,
+      ene: 4,
+      cash: -400,
+      msg: "Bajas lo que apartas y recuperas los sábados. Las dos cosas valen."
+    }
+  }]
+}, {
+  id: 24102,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_gusto,
+  t: "Llegas justo a fin de mes",
+  x: "Faltan diez días para el sueldo y la cuenta está casi en cero. Un imprevisto ahora sería un problema.",
+  o: [{
+    t: "Apretarte hasta el próximo sueldo",
+    d: {
+      ene: -4,
+      cri: 3,
+      msg: "Arroz, transporte público y nada de planes. Aprendes lo que dura un sueldo."
+    }
+  }, {
+    t: "Pedirle prestado a un amigo",
+    d: {
+      red: -2,
+      msg: "Te presta sin preguntar. Le devuelves con el próximo sueldo y un poco de vergüenza."
+    }
+  }]
+}, {
+  id: 24103,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_gusto,
+  t: "El gusto se volvió costumbre",
+  x: "Lo que fue una vez ahora es cada mes: la cena, la ropa, la comida a domicilio. El sueldo sube y lo que sobra no.",
+  o: [{
+    t: "Revisar en qué se va el dinero",
+    d: {
+      cri: 4,
+      ene: -2,
+      msg: "Haces la lista. La mitad son cosas que ni recordabas haber comprado."
+    }
+  }, {
+    t: "No pasa nada: para eso trabajas",
+    d: {
+      ene: 3,
+      cash: -600,
+      msg: "Disfrutas. El ahorro puede esperar, piensas, y el mes siguiente piensas lo mismo."
+    }
+  }]
+}, {
+  id: 24104,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_familia,
+  t: "Tu familia te devuelve el favor",
+  x: "Tu tía se entera de lo que hiciste y te presenta a un conocido que busca gente joven para un proyecto.",
+  o: [{
+    t: "Ir a la reunión",
+    d: {
+      red: 6,
+      ene: -2,
+      msg: "Un café que no lleva a nada inmediato, pero ahora alguien más sabe quién eres."
+    }
+  }, {
+    t: "Agradecer y dejarlo pasar",
+    d: {
+      ene: 2,
+      msg: "Le das las gracias. Tu tía insiste dos veces más y después se olvida."
+    }
+  }]
+}, {
+  id: 24105,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_familia,
+  t: "Ahora cuentan con eso cada mes",
+  x: "Lo que fue una ayuda se volvió parte del presupuesto de la casa. Nadie lo dijo, pero ya cuentan con eso.",
+  o: [{
+    t: "Seguir ayudando",
+    d: {
+      red: 3,
+      cash: -600,
+      ene: -2,
+      msg: "Lo sigues mandando. Es tu familia, y el ahorro tendrá que esperar."
+    }
+  }, {
+    t: "Hablarlo y poner un límite",
+    d: {
+      cri: 3,
+      red: -2,
+      msg: "Una conversación incómoda. Acuerdan una ayuda fija, más pequeña y sin sorpresas."
+    }
+  }]
+}, {
+  id: 24110,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_tarjeta_bien,
+  t: "Tu historial empieza a contar",
+  x: "Dos años pagando a tiempo se notan. El banco te sube el cupo y te ofrece un préstamo a buena tasa, por si lo necesitas.",
+  o: [{
+    t: "Dejarlo ahí por si hace falta",
+    d: {
+      cri: 3,
+      msg: "No lo usas, pero sabes que está. Tu historial ya trabaja por ti."
+    }
+  }, {
+    t: "Usarlo para un curso que querías",
+    d: {
+      mod: 5,
+      cash: -1500,
+      ene: -3,
+      msg: "Lo usas en ti. El curso vale la pena; la cuota también se nota."
+    }
+  }]
+}, {
+  id: 24111,
+  min: 0,
+  max: 6,
+  por: "Sacaste tu primera tarjeta de crédito",
+  t: "Un mes se te olvidó pagar",
+  x: "Llega el estado de cuenta con intereses y un cargo por pagar tarde. Fue un mes complicado y se te pasó la fecha.",
+  o: [{
+    t: "Pagar todo y poner el pago automático",
+    d: {
+      cri: 4,
+      cash: -300,
+      msg: "Pagas el error y lo arreglas para que no vuelva a pasar."
+    }
+  }, {
+    t: "Pagar el mínimo y ver el mes siguiente",
+    d: {
+      cash: -500,
+      cri: -2,
+      msg: "El cargo se suma al siguiente. La deuda empieza a tener vida propia."
+    }
+  }]
+}, {
+  id: 24112,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_tarjeta_minimo,
+  t: "La deuda de la tarjeta no baja",
+  x: "Pagas el mínimo cada mes y la deuda no baja: los intereses se comen casi todo lo que pones.",
+  o: [{
+    t: "Guardar la tarjeta y pagarla en serio",
+    d: {
+      cash: -2000,
+      cri: 5,
+      ene: -4,
+      msg: "Seis meses de apretarte. Cuando llega a cero, entiendes el interés compuesto, pero al revés."
+    }
+  }, {
+    t: "Seguir pagando el mínimo",
+    d: {
+      cash: -1200,
+      ene: -3,
+      msg: "Pagas y no avanzas. La deuda te sigue a todas partes, como una sombra cara."
+    }
+  }]
+}, {
+  id: 24120,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_piso,
+  t: "La casa se volvió tu gente",
+  x: "Tus compañeros de piso te presentan a medio mundo. Uno trabaja en una empresa que busca a alguien como tú.",
+  o: [{
+    t: "Pedirle que te recomiende",
+    d: {
+      red: 5,
+      car: 2,
+      msg: "Te pasa el contacto. No sale nada este año, pero ya estás en una lista."
+    }
+  }, {
+    t: "Disfrutar la casa sin mezclar",
+    d: {
+      ene: 4,
+      red: 2,
+      msg: "Cenas largas y nada de trabajo. También es una forma de descansar."
+    }
+  }]
+}, {
+  id: 24121,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_piso,
+  t: "Un compañero deja de pagar",
+  x: "Uno de tus compañeros de piso se quedó sin trabajo y no puede pagar su parte del alquiler este mes.",
+  o: [{
+    t: "Cubrirlo tú este mes",
+    d: {
+      cash: -700,
+      red: 4,
+      msg: "Pagas su parte. Te lo devuelve en tres meses y no se le olvida."
+    }
+  }, {
+    t: "Pedirle que busque otro lugar",
+    d: {
+      red: -4,
+      cri: 2,
+      msg: "Tienes razón y se va. La casa queda más tranquila y un poco más fría."
+    }
+  }]
+}, {
+  id: 24122,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_solo,
+  t: "El alquiler se lleva el ahorro",
+  x: "Cada mes, después del alquiler, sobra casi nada. Vivir por tu cuenta tiene un precio fijo.",
+  o: [{
+    t: "Buscar algo más barato",
+    d: {
+      cash: 800,
+      ene: -3,
+      msg: "Te mudas a un lugar más chico y más lejos. El ahorro vuelve a aparecer."
+    }
+  }, {
+    t: "Quedarte: tu espacio vale",
+    d: {
+      ene: 3,
+      cash: -500,
+      msg: "Te quedas. Es caro, pero llegas a casa y descansas de verdad."
+    }
+  }]
+}, {
+  id: 24123,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_solo,
+  t: "Tu casa, tu ritmo",
+  x: "Vivir por tu cuenta te ordenó: cocinas, duermes bien y llegas temprano. En el trabajo se nota.",
+  o: [{
+    t: "Aprovechar para estudiar de noche",
+    d: {
+      mod: 4,
+      ene: -2,
+      msg: "Tienes silencio y lo usas. Una hora al día suma más de lo que parece."
+    }
+  }, {
+    t: "Disfrutarlo sin culpa",
+    d: {
+      ene: 5,
+      msg: "Lees, cocinas, duermes. La energía también es algo que se cuida."
+    }
+  }]
+}, {
+  id: 24130,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_domingo,
+  t: "Ahora te escribe todos los domingos",
+  x: "Desde aquella vez, tu jefa te escribe casi cada fin de semana. Ya da por hecho que contestas.",
+  o: [{
+    t: "Poner un límite con educación",
+    d: {
+      ene: 5,
+      rep: -2,
+      msg: "Le dices que los domingos los guardas para ti. Le sorprende, y lo respeta a medias."
+    }
+  }, {
+    t: "Seguir contestando",
+    d: {
+      car: 3,
+      ene: -8,
+      msg: "Contestas siempre. Te ganas su confianza y pierdes los domingos, todos."
+    }
+  }]
+}, {
+  id: 24131,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_domingo,
+  t: "Te ven como alguien de confianza",
+  x: "Tu jefa te nombra en la reunión del equipo: «cuando hay algo urgente, es la persona que responde».",
+  o: [{
+    t: "Pedir algo a cambio: un proyecto mejor",
+    d: {
+      car: 3,
+      rep: 2,
+      msg: "Lo pides y te lo dan. Aquella tarde de domingo empezó a pagar."
+    }
+  }, {
+    t: "Agradecer y seguir igual",
+    d: {
+      rep: 2,
+      msg: "Sonríes. La fama de confiable se gana lento y se pierde rápido."
+    }
+  }]
+}, {
+  id: 24132,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_lunes,
+  t: "Nadie dijo nada",
+  x: "El lunes entregaste temprano y tu jefa no comentó nada del domingo. Parece que no era tan urgente.",
+  o: [{
+    t: "Hacerlo costumbre: el fin de semana es tuyo",
+    d: {
+      ene: 5,
+      msg: "Descubres que casi nada es urgente un domingo. Llegas al lunes con ganas."
+    }
+  }, {
+    t: "Por si acaso, mirar el correo los domingos",
+    d: {
+      ene: -2,
+      rep: 1,
+      msg: "Lo miras sin contestar. Medio descanso es peor que uno entero."
+    }
+  }]
+}, {
+  id: 24133,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_lunes,
+  t: "Era urgente, después de todo",
+  x: "Resulta que el cliente quería el documento el domingo. Tu jefa lo resolvió sola y te lo recuerda.",
+  o: [{
+    t: "Disculparte y pedir que avise cuando urja",
+    d: {
+      cri: 3,
+      rep: 1,
+      msg: "Le pides una señal clara para lo urgente. Le parece justo."
+    }
+  }, {
+    t: "Defender que era domingo",
+    d: {
+      rep: -3,
+      ene: 2,
+      msg: "Tienes razón en el fondo. En la forma, tu jefa se queda con la duda."
+    }
+  }]
+}, {
+  id: 24140,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_cuotas,
+  t: "Las cuotas se juntaron",
+  x: "Al celular se sumaron la computadora y un sofá, también a cuotas. Cada una es poca cosa; juntas son buena parte del sueldo.",
+  o: [{
+    t: "No sumar ninguna cuota más",
+    d: {
+      cri: 4,
+      ene: -2,
+      msg: "Haces la cuenta y te asustas. Hasta que terminen, nada más a cuotas."
+    }
+  }, {
+    t: "Seguir: total, son pequeñas",
+    d: {
+      ene: 2,
+      cash: -800,
+      msg: "Una más no se nota. El problema es que nunca es solo una más."
+    }
+  }]
+}, {
+  id: 24141,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_cuotas,
+  t: "«Sin intereses» tenía letra chica",
+  x: "En el estado de cuenta aparecen un seguro y un cargo de administración que nadie mencionó en la tienda.",
+  o: [{
+    t: "Reclamar y cancelar los cargos",
+    d: {
+      cri: 4,
+      ene: -3,
+      cash: 200,
+      msg: "Tres llamadas y un correo. Te devuelven una parte y aprendes a leer antes de firmar."
+    }
+  }, {
+    t: "Pagarlos y olvidarlo",
+    d: {
+      cash: -300,
+      msg: "No vale la pena la pelea, piensas. La tienda piensa lo mismo, con todo el mundo."
+    }
+  }]
+}, {
+  id: 24142,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_esperar,
+  t: "Esperar salió más barato",
+  x: "Cuando juntaste el dinero, el modelo había bajado de precio. Te sobra para una funda y algo más.",
+  o: [{
+    t: "Guardar lo que sobró",
+    d: {
+      cri: 3,
+      cash: 300,
+      msg: "Lo que sobró va al ahorro. Esperar también es una forma de ganar."
+    }
+  }, {
+    t: "Darte un pequeño gusto",
+    d: {
+      ene: 3,
+      msg: "Unos audífonos con lo que sobró. Comprar sin deber se siente distinto."
+    }
+  }]
+}, {
+  id: 24143,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_esperar,
+  t: "El viejo se rompió antes",
+  x: "Tu celular viejo murió a mitad de mes y te quedaste sin teléfono justo cuando tu jefa te buscaba.",
+  o: [{
+    t: "Comprar uno barato de transición",
+    d: {
+      cash: -300,
+      ene: -2,
+      msg: "Un teléfono simple por unas semanas. Funciona, aunque las fotos dan pena."
+    }
+  }, {
+    t: "Adelantar la compra con lo que juntaste",
+    d: {
+      cash: -200,
+      cri: 1,
+      msg: "Te faltaba poco. Lo compras ahora y completas el ahorro después."
+    }
+  }]
+}, {
+  id: 24150,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_sabados,
+  t: "Te piden el informe a ti",
+  x: "Tu jefa necesita un análisis rápido y piensa en quien sabe usar las hojas de cálculo. Piensa en ti.",
+  o: [{
+    t: "Hacerlo y explicar cómo lo hiciste",
+    d: {
+      rep: 4,
+      car: 2,
+      ene: -3,
+      msg: "Entregas en una tarde y enseñas el truco. Ahora te preguntan a ti."
+    }
+  }, {
+    t: "Hacerlo rápido y sin contar cómo",
+    d: {
+      car: 3,
+      ene: -2,
+      msg: "Lo entregas antes de tiempo. Nadie sabe cómo; eso también tiene su valor."
+    }
+  }]
+}, {
+  id: 24151,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_sabados,
+  t: "El grupo de los sábados",
+  x: "De las clases salió un grupo de compañeros que se ayudan y se pasan datos. Te proponen seguir viéndose.",
+  o: [{
+    t: "Seguir con el grupo",
+    d: {
+      red: 5,
+      ene: -2,
+      msg: "Un sábado al mes y un chat que no para. Es tu primera red de contactos, y la armaste tú."
+    }
+  }, {
+    t: "Agradecer y volver a tus sábados",
+    d: {
+      ene: 3,
+      msg: "Te despides con cariño. Lo aprendido se queda; el grupo sigue sin ti."
+    }
+  }]
+}, {
+  id: 24160,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_extra_si,
+  t: "Quedarse se volvió obligación",
+  x: "Desde aquel viernes, quedarte tarde ya no es un gesto: es lo que se espera de ti, todas las semanas.",
+  o: [{
+    t: "Hablar con tu jefa del horario",
+    d: {
+      ene: 4,
+      rep: -1,
+      cri: 2,
+      msg: "Le explicas que así no rindes. Acuerdan quedarte solo cuando de verdad haga falta."
+    }
+  }, {
+    t: "Aguantar: ya vendrá el ascenso",
+    d: {
+      car: 3,
+      ene: -8,
+      msg: "Aguantas. El ascenso quizá llegue; el cansancio llegó primero."
+    }
+  }]
+}, {
+  id: 24161,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_extra_si,
+  t: "Las horas se notaron",
+  x: "En la evaluación del año, tu jefa menciona tu compromiso y te propone para un proyecto más visible.",
+  o: [{
+    t: "Aceptar el proyecto",
+    d: {
+      car: 4,
+      ene: -4,
+      msg: "Más visible, más trabajo y tu nombre en la presentación final."
+    }
+  }, {
+    t: "Aceptar, con un horario claro",
+    d: {
+      car: 3,
+      ene: -1,
+      cri: 2,
+      msg: "Dices que sí y pones tus condiciones. Te las aceptan: ya demostraste que cumples."
+    }
+  }]
+}, {
+  id: 24162,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_extra_no,
+  t: "Te pasaron por alto",
+  x: "Un proyecto interesante le tocó a alguien que siempre se queda hasta tarde. Nadie te dijo que fuera por eso.",
+  o: [{
+    t: "Preguntar qué hace falta para el próximo",
+    d: {
+      cri: 3,
+      rep: 1,
+      msg: "Preguntas directo. Te dicen que el próximo es tuyo si muestras iniciativa."
+    }
+  }, {
+    t: "Aceptarlo: tu tiempo vale",
+    d: {
+      ene: 3,
+      car: -1,
+      msg: "Lo dejas pasar. No todos los proyectos valen tus noches."
+    }
+  }]
+}, {
+  id: 24163,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_extra_no,
+  t: "Rendir en horario también cuenta",
+  x: "Tu jefa nota que entregas todo a tiempo sin quedarte tarde y te pregunta cómo te organizas.",
+  o: [{
+    t: "Contarle tu método",
+    d: {
+      rep: 4,
+      cri: 2,
+      msg: "Le explicas cómo planificas la semana. Lo copia para el equipo."
+    }
+  }, {
+    t: "Restarle importancia",
+    d: {
+      rep: 2,
+      msg: "«Nada especial», dices. Ella sabe que sí."
+    }
+  }]
+}, {
+  id: 24170,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_dentista,
+  t: "Ahora duele de verdad",
+  x: "La muela se complicó un fin de semana. Urgencias, un tratamiento más largo y una cuenta tres veces mayor.",
+  o: [{
+    t: "Pagarlo todo de una vez",
+    d: {
+      cash: -2500,
+      ene: -4,
+      msg: "Lo pagas y aprendes que lo barato de esperar sale caro."
+    }
+  }, {
+    t: "Pedir un plan de pagos",
+    d: {
+      cash: -2800,
+      ene: -2,
+      msg: "Te dan un plan. Vas a recordar esta muela cada mes durante un año."
+    }
+  }]
+}, {
+  id: 24171,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_dentista,
+  t: "Se te pasó sin hacer nada",
+  x: "La molestia se fue sola. En la siguiente revisión, el dentista dice que tuviste suerte.",
+  o: [{
+    t: "Ir a revisión cada año",
+    d: {
+      cri: 2,
+      cash: -200,
+      msg: "Agendas una revisión anual. La suerte no es un plan."
+    }
+  }, {
+    t: "Seguir igual",
+    d: {
+      ene: 1,
+      msg: "Salió bien. La próxima, quién sabe."
+    }
+  }]
+}, {
+  id: 24180,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_posgrado,
+  t: "El posgrado abrió una puerta",
+  x: "Un profesor del posgrado dirige un área en otra firma y te ofrece una entrevista.",
+  o: [{
+    t: "Ir a la entrevista",
+    d: {
+      red: 5,
+      car: 2,
+      msg: "Vas, te va bien y te quedas con un contacto que vale más que el diploma."
+    }
+  }, {
+    t: "Agradecer: estás bien donde estás",
+    d: {
+      red: 2,
+      rep: 1,
+      msg: "Le das las gracias. Saber que hay puertas afuera también tranquiliza."
+    }
+  }]
+}, {
+  id: 24181,
+  min: 0,
+  max: 6,
+  por: HUELLAS.nov_posgrado,
+  t: "El posgrado te está ganando",
+  x: "Entre el trabajo y las clases duermes cinco horas. Te queda un semestre y no sabes si llegas.",
+  o: [{
+    t: "Terminarlo como sea",
+    d: {
+      mod: 3,
+      ene: -8,
+      rep: 2,
+      msg: "Llegas al final a rastras. El diploma pesa menos que el cansancio, por ahora."
+    }
+  }, {
+    t: "Congelarlo un semestre",
+    d: {
+      ene: 6,
+      cri: 1,
+      msg: "Lo pausas. No es rendirse: es elegir cuándo."
     }
   }]
 }];
@@ -47915,14 +49110,14 @@ const RITMOS = [{
   id: "tranquilo",
   n: "Tranquilo",
   car: 0,
-  ene: -4,
+  ene: 0,
   rep: -1,
   d: "Sales a tu hora. La carrera avanza sola y despacio; llegas entero a los cincuenta."
 }, {
   id: "normal",
   n: "Normal",
   car: 2,
-  ene: -8,
+  ene: -5,
   rep: 0,
   d: "Lo que se espera de ti y poco más. El punto medio."
 }, {
@@ -49349,16 +50544,17 @@ const ID_PRE = 9790;
 const MIN_JUEGOS_ANO = 2;
 const CARTAS_PRE = {
   ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
-  cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto"],
-  mod: ["Curso de Excel avanzado", "Rehacer un modelo desde cero", "Atajos de teclado hasta dormido", "Copiar el modelo del mejor de la mesa"],
+  /* modelaje y criterio son ya una sola habilidad: un solo mazo, para
+     que no salgan dos cartas de lo mismo con distinto nombre */
+  cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto", "Curso de Excel avanzado", "Rehacer un modelo desde cero", "Atajos de teclado hasta dormido", "Copiar el modelo del mejor de la mesa"],
   red: ["Café con el director", "El asado de la promoción", "Presentarte en el congreso", "Ayudar a alguien de otra área"],
   rep: ["Entregar antes del plazo", "Firmar un informe que sale bien", "Dar una charla en la facultad", "Admitir un error a tiempo"]
 };
 const NOMBRE_ATRIB = {
   ene: "energía",
-  cri: "criterio",
-  mod: "modelaje",
-  red: "red",
+  cri: "habilidad",
+  mod: "habilidad",
+  red: "contactos",
   rep: "reputación"
 };
 /* Las vacaciones de verdad te devuelven la energía al 100% (Alessandro,
@@ -49390,7 +50586,9 @@ const escenaPretemporada = st => {
       rareza,
       d: {
         [k]: v,
-        msg: VACACIONES_OPCIONES.indexOf(titulo) >= 0 ? "Inicio de año: vuelves de las vacaciones con la energía al 100%." : "Inicio de año: +" + v + " de " + NOMBRE_ATRIB[k] + "."
+        msg: VACACIONES_OPCIONES.indexOf(titulo) >= 0 ? "Inicio de año: vuelves de las vacaciones con la energía al 100%."
+        /* sin la cifra: lo que sube de verdad depende de dónde estés,
+           y la pantalla de resultado ya enseña el número exacto */ : "Inicio de año: " + (v >= 8 ? "un empujón grande de " : "ganas algo de ") + NOMBRE_ATRIB[k] + "."
       }
     });
   }
@@ -49553,6 +50751,13 @@ const sanear = bruto => {
   ["mod", "cri", "red", "rep", "ene"].forEach(k => {
     st[k] = clamp(numero(r[k], BASE[k]), 0, 100);
   });
+  /* Una sola habilidad: si llegan distintos (una partida de antes de
+     juntarlos, o algo que subió solo uno de los dos) quedan en su
+     media, y desde ahí se mueven juntos. */
+  if (st.mod !== st.cri) {
+    st.cri = Math.round((st.mod + st.cri) / 2);
+    st.mod = st.cri;
+  }
   st.cash = clamp(numero(r.cash, 0), -TOPE_PLATA, TOPE_PLATA);
   st.cartera = clamp(numero(r.cartera, 0), 0, TOPE_PLATA);
   st.pais = IDS_PAIS.indexOf(r.pais) >= 0 ? r.pais : null;
@@ -49756,6 +50961,88 @@ const fuerzaDe = (k, v) => {
   return x >= 9 ? 3 : x >= 4 ? 2 : 1;
 };
 
+/* La habilidad junta modelaje y criterio. Si una opción sube los dos,
+   cuenta entero el mayor y la mitad del otro: aprender dos cosas a la
+   vez no es aprender el doble. Con signos distintos se compensan. */
+const juntarHab = (a, b) => {
+  const x = numero(a, 0),
+    y = numero(b, 0);
+  if (!x || !y || x > 0 !== y > 0) return x + y;
+  const mayor = Math.abs(x) >= Math.abs(y) ? x : y;
+  const menor = mayor === x ? y : x;
+  return Math.round(mayor + menor / 2);
+};
+
+/* «Habilidad +10 · Contactos +4»: los bonos de edad o de carrera en
+   una línea, con modelaje y criterio ya juntos. */
+const modsTxt = mods => {
+  const m = mods && typeof mods === "object" ? mods : {};
+  const out = [];
+  const hab = juntarHab(m.mod, m.cri);
+  if (hab) out.push("Habilidad " + (hab > 0 ? "+" : "") + hab);
+  ["red", "rep", "ene", "car"].forEach(k => {
+    const v = numero(m[k], 0);
+    if (v) out.push(ETIQ[k] + " " + (v > 0 ? "+" : "") + v);
+  });
+  return out.join(" · ");
+};
+
+/* El hilo del año, para el informe de cierre. Lo que más se echaba en
+   falta era ver que lo que decides cuenta: las consecuencias llegaban
+   con su «Viene de» y luego nadie las volvía a nombrar, y lo que aún
+   podía volver no se veía en ninguna parte.
+   - ecos: las consecuencias que viviste este año y de qué venían.
+   - abiertos: lo que dejaste en marcha y todavía puede volver. */
+const hiloDelAno = (st, turno) => {
+  const ecos = [],
+    abiertos = [];
+  try {
+    (Array.isArray(st.camino) ? st.camino : []).forEach(c => {
+      if (!c || c.a !== turno || IDS_CONSEC.indexOf(c.id) < 0) return;
+      const e = escenaDeId(c.id, st);
+      if (e && e.por && e.por !== POR_RAMA && !ecos.some(x => x.t === e.t)) ecos.push({
+        t: e.t,
+        por: e.por
+      });
+    });
+    (Array.isArray(st.pendientes) ? st.pendientes : []).forEach(p => {
+      if (!p || p.en <= turno) return;
+      const e = escenaDeId(p.id, st);
+      if (e && e.por && e.por !== POR_RAMA && abiertos.indexOf(e.por) < 0) abiertos.push(e.por);
+    });
+  } catch (e) {/* el informe sale igual, sin el hilo */}
+  return {
+    ecos: ecos.slice(0, 4),
+    abiertos: abiertos.slice(0, 3),
+    masAbiertos: Math.max(0, abiertos.length - 3)
+  };
+};
+
+/* El país en palabras: sueldos bajos / medios / altos, vida barata /
+   media / cara. Los cortes van sobre el índice de NACIONES (España = 1). */
+const nivelPais = (x, gasto) => {
+  const v = numero(x, 1);
+  const n = v < 0.55 ? 0 : v < 0.8 ? 1 : v < 1.2 ? 2 : 3;
+  return (gasto ? ["barata", "más bien barata", "media", "cara"] : ["bajos", "medios", "altos", "muy altos"])[n];
+};
+
+/* Lo que cuesta subir. De 25 a 40 se sube casi entero; de 70 a 80,
+   a la quinta parte; por encima de 85, casi nada. Así llegar arriba
+   lleva una carrera y no tres años, como en la vida. Las pérdidas no
+   se atenúan: caer siempre es fácil. */
+const cuesta = (actual, v, desde) => {
+  const n = numero(v, 0);
+  if (n <= 0) return n;
+  const base = numero(desde, 20);
+  const f = Math.pow(clamp((100 - numero(actual, 0)) / (100 - base), 0.05, 1), 1.6);
+  return Math.round(n * f);
+};
+/* La reputación decide ascensos y despidos: hasta cincuenta se gana
+   entera, para no empujar a nadie al despido; arriba cuesta igual. */
+const DESDE_ATRIB = {
+  rep: 50
+};
+
 /* Lo que mueve una opcion: la clave y cuanto, para pintarlo en signos */
 const efectosDe = o => {
   if (!o || typeof o !== "object") return [];
@@ -49763,7 +51050,8 @@ const efectosDe = o => {
   if (!d || typeof d !== "object") return [];
   const out = [];
   CLAVES_ATRIB.forEach(k => {
-    const v = numero(d[k], 0);
+    if (k === "mod") return; /* va junto con criterio, como habilidad */
+    const v = k === "cri" ? juntarHab(d.mod, d.cri) : numero(d[k], 0);
     if (v) out.push({
       k,
       v
@@ -49776,15 +51064,16 @@ const efectoDe = o => {
   const d = o.d || o.res && (o.res.exito || o.res.parcial || o.res.fallo) || o.chk && (o.chk.ok || o.ok) || null;
   if (!d || typeof d !== "object") return null;
   const sube = [],
-    cuesta = [];
+    baja = [];
   CLAVES_ATRIB.forEach(k => {
-    const v = numero(d[k], 0);
-    if (v > 0) sube.push((ETIQ[k] || k).toLowerCase());else if (v < 0) cuesta.push((ETIQ[k] || k).toLowerCase());
+    if (k === "mod") return;
+    const v = k === "cri" ? juntarHab(d.mod, d.cri) : numero(d[k], 0);
+    if (v > 0) sube.push((ETIQ[k] || k).toLowerCase());else if (v < 0) baja.push((ETIQ[k] || k).toLowerCase());
   });
-  if (!sube.length && !cuesta.length) return null;
+  if (!sube.length && !baja.length) return null;
   return {
     sube,
-    cuesta
+    cuesta: baja
   };
 };
 
@@ -49838,6 +51127,92 @@ const faltaDe = (o, st) => {
    tema ni tiene pista escrita, al menos se explica la palabra clave. */
 const GLOS_EN_TEXTO = [/* primero lo muy concreto, que si no se lo come una palabra general */
 [/flujo de caja libre|caja libre|utilidad contable/i, "fcl"], [/costo del capital|coste del capital|wacc|capital propio comparado/i, "wacc"], [/opci[óo]n de (compra|venta)|call|put|prima/i, "opcion"], [/forward de divisas|cobertura natural|cubrir(se)?|hedge/i, "cobertura"], [/convertir en efectivo|m[áa]s r[áa]pido es/i, "liquidez"], [/cobra 0,2|misma estrategia, uno cobra/i, "comision"], [/primera pregunta deber[íi]a ser|antes de invertir en algo/i, "invertir"], [/mutuamente excluyentes|se[ñn]ales opuestas/i, "tir"], [/valor terminal|\bdcf\b|descuento de flujos|tasa de descuento|valor presente|flujos futuros/i, "valorpresente"], [/duraci[óo]n modificada|puntos b[áa]sicos|\bduraci[óo]n\b/i, "duration"], [/curva de rendimientos|curva se invierte/i, "curva"], [/earn ?out/i, "earnout"], [/equity value|enterprise value|deuda neta sobre ebitda/i, "ebitda"], [/m[úu]ltiplo|precio sobre utilidad/i, "multiplo"], [/tasa interna|\btir\b|carry|hurdle/i, "tir"], [/distressed|treinta centavos/i, "distressed"], [/aumento de capital|derecho de preferencia|diluci[óo]n|dilu(ye|ir)/i, "dilucion"], [/inventarios|cuentas por cobrar|capital de trabajo/i, "capitalTrabajo"], [/costo de oportunidad|coste de oportunidad|parados en la cuenta/i, "costoOportunidad"], [/\bseguros?\b/i, "seguro"], [/misma cantidad todos los meses|aport(ar|es) peri[óo]dic|cada mes sin importar/i, "aportes"], [/rendido mucho|[úu]ltimos tres a[ñn]os|gestor|fondo activo/i, "indexado"], [/a cuotas|tarjeta de cr[ée]dito|40% anual|pagar (la|una) deuda/i, "deuda"], [/exportadora|moneda local se deval/i, "devaluacion"], [/tasa de ahorro|ahorrar de verdad|forma m[áa]s efectiva de ahorrar/i, "presupuesto"], [/\bactivo\b/i, "activo"], [/\binter[ée]s compuesto\b/i, "interesCompuesto"], [/\bregla del (setenta y dos|72)\b/i, "interesCompuesto"], [/\bregla del (cuatro|4)\s*%/i, "regla4"], [/\binflaci[óo]n\b/i, "inflacion"], [/\bdiversific/i, "diversificar"], [/\bvolatilidad\b/i, "volatilidad"], [/\bliquidez\b|\bl[íi]quido\b/i, "liquidez"], [/\bcomisi[óo]n(es)?\b/i, "comision"], [/\bfondo indexado\b|\b[íi]ndice\b/i, "fondoIndexado"], [/\bfondo de emergencia\b|\bcolch[óo]n\b/i, "fondoEmergencia"], [/\bapalanca/i, "apalancamiento"], [/\bebitda\b/i, "ebitda"], [/\bbeta\b/i, "beta"], [/\brebalance/i, "rebalanceo"], [/\bpatrimonio\b/i, "patrimonio"], [/\bencaje\b/i, "encaje"], [/\btasa de referencia\b|\bbanco central\b/i, "tasaRectora"], [/\bcarta de cr[ée]dito\b/i, "cartaCredito"], [/\bdevalua/i, "devaluacion"], [/\btasa efectiva\b|\bcoste total\b/i, "tasaEfectiva"], [/\bbonos?\b/i, "bono"], [/\bacci(ón|ones)\b/i, "accion"], [/\bcartera\b|\bportafolio\b/i, "cartera"], [/\briesgo\b/i, "riesgo"]];
+
+/* La jerga de las escenas. El modo aprendiz promete que «cada término
+   se explica antes de usarse», pero el glosario solo llegaba a las
+   preguntas: una pasante de veinte años leía «el EBITDA cambia un 12%»
+   en su segunda escena sin ninguna ayuda. Aquí van las palabras de
+   oficio que salen en las escenas y no estaban en el glosario, en el
+   mismo tono llano; las que ya estaban se reutilizan por su clave. */
+const JERGA_ESCENA = [[/\bdcf\b|descuento de flujos/i, {
+  n: "DCF",
+  x: "Una forma de calcular cuánto vale una empresa: sumas el dinero que va a ganar en los próximos años y lo traes a valor de hoy, porque un dólar dentro de cinco años vale menos que uno ahora."
+}], [/due diligence/i, {
+  n: "Due diligence",
+  x: "La revisión a fondo que se hace antes de comprar una empresa: cuentas, contratos, deudas, juicios. Es buscar lo que el vendedor no te contó."
+}], [/data room/i, {
+  n: "Data room",
+  x: "La carpeta, casi siempre digital, donde el vendedor deja todos los documentos de la empresa para que el comprador los revise."
+}], [/\blps?\b/, {
+  n: "LP",
+  x: "Los inversionistas que ponen el dinero en un fondo. Confían en que el gestor lo invierta bien y esperan recibirlo de vuelta con ganancia."
+}], [/\bteaser\b/i, {
+  n: "Teaser",
+  x: "Un resumen corto de una empresa en venta, sin su nombre, que se manda a posibles compradores para ver quién se interesa."
+}], [/\bpitch\b/i, {
+  n: "Pitch",
+  x: "La presentación con la que intentas convencer a alguien: a un cliente de que te contrate, o a un comité de que apruebe una inversión."
+}], [/\bmandatos?\b/i, {
+  n: "Mandato",
+  x: "El encargo formal de un cliente: «véndeme esta empresa» o «consígueme este dinero». Para una firma, cada mandato es trabajo y comisión."
+}], [/\bvp\b/, {
+  n: "VP",
+  x: "Vicepresidente: en banca es un cargo intermedio, el jefe directo de los analistas. No dirige la firma: dirige el trabajo del día."
+}], [/\bcompliance\b/i, {
+  n: "Compliance",
+  x: "El área que vigila que la firma y su gente cumplan las reglas: nada de usar información secreta, nada de conflictos de interés."
+}], [/\bposici[óo]n(es)?\b/i, {
+  n: "Posición",
+  x: "Lo que tienes comprado de algo. «Una posición que sube 70%» es una inversión tuya que ya vale 70% más de lo que pagaste."
+}], [/headhunter|cazatalentos/i, {
+  n: "Headhunter",
+  x: "Alguien a quien las empresas pagan para encontrar y convencer a gente que ya trabaja en otro sitio."
+}], [/roadshow/i, {
+  n: "Roadshow",
+  x: "Una gira de reuniones con inversionistas, ciudad por ciudad, para venderles una emisión o una empresa."
+}], [/colocaci[óo]n/i, {
+  n: "Colocación",
+  x: "Vender acciones o bonos nuevos de una empresa a inversionistas para que la empresa consiga dinero."
+}], [/retainer/i, {
+  n: "Retainer",
+  x: "Un pago fijo cada mes por estar disponible para un cliente, aparte de lo que se cobra si la operación sale."
+}], [/\bcascada\b/i, {
+  n: "Cascada",
+  x: "El orden en que se reparte la ganancia de un fondo: primero recuperan su dinero los inversionistas, luego cobra el gestor."
+}], [/track record/i, {
+  n: "Track record",
+  x: "Tu historial de resultados. Lo que has hecho antes es lo primero que mira quien te va a confiar dinero."
+}], [/\bdeal\b/i, {
+  n: "Deal",
+  x: "Una operación: una compra, una venta, una inversión. «Cerrar el deal» es firmarla."
+}], [/\bfees?\b/i, {
+  n: "Fee",
+  x: "Honorario o comisión: lo que cobra la firma por su trabajo."
+}], [/orden limitada/i, {
+  n: "Orden limitada",
+  x: "Una orden de compra o venta con un precio tope. Solo se ejecuta si el mercado llega a ese precio: no compras más caro de lo que decidiste."
+}], [/deuda neta/i, {
+  n: "Deuda neta",
+  x: "Lo que una empresa debe menos el efectivo que tiene. Es la deuda que de verdad le pesa."
+}], [/\bebitda\b/i, "ebitda"], [/apalanca/i, "apalancamiento"], [/devalua/i, "devaluacion"], [/distressed/i, "distressed"], [/\bm[úu]ltiplo/i, "multiplo"], [/diluci[óo]n|dilu(ye|ir)/i, "dilucion"], [/earn ?out/i, "earnout"], [/capital de trabajo/i, "capitalTrabajo"], [/\bportafolio\b|\bcartera\b/i, "cartera"]];
+/* hasta tres palabras de una escena, en el orden en que aparecen */
+const jergaDe = ev => {
+  if (!ev) return [];
+  const txt = String(ev.t || "") + " " + String(ev.x || "") + " " + (Array.isArray(ev.o) ? ev.o.map(o => o && o.t || "").join(" ") : "");
+  const out = [];
+  JERGA_ESCENA.forEach(([re, v]) => {
+    const m = txt.match(re);
+    if (!m) return;
+    const g = typeof v === "string" ? GLOSARIO[v] : v;
+    if (!g || out.some(x => x.n === g.n)) return;
+    out.push({
+      n: g.n,
+      x: g.x,
+      en: txt.search(re)
+    });
+  });
+  return out.sort((a, b) => a.en - b.en).slice(0, 3);
+};
 
 /* El contexto de una pregunta, por orden: el tema del que salió, la
    pista escrita a mano, o el término del glosario que aparezca en el
@@ -51530,7 +52905,14 @@ function TarjetaJuego({
   }, j.gana)), /*#__PURE__*/React.createElement("button", {
     className: "ea-btn ea-btnJugar",
     onClick: empezar
-  }, visto ? "Empezar" : "Entendido, empezar"), visto && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+  }, visto ? "Empezar" : "Entendido, empezar"), /*#__PURE__*/React.createElement("button", {
+    className: "ea-atras ea-dis",
+    style: {
+      marginTop: 12,
+      marginBottom: 0
+    },
+    onClick: () => onFin("parcial")
+  }, "Decidir sin jugar: resultado medio"), visto && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     className: "ea-atras ea-dis",
     style: {
       marginTop: 12,
@@ -52914,7 +54296,7 @@ function BarraAzar({
     className: "ea-azar"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-azarK ea-dis"
-  }, "Ten\xEDa un ", pct(ps[i]), "% de pasar"), /*#__PURE__*/React.createElement("div", {
+  }, "Esto pasa ", pct(ps[i]), " de cada 100 veces"), /*#__PURE__*/React.createElement("div", {
     className: "ea-azarB"
   }, ps.map((x, k) => /*#__PURE__*/React.createElement("span", {
     key: k,
@@ -55017,9 +56399,10 @@ function Motor() {
        se alargaban sin fin. Ahora ocupa el sitio de las escenas al azar:
        cuanto más tuya es la historia, menos sorteo, y el año dura lo
        mismo. Se apartan aquí y entran después de contar las forzadas.
-       Dos como mucho; si coinciden más, las otras esperan al año
-       siguiente. */
-    const vuelven = (Array.isArray(st.pendientes) ? st.pendientes : []).filter(p => p.en <= st.turno && pendienteVivo(p, st)).map(p => escenaDeId(p.id, st)).filter(e => e && usados.indexOf(e.id) < 0 && huellasOk(e, st)).slice(0, 2);
+       Tres como mucho; si coinciden más, las otras esperan al año
+       siguiente. Eran dos, y con tres a cinco decisiones al año la cola
+       crecía sin parar y las más viejas se perdían sin haber vuelto. */
+    const vuelven = (Array.isArray(st.pendientes) ? st.pendientes : []).filter(p => p.en <= st.turno && pendienteVivo(p, st)).map(p => escenaDeId(p.id, st)).filter(e => e && usados.indexOf(e.id) < 0 && huellasOk(e, st)).slice(0, 3);
     vuelven.forEach(e => {
       usados.push(e.id);
     });
@@ -55149,6 +56532,20 @@ function Motor() {
        «los minijuegos salen mucho menos»). Al rellenar se eligen primero
        las que traen minijuego, sin repetir escenas ya vistas; si el año
        quedó corto de juegos, se suma una más. */
+    /* La ruta del novato: los tres primeros años guardan hasta dos huecos
+       para la vida laboral común (el primer sueldo, la tarjeta, el piso).
+       Ocupan el sitio de escenas al azar, así que el año no se alarga; y
+       van antes del relleno porque el relleno elige primero las que traen
+       minijuego, y estas no traen ninguno: sin el hueco no salían nunca. */
+    if (st.turno <= 2) {
+      const novato = E.filter(e => e.novato);
+      for (let k = 0; k < 2 && lista.length < objetivo; k++) {
+        const e = sacar(novato, st, usados, true);
+        if (!e) break;
+        lista.push(e);
+        usados.push(e.id);
+      }
+    }
     const fuente = sinJefe(st) ? E.concat(DUENO) : E;
     const conJuego = e => !!(e && Array.isArray(e.o) && e.o.some(o => o && (o.j || o.juego)));
     const fuenteJuego = fuente.filter(conJuego);
@@ -55549,7 +56946,10 @@ function Motor() {
       cartera: r.cartera,
       perks: st.perks.concat(p.id)
     };
-    if (p.id === "mba") n.cri = clamp(n.cri + 8, 0, 100);
+    if (p.id === "mba") {
+      n.cri = clamp(n.cri + 4, 0, 100);
+      n.mod = n.cri;
+    }
     n.titulares = st.titulares.concat({
       q: String(2026 + st.turno),
       t: "Compras " + p.n.toLowerCase()
@@ -55849,11 +57249,37 @@ function Motor() {
         v: -Math.round(quita)
       });
     }
-    ["mod", "cri", "red", "rep", "ene", "car"].forEach(k => {
-      if (!d[k]) return;
-      let v = d[k];
+
+    /* Modelaje y criterio son una sola cosa para el jugador: la
+       habilidad. Las escenas siguen escribiendo mod y cri por separado,
+       así que aquí se juntan en un solo cambio y se aplica a los dos. */
+    const dHab = juntarHab(numero(d.mod, 0), numero(d.cri, 0));
+    ["hab", "red", "rep", "ene", "car"].forEach(k => {
+      let v = k === "hab" ? dHab : numero(d[k], 0);
+      if (!v) return;
       if (k === "rep" && v < 0 && tiene(st, "abogado")) v = Math.round(v * 0.6);
-      if (k === "car") st.carrera += v;else st[k] = clamp(st[k] + v, 0, 100);
+      if (k === "car") {
+        st.carrera += v;
+        cambios.push({
+          k,
+          v
+        });
+        return;
+      }
+      if (k === "hab") {
+        v = cuesta(st.cri, v);
+        if (!v) return;
+        st.cri = clamp(st.cri + v, 0, 100);
+        st.mod = st.cri;
+        cambios.push({
+          k: "cri",
+          v
+        });
+        return;
+      }
+      if (k !== "ene") v = cuesta(st[k], v, DESDE_ATRIB[k]);
+      if (!v) return;
+      st[k] = clamp(st[k] + v, 0, 100);
       cambios.push({
         k,
         v
@@ -56076,11 +57502,16 @@ function Motor() {
         st[k] = clamp(numero(st[k], 0) + b.cierre[k], 0, 100);
       });
     });
-    if (tiene(st, "excel")) st.mod = clamp(st.mod + 1, 0, 100);
-    if (tiene(st, "diario")) st.cri = clamp(st.cri + 1, 0, 100);
+    /* habilidad: modelaje y criterio suben juntos, un punto por mejora */
+    const masHab = n => {
+      st.cri = clamp(st.cri + n, 0, 100);
+      st.mod = st.cri;
+    };
+    if (tiene(st, "excel")) masHab(1);
+    if (tiene(st, "diario")) masHab(1);
     if (tiene(st, "zapas")) st.ene = clamp(st.ene + 2, 0, 100);
     if (tiene(st, "after")) st.red = clamp(st.red + 1, 0, 100);
-    if (tiene(st, "research")) st.mod = clamp(st.mod + 2, 0, 100);
+    if (tiene(st, "research")) masHab(1);
     if (tiene(st, "club")) st.red = clamp(st.red + 2, 0, 100);
     if (tiene(st, "prensa")) st.rep = clamp(st.rep + 2, 0, 100);
     if (tiene(st, "gym")) st.ene = clamp(st.ene + 6, 0, 100);
@@ -56090,7 +57521,7 @@ function Motor() {
     }
     if (tiene(st, "mba")) st.carrera += 2;
     if (tipoRama(st) === "mya") st.carrera += 2;
-    if (tipoRama(st) === "mercados") st.mod = clamp(st.mod + 2, 0, 100);
+    if (tipoRama(st) === "mercados") masHab(1);
     if (tipoRama(st) === "patrimonio") st.red = clamp(st.red + 2, 0, 100);
     if (tipoRama(st) === "boutique") st.rep = clamp(st.rep + 2, 0, 100);
 
@@ -56435,18 +57866,27 @@ function Motor() {
     if (rt.car || gv.f !== 1) {
       notas.push("Este año fuiste a ritmo " + rt.n.toLowerCase() + " y viviste de forma " + gv.n.toLowerCase() + ": " + (rt.car ? "+" + rt.car + " de carrera" : "sin empujar la carrera") + " y un gasto " + (gv.f > 1 ? Math.round((gv.f - 1) * 100) + "% por encima" : gv.f < 1 ? Math.round((1 - gv.f) * 100) + "% por debajo" : "en su nivel") + " de lo normal.");
     }
-    let desgaste = (tiene(st, "coach") ? 5 : 8) + (tipoRama(st) === "boutique" ? 3 : 0);
+    let desgaste = (tiene(st, "coach") ? 2 : 4) + (tipoRama(st) === "boutique" ? 3 : 0);
     desgaste += -rt.ene - gv.ene; /* el ritmo cansa, vivir bien descansa */
     if (st.pareja === "casado" || st.pareja === "noviazgo") desgaste -= 3; /* alguien con quien contar */
     desgaste += Math.min(6, entero(st.hijos, 0, 0, 8) * 2); /* y alguien a quien cuidar */
     st.ene = clamp(st.ene - desgaste, 0, 100);
-    /* Por debajo de la mitad el cuerpo se impone: duermes, cancelas, bajas
-       el ritmo. No te devuelve a ochenta, pero rompe la caída libre que
-       hacía imposible pasar del año diez. */
-    if (st.ene < 50) {
-      st.ene = clamp(st.ene + 6, 0, 100);
+    /* La energía va y viene, como en la vida: los fines de semana, las
+       vacaciones y dormir devuelven algo cada año, más cuanto más bajo
+       estás. Por debajo de sesenta recuperas un tercio de lo que te
+       falta para llegar ahí. A ritmo normal eso deja la energía entre
+       cuarenta y setenta; a tope, el ritmo gana y acabas quemado. */
+    if (st.ene < 60) {
+      st.ene = clamp(st.ene + Math.round((60 - st.ene) * 0.33), 0, 100);
       if (st.ene < 35) notas.push("Estás funcionando a media máquina. El cuerpo te está cobrando las horas.");
     }
+    /* Lo que no se practica se oxida, y los contactos que no se llaman
+       se enfrían. Poco, y solo arriba: mantenerse en lo alto cuesta. */
+    if (st.cri > 60) {
+      st.cri = clamp(st.cri - 1, 0, 100);
+      st.mod = st.cri;
+    }
+    if (st.red > 60) st.red = clamp(st.red - 1, 0, 100);
     let terminar = null;
     if (st.ene <= 0) {
       st.burnouts += 1;
@@ -56659,7 +58099,8 @@ function Motor() {
       hitosDec: cartera.hitos,
       cobertura,
       gastos,
-      indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0
+      indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0,
+      ...hiloDelAno(st, ano - 2026)
     });
     if (terminar) setFin(terminar);
     setAnuncio(true); /* primero el rodillo, y despues el informe */
@@ -56678,6 +58119,41 @@ function Motor() {
     a += MODO(s.modo).ayuda; /* el modo aprendiz perdona más */
     a += ayudaBoosts(s, tipo); /* los boosts activos */
     return clamp(a, 0, 100);
+  };
+
+  /* Cuánto puede salir mal una opción, dicho antes de elegir. Usa las
+     mismas cuentas que la resolución de abajo. Antes el azar castigaba
+     sin avisar: «Trabajar con el EBITDA que te dieron» fallaba 88 de
+     cada 100 veces y la escena no lo dejaba ver. Con minijuego no se
+     dice nada: ahí depende de cómo juegues. */
+  const riesgoDe = o => {
+    if (!o || o.juego || o.j) return null;
+    let mal = null;
+    try {
+      if (o.azar && Array.isArray(o.azar.esc) && o.azar.esc.length) {
+        const ps = probsAzar(o, s);
+        mal = o.azar.esc.reduce((a, x, k) => a + (x && x.nivel === "fallo" ? numero(ps[k], 0) : 0), 0);
+      } else if (o.apuesta) {
+        mal = 1 - clamp(numero(o.apuesta.p, 0.5), 0.01, 0.99);
+      } else if (o.chk) {
+        mal = 1 - clamp((s[o.chk.s] - o.chk.dif) / 55 + 0.5 + suerteBoosts(s) / 2, 0.12, 0.9);
+      }
+    } catch (e) {
+      return null;
+    }
+    if (mal == null || mal < 0.15) return null;
+    if (mal >= 0.6) return {
+      t: "Arriesgado: lo normal es que salga mal",
+      c: "alto"
+    };
+    if (mal >= 0.35) return {
+      t: "Puede salir mal",
+      c: "medio"
+    };
+    return {
+      t: "Suele salir bien",
+      c: "bajo"
+    };
   };
   const elegir = o => {
     if (!enFase("evento") || !o) return;
@@ -57422,7 +58898,7 @@ function Motor() {
     style: {
       marginBottom: 18
     }
-  }, "Nadie est\xE1 fuera de tiempo. M\xE1s tarde es menos a\xF1os y m\xE1s criterio, red y dinero."), EDADES.map(e => /*#__PURE__*/React.createElement("button", {
+  }, "Nadie est\xE1 fuera de tiempo. M\xE1s tarde es menos a\xF1os y m\xE1s habilidad, contactos y dinero."), EDADES.map(e => /*#__PURE__*/React.createElement("button", {
     className: "ea-opcion" + (elec.edad === e.e ? " on" : ""),
     key: e.e,
     onClick: () => {
@@ -57434,7 +58910,7 @@ function Motor() {
     className: "ea-opcionD"
   }, e.d), /*#__PURE__*/React.createElement("div", {
     className: "ea-opcionM"
-  }, "Te preguntan si te retiras a los ", e.e + DURACION(elec.duracion).meta, ", y ah\xED decides si sigues", e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado", Object.keys(e.mods || {}).length ? " · " + Object.keys(e.mods).map(k => ETIQ[k] + " " + (e.mods[k] > 0 ? "+" : "") + e.mods[k]).join(" · ") : "")))), fase === "familia" && /*#__PURE__*/React.createElement("div", {
+  }, "Te preguntan si te retiras a los ", e.e + DURACION(elec.duracion).meta, ", y ah\xED decides si sigues", e.cash > 0 ? " · empiezas con USD " + fmt(e.cash) + " ahorrados" : " · empiezas sin nada ahorrado", modsTxt(e.mods) ? " · " + modsTxt(e.mods) : "")))), fase === "familia" && /*#__PURE__*/React.createElement("div", {
     className: "ea-wrap",
     style: {
       maxWidth: 760,
@@ -57559,7 +59035,7 @@ function Motor() {
       fontSize: 12,
       color: "var(--cobre)"
     }
-  }, "Sueldos ", Math.round(p.sal * 100), " \xB7 costo de vida ", Math.round(p.gas * 100), " \xB7 impuesto ", Math.round(p.tax * 100), "% \xB7 empiezas con USD ", fmt(p.cash)), /*#__PURE__*/React.createElement("div", {
+  }, "Sueldos ", nivelPais(p.sal), " \xB7 vida ", nivelPais(p.gas, true), " \xB7 impuestos del ", Math.round(p.tax * 100), "% \xB7 ", p.cash >= 0 ? "empiezas con USD " + fmt(p.cash) : "empiezas debiendo USD " + fmt(-p.cash)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 12,
       color: "var(--gris)",
@@ -57621,7 +59097,7 @@ function Motor() {
       fontSize: 12,
       color: "var(--cobre)"
     }
-  }, Object.keys(c.mods).map(k => ETIQ[k] + " +" + c.mods[k]).join(" · "), " \xB7 mejor en ", c.juegos.map(j => JUEGO(j).n.toLowerCase()).join(" y ")), /*#__PURE__*/React.createElement("button", {
+  }, modsTxt(c.mods), " \xB7 mejor en ", c.juegos.map(j => JUEGO(j).n.toLowerCase()).join(" y ")), /*#__PURE__*/React.createElement("button", {
     className: "ea-mini",
     onClick: () => {
       if (!enFase("estudio")) return;
@@ -57733,7 +59209,7 @@ function Motor() {
     })));
   })(), /*#__PURE__*/React.createElement("div", {
     className: "ea-anillos"
-  }, ["ene", "cri", "mod", "red", "rep"].map(k => /*#__PURE__*/React.createElement(Anillo, {
+  }, ["ene", "cri", "red", "rep"].map(k => /*#__PURE__*/React.createElement(Anillo, {
     key: k,
     k: k,
     v: s[k]
@@ -57839,9 +59315,6 @@ function Motor() {
     titulo: "Tus atributos",
     resumen: "criterio " + Math.round(s.cri)
   }, /*#__PURE__*/React.createElement(Stat, {
-    k: "mod",
-    v: s.mod
-  }), /*#__PURE__*/React.createElement(Stat, {
     k: "cri",
     v: s.cri
   }), /*#__PURE__*/React.createElement(Stat, {
@@ -58115,7 +59588,20 @@ function Motor() {
         color: razon >= 1 ? "var(--verde)" : razon >= 0.5 ? "var(--cobre)" : "var(--rojo)"
       }
     }, meta.aun ? "Todavía no te toca esta vara: la primera referencia es a los treinta. Lo que hagas ahora es lo que la hará fácil." : razon >= 1 ? "Vas por delante de la referencia. Sigue y no subas el tren de vida por costumbre." : razon >= 0.5 ? "Vas por detrás, y a tiempo. Cada punto de tasa de ahorro cierra esa distancia más rápido que cualquier acierto en el mercado." : "Vas bastante por detrás. Lo que mueve esto no es el retorno: es cuánto de lo que entra no se gasta."));
-  })(), /*#__PURE__*/React.createElement(Plegable, {
+  })(), (Array.isArray(s.huellas) ? s.huellas : []).some(h => HUELLAS[h]) && /*#__PURE__*/React.createElement(Plegable, {
+    titulo: "Tu historia",
+    resumen: s.huellas.filter(h => HUELLAS[h]).length + " cosas que el juego recuerda"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-itemD",
+    style: {
+      marginBottom: 10
+    }
+  }, "Lo que hiciste y no se olvida. Algunas de estas cosas vuelven m\xE1s adelante y deciden c\xF3mo termina tu historia."), s.huellas.filter(h => HUELLAS[h]).slice().reverse().map(h => /*#__PURE__*/React.createElement("div", {
+    className: "ea-item",
+    key: h
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ea-itemD"
+  }, HUELLAS[h])))), /*#__PURE__*/React.createElement(Plegable, {
     titulo: "El diccionario",
     resumen: Object.keys(GLOSARIO).length + " palabras"
   }, /*#__PURE__*/React.createElement("div", {
@@ -58823,7 +60309,14 @@ function Motor() {
       className: "ea-memoTit ea-dis"
     }, ev.t), /*#__PURE__*/React.createElement("p", {
       className: "ea-memoTxt"
-    }, ev.x), /*#__PURE__*/React.createElement("div", {
+    }, ev.x), (() => {
+      const jg = jergaDe(ev);
+      return jg.length ? /*#__PURE__*/React.createElement("div", {
+        className: "ea-jerga"
+      }, jg.map(g => /*#__PURE__*/React.createElement("details", {
+        key: g.n
+      }, /*#__PURE__*/React.createElement("summary", null, "\xBFQu\xE9 es ", g.n, "?"), /*#__PURE__*/React.createElement("p", null, g.x)))) : null;
+    })(), /*#__PURE__*/React.createElement("div", {
       className: "ea-ops"
     }, (() => {
       const ops = opcionesDe(ev);
@@ -58844,7 +60337,7 @@ function Motor() {
         const efs = efectosDe(o);
         const falta = faltas[i];
         const bits = [];
-        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Criterio") + " " + Math.round(ayudaDe(o)));
+        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Habilidad") + " " + Math.round(ayudaDe(o)));
         return /*#__PURE__*/React.createElement("button", {
           className: "ea-op" + (falta ? " sinfuerza" : "") + (o.rareza ? " " + o.rareza : ""),
           key: i,
@@ -58891,10 +60384,17 @@ function Motor() {
           }, signo), /*#__PURE__*/React.createElement(Icono, {
             k: ICONO_ATRIB[e.k],
             tam: 13
-          }));
+          }), /*#__PURE__*/React.createElement("span", {
+            className: "ea-efN"
+          }, e.k === "cash" ? "Dinero" : ETIQ[e.k] || e.k));
         })), bits.length > 0 && /*#__PURE__*/React.createElement("span", {
           className: "ea-opTag"
-        }, bits.join(" · ")));
+        }, bits.join(" · ")), (() => {
+          const rg = falta ? null : riesgoDe(o);
+          return rg ? /*#__PURE__*/React.createElement("span", {
+            className: "ea-opRiesgo ea-dis " + rg.c
+          }, rg.t) : null;
+        })());
       });
     })(), opcionesDe(ev).length === 0 && /*#__PURE__*/React.createElement("button", {
       className: "ea-op",
@@ -58908,7 +60408,7 @@ function Motor() {
     tipo: op.juego || op.j,
     ayuda: ayudaDe(op),
     nivel: nivelDe(s.turno, s.estudia),
-    statN: ETIQ[op.stat] || "Criterio",
+    statN: ETIQ[op.stat] || "Habilidad",
     onFin: finJuego,
     modo: s.modo,
     temas: s.temas,
@@ -59018,7 +60518,24 @@ function Motor() {
     style: {
       left: "71.4%"
     }
-  }))), cierre.leccion && (() => {
+  }))), ((cierre.ecos || []).length > 0 || (cierre.abiertos || []).length > 0) && /*#__PURE__*/React.createElement("div", {
+    className: "ea-hilo"
+  }, (cierre.ecos || []).length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-hiloK ea-dis"
+  }, "Lo que volvi\xF3 de tus decisiones"), cierre.ecos.map((e, i) => /*#__PURE__*/React.createElement("div", {
+    className: "ea-hiloL",
+    key: "e" + i
+  }, /*#__PURE__*/React.createElement("b", null, e.t), /*#__PURE__*/React.createElement("span", null, "porque ", e.por.charAt(0).toLowerCase() + e.por.slice(1))))), (cierre.abiertos || []).length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ea-hiloK ea-dis",
+    style: {
+      marginTop: (cierre.ecos || []).length ? 10 : 0
+    }
+  }, "Lo que sigue abierto"), cierre.abiertos.map((t, i) => /*#__PURE__*/React.createElement("div", {
+    className: "ea-hiloL",
+    key: "a" + i
+  }, /*#__PURE__*/React.createElement("span", null, t, ": puede volver en los pr\xF3ximos a\xF1os."))), cierre.masAbiertos > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "ea-hiloL"
+  }, /*#__PURE__*/React.createElement("span", null, "Y ", cierre.masAbiertos, " cosa", cierre.masAbiertos > 1 ? "s" : "", " m\xE1s.")))), cierre.leccion && (() => {
     const x = texto(cierre.leccion.x, "", 1200);
     const corte = x.search(/\.\s/);
     const primera = corte > 0 ? x.slice(0, corte + 1) : x;
