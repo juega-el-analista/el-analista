@@ -50439,6 +50439,14 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
         <button className="ea-btn ea-btnJugar" onClick={empezar}>
           {visto ? "Empezar" : "Entendido, empezar"}
         </button>
+        {/* Para quien no quiere jugar ahora: decide igual y se lleva el
+            resultado medio, sin el premio de ganar ni el castigo de
+            perder. Un minijuego obligatorio era una pared para quien solo
+            quería ver qué pasaba con su vida. */}
+        <button className="ea-atras ea-dis" style={{ marginTop: 12, marginBottom: 0 }}
+          onClick={() => onFin("parcial")}>
+          Decidir sin jugar: resultado medio
+        </button>
 
         {visto && (
           <div>
