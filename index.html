@@ -1733,8 +1733,8 @@ const impactoActivo = (k, notis) => {
    claves internas siguen siendo dos para no romper las escenas ni las
    partidas guardadas; sanear las mantiene iguales. */
 const ETIQ = {
-  mod: "Habilidad",
-  cri: "Habilidad",
+  mod: "Conocimiento",
+  cri: "Conocimiento",
   red: "Contactos",
   rep: "Reputación",
   ene: "Energía",
@@ -2681,12 +2681,12 @@ const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el pr
   id: "excel",
   n: "Curso online de Excel avanzado",
   c: 400,
-  d: "Sumas un punto de habilidad cada año."
+  d: "Sumas un punto de conocimiento cada año."
 }, {
   id: "diario",
   n: "Suscripción a un diario financiero",
   c: 500,
-  d: "Sumas un punto de habilidad cada año."
+  d: "Sumas un punto de conocimiento cada año."
 }, {
   id: "zapas",
   n: "Zapatillas y un plan para correr",
@@ -2701,7 +2701,7 @@ const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el pr
   id: "research",
   n: "Suscripción a research institucional",
   c: 5000,
-  d: "Sumas un punto de habilidad cada año."
+  d: "Sumas un punto de conocimiento cada año."
 }, {
   id: "gym",
   n: "Entrenador y nutricionista",
@@ -2756,7 +2756,7 @@ const PERKS = [/* las de pasante: baratas, para que invertir en ti empiece el pr
   id: "mba",
   n: "MBA ejecutivo de fin de semana",
   c: 45000,
-  d: "Cuatro puntos de habilidad de entrada y dos de ascenso cada año."
+  d: "Cuatro puntos de conocimiento de entrada y dos de ascenso cada año."
 }];
 
 /* ============================================================
@@ -5370,7 +5370,7 @@ const RAMAS = [{
 }, {
   id: "mercados",
   n: "Mercados de capitales",
-  d: "Emisiones y colocaciones. Un punto de habilidad cada año y un ingreso variable ligado al volumen."
+  d: "Emisiones y colocaciones. Un punto de conocimiento cada año y un ingreso variable ligado al volumen."
 }, {
   id: "pe",
   n: "Private equity",
@@ -5400,7 +5400,7 @@ const RAMAS = [{
    ============================================================ */
 const EFECTO_TIPO = {
   mya: "Dos puntos extra de ascenso cada año.",
-  mercados: "Un punto de habilidad cada año y un variable ligado al volumen.",
+  mercados: "Un punto de conocimiento cada año y un variable ligado al volumen.",
   pe: "Tu futuro fondo te pide la mitad de capital propio y sus salidas rinden más.",
   patrimonio: "Un punto extra de retorno en tu cartera y dos de contactos cada año.",
   boutique: "Juntas clientes propios y ahorro para el día en que firmes la renuncia: la oferta de montarla llega antes."
@@ -50356,7 +50356,7 @@ const CULTURAS = {
     rep: 1,
     repPierde: 1,
     ayuda: 8,
-    d: "Te enseñan: la habilidad crece más rápido y tienes quien te explique. Pagan algo menos."
+    d: "Te enseñan: el conocimiento crece más rápido y tienes quien te explique. Pagan algo menos."
   },
   tranquila: {
     n: "Tranquila",
@@ -51234,8 +51234,8 @@ const CARTAS_PRE = {
 };
 const NOMBRE_ATRIB = {
   ene: "energía",
-  cri: "habilidad",
-  mod: "habilidad",
+  cri: "conocimiento",
+  mod: "conocimiento",
   red: "contactos",
   rep: "reputación"
 };
@@ -51621,8 +51621,8 @@ const puedeComprar = (c, st) => {
 const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
 /* que simbolo lleva cada atributo, para poder decirlo sin palabras */
 const ICONO_ATRIB = {
-  mod: "tabla",
-  cri: "ojo",
+  mod: "libro",
+  cri: "libro",
   red: "nodos",
   rep: "estrella",
   car: "escalera",
@@ -51661,7 +51661,7 @@ const modsTxt = mods => {
   const m = mods && typeof mods === "object" ? mods : {};
   const out = [];
   const hab = juntarHab(m.mod, m.cri);
-  if (hab) out.push("Habilidad " + (hab > 0 ? "+" : "") + hab);
+  if (hab) out.push("Conocimiento " + (hab > 0 ? "+" : "") + hab);
   ["red", "rep", "ene", "car"].forEach(k => {
     const v = numero(m[k], 0);
     if (v) out.push(ETIQ[k] + " " + (v > 0 ? "+" : "") + v);
@@ -51710,7 +51710,7 @@ const etiquetasDe = mods => {
   const hab = juntarHab(m.mod, m.cri);
   if (hab) out.push({
     k: "cri",
-    n: "Habilidad",
+    n: "Conocimiento",
     sube: hab > 0
   });
   [["red", "Contactos"], ["rep", "Reputación"], ["ene", "Energía"]].forEach(([k, n]) => {
@@ -51764,7 +51764,7 @@ const efectosDe = o => {
   if (!d || typeof d !== "object") return [];
   const out = [];
   CLAVES_ATRIB.forEach(k => {
-    if (k === "mod") return; /* va junto con criterio, como habilidad */
+    if (k === "mod") return; /* va junto con criterio, como conocimiento */
     const v = k === "cri" ? juntarHab(d.mod, d.cri) : numero(d[k], 0);
     if (v) out.push({
       k,
@@ -54163,7 +54163,7 @@ function JuegoBanderas({
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Marcadas ", sel.length, " de ", CUANTAS), /*#__PURE__*/React.createElement("span", null, caso.quitar > 0 ? "Tu habilidad descartó " + caso.quitar + (caso.quitar === 1 ? " señuelo" : " señuelos") : "Sin descartes")), caso.doc && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, "Marcadas ", sel.length, " de ", CUANTAS), /*#__PURE__*/React.createElement("span", null, caso.quitar > 0 ? "Tu conocimiento descartó " + caso.quitar + (caso.quitar === 1 ? " señuelo" : " señuelos") : "Sin descartes")), caso.doc && /*#__PURE__*/React.createElement("div", {
     className: "ea-docK ea-dis"
   }, "Sobre la mesa \xB7 ", caso.doc), /*#__PURE__*/React.createElement("p", {
     className: "ea-qtxt",
@@ -54625,7 +54625,7 @@ function JuegoComite({
     className: "ea-jw"
   }, /*#__PURE__*/React.createElement("div", {
     className: "ea-jinfo ea-dis"
-  }, /*#__PURE__*/React.createElement("span", null, "Tres negocios \xB7 capital para uno"), /*#__PURE__*/React.createElement("span", null, ayuda >= 60 ? "Tu habilidad ya descarta lo obvio" : "Sin pistas")), /*#__PURE__*/React.createElement(Pista, null, "Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman; depender de un solo cliente y arrastrar deuda restan casi lo mismo. Elige uno."), mesa.map((e, i) => {
+  }, /*#__PURE__*/React.createElement("span", null, "Tres negocios \xB7 capital para uno"), /*#__PURE__*/React.createElement("span", null, ayuda >= 60 ? "Tu conocimiento ya descarta lo obvio" : "Sin pistas")), /*#__PURE__*/React.createElement(Pista, null, "Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman; depender de un solo cliente y arrastrar deuda restan casi lo mismo. Elige uno."), mesa.map((e, i) => {
     const marcado = sel === i;
     const esMejor = sel != null && e.n === mejor.n;
     return /*#__PURE__*/React.createElement("div", {
@@ -55590,9 +55590,9 @@ const TONO_ATRIB = {
   ene: "#F2B632",
   /* mostaza: lo que te queda en el cuerpo */
   cri: "#8DB2FF",
-  /* azul: tu habilidad */
+  /* azul: tu conocimiento */
   mod: "#8DB2FF",
-  /* modelaje es habilidad: el mismo azul */
+  /* modelaje es conocimiento: el mismo azul */
   red: "#7FD6A0",
   /* verde: a quién conoces */
   rep: "#FF8F7A" /* coral: lo que dicen de ti */
@@ -58026,7 +58026,7 @@ function Motor() {
           cambios.push({
             k: "cri",
             v: 0,
-            nota: "tu habilidad te ahorró " + fmt(ahorrado)
+            nota: "tu conocimiento te ahorró " + fmt(ahorrado)
           });
         }
       }
@@ -61105,7 +61105,7 @@ function Motor() {
         const efs = efectosDe(o);
         const falta = faltas[i];
         const bits = [];
-        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Habilidad") + " " + Math.round(ayudaDe(o)));
+        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Conocimiento") + " " + Math.round(ayudaDe(o)));
         return /*#__PURE__*/React.createElement("button", {
           className: "ea-op" + (falta ? " sinfuerza" : "") + (o.rareza ? " " + o.rareza : ""),
           key: i,
@@ -61176,7 +61176,7 @@ function Motor() {
     tipo: op.juego || op.j,
     ayuda: ayudaDe(op),
     nivel: nivelDe(s.turno, s.estudia),
-    statN: ETIQ[op.stat] || "Habilidad",
+    statN: ETIQ[op.stat] || "Conocimiento",
     onFin: finJuego,
     modo: s.modo,
     temas: s.temas,

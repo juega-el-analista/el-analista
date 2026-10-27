@@ -1005,7 +1005,7 @@ const impactoActivo = (k, notis) => {
    quien no viene de finanzas eran dos palabras para lo mismo. Las
    claves internas siguen siendo dos para no romper las escenas ni las
    partidas guardadas; sanear las mantiene iguales. */
-const ETIQ = { mod: "Habilidad", cri: "Habilidad", red: "Contactos", rep: "Reputación", ene: "Energía", car: "Ascenso", cash: "Efectivo" };
+const ETIQ = { mod: "Conocimiento", cri: "Conocimiento", red: "Contactos", rep: "Reputación", ene: "Energía", car: "Ascenso", cash: "Efectivo" };
 
 /* ============================================================
    LOS DIECIOCHO MODOS
@@ -1973,11 +1973,11 @@ const CSS4 = `
 /* ---------- mejoras que se compran una sola vez ---------- */
 const PERKS = [
   /* las de pasante: baratas, para que invertir en ti empiece el primer año */
-  { id: "excel", n: "Curso online de Excel avanzado", c: 400, d: "Sumas un punto de habilidad cada año." },
-  { id: "diario", n: "Suscripción a un diario financiero", c: 500, d: "Sumas un punto de habilidad cada año." },
+  { id: "excel", n: "Curso online de Excel avanzado", c: 400, d: "Sumas un punto de conocimiento cada año." },
+  { id: "diario", n: "Suscripción a un diario financiero", c: 500, d: "Sumas un punto de conocimiento cada año." },
   { id: "zapas", n: "Zapatillas y un plan para correr", c: 600, d: "Recuperas dos puntos de energía cada año." },
   { id: "after", n: "Afterwork con la gente del sector", c: 800, d: "Sumas un punto de contactos cada año." },
-  { id: "research", n: "Suscripción a research institucional", c: 5000, d: "Sumas un punto de habilidad cada año." },
+  { id: "research", n: "Suscripción a research institucional", c: 5000, d: "Sumas un punto de conocimiento cada año." },
   { id: "gym", n: "Entrenador y nutricionista", c: 4500, d: "Recuperas seis puntos de energía cada año." },
   { id: "fiscal", n: "Asesor fiscal propio", c: 6500, d: "Tus gastos de vida bajan 15% para siempre." },
   { id: "coach", n: "Coach ejecutivo", c: 8000, d: "El desgaste fijo de cada año baja a la mitad." },
@@ -1988,7 +1988,7 @@ const PERKS = [
   { id: "broker", n: "Bróker institucional con mejor ejecución", c: 15000, d: "La volatilidad de tu portafolio baja un cuarto." },
   { id: "club", n: "Membresía del club de negocios", c: 17000, d: "Dos puntos de contactos cada año y mejor lectura en las negociaciones." },
   { id: "colchon", n: "Colchón de emergencia bien estructurado", c: 20000, d: "Los golpes negativos de mercado te pegan a la mitad." },
-  { id: "mba", n: "MBA ejecutivo de fin de semana", c: 45000, d: "Cuatro puntos de habilidad de entrada y dos de ascenso cada año." },
+  { id: "mba", n: "MBA ejecutivo de fin de semana", c: 45000, d: "Cuatro puntos de conocimiento de entrada y dos de ascenso cada año." },
 ];
 
 /* ============================================================
@@ -2830,7 +2830,7 @@ const PROPIEDADES = [
 /* ---------- ramas de carrera ---------- */
 const RAMAS = [
   { id: "mya", n: "Fusiones y adquisiciones", d: "El camino clásico. Dos puntos extra de ascenso cada año y honorarios más altos en los cierres." },
-  { id: "mercados", n: "Mercados de capitales", d: "Emisiones y colocaciones. Un punto de habilidad cada año y un ingreso variable ligado al volumen." },
+  { id: "mercados", n: "Mercados de capitales", d: "Emisiones y colocaciones. Un punto de conocimiento cada año y un ingreso variable ligado al volumen." },
   { id: "pe", n: "Private equity", d: "Te preparas para el lado comprador. Tu futuro fondo pide la mitad de capital propio y sus salidas rinden más." },
   { id: "patrimonio", n: "Gestión de patrimonios", d: "Menos adrenalina, más composición. Un punto extra de retorno en tu portafolio cada año y dos puntos de contactos." },
   { id: "boutique", n: "Tu propia boutique", d: "Te independizas. Ingresos irregulares y más altos en promedio, dos puntos de reputación al año y más desgaste." },
@@ -2851,7 +2851,7 @@ const RAMAS = [
    ============================================================ */
 const EFECTO_TIPO = {
   mya: "Dos puntos extra de ascenso cada año.",
-  mercados: "Un punto de habilidad cada año y un variable ligado al volumen.",
+  mercados: "Un punto de conocimiento cada año y un variable ligado al volumen.",
   pe: "Tu futuro fondo te pide la mitad de capital propio y sus salidas rinden más.",
   patrimonio: "Un punto extra de retorno en tu cartera y dos de contactos cada año.",
   boutique: "Juntas clientes propios y ahorro para el día en que firmes la renuncia: la oferta de montarla llega antes.",
@@ -48449,7 +48449,7 @@ const CULTURAS = {
   prestigio: { n: "De prestigio", desgaste: 1, car: 0, aprende: 1, rep: 1.4, repPierde: 1.3, ayuda: 0,
     d: "El nombre de la firma te abre puertas y lo que haces bien se nota el doble. Los errores, también." },
   escuela: { n: "Escuela", desgaste: 0, car: 0, aprende: 1.5, rep: 1, repPierde: 1, ayuda: 8,
-    d: "Te enseñan: la habilidad crece más rápido y tienes quien te explique. Pagan algo menos." },
+    d: "Te enseñan: el conocimiento crece más rápido y tienes quien te explique. Pagan algo menos." },
   tranquila: { n: "Tranquila", desgaste: -5, car: -1, aprende: 1, rep: 1, repPierde: 1, ayuda: 0,
     d: "Se sale a las seis y nadie escribe el domingo. La carrera va más despacio." },
 };
@@ -48991,7 +48991,7 @@ const CARTAS_PRE = {
   red: ["Café con el director", "El asado de la promoción", "Presentarte en el congreso", "Ayudar a alguien de otra área"],
   rep: ["Entregar antes del plazo", "Firmar un informe que sale bien", "Dar una charla en la facultad", "Admitir un error a tiempo"],
 };
-const NOMBRE_ATRIB = { ene: "energía", cri: "habilidad", mod: "habilidad", red: "contactos", rep: "reputación" };
+const NOMBRE_ATRIB = { ene: "energía", cri: "conocimiento", mod: "conocimiento", red: "contactos", rep: "reputación" };
 /* Las vacaciones de verdad te devuelven la energía al 100% (Alessandro,
    8-oct-2026): es el atributo que más gastan las decisiones, y unas
    semanas lejos tienen que notarse. Van por nombre para no tocar los
@@ -49332,7 +49332,7 @@ const puedeComprar = (c, st) => {
    decisión en aritmética y le quita la apuesta. */
 const CLAVES_ATRIB = ["mod", "cri", "red", "rep", "car", "ene", "cash"];
 /* que simbolo lleva cada atributo, para poder decirlo sin palabras */
-const ICONO_ATRIB = { mod: "tabla", cri: "ojo", red: "nodos", rep: "estrella",
+const ICONO_ATRIB = { mod: "libro", cri: "libro", red: "nodos", rep: "estrella",
   car: "escalera", ene: "rayo", cash: "moneda" };
 
 /* Cuanto pesa un cambio, medido en signos y no en cifras.
@@ -49365,7 +49365,7 @@ const modsTxt = (mods) => {
   const m = mods && typeof mods === "object" ? mods : {};
   const out = [];
   const hab = juntarHab(m.mod, m.cri);
-  if (hab) out.push("Habilidad " + (hab > 0 ? "+" : "") + hab);
+  if (hab) out.push("Conocimiento " + (hab > 0 ? "+" : "") + hab);
   ["red", "rep", "ene", "car"].forEach((k) => {
     const v = numero(m[k], 0);
     if (v) out.push(ETIQ[k] + " " + (v > 0 ? "+" : "") + v);
@@ -49404,7 +49404,7 @@ const etiquetasDe = (mods) => {
   const m = mods && typeof mods === "object" ? mods : {};
   const out = [];
   const hab = juntarHab(m.mod, m.cri);
-  if (hab) out.push({ k: "cri", n: "Habilidad", sube: hab > 0 });
+  if (hab) out.push({ k: "cri", n: "Conocimiento", sube: hab > 0 });
   [["red", "Contactos"], ["rep", "Reputación"], ["ene", "Energía"]].forEach(([k, n]) => {
     const v = numero(m[k], 0);
     if (v) out.push({ k, n: v > 0 ? n : "Menos " + n.toLowerCase(), sube: v > 0 });
@@ -49452,7 +49452,7 @@ const efectosDe = (o) => {
   if (!d || typeof d !== "object") return [];
   const out = [];
   CLAVES_ATRIB.forEach((k) => {
-    if (k === "mod") return;   /* va junto con criterio, como habilidad */
+    if (k === "mod") return;   /* va junto con criterio, como conocimiento */
     const v = k === "cri" ? juntarHab(d.mod, d.cri) : numero(d[k], 0);
     if (v) out.push({ k, v });
   });
@@ -51347,7 +51347,7 @@ function JuegoBanderas({ ayuda, onFin, modo }) {
     <div className="ea-jw">
       <div className="ea-jinfo ea-dis">
         <span>Marcadas {sel.length} de {CUANTAS}</span>
-        <span>{caso.quitar > 0 ? "Tu habilidad descartó " + caso.quitar + (caso.quitar === 1 ? " señuelo" : " señuelos") : "Sin descartes"}</span>
+        <span>{caso.quitar > 0 ? "Tu conocimiento descartó " + caso.quitar + (caso.quitar === 1 ? " señuelo" : " señuelos") : "Sin descartes"}</span>
       </div>
 
       {caso.doc && (
@@ -51720,7 +51720,7 @@ function JuegoComite({ ayuda, onFin }) {
     <div className="ea-jw">
       <div className="ea-jinfo ea-dis">
         <span>Tres negocios · capital para uno</span>
-        <span>{ayuda >= 60 ? "Tu habilidad ya descarta lo obvio" : "Sin pistas"}</span>
+        <span>{ayuda >= 60 ? "Tu conocimiento ya descarta lo obvio" : "Sin pistas"}</span>
       </div>
       <Pista>
         Estos son los cinco datos con los que se decide de verdad. Crecer y tener margen suman;
@@ -52423,8 +52423,8 @@ function Pista({ children }) {
 const TONO_ATRIB = {
   /* la paleta Atardecer: los mismos colores que las fichas de efecto */
   ene: "#F2B632",   /* mostaza: lo que te queda en el cuerpo */
-  cri: "#8DB2FF",   /* azul: tu habilidad */
-  mod: "#8DB2FF",   /* modelaje es habilidad: el mismo azul */
+  cri: "#8DB2FF",   /* azul: tu conocimiento */
+  mod: "#8DB2FF",   /* modelaje es conocimiento: el mismo azul */
   red: "#7FD6A0",   /* verde: a quién conoces */
   rep: "#FF8F7A",   /* coral: lo que dicen de ti */
 };
@@ -54248,7 +54248,7 @@ function Motor() {
         const ahorrado = Math.round(-monto * amortigua);
         if (ahorrado > 0) {
           monto += ahorrado;
-          cambios.push({ k: "cri", v: 0, nota: "tu habilidad te ahorró " + fmt(ahorrado) });
+          cambios.push({ k: "cri", v: 0, nota: "tu conocimiento te ahorró " + fmt(ahorrado) });
         }
       }
       if (monto >= 0) st.cash += monto;
@@ -56371,7 +56371,7 @@ function Motor() {
                         const efs = efectosDe(o);
                         const falta = faltas[i];
                         const bits = [];
-                        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Habilidad") + " " + Math.round(ayudaDe(o)));
+                        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Conocimiento") + " " + Math.round(ayudaDe(o)));
                         return (
                           <button className={"ea-op" + (falta ? " sinfuerza" : "") + (o.rareza ? " " + o.rareza : "")} key={i}
                             style={{ "--i": i }}
@@ -56443,7 +56443,7 @@ function Motor() {
                   entera ella sola, en sus tres pasos. */}
               {fase === "minijuego" && op && (
                 <TarjetaJuego tipo={op.juego || op.j} ayuda={ayudaDe(op)} nivel={nivelDe(s.turno, s.estudia)}
-                  statN={ETIQ[op.stat] || "Habilidad"} onFin={finJuego} modo={s.modo}
+                  statN={ETIQ[op.stat] || "Conocimiento"} onFin={finJuego} modo={s.modo}
                   temas={s.temas} onTema={apuntarTema}
                   visto={(Array.isArray(s.jugados) ? s.jugados : []).indexOf(op.juego || op.j) >= 0}
                   onVisto={apuntarJuego} ctx={ctxJuego} />
