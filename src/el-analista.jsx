@@ -856,6 +856,22 @@ const CSS6 = `
 .ea-signos .ojo{color:var(--mostaza)}
 .ea-signos .mal{color:#FF9A85}
 .ea-quienRama{color:var(--mostaza)}
+/* ---- los mentores ---- */
+.ea-avatar{display:block;flex:none;border-radius:50%}
+.ea-opsMentor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ea-op.ea-opMentor{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;padding:16px 10px 14px}
+.ea-opMentorN{font-family:var(--f-dis);font-weight:800;font-size:17px;color:var(--crema);line-height:1.1}
+.ea-opMentorL{font-size:12.5px;font-weight:600;color:var(--tenue);line-height:1.35}
+.ea-consejo{display:flex;gap:12px;align-items:center;margin-top:4px;padding:10px 14px 10px 10px;
+  background:var(--crema);border-radius:16px;box-shadow:inset 0 0 0 2px rgba(42,36,64,.08)}
+.ea-consejoK{font-size:11px;letter-spacing:.08em;color:var(--cobre)}
+.ea-consejoX{font-size:14px;line-height:1.4;color:var(--tinta);margin-top:2px}
+.ea-jugaste{display:flex;gap:16px;align-items:center;text-align:left;margin:22px auto 6px;max-width:560px;
+  background:var(--tinta);color:var(--crema);border-radius:22px;padding:18px 20px;box-shadow:0 14px 32px rgba(42,36,64,.22)}
+.ea-jugasteK{font-size:11.5px;letter-spacing:.14em;color:var(--mostaza)}
+.ea-jugasteN{font-family:var(--f-dis);font-weight:800;font-size:26px;line-height:1.1;margin-top:2px}
+.ea-jugasteX{font-size:14px;line-height:1.45;color:var(--tenue);margin-top:6px}
+.ea-jugasteL{font-size:14px;font-style:italic;color:var(--crema);margin-top:6px}
 /* ---- elegir edad, país y carrera: tarjetas enteras que se tocan ---- */
 .ea-elige{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;cursor:pointer;
   background:var(--papel);color:var(--tinta);border:none;border-radius:20px;padding:16px;margin-bottom:10px;
@@ -49038,12 +49054,294 @@ const escenaPretemporada = (st) => {
   };
 };
 
+/* ============================================================
+   LOS MENTORES
+   Siete personajes de parodia, cada uno con su forma de hacerse rico.
+   Eliges uno al empezar y en cada decisión te dice qué haría él, con una
+   frase suya. Al final ves con quién coincidiste más: «Jugaste como…».
+   Son parodias: los nombres están cambiados, las frases son del juego
+   (algunas inspiradas en cosas que dijeron, retorcidas) y ninguno habla
+   por la persona real.
+   peso: lo que le importa a cada uno al elegir. cash va en miles; riesgo
+   es cuánto puede salir mal (0 a 0,7): positivo si le gusta, negativo si
+   lo evita; cashPierde multiplica las pérdidas de dinero; grande premia
+   las decisiones que mueven mucho, en cualquier sentido.
+   ============================================================ */
+const ID_MENTOR = 9795;
+const MENTORES = [
+  { id: "tusk", n: "Elon Tusk", k: "car", aconseja: "Te aconseja arriesgar",
+    lema: "Si no da un poco de miedo, es demasiado pequeño.",
+    peso: { cash: 0.9, car: 0.4, hab: 0, red: 0.1, rep: 0, ene: 0, riesgo: 14, grande: 0.6 },
+    frases: [
+      "Si es lo bastante grande, se hace aunque todo diga que no.",
+      "Y si explota, se hace otro.",
+      "Lo seguro es aburrido. Y lo aburrido no sale en las noticias.",
+      "Duerme cuando llegues a Marte.",
+      "Las probabilidades están en contra. Mejor: así nadie más lo intenta.",
+      "Apuesta grande. Lo pequeño también cuesta trabajo.",
+    ] },
+  { id: "bufalo", n: "Warren Búfalo", k: "cri", aconseja: "Te aconseja paciencia",
+    lema: "Compra barato, siéntate y espera.",
+    peso: { cash: 0.1, car: 0.2, hab: 1.6, red: 0.1, rep: 0.6, ene: 0.3, riesgo: -10 },
+    frases: [
+      "Cuando todos compran, yo me escondo. Cuando todos corren, yo compro.",
+      "El precio es lo que pagas. El valor es lo que te llevas a casa.",
+      "Cuando baja la marea se ve quién nadaba sin bañador. Yo siempre llevo dos.",
+      "Si no lo entiendes, no lo toques.",
+      "La paciencia también rinde intereses.",
+      "Lo bueno se compra una vez y se guarda toda la vida.",
+    ] },
+  { id: "kardashow", n: "Kim Kardashow", k: "red", aconseja: "Te aconseja contactos",
+    lema: "Tu nombre vale más que tu sueldo.",
+    peso: { cash: 0.2, car: 0.5, hab: 0.1, red: 1.4, rep: 1.2, ene: 0.1, riesgo: -1 },
+    frases: [
+      "Levántate, arréglate y trabaja. Y súbelo a redes, que si no, no cuenta.",
+      "Rodéate de gente que trabaje. Y que te siga.",
+      "Un contacto hoy es un contrato mañana.",
+      "Si nadie te vio hacerlo, ¿de verdad lo hiciste?",
+      "La reputación se construye en público.",
+      "Di que sí al café. Siempre al café.",
+    ] },
+  { id: "pesos", n: "Jeff Pesos", k: "car", aconseja: "Te aconseja crecer",
+    lema: "Hoy es el día uno, otra vez.",
+    peso: { cash: 0, car: 1.6, hab: 0.9, red: 0.4, rep: 0.2, ene: -0.2, riesgo: 0 },
+    frases: [
+      "Hoy es el día uno. Mañana también.",
+      "Reinvierte hasta el último peso.",
+      "Crecer duele. No crecer también, pero más tarde.",
+      "El cliente primero. Tu fin de semana, después.",
+      "El día dos es para los que ya se jubilaron.",
+      "Si no lo puedes hacer más grande, hazlo más rápido.",
+    ] },
+  { id: "thrift", n: "Taylor Thrift", k: "cash", aconseja: "Te aconseja ahorrar",
+    lema: "Lo mío es mío.",
+    peso: { cash: 1.2, cashPierde: 2.5, car: 0.1, hab: 0.2, red: 0.1, rep: 0.3, ene: 0.4, riesgo: -8 },
+    frases: [
+      "Antes de firmar, pregunta de quién es lo que haces.",
+      "Si no es tuyo, vuelve a hacerlo.",
+      "Guarda una parte de cada gira. Las giras se acaban.",
+      "La letra chica también es letra.",
+      "No prestes lo que no puedes perder.",
+      "Gastar es fácil. Volver a ganarlo, no tanto.",
+    ] },
+  { id: "rinaldo", n: "Cristiano Rinaldo", k: "ene", aconseja: "Te aconseja cuidar tu energía",
+    lema: "El talento sin descanso no dura.",
+    peso: { cash: 0.1, car: 0.5, hab: 0.3, red: 0.2, rep: 0.4, ene: 1.5, riesgo: -2 },
+    frases: [
+      "El talento sin trabajo no llega ni al banquillo.",
+      "Duerme ocho horas. Los campeones no se desvelan.",
+      "Tu cuerpo es tu mejor inversión.",
+      "Entrena hoy, cobra mañana.",
+      "Un mal partido se olvida. Una lesión, no.",
+      "Cuida tu energía: sin ella no hay segundo tiempo.",
+    ] },
+  { id: "nakamotto", n: "Satoshi Nakamotto", k: "rep", aconseja: "Te aconseja especular",
+    lema: "Nadie sabe quién soy, y nadie sabe cuánto vale.",
+    peso: { cash: 0.8, car: 0.2, hab: 0.2, red: 0, rep: -0.1, ene: 0, riesgo: 12 },
+    frases: [
+      "Si no lo entiendes, no tengo tiempo de explicártelo.",
+      "Lo que tú pierdes, lo ganan los demás. Piénsalo como una donación.",
+      "Lo nuevo da miedo hasta que da dinero.",
+      "Llegar primero es la mitad del negocio.",
+      "No confíes en nadie. Ni en mí.",
+      "Sube, baja, vuelve a subir. Eso también es un plan.",
+    ] },
+];
+const IDS_MENTOR = MENTORES.map((m) => m.id);
+const MENTOR = (id) => MENTORES.find((m) => m.id === id) || null;
+
+/* lo que se espera de una opción: su efecto, o el de salir bien */
+const efectoEsperado = (o) => {
+  if (!o || typeof o !== "object") return {};
+  if (o.d) return o.d;
+  if (o.res) return o.res.exito || o.res.parcial || {};
+  if (o.chk) return o.chk.ok || o.ok || {};
+  if (o.azar && Array.isArray(o.azar.esc) && o.azar.esc.length) {
+    const e = o.azar.esc.find((x) => x && x.nivel === "exito") || o.azar.esc[0];
+    return (e && e.d) || {};
+  }
+  return {};
+};
+/* La opción que elegiría un mentor. riesgo(o) es la función de la
+   partida que dice cuánto puede salir mal; los minijuegos cuentan como
+   riesgo medio. */
+const mentorElige = (m, ops, riesgo) => {
+  if (!m || !Array.isArray(ops) || !ops.length) return -1;
+  let mejor = -Infinity, iMejor = 0;
+  ops.forEach((o, i) => {
+    const d = efectoEsperado(o);
+    const w = m.peso;
+    const cash = numero(d.cash, 0) / 1000;
+    let r = 0;
+    try {
+      const x = riesgo ? riesgo(o) : null;
+      r = x ? (x.c === "alto" ? 0.7 : x.c === "medio" ? 0.45 : 0.2) : (o.j || o.juego ? 0.3 : 0);
+    } catch (e) { r = 0; }
+    const v = w.cash * (cash < 0 && w.cashPierde ? cash * w.cashPierde : cash)
+      + w.car * numero(d.car, 0) + w.hab * juntarHab(d.mod, d.cri)
+      + w.red * numero(d.red, 0) + w.rep * numero(d.rep, 0) + w.ene * numero(d.ene, 0)
+      + w.riesgo * r
+      + numero(w.grande, 0) * (Math.abs(cash) + Math.abs(numero(d.car, 0)) + Math.abs(juntarHab(d.mod, d.cri))
+        + Math.abs(numero(d.red, 0)) + Math.abs(numero(d.rep, 0)) + Math.abs(numero(d.ene, 0)));
+    if (v > mejor) { mejor = v; iMejor = i; }
+  });
+  return iMejor;
+};
+/* una frase del mentor para esta escena: siempre la misma en la misma escena */
+const fraseMentor = (m, idEscena) => {
+  if (!m) return "";
+  const n = Math.abs(entero(idEscena, 0, -1e9, 1e9));
+  return m.frases[n % m.frases.length];
+};
+/* con quién coincidiste más, para el final */
+const jugasteComo = (st) => {
+  const total = entero(st && st.nDec, 0, 0, 99999);
+  const afin = (st && st.afin) || {};
+  if (total < 5) return null;
+  const lista = MENTORES.map((m) => ({ m, pct: Math.round(100 * entero(afin[m.id], 0, 0, 99999) / total) }))
+    .sort((a, b) => b.pct - a.pct);
+  return { primero: lista[0], segundo: lista[1], total };
+};
+
+/* La escena de elegir mentor: la primera del primer año (o del año
+   siguiente, en una partida empezada antes de que existieran). */
+const escenaMentor = () => ({
+  id: ID_MENTOR, min: 0, max: 6, mentores: true,
+  t: "¿Quién te aconseja?",
+  x: "Siete personas que se hicieron ricas de siete formas distintas. Elige a quién quieres oír en cada decisión. Su consejo es solo eso: un consejo.",
+  o: MENTORES.map((m) => ({
+    t: m.n, mentorId: m.id,
+    d: { msg: m.n + " te va a aconsejar a partir de ahora: «" + m.lema + "»" },
+  })),
+});
+
+/* Los avatares: dibujados con rasgos y objetos, sin retratos ni logos. */
+function AvatarMentor({ id, tam }) {
+  const n = numero(tam, 56);
+  const comun = { width: n, height: n, viewBox: "0 0 120 120", "aria-hidden": "true", focusable: "false", className: "ea-avatar" };
+  if (id === "tusk") return (
+    <svg {...comun}>
+      <circle cx="60" cy="60" r="60" fill="#2A2440" />
+      <circle cx="22" cy="24" r="1.6" fill="#FFF4DC" /><circle cx="40" cy="14" r="1.2" fill="#FFF4DC" /><circle cx="14" cy="52" r="1.2" fill="#FFF4DC" />
+      <g transform="rotate(35 92 40)">
+        <path d="M92 14 C100 24 102 38 100 54 L84 54 C82 38 84 24 92 14 Z" fill="#FFF4DC" />
+        <circle cx="92" cy="34" r="4.5" fill="#8DB2FF" />
+        <path d="M84 50 L78 60 L86 56 Z M100 50 L106 60 L98 56 Z" fill="#D9643A" />
+        <path d="M86 54 L92 70 L98 54 Z" fill="#F2B632" />
+      </g>
+      <path d="M30 120 C32 100 44 94 60 94 C76 94 86 100 88 120 Z" fill="#14101F" />
+      <rect x="52" y="82" width="14" height="14" fill="#E9B993" />
+      <ellipse cx="59" cy="66" rx="22" ry="25" fill="#F1C7A4" />
+      <path d="M36 62 C34 42 50 34 62 36 C74 37 84 44 81 60 C76 50 66 46 52 48 C44 49 39 54 36 62 Z" fill="#3A2A20" />
+      <circle cx="51" cy="66" r="2.4" fill="#2A2440" /><circle cx="67" cy="66" r="2.4" fill="#2A2440" />
+      <path d="M50 79 C56 82 64 82 70 77" fill="none" stroke="#2A2440" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M68 78 L72 88 L74 77 Z" fill="#FFFFFF" stroke="#2A2440" strokeWidth="1" />
+    </svg>
+  );
+  if (id === "bufalo") return (
+    <svg {...comun}>
+      <circle cx="60" cy="60" r="60" fill="#E9875A" />
+      <path d="M30 40 C14 34 10 20 16 12 C20 26 28 30 38 32 Z" fill="#FFF4DC" />
+      <path d="M90 40 C106 34 110 20 104 12 C100 26 92 30 82 32 Z" fill="#FFF4DC" />
+      <path d="M24 46 C24 26 40 20 60 20 C80 20 96 26 96 46 C96 70 84 92 60 96 C36 92 24 70 24 46 Z" fill="#6B4A35" />
+      <path d="M36 30 C44 22 76 22 84 30 C76 34 44 34 36 30 Z" fill="#4E3424" />
+      <ellipse cx="60" cy="80" rx="20" ry="15" fill="#A07850" />
+      <ellipse cx="53" cy="80" rx="3" ry="4" fill="#3B2A1E" /><ellipse cx="67" cy="80" rx="3" ry="4" fill="#3B2A1E" />
+      <circle cx="47" cy="56" r="9" fill="#FFF4DC" stroke="#2A2440" strokeWidth="2.6" />
+      <circle cx="73" cy="56" r="9" fill="#FFF4DC" stroke="#2A2440" strokeWidth="2.6" />
+      <path d="M56 56 L64 56" stroke="#2A2440" strokeWidth="2.6" />
+      <circle cx="47" cy="57" r="3" fill="#2A2440" /><circle cx="73" cy="57" r="3" fill="#2A2440" />
+      <rect x="70" y="92" width="36" height="22" rx="2" fill="#FFFFFF" transform="rotate(-10 88 103)" />
+      <path d="M76 99 L98 95 M77 104 L99 100 M78 109 L92 107" stroke="#9A9A94" strokeWidth="2" transform="rotate(-10 88 103)" />
+    </svg>
+  );
+  if (id === "kardashow") return (
+    <svg {...comun}>
+      <circle cx="60" cy="60" r="60" fill="#FBDAD3" />
+      <circle cx="60" cy="58" r="42" fill="none" stroke="#FFFFFF" strokeWidth="7" />
+      <path d="M30 120 L30 62 C30 34 44 24 60 24 C76 24 90 34 90 62 L90 120 Z" fill="#241815" />
+      <path d="M40 120 C40 104 48 98 60 98 C72 98 80 104 80 120 Z" fill="#E8654F" />
+      <rect x="53" y="84" width="14" height="16" fill="#E2AE8A" />
+      <ellipse cx="60" cy="64" rx="18" ry="23" fill="#EBBE9B" />
+      <path d="M44 58 C46 44 56 40 60 40 C64 40 74 44 76 58 C70 50 66 46 60 46 C54 46 50 50 44 58 Z" fill="#241815" />
+      <path d="M49 63 C51 61 55 61 57 63 M63 63 C65 61 69 61 71 63" fill="none" stroke="#241815" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M53 77 C56 81 64 81 67 77 C64 75 56 75 53 77 Z" fill="#B23B4E" />
+      <rect x="80" y="76" width="20" height="34" rx="4" fill="#2A2440" transform="rotate(12 90 93)" />
+      <rect x="83" y="80" width="14" height="24" rx="2" fill="#8DB2FF" transform="rotate(12 90 93)" />
+    </svg>
+  );
+  if (id === "pesos") return (
+    <svg {...comun}>
+      <circle cx="60" cy="60" r="60" fill="#F2B632" />
+      <path d="M28 120 C30 100 42 94 58 94 C74 94 86 100 88 120 Z" fill="#3B3358" />
+      <path d="M50 94 L58 106 L66 94 Z" fill="#FFFFFF" />
+      <rect x="51" y="82" width="14" height="14" fill="#D9A27E" />
+      <ellipse cx="58" cy="60" rx="25" ry="28" fill="#E8B48E" />
+      <ellipse cx="50" cy="42" rx="9" ry="5" fill="#FFFFFF" opacity=".55" />
+      <circle cx="49" cy="62" r="2.6" fill="#2A2440" /><circle cx="67" cy="62" r="2.6" fill="#2A2440" />
+      <path d="M44 72 C50 84 66 84 72 72 Z" fill="#FFFFFF" stroke="#2A2440" strokeWidth="2.2" strokeLinejoin="round" />
+      <rect x="78" y="78" width="34" height="28" rx="3" fill="#C98B4E" />
+      <path d="M78 86 L112 86" stroke="#A86E37" strokeWidth="2" />
+      <circle cx="95" cy="97" r="7" fill="#FFF4DC" />
+      <path d="M95 92 L95 102 M92 94.5 C92 93 98 93 98 95 C98 97 92 97 92 99 C92 101 98 101 98 99.5" fill="none" stroke="#7A5600" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+  if (id === "thrift") return (
+    <svg {...comun}>
+      <circle cx="60" cy="60" r="60" fill="#D3F0DD" />
+      <path d="M30 104 L30 60 C30 34 44 24 60 24 C76 24 90 34 90 60 L90 104 C84 100 80 100 76 104 L44 104 C40 100 36 100 30 104 Z" fill="#E9C46A" />
+      <path d="M38 120 C38 104 48 98 60 98 C72 98 82 104 82 120 Z" fill="#5B4785" />
+      <rect x="53" y="84" width="14" height="16" fill="#EFC9A9" />
+      <ellipse cx="60" cy="64" rx="18" ry="22" fill="#F6D5BA" />
+      <path d="M42 56 C44 40 54 36 60 36 C68 36 76 40 78 56 L72 52 L66 56 L60 51 L54 56 L48 52 Z" fill="#E9C46A" />
+      <circle cx="53" cy="65" r="2.3" fill="#2A2440" /><circle cx="67" cy="65" r="2.3" fill="#2A2440" />
+      <path d="M53 76 C56 80 64 80 67 76 C64 74 56 74 53 76 Z" fill="#C8323C" />
+      <g transform="rotate(-28 24 92)">
+        <ellipse cx="22" cy="98" rx="12" ry="10" fill="#B24E27" />
+        <circle cx="22" cy="98" r="3.4" fill="#5B2A16" />
+        <rect x="20" y="60" width="4.5" height="32" fill="#8E3A1B" />
+      </g>
+      <ellipse cx="96" cy="100" rx="13" ry="10" fill="#F4A6B4" />
+      <rect x="92" y="88" width="9" height="3" rx="1.5" fill="#2A2440" />
+      <circle cx="96" cy="78" r="6" fill="#F2B632" stroke="#7A5600" strokeWidth="1.5" />
+    </svg>
+  );
+  if (id === "rinaldo") return (
+    <svg {...comun}>
+      <circle cx="60" cy="60" r="60" fill="#DCE6FA" />
+      <path d="M44 22 L50 12 L56 20 L60 8 L64 20 L70 12 L76 22 Z" fill="#F2B632" stroke="#B98510" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M30 120 C32 100 44 94 60 94 C76 94 88 100 90 120 Z" fill="#B0321F" />
+      <path d="M54 94 L60 104 L66 94" fill="none" stroke="#FFF4DC" strokeWidth="3" />
+      <rect x="53" y="82" width="14" height="14" fill="#C88C66" />
+      <ellipse cx="60" cy="60" rx="21" ry="25" fill="#D69A72" />
+      <path d="M39 54 C38 36 50 28 62 28 C74 28 84 36 81 54 C78 44 72 40 66 41 C60 37 52 38 46 42 C42 45 40 49 39 54 Z" fill="#1E1612" />
+      <path d="M48 58 L55 59 M65 59 L72 58" stroke="#1E1612" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="52" cy="63" r="2.3" fill="#2A2440" /><circle cx="68" cy="63" r="2.3" fill="#2A2440" />
+      <path d="M50 73 C55 79 65 79 70 73 Z" fill="#FFFFFF" stroke="#2A2440" strokeWidth="2" strokeLinejoin="round" />
+      <circle cx="22" cy="96" r="13" fill="#FFFFFF" stroke="#2A2440" strokeWidth="2" />
+      <path d="M22 90 L27 94 L25 100 L19 100 L17 94 Z" fill="#2A2440" />
+    </svg>
+  );
+  if (id === "nakamotto") return (
+    <svg {...comun}>
+      <circle cx="60" cy="60" r="60" fill="#3B3358" />
+      <path d="M22 120 C22 96 30 84 34 70 C34 40 46 22 60 22 C74 22 86 40 86 70 C90 84 98 96 98 120 Z" fill="#14101F" />
+      <path d="M42 70 C42 50 50 40 60 40 C70 40 78 50 78 70 C78 82 70 90 60 90 C50 90 42 82 42 70 Z" fill="#0A0814" />
+      <circle cx="52" cy="66" r="3" fill="#7FD6A0" /><circle cx="68" cy="66" r="3" fill="#7FD6A0" />
+      <circle cx="60" cy="104" r="15" fill="#F2B632" stroke="#B98510" strokeWidth="2.5" />
+      <path d="M55 99 C55 95 65 95 65 100 C65 104 60 104 60 107 M60 111 L60 111.5" fill="none" stroke="#7A5600" strokeWidth="2.6" strokeLinecap="round" />
+    </svg>
+  );
+  return null;
+}
+
 /* Devuelve la escena de ese id, o null. Las de firma propia se generan
    al vuelo desde el titulo del jugador, asi que se reconstruyen. */
 const escenaDeId = (id, st) => {
   if (id === ID_PRE) {
     try { return escenaPretemporada(st); } catch (e) { return null; }
   }
+  if (id === ID_MENTOR) return escenaMentor();
   /* el contrato trae ofertas de otras firmas, armadas con la semilla del año */
   if (id === ESCENA_CONTRATO.id) {
     try { return escenaContrato(st); } catch (e) { return ESCENA_CONTRATO; }
@@ -49068,7 +49366,7 @@ const colaDeIds = (ids, st) =>
     /* una cola guardada justo al montar tu firma no trae escenas de empleado */
     .filter((e) => !(sinJefe(st) && esDeEmpleado(e)));
 
-const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA, [ID_PRE]);
+const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA, [ID_PRE, ID_MENTOR]);
 
 
 
@@ -49267,6 +49565,11 @@ const sanear = (bruto) => {
     .map((x) => ({ id: x.id, en: entero(x.en, 0, 0, 99), p: x.p == null ? null : clamp(numero(x.p, 0), 0, 1) }));
   st.patronAnt = texto(r.patronAnt, "", 48);
   st.startup = r.startup === true;
+  /* el mentor y cuántas decisiones coincidiste con cada uno */
+  st.mentor = IDS_MENTOR.indexOf(r.mentor) >= 0 ? r.mentor : null;
+  st.nDec = entero(r.nDec, 0, 0, 99999);
+  st.afin = {};
+  IDS_MENTOR.forEach((id) => { const v = entero(r.afin && r.afin[id], 0, 0, 99999); if (v) st.afin[id] = Math.min(v, st.nDec); });
   st.camino = listaDe(r.camino, (x) => x && typeof x === "object" && IDS_ARBOL.indexOf(x.id) >= 0, TOPE_CAMINO)
     .map((x) => ({ id: x.id, o: entero(x.o, 0, 0, 9), a: entero(x.a, 0, 0, 60),
       n: ["exito", "parcial", "fallo"].indexOf(x.n) >= 0 ? x.n : "exito", r: entero(x.r, -1, -1, 9) }));
@@ -52328,6 +52631,7 @@ const ICONO_VIDA = {
 const CLASE_ESCENA = (ev) => {
   if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
   if (ev.pretemporada) return { k: "documento", n: "Inicio de año", c: "var(--cobre)" };
+  if (ev.mentores) return { k: "persona", n: "Tu mentor", c: "var(--cobre)" };
   if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "#B8901C" };   /* dorado, como las cartas doradas */
   if (ev.rama) return { k: "bifurca", n: "Bifurcación", c: "var(--cobre)" };
   if (ev.por) return { k: "eco", n: "Consecuencia", c: "#7A4FB0" };
@@ -53730,6 +54034,9 @@ function Motor() {
     /* La pretemporada abre el año y va por fuera del presupuesto: se pone
        delante cuando todo lo demás ya está contado. */
     lista.unshift(escenaPretemporada(st));
+    /* sin mentor todavía: elegirlo es lo primero (también en una partida
+       empezada antes de que hubiera mentores) */
+    if (!st.mentor && st.vistos.indexOf(ID_MENTOR) < 0) lista.unshift(escenaMentor());
     return lista;
   };
 
@@ -54105,6 +54412,22 @@ function Motor() {
     /* los minijuegos ganados: uno de los objetivos del día los cuenta */
     if (nivel === "exito" && o && (o.j || o.juego)) st.ganados = entero(numero(st.ganados, 0) + 1, 0, 0, 999);
     if (o && o.ramaId) st.rama = o.ramaId;
+    if (o && o.mentorId && IDS_MENTOR.indexOf(o.mentorId) >= 0) st.mentor = o.mentorId;
+    /* con qué mentores coincidió esta decisión (para el «Jugaste como…») */
+    if (ev && o && !ev.mentores && !ev.pretemporada) {
+      try {
+        const opsEv = opcionesDe(ev);
+        const iElegida = opsEv.indexOf(o);
+        if (opsEv.length >= 2 && iElegida >= 0) {
+          st.nDec = entero(numero(st.nDec, 0) + 1, 0, 0, 99999);
+          const afin = { ...(st.afin || {}) };
+          MENTORES.forEach((m) => {
+            if (mentorElige(m, opsEv, riesgoDe) === iElegida) afin[m.id] = entero(numero(afin[m.id], 0) + 1, 0, 0, 99999);
+          });
+          st.afin = afin;
+        }
+      } catch (e) { /* sin afinidad esta vez */ }
+    }
     if (o && o.firmaPropia && !st.propia) {
       const f = FIRMA_DE(st);
       /* Si el minijuego sale mal montas la firma igual, pero arrancas
@@ -56353,7 +56676,7 @@ function Motor() {
                       </div>
                     ) : null;
                   })()}
-                  <div className="ea-ops">
+                  <div className={"ea-ops" + (ev.mentores ? " ea-opsMentor" : "")}>
                     {/* Una sola linea de letra chica por opcion. Antes cada
                         opcion podia arrastrar cuatro: el minijuego con su tema,
                         la ayuda, la rama y el efecto. Debajo de una frase de
@@ -56372,6 +56695,18 @@ function Motor() {
                         const falta = faltas[i];
                         const bits = [];
                         if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Conocimiento") + " " + Math.round(ayudaDe(o)));
+                        /* la elección de mentor: su avatar, su lema y lo que aconseja */
+                        if (o.mentorId) {
+                          const m = MENTOR(o.mentorId);
+                          return m ? (
+                            <button className="ea-op ea-opMentor" key={i} style={{ "--i": i }} onClick={() => elegir(o)}>
+                              <AvatarMentor id={m.id} tam={64} />
+                              <span className="ea-opMentorN">{o.t}</span>
+                              <span className="ea-opMentorL">«{m.lema}»</span>
+                              <span className={"ea-ef pos k-" + m.k}>{m.aconseja}</span>
+                            </button>
+                          ) : null;
+                        }
                         return (
                           <button className={"ea-op" + (falta ? " sinfuerza" : "") + (o.rareza ? " " + o.rareza : "")} key={i}
                             style={{ "--i": i }}
@@ -56427,6 +56762,23 @@ function Motor() {
                           </button>
                         );
                       });
+                    })()}
+                    {/* lo que haría tu mentor, con una frase suya */}
+                    {(() => {
+                      const m = MENTOR(s.mentor);
+                      const ops = opcionesDe(ev);
+                      if (!m || ev.mentores || ev.pretemporada || ops.length < 2) return null;
+                      const k = mentorElige(m, ops, riesgoDe);
+                      if (k < 0) return null;
+                      return (
+                        <div className="ea-consejo">
+                          <AvatarMentor id={m.id} tam={44} />
+                          <div>
+                            <div className="ea-consejoK ea-dis">{m.n} elegiría la {String.fromCharCode(65 + k)}</div>
+                            <div className="ea-consejoX">«{fraseMentor(m, ev.id)}»</div>
+                          </div>
+                        </div>
+                      );
                     })()}
                     {opcionesDe(ev).length === 0 && (
                       <button className="ea-op" onClick={() => resolverEscena({ msg: "El asunto se resolvió sin que te tocara decidir." }, "parcial", null)}>
@@ -56865,6 +57217,27 @@ function Motor() {
                     const o = OBJETIVOS_DIA.find((y) => y.id === id);
                     return o ? <div key={id} className="ea-diaObj"><span>{h[i] ? "✅" : "❌"}</span> {o.t}</div> : null;
                   })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* con quién coincidiste más: lo que se comparte */}
+          {(() => {
+            const j = jugasteComo(s);
+            if (!j) return null;
+            return (
+              <div className="ea-jugaste">
+                <AvatarMentor id={j.primero.m.id} tam={84} />
+                <div>
+                  <div className="ea-jugasteK ea-dis">Jugaste como…</div>
+                  <div className="ea-jugasteN">{j.primero.m.n}</div>
+                  <div className="ea-jugasteX">
+                    Coincidiste con {j.primero.m.n.split(" ")[0]} en el {j.primero.pct}% de tus {j.total} decisiones
+                    {j.segundo && j.segundo.pct > 0 ? ", y con " + j.segundo.m.n + " en el " + j.segundo.pct + "%" : ""}.
+                    {s.mentor && MENTOR(s.mentor) && s.mentor !== j.primero.m.id ? " Tu mentor era " + MENTOR(s.mentor).n + "." : ""}
+                  </div>
+                  <div className="ea-jugasteL">«{j.primero.m.lema}»</div>
                 </div>
               </div>
             );
