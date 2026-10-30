@@ -49187,6 +49187,27 @@ const mentorElige = (m, ops, riesgo) => {
   });
   return iMejor;
 };
+/* El mentor no habla en todas: solo en las decisiones que marcan la
+   partida. Si opinara de cada café, dejaría de escucharse. Cuentan las
+   decisiones clave, las legendarias, la bifurcación de carrera, el
+   contrato, montar tu firma, las raíces de los árboles, las escenas de
+   drama y cualquier escena donde haya mucho en juego. */
+const IDS_RAIZ = [].concat(...RAICES.map((r) => r.ids));
+const MUCHO_EN_JUEGO = { cash: 15000, attr: 14 };
+const decisionImportante = (e) => {
+  if (!e || e.mentores || e.pretemporada) return false;
+  /* la vida (pareja, hijos, duelos) no es asunto de un mentor de negocios */
+  if (VIDA.some((v) => v.id === e.id)) return false;
+  /* «clave» lo llevan unas 120 escenas; las decisiones clave de verdad
+     son las de D, las que salen cada dos años */
+  if (e.legendaria || e.rama || e.contrato || D.some((x) => x.id === e.id)) return true;
+  if (IDS_FIRMA.indexOf(e.id) >= 0 || IDS_RAIZ.indexOf(e.id) >= 0 || DRAMA_IDS.indexOf(e.id) >= 0) return true;
+  return (Array.isArray(e.o) ? e.o : []).some((o) => {
+    const d = efectoEsperado(o);
+    if (Math.abs(numero(d.cash, 0)) >= MUCHO_EN_JUEGO.cash) return true;
+    return ["car", "cri", "mod", "red", "rep", "ene"].some((k) => Math.abs(numero(d[k], 0)) >= MUCHO_EN_JUEGO.attr);
+  });
+};
 /* una frase del mentor para esta escena: siempre la misma en la misma escena */
 const fraseMentor = (m, idEscena) => {
   if (!m) return "";
@@ -53982,7 +54003,9 @@ function Motor() {
       if (dueno) { lista.push(dueno); usados.push(dueno.id); }
     }
     if (esClave(st.turno)) {
-      const k = sacar(D, st, usados);
+      /* sin repetir: con pocas decisiones clave para tu cargo, la misma
+         salía año tras año («Te ofrecen quedarte», tres veces) */
+      const k = sacar(D, st, usados, true);
       if (k) { lista.push(k); usados.push(k.id); }
     }
     /* La escena de apertura se SUMA al anio, no ocupa el sitio de un
@@ -56767,7 +56790,7 @@ function Motor() {
                     {(() => {
                       const m = MENTOR(s.mentor);
                       const ops = opcionesDe(ev);
-                      if (!m || ev.mentores || ev.pretemporada || ops.length < 2) return null;
+                      if (!m || ops.length < 2 || !decisionImportante(ev)) return null;
                       const k = mentorElige(m, ops, riesgoDe);
                       if (k < 0) return null;
                       return (
