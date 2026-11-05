@@ -2014,10 +2014,13 @@ const PERKS = [
    consumibles de El Ídolo (Alessandro, 8-oct-2026). Se guardan como
    { id, hasta }: activo mientras turno < hasta. Al cerrar el último año
    hacen efecto y se van, y el informe lo avisa.
-   El precio ya no es fijo (César, 5-nov-2026): un café de 300 dólares
-   era caro para un pasante y nada para un socio. Ahora c es el precio
-   base y el que se cobra sale de precioBoost: sube con tu sueldo anual,
-   así que acompaña a la carrera.
+   Algunos precios suben con la carrera (César, 5-nov-2026). Los que
+   llevan escala: true son servicios que cobran según quién eres: el
+   taller de negociación (a un director le venden el programa ejecutivo),
+   la licencia de modelos (la versión institucional) y el agente de
+   prensa (cobra según tu perfil). Esos salen de precioBoost y suben con
+   tu sueldo anual. El café, la cábala, las bebidas y el profesor cuestan
+   lo mismo seas pasante o socio, como en la vida.
    ============================================================ */
 const BOOSTS = [
   { id: "cafe", e: "☕", n: "Café de especialidad todo el año", c: 300, anos: 1, cierre: { ene: 6 },
@@ -2030,13 +2033,13 @@ const BOOSTS = [
   { id: "profe", e: "📚", n: "Clases con un profesor particular", c: 700, anos: 1, ayuda: 20,
     juegos: ["quiz", "catedra", "semaforo", "comite"],
     d: "Llegas mejor preparado a exámenes, cátedras y comités." },
-  { id: "negocia", e: "🎤", n: "Taller intensivo de negociación", c: 900, anos: 2, ayuda: 20,
+  { id: "negocia", e: "🎤", n: "Taller intensivo de negociación", c: 900, anos: 2, ayuda: 20, escala: true,
     juegos: ["anclaje", "subasta", "cuatro", "tresraya"],
     d: "Lees mejor a la otra parte en negociaciones y subastas." },
-  { id: "modelos", e: "📊", n: "Licencia de software de modelos", c: 1200, anos: 2, ayuda: 20,
+  { id: "modelos", e: "📊", n: "Licencia de software de modelos", c: 1200, anos: 2, ayuda: 20, escala: true,
     juegos: ["ojo", "calculo", "estructura", "banderas", "orden"],
     d: "Los números salen más rápido y con menos errores." },
-  { id: "prensa2", e: "📣", n: "Agente de prensa por una temporada", c: 1500, anos: 2, cierre: { rep: 3 },
+  { id: "prensa2", e: "📣", n: "Agente de prensa por una temporada", c: 1500, anos: 2, cierre: { rep: 3 }, escala: true,
     d: "Sumas 3 de reputación cada año que dure." },
 ];
 const IDS_BOOST = BOOSTS.map((b) => b.id);
@@ -2064,11 +2067,11 @@ const EMOJI_COMPRA = {
 };
 BOOSTS.forEach((b) => { EMOJI_COMPRA[b.id] = b.e; });
 
-/* Lo que cuesta un boost hoy. Es el precio base por tu sueldo anual
-   entre 4.000 dólares (lo que gana al año alguien que empieza), con un
-   piso de vez y media el precio base. Un pasante en Caracas paga el
-   piso; un analista en Miami, unas nueve veces la base; un socio, del
-   orden de doscientas: siempre la misma tajada de lo que cobras. */
+/* Lo que cuesta un boost hoy. Sin escala, su precio de siempre. Con
+   escala, el precio base por tu sueldo anual entre 4.000 dólares (lo que
+   gana al año alguien que empieza), con un piso de vez y media la base:
+   un pasante en Caracas paga el piso; un analista en Miami, unas nueve
+   veces la base; un socio, del orden de doscientas. */
 const SUELDO_REF_BOOST = 4000;
 const redondeoPrecio = (v) => {
   const paso = v < 1000 ? 50 : v < 10000 ? 100 : v < 100000 ? 1000 : 5000;
@@ -2076,6 +2079,7 @@ const redondeoPrecio = (v) => {
 };
 const precioBoost = (b, st) => {
   const base = numero(b && b.c, 0);
+  if (!(b && b.escala)) return base;
   const sueldo = numero(sueldoCon(st, 1), 0);
   return redondeoPrecio(Math.max(base * 1.5, (base * sueldo) / SUELDO_REF_BOOST));
 };
@@ -55479,7 +55483,7 @@ function Motor() {
       d: "Se compran una vez y trabajan para ti todos los años que queden." },
     /* se abren junto con las mejoras: los dos son invertir en ti */
     { id: "boosts", n: "Boosts", e: "⚡", lista: BOOSTS, abierto: abierto(s, "mejoras"),
-      d: "Potenciadores que duran uno o dos años. Su precio sube con tu sueldo: mientras más arriba estás, más cuestan." },
+      d: "Potenciadores que duran uno o dos años. Los que dicen «sube con tu sueldo» cuestan más mientras más arriba estás." },
   ];
   const GRUPO_ACT = GRUPOS_COMPRA.filter((g) => g.abierto).find((g) => g.id === grupo)
     || GRUPOS_COMPRA.filter((g) => g.abierto)[0]
@@ -56333,7 +56337,7 @@ function Motor() {
                           </div>
                           <div className="ea-etqs">
                             <span className="ea-etq act">dura {b.anos === 1 ? "un año" : b.anos + " años"}</span>
-                            <span className="ea-etq">sube con tu sueldo</span>
+                            {b.escala && <span className="ea-etq">sube con tu sueldo</span>}
                           </div>
                           <div className="ea-itemD">{b.d}</div>
                           {activo
