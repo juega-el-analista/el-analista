@@ -3636,6 +3636,79 @@ const E = [
       { t: "Pagarla con la tarjeta, en cuotas", d: { cash: -1000, ene: 2, msg: "La tratas hoy y la pagas en seis meses, con un poco de interés." } },
       { t: "Dejarlo para más adelante", d: { ene: -3, deja: "nov_dentista", luego: [{ en: 1, azar: [{ p: 70, id: 24170 }, { p: 30, id: 24171 }] }], msg: "Analgésicos y esperar. Tienes cosas más urgentes, piensas." } },
     ] },
+  /* ---------- los arranques de cada edad ----------
+     La ruta del novato es para quien empieza a los veinte. Quien empieza
+     a los treinta, cuarenta o cincuenta entraba directo en escenas de
+     banca, como si no trajera vida detrás. Estas salen en sus dos
+     primeros años, solo para su edad (arranque), y cada una tiene futuro
+     (24330 en adelante). Nov-2026. */
+  { id: 24300, arranque: 30, min: 0, max: 6, t: "Llegas tarde y lo sabes",
+    x: "Tus compañeros de promoción tienen veinticuatro años y ya se saben los atajos. Tú vienes de otro trabajo y tienes que ponerte al día.",
+    o: [
+      { t: "Contar de dónde vienes, sin complejos", d: { rep: 3, red: 3, msg: "Lo que aprendiste fuera les sirve más de lo que esperabas. Te empiezan a consultar." } },
+      { t: "Callarte y aprender como uno más", d: { cri: 3, ene: -3, msg: "Preguntas poco y miras mucho. En unos meses nadie se acuerda de que llegaste tarde." } },
+      { t: "Ponerte al día de noche", d: { cri: 5, ene: -7, deja: "ini30_noche", luego: [{ en: 1, azar: [{ p: 55, id: 24330 }, { p: 45, id: 24331 }] }], msg: "Cursos después de cenar y fines de semana con el portátil. Avanzas rápido, y se nota en la cara." } },
+    ] },
+  { id: 24301, arranque: 30, min: 0, max: 6, t: "Los ahorros de tus veintes",
+    x: "Tienes nueve mil dólares guardados de los años anteriores. Es la primera vez que ese dinero puede hacer algo más que esperar.",
+    o: [
+      { t: "Usarlos de entrada para un piso", d: { cash: -6000, ene: 3, deja: "ini30_piso", luego: [{ en: 2, azar: [{ p: 50, id: 24332 }, { p: 50, id: 24333 }] }], msg: "Firmas una hipoteca a veinticinco años. Es tuyo, y el banco también." } },
+      { t: "Invertirlos y seguir alquilando", d: { cri: 3, mercado: 0.04, msg: "El alquiler sigue, el dinero trabaja. Ninguna de las dos cosas se ve desde fuera." } },
+      { t: "Dejarlos quietos, como colchón", d: { ene: 2, msg: "No haces nada con ellos. A veces lo mejor que hace un ahorro es estar ahí." } },
+    ] },
+  { id: 24302, arranque: 30, min: 0, max: 6, t: "Tu jefe es más joven que tú",
+    x: "El que te asigna el trabajo tiene veintiocho años y lo hace bien. Tú tienes treinta y una carrera entera en otro sitio.",
+    o: [
+      { t: "Ganártelo con trabajo", d: { car: 3, ene: -5, msg: "Entregas antes de que te lo pida. Deja de revisarte las cosas a los dos meses." } },
+      { t: "Hablarlo claro desde el primer día", chk: { s: "rep", dif: 45,
+        ok: { rep: 3, red: 3, msg: "Le dices que te sobra experiencia y te falta oficio. Le gusta la franqueza; te da lo difícil." },
+        no: { rep: -3, msg: "Lo toma como una amenaza. Pasan meses hasta que se le pasa." } } },
+      { t: "Pedir que te pasen a otro equipo", d: { red: 2, car: -1, msg: "Te cambian. El jefe nuevo es mayor que tú y no te enseña nada." } },
+    ] },
+  { id: 24310, arranque: 40, pareja: ["casado"], min: 0, max: 6, t: "Tu matrimonio se termina",
+    x: "Después de muchos años, los dos lo saben. Queda decidir cómo se reparte lo que construyeron juntos.",
+    o: [
+      { t: "Un acuerdo justo, mitad y mitad", d: { pareja: "divorciado", patPct: 0.3, ene: -6, rep: 1, deja: "ini40_acuerdo", msg: "Se firma en dos reuniones. Duele igual, pero se puede hablar después." } },
+      { t: "Pelear cada cosa con abogados", chk: { s: "cri", dif: 60,
+        ok: { pareja: "divorciado", patPct: 0.2, cash: -5000, ene: -12, deja: "ini40_pelea", msg: "Te quedas con más de lo que te tocaba. Los abogados, con una parte. Y nadie se habla." },
+        no: { pareja: "divorciado", patPct: 0.4, cash: -7000, ene: -14, deja: "ini40_pelea", msg: "Un año de juicio y pierdes casi todo lo que peleabas. Lo único que creció fue la factura." } } },
+      { t: "Intentarlo una vez más, con terapia", d: { cash: -3000, ene: -4, deja: "ini40_terapia", luego: [{ en: 2, azar: [{ p: 55, id: 24340 }, { p: 45, id: 24341 }] }], msg: "Una tarde a la semana con alguien que escucha a los dos. Nadie sabe todavía si sirve." } },
+    ] },
+  { id: 24311, arranque: 40, min: 0, max: 6, t: "Te dan un equipo",
+    x: "Por primera vez tienes gente a tu cargo: cinco personas, dos de ellas con más años en la firma que tú.",
+    o: [
+      { t: "Aceptar y aprender a dirigir", d: { car: 5, ene: -6, rep: 2, deja: "ini40_equipo", luego: [{ en: 1, azar: [{ p: 60, id: 24342 }, { p: 40, id: 24343 }] }], msg: "Tu agenda se llena de reuniones que antes no existían. Tu trabajo ahora es el de ellos." } },
+      { t: "Quedarte como especialista", d: { cri: 4, ene: 2, car: -1, msg: "Dices que no. Sigues haciendo lo que sabes hacer, y lo haces mejor que nadie." } },
+    ] },
+  { id: 24312, arranque: 40, min: 0, max: 6, t: "Un excompañero monta algo",
+    x: "Alguien con quien trabajaste hace diez años abre su propia empresa. Busca socios con capital y alguien que entienda de números.",
+    o: [
+      { t: "Entrar con una parte de tus ahorros", d: { cash: -10000, red: 3, deja: "ini40_socio", luego: [{ en: 2, azar: [{ p: 45, id: 24344 }, { p: 55, id: 24345 }] }], msg: "Pones diez mil y una tarde al mes. Te sientas en su consejo, que es una mesa de cocina." } },
+      { t: "Ayudarle gratis y quedarte fuera", d: { red: 4, ene: -2, msg: "Le revisas el plan dos veces. No pones dinero; te queda un amigo en deuda contigo." } },
+      { t: "Decirle que no", d: { ene: 2, msg: "No es el momento. Le deseas suerte y lo dices en serio." } },
+    ] },
+  { id: 24320, arranque: 50, min: 0, max: 6, t: "Tu nombre está en la lista",
+    x: "La firma recorta y tu puesto aparece en la reestructuración. Te ofrecen tres salidas y una semana para decidir.",
+    o: [
+      { t: "Aceptar un puesto menor y quedarte", d: { car: -8, ene: 4, msg: "Bajas un escalón y sales a las seis. Nadie lo dice, pero ya no estás en las reuniones que importan." } },
+      { t: "Pelear por tu puesto con tus resultados", chk: { s: "rep", dif: 55,
+        ok: { car: 3, rep: 4, msg: "Llevas diez años de números y los pones sobre la mesa. Sales de la lista." },
+        no: { car: -6, rep: -3, ene: -8, msg: "Te quedas, pero en la sala ya todos saben que estuviste en la lista." } } },
+      { t: "Negociar la indemnización y quedarte de consultor", d: { cash: 18000, car: -12, ene: 6, deja: "ini50_consultor", msg: "Cobras la salida y vuelves dos días por semana, con otra tarjeta y menos jefe." } },
+    ] },
+  { id: 24321, arranque: 50, min: 0, max: 6, t: "¿Cuándo te quieres retirar?",
+    x: "El asesor del banco te lo pregunta en serio, por primera vez. De la respuesta depende cuánto tienes que apartar cada mes.",
+    o: [
+      { t: "Pronto: a los sesenta", d: { cri: 3, deja: "ini50_pronto", luego: [{ id: 24350, en: 1 }], msg: "Hacen la cuenta y el número asusta. Hay que ahorrar casi el doble que ahora." } },
+      { t: "Cuando el cuerpo diga basta", d: { car: 3, ene: -4, msg: "Sigues como si tuvieras cuarenta. El asesor apunta algo y no te lo enseña." } },
+      { t: "Nunca del todo", d: { red: 3, msg: "Te imaginas dando clases, asesorando, opinando. Retirarse, para ti, es cambiar de oficina." } },
+    ] },
+  { id: 24322, arranque: 50, min: 0, max: 6, t: "La universidad te ofrece un curso",
+    x: "Te proponen enseñar una materia por las tardes. Pagan poco, piden mucho y los alumnos tienen veinte años.",
+    o: [
+      { t: "Aceptar", d: { rep: 4, red: 3, ene: -4, deja: "ini50_clases", luego: [{ id: 24351, en: 2 }], msg: "Preparas cada clase como si fuera un comité. Ellos preguntan cosas que nadie te preguntaba hace años." } },
+      { t: "Declinar con elegancia", d: { ene: 3, msg: "Les dices que el año que viene, quizás. Los dos saben que no." } },
+    ] },
   /* ---------- el carácter de cada firma ----------
      Solo salen si tu firma tiene esa cultura (ver CULTURAS). */
   { id: 24210, cultura: "exigente", min: 0, max: 5, t: "Te piden el fin de semana",
@@ -4070,6 +4143,16 @@ const HUELLAS = {
   nov_dentista: "Dejaste para después el dentista",
   nov_negociaste: "Negociaste tu primer sueldo",
   nov_posgrado: "Te inscribiste en un posgrado de noche",
+  ini30_noche: "Te pusiste al día de noche, a los treinta",
+  ini30_piso: "Usaste tus primeros ahorros para un piso",
+  ini40_acuerdo: "Te separaste con un acuerdo justo",
+  ini40_pelea: "Peleaste el divorcio con abogados",
+  ini40_terapia: "Intentaste salvar tu matrimonio con terapia",
+  ini40_equipo: "Aceptaste dirigir tu primer equipo",
+  ini40_socio: "Entraste de socio en la empresa de un excompañero",
+  ini50_consultor: "Saliste de la reestructuración como consultor",
+  ini50_pronto: "Decidiste retirarte a los sesenta",
+  ini50_clases: "Empezaste a dar clases en la universidad",
   saltaste: "Te fuiste con el headhunter",
   negociaste: "Usaste la oferta para negociar",
   leal: "Rechazaste la oferta y lo dijiste",
@@ -4814,6 +4897,81 @@ const CONSECUENCIAS = [
     o: [
       { t: "Terminarlo como sea", d: { mod: 3, ene: -8, rep: 2, msg: "Llegas al final a rastras. El diploma pesa menos que el cansancio, por ahora." } },
       { t: "Congelarlo un semestre", d: { ene: 6, cri: 1, msg: "Lo pausas. No es rendirse: es elegir cuándo." } },
+    ] },
+  /* ---------- lo que vuelve de los arranques de cada edad ---------- */
+  { id: 24330, min: 0, max: 6, por: HUELLAS.ini30_noche, t: "Ya no te tienen que explicar nada",
+    x: "En la revisión de mitad de año tu jefe dice que eres de los que más rápido aprendió. No sabe a qué hora te acuestas.",
+    o: [
+      { t: "Aflojar: ya llegaste", d: { ene: 6, car: 2, msg: "Vuelves a cenar a la mesa. Lo aprendido no se va." } },
+      { t: "Seguir al mismo ritmo", d: { cri: 3, ene: -5, car: 2, msg: "Si funcionó, ¿por qué parar? Tu cuerpo tiene otra opinión." } },
+    ] },
+  { id: 24331, min: 0, max: 6, por: HUELLAS.ini30_noche, t: "Te quedas dormido en una reunión",
+    x: "Tres meses durmiendo cinco horas. Hoy cerraste los ojos un segundo delante del cliente.",
+    o: [
+      { t: "Pedir perdón y explicarlo", d: { rep: -1, ene: 4, msg: "Te miran con más comprensión de la que esperabas. Esa noche duermes nueve horas." } },
+      { t: "Hacer como si nada", d: { rep: -3, msg: "Nadie dice nada. Todos lo vieron." } },
+    ] },
+  { id: 24332, min: 0, max: 6, por: HUELLAS.ini30_piso, t: "La cuota de la hipoteca sube",
+    x: "Los tipos de interés subieron y tu cuota con ellos. Ahora se lleva un tercio de tu sueldo.",
+    o: [
+      { t: "Apretarte y seguir pagando", d: { cash: -2500, ene: -3, msg: "Menos cenas fuera, menos viajes. El piso sigue siendo tuyo." } },
+      { t: "Renegociar con el banco", chk: { s: "cri", dif: 50,
+        ok: { cash: -800, cri: 2, msg: "Alargas el plazo y la cuota vuelve a donde estaba. Pagarás más al final, pero respiras." },
+        no: { cash: -2000, msg: "El banco te escucha con educación y no cambia nada." } } },
+    ] },
+  { id: 24333, min: 0, max: 6, por: HUELLAS.ini30_piso, t: "Tu piso vale más",
+    x: "Abrieron una estación de metro a dos calles. Lo que compraste vale bastante más que hace dos años.",
+    o: [
+      { t: "Quedártelo: es tu casa", d: { ene: 3, cash: 1500, msg: "No vendes. Pero sabes que está ahí, y eso cambia cómo duermes." } },
+      { t: "Venderlo y alquilar otra vez", d: { cash: 9000, ene: -3, msg: "Cobras la diferencia y vuelves a alquilar. El dinero, esta vez, en tu cuenta." } },
+    ] },
+  { id: 24340, min: 0, max: 6, por: HUELLAS.ini40_terapia, pareja: ["casado"], t: "Lo están arreglando",
+    x: "Dos años de terapia. No es lo que era al principio, pero es algo mejor: hablan.",
+    o: [
+      { t: "Un viaje los dos solos", d: { cash: -3000, ene: 8, msg: "Diez días sin hijos ni correo. Vuelven con ganas de seguir." } },
+      { t: "Seguir con la terapia, sin prisa", d: { cash: -1200, ene: 3, msg: "Una tarde por semana. Es lo que funciona." } },
+    ] },
+  { id: 24341, min: 0, max: 6, por: HUELLAS.ini40_terapia, pareja: ["casado"], t: "La terapia no alcanzó",
+    x: "Lo intentaron de verdad. Al final, el terapeuta les dice lo que los dos ya sabían.",
+    o: [
+      { t: "Separarse en paz", d: { pareja: "divorciado", patPct: 0.25, ene: -4, msg: "Se separan sin abogados y sin gritos. Lo que se intentó sirvió para eso." } },
+      { t: "Seguir juntos por los demás", d: { ene: -6, rep: 1, msg: "Siguen. Desde fuera nadie nota nada; desde dentro, todo." } },
+    ] },
+  { id: 24342, min: 0, max: 6, por: HUELLAS.ini40_equipo, t: "Tu equipo te respalda",
+    x: "Un socio quiere culpar a tu equipo de un retraso. Los cinco aparecen en su despacho con los correos que prueban lo contrario.",
+    o: [
+      { t: "Defenderlos tú delante del comité", d: { rep: 4, red: 3, car: 2, msg: "Les pones la cara. Esa semana se ganan una lealtad que no se compra." } },
+      { t: "Dejar que hablen los correos", d: { rep: 2, msg: "Los papeles hablan solos. El socio retrocede sin disculparse." } },
+    ] },
+  { id: 24343, min: 0, max: 6, por: HUELLAS.ini40_equipo, t: "Alguien de tu equipo se quema",
+    x: "La mejor de tus cinco te pide una semana libre y en sus ojos ves que no es una semana lo que necesita.",
+    o: [
+      { t: "Darle un mes y repartir su trabajo", d: { ene: -6, rep: 3, red: 2, msg: "Cubres su parte con el resto. Vuelve. Y no se olvida." } },
+      { t: "Darle la semana y nada más", d: { car: 1, rep: -2, msg: "Se toma la semana. Dos meses después, se va a otra firma." } },
+    ] },
+  { id: 24344, min: 0, max: 6, por: HUELLAS.ini40_socio, t: "La empresa de tu excompañero despega",
+    x: "Un fondo compra la mitad de la empresa. Tu parte vale ahora tres veces lo que pusiste.",
+    o: [
+      { t: "Vender tu parte al fondo", d: { cash: 30000, red: 2, msg: "Cobras y sales. Tu excompañero te invita a cenar y paga él." } },
+      { t: "Quedarte para la siguiente ronda", d: { cash: 6000, red: 3, cri: 2, msg: "Vendes un poco y te quedas con el resto. Te dejan seguir en el consejo, que ya no es una cocina." } },
+    ] },
+  { id: 24345, min: 0, max: 6, por: HUELLAS.ini40_socio, t: "La empresa de tu excompañero cierra",
+    x: "Dos años de intentarlo y el dinero se acabó. Tu excompañero te llama para decírtelo antes de que lo leas en otro sitio.",
+    o: [
+      { t: "Decirle que lo volvería a hacer", d: { red: 4, ene: 2, msg: "Pierdes lo que pusiste y ganas a alguien que no lo olvida." } },
+      { t: "Pedirle cuentas", d: { red: -4, cri: 2, msg: "Te enseña los números. No hay nada raro, solo un negocio que no funcionó." } },
+    ] },
+  { id: 24350, min: 0, max: 6, por: HUELLAS.ini50_pronto, t: "Recortar para llegar a los sesenta",
+    x: "Para retirarte cuando dijiste hay que apartar casi la mitad del sueldo. Es la primera vez que miras de verdad en qué se va.",
+    o: [
+      { t: "Recortar en serio", d: { cash: 4000, ene: -3, cri: 3, msg: "Coche más pequeño, vacaciones más cerca. El número empieza a cuadrar." } },
+      { t: "Retrasar la meta un par de años", d: { ene: 3, msg: "Los sesenta y dos también están bien. Respiras." } },
+    ] },
+  { id: 24351, min: 0, max: 6, por: HUELLAS.ini50_clases, t: "Una alumna te escribe",
+    x: "Una alumna de tu primer curso te cuenta que entró en una firma grande. Dice que fue por tu clase.",
+    o: [
+      { t: "Pedirle que te tenga al tanto", d: { red: 4, rep: 2, msg: "Te escribe cada tantos meses. En unos años, ella será quien te llame a ti." } },
+      { t: "Contárselo a la universidad", d: { rep: 3, msg: "Te ofrecen un segundo curso. Ya no lo dudas tanto." } },
     ] },
   /* ---------- el primer día en una firma nueva, según su cultura ---------- */
   { id: 24200, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma que no para",
@@ -48809,6 +48967,8 @@ const SOLO_EMPLEADO = [
   24030, 24060, 24080, 24130, 24131, 24132, 24133, 24150, 24160, 24161, 24162, 24163,
   /* el carácter de las firmas: su primer día y sus escenas */
   24200, 24201, 24202, 24203, 24210, 24211, 24212, 24213, 24214, 24215, 24216, 24217,
+  /* los arranques por edad que dan por hecho un jefe o una firma */
+  24302, 24311, 24320, 24342, 24343,
 ];
 LOTES.escenas.concat(LOTES.propias || []).forEach((e) => { if (e.empleado) SOLO_EMPLEADO.push(e.id); });
 /* Escenas que dan por hecho que tienes jefe, encontradas leyendo una por
@@ -53961,6 +54121,8 @@ function Motor() {
     /* con firma propia no salen las de empleado, y sin ella no salen las de dueño */
     const cabe = (e) => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0
       && !(e.cultura && (!culturaDe(st) || culturaDe(st).k !== e.cultura))
+      /* los arranques de una edad: solo para esa edad y en los primeros años */
+      && !(e.arranque && (e.arranque !== st.edadIni || st.turno > 2))
       && !(sinJefe(st) && esDeEmpleado(e)) && !(e.dueno && !sinJefe(st)) && huellasOk(e, st);
     let pool = fuente.filter((e) => cabe(e) && st.vistos.indexOf(e.id) < 0);
     if (pool.length === 0 && !sinRepetir) pool = fuente.filter(cabe);
@@ -54130,6 +54292,19 @@ function Motor() {
       const novato = E.filter((e) => e.novato);
       for (let k = 0; k < 2 && lista.length < objetivo; k++) {
         const e = sacar(novato, st, usados, true);
+        if (!e) break;
+        lista.push(e); usados.push(e.id);
+      }
+    }
+    /* Lo mismo para quien empieza a los 30, 40 o 50: sus dos primeros
+       años traen escenas de su edad. A esas edades el primer año ya llega
+       lleno (la vida y la familia ocupan el presupuesto), así que la
+       primera SUMA al año, como pide CONTRIBUIR; la segunda solo entra si
+       queda hueco. */
+    if (st.turno <= 1 && entero(st.edadIni, 20, 20, 50) >= 30) {
+      const suyas = E.filter((e) => e.arranque === st.edadIni);
+      for (let k = 0; k < 2 && (k === 0 || lista.length < objetivo); k++) {
+        const e = sacar(suyas, st, usados, true);
         if (!e) break;
         lista.push(e); usados.push(e.id);
       }
