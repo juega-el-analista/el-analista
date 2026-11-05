@@ -958,6 +958,9 @@ const CSS6 = `
 .ea-anuncioJK,.ea-anuncioJT{color:var(--mostaza)}
 .ea-anuncio{background:var(--tinta)}
 .ea-juegoPleno{background:var(--arena)}
+/* ---- la pista de una línea, la primera vez que aparece algo ---- */
+.ea-pistaUna{font-size:13px;line-height:1.45;color:var(--tinta);background:#EBE3F6;border-radius:12px;padding:7px 12px;margin:0 0 10px}
+.ea-pistaUna span{display:inline-block;margin-right:8px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--lila2);font-weight:800}
 `;
 
 /* ---------- escala de la carrera ---------- */
@@ -47850,6 +47853,48 @@ const anotarMovimiento = (v) => {
 };
 
 /* ============================================================
+   PISTAS DE UNA LÍNEA
+   Las ventanas de guía se quitaron (Saúl, oct-2026): cortaban el hilo
+   y salían en cada partida. Pero quien juega por primera vez se quedaba
+   sin nada. Esto es lo que las reemplaza: una frase corta encima de las
+   opciones, la primera vez que aparece cada cosa, y nunca más. Vive en
+   el navegador, como el movimiento: sobrevive a todas las vidas.
+   ============================================================ */
+const CLAVE_PISTAS = "el-analista-pistas";
+const PISTAS_UNA = [
+  { id: "efectos", t: "Las fichas de color dicen qué mueve cada opción: llena si sube, en contorno si baja. Más signos, más cambio.",
+    cuando: (c) => c.ops.some((o) => efectosDe(o).length > 0) },
+  { id: "consecuencia", t: "Esto pasa por algo que decidiste antes. Lo que eliges vuelve.",
+    cuando: (c) => !!(c.ev.por && c.ev.por !== POR_RAMA) },
+  { id: "clave", t: "Decisión clave: hay pocas y pesan más que las demás.",
+    cuando: (c) => D.some((x) => x.id === c.ev.id) },
+  { id: "mentor", t: "Tu mentor solo opina en las decisiones que marcan la partida. Es un consejo, no una orden.",
+    cuando: (c) => c.mentorHabla },
+  { id: "riesgo", t: "«Puede salir mal» te avisa antes de elegir: es lo probable que se tuerza.",
+    cuando: (c) => c.ops.some((o) => { try { return !!c.riesgo(o); } catch (e) { return false; } }) },
+  { id: "minijuego", t: "Las opciones con minijuego se juegan: cuanto mejor lo hagas, mejor sale.",
+    cuando: (c) => c.ops.some((o) => o.j || o.juego) },
+  { id: "candado", t: "Una opción con candado pide más de lo que tienes. Sube ese atributo y se abre.",
+    cuando: (c) => c.ops.some((o) => { try { return !!faltaDe(o, c.st); } catch (e) { return false; } }) },
+  { id: "jerga", t: "Si una palabra no te suena, toca «¿Qué es…?».",
+    cuando: (c) => jergaDe(c.ev).length > 0 },
+];
+const IDS_PISTAS = PISTAS_UNA.map((p) => p.id);
+const leerPistas = () => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return [];
+    const v = JSON.parse(window.localStorage.getItem(CLAVE_PISTAS) || "[]");
+    return Array.isArray(v) ? v.filter((x) => IDS_PISTAS.indexOf(x) >= 0) : [];
+  } catch (e) { return []; }
+};
+const anotarPistas = (lista) => {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return;
+    window.localStorage.setItem(CLAVE_PISTAS, JSON.stringify(lista.filter((x) => IDS_PISTAS.indexOf(x) >= 0)));
+  } catch (e) { /* sin almacén, las pistas vuelven a salir en la próxima vida */ }
+};
+
+/* ============================================================
    LA CARRERA DEL DÍA
    La misma para todos los que juegan esa fecha: país, carrera y edad
    salen de la fecha, y el azar de cada año se siembra con fecha y año.
@@ -55451,6 +55496,25 @@ function Motor() {
     ...st, guiaVistas: (Array.isArray(st.guiaVistas) ? st.guiaVistas : []).concat(id),
   }));
 
+  /* Las pistas de una línea: al llegar a una escena se miran las que
+     tocan y no se han visto nunca (dos como mucho), se anotan como vistas
+     y se quedan en pantalla mientras dure esa escena. */
+  const [pistasEscena, setPistasEscena] = useState({ ev: null, t: [] });
+  const idEvPista = fase === "evento" && ev ? ev.id : null;
+  useEffect(() => {
+    if (idEvPista == null || !ev || ev.mentores || ev.pretemporada) return;
+    try {
+      const vistas = leerPistas();
+      const ops = opcionesDe(ev);
+      const m = MENTOR(s.mentor);
+      const ctx = { ev, ops, st: s, riesgo: riesgoDe, mentorHabla: !!(m && ops.length >= 2 && decisionImportante(ev)) };
+      const nuevas = PISTAS_UNA.filter((p) => vistas.indexOf(p.id) < 0 && (() => { try { return !!p.cuando(ctx); } catch (e) { return false; } })()).slice(0, 2);
+      if (!nuevas.length) return;
+      anotarPistas(vistas.concat(nuevas.map((p) => p.id)));
+      setPistasEscena({ ev: idEvPista, t: nuevas.map((p) => p.t) });
+    } catch (e) { /* sin pistas: el juego sigue igual */ }
+  }, [idEvPista]);   // eslint-disable-line react-hooks/exhaustive-deps
+
   const opcionesDe = (e) => {
     const todas = e && Array.isArray(e.o) ? e.o.filter((o) => o && o.t) : [];
     const vis = todas.filter((o) => { try { return visible(o, s); } catch (err) { return false; } });
@@ -56762,6 +56826,10 @@ function Motor() {
                       </div>
                     ) : null;
                   })()}
+                  {/* la primera vez que aparece algo, una frase que lo explica */}
+                  {pistasEscena.ev === ev.id && pistasEscena.t.map((t, i) => (
+                    <div className="ea-pistaUna" key={i}><span className="ea-dis">Primera vez</span>{t}</div>
+                  ))}
                   <div className={"ea-ops" + (ev.mentores ? " ea-opsMentor" : "")}>
                     {/* Una sola linea de letra chica por opcion. Antes cada
                         opcion podia arrastrar cuatro: el minijuego con su tema,
