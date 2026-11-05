@@ -10,6 +10,12 @@ const RUTA_ORIGINAL = path.join(RAIZ, "historia", "el-analista.v5-original.jsx")
    circulación del capital sin depender de conducir la interfaz. */
 const fs = require("fs");
 const RUTA = RUTA_FUENTE;
+
+/* cada comprobación escribe «ok» o «FALLA»: se cuentan las FALLA para que
+   la prueba termine en rojo y la publicación se pare */
+let fallas = 0;
+const escribir = console.log;
+console.log = (...a) => { if (a.some((x) => /FALLA/.test(String(x)))) fallas++; escribir(...a); };
 const src = fs.readFileSync(RUTA, "utf8");
 
 /* --- localizar el bloque "if (st.fondo) { ... }" del cierre --- */
@@ -122,3 +128,4 @@ console.log("    capacidad inicial " + fmt(cap0) + "  ->  final " + fmt(capacida
 console.log("    ganancia realizada acumulada: " + fmt(st3.fondo.realizado));
 console.log("    oportunidades en la ultima ronda: " + st3.fondo.oferta.length);
 console.log("    " + (st3.fondo.oferta.length > 0 ? "ok    " : "FALLA ") + "el fondo sigue vivo despues de diez anos de rotacion");
+process.exit(fallas ? 1 : 0);

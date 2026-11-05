@@ -35,7 +35,12 @@
     "cierre": "node pruebas/cierre.js",
     "contrato": "node pruebas/contrato.js",
     "boosts": "node pruebas/boosts.js",
-    "gala": "node pruebas/gala.js"
+    "gala": "node pruebas/gala.js",
+    "mentores": "node pruebas/mentores.js",
+    "pistas": "node pruebas/pistas.js",
+    "arranques": "node pruebas/arranques.js",
+    "ofertas": "node pruebas/ofertas.js",
+    "vigilancia": "npm run fondo && npm run cierre && npm run mentores && npm run ofertas && npm run pistas && npm run arranques && node pruebas/finales.js 8"
   },
   "devDependencies": {
     "@babel/core": "^7",

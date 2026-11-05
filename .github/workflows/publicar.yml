@@ -57,6 +57,14 @@ jobs:
       - name: Robustez
         run: npm run robustez
 
+      # Las sondas que miran lo que se ve jugando: el fondo, el inicio y
+      # cierre de año, los mentores, las ofertas de trabajo, las pistas,
+      # los arranques por edad y la pantalla final (ocho vidas enteras).
+      # Antes no corría ninguna y fondo llevaba semanas fallando sin que
+      # nadie lo viera.
+      - name: Vigilancia
+        run: npm run vigilancia
+
       # El juego más lo que lo hace instalable (manifiesto, iconos y el
       # trabajador que lo deja jugar sin conexión). pruebas/pwa.js verifica
       # que index.html, el del artifact y el quine, no se toque.

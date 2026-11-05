@@ -34,9 +34,12 @@ porque otro llegó antes. Ya pasó.
 ```bash
 npm run robustez     # 27 escenarios de guardados corruptos y estados imposibles
 npm run quine        # 21 comprobaciones de que el documento sabe reconstruirse
+npm run vigilancia   # fondo, inicio y cierre de año, mentores, ofertas, pistas,
+                     # arranques por edad y ocho vidas enteras hasta el final
 ```
 
-Las dos tienen que salir en verde. Si tocaste contenido —escenas, preguntas,
+Las tres tienen que salir en verde: la publicación las corre y, si una
+falla, no publica. Si tocaste contenido —escenas, preguntas,
 textos— corre además:
 
 ```bash
