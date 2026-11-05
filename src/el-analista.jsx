@@ -56380,7 +56380,7 @@ function Motor() {
                       </div>
                     </div>
                     <div className="ea-plegs">
-                    <Plegable titulo="Tus atributos" resumen={"criterio " + Math.round(s.cri)}>
+                    <Plegable titulo="Tus atributos" resumen={"conocimiento " + Math.round(s.cri)}>
                     <Stat k="cri" v={s.cri} /><Stat k="red" v={s.red} /><Stat k="rep" v={s.rep} /><Stat k="ene" v={s.ene} ene />
                     </Plegable>
                     <Plegable titulo="Quién eres" resumen={cargoDe(s)}>
