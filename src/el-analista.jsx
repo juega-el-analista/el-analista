@@ -3427,7 +3427,7 @@ const E = [
     ] },
   { id: 7, clave: true, min: 1, max: 4, sin: ["sancionado"], t: "Te llama un headhunter", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
     o: [
-      { t: "Aceptar y mudarte de firma", mudaFirma: true, d: { cash: 4000, ene: -10, rep: -4, car: 6, red: 5, deja: "saltaste", luego: [{ id: 7101, en: 1 }, { id: 7103, en: 3 }], msg: "Nueva placa en la puerta, mismo Excel. Tu antigua red se enfría un poco." } },
+      { t: "Aceptar y mudarte de firma", mudaFirma: true, paga: 1.4, d: { cash: 4000, ene: -10, rep: -4, car: 6, red: 5, deja: "saltaste", luego: [{ id: 7101, en: 1 }, { id: 7103, en: 3 }], msg: "Nueva placa en la puerta, mismo Excel. Tu antigua red se enfría un poco." } },
       { t: "Usarla para negociar donde estás", min: { red: 20 }, j: "anclaje", stat: "red", d: { cash: 3000, rep: 3, car: 3, deja: "negociaste", luego: [{ id: 7104, en: 2 }], msg: "Entras a la oficina del socio con una oferta en la mano y un número en la cabeza." } },
       { t: "Decir que no y contarlo abiertamente", d: { rep: 7, red: 3, deja: "leal", luego: [{ id: 7105, en: 2 }, { id: 7106, en: 2 }], msg: "La lealtad se cotiza distinto en las firmas pequeñas. Aquí sube." } },
     ] },
@@ -4228,7 +4228,7 @@ const CONSECUENCIAS = [
     x: "Hay recortes. El socio te recuerda, delante de todos, quién pidió más hace dos años.",
     o: [
       { t: "Aceptar el recorte sin discutir", d: { cash: -3000, rep: 4, msg: "Pagas la subida de entonces. El socio da el asunto por cerrado." } },
-      { t: "Volver a llamar al headhunter", mudaFirma: true, d: { cash: 4000, red: -4, car: 4, rep: -3, deja: "saltaste", luego: [{ id: 7101, en: 1 }], msg: "Esta vez no negocias: te vas." } },
+      { t: "Volver a llamar al headhunter", mudaFirma: true, paga: 1.3, d: { cash: 4000, red: -4, car: 4, rep: -3, deja: "saltaste", luego: [{ id: 7101, en: 1 }], msg: "Esta vez no negocias: te vas." } },
     ] },
   { id: 7105, min: 0, max: 6, por: HUELLAS.leal, sin: ["delator"], t: "La lealtad se cobra",
     x: "El socio no olvidó que rechazaste la oferta. Te ofrece llevar la cuenta más grande de la firma.",
@@ -4277,7 +4277,7 @@ const CONSECUENCIAS = [
     x: "La sanción es pública. Tu nombre es lo primero que sale cuando alguien te busca, y donde trabajas ya lo saben.",
     o: [
       { t: "Dar la cara y aguantar las miradas", d: { car: -6, rep: 5, ene: -8, msg: "Pides perdón en voz alta y trabajas el doble. Algunos dejan de mirarte; otros no." } },
-      { t: "Irte a una firma pequeña donde nadie pregunta", mudaFirma: true, d: { car: -8, rep: 6, ene: -6, msg: "Menos sueldo, menos cargo y gente que no pregunta. Por algo se empieza." } },
+      { t: "Irte a una firma pequeña donde nadie pregunta", mudaFirma: true, paga: 0.85, d: { car: -8, rep: 6, ene: -6, msg: "Menos sueldo, menos cargo y gente que no pregunta. Por algo se empieza." } },
       { t: "Pasarte a compliance: conoces el error por dentro", d: { cri: 9, rep: 4, car: -4, deja: "converso", msg: "Nadie detecta un abuso de mercado como quien cometió uno." } },
     ] },
 
@@ -4300,7 +4300,7 @@ const CONSECUENCIAS = [
     x: "El comité dice que eres de los buenos, pero los que suben este año se dejaron la vida. A ti te toca esperar.",
     o: [
       { t: "Aceptar y seguir a tu ritmo", d: { ene: 6, cri: 4, car: 3, msg: "Esperas. Llegas un año tarde y con la vida entera." } },
-      { t: "Buscar fuera quien sí te valore", mudaFirma: true, d: { car: 6, red: -4, cash: 3000, msg: "Otra firma te da hoy lo que esta te prometía para mañana." } },
+      { t: "Buscar fuera quien sí te valore", mudaFirma: true, paga: 1.15, d: { car: 6, red: -4, cash: 3000, msg: "Otra firma te da hoy lo que esta te prometía para mañana." } },
     ] },
 
   /* ---------- tu camino: el fondo (tipo pe) ---------- */
@@ -4425,7 +4425,7 @@ const CONSECUENCIAS = [
     x: "Tu jefe no dice nada. Al mes siguiente estás en la cuenta más aburrida de la firma.",
     o: [
       { t: "Aguantar y hacerla brillar", d: { mod: 6, car: 3, ene: -6, luego: [{ id: 7304, en: 2 }], msg: "Conviertes la cuenta aburrida en la más ordenada de la firma. Alguien arriba lo nota." } },
-      { t: "Buscarte otra firma", mudaFirma: true, d: { red: -3, car: 3, cash: 2000, msg: "Te vas sin dar explicaciones. La firma nueva no sabe nada, y mejor así." } },
+      { t: "Buscarte otra firma", mudaFirma: true, paga: 1.05, d: { red: -3, car: 3, cash: 2000, msg: "Te vas sin dar explicaciones. La firma nueva no sabe nada, y mejor así." } },
     ] },
   { id: 7304, min: 0, max: 6, por: HUELLAS.te_negaste, t: "Tu jefe cae solo",
     x: "Los auditores encuentran el ajuste que otro sí firmó. Necesitan a alguien limpio en su silla.",
@@ -4503,7 +4503,7 @@ const CONSECUENCIAS = [
       { t: "Pedirle perdón a la ganadora", chk: { s: "rep", dif: 60,
         ok: { rep: -2, cri: 4, msg: "Te perdona, con condiciones. Una más y te vas." },
         no: { car: -8, rep: -6, msg: "No te perdona. Te quedas en la firma, pero fuera de todo." } } },
-      { t: "Irte antes de que te echen", mudaFirma: true, d: { car: 2, red: -6, msg: "Te vas con tu versión de la historia. La firma nueva no pregunta." } },
+      { t: "Irte antes de que te echen", mudaFirma: true, paga: 0.95, d: { car: 2, red: -6, msg: "Te vas con tu versión de la historia. La firma nueva no pregunta." } },
     ] },
   /* ---------- el préstamo a tu primo ---------- */
   { id: 7331, min: 0, max: 6, por: HUELLAS.estafado, t: "La cena de Navidad",
@@ -4709,7 +4709,7 @@ const CONSECUENCIAS = [
     x: "Desde que te descubrieron, eres el último en enterarte de todo.",
     o: [
       { t: "Ganarte la confianza con trabajo", d: { mod: 6, rep: 4, ene: -8, msg: "Dos años de trabajo impecable. Poco a poco vuelven a llamarte." } },
-      { t: "Cambiar de firma y empezar limpio", mudaFirma: true, d: { car: 3, red: -4, msg: "Empiezas en otra firma, donde nadie sabe nada." } },
+      { t: "Cambiar de firma y empezar limpio", mudaFirma: true, paga: 1, d: { car: 3, red: -4, msg: "Empiezas en otra firma, donde nadie sabe nada." } },
     ] },
   /* ---------- lo que vuelve de la ruta del novato ---------- */
   { id: 24100, min: 0, max: 6, por: HUELLAS.nov_ahorro, t: "El ahorro te salvó el mes",
@@ -48696,6 +48696,32 @@ const otroPatron = (st) => {
   const fuera = lista.filter((n) => n !== (st && st.patron));
   return elegirAzar(fuera.length ? fuera : lista) || lista[0];
 };
+/* Adónde te vas cuando una escena te ofrece irte de firma. Sale de la
+   semilla, el año y la escena, así que se puede decir ANTES de elegir
+   (qué firma, de qué cultura y cuánto paga) y al elegir pasa justo eso.
+   Antes la firma se sorteaba al resolver y el sueldo no cambiaba, aunque
+   el headhunter prometiera «40% más» (nov-2026). */
+const destinoDe = (st, idEscena) => {
+  const lista = PATRONES[st && st.estudio] || PATRONES_TODOS;
+  const fuera = lista.filter((n) => n !== (st && st.patron));
+  const pozo = fuera.length ? fuera : lista;
+  const rnd = generadorDe("muda:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + entero(st && st.turno, 0, 0, 99) + ":" + entero(idEscena, 0, 0, 1e9));
+  return pozo[Math.floor(rnd() * pozo.length) % pozo.length] || pozo[0];
+};
+/* lo que multiplica tu sueldo esa oferta (paga: 1.4 es un 40% más) */
+const pagaDe = (o) => clamp(numero(o && o.paga, 1), 0.6, 1.6);
+
+/* Lo que tu firma actual te lleva dado o quitado por su cultura: energía
+   y ascenso cada año, y lo de más que aprendes (escuela) o que se nota tu
+   reputación (prestigio). Se lleva solo de la firma donde estás: al
+   cambiarte, la cuenta empieza de cero. */
+const CAMPOS_CULTURA = ["anos", "ene", "car", "hab", "rep"];
+const sumarCultura = (st, campo, n) => {
+  if (!st || !n || CAMPOS_CULTURA.indexOf(campo) < 0 || !culturaDe(st)) return;
+  const t = st.culturaTot && st.culturaTot.f === st.patron ? { ...st.culturaTot } : { f: st.patron, anos: 0, ene: 0, car: 0, hab: 0, rep: 0 };
+  t[campo] = entero(numero(t[campo], 0) + n, 0, -9999, 9999);
+  st.culturaTot = t;
+};
 
 /* Duraciones que se pueden firmar. Mas años, mas sueldo y menos margen
    para moverte: es el intercambio y esta a la vista. */
@@ -49851,6 +49877,12 @@ const sanear = (bruto) => {
     .map((x) => ({ id: x.id, en: entero(x.en, 0, 0, 99), p: x.p == null ? null : clamp(numero(x.p, 0), 0, 1) }));
   st.patronAnt = texto(r.patronAnt, "", 48);
   st.startup = r.startup === true;
+  /* la cuenta de la cultura de tu firma (sumarCultura) */
+  st.culturaTot = r.culturaTot && typeof r.culturaTot === "object" && texto(r.culturaTot.f, "", 48)
+    ? { f: texto(r.culturaTot.f, "", 48), anos: entero(r.culturaTot.anos, 0, 0, 999),
+        ene: entero(r.culturaTot.ene, 0, -9999, 9999), car: entero(r.culturaTot.car, 0, -9999, 9999),
+        hab: entero(r.culturaTot.hab, 0, -9999, 9999), rep: entero(r.culturaTot.rep, 0, -9999, 9999) }
+    : null;
   /* el mentor y cuántas decisiones coincidiste con cada uno */
   st.mentor = IDS_MENTOR.indexOf(r.mentor) >= 0 ? r.mentor : null;
   st.nDec = entero(r.nDec, 0, 0, 99999);
@@ -54795,7 +54827,9 @@ function Motor() {
     if (o && o.mudaFirma && !sinJefe(st)) {
       const antes = st.patron;
       st.patronAnt = antes || "";
-      st.patron = otroPatron(st);
+      /* la firma y el sueldo que la opción enseñaba antes de elegir */
+      st.patron = ev ? destinoDe(s, ev.id) : otroPatron(st);
+      st.sueldoMult = clamp(numero(st.sueldoMult, 1) * pagaDe(o), 0.6, TOPE_MULT);
       st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Te vas de " + (antes || "tu firma") + " a " + st.patron });
     }
     /* La startup a tiempo completo: dejas la firma de verdad. Se acaba
@@ -54854,7 +54888,11 @@ function Motor() {
       if (k === "hab") {
         v = cuesta(st.cri, v);
         /* en una firma escuela se aprende más rápido */
-        if (v > 0 && culturaDe(st)) v = Math.round(v * culturaDe(st).aprende);
+        if (v > 0 && culturaDe(st)) {
+          const antes = v;
+          v = Math.round(v * culturaDe(st).aprende);
+          sumarCultura(st, "hab", v - antes);
+        }
         if (!v) return;
         st.cri = clamp(st.cri + v, 0, 100);
         st.mod = st.cri;
@@ -54863,7 +54901,11 @@ function Motor() {
       }
       if (k !== "ene") v = cuesta(st[k], v, DESDE_ATRIB[k]);
       /* en una firma de prestigio lo que haces se nota más, para bien y para mal */
-      if (k === "rep" && culturaDe(st)) v = Math.round(v * (v > 0 ? culturaDe(st).rep : culturaDe(st).repPierde));
+      if (k === "rep" && culturaDe(st)) {
+        const antes = v;
+        v = Math.round(v * (v > 0 ? culturaDe(st).rep : culturaDe(st).repPierde));
+        sumarCultura(st, "rep", v - antes);
+      }
       if (!v) return;
       st[k] = clamp(st[k] + v, 0, 100);
       cambios.push({ k, v });
@@ -55320,6 +55362,10 @@ function Motor() {
     if (cul) {
       desgaste += cul.desgaste;
       st.carrera = Math.max(0, st.carrera + cul.car);
+      /* la cuenta de lo que te va dando o quitando esta firma, para la Ficha */
+      sumarCultura(st, "ene", -cul.desgaste);
+      sumarCultura(st, "car", cul.car);
+      sumarCultura(st, "anos", 1);
       if (cul.desgaste || cul.car) notas.push("Trabajar en " + st.patron + " (" + cul.n.toLowerCase() + ")"
         + (cul.desgaste > 0 ? " te costó energía de más" : cul.desgaste < 0 ? " te dejó energía de sobra" : "")
         + (cul.car > 0 ? " y empujó tu carrera." : cul.car < 0 ? " y frenó un poco tu carrera." : "."));
@@ -56346,6 +56392,18 @@ function Motor() {
                         <b>{culturaDe(s).n}.</b> {culturaDe(s).d}
                       </div>
                     )}
+                    {/* y lo que te lleva dado o quitado, en números */}
+                    {culturaDe(s) && s.culturaTot && s.culturaTot.f === s.patron && s.culturaTot.anos > 0 && (() => {
+                      const t = s.culturaTot;
+                      const fx = [["ene", "Energía"], ["car", "Ascenso"], ["hab", "Conocimiento"], ["rep", "Reputación"]]
+                        .filter(([k]) => t[k]).map(([k, n]) => ({ k: k === "hab" ? "cri" : k, n: n + " " + (t[k] > 0 ? "+" : "−") + Math.abs(t[k]), sube: t[k] > 0 }));
+                      return (
+                        <div className="ea-itemD" style={{ margin: "0 0 10px" }}>
+                          En {t.f}, {t.anos === 1 ? "un año" : t.anos + " años"}{fx.length ? ":" : ", sin efectos todavía."}
+                          {fx.length > 0 && <div style={{ marginTop: 6 }}><Etiquetas lista={fx} /></div>}
+                        </div>
+                      );
+                    })()}
                     <div className="ea-fila">
                       <span className="ea-dis" style={{ fontSize: 12 }}>Contrato</span>
                       <span className="ea-mono">
@@ -57052,6 +57110,17 @@ function Motor() {
                                 <span className="ea-mono">{o.j ? "hasta " : ""}USD {fmt(o.sueldo)} al año</span>
                               </span>
                             )}
+                            {/* irte de firma: adónde, qué clase de firma es y cuánto paga, frente a lo de hoy */}
+                            {o.mudaFirma && !sinJefe(s) && (() => {
+                              const f = destinoDe(s, ev.id);
+                              const k = culturaDeFirma(f);
+                              return (
+                                <span className="ea-opSueldo">
+                                  <span className="ea-opEtq ea-dis">{f}{k ? " · " + CULTURAS[k].n : ""}</span>
+                                  <span className="ea-mono">USD {fmt(Math.round(sueldoCon(s, pagaDe(o))))} al año (hoy {fmt(Math.round(sueldoCon(s, 1)))})</span>
+                                </span>
+                              );
+                            })()}
                             {o.req && !falta && <span className="ea-opSolo ea-dis">solo tú</span>}
                             {o.azar && <span className="ea-opAzar ea-dis"><Icono k="dado" tam={12} />{(o.azar.esc || []).length} escenarios</span>}
                             {/* Con el nombre del atributo, no solo el icono:
