@@ -48,7 +48,7 @@ const MARCAS = {
   "pantalla de edad": "¿A qué edad empiezas?",
   "novato: primer sueldo": "Tu primer sueldo",
   "novato: tarjeta de crédito": "Te ofrecen una tarjeta de crédito",
-  "novato: dónde vivir": "¿Compartir piso o vivir por tu cuenta?",
+  "novato: dónde vivir": "¿Compartir apartamento o vivir por tu cuenta?",
   "novato: decisión clave": "Te ofrecen quedarte",
   "informe: lo que volvió": "Lo que volvió de tus decisiones",
   "informe: lo que sigue abierto": "Lo que sigue abierto",

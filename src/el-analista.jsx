@@ -884,7 +884,11 @@ const CSS6 = `
 .ea-eligeMarca{flex:none;width:52px;height:52px;border-radius:14px}
 .ea-eligeNum{display:flex;align-items:center;justify-content:center;background:var(--tinta);color:var(--mostaza);
   font-family:var(--f-dis);font-weight:800;font-size:22px;letter-spacing:-.02em}
-.ea-bandera{height:36px;margin-top:6px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(42,36,64,.15)}
+.ea-bandera{height:36px;margin-top:6px;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(42,36,64,.18)}
+.ea-bandera .ea-banderaSvg{display:block;width:100%;height:100%}
+.ea-banderaSvg{flex:none;border-radius:2px}
+.ea-logoCarrera{display:flex;align-items:center;justify-content:center;order:-1;
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,.18),0 2px 6px rgba(42,36,64,.15)}
 .ea-eligeCuerpo{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
 .ea-eligeNum{order:-1}
 /* el botón de verdad (teclado y lectores de pantalla), dibujado como una
@@ -1072,7 +1076,7 @@ const JUEGOS = {
       "Ronda tres: otro recorrido nuevo, de 6.",
     ],
     gana: "Las tres rondas es éxito. Dos rondas, resultado parcial.",
-    ensena: "Retener detalle sin apuntar nada: quién dijo qué, en qué cláusula y en qué página.",
+    ensena: "Retener detalle sin anotar nada: quién dijo qué, en qué cláusula y en qué página.",
   },
   ojo: {
     n: "Ojo clínico", tema: "Detalle contable", dur: "20 s",
@@ -1991,7 +1995,7 @@ const PERKS = [
   /* las de pasante: baratas, para que invertir en ti empiece el primer año */
   { id: "excel", n: "Curso online de Excel avanzado", c: 400, d: "Sumas un punto de conocimiento cada año." },
   { id: "diario", n: "Suscripción a un diario financiero", c: 500, d: "Sumas un punto de conocimiento cada año." },
-  { id: "zapas", n: "Zapatillas y un plan para correr", c: 600, d: "Recuperas dos puntos de energía cada año." },
+  { id: "zapas", n: "Zapatos deportivos y un plan para correr", c: 600, d: "Recuperas dos puntos de energía cada año." },
   { id: "after", n: "Afterwork con la gente del sector", c: 800, d: "Sumas un punto de contactos cada año." },
   { id: "research", n: "Suscripción a research institucional", c: 5000, d: "Sumas un punto de conocimiento cada año." },
   { id: "gym", n: "Entrenador y nutricionista", c: 4500, d: "Recuperas seis puntos de energía cada año." },
@@ -3191,37 +3195,31 @@ const BANDERAS = [
 const NACIONES = [
   { id: "ve", n: "Venezuela", ban: "Caracas",
     gancho: "Entiendes el dinero antes que nadie: creciste con la inflación.",
-    bandera: "linear-gradient(#FFCC00 0 33.4%, #00247D 0 66.7%, #CF142B 0)",
     d: "Creciste viendo inflación de tres dígitos, así que entiendes el dinero antes que nadie. El mercado local es pequeño y todo se resuelve por quién conoces a quién.",
     mods: { red: 7, cri: 7 }, cash: 1200, sal: 0.46, gas: 0.62, tax: 0.12, sesgo: "Emergentes",
     nota: "Sueldos bajos, costo de vida bajo, impuestos bajos, todo el mundo se conoce." },
   { id: "co", n: "Colombia", ban: "Bogotá",
     gancho: "Banca de verdad y competencia por cada puesto.",
-    bandera: "linear-gradient(#FCD116 0 50%, #003893 0 75%, #CE1126 0)",
     d: "Mercado mediano y ordenado, con banca de inversión de verdad y competencia por los puestos.",
     mods: { red: 4, rep: 3 }, cash: 3000, sal: 0.6, gas: 0.66, tax: 0.17, sesgo: "Emergentes",
     nota: "Punto de equilibrio entre oportunidad y estabilidad." },
   { id: "ar", n: "Argentina", ban: "Buenos Aires",
     gancho: "Cada década una crisis, y aprendes a leerlas todas.",
-    bandera: "linear-gradient(#74ACDF 0 33.4%, #FFFFFF 0 66.7%, #74ACDF 0)",
     d: "El país que te enseña macro a la fuerza. Cada década trae una crisis y cada crisis deja una generación que sabe leer una curva.",
     mods: { cri: 9, mod: 2 }, cash: 1800, sal: 0.54, gas: 0.59, tax: 0.24, sesgo: "Tasas",
     nota: "Criterio macro altísimo, ingresos volátiles." },
   { id: "mx", n: "México", ban: "Ciudad de México",
     gancho: "El mercado más grande en español, pegado al norte.",
-    bandera: "linear-gradient(90deg, #006847 0 33.4%, #FFFFFF 0 66.7%, #CE1126 0)",
     d: "El mercado más grande de habla hispana y la puerta de entrada al capital estadounidense.",
     mods: { red: 4, mod: 3 }, cash: 4500, sal: 0.72, gas: 0.85, tax: 0.21, sesgo: "Comercio",
     nota: "Volumen de operaciones alto y cercanía con el norte." },
   { id: "es", n: "España", ban: "Madrid",
     gancho: "Carrera más lenta, sueldos más altos y toda Europa cerca.",
-    bandera: "linear-gradient(#AA151B 0 25%, #F1BF00 0 75%, #AA151B 0)",
     d: "Acceso a Europa, instituciones sólidas y una carrera más lenta pero más predecible.",
     mods: { rep: 5, mod: 3 }, cash: 7000, sal: 1, gas: 1, tax: 0.31, sesgo: "Mercados",
     nota: "Estabilidad y la carga fiscal más alta de la lista." },
   { id: "us", n: "Estados Unidos", ban: "Miami",
     gancho: "Sueldos de otra escala. Empiezas debiendo la universidad.",
-    bandera: "linear-gradient(#3C3B6E, #3C3B6E) 0 0 / 42% 54% no-repeat, repeating-linear-gradient(#B22234 0 7.7%, #FFFFFF 0 15.4%)",
     d: "La capital financiera de América Latina en Estados Unidos. Los sueldos son otra escala y también lo son la deuda estudiantil y el alquiler.",
     mods: { mod: 7 }, cash: -16000, sal: 1.7, gas: 1.52, tax: 0.22, sesgo: "Mercados",
     nota: "Empiezas debiendo dieciséis mil dólares de la universidad." },
@@ -3229,12 +3227,12 @@ const NACIONES = [
 
 /* ---------- qué estudiaste ---------- */
 const CARRERAS = [
-  { id: "eco", n: "Economía", d: "Lees el ciclo antes que el resto de la mesa.", mods: { cri: 9, mod: 3 }, juegos: ["quiz", "semaforo", "pares"] },
-  { id: "con", n: "Contaduría", d: "Encuentras el número que no cuadra sin buscarlo.", mods: { mod: 9, cri: 3 }, juegos: ["ojo", "banderas", "pares"] },
-  { id: "ing", n: "Ingeniería", d: "Las cuentas de cabeza y las estructuras son tu terreno.", mods: { mod: 7, ene: 6 }, juegos: ["calculo", "estructura", "carril"] },
-  { id: "der", n: "Derecho", d: "Negocias y lees contratos sin depender de nadie.", mods: { rep: 8, red: 4 }, juegos: ["anclaje", "tresraya", "cuatro"] },
-  { id: "adm", n: "Administración", d: "Conoces a media promoción y a la promoción anterior también.", mods: { red: 9, rep: 3 }, juegos: ["reaccion", "memoria", "cuatro"] },
-  { id: "sis", n: "Computación", d: "Automatizas en una tarde lo que otros hacen a mano toda la semana.", mods: { mod: 6, cri: 5 }, juegos: ["trading", "reaccion", "carril"] },
+  { id: "eco", ico: "tendencia", color: "#2E7D5B", n: "Economía", d: "Lees el ciclo antes que el resto de la mesa.", mods: { cri: 9, mod: 3 }, juegos: ["quiz", "semaforo", "pares"] },
+  { id: "con", ico: "calculadora", color: "#C0632B", n: "Contaduría", d: "Encuentras el número que no cuadra sin buscarlo.", mods: { mod: 9, cri: 3 }, juegos: ["ojo", "banderas", "pares"] },
+  { id: "ing", ico: "engranaje", color: "#3B5BA9", n: "Ingeniería", d: "Las cuentas de cabeza y las estructuras son tu terreno.", mods: { mod: 7, ene: 6 }, juegos: ["calculo", "estructura", "carril"] },
+  { id: "der", ico: "balanza", color: "#7A3E8E", n: "Derecho", d: "Negocias y lees contratos sin depender de nadie.", mods: { rep: 8, red: 4 }, juegos: ["anclaje", "tresraya", "cuatro"] },
+  { id: "adm", ico: "maleta", color: "#A8740C", n: "Administración", d: "Conoces a media promoción y a la promoción anterior también.", mods: { red: 9, rep: 3 }, juegos: ["reaccion", "memoria", "cuatro"] },
+  { id: "sis", ico: "laptop", color: "#1F8A99", n: "Computación", d: "Automatizas en una tarde lo que otros hacen a mano toda la semana.", mods: { mod: 6, cri: 5 }, juegos: ["trading", "reaccion", "carril"] },
 ];
 
 /* Los tres que se ofrecen a la vista. Cinco perfiles con su esperado y
@@ -3583,7 +3581,7 @@ const E = [
     x: "Te llega el primer sueldo completo. Después del alquiler y la comida sobra un poco, y es la primera vez que decides tú qué hacer con eso.",
     o: [
       { t: "Apartar una parte apenas llega", d: { cri: 3, ene: -1, deja: "nov_ahorro", luego: [{ en: 2, azar: [{ p: 60, id: 24100 }, { p: 40, id: 24101 }] }], msg: "Pasas un pedazo a otra cuenta el mismo día. Lo que no ves, no lo gastas." } },
-      { t: "Darte un gusto: te lo ganaste", d: { ene: 6, cash: -800, deja: "nov_gusto", luego: [{ en: 1, azar: [{ p: 55, id: 24102 }, { p: 45, id: 24103 }] }], msg: "Cena buena, zapatillas nuevas y la sensación de que por fin trabajas." } },
+      { t: "Darte un gusto: te lo ganaste", d: { ene: 6, cash: -800, deja: "nov_gusto", luego: [{ en: 1, azar: [{ p: 55, id: 24102 }, { p: 45, id: 24103 }] }], msg: "Cena buena, zapatos deportivos nuevos y la sensación de que por fin trabajas." } },
       { t: "Mandarle una parte a tu familia", d: { red: 4, cash: -600, deja: "nov_familia", luego: [{ en: 1, azar: [{ p: 65, id: 24104 }, { p: 35, id: 24105 }] }], msg: "Tu familia no te lo pidió. Igual lo agradecen más de lo que dicen." } },
     ] },
   { id: 24010, novato: true, min: 0, max: 1, t: "Te ofrecen una tarjeta de crédito",
@@ -3593,7 +3591,7 @@ const E = [
       { t: "Usarla y pagar solo el mínimo", d: { ene: 4, cash: 1000, deja: "nov_tarjeta_minimo", luego: [{ en: 1, azar: [{ p: 75, id: 24112 }, { p: 25, id: 24111 }] }], msg: "Compras lo que tenías pendiente. El mínimo es tan bajo que casi no se nota." } },
       { t: "No sacarla", d: { ene: 1, msg: "Le dices que no. Sin tarjeta no hay deuda, aunque tampoco historial." } },
     ] },
-  { id: 24020, novato: true, min: 0, max: 1, t: "¿Compartir piso o vivir por tu cuenta?",
+  { id: 24020, novato: true, min: 0, max: 1, t: "¿Compartir apartamento o vivir por tu cuenta?",
     x: "Necesitas dónde vivir cerca del trabajo. Compartir sale a la mitad; un lugar propio te da silencio.",
     o: [
       { t: "Compartir con dos amigos", d: { cash: 1500, red: 3, ene: -3, deja: "nov_piso", luego: [{ en: 1, azar: [{ p: 65, id: 24120 }, { p: 35, id: 24121 }] }], msg: "Casa con ruido, nevera compartida y un alquiler que te deja respirar." } },
@@ -4055,7 +4053,7 @@ const HUELLAS = {
   nov_familia: "Mandaste parte de tu sueldo a tu familia",
   nov_tarjeta_bien: "Usaste la tarjeta y la pagaste entera cada mes",
   nov_tarjeta_minimo: "Pagaste solo el mínimo de la tarjeta",
-  nov_piso: "Compartiste piso para ahorrar",
+  nov_piso: "Compartiste apartamento para ahorrar",
   nov_solo: "Alquilaste un lugar para ti",
   nov_domingo: "Le contestaste a tu jefa un domingo",
   nov_lunes: "Dejaste para el lunes el mensaje del domingo",
@@ -4448,7 +4446,7 @@ const CONSECUENCIAS = [
     x: "No contesta el teléfono. El local está cerrado y nadie en la familia sabe dónde está.",
     o: [
       { t: "Buscarlo hasta encontrarlo", d: { ene: -6, luego: [{ en: 1, azar: [{ p: 40, id: 7367 }, { p: 60, id: 7331 }] }], msg: "Preguntas a sus amigos, a su exnovia, a su madre." } },
-      { t: "Darlo por perdido", d: { cri: 5, ene: 3, deja: "estafado", msg: "Cinco mil que no vuelven. Los apuntas como lo que costó aprender." } },
+      { t: "Darlo por perdido", d: { cri: 5, ene: 3, deja: "estafado", msg: "Cinco mil que no vuelven. Los anotas como lo que costó aprender." } },
     ] },
   { id: 7352, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo te paga a tiempo",
     x: "Todas las cuotas, sin falta: ya te devolvió los 5.000. Ahora te pide otro préstamo para abrir un segundo local.",
@@ -4510,7 +4508,7 @@ const CONSECUENCIAS = [
   { id: 7363, min: 0, max: 6, por: "Lo dejaste pasar", t: "Nunca más vuelve a pagar",
     x: "Pasaron dos años. Ni una cuota, y en la familia nadie lo menciona.",
     o: [
-      { t: "Sacarlo en la cena de Navidad", d: { red: -2, luego: [{ id: 7331, en: 1 }], msg: "Lo apuntas para diciembre. No va a ser una cena tranquila." } },
+      { t: "Sacarlo en la cena de Navidad", d: { red: -2, luego: [{ id: 7331, en: 1 }], msg: "Lo anotas para diciembre. No va a ser una cena tranquila." } },
       { t: "Darlo por perdido", d: { cri: 5, deja: "estafado", msg: "Lo das por perdido. Familia es familia, y esta vez te costó cinco mil." } },
     ] },
   { id: 7364, min: 0, max: 6, por: "Lo dejaste pasar", t: "Te paga todo de golpe",
@@ -4681,13 +4679,13 @@ const CONSECUENCIAS = [
       { t: "Seguir pagando el mínimo", d: { cash: -1200, ene: -3, msg: "Pagas y no avanzas. La deuda te sigue a todas partes, como una sombra cara." } },
     ] },
   { id: 24120, min: 0, max: 6, por: HUELLAS.nov_piso, t: "La casa se volvió tu gente",
-    x: "Tus compañeros de piso te presentan a medio mundo. Uno trabaja en una empresa que busca a alguien como tú.",
+    x: "Tus compañeros de apartamento te presentan a medio mundo. Uno trabaja en una empresa que busca a alguien como tú.",
     o: [
       { t: "Pedirle que te recomiende", d: { red: 5, car: 2, msg: "Te pasa el contacto. No sale nada este año, pero ya estás en una lista." } },
       { t: "Disfrutar la casa sin mezclar", d: { ene: 4, red: 2, msg: "Cenas largas y nada de trabajo. También es una forma de descansar." } },
     ] },
   { id: 24121, min: 0, max: 6, por: HUELLAS.nov_piso, t: "Un compañero deja de pagar",
-    x: "Uno de tus compañeros de piso se quedó sin trabajo y no puede pagar su parte del alquiler este mes.",
+    x: "Uno de tus compañeros de apartamento se quedó sin trabajo y no puede pagar su parte del alquiler este mes.",
     o: [
       { t: "Cubrirlo tú este mes", d: { cash: -700, red: 4, msg: "Pagas su parte. Te lo devuelve en tres meses y no se le olvida." } },
       { t: "Pedirle que busque otro lugar", d: { red: -4, cri: 2, msg: "Tienes razón y se va. La casa queda más tranquila y un poco más fría." } },
@@ -9689,7 +9687,7 @@ const LOTES = {
      "t": "Prometer hablarlo en serio este año",
      "d": {
       "ene": -1,
-      "msg": "Lo apuntas mentalmente. Tu pareja lo apunta en el calendario."
+      "msg": "Lo anotas mentalmente. Tu pareja lo anota en el calendario."
      }
     },
     {
@@ -10176,7 +10174,7 @@ const LOTES = {
      }
     },
     {
-     "t": "Usar las noches para un máster",
+     "t": "Usar las noches para una maestría",
      "d": {
       "mod": 4,
       "cri": 2,
@@ -10318,7 +10316,7 @@ const LOTES = {
      }
     },
     {
-     "t": "Seguir los dos a tope y pagar",
+     "t": "Seguir los dos al máximo y pagar",
      "d": {
       "cash": -4000,
       "ene": -4,
@@ -10655,14 +10653,14 @@ const LOTES = {
    "id": 12451,
    "por": "Metiste dinero en la empresa del 4% mensual",
    "t": "Te escriben los que recuperan fondos",
-   "x": "Un despacho dice que recupera dinero de estafas como la tuya. Solo hay que pagar un adelanto por los gastos.",
+   "x": "Un bufete dice que recupera dinero de estafas como la tuya. Solo hay que pagar un adelanto por los gastos.",
    "o": [
     {
      "t": "Pagar el adelanto, es la última esperanza",
      "d": {
       "cash": -1500,
       "cri": -4,
-      "msg": "Pagas. El despacho desaparece con la misma elegancia que la empresa."
+      "msg": "Pagas. El bufete desaparece con la misma elegancia que la empresa."
      }
     },
     {
@@ -10677,7 +10675,7 @@ const LOTES = {
      "d": {
       "cri": 2,
       "ene": 1,
-      "msg": "Borras el correo. Al día siguiente llega otro, de otro despacho, con el mismo texto."
+      "msg": "Borras el correo. Al día siguiente llega otro, de otro bufete, con el mismo texto."
      }
     }
    ]
@@ -10833,7 +10831,7 @@ const LOTES = {
   {
    "id": 12500,
    "por": "Tu relación sobrevivió al desgaste",
-   "t": "Una semana sin portátil",
+   "t": "Una semana sin laptop",
    "x": "Por fin una semana de playa con tu pareja. El tercer día, un cliente escribe con algo que él llama urgente.",
    "o": [
     {
@@ -11196,7 +11194,7 @@ const LOTES = {
      "d": {
       "cri": 1,
       "ene": 1,
-      "msg": "Lo apuntan a un taller de memoria. Lo deja a la segunda sesión y se hace amigo del profesor."
+      "msg": "Lo inscriben en un taller de memoria. Lo deja a la segunda sesión y se hace amigo del profesor."
      }
     }
    ]
@@ -11858,7 +11856,7 @@ const LOTES = {
      }
     },
     {
-     "t": "Invertirlo y seguir a tope",
+     "t": "Invertirlo y seguir al máximo",
      "d": {
       "cash": 2500,
       "car": 2,
@@ -12402,7 +12400,7 @@ const LOTES = {
      }
     },
     {
-     "t": "Apuntarte a una carrera larga",
+     "t": "Inscribirte en una carrera larga",
      "d": {
       "ene": 3,
       "red": 3,
@@ -14896,7 +14894,7 @@ const LOTES = {
       "cash": 3000,
       "cri": 2,
       "red": -2,
-      "msg": "La cuenta la llevas tú. Él lo acepta y apunta, en algún lado, que el cliente lo trajo él."
+      "msg": "La cuenta la llevas tú. Él lo acepta y anota, en algún lado, que el cliente lo trajo él."
      }
     }
    ]
@@ -17943,7 +17941,7 @@ const LOTES = {
      "d": {
       "cash": 3000,
       "cri": 3,
-      "msg": "Ganas, vendes y apagas. Por una vez, el reflejo y el criterio van en el mismo coche."
+      "msg": "Ganas, vendes y apagas. Por una vez, el reflejo y el criterio van en el mismo carro."
      }
     },
     {
@@ -18270,7 +18268,7 @@ const LOTES = {
   {
    "id": 14754,
    "por": "Hiciste el roadshow por videollamada",
-   "t": "Los fondos te mandan a la cola",
+   "t": "Los fondos te mandan al final de la fila",
    "x": "En el siguiente proceso, los fondos que viste por pantalla te dan reunión con un analista junior, a las seis de la tarde.",
    "o": [
     {
@@ -18981,7 +18979,7 @@ const LOTES = {
      }
     },
     {
-     "t": "Apuntarte a algo con horario fijo",
+     "t": "Inscribirte en algo con horario fijo",
      "d": {
       "ene": 3,
       "cash": -500,
@@ -19081,7 +19079,7 @@ const LOTES = {
    "id": 15024,
    "por": "Bloqueaste una hora diaria para tu salud",
    "t": "Te guardaron un dorsal",
-   "x": "Los del grupo de las seis de la mañana se apuntaron a una media maratón. Cuentan contigo.",
+   "x": "Los del grupo de las seis de la mañana se inscribieron en una media maratón. Cuentan contigo.",
    "o": [
     {
      "t": "Entrenar y correrla",
@@ -20290,7 +20288,7 @@ const LOTES = {
      "d": {
       "rep": 1,
       "ene": 1,
-      "msg": "Le pides que te llame en un año. Lo apunta. Lo hará."
+      "msg": "Le pides que te llame en un año. Lo anota. Lo hará."
      }
     }
    ],
@@ -25071,7 +25069,7 @@ const LOTES = {
      "d": {
       "rep": 3,
       "cri": 1,
-      "msg": "Lo explicas en dos minutos y sin tropezar. Algún nuevo lo apunta palabra por palabra."
+      "msg": "Lo explicas en dos minutos y sin tropezar. Algún nuevo lo anota palabra por palabra."
      }
     },
     {
@@ -26067,7 +26065,7 @@ const LOTES = {
      "d": {
       "red": 1,
       "rep": -1,
-      "msg": "Tu colega contesta bien. El cliente apunta su nombre y no el tuyo."
+      "msg": "Tu colega contesta bien. El cliente anota su nombre y no el tuyo."
      }
     }
    ]
@@ -26756,7 +26754,7 @@ const LOTES = {
      "d": {
       "rep": -1,
       "cri": -1,
-      "msg": "Dices que el segundo año lo compensa. Lo apuntan con fecha."
+      "msg": "Dices que el segundo año lo compensa. Lo anotan con fecha."
      }
     },
     {
@@ -47191,7 +47189,7 @@ const TRONCOS = [
   { id: 7320, clave: true, min: 2, max: 6, sin: ["heroe"], t: "Guerra por dirigir tu firma",
     x: "En la firma donde trabajas, dos socias se disputan quién la dirige. Las dos te quieren de su lado y ninguna acepta un no.",
     o: [
-      { t: "Ponerte del lado de la veterana", d: { red: 5, deja: "veterana", luego: [{ id: 7321, en: 1 }], msg: "Se lo dices en su despacho. Te sirve un café y te cuenta cómo va a ganar." } },
+      { t: "Ponerte del lado de la veterana", d: { red: 5, deja: "veterana", luego: [{ id: 7321, en: 1 }], msg: "Se lo dices en su oficina. Te sirve un café y te cuenta cómo va a ganar." } },
       { t: "Apostar por la joven que viene subiendo", d: { red: 3, car: 2, deja: "joven", luego: [{ id: 7322, en: 1 }], msg: "Te sumas a la que quiere cambiarlo todo. Es arriesgado y suena bien." } },
       { t: "Jugar a dos bandas", chk: { s: "red", dif: 60,
         ok: { red: 8, deja: "dos_bandas", luego: [{ id: 7323, en: 1 }], msg: "Las dos creen que estás con ellas. Por ahora." },
@@ -47351,7 +47349,7 @@ const E5 = [
       { t: "Repasarlo hasta poder explicarlo en cristiano", juego: "catedra", stat: "cri", res: {
         exito: { cri: 7, red: 4, estudia: 12, msg: "Se lo explicas sin una sola palabra técnica. Si puedes hacer eso, lo entiendes." },
         parcial: { cri: 4, estudia: 7, msg: "Te acercas. Sigues necesitando dos tecnicismos para llegar al final." },
-        fallo: { cri: 1, estudia: 3, msg: "Le sueltas la jerga de la oficina y se queda igual que antes. Vosotros dos aprendéis lo mismo: nada." } } },
+        fallo: { cri: 1, estudia: 3, msg: "Le sueltas la jerga de la oficina y se queda igual que antes. Ustedes dos aprenden lo mismo: nada." } } },
       { t: "Mandarle el nombre de un fondo y ya", d: { red: -2, cri: -2, msg: "Le pasas un nombre sin explicación. Es lo que hace casi todo el mundo y es la razón por la que casi nadie entiende dónde tiene su dinero." } },
     ] },
 ];
@@ -47552,7 +47550,7 @@ const VIDA = [
     x: "Llevan tiempo. Aparece la conversación de siempre: dónde van a vivir, si hay hijos en el plan, y quién de los dos va a bajar el pie del acelerador para que eso pase.",
     o: [
       { t: "Poner tú el pie en el freno", d: { car: -3, ene: 12, rep: 2, msg: "Reduces el ritmo tú. La relación va mejor y tu carrera avanza más lento: es el intercambio y lo estás eligiendo." } },
-      { t: "Que sea el otro quien lo baje", d: { car: 4, ene: -6, rep: -2, msg: "Sigues a tope y el ajuste lo hace la otra persona. Funciona ahora y se cobra después." } },
+      { t: "Que sea el otro quien lo baje", d: { car: 4, ene: -6, rep: -2, msg: "Sigues al máximo y el ajuste lo hace la otra persona. Funciona ahora y se cobra después." } },
       { t: "Buscar la manera de que quepan las dos cosas", j: "orden", stat: "cri",
         d: { ene: 7, cri: 5, red: 3, cash: -1500, msg: "Reorganizan la vida entera para que quepan las dos cosas. Cuesta plata y coordinación." } },
     ],
@@ -48102,7 +48100,7 @@ const RITMOS = [
     d: "Sales a tu hora. La carrera avanza sola y despacio; llegas entero a los cincuenta." },
   { id: "normal", n: "Normal", car: 2, ene: -5, rep: 0,
     d: "Lo que se espera de ti y poco más. El punto medio." },
-  { id: "tope", n: "A tope", car: 6, ene: -14, rep: 2,
+  { id: "tope", n: "Al máximo", car: 6, ene: -14, rep: 2,
     d: "Sales de últimos. Asciendes antes y pagas la diferencia en salud y en vida." },
 ];
 const RITMO = (id) => RITMOS.find((x) => x.id === id) || RITMOS[1];
@@ -48111,7 +48109,7 @@ const RITMO = (id) => RITMOS.find((x) => x.id === id) || RITMOS[1];
    pesa en el patrimonio final y la que menos gente toca a propósito. */
 const GASTOS = [
   { id: "apretado", n: "Apretado", f: 0.78, ene: -3, rep: -1,
-    d: "Compartes piso, cocinas en casa, dices no a bastantes cosas. Ahorras como en ningún otro momento." },
+    d: "Compartes apartamento, cocinas en casa, dices no a bastantes cosas. Ahorras como en ningún otro momento." },
   { id: "normal", n: "Normal", f: 1, ene: 0, rep: 0,
     d: "Vives como vive la gente de tu cargo. Ni austero ni llamativo." },
   { id: "holgado", n: "Holgado", f: 1.28, ene: 4, rep: 2,
@@ -48613,7 +48611,7 @@ const APERTURAS = [
       ] },
     escena: { id: 9705, min: 0, max: 6, apertura: true,
       t: "Tu primera inversión en ti",
-      x: "Cobras tu primer sueldo y te sobra poco. Pero ese poco puede ir a algo que te haga mejor cada año: un curso, un diario, unas zapatillas.",
+      x: "Cobras tu primer sueldo y te sobra poco. Pero ese poco puede ir a algo que te haga mejor cada año: un curso, un diario, unos zapatos deportivos.",
       o: [
         { t: "Invertir en ti desde ya", abre: "mejoras",
           d: { cri: 3, mod: 2, msg: "Se abre la sección Mejoras, dentro de Compras: cosas que se compran una vez y rinden todos los años. Las primeras cuestan poco." } },
@@ -49086,7 +49084,7 @@ const MENTORES = [
     frases: [
       "Cuando todos compran, yo me escondo. Cuando todos corren, yo compro.",
       "El precio es lo que pagas. El valor es lo que te llevas a casa.",
-      "Cuando baja la marea se ve quién nadaba sin bañador. Yo siempre llevo dos.",
+      "Cuando baja la marea se ve quién nadaba sin traje de baño. Yo siempre llevo dos.",
       "Si no lo entiendes, no lo toques.",
       "La paciencia también rinde intereses.",
       "Lo bueno se compra una vez y se guarda toda la vida.",
@@ -52209,7 +52207,7 @@ const FINALES = [
     x: "Te sancionaron por usar información privilegiada y terminaste en compliance, detectando a los que hacen lo mismo. Nadie los ve venir como tú." },
   { id: "sancionado", c: (st) => hu(st, "sancionado"), t: "Tu nombre sale primero",
     x: "Una sanción pública marcó todo lo que vino después. Se puede vivir con ella; lo que no se puede es borrarla." },
-  { id: "impune", c: (st) => hu(st, "reincidente"), t: "Nunca te pillaron",
+  { id: "impune", c: (st) => hu(st, "reincidente"), t: "Nunca te agarraron",
     x: "Usaste información privilegiada dos veces y nadie lo supo. Tu patrimonio lo sabe. Tú también." },
   { id: "complice", c: (st) => hu(st, "complice"), t: "Firmaste lo que no debías",
     x: "Un trimestre maquillado te persiguió el resto de la carrera. Una firma dura más que el año que arregla." },
@@ -52551,6 +52549,13 @@ function Rodillo({ v }) {
    lea como una sola cosa y no como cinco simbolos sueltos.
    ============================================================ */
 const TRAZOS = {
+  /* ---- los logos de lo que estudiaste ----
+     Antes la tarjeta decía «Eco», «Con», «Ing»: tres letras que repetían
+     el nombre. Un símbolo por carrera se reconoce de un vistazo. */
+  tendencia:   "M3.4 20.4h17.2 M3.4 20.4V3.6 M6.6 15.4l4-4.4 3.4 3 5.6-6.4 M15.4 7.6h4.2v4.2",
+  calculadora: "M6 2.8h12a1.6 1.6 0 0 1 1.6 1.6v15.2a1.6 1.6 0 0 1-1.6 1.6H6a1.6 1.6 0 0 1-1.6-1.6V4.4A1.6 1.6 0 0 1 6 2.8z M7.8 6h8.4v3.4H7.8z M8.4 13.2h.02 M12 13.2h.02 M15.6 13.2h.02 M8.4 17h.02 M12 17h.02 M15.6 17h.02",
+  engranaje:   "M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z M12 19.2a7.2 7.2 0 1 0 0-14.4 7.2 7.2 0 0 0 0 14.4z M12 2v2.8 M12 19.2V22 M2 12h2.8 M19.2 12H22 M4.9 4.9l2 2 M17.1 17.1l2 2 M4.9 19.1l2-2 M17.1 6.9l2-2",
+  laptop:      "M4.6 4.8h14.8a1.2 1.2 0 0 1 1.2 1.2v9.8H3.4V6a1.2 1.2 0 0 1 1.2-1.2z M1.6 19h20.8 M10 8.6l-2.2 2.1 2.2 2.1 M14 8.6l2.2 2.1-2.2 2.1",
   rayo:      "M13.5 2 L5 13.5 h5.2 l-1.2 8.5 L18 10.5 h-5.3 z",
   edificio:  "M3 21.5V7.2l6.5-3.7 6.5 3.7v14.3 M9.6 21.5v-4.6h3.6v4.6 M6.2 10.4h1.9 M6.2 14h1.9 M14.6 10.4h1.9 M14.6 14h1.9",
   pin:       "M12 22s6.6-6.3 6.6-10.6a6.6 6.6 0 1 0-13.2 0C5.4 15.7 12 22 12 22z M12 13.2a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4z",
@@ -52673,6 +52678,103 @@ const ICONO_BIEN = {
   local: "edificio", ofi: "edificio", galpon: "edificio", edificio: "edificio",
   terreno: "terreno", hotel: "casa", centro: "edificio", isla: "palmera",
 };
+
+/* ---- las banderas ----
+   Eran degradados de CSS: tres franjas de color y nada más, así que
+   Venezuela salía sin estrellas, Argentina sin sol y México sin escudo.
+   Ahora cada una se dibuja en SVG con lo que la distingue. Proporción
+   3:2 para todas, para que se alineen en la lista. */
+function estrellaSvg(cx, cy, r) {
+  let d = "";
+  for (let i = 0; i < 10; i++) {
+    const ang = -Math.PI / 2 + (i * Math.PI) / 5;
+    const rr = i % 2 === 0 ? r : r * 0.4;
+    d += (i === 0 ? "M" : "L") + (cx + rr * Math.cos(ang)).toFixed(2) + " " + (cy + rr * Math.sin(ang)).toFixed(2);
+  }
+  return d + "z";
+}
+function dibujoBandera(id) {
+  if (id === "ve") {
+    let estrellas = "";
+    for (let i = 0; i < 8; i++) {
+      const ang = Math.PI * (0.84 - (i * 0.68) / 7);
+      estrellas += estrellaSvg(15 + 4.6 * Math.cos(ang), 14.7 - 4.6 * Math.sin(ang), 0.72);
+    }
+    return (<>
+      <rect width="30" height="6.67" fill="#FFCC00" />
+      <rect y="6.67" width="30" height="6.67" fill="#00247D" />
+      <rect y="13.33" width="30" height="6.67" fill="#CF142B" />
+      <path d={estrellas} fill="#FFFFFF" />
+    </>);
+  }
+  if (id === "co") return (<>
+    <rect width="30" height="10" fill="#FCD116" />
+    <rect y="10" width="30" height="5" fill="#003893" />
+    <rect y="15" width="30" height="5" fill="#CE1126" />
+  </>);
+  if (id === "ar") {
+    let rayos = "";
+    for (let i = 0; i < 16; i++) {
+      const a = (i * Math.PI) / 8;
+      const r2 = i % 2 === 0 ? 3 : 2.5;
+      rayos += "M" + (15 + 1.6 * Math.cos(a)).toFixed(2) + " " + (10 + 1.6 * Math.sin(a)).toFixed(2)
+        + "L" + (15 + r2 * Math.cos(a)).toFixed(2) + " " + (10 + r2 * Math.sin(a)).toFixed(2);
+    }
+    return (<>
+      <rect width="30" height="20" fill="#74ACDF" />
+      <rect y="6.67" width="30" height="6.67" fill="#FFFFFF" />
+      <path d={rayos} stroke="#F6B40E" strokeWidth="0.6" strokeLinecap="round" />
+      <circle cx="15" cy="10" r="1.65" fill="#F6B40E" stroke="#85340A" strokeWidth="0.25" />
+    </>);
+  }
+  if (id === "mx") return (<>
+    <rect width="10" height="20" fill="#006847" />
+    <rect x="10" width="10" height="20" fill="#FFFFFF" />
+    <rect x="20" width="10" height="20" fill="#CE1126" />
+    {/* el escudo, simplificado: la corona, el lago, el nopal y el águila */}
+    <path d="M11.4 10.4a3.6 3.6 0 0 0 7.2 0" fill="none" stroke="#2E7D32" strokeWidth="0.6" strokeLinecap="round" />
+    <path d="M13.6 12.9h2.8" stroke="#3B6FB6" strokeWidth="0.6" strokeLinecap="round" />
+    <path d="M15 12.6v-2.2M15 11.2l-1-0.7M15 11.6l1-0.6" stroke="#4E8A2B" strokeWidth="0.7" strokeLinecap="round" />
+    <path d="M12.6 7.2c.9.2 1.7.8 2.1 1.6.4-.9 1.2-1.6 2.2-1.9-.1.9-.5 1.7-1.2 2.2.6.2 1 .7 1.1 1.3l-1.4-.3-.5.9-.6-.9c-.9.1-1.6-.4-1.9-1.1.6.1 1 0 1.4-.2-.8-.3-1.2-1-1.2-1.6z" fill="#7B4A1E" />
+    <circle cx="16.6" cy="7.6" r="0.55" fill="#7B4A1E" />
+    <path d="M17.1 7.6l.6.2-.6.2" fill="#C8A400" />
+  </>);
+  if (id === "es") return (<>
+    <rect width="30" height="20" fill="#AA151B" />
+    <rect y="5" width="30" height="10" fill="#F1BF00" />
+    {/* el escudo, simplificado: corona, cuarteles y las columnas */}
+    <path d="M8.3 7.4h3.4v3.4a1.7 1.7 0 0 1-3.4 0z" fill="#AA151B" stroke="#7A0F14" strokeWidth="0.2" />
+    <path d="M10 7.4v5.1M8.3 9.6h3.4" stroke="#F1BF00" strokeWidth="0.35" />
+    <path d="M8.4 7.1l.4-1 .7.5.5-.8.5.8.7-.5.4 1z" fill="#C8A400" />
+    <path d="M7.4 8v4.4M12.6 8v4.4" stroke="#9A9A9A" strokeWidth="0.55" />
+  </>);
+  if (id === "us") {
+    const franjas = [];
+    for (let i = 0; i < 13; i += 2) franjas.push(<rect key={i} y={(i * 20) / 13} width="30" height={20 / 13} fill="#B22234" />);
+    let puntos = "";
+    for (let f = 0; f < 9; f++) {
+      const n = f % 2 === 0 ? 6 : 5;
+      for (let c = 0; c < n; c++) puntos += estrellaSvg(1 + c * 2 + (f % 2), 0.6 + f * 1.2, 0.48);
+    }
+    return (<>
+      <rect width="30" height="20" fill="#FFFFFF" />
+      {franjas}
+      <rect width="12" height={(7 * 20) / 13} fill="#3C3B6E" />
+      <path d={puntos} fill="#FFFFFF" />
+    </>);
+  }
+  return <rect width="30" height="20" fill="#CCCCCC" />;
+}
+function Bandera({ id, alto }) {
+  const h = numero(alto, 20);
+  return (
+    <svg className="ea-banderaSvg" width={h * 1.5} height={h} viewBox="0 0 30 20" aria-hidden="true" focusable="false"
+      preserveAspectRatio="none">
+      {dibujoBandera(id)}
+      <rect x="0.15" y="0.15" width="29.7" height="19.7" fill="none" stroke="rgba(42,36,64,.18)" strokeWidth="0.3" />
+    </svg>
+  );
+}
 
 /* un icono de trazo, para lo que solo necesita identificarse */
 function Icono({ k, tam, tono }) {
@@ -55813,7 +55915,7 @@ function Motor() {
           {NACIONES.map((p) => (
             <div className={"ea-elige" + (elec.pais === p.id ? " on" : "")} key={p.id}
               onClick={() => { if (enFase("pais")) elige("pais", p.id, "estudio"); }}>
-              <span className="ea-eligeMarca ea-bandera" style={{ background: p.bandera }} aria-hidden="true" />
+              <span className="ea-eligeMarca ea-bandera" aria-hidden="true"><Bandera id={p.id} alto={36} /></span>
               <span className="ea-eligeCuerpo">
                 <span className="ea-eligeN">{p.n}<small>{p.ban}</small></span>
                 <span className="ea-eligeG">{p.gancho}</span>
@@ -55853,7 +55955,7 @@ function Motor() {
             };
             return CARRERAS.map((c) => (
               <div className="ea-elige" key={c.id} onClick={() => elegirCarrera(c)}>
-                <span className="ea-eligeMarca ea-eligeNum" style={{ fontSize: 15 }} aria-hidden="true">{c.n.slice(0, 3)}</span>
+                <span className="ea-eligeMarca ea-logoCarrera" style={{ background: c.color }} aria-hidden="true"><Icono k={c.ico} tam={28} tono="#FFFFFF" /></span>
                 <span className="ea-eligeCuerpo">
                   <span className="ea-eligeN">{c.n}</span>
                   <span className="ea-eligeG">{c.d}</span>
@@ -55883,7 +55985,7 @@ function Motor() {
                 {s.nombre && <span><Icono k="escalera" tam={12} />{cargoDe(s)}</span>}
                 <span><Icono k="edificio" tam={12} />{s.patron || estudio.n}
                   {culturaDe(s) && <em className="ea-cultura" title={culturaDe(s).d}>{culturaDe(s).n}</em>}</span>
-                <span><Icono k="pin" tam={12} />{nacion.n}</span>
+                <span><Bandera id={nacion.id} alto={11} />{nacion.n}</span>
                 {/* El camino que elegiste no se anuncia en la placa: se
                     descubre entero al final, en «Tu camino». */}
               </div>
