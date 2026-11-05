@@ -77,7 +77,12 @@ async function primerAno(semilla, edad) {
   ok(anos.length >= 4, "se jugaron " + anos.length + " primeros años completos");
   anos.forEach(({ s, e, a }) => {
     console.log("     (semilla " + s + ", " + e + " años) " + a.join("  →  "));
-    ok(/^Inicio de año$/i.test(a[0]), "  empieza con «Inicio de año»");
+    /* En el primer año se elige mentor antes de nada (Saúl, oct-2026; se
+       dejó así a propósito): esa escena va primera y después el año abre
+       con «Inicio de año» como siempre. */
+    const resto = /^Tu mentor$/i.test(a[0]) ? a.slice(1) : a;
+    ok(/^Inicio de año$/i.test(resto[0]), "  empieza con «Inicio de año»" + (resto !== a ? " (tras elegir mentor)" : ""));
+    ok(resto.every((c) => !/^Tu mentor$/i.test(c)), "  y el mentor solo puede ir delante de todo");
     ok(/^Cierre de año/i.test(a[a.length - 1]), "  y la última escena lleva «Cierre de año»");
     ok(a.slice(0, -1).every((c) => !/Cierre de año/i.test(c)), "  y ninguna otra lo lleva");
   });

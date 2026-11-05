@@ -49062,7 +49062,8 @@ const escenaPretemporada = (st) => {
    Son parodias: los nombres están cambiados, las frases son del juego
    (algunas inspiradas en cosas que dijeron, retorcidas) y ninguno habla
    por la persona real.
-   peso: lo que le importa a cada uno al elegir. cash va en miles; riesgo
+   peso: lo que le importa a cada uno al elegir. cash va comprimido (ver
+   mentorElige); riesgo
    es cuánto puede salir mal (0 a 0,7): positivo si le gusta, negativo si
    lo evita; cashPierde multiplica las pérdidas de dinero; grande premia
    las decisiones que mueven mucho, en cualquier sentido.
@@ -49071,7 +49072,7 @@ const ID_MENTOR = 9795;
 const MENTORES = [
   { id: "tusk", n: "Elon Tusk", k: "car", aconseja: "Te aconseja arriesgar",
     lema: "Si no da un poco de miedo, es demasiado pequeño.",
-    peso: { cash: 0.9, car: 0.4, hab: 0, red: 0.1, rep: 0, ene: 0, riesgo: 14, grande: 0.6 },
+    peso: { cash: 0.8, car: 0.4, hab: 0, red: -0.3, rep: -0.6, ene: -0.6, riesgo: 12, grande: 0.6 },
     frases: [
       "Si es lo bastante grande, se hace aunque todo diga que no.",
       "Y si explota, se hace otro.",
@@ -49082,7 +49083,7 @@ const MENTORES = [
     ] },
   { id: "bufalo", n: "Warren Búfalo", k: "cri", aconseja: "Te aconseja paciencia",
     lema: "Compra barato, siéntate y espera.",
-    peso: { cash: 0.1, car: 0.2, hab: 1.6, red: 0.1, rep: 0.6, ene: 0.3, riesgo: -10 },
+    peso: { cash: 0.3, car: 0, hab: 1.8, red: 0, rep: 0.6, ene: 0.2, riesgo: -16, grande: -0.4 },
     frases: [
       "Cuando todos compran, yo me escondo. Cuando todos corren, yo compro.",
       "El precio es lo que pagas. El valor es lo que te llevas a casa.",
@@ -49093,7 +49094,7 @@ const MENTORES = [
     ] },
   { id: "kardashow", n: "Kim Kardashow", k: "red", aconseja: "Te aconseja contactos",
     lema: "Tu nombre vale más que tu sueldo.",
-    peso: { cash: 0.2, car: 0.5, hab: 0.1, red: 1.4, rep: 1.2, ene: 0.1, riesgo: -1 },
+    peso: { cash: 0, car: 0.2, hab: -0.4, red: 2.0, rep: 1.6, ene: 0, riesgo: -2 },
     frases: [
       "Levántate, arréglate y trabaja. Y súbelo a redes, que si no, no cuenta.",
       "Rodéate de gente que trabaje. Y que te siga.",
@@ -49104,7 +49105,7 @@ const MENTORES = [
     ] },
   { id: "pesos", n: "Jeff Pesos", k: "car", aconseja: "Te aconseja crecer",
     lema: "Hoy es el día uno, otra vez.",
-    peso: { cash: 0, car: 1.6, hab: 0.9, red: 0.4, rep: 0.2, ene: -0.2, riesgo: 0 },
+    peso: { cash: -0.2, car: 2.0, hab: 0.8, red: 0, rep: 0, ene: -0.5, riesgo: -3, grande: -0.2 },
     frases: [
       "Hoy es el día uno. Mañana también.",
       "Reinvierte hasta el último peso.",
@@ -49115,7 +49116,7 @@ const MENTORES = [
     ] },
   { id: "thrift", n: "Taylor Thrift", k: "cash", aconseja: "Te aconseja ahorrar",
     lema: "Lo mío es mío.",
-    peso: { cash: 1.2, cashPierde: 2.5, car: 0.1, hab: 0.2, red: 0.1, rep: 0.3, ene: 0.4, riesgo: -8 },
+    peso: { cash: 1.6, cashPierde: 3, car: 0, hab: 0, red: 0, rep: 0.3, ene: 0.6, riesgo: -18 },
     frases: [
       "Antes de firmar, pregunta de quién es lo que haces.",
       "Si no es tuyo, vuelve a hacerlo.",
@@ -49126,7 +49127,7 @@ const MENTORES = [
     ] },
   { id: "rinaldo", n: "Cristiano Rinaldo", k: "ene", aconseja: "Te aconseja cuidar tu energía",
     lema: "El talento sin descanso no dura.",
-    peso: { cash: 0.1, car: 0.5, hab: 0.3, red: 0.2, rep: 0.4, ene: 1.5, riesgo: -2 },
+    peso: { cash: 0, car: 0.3, hab: -0.2, red: 0.2, rep: 0.3, ene: 1.8, riesgo: -2 },
     frases: [
       "El talento sin trabajo no llega ni al banquillo.",
       "Duerme ocho horas. Los campeones no se desvelan.",
@@ -49137,7 +49138,7 @@ const MENTORES = [
     ] },
   { id: "nakamotto", n: "Satoshi Nakamotto", k: "rep", aconseja: "Te aconseja especular",
     lema: "Nadie sabe quién soy, y nadie sabe cuánto vale.",
-    peso: { cash: 0.8, car: 0.2, hab: 0.2, red: 0, rep: -0.1, ene: 0, riesgo: 12 },
+    peso: { cash: 0.2, car: -0.5, hab: 0, red: -0.3, rep: -0.8, ene: -0.2, riesgo: 30 },
     frases: [
       "Si no lo entiendes, no tengo tiempo de explicártelo.",
       "Lo que tú pierdes, lo ganan los demás. Piénsalo como una donación.",
@@ -49149,6 +49150,59 @@ const MENTORES = [
 ];
 const IDS_MENTOR = MENTORES.map((m) => m.id);
 const MENTOR = (id) => MENTORES.find((m) => m.id === id) || null;
+
+/* Lo que dice el mentor DESPUÉS, en las decisiones donde aconsejó: si le
+   hiciste caso o no, y si salió bien o mal. Un consejo sin consecuencia
+   es un cartel; esto es lo que lo vuelve un personaje (nov-2026). */
+const REACCIONES = {
+  tusk: {
+    siguioBien: "¿Ves? Lo grande sale.",
+    siguioMal: "Explotó. Perfecto: ahora sabemos qué no hacer.",
+    noBien: "Salió bien. Aunque podía haber sido más grande.",
+    noMal: "Si vas a fallar, que sea a lo grande. Esto fue pequeño y encima salió mal.",
+  },
+  bufalo: {
+    siguioBien: "Paciencia. Siempre paga.",
+    siguioMal: "Un mal año no convierte una buena decisión en mala.",
+    noBien: "Salió bien. Que no se te haga costumbre.",
+    noMal: "Si no lo entiendes, no lo toques. Ya lo sabes.",
+  },
+  kardashow: {
+    siguioBien: "Esto hay que subirlo ya.",
+    siguioMal: "Nadie lo vio. Por suerte.",
+    noBien: "Bien hecho. Lástima que nadie lo vio.",
+    noMal: "Y encima nadie va a hablar de ti. Ni para mal.",
+  },
+  pesos: {
+    siguioBien: "Día uno, otra vez. Y vamos ganando.",
+    siguioMal: "Crecer duele. Mañana, otra vez.",
+    noBien: "Bien. Ahora hazlo el doble de rápido.",
+    noMal: "Eso pasa cuando se piensa en pequeño.",
+  },
+  thrift: {
+    siguioBien: "Y lo tuyo sigue siendo tuyo.",
+    siguioMal: "Duele, pero no perdiste lo que no podías perder.",
+    noBien: "Esta vez salió. La próxima, lee la letra chica.",
+    noMal: "Te lo advertí: gastar es fácil.",
+  },
+  rinaldo: {
+    siguioBien: "Así se gana: descansado.",
+    siguioMal: "Un mal partido. Se olvida.",
+    noBien: "Ganaste, pero mira cómo llegas.",
+    noMal: "Sin energía no hay segundo tiempo.",
+  },
+  nakamotto: {
+    siguioBien: "Sube. Te dije que subía.",
+    siguioMal: "Baja. También te dije que bajaba.",
+    noBien: "Ganaste sin arriesgar nada. Qué aburrido.",
+    noMal: "Perdiste sin emoción. Lo peor de los dos mundos.",
+  },
+};
+const reaccionMentor = (id, siguio, bien) => {
+  const r = REACCIONES[id];
+  if (!r) return "";
+  return siguio ? (bien ? r.siguioBien : r.siguioMal) : (bien ? r.noBien : r.noMal);
+};
 
 /* lo que se espera de una opción: su efecto, o el de salir bien */
 const efectoEsperado = (o) => {
@@ -49171,7 +49225,13 @@ const mentorElige = (m, ops, riesgo) => {
   ops.forEach((o, i) => {
     const d = efectoEsperado(o);
     const w = m.peso;
-    const cash = numero(d.cash, 0) / 1000;
+    /* El dinero, comprimido: en miles a secas, 20.000 pesaban 20 y un
+       atributo rara vez pasa de 9, así que todos los mentores acababan
+       eligiendo lo que más pagaba y coincidían casi siempre (Tusk y
+       Nakamotto en el 90% de las decisiones importantes). Con la raíz,
+       1.000 pesan 2, 5.000 pesan 4,5 y 20.000 pesan 9. */
+    const crudo = numero(d.cash, 0);
+    const cash = Math.sign(crudo) * Math.sqrt(Math.abs(crudo) / 1000) * 2;
     let r = 0;
     try {
       const x = riesgo ? riesgo(o) : null;
@@ -54433,6 +54493,7 @@ function Motor() {
     if (o && o.ramaId) st.rama = o.ramaId;
     if (o && o.mentorId && IDS_MENTOR.indexOf(o.mentorId) >= 0) st.mentor = o.mentorId;
     /* con qué mentores coincidió esta decisión (para el «Jugaste como…») */
+    let reaccion = null;
     if (ev && o && !ev.mentores && !ev.pretemporada) {
       try {
         const opsEv = opcionesDe(ev);
@@ -54444,6 +54505,12 @@ function Motor() {
             if (mentorElige(m, opsEv, riesgoDe) === iElegida) afin[m.id] = entero(numero(afin[m.id], 0) + 1, 0, 0, 99999);
           });
           st.afin = afin;
+          /* si tu mentor aconsejó aquí, dice algo del resultado */
+          const m = MENTOR(s.mentor);
+          if (m && decisionImportante(ev)) {
+            const siguio = mentorElige(m, opsEv, riesgoDe) === iElegida;
+            reaccion = { id: m.id, t: reaccionMentor(m.id, siguio, nivel !== "fallo") };
+          }
         }
       } catch (e) { /* sin afinidad esta vez */ }
     }
@@ -54701,7 +54768,7 @@ function Motor() {
       nivel, cash: numero(enCaja, 0),
     }).slice(-6);
 
-    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600), nivel, cambios, azar: azar || null });
+    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600), nivel, cambios, azar: azar || null, reaccion });
     irA("resultado");
   };
 
@@ -56826,6 +56893,16 @@ function Motor() {
                   <div className={"ea-sello ea-dis" + selloCls[res.nivel]}>{selloTxt[res.nivel]}</div>
                   <h2 className="ea-memoTit ea-dis">{(ev && ev.t) || "Resolución"}</h2>
                   <p className="ea-memoTxt">{res.msg}</p>
+                  {/* tu mentor, después: le hiciste caso o no, y cómo salió */}
+                  {res.reaccion && res.reaccion.t && MENTOR(res.reaccion.id) && (
+                    <div className="ea-consejo" style={{ marginBottom: 12 }}>
+                      <AvatarMentor id={res.reaccion.id} tam={40} />
+                      <div>
+                        <div className="ea-consejoK ea-dis">{MENTOR(res.reaccion.id).n}, después de tu decisión</div>
+                        <div className="ea-consejoX">«{res.reaccion.t}»</div>
+                      </div>
+                    </div>
+                  )}
                   {/* El dinero deja de ser un chip entre seis. Es lo que el
                       jugador vino a ver, asi que sale solo, grande y
                       contando; los atributos quedan detras, en pequeño. */}

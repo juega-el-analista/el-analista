@@ -93,7 +93,12 @@ async function unaVida(semilla) {
     if (/Vivir otra vida/.test(t)) {
       const ver = (t.match(/años · .+? · .+? (.+?) (Cargo final|Tu reputación|Llegaste|Terminaste|Con |Trabajaste|El cargo|Tu patrimonio)/) || [])[1] || "";
       const cf = (t.match(/Cargo final (.+?) Rama/) || [])[1] || cargo;
-      return { ano, fin: norm(ver).slice(0, 46) || "fin", cargo: cf, burnouts, ene: ultimaEne };
+      /* «Jugaste como…»: con quién coincidiste y en qué porcentaje. Es la
+         única prueba que llega a la pantalla final, así que es la que lo
+         vigila. */
+      const mJ = t.match(/Jugaste como… (.+?) Coincidiste con .+? en el (\d+) ?% de tus (\d+) decisiones ?(?:, y con (.+?) en el (\d+) ?%)?/);
+      const jugaste = mJ ? { n: mJ[1], pct: Number(mJ[2]), total: Number(mJ[3]), n2: mJ[4] || null, pct2: mJ[5] ? Number(mJ[5]) : null } : null;
+      return { ano, fin: norm(ver).slice(0, 46) || "fin", cargo: cf, burnouts, ene: ultimaEne, jugaste };
     }
     const mEne = t.match(/ENERGÍA (\d+)|Energía (\d+)/);
     if (mEne) ultimaEne = Number(mEne[1] || mEne[2]);
@@ -181,4 +186,22 @@ async function unaVida(semilla) {
     console.log("    pantalla: " + String(x.pantalla).slice(0, 150));
     console.log("    botones:  " + JSON.stringify(x.botones));
   });
+
+  /* «Jugaste como…»: tiene que salir en toda vida que termina, y los
+     mentores tienen que distinguirse. Si el primero y el segundo empatan
+     casi siempre, la frase no le dice nada a nadie. */
+  const conJ = res.filter((x) => x.jugaste);
+  console.log("");
+  console.log("  «Jugaste como…» en la pantalla final: " + conJ.length + " de " + acaban);
+  const porMentor = {};
+  conJ.forEach((x) => { porMentor[x.jugaste.n] = (porMentor[x.jugaste.n] || 0) + 1; });
+  Object.keys(porMentor).sort((a, b) => porMentor[b] - porMentor[a]).forEach((k) => console.log("    " + String(porMentor[k]).padStart(2) + "x  " + k));
+  const ventaja = conJ.filter((x) => x.jugaste.pct2 != null).map((x) => x.jugaste.pct - x.jugaste.pct2);
+  if (ventaja.length) console.log("  ventaja media del primero sobre el segundo: " + (ventaja.reduce((a, v) => a + v, 0) / ventaja.length).toFixed(1) + " puntos");
+
+  let fallos = 0;
+  if (acaban < res.length) { console.log("  FALLO  " + (res.length - acaban) + " vida(s) no llegan a un balance final"); fallos++; }
+  if (conJ.length < acaban) { console.log("  FALLO  falta «Jugaste como…» en " + (acaban - conJ.length) + " pantalla(s) final(es)"); fallos++; }
+  console.log("\n  " + (fallos ? fallos + " FALLO(S)" : "todo en verde"));
+  process.exit(fallos ? 1 : 0);
 })();

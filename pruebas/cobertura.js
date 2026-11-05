@@ -57,6 +57,7 @@ const MARCAS = {
   "mentor: elegirlo": "¿Quién te aconseja?",
   "mentor: su consejo": "elegiría la",
   "mentor: jugaste como": "Jugaste como",
+  "mentor: reacciona al resultado": "después de tu decisión",
   "firma: la cultura en el informe": "Trabajar en ",
   "modo aprendiz elegido": "Palabras que vas a ver",
   "recordatorio en el quiz": "Antes de responder, el recordatorio",
