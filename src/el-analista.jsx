@@ -2014,6 +2014,10 @@ const PERKS = [
    consumibles de El Ídolo (Alessandro, 8-oct-2026). Se guardan como
    { id, hasta }: activo mientras turno < hasta. Al cerrar el último año
    hacen efecto y se van, y el informe lo avisa.
+   El precio ya no es fijo (César, 5-nov-2026): un café de 300 dólares
+   era caro para un pasante y nada para un socio. Ahora c es el precio
+   base y el que se cobra sale de precioBoost: sube con tu sueldo anual,
+   así que acompaña a la carrera.
    ============================================================ */
 const BOOSTS = [
   { id: "cafe", e: "☕", n: "Café de especialidad todo el año", c: 300, anos: 1, cierre: { ene: 6 },
@@ -2059,6 +2063,22 @@ const EMOJI_COMPRA = {
   asistente: "🗂️", prensa: "🗞️", terminal: "🖥️", abogado: "⚖️", broker: "💹", club: "🥂", colchon: "🛟", mba: "🏛️",
 };
 BOOSTS.forEach((b) => { EMOJI_COMPRA[b.id] = b.e; });
+
+/* Lo que cuesta un boost hoy. Es el precio base por tu sueldo anual
+   entre 4.000 dólares (lo que gana al año alguien que empieza), con un
+   piso de vez y media el precio base. Un pasante en Caracas paga el
+   piso; un analista en Miami, unas nueve veces la base; un socio, del
+   orden de doscientas: siempre la misma tajada de lo que cobras. */
+const SUELDO_REF_BOOST = 4000;
+const redondeoPrecio = (v) => {
+  const paso = v < 1000 ? 50 : v < 10000 ? 100 : v < 100000 ? 1000 : 5000;
+  return Math.round(v / paso) * paso;
+};
+const precioBoost = (b, st) => {
+  const base = numero(b && b.c, 0);
+  const sueldo = numero(sueldoCon(st, 1), 0);
+  return redondeoPrecio(Math.max(base * 1.5, (base * sueldo) / SUELDO_REF_BOOST));
+};
 
 /* ---------- los escalones del tren de vida ----------
    El índice de vida era un número suelto en una esquina y no significaba
@@ -54336,8 +54356,9 @@ function Motor() {
 
   /* un boost: se paga ahora y dura sus años desde este */
   const comprarBoost = (b) => setS((st) => {
-    if (!b || st.cash + st.cartera < b.c || boostActivo(st, b.id)) return st;
-    const r = cobrar(st, b.c);
+    const precio = precioBoost(b, st);
+    if (!b || st.cash + st.cartera < precio || boostActivo(st, b.id)) return st;
+    const r = cobrar(st, precio);
     const otros = (Array.isArray(st.boosts) ? st.boosts : []).filter((x) => x.id !== b.id);
     return {
       ...st, cash: r.cash, cartera: r.cartera,
@@ -55458,7 +55479,7 @@ function Motor() {
       d: "Se compran una vez y trabajan para ti todos los años que queden." },
     /* se abren junto con las mejoras: los dos son invertir en ti */
     { id: "boosts", n: "Boosts", e: "⚡", lista: BOOSTS, abierto: abierto(s, "mejoras"),
-      d: "Potenciadores baratos que duran uno o dos años. Cuando vencen, se pueden volver a activar." },
+      d: "Potenciadores que duran uno o dos años. Su precio sube con tu sueldo: mientras más arriba estás, más cuestan." },
   ];
   const GRUPO_ACT = GRUPOS_COMPRA.filter((g) => g.abierto).find((g) => g.id === grupo)
     || GRUPOS_COMPRA.filter((g) => g.abierto)[0]
@@ -56300,17 +56321,19 @@ function Motor() {
                     {GRUPO_ACT.id === "boosts" && BOOSTS.map((b) => {
                       const activo = boostActivo(s, b.id);
                       const queda = quedaBoost(s, b.id);
-                      const caro = s.cash + s.cartera < b.c;
+                      const precio = precioBoost(b, s);
+                      const caro = s.cash + s.cartera < precio;
                       return (
                         <div className={"ea-item" + (activo ? " tuyo" : "")} key={b.id}>
                           <div className="ea-itemTop">
                             <span className="ea-itemN ea-itemConIco">
                               <span className="ea-itemEmoji" aria-hidden="true">{b.e}</span>{b.n}
                             </span>
-                            <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(b.c)}</span>
+                            <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(precio)}</span>
                           </div>
                           <div className="ea-etqs">
                             <span className="ea-etq act">dura {b.anos === 1 ? "un año" : b.anos + " años"}</span>
+                            <span className="ea-etq">sube con tu sueldo</span>
                           </div>
                           <div className="ea-itemD">{b.d}</div>
                           {activo
