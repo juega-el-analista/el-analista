@@ -49,7 +49,7 @@ const MARCAS = {
   "novato: primer sueldo": "Tu primer sueldo",
   "novato: tarjeta de crédito": "Te ofrecen una tarjeta de crédito",
   "novato: dónde vivir": "¿Compartir apartamento o vivir por tu cuenta?",
-  "novato: decisión clave": "Te ofrecen quedarte",
+  "novato: decisión clave": "Te ofrecen un puesto fijo al terminar la prueba",
   "informe: lo que volvió": "Lo que volvió de tus decisiones",
   "informe: lo que sigue abierto": "Lo que sigue abierto",
   "escena: ¿qué es?": "¿Qué es ",

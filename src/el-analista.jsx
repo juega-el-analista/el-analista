@@ -3409,7 +3409,7 @@ const CARRILES = [
 
 /* ---------- eventos de semestre, muchos con juego rápido ---------- */
 const E = [
-  { id: 1, min: 2, max: 3, t: "Un DCF para mañana a las ocho", x: "Once de la noche. El VP deja una carpeta encima de tu teclado y dice que el cliente quiere el modelo antes del desayuno.",
+  { id: 1, min: 2, max: 3, t: "Te piden un modelo financiero para mañana temprano", x: "Once de la noche. El VP deja una carpeta encima de tu teclado y dice que el cliente quiere el modelo antes del desayuno.",
     o: [
       { t: "Amanecerte y entregarlo impecable", d: { mod: 6, car: 3, ene: -18, rep: 3, msg: "Entregas a las 7:40 con las tres sensibilidades corridas. El VP no dice nada, que aquí significa que quedó bien." } },
       { t: "Armarlo rápido y confiar en tu ojo", j: "calculo", stat: "mod", d: { mod: 4, car: 2, ene: -6, msg: "Corres los números de cabeza para no perder tiempo abriendo el modelo entero." } },
@@ -3425,56 +3425,56 @@ const E = [
       { t: "Preguntarle por el negocio y escuchar", d: { red: 7, cri: 4, msg: "Te cuenta cómo levantó su primer mandato. Aprendes más que en dos meses de Excel." } },
       { t: "Soltarle una idea de originación tuya", min: { red: 24 }, j: "reaccion", stat: "red", d: { red: 5, rep: 5, car: 4, msg: "Tienes una ventana de segundos para meter la idea sin que suene forzado." } },
     ] },
-  { id: 4, min: 0, max: 4, t: "Certificación de por medio", x: "Se abre la inscripción. Cuesta plata, quita fines de semana y no garantiza nada.",
+  { id: 4, min: 0, max: 4, t: "Se abre la inscripción a una certificación profesional", x: "Se abre la inscripción. Cuesta plata, quita fines de semana y no garantiza nada.",
     o: [
       { t: "Inscribirte y estudiar en serio", min: { cri: 18 }, j: "quiz", stat: "cri", d: { cash: -1600, mod: 7, cri: 5, ene: -10, car: 3, msg: "Seis meses de sábados perdidos y el examen encima." } },
       { t: "Saltarlo, tu escuela es la mesa", d: { ene: 4, msg: "Decides que el aprendizaje viene de los mandatos. Tampoco es mala tesis." } },
     ] },
-  { id: 5, min: 2, max: 3, t: "Cierre de operación, fiesta en el bar", x: "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
+  { id: 5, min: 2, max: 3, t: "Se firmó el negocio y el equipo va a celebrar", x: "Firmaron. Todo el equipo se va a celebrar y estarán los del fondo comprador.",
     o: [
       { t: "Ir y quedarte hasta el final", d: { red: 8, ene: -9, rep: 2, msg: "Terminas hablando de mineras con un principal de un fondo. Se guarda tu número." } },
       { t: "Aparecerte una hora y dormir", d: { red: 3, ene: 6, msg: "Saludas, brindas, te vas. El equilibrio también es una habilidad." } },
       { t: "Quedarte a adelantar el próximo pitch", d: { mod: 4, car: 2, ene: -7, red: -3, msg: "El lunes tienes ventaja. El viernes tuviste soledad." } },
     ] },
-  { id: 6, min: 2, max: 3, t: "El data room es un desastre", x: "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
+  { id: 6, min: 2, max: 3, t: "Te toca ordenar cuatrocientos archivos sin nombre", x: "Cuatrocientos archivos sin nombrar. Alguien tiene que ordenarlos y ese alguien tiene tu cargo.",
     o: [
       { t: "Armar un índice maestro que sirva a todos", min: { mod: 27 }, j: "orden", stat: "cri", d: { mod: 5, rep: 5, ene: -10, car: 3, msg: "Ordenas el desastre siguiendo la lógica del proceso." } },
       { t: "Revisar solo lo que te pidieron", d: { ene: -3, car: 1, msg: "Cumples. Nada más y nada menos." } },
     ] },
-  { id: 7, clave: true, min: 1, max: 4, sin: ["sancionado"], t: "Te llama un headhunter", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
+  { id: 7, clave: true, min: 1, max: 4, sin: ["sancionado"], t: "Una firma más grande te ofrece 40 % más de sueldo", x: "Una firma más grande ofrece 40% más de sueldo y el doble de horas.",
     o: [
       { t: "Aceptar y mudarte de firma", mudaFirma: true, d: { cash: 4000, ene: -10, rep: -4, car: 6, red: 5, deja: "saltaste", luego: [{ id: 7101, en: 1 }, { id: 7103, en: 3 }], msg: "Nueva placa en la puerta, mismo Excel. Tu antigua red se enfría un poco." } },
       { t: "Usarla para negociar donde estás", min: { red: 20 }, j: "anclaje", stat: "red", d: { cash: 3000, rep: 3, car: 3, deja: "negociaste", luego: [{ id: 7104, en: 2 }], msg: "Entras a la oficina del socio con una oferta en la mano y un número en la cabeza." } },
       { t: "Decir que no y contarlo abiertamente", d: { rep: 7, red: 3, deja: "leal", luego: [{ id: 7105, en: 2 }, { id: 7106, en: 2 }], msg: "La lealtad se cotiza distinto en las firmas pequeñas. Aquí sube." } },
     ] },
-  { id: 8, min: 0, max: 4, t: "Un rumor que vale plata", x: "Escuchas en un pasillo que una empresa listada recibirá una oferta el mes que viene. Tu cuenta personal está a un clic.",
+  { id: 8, min: 0, max: 4, t: "Oyes un secreto con el que podrías ganar en bolsa", x: "Escuchas en un pasillo que una empresa listada recibirá una oferta el mes que viene. Tu cuenta personal está a un clic.",
     o: [
       { t: "No tocar nada y anotarlo en el registro", d: { rep: 8, cri: 7, deja: "limpio", luego: [{ id: 8101, en: 2 }], msg: "Compliance te lo agradece por escrito. Duermes tranquilo, que en esto es patrimonio." } },
       { t: "Comprar una posición pequeña", chk: { s: "cri", dif: 80,
         ok: { cash: 11000, rep: -6, deja: "privilegiada", luego: [{ id: 8102, en: 1 }, { id: 8103, en: 3 }], msg: "Ganas plata y una ansiedad crónica que no aparece en el estado de cuenta." },
         no: { cash: -8000, rep: -30, deja: "sancionado", luego: [{ id: 8104, en: 1 }], msg: "El regulador cruza operaciones. Tu nombre queda en una lista que no se borra." } } },
     ] },
-  { id: 9, min: 2, max: 4, t: "Cien mensajes en frío", x: "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
+  { id: 9, min: 2, max: 4, t: "Escribirle a cien fondos que no te conocen", x: "Nadie te asignó esto. Puedes construir tu propia lista de fondos y empezar a escribir.",
     o: [
       { t: "Armar la base y escribir todos los días", d: { red: 11, car: 5, ene: -11, msg: "De cien mensajes contestan siete. De esos siete sale una reunión que en dos años será un mandato." } },
       { t: "Enfocarte en diez contactos bien elegidos", min: { red: 20 }, j: "reaccion", stat: "red", d: { red: 7, cri: 4, ene: -4, msg: "Menos volumen y mejor timing. Escribes justo cuando conviene escribir." } },
     ] },
-  { id: 10, min: 2, max: 3, t: "El teaser que vuelve marcado", x: "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
+  { id: 10, min: 2, max: 3, t: "Tu informe vuelve con ochenta correcciones", x: "Tu teaser sectorial regresa con ochenta comentarios. La mitad son de forma.",
     o: [
       { t: "Rehacerlo entero y aprender el formato", d: { mod: 6, rep: 4, ene: -8, car: 2, msg: "La siguiente versión vuelve con cuatro comentarios. Progreso medible." } },
       { t: "Defender los puntos que no compartes", min: { cri: 28 }, j: "quiz", stat: "cri", d: { rep: 5, cri: 5, car: 2, msg: "Discutir un comentario técnico te obliga a tener razón de verdad." } },
     ] },
-  { id: 11, min: 0, max: 6, t: "Media hora antes del cierre", x: "El mercado cierra en treinta minutos y tienes una orden a medio ejecutar en tu cuenta personal.",
+  { id: 11, min: 0, max: 6, t: "La bolsa cierra en media hora y tu compra está a medias", x: "El mercado cierra en treinta minutos y tienes una orden a medio ejecutar en tu cuenta personal.",
     o: [
       { t: "Ejecutar tú mismo en el momento justo", j: "reaccion", stat: "cri", d: { cash: 2200, cri: 4, msg: "Te quedas mirando la pantalla esperando el momento." } },
       { t: "Dejar una orden limitada y apagar todo", d: { cri: 3, ene: 4, cash: 600, msg: "Pones el precio al que estarías cómodo y te olvidas. Se ejecuta a medias." } },
     ] },
-  { id: 12, min: 0, max: 6, t: "Ruido en la pantalla", x: "Seis titulares en una hora y tu portafolio reaccionando a cada uno. Alguien tiene que decidir qué es señal y qué es ruido.",
+  { id: 12, min: 0, max: 6, t: "Seis noticias en una hora mueven tu inversión", x: "Seis titulares en una hora y tu portafolio reaccionando a cada uno. Alguien tiene que decidir qué es señal y qué es ruido.",
     o: [
       { t: "Operar cada señal en el momento", j: "semaforo", stat: "cri", d: { cash: 2600, cri: 3, ene: -5, msg: "Te sientas a operar los titulares uno por uno." } },
       { t: "Cerrar la pantalla y no hacer nada", d: { cri: 5, ene: 6, msg: "El mejor movimiento del semestre fue no hacer ninguno." } },
     ] },
-  { id: 13, min: 2, max: 6, t: "Roadshow de tres ciudades", x: "Bogotá el lunes, Asunción el miércoles, Buenos Aires el viernes. Ocho reuniones con fondos.",
+  { id: 13, min: 2, max: 6, t: "Ocho reuniones con inversionistas en tres ciudades", x: "Bogotá el lunes, Asunción el miércoles, Buenos Aires el viernes. Ocho reuniones con fondos.",
     o: [
       { t: "Ir a todo y preparar cada reunión", d: { red: 12, car: 6, ene: -17, rep: 5, msg: "Vuelves destruido y con dos cartas de interés." } },
       { t: "Mandar a tu asociado a una de las plazas", d: { red: 6, car: 3, ene: -8, rep: 2, msg: "Delegar también es señal de nivel. Tu asociado responde bien." } },
@@ -3485,7 +3485,7 @@ const E = [
       { t: "Desearle bien y mantener el puente", d: { red: 8, rep: 5, ene: -5, msg: "A los dos años ese fondo entra como comprador en un proceso tuyo." } },
       { t: "Contraofertar y retenerlo", min: { red: 34 }, j: "anclaje", stat: "red", d: { car: 4, ene: -5, cash: -2000, msg: "Tienes que encontrar el número que lo convence sin romper la escala del equipo." } },
     ] },
-  { id: 15, clave: true, min: 4, max: 6, sin: ["sancionado"], t: "Te ofrecen una silla en el board", x: "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
+  { id: 15, clave: true, min: 4, max: 6, sin: ["sancionado"], t: "Te ofrecen entrar a la junta directiva de una empresa", x: "Una compañía del portafolio de un cliente quiere que entres a su junta directiva.",
     o: [
       { t: "Aceptar y tomarlo en serio", d: { red: 10, rep: 8, cri: 6, ene: -9, cash: 8000, car: 4, msg: "Cuatro juntas al año, mucha lectura y una visión del negocio que desde afuera no tenías." } },
       { t: "Declinar por conflicto de interés", d: { rep: 6, cri: 6, msg: "El cliente entiende y confía más. Tu agenda respira." } },
@@ -3495,23 +3495,23 @@ const E = [
       { t: "Meter una parte que puedas perder", d: { cash: -1500, cripto: 20, msg: "Defines de antemano cuánto estás dispuesto a perder. Eso ya es gestión de riesgo." } },
       { t: "Explicarle por qué no", j: "quiz", stat: "cri", d: { cri: 5, red: -2, msg: "Le explicas con números, que es la única forma de que entienda." } },
     ] },
-  { id: 17, min: 0, max: 6, t: "El cuerpo pasa factura", x: "Dolor de espalda, sueño malo, tres cafés antes del mediodía. El médico te da una lista de cosas que no vas a hacer.",
+  { id: 17, min: 0, max: 6, t: "Dolor de espalda, mal sueño y una visita al médico", x: "Dolor de espalda, sueño malo, tres cafés antes del mediodía. El médico te da una lista de cosas que no vas a hacer.",
     o: [
       { t: "Bloquear una hora diaria y cumplirla", d: { ene: 22, rep: -2, cri: 3, msg: "Una hora menos de escritorio y bastante más cabeza." } },
       { t: "Ignorarlo, ya habrá tiempo", d: { ene: -10, mod: 2, car: 2, msg: "Aguantas. Todo el mundo aguanta hasta que no." } },
     ] },
-  { id: 18, min: 0, max: 5, t: "La boda es el mismo fin de semana del pitch", x: "Tu mejor amigo se casa el sábado. El pitch al comité es el lunes a primera hora.",
+  { id: 18, min: 0, max: 5, t: "La boda de tu mejor amigo y una presentación el lunes", x: "Tu mejor amigo se casa el sábado. El pitch al comité es el lunes a primera hora.",
     o: [
       { t: "Ir a la boda y preparar el domingo", d: { ene: 8, red: 3, rep: -3, msg: "Llegas al lunes con menos horas y más humanidad. El pitch sale bien igual." } },
       { t: "Mandar un regalo y quedarte trabajando", d: { car: 3, mod: 3, ene: -6, red: -4, msg: "El pitch queda redondo. La amistad queda con una marca pequeña." } },
     ] },
-  { id: 19, min: 1, max: 5, t: "Prensa al teléfono", x: "Un periodista quiere una cita tuya sobre el sector. Tu firma no tiene política clara al respecto.",
+  { id: 19, min: 1, max: 5, t: "Un periodista quiere entrevistarte", x: "Un periodista quiere una cita tuya sobre el sector. Tu firma no tiene política clara al respecto.",
     o: [
       { t: "Hablar solo de datos públicos", d: { rep: 6, red: 4, cri: 3, msg: "Sales citado con prudencia. Dos fondos te escriben esa semana." } },
       { t: "Aceptar la entrevista técnica en vivo", min: { cri: 30 }, j: "quiz", stat: "cri", d: { rep: 7, red: 6, msg: "En vivo no hay forma de consultar nada." } },
       { t: "Declinar y pasarlo al socio", d: { rep: 2, red: 2, msg: "Correcto y aburrido. A veces es exactamente lo que toca." } },
     ] },
-  { id: 20, min: 1, max: 4, t: "Alguien se cuelga de tu trabajo", x: "Un colega presenta al comité el análisis que armaste tú, sin mencionarte.",
+  { id: 20, min: 1, max: 4, t: "Un colega presenta tu trabajo como si fuera suyo", x: "Un colega presenta al comité el análisis que armaste tú, sin mencionarte.",
     o: [
       { t: "Hablarlo con él, en privado y directo", d: { rep: 5, cri: 5, red: 2, msg: "Se incomoda y corrige en la siguiente sesión. El límite queda puesto." } },
       { t: "Escalarlo al socio", chk: { s: "rep", dif: 60, ok: { rep: 6, car: 3, msg: "El socio ya lo sospechaba. Ajustan la asignación de créditos del equipo." }, no: { rep: -8, red: -5, msg: "Queda como conflicto de egos y tú como el que se queja." } } },
@@ -3522,7 +3522,7 @@ const E = [
       { t: "Mandarlo casi todo al portafolio", d: { cash: 3200, cri: 4, msg: "Lo inviertes antes de acostumbrarte a verlo en la cuenta." } },
       { t: "Repartir entre disfrute y ahorro", d: { cash: 1400, ene: 8, msg: "Un viaje corto y el resto invertido. Difícil discutirlo." } },
     ] },
-  { id: 22, min: 2, max: 6, t: "Fusión de tu firma", x: "Anuncian la integración con una casa regional. Reorganizan equipos en sesenta días.",
+  { id: 22, min: 2, max: 6, t: "Tu firma se une con otra y cambian los equipos", x: "Anuncian la integración con una casa regional. Reorganizan equipos en sesenta días.",
     o: [
       { t: "Posicionarte temprano con los que llegan", d: { red: 9, car: 5, rep: 3, ene: -7, msg: "Terminas liderando la integración de la cobertura sectorial." } },
       { t: "Bajar la cabeza y ejecutar", d: { mod: 4, car: 2, rep: -2, msg: "Sobrevives al recorte. Nadie te tiene muy presente." } },
@@ -3537,7 +3537,7 @@ const E = [
       { t: "Dedicarle dos horas por semana", d: { red: 6, rep: 5, ene: -5, cri: 3, msg: "En seis meses te libera un tercio de tu carga. La mejor inversión del año." } },
       { t: "Que aprenda como aprendiste tú", d: { ene: 2, rep: -3, msg: "Sobrevive, pero no te busca cuando importa." } },
     ] },
-  { id: 25, min: 0, max: 6, t: "Un amigo levanta capital", x: "Su startup necesita cierre y te ofrece entrar en la ronda como ángel.",
+  { id: 25, min: 0, max: 6, t: "Un amigo te pide que inviertas en su empresa nueva", x: "Su startup necesita cierre y te ofrece entrar en la ronda como ángel.",
     o: [
       { t: "Invertir un ticket que puedas perder", d: { cash: -3000, red: 3, deja: "ticket",
         luego: [{ en: 2, s: "cri", azar: [{ p: 45, id: 7371, bueno: false }, { p: 30, id: 7341 }, { p: 20, id: 7342, bueno: true }, { p: 5, id: 7372, bueno: true }] }],
@@ -3545,7 +3545,7 @@ const E = [
       { t: "Revisarle el modelo antes de decidir", min: { mod: 30 }, j: "ojo", stat: "mod", d: { red: 6, cri: 4, deja: "revisaste", luego: [{ id: 7343, en: 1 }], msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
       { t: "No invertir y seguir siendo su amigo", d: { ene: 2, red: 2, msg: "Le dices que no con cariño. El dinero y la amistad se quedan cada uno en su sitio." } },
     ] },
-  { id: 26, min: 2, max: 6, t: "Comité de crédito difícil", x: "Defiendes una estructura de factoring sobre un sector volátil. Dos miembros vienen buscando sangre.",
+  { id: 26, min: 2, max: 6, t: "Defiendes un préstamo ante un comité exigente", x: "Defiendes una estructura de factoring sobre un sector volátil. Dos miembros vienen buscando sangre.",
     o: [
       { t: "Responder con los números en la cabeza", min: { mod: 28 }, j: "calculo", stat: "mod", d: { car: 6, rep: 7, cri: 4, msg: "Te preguntan tasas y coberturas y no hay tiempo de abrir el archivo." } },
       { t: "Retirar el caso y volver el mes que viene", d: { cri: 6, rep: 2, ene: -3, msg: "Preferible retirarse que perder. Vuelves mejor armado." } },
@@ -3555,39 +3555,39 @@ const E = [
       { t: "Aguantar el pulso y buscar el punto medio", min: { red: 30 }, j: "tresraya", stat: "red", d: { red: 7, car: 5, rep: 4, msg: "La reunión se vuelve un juego de posiciones antes de hablar de precio." } },
       { t: "Mandar una propuesta por escrito y esperar", d: { car: 2, ene: 3, msg: "Ordenado y sin desgaste. También sin conexión personal." } },
     ] },
-  { id: 28, min: 3, max: 6, t: "Un cliente grande aprieta", x: "Amenaza con llevarse la cuenta si no aceptas un fee contingente que castiga a tu equipo.",
+  { id: 28, min: 3, max: 6, t: "Un cliente grande exige pagar menos o se va", x: "Amenaza con llevarse la cuenta si no aceptas un fee contingente que castiga a tu equipo.",
     o: [
       { t: "Sostener el esquema de honorarios", sigue: 602, d: { rep: 9, cash: -9000, cri: 6, msg: "Pierdes la cuenta este año y la recuperas en dos, con mejores términos." } },
       { t: "Negociar un esquema mixto", min: { red: 38 }, j: "anclaje", stat: "red", d: { cash: 7000, rep: 4, car: 4, msg: "Retainer bajo y éxito alto. Hay que encontrar el punto exacto." } },
       { t: "Ceder para proteger la facturación", d: { cash: 9000, rep: -7, ene: -7, msg: "El equipo trabaja igual por menos. Alguien renuncia en tres meses." } },
     ] },
-  { id: 29, min: 2, max: 6, t: "Auditoría interna sobre tus expedientes", x: "Revisan al azar cinco mandatos tuyos, papel por papel.",
+  { id: 29, min: 2, max: 6, t: "Revisan papel por papel cinco de tus casos", x: "Revisan al azar cinco mandatos tuyos, papel por papel.",
     o: [
       { t: "Reconstruir la cronología completa", j: "memoria", stat: "cri", d: { rep: 8, cri: 5, msg: "Te sientan a explicar cada aprobación en orden." } },
       { t: "Pedir tiempo para ordenar antes de entregar", d: { ene: -7, rep: -2, cri: 4, msg: "Ganas la semana y entregas impecable. El auditor se da cuenta igual." } },
     ] },
-  { id: 30, min: 0, max: 6, t: "Corrección fuerte en la pantalla", x: "El mercado abre 20% abajo. El teléfono no para y tu portafolio personal amanece flaco.",
+  { id: 30, min: 0, max: 6, t: "La bolsa abre con una caída del 20 %", x: "El mercado abre 20% abajo. El teléfono no para y tu portafolio personal amanece flaco.",
     o: [
       { t: "Comprar la caída en tramos", j: "precision", stat: "cri", d: { cri: 5, cash: 3000, msg: "Entrar bien en una caída es todo cuestión de momento." } },
       { t: "No mirar la pantalla en un mes", d: { cri: 4, ene: 6, msg: "El pánico ajeno no es una estrategia y tampoco lo es el tuyo." } },
       { t: "Vender y refugiarte en efectivo", d: { cri: -3, mercado: -0.05, ene: 3, msg: "Cortas el dolor y también la recuperación." } },
     ] },
-  { id: 31, min: 4, max: 6, t: "Un fondo pide condiciones aparte", x: "Quiere una side letter con derechos que los demás inversionistas no tendrán.",
+  { id: 31, min: 4, max: 6, t: "Un inversionista pide privilegios que otros no tendrán", x: "Quiere una side letter con derechos que los demás inversionistas no tendrán.",
     o: [
       { t: "Negarte y ofrecer los mismos términos a todos", d: { rep: 9, cri: 6, cash: -3000, msg: "El fondo entra igual, con menos ruido y más respeto." } },
       { t: "Concederlo y documentarlo con transparencia", d: { cri: 5, red: 5, car: 3, rep: -3, msg: "Se hace, se documenta y se informa. Correcto, aunque incómodo." } },
     ] },
-  { id: 32, min: 2, max: 6, t: "Te piden explicar la cascada", x: "Un LP nuevo no entiende cómo se reparte la plata y quiere que se lo expliques en voz alta.",
+  { id: 32, min: 2, max: 6, t: "Un inversionista no entiende cómo se reparte el dinero", x: "Un LP nuevo no entiende cómo se reparte la plata y quiere que se lo expliques en voz alta.",
     o: [
       { t: "Explicárselo paso por paso", j: "orden", stat: "cri", d: { red: 6, rep: 6, cri: 4, msg: "Le pides una hoja y le dibujas el orden completo." } },
       { t: "Mandarle el documento y que lo lea", d: { rep: -2, ene: 3, msg: "Técnicamente correcto. El LP se queda con la duda y con la sensación." } },
     ] },
-  { id: 33, clave: true, min: 2, max: 6, t: "Dos ofertas sobre la mesa", x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
+  { id: 33, clave: true, min: 2, max: 6, t: "Dos compradores ofrecen casi lo mismo por la empresa", x: "Un comprador financiero y uno estratégico. Precios parecidos y riesgos de ejecución muy distintos.",
     o: [
       { t: "Ordenar los criterios y decidir con método", min: { cri: 33 }, j: "orden", stat: "cri", d: { cri: 7, car: 5, rep: 5, msg: "Pones los criterios en orden de importancia antes de mirar los precios." } },
       { t: "Ir por el precio más alto y punto", chk: { s: "cri", dif: 55, ok: { cash: 6000, car: 4, msg: "El precio alto además cerró sin problemas. Suerte y criterio en la misma jugada." }, no: { rep: -8, ene: -6, msg: "El comprador no consigue el financiamiento y el proceso se cae en la recta final." } } },
     ] },
-  { id: 34, min: 0, max: 6, t: "Alguien de la mesa te pregunta qué harías", x: "Sin contexto, sin archivo, sin tiempo. Solo la pregunta y seis pares de ojos esperando.",
+  { id: 34, min: 0, max: 6, t: "Te preguntan qué harías, delante de todos y sin datos", x: "Sin contexto, sin archivo, sin tiempo. Solo la pregunta y seis pares de ojos esperando.",
     o: [
       { t: "Contestar en el momento", j: "semaforo", stat: "cri", d: { rep: 6, cri: 4, car: 3, msg: "Sin datos en pantalla, solo criterio y velocidad." } },
       { t: "Pedir el archivo y contestar después", d: { rep: -2, mod: 3, msg: "Contestas bien y tarde. En algunas salas eso vale menos que contestar rápido." } },
@@ -3654,14 +3654,14 @@ const E = [
     ] },
   /* ---------- el carácter de cada firma ----------
      Solo salen si tu firma tiene esa cultura (ver CULTURAS). */
-  { id: 24210, cultura: "exigente", min: 0, max: 5, t: "Te piden el fin de semana",
+  { id: 24210, cultura: "exigente", min: 0, max: 5, t: "Te piden trabajar todo el fin de semana",
     x: "Viernes a las siete: el cliente adelantó la reunión y el equipo entero trabaja sábado y domingo. Nadie pregunta si tenías planes.",
     o: [
       { t: "Quedarte todo el fin de semana", d: { car: 3, rep: 2, ene: -9, msg: "Entregas el lunes a las ocho. Te lo agradecen con otro proyecto." } },
       { t: "Trabajar el sábado y guardar el domingo", d: { car: 1, ene: -4, msg: "Haces tu parte el sábado y desapareces el domingo. Nadie lo comenta; todos lo notan." } },
       { t: "Decir que tienes un compromiso", d: { ene: 3, rep: -3, msg: "Lo entienden en voz alta. En la evaluación del año, se acuerdan." } },
     ] },
-  { id: 24211, cultura: "exigente", min: 0, max: 5, t: "El bono depende del ranking",
+  { id: 24211, cultura: "exigente", min: 0, max: 5, t: "Cada año ordenan al equipo de mejor a peor",
     x: "Aquí cada año se ordena al equipo de mejor a peor. Los primeros cobran el doble; los últimos, se van.",
     o: [
       { t: "Ir a por el primer puesto", d: { car: 4, cash: 2000, ene: -8, red: -3, msg: "Llegas primero. Dos compañeros dejan de hablarte." } },
@@ -3693,7 +3693,7 @@ const E = [
       { t: "Aceptar el curso y la condición", d: { cri: 5, mod: 3, ene: -3, msg: "Aprendes mucho. Durante dos años, las ofertas de fuera las miras de lejos." } },
       { t: "Rechazarlo: quieres la puerta abierta", d: { red: 2, msg: "Sigues con la puerta abierta. El curso se lo lleva otro." } },
     ] },
-  { id: 24216, cultura: "tranquila", min: 0, max: 6, t: "«Aquí no hace falta correr»",
+  { id: 24216, cultura: "tranquila", min: 0, max: 6, t: "Un compañero te dice que no trabajes tanto",
     x: "Un compañero veterano te ve trabajar hasta tarde y te dice que no te esfuerces tanto: aquí nadie asciende más rápido por eso.",
     o: [
       { t: "Hacerle caso y bajar el ritmo", d: { ene: 5, car: -1, msg: "Sales a las seis. Descubres que la vida tenía tardes." } },
@@ -3711,7 +3711,7 @@ const E = [
 
 /* ---------- decisiones clave, cada dos años ---------- */
 const D = [
-  { id: 101, clave: true, min: 2, max: 3, t: "La cifra que va en la portada", x: "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
+  { id: 101, clave: true, min: 2, max: 3, t: "Decides cuánto pedirle al comprador por la empresa", x: "Mañana entregas la valoración. El rango del comprador ya está insinuado en tres correos y tu número tiene que caer cerca sin regalar valor.",
     o: [
       { t: "Calzar el precio con la señal del comprador", juego: "anclaje", stat: "red",
         res: { exito: { car: 7, rep: 8, cash: 5000, msg: "Tu número cae justo dentro del rango del comprador. Firman sin renegociar." },
@@ -3722,7 +3722,7 @@ const D = [
                parcial: { mod: 4, car: 2, ene: -6, msg: "Encuentras una y se te escapa otra. Nadie pregunta por esa, esta vez." },
                fallo: { rep: -9, ene: -8, msg: "El comprador encuentra el error en la primera llamada técnica." } } },
     ] },
-  { id: 102, clave: true, min: 2, max: 3, t: "Tres días de due diligence", x: "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
+  { id: 102, clave: true, min: 2, max: 3, t: "Tres días para revisar todos los papeles de una empresa", x: "El data room abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
     o: [
       { t: "Peinar el legajo completo en orden", juego: "memoria", stat: "cri", sigue: 601,
         res: { exito: { cri: 9, rep: 8, car: 6, ene: -9, msg: "Reconstruyes la cadena de contratos y aparece un pasivo laboral no declarado. Ajustan el precio." },
@@ -3744,7 +3744,7 @@ const D = [
                parcial: { cash: 2500, rep: 3, msg: "Aceptan con condiciones. Sales empatado." },
                fallo: { cash: -1200, rep: -5, msg: "El número quedó fuera de mercado y te dejó sin margen para moverte." } } },
     ] },
-  { id: 104, clave: true, min: 2, max: 6, t: "La posición que ya dio mucho", x: "Una posición de tu portafolio va 70% arriba. Todos los indicadores dicen cosas distintas.",
+  { id: 104, clave: true, min: 2, max: 6, t: "Una de tus inversiones ya sube 70 %", x: "Una posición de tu portafolio va 70% arriba. Todos los indicadores dicen cosas distintas.",
     o: [
       { t: "Aguantar y dejar correr", juego: "suerte", stat: "cri",
         res: { exito: { cash: 20000, cri: 6, msg: "Sales cerca del pico. No se puede pedir más." },
@@ -3755,7 +3755,7 @@ const D = [
                parcial: { cash: 4000, cri: 4, msg: "Dos tramos buenos, uno malo. Neto positivo." },
                fallo: { cash: -3000, cri: 3, msg: "Vendes justo en el peor momento de cada tramo." } } },
     ] },
-  { id: 105, clave: true, min: 2, max: 6, t: "Comité de crédito", x: "Presentas una estructura sobre facturas de un sector volátil. Dos miembros del comité vienen buscando sangre.",
+  { id: 105, clave: true, min: 2, max: 6, t: "Presentas al comité un préstamo sobre facturas", x: "Presentas una estructura sobre facturas de un sector volátil. Dos miembros del comité vienen buscando sangre.",
     o: [
       { t: "Ir con el análisis de contraparte hecho", juego: "ojo", stat: "mod",
         res: { exito: { car: 8, rep: 9, cri: 5, msg: "Detectas la concentración de deudores antes de que la pregunten. Aprueban con condiciones." },
@@ -3766,7 +3766,7 @@ const D = [
                parcial: { car: 3, rep: 2, msg: "Aciertas la mayoría y buscas dos datos en la carpeta." },
                fallo: { rep: -10, msg: "Te trabas en el segundo dato y la confianza del comité se cae con la cifra." } } },
     ] },
-  { id: 106, clave: true, min: 2, max: 6, t: "Subasta competitiva", x: "Cinco postores, dos rondas. Tu cliente compra y tú decides la estrategia de precio.",
+  { id: 106, clave: true, min: 2, max: 6, t: "Tu cliente compite con otros cuatro por una empresa", x: "Cinco postores, dos rondas. Tu cliente compra y tú decides la estrategia de precio.",
     o: [
       { t: "Poner precio firme en la primera ronda", juego: "subasta", stat: "cri",
         res: { exito: { car: 9, rep: 8, cash: 9000, msg: "Sacas a tres competidores de una vez y cierras sin segunda vuelta." },
@@ -3777,7 +3777,7 @@ const D = [
                parcial: { car: 3, cash: 2000, msg: "Llegas a la final y pierdes por poco." },
                fallo: { rep: -8, cash: -4500, ene: -6, msg: "Los eliminan antes de la segunda ronda por no mostrar seriedad temprano." } } },
     ] },
-  { id: 107, clave: true, min: 2, max: 6, t: "El pitch al comité de inversión", x: "Veinte minutos, siete personas y una tesis que tienes que defender sin leer la lámina.",
+  { id: 107, clave: true, min: 2, max: 6, t: "Veinte minutos para convencer al comité de inversión", x: "Veinte minutos, siete personas y una tesis que tienes que defender sin leer la lámina.",
     o: [
       { t: "Ensayar hasta tenerlo memorizado", juego: "memoria", stat: "red",
         res: { exito: { car: 8, rep: 9, red: 6, msg: "Hablas sin mirar la pantalla veinte minutos. Aprueban el mandato ese mismo día." },
@@ -3788,7 +3788,7 @@ const D = [
                parcial: { car: 3, rep: 2, msg: "Te pasas del tiempo y cortan la parte de valoración." },
                fallo: { rep: -8, msg: "Te extiendes, pierdes la sala y el comité decide sin escuchar tu cierre." } } },
     ] },
-  { id: 108, clave: true, min: 3, max: 6, t: "Papel distressed a treinta centavos", x: "Un bono corporativo cotiza a treinta. La reestructuración puede tardar dos años o no llegar nunca.",
+  { id: 108, clave: true, min: 3, max: 6, t: "Deuda de una empresa en crisis a 30 centavos por dólar", x: "Un bono corporativo cotiza a treinta. La reestructuración puede tardar dos años o no llegar nunca.",
     o: [
       { t: "Comprar y aguantar hasta el acuerdo", juego: "suerte", stat: "cri",
         res: { exito: { cash: 38000, cri: 8, rep: 6, msg: "El acuerdo llega y el papel recupera a sesenta y cinco. Doblaste el capital." },
@@ -3799,7 +3799,7 @@ const D = [
                parcial: { cash: 5000, red: 4, msg: "Un fondo entra con un ticket menor al que buscabas." },
                fallo: { rep: -6, ene: -5, msg: "Nadie compra la tesis y quedas con seis semanas de trabajo sin factura." } } },
     ] },
-  { id: 109, clave: true, min: 2, max: 4, t: "Auditoría regulatoria sorpresa", x: "Llegan sin aviso a revisar expedientes de los últimos dos años. Te toca a ti acompañarlos.",
+  { id: 109, clave: true, min: 2, max: 4, t: "El regulador llega sin avisar a revisar tus papeles", x: "Llegan sin aviso a revisar expedientes de los últimos dos años. Te toca a ti acompañarlos.",
     o: [
       { t: "Reconstruir la trazabilidad de memoria", juego: "memoria", stat: "cri",
         res: { exito: { rep: 10, cri: 6, msg: "Explicas cada aprobación en orden y sin dudar. El informe sale limpio." },
@@ -3810,7 +3810,7 @@ const D = [
                parcial: { rep: 2, ene: -4, msg: "Ordenas casi todo. Una carpeta llega tarde." },
                fallo: { rep: -10, msg: "Entregas con un hueco que el auditor detecta en la primera revisión." } } },
     ] },
-  { id: 110, clave: true, min: 4, max: 6, t: "Fijar el rango de precio de la colocación", x: "Sale la emisión. Muy arriba no se coloca, muy abajo dejas plata del cliente en la mesa.",
+  { id: 110, clave: true, min: 4, max: 6, t: "Fijas el precio de las acciones que salen a la venta", x: "Sale la emisión. Muy arriba no se coloca, muy abajo dejas plata del cliente en la mesa.",
     o: [
       { t: "Leer el libro y fijar el punto exacto", juego: "precision", stat: "mod",
         res: { exito: { car: 12, rep: 12, cash: 20000, msg: "La emisión se coloca completa y cotiza arriba el primer día." },
@@ -3821,7 +3821,7 @@ const D = [
                parcial: { car: 5, red: 4, cash: 4000, msg: "Dos anclas entran, uno se cae. Sale igual." },
                fallo: { rep: -9, red: -4, msg: "Los anclas se enfrían y la emisión se pospone al semestre siguiente." } } },
     ] },
-  { id: 111, clave: true, min: 4, max: 6, t: "Primer cierre de tu fondo", x: "Tienes la tesis, el track record y una lista de LPs. Falta convencerlos del tamaño del ticket.",
+  { id: 111, clave: true, min: 4, max: 6, t: "Buscas a los primeros inversionistas de tu fondo", x: "Tienes la tesis, el track record y una lista de LPs. Falta convencerlos del tamaño del ticket.",
     o: [
       { t: "Negociar el ticket con el LP ancla", juego: "anclaje", stat: "red",
         res: { exito: { cash: 60000, car: 15, rep: 12, red: 10, msg: "El ancla entra por el doble de lo que esperabas y el resto lo sigue. Primer cierre por encima del objetivo." },
@@ -3832,7 +3832,7 @@ const D = [
                parcial: { cash: 18000, car: 6, msg: "Cierras algo menor de lo planeado después de mucho desgaste." },
                fallo: { cash: -22000, ene: -15, rep: -8, msg: "Se te pasó el momento del mercado. La ventana se cerró con el fondo abierto." } } },
     ] },
-  { id: 112, clave: true, min: 2, max: 6, t: "Dos cierres el mismo viernes", x: "Dos mandatos firman el mismo día en ciudades distintas. Los dos clientes creen que estás con ellos.",
+  { id: 112, clave: true, min: 2, max: 6, t: "Dos clientes firman el mismo día en ciudades distintas", x: "Dos mandatos firman el mismo día en ciudades distintas. Los dos clientes creen que estás con ellos.",
     o: [
       { t: "Coordinar los tiempos al minuto", juego: "precision", stat: "cri",
         res: { exito: { car: 10, rep: 9, cash: 10000, ene: -11, msg: "Los dos cierran sin fricción y ninguno se entera del otro." },
@@ -3843,7 +3843,7 @@ const D = [
                parcial: { car: 3, ene: -5, msg: "Sale, con dos llamadas tuyas de emergencia en el medio." },
                fallo: { rep: -8, red: -4, ene: -7, msg: "El equipo se traba en un detalle registral y el cierre se cae al lunes." } } },
     ] },
-  { id: 113, clave: true, min: 2, max: 6, t: "Reasignar tu portafolio antes del cierre de año", x: "Tienes que decidir dónde queda parado tu patrimonio los próximos doce meses. Nadie va a revisar esto por ti.",
+  { id: 113, clave: true, min: 2, max: 6, t: "Decides dónde invertir tu dinero el próximo año", x: "Tienes que decidir dónde queda parado tu patrimonio los próximos doce meses. Nadie va a revisar esto por ti.",
     o: [
       { t: "Decidir tú, con tesis propia y convicción", juego: "quiz", stat: "cri",
         res: { exito: { cri: 9, mercado: 0.24, msg: "Lees bien el ciclo y la reasignación funciona. El portafolio se dispara." },
@@ -3859,7 +3859,7 @@ const D = [
                fallo: { red: -4, rep: -8, mercado: -0.13, msg: "Fallas la pregunta de duración delante de él y encima replicas mal la idea." } } },
       { t: "Llevar a tu jefe y quedarte de apoyo", d: { red: 4, rep: 2, ene: -3, msg: "El fondo entra igual, por la puerta de tu jefe. Tú quedas como el que tomó notas." } },
     ] },
-  { id: 115, clave: true, min: 2, max: 4, t: "Examen de idoneidad del regulador", x: "Para firmar operaciones a tu nombre tienes que aprobarlo. Dos intentos y queda en registro público.",
+  { id: 115, clave: true, min: 2, max: 4, t: "El examen oficial para poder firmar operaciones", x: "Para firmar operaciones a tu nombre tienes que aprobarlo. Dos intentos y queda en registro público.",
     o: [
       { t: "Presentarte y responder tú", juego: "quiz", stat: "mod",
         res: { exito: { rep: 11, car: 7, mod: 6, msg: "Aprobado a la primera. Ya puedes firmar operaciones a tu nombre." },
@@ -3867,7 +3867,7 @@ const D = [
                fallo: { rep: -10, cash: -3000, ene: -7, msg: "Reprobado y en registro público. Un año más para volver a intentarlo." } } },
       { t: "Postergarlo un año más", d: { car: -2, ene: 4, rep: -3, msg: "Sigues firmando bajo la licencia de otro. Cómodo hoy, caro cuando quieras independizarte." } },
     ] },
-  { id: 116, clave: true, min: 3, max: 6, t: "Tu propia tesis frente al comité", x: "Propones sobreponderar un sector completo. Si te creen y aciertas, todos lo notan. Si te creen y fallas, también.",
+  { id: 116, clave: true, min: 3, max: 6, t: "Le propones al comité apostar por un sector entero", x: "Propones sobreponderar un sector completo. Si te creen y aciertas, todos lo notan. Si te creen y fallas, también.",
     o: [
       { t: "Defender la tesis con todo el rigor", juego: "quiz", stat: "cri",
         res: { exito: { car: 11, rep: 11, cri: 7, mercado: 0.22, msg: "Aprueban la tesis y el sector rinde. Tu nombre queda pegado a la mejor decisión del año." },
@@ -3875,7 +3875,7 @@ const D = [
                fallo: { car: -3, rep: -12, mercado: -0.17, ene: -7, msg: "La tesis se cae en la primera pregunta y la posición personal que ya tenías se hunde." } } },
       { t: "Proponerla como piloto pequeño", d: { car: 3, cri: 4, mercado: 0.04, msg: "Empiezas con un tamaño chico. Menos gloria y también menos posibilidad de desastre." } },
     ] },
-  { id: 117, clave: true, min: 0, max: 6, t: "El dominó antes del negocio", x: "El dueño de la empresa familiar te recibe en su casa y saca la mesa antes de hablar de números. Dice que así conoce a la gente.",
+  { id: 117, clave: true, min: 0, max: 6, t: "Juegas dominó con el dueño antes de negociar", x: "El dueño de la empresa familiar te recibe en su casa y saca la mesa antes de hablar de números. Dice que así conoce a la gente.",
     o: [
       { t: "Aceptar la partida y jugarla en serio", juego: "tresraya", stat: "red",
         res: { exito: { red: 11, rep: 8, car: 6, cash: 4000, msg: "Le ganas limpio y se ríe. A partir de ahí te habla como si te conociera de siempre y firma." },
@@ -3886,7 +3886,7 @@ const D = [
                parcial: { car: 2, msg: "Firma después de pensarlo dos semanas." },
                fallo: { rep: -6, msg: "Le pareces apurado y frío. No vuelve a contestar el teléfono." } } },
     ] },
-  { id: 118, clave: true, min: 2, max: 6, t: "Pulso con el comprador estratégico", x: "Del otro lado hay un director de M&A con veinte años más que tú. Cada movimiento suyo busca una concesión tuya.",
+  { id: 118, clave: true, min: 2, max: 6, t: "Negocias contra un comprador con mucha más experiencia", x: "Del otro lado hay un director de M&A con veinte años más que tú. Cada movimiento suyo busca una concesión tuya.",
     o: [
       { t: "Aguantar el pulso movimiento por movimiento", juego: "tresraya", stat: "cri", sigue: 603,
         res: { exito: { car: 10, rep: 10, cash: 12000, msg: "Cierras en tus términos y con el precio intacto. El otro lado pide tu tarjeta al final." },
@@ -3897,7 +3897,7 @@ const D = [
                parcial: { car: 3, cash: 2500, msg: "El proceso no atrae a nadie más pero la amenaza sirvió." },
                fallo: { rep: -9, cash: -6000, ene: -7, msg: "El estratégico se ofende, se retira y te quedas sin comprador." } } },
     ] },
-  { id: 119, clave: true, min: 3, max: 6, sin: ["sancionado"], t: "La silla del socio se decide en la mesa", x: "Dos candidatos, una sola promoción, y el socio director los invita a jugar mientras conversan. Nadie dice que sea una prueba.",
+  { id: 119, clave: true, min: 3, max: 6, sin: ["sancionado"], t: "Juegas con el socio director mientras decide tu ascenso", x: "Dos candidatos, una sola promoción, y el socio director los invita a jugar mientras conversan. Nadie dice que sea una prueba.",
     o: [
       { t: "Jugar y dejar que te lea", juego: "cuatro", stat: "cri",
         res: { exito: { car: 12, rep: 9, red: 6, msg: "Ganas sin humillar a nadie y con conversación. El socio ve lo que quería ver." },
@@ -3918,7 +3918,7 @@ const D = [
     ] },
   /* las dos decisiones clave del novato: lo que se decide antes de saber
      nada de mercados, y que igual marca la carrera */
-  { id: 24080, clave: true, min: 0, max: 1, t: "Te ofrecen quedarte",
+  { id: 24080, clave: true, min: 0, max: 1, t: "Te ofrecen un puesto fijo al terminar la prueba",
     x: "Termina tu período de prueba y te ofrecen quedarte con un sueldo fijo. Puedes aceptarlo tal cual o pedir más.",
     o: [
       { t: "Aceptar lo que ofrecen", d: { ene: 2, msg: "Firmas con alivio. Lo importante era entrar." } },
@@ -3939,17 +3939,17 @@ const D = [
 
 /* ---------- eventos que usan los juegos interactivos nuevos ---------- */
 const E2 = [
-  { id: 40, min: 0, max: 6, t: "Una sesión larga frente a la pantalla", x: "Tienes el día libre y una cuenta propia. El mercado abre en cinco minutos y la tentación es operarlo todo.",
+  { id: 40, min: 0, max: 6, t: "Un día libre para comprar y vender en la bolsa", x: "Tienes el día libre y una cuenta propia. El mercado abre en cinco minutos y la tentación es operarlo todo.",
     o: [
       { t: "Operar la sesión completa", min: { cri: 39 }, j: "trading", stat: "cri", d: { cash: 3000, cri: 4, ene: -6, msg: "Te sientas a operar de apertura a cierre." } },
       { t: "Comprar y apagar la pantalla", d: { cri: 4, ene: 5, cash: 900, msg: "Compras, cierras la laptop y te vas a hacer otra cosa. Suele funcionar mejor de lo que uno acepta." } },
     ] },
-  { id: 41, min: 2, max: 6, t: "Un cliente quiere comprar apalancado", x: "El comprador tiene el activo identificado y quiere saber cuánta deuda le puede meter sin ahorcarse.",
+  { id: 41, min: 2, max: 6, t: "Un cliente quiere comprar con dinero prestado", x: "El comprador tiene el activo identificado y quiere saber cuánta deuda le puede meter sin ahorcarse.",
     o: [
       { t: "Armarle la estructura tú mismo", min: { mod: 38 }, j: "estructura", stat: "mod", d: { car: 6, rep: 6, cash: 5000, mod: 5, msg: "Te sientas a repartir el precio entre deuda y capital." } },
       { t: "Mandarlo con el banco y quedarte fuera", d: { rep: -2, ene: 3, msg: "El banco arma la estructura y se queda con la relación. Tú te quedas con el fee de asesoría y nada más." } },
     ] },
-  { id: 42, min: 1, max: 6, t: "Ocho hallazgos sobre la mesa", x: "El equipo junior te deja una lista de hallazgos de la revisión. Tienes que decidir cuáles suben al comité y cuáles son ruido.",
+  { id: 42, min: 1, max: 6, t: "Decides cuáles de ocho problemas llevar al comité", x: "El equipo junior te deja una lista de hallazgos de la revisión. Tienes que decidir cuáles suben al comité y cuáles son ruido.",
     o: [
       { t: "Filtrar tú los hallazgos", min: { cri: 36 }, j: "banderas", stat: "cri", d: { cri: 7, rep: 6, car: 4, msg: "Te sientas a separar lo que importa de lo que solo hace ruido." } },
       { t: "Subirlos todos al comité", d: { rep: -4, ene: -3, cri: 2, msg: "El comité se pierde en detalles operativos y el caso pierde fuerza. Filtrar también es tu trabajo." } },
@@ -3992,25 +3992,25 @@ const E3 = [
       { t: "Mandarla a los abogados y esperar", d: { cash: -2500, ene: -3, car: 1, msg: "Tres días y una factura después, confirman lo que ya sospechabas." } },
       { t: "Firmarla como está", chk: { s: "cri", dif: 70, ok: { car: 3, msg: "No pasó nada. Esta vez." }, no: { cash: -9000, rep: -8, msg: "El ajuste de precio se aplica en contra de tu cliente y la conversación es muy incómoda." } } },
     ] },
-  { id: 51, min: 2, max: 3, t: "El modelo se rompió", x: "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
+  { id: 51, min: 2, max: 3, t: "Tu hoja de cálculo falla y entregas en seis horas", x: "Referencia circular, cuatro archivos vinculados y una hoja que nadie entiende. La entrega es en seis horas.",
     o: [
       { t: "Escribir un script que lo reconstruya", req: { est: "sis" }, j: "calculo", stat: "mod", d: { mod: 9, car: 5, rep: 6, ene: -5, msg: "En vez de arreglar celdas, automatizas la reconstrucción completa." } },
       { t: "Rehacerlo a mano desde cero", d: { mod: 6, ene: -14, car: 3, msg: "Catorce horas seguidas y un modelo limpio. El método más caro que existe." } },
       { t: "Entregar la versión vieja", d: { rep: -7, ene: 3, msg: "Nadie compara las versiones hasta que alguien las compara." } },
     ] },
-  { id: 52, min: 2, max: 3, t: "Cierre contable de la compañía objetivo", x: "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
+  { id: 52, min: 2, max: 3, t: "Las cuentas de la empresa cambian a último minuto", x: "Los estados que te mandaron tienen ajustes de último minuto que cambian el EBITDA en un 12%.",
     o: [
       { t: "Revisar los ajustes uno por uno", req: { est: "con" }, j: "ojo", stat: "mod", d: { mod: 8, cri: 6, car: 5, rep: 5, msg: "Sabes exactamente dónde se esconden los ajustes que maquillan un cierre." } },
       { t: "Pedir los estados auditados y esperar", d: { ene: -4, car: 2, rep: 3, msg: "Correcto y lento. El proceso se atrasa un mes." } },
       { t: "Trabajar con el EBITDA ajustado que te dieron", chk: { s: "mod", dif: 65, ok: { car: 3, msg: "Los ajustes eran legítimos. Suerte más que método." }, no: { rep: -9, msg: "El EBITDA ajustado era humo y la valoración entera se cae en due diligence." } } },
     ] },
-  { id: 53, min: 2, max: 4, t: "La pregunta de macro en la entrevista", x: "Te preguntan qué pasa con el tipo de cambio si el banco central sube tasas y el fiscal sigue deficitario.",
+  { id: 53, min: 2, max: 4, t: "Una pregunta de economía en la entrevista", x: "Te preguntan qué pasa con el tipo de cambio si el banco central sube tasas y el fiscal sigue deficitario.",
     o: [
       { t: "Desarrollarla con el marco completo", req: { est: "eco" }, j: "quiz", stat: "cri", d: { car: 6, rep: 7, red: 5, msg: "Es exactamente la pregunta para la que pasaste cuatro años." } },
       { t: "Contestar con intuición de mercado", j: "semaforo", stat: "cri", d: { car: 3, rep: 4, msg: "No tienes el marco pero tienes calle." } },
       { t: "Admitir que no lo tienes claro", d: { rep: 2, cri: 3, msg: "Honesto y poco memorable. Al menos no inventaste." } },
     ] },
-  { id: 54, min: 0, max: 6, t: "Controles de cambio de un día para otro", x: "Amaneces con un control cambiario nuevo. Tus ahorros están en moneda local y el dólar oficial no existe en la práctica.",
+  { id: 54, min: 0, max: 6, t: "El gobierno limita de golpe la compra de dólares", x: "Amaneces con un control cambiario nuevo. Tus ahorros están en moneda local y el dólar oficial no existe en la práctica.",
     o: [
       { t: "Moverlo todo antes del mediodía", req: { pais: ["ve", "ar"] }, j: "reaccion", stat: "cri", d: { cash: 4000, cri: 6, ene: -5, msg: "Creciste con esto. Sabes exactamente a quién llamar y en qué orden." } },
       { t: "Esperar a que se aclare la norma", d: { cash: -3500, cri: 4, msg: "La norma se aclara dos semanas después y para entonces ya perdiste 30% del poder de compra." } },
@@ -4139,13 +4139,13 @@ const POR_RAMA = "Por el camino que elegiste";
 
 const CONSECUENCIAS = [
   /* ---------- el headhunter ---------- */
-  { id: 7101, min: 0, max: 6, por: HUELLAS.saltaste, t: "La firma grande no espera",
+  { id: 7101, min: 0, max: 6, por: HUELLAS.saltaste, t: "Seis meses en la firma nueva y nadie te conoce",
     x: "Seis meses en la firma nueva. Aquí nadie te conoce y el primer mandato lo decide todo.",
     o: [
       { t: "Ir con todo en el primer mandato", j: "calculo", stat: "mod", d: { car: 7, rep: 5, ene: -12, msg: "Entregas antes que nadie y sin un error. Ya saben tu nombre." } },
       { t: "Llamar a tu antiguo jefe y pedir volver", vuelveFirma: true, d: { rep: -4, red: 3, ene: 6, deja: "volviste", luego: [{ id: 7102, en: 2 }], msg: "Te recibe de vuelta. Nadie lo dice, pero todos lo saben." } },
     ] },
-  { id: 7102, min: 0, max: 6, por: HUELLAS.volviste, t: "Ya te fuiste una vez",
+  { id: 7102, min: 0, max: 6, por: HUELLAS.volviste, t: "Volviste a tu antigua firma y te lo recuerdan",
     x: "Te recibieron bien, pero en la mesa de socios alguien recuerda, en voz alta, que ya te fuiste una vez.",
     o: [
       { t: "Demostrar que volviste para quedarte", d: { rep: 6, car: 4, ene: -8, msg: "Dos años sin una falta. El comentario deja de oírse." } },
@@ -4163,7 +4163,7 @@ const CONSECUENCIAS = [
       { t: "Aceptar el recorte sin discutir", d: { cash: -3000, rep: 4, msg: "Pagas la subida de entonces. El socio da el asunto por cerrado." } },
       { t: "Volver a llamar al headhunter", mudaFirma: true, d: { cash: 4000, red: -4, car: 4, rep: -3, deja: "saltaste", luego: [{ id: 7101, en: 1 }], msg: "Esta vez no negocias: te vas." } },
     ] },
-  { id: 7105, min: 0, max: 6, por: HUELLAS.leal, sin: ["delator"], t: "La lealtad se cobra",
+  { id: 7105, min: 0, max: 6, por: HUELLAS.leal, sin: ["delator"], t: "Por rechazar la otra oferta, te dan el mejor cliente",
     x: "El socio no olvidó que rechazaste la oferta. Te ofrece llevar la cuenta más grande de la firma.",
     o: [
       { t: "Tomarla y ponerle tu nombre", d: { car: 9, rep: 6, ene: -10, cash: 3000, msg: "La cuenta grande es tuya. Y sus problemas también." } },
@@ -4173,7 +4173,7 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- el rumor ---------- */
-  { id: 8101, min: 0, max: 6, por: HUELLAS.limpio, t: "Compliance te pide ayuda",
+  { id: 8101, min: 0, max: 6, por: HUELLAS.limpio, t: "Te piden declarar contra un colega",
     x: "Alguien de tu equipo sí compró con aquel dato. Compliance sabe que tú lo anotaste y quiere que declares.",
     o: [
       { t: "Contar todo lo que sabes", d: { rep: 8, cri: 4, red: -6, deja: "delator", msg: "Tu colega cae. La firma te lo agradece y medio equipo deja de invitarte a almorzar." } },
@@ -4215,13 +4215,13 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- tu camino: la silla de arriba (tipo mya) ---------- */
-  { id: 7201, min: 0, max: 6, por: POR_RAMA, t: "La carrera hacia la silla de arriba",
+  { id: 7201, min: 0, max: 6, por: POR_RAMA, t: "Cinco candidatos compiten por dos ascensos",
     x: "Hay dos puestos arriba y cinco candidatos. Los próximos dos años cuentan doble.",
     o: [
       { t: "Ir por todas: cada mandato, cada fin de semana", d: { car: 8, ene: -14, rep: 3, deja: "ambicion", luego: [{ id: 7202, en: 2 }, { id: 7204, en: 2 }], msg: "Eres el primero en llegar y el último en irte. Todos lo ven." } },
       { t: "Ir a tu ritmo y cuidar lo de fuera", d: { ene: 8, car: 2, deja: "ritmo", luego: [{ id: 7203, en: 2 }], msg: "Trabajas bien y te vas a tu hora. Algunos lo respetan." } },
     ] },
-  { id: 7202, min: 0, max: 6, por: HUELLAS.ambicion, sin: ["sancionado"], t: "La votación",
+  { id: 7202, min: 0, max: 6, por: HUELLAS.ambicion, sin: ["sancionado"], t: "Los socios votan si te ascienden",
     x: "Se vota tu nombre. En la mesa están todos los que trabajaron contigo estos dos años.",
     o: [
       { t: "Esperar el resultado con tu historial", chk: { s: "rep", dif: 55,
@@ -4229,7 +4229,7 @@ const CONSECUENCIAS = [
         no: { car: -3, rep: -2, ene: -6, msg: "Gana otro por un voto. Te quedan la experiencia y el cansancio." } } },
       { t: "Hacer campaña voto por voto", j: "cuatro", stat: "red", d: { car: 10, red: 6, cash: 6000, msg: "Te sientas con cada socio, uno por uno." } },
     ] },
-  { id: 7203, min: 0, max: 6, por: HUELLAS.ritmo, t: "Te piden esperar un año más",
+  { id: 7203, min: 0, max: 6, por: HUELLAS.ritmo, t: "Te piden esperar un año más para ascender",
     x: "El comité dice que eres de los buenos, pero los que suben este año se dejaron la vida. A ti te toca esperar.",
     o: [
       { t: "Aceptar y seguir a tu ritmo", d: { ene: 6, cri: 4, car: 3, msg: "Esperas. Llegas un año tarde y con la vida entera." } },
@@ -4243,7 +4243,7 @@ const CONSECUENCIAS = [
       { t: "La que crece", d: { car: 5, cri: 3, deja: "apuesta_crec", luego: [{ id: 7212, en: 2 }], msg: "El comité aprueba la apuesta. El plan dice que se triplica." } },
       { t: "La aburrida que da caja", d: { cri: 5, rep: 2, deja: "apuesta_caja", luego: [{ id: 7213, en: 2 }], msg: "Nadie se emociona en el comité. Nadie pierde el sueño tampoco." } },
     ] },
-  { id: 7212, min: 0, max: 6, por: HUELLAS.apuesta_crec, t: "La que crecía se quedó sin caja",
+  { id: 7212, min: 0, max: 6, por: HUELLAS.apuesta_crec, t: "La empresa que crecía se queda sin dinero",
     x: "Necesita capital nuevo para no caerse. Si pones más, pones más de lo que querías.",
     o: [
       { t: "Poner más capital y salvarla", chk: { s: "cri", dif: 65,
@@ -4251,7 +4251,7 @@ const CONSECUENCIAS = [
         no: { cash: -12000, rep: -6, msg: "El capital nuevo se quema igual que el primero." } } },
       { t: "Dejarla caer y aprender la lección", d: { cri: 8, rep: -5, cash: -4000, msg: "Pierdes lo que pusiste. Aprendes para siempre la diferencia entre crecer y ganar." } },
     ] },
-  { id: 7213, min: 0, max: 6, por: HUELLAS.apuesta_caja, t: "La aburrida te hizo quedar bien",
+  { id: 7213, min: 0, max: 6, por: HUELLAS.apuesta_caja, t: "Tu empresa más estable recibe una buena oferta",
     x: "Pagó dividendos todos los años. Ahora un comprador estratégico la quiere, y a buen precio.",
     o: [
       { t: "Vender ya", d: { cash: 14000, rep: 5, car: 5, msg: "Vendes a buen múltiplo. Sin drama, que en un fondo es lo mejor que se puede decir." } },
@@ -4282,13 +4282,13 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- tu camino: el mercado (tipo mercados) ---------- */
-  { id: 7231, min: 0, max: 6, por: POR_RAMA, t: "Tu tesis va contra toda la mesa",
+  { id: 7231, min: 0, max: 6, por: POR_RAMA, t: "Tu análisis dice lo contrario que el de todos",
     x: "Crees que el mercado se equivoca y tienes los números. Todos los demás piensan lo contrario.",
     o: [
       { t: "Sostenerla con tu nombre", d: { rep: 3, cri: 4, deja: "contra_consenso", luego: [{ id: 7232, en: 1 }], msg: "La presentas en el comité. Nadie te apoya, pero todos la leen." } },
       { t: "Guardarla y alinearte con la mesa", d: { ene: 4, red: 3, deja: "consenso", luego: [{ id: 7233, en: 2 }], msg: "Guardas el análisis en un cajón. Nadie se pelea contigo." } },
     ] },
-  { id: 7232, min: 0, max: 6, por: HUELLAS.contra_consenso, t: "El mercado decidió",
+  { id: 7232, min: 0, max: 6, por: HUELLAS.contra_consenso, t: "Un año después se sabe si tenías razón",
     x: "Un año después el precio cruzó tu número. Solo falta ver hacia qué lado.",
     o: [
       { t: "Mirar el resultado", chk: { s: "cri", dif: 60,
@@ -4296,7 +4296,7 @@ const CONSECUENCIAS = [
         no: { rep: -8, car: -3, msg: "Te equivocaste, y en público. Toca volver a ganarse la silla." } } },
       { t: "Cubrirte a medias antes del dato", d: { cri: 5, rep: 2, cash: 2000, msg: "Pase lo que pase, no te hundes. Tampoco te luces." } },
     ] },
-  { id: 7233, min: 0, max: 6, por: HUELLAS.consenso, t: "La mesa entera se equivocó",
+  { id: 7233, min: 0, max: 6, por: HUELLAS.consenso, t: "Tenías razón y no lo dijiste",
     x: "Pasó lo que decía tu tesis. Nadie pierde el puesto porque se equivocaron todos juntos, y tú con ellos.",
     o: [
       { t: "Sacar tu análisis del cajón", d: { cri: 5, rep: -2, red: -3, msg: "Tenías razón y no lo dijiste. Eso también se recuerda." } },
@@ -4324,13 +4324,13 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- versiones: la misma escena, contada según lo que ya hiciste en OTRO árbol ---------- */
-  { id: 7106, min: 0, max: 6, por: HUELLAS.leal, si: ["delator"], t: "La lealtad se cobra, a medias",
+  { id: 7106, min: 0, max: 6, por: HUELLAS.leal, si: ["delator"], t: "Te dan el cliente más grande, pero el equipo desconfía",
     x: "El socio quiere darte la cuenta grande. Pero medio equipo no olvida que declaraste contra un colega, y la cuenta se lleva en equipo.",
     o: [
       { t: "Tomarla igual y aguantar las miradas", d: { car: 8, rep: 3, red: -6, ene: -10, msg: "La cuenta es tuya. El equipo trabaja contigo, no para ti." } },
       { t: "Pedir que te la den con gente nueva", d: { car: 5, red: 4, cash: 2000, msg: "Armas tu propio equipo desde cero. Nadie arrastra la historia." } },
     ] },
-  { id: 7204, min: 0, max: 6, por: HUELLAS.ambicion, si: ["sancionado"], t: "La votación, con tu sanción encima",
+  { id: 7204, min: 0, max: 6, por: HUELLAS.ambicion, si: ["sancionado"], t: "Votan tu ascenso y alguien recordará tu sanción",
     x: "Se vota tu nombre. Dos años sin fines de semana, y una sanción pública que alguien va a sacar en la mesa.",
     o: [
       { t: "Contar tú la sanción antes de que la saquen", chk: { s: "rep", dif: 65,
@@ -4340,7 +4340,7 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- el atajo contable ---------- */
-  { id: 7301, min: 0, max: 6, por: HUELLAS.maquillaste, t: "Los auditores encuentran el ajuste",
+  { id: 7301, min: 0, max: 6, por: HUELLAS.maquillaste, t: "Los auditores descubren el cambio que firmaste",
     x: "Dos años después, el auditor nuevo tira del hilo. Tu firma está en la conciliación.",
     o: [
       { t: "Decir que fue una orden de tu jefe", chk: { s: "rep", dif: 50,
@@ -4348,7 +4348,7 @@ const CONSECUENCIAS = [
         no: { rep: -12, car: -6, deja: "complice", msg: "No hay correo que lo pruebe. Quedas como cómplice." } } },
       { t: "Asumirlo tú y proteger a tu jefe", d: { rep: -8, red: 6, deja: "leal_jefe", luego: [{ id: 7302, en: 2 }], msg: "Te comes la amonestación. Tu jefe te mira distinto desde ese día." } },
     ] },
-  { id: 7302, min: 0, max: 6, por: HUELLAS.leal_jefe, t: "Tu jefe no se olvida",
+  { id: 7302, min: 0, max: 6, por: HUELLAS.leal_jefe, t: "Ascienden a tu jefe y te llama a su oficina",
     x: "Lo hicieron socio. Lo primero que hace es llamarte a su oficina y cerrar la puerta.",
     o: [
       { t: "Dejar que te lleve con él", d: { car: 11, cash: 6000, rep: -2, msg: "Subes con él. Todos saben por qué, nadie lo dice." } },
@@ -4360,13 +4360,13 @@ const CONSECUENCIAS = [
       { t: "Aguantar y hacerla brillar", d: { mod: 6, car: 3, ene: -6, luego: [{ id: 7304, en: 2 }], msg: "Conviertes la cuenta aburrida en la más ordenada de la firma. Alguien arriba lo nota." } },
       { t: "Buscarte otra firma", mudaFirma: true, d: { red: -3, car: 3, cash: 2000, msg: "Te vas sin dar explicaciones. La firma nueva no sabe nada, y mejor así." } },
     ] },
-  { id: 7304, min: 0, max: 6, por: HUELLAS.te_negaste, t: "Tu jefe cae solo",
+  { id: 7304, min: 0, max: 6, por: HUELLAS.te_negaste, t: "Los auditores atrapan a tu jefe y te ofrecen su puesto",
     x: "Los auditores encuentran el ajuste que otro sí firmó. Necesitan a alguien limpio en su silla.",
     o: [
       { t: "Aceptar la silla", d: { car: 12, rep: 8, cash: 6000, ene: -6, msg: "La silla que te quitaron por decir que no, te la dan por haberlo dicho." } },
       { t: "Pedir que limpien primero el área", d: { rep: 6, cri: 6, car: 4, msg: "Entras cuando el área está limpia. Tardas más y llegas sin deudas." } },
     ] },
-  { id: 7305, min: 0, max: 6, por: HUELLAS.denunciaste, t: "La investigación interna",
+  { id: 7305, min: 0, max: 6, por: HUELLAS.denunciaste, t: "Abren una investigación tras tu denuncia",
     x: "El comité abre una investigación. Durante seis meses, media oficina no sabe si eres un héroe o un problema.",
     o: [
       { t: "Darles todo y aguantar", chk: { s: "rep", dif: 55,
@@ -4376,7 +4376,7 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- la startup de tu amiga ---------- */
-  { id: 7311, min: 0, max: 6, por: HUELLAS.startup, t: "Se acaba la caja de la startup",
+  { id: 7311, min: 0, max: 6, por: HUELLAS.startup, t: "La empresa de tu amiga se queda sin dinero",
     x: "Quedan dos meses de caja. Un fondo ofrece invertir, pero pide que te dediques a tiempo completo.",
     o: [
       { t: "Ir a tiempo completo", chk: { s: "cri", dif: 60,
@@ -4384,7 +4384,7 @@ const CONSECUENCIAS = [
         no: { cash: -6000, rep: -4, ene: -6, msg: "El fondo se echa atrás a última hora. La startup cierra, y tú vuelves con un año perdido." } } },
       { t: "Vender tu parte a tu amiga", d: { cash: 4000, red: -3, msg: "Le vendes tu 5% a buen precio. Sigue siendo tu amiga, con algo de distancia." } },
     ] },
-  { id: 7312, min: 0, max: 6, por: HUELLAS.startup, t: "Un banco quiere comprar la startup",
+  { id: 7312, min: 0, max: 6, por: HUELLAS.startup, t: "Un banco quiere comprar tu empresa",
     x: "Un banco grande ofrece comprar la empresa. Tu parte vale más que diez años de bono.",
     o: [
       { t: "Vender", d: { cash: 60000, ene: 8, deja: "fundador", vendeStartup: true, msg: "Firmas la venta. Tu primera empresa ya tiene dueño, y tú tienes otra vida." } },
@@ -4392,7 +4392,7 @@ const CONSECUENCIAS = [
         ok: { cash: 120000, rep: 10, deja: "fundador", vendeStartup: true, msg: "Dos años después la compra otro, por el triple." },
         no: { cash: -3000, rep: -5, startup: false, msg: "El banco construye su propia versión. La tuya se queda sin aire y vuelves a buscar trabajo." } } },
     ] },
-  { id: 7313, min: 0, max: 6, por: HUELLAS.angel, t: "Llega el correo de los inversores",
+  { id: 7313, min: 0, max: 6, por: HUELLAS.angel, t: "Un correo dice qué pasó con tu inversión",
     x: "Tres años después de poner tus ahorros. El asunto dice «novedades importantes».",
     o: [
       { t: "Abrirlo", chk: { s: "cri", dif: 65,
@@ -4416,7 +4416,7 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- la guerra de socias ---------- */
-  { id: 7321, min: 0, max: 6, por: HUELLAS.veterana, t: "Se vota la dirección",
+  { id: 7321, min: 0, max: 6, por: HUELLAS.veterana, t: "Se vota quién dirige la firma",
     x: "Hoy se decide quién dirige la firma. Estás sentado al lado de la veterana.",
     o: [
       { t: "Esperar el resultado a su lado", chk: { s: "red", dif: 50,
@@ -4424,13 +4424,13 @@ const CONSECUENCIAS = [
         no: { car: -5, red: -5, msg: "Pierde. La nueva directora sabe muy bien de qué lado estabas." } } },
       { t: "Cambiarte de lado a última hora", d: { red: -6, rep: -6, car: 3, msg: "Llegas tarde al bando ganador. Te reciben, y no te olvidan." } },
     ] },
-  { id: 7322, min: 0, max: 6, por: HUELLAS.joven, t: "La socia joven gana y lo cambia todo",
+  { id: 7322, min: 0, max: 6, por: HUELLAS.joven, t: "La socia joven gana y te ofrece un área nueva",
     x: "Gana por dos votos y desmonta la vieja guardia. Te ofrece dirigir un área nueva.",
     o: [
       { t: "Aceptar el área nueva", d: { car: 9, ene: -10, cash: 4000, msg: "Un área que no existía y que ahora depende de ti." } },
       { t: "Pedir quedarte donde estás", d: { ene: 5, red: 3, msg: "Te quedas. Ella lo entiende, y busca a otra persona." } },
     ] },
-  { id: 7323, min: 0, max: 6, por: HUELLAS.dos_bandas, t: "Las dos se enteran el mismo día",
+  { id: 7323, min: 0, max: 6, por: HUELLAS.dos_bandas, t: "Las dos socias saben que contaste sus secretos",
     x: "Gana una de las dos. Las dos te contaron cosas, y ahora saben que lo compartiste.",
     o: [
       { t: "Pedirle perdón a la ganadora", chk: { s: "rep", dif: 60,
@@ -4439,7 +4439,7 @@ const CONSECUENCIAS = [
       { t: "Irte antes de que te echen", mudaFirma: true, d: { car: 2, red: -6, msg: "Te vas con tu versión de la historia. La firma nueva no pregunta." } },
     ] },
   /* ---------- el préstamo a tu primo ---------- */
-  { id: 7331, min: 0, max: 6, por: HUELLAS.estafado, t: "La cena de Navidad",
+  { id: 7331, min: 0, max: 6, por: HUELLAS.estafado, t: "Tu primo te debe dinero y aparece en Navidad",
     x: "Tu primo aparece en la cena como si nada. Toda la familia sabe lo del dinero, y todos te miran a ti.",
     o: [
       { t: "Reclamárselo delante de todos", azar: { s: "red", esc: [
@@ -4488,7 +4488,7 @@ const CONSECUENCIAS = [
       { t: "Cobrar hasta la última", d: { cash: 5800, cri: 3, msg: "Cobras todo, intereses incluidos. Un préstamo bien hecho." } },
       { t: "Perdonarle los intereses", d: { cash: 5000, red: 6, msg: "Te devuelve lo prestado y le regalas los intereses. Se acuerda en cada cumpleaños." } },
     ] },
-  { id: 7357, min: 0, max: 6, por: HUELLAS.contrato_primo, t: "Se retrasa, y hay contrato",
+  { id: 7357, min: 0, max: 6, por: HUELLAS.contrato_primo, t: "Tu primo se atrasa y puedes quedarte con su moto",
     x: "Lleva dos cuotas atrasadas. El contrato dice que puedes quedarte con la garantía: su moto.",
     o: [
       { t: "Ejecutar la garantía", d: { cash: 2500, red: -8, deja: "garantia", luego: [{ id: 7333, en: 1 }], msg: "Te quedas con la moto. Para eso estaba el contrato." } },
@@ -4520,7 +4520,7 @@ const CONSECUENCIAS = [
       { t: "Invitarlo a celebrarlo", d: { cash: 5000, red: 6, msg: "Lo celebran juntos. Ahora te cuenta cómo va el local cada mes." } },
       { t: "Ofrecerle ayuda con las cuentas", d: { cash: 5000, cri: 3, red: 4, msg: "Le armas una hoja de caja. Es lo mejor que le ha pasado al local." } },
     ] },
-  { id: 7362, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo no tiene nada",
+  { id: 7362, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo cerró su local y no puede pagarte",
     x: "Te lo dice llorando: cerró el local y le debe a medio mundo.",
     o: [
       { t: "Perdonarle la deuda", d: { red: 6, ene: 4, cri: 2, msg: "Le dices que se olvide. Lo que perdiste en plata lo ganaste en primo." } },
@@ -4538,31 +4538,31 @@ const CONSECUENCIAS = [
       { t: "Aceptarlo sin más", d: { cash: 5000, red: 3, msg: "Llegó. Tarde, pero llegó." } },
       { t: "Pedirle los intereses del retraso", d: { cash: 5600, red: -5, msg: "Te los paga, y te lo recuerda en cada cena." } },
     ] },
-  { id: 7366, min: 0, max: 6, por: "Le diste más plazo", t: "Cumple el nuevo plan",
+  { id: 7366, min: 0, max: 6, por: "Le diste más plazo", t: "Tu primo paga cada mes con el nuevo plazo",
     x: "Menos cuota y más plazo funcionó: paga cada mes, sin falta.",
     o: [
       { t: "Seguir así hasta el final", d: { cash: 5000, cri: 3, red: 3, msg: "Te devuelve todo, despacio. Un préstamo bien arreglado." } },
       { t: "Perdonarle la última cuota", d: { cash: 4000, red: 6, msg: "Le regalas el final. Lo cuenta en la familia como si le hubieras salvado la vida." } },
     ] },
-  { id: 7367, min: 0, max: 6, por: "Lo buscaste", t: "Lo encuentras: está peor que tú",
+  { id: 7367, min: 0, max: 6, por: "Lo buscaste", t: "Encuentras a tu primo y está sin dinero",
     x: "Vive en casa de un amigo y no tiene ni para el transporte.",
     o: [
       { t: "Ayudarle a volver a empezar", d: { cash: -1500, red: 8, ene: -4, msg: "Le pagas un mes de alquiler. El dinero no vuelve; tu primo, sí." } },
       { t: "Pedirle lo que pueda y despedirte", d: { cash: 500, red: -4, deja: "estafado", msg: "Te da quinientos. No lo vuelves a ver en mucho tiempo." } },
     ] },
-  { id: 7368, min: 0, max: 6, por: HUELLAS.primo_exito, t: "Diez locales",
+  { id: 7368, min: 0, max: 6, por: HUELLAS.primo_exito, t: "El negocio de tu primo crece sin parar",
     x: "El negocio de tu primo crece sin parar. Tu 20% vale una fortuna.",
     o: [
       { t: "Vender tu parte", d: { cash: 30000, msg: "Vendes tu 20% a un fondo. El préstamo de la familia se volvió patrimonio." } },
       { t: "Quedarte y cobrar dividendos", d: { cash: 12000, red: 4, msg: "Te quedas dentro. Cada diciembre, un cheque." } },
     ] },
-  { id: 7369, min: 0, max: 6, por: HUELLAS.primo_exito, t: "Dividendos cada año",
+  { id: 7369, min: 0, max: 6, por: HUELLAS.primo_exito, t: "El negocio de tu primo te paga ganancias cada año",
     x: "Crece despacio y reparte. Tu primo te manda el informe cada diciembre.",
     o: [
       { t: "Reinvertir los dividendos", d: { cash: 4000, cri: 3, msg: "Lo vuelves a meter. Crece despacio, contigo dentro." } },
       { t: "Cobrarlos y disfrutarlos", d: { cash: 6000, ene: 4, msg: "Los cobras. Un negocio de la familia que te paga las vacaciones." } },
     ] },
-  { id: 7370, min: 0, max: 6, por: HUELLAS.primo_exito, t: "El cuarto local lo hunde",
+  { id: 7370, min: 0, max: 6, por: HUELLAS.primo_exito, t: "El cuarto local pone en riesgo el negocio de tu primo",
     x: "Crecieron demasiado rápido: el cuarto local se come la caja de los otros tres.",
     o: [
       { t: "Poner más para salvarlo", azar: { s: "cri", esc: [
@@ -4579,26 +4579,26 @@ const CONSECUENCIAS = [
       { t: "Ayudarle a cerrar ordenado", d: { red: 6, ene: -4, cri: 3, msg: "Le ayudas a pagar a los proveedores primero. Cierra con la cabeza alta." } },
       { t: "Pedirle tu parte de lo que quede", d: { cash: 600, red: -5, msg: "Te llega algo. A él le queda menos que a ti." } },
     ] },
-  { id: 7372, min: 0, max: 6, por: HUELLAS.ticket, t: "Una de cada cien",
+  { id: 7372, min: 0, max: 6, por: HUELLAS.ticket, t: "Tu parte en el negocio de tu amigo vale 40 veces más",
     x: "El negocio de tu amigo vale cuarenta veces lo que pusiste. Un fondo quiere comprar tu parte.",
     o: [
       { t: "Vender ya", d: { cash: 60000, deja: "ticket_unicornio", msg: "Cuarenta veces tu ticket, en tu cuenta. De esas cosas que casi nunca pasan." } },
       { t: "Aguantar hasta la salida a bolsa", d: { deja: "ticket_unicornio", luego: [{ en: 2, s: "cri", azar: [{ p: 60, id: 7373, bueno: true }, { p: 40, id: 7374, bueno: false }] }], msg: "Te quedas. Si sale a bolsa, lo de hoy parecerá poco." } },
     ] },
-  { id: 7373, min: 0, max: 6, por: "Aguantaste hasta la salida", t: "Sale a bolsa",
+  { id: 7373, min: 0, max: 6, por: "Aguantaste hasta la salida", t: "La empresa de tu amigo empieza a cotizar en bolsa",
     x: "El negocio de tu amigo toca la campana. Tu parte vale más que todo lo que has ganado trabajando.",
     o: [
       { t: "Vender el primer día", d: { cash: 120000, msg: "Vendes el día de la campana. Tu amigo te manda una foto del parqué." } },
       { t: "Quedarte una parte", d: { cash: 80000, cri: 3, msg: "Vendes la mitad y te quedas con la otra, por si acaso." } },
     ] },
-  { id: 7374, min: 0, max: 6, por: "Aguantaste hasta la salida", t: "La burbuja se desinfla",
+  { id: 7374, min: 0, max: 6, por: "Aguantaste hasta la salida", t: "La empresa de tu amigo pierde la mitad de su valor",
     x: "El mercado se enfría y la valoración cae a la mitad antes de la salida.",
     o: [
       { t: "Vender lo que vale hoy", d: { cash: 25000, cri: 4, msg: "Vendes a la mitad de lo que valía. Sigue siendo muchísimo." } },
       { t: "Esperar a que vuelva", d: { cash: 15000, ene: -3, msg: "No vuelve. Vendes un año después, por menos." } },
     ] },
 
-  { id: 7334, min: 0, max: 6, por: HUELLAS.no_prestaste, t: "El banco tampoco le prestó",
+  { id: 7334, min: 0, max: 6, por: HUELLAS.no_prestaste, t: "Tu primo le debe a un prestamista y te llama otra vez",
     x: "Tu primo abrió igual, con un prestamista carísimo. Ahora está ahogado y te vuelve a llamar.",
     o: [
       { t: "Prestarle para que pague al prestamista", azar: { esc: [
@@ -4609,7 +4609,7 @@ const CONSECUENCIAS = [
     ] },
 
   /* ---------- el negocio de tu amigo ---------- */
-  { id: 7341, min: 0, max: 6, por: HUELLAS.ticket, t: "Tu amigo pide una segunda ronda",
+  { id: 7341, min: 0, max: 6, por: HUELLAS.ticket, t: "Tu amigo necesita más dinero para su empresa",
     x: "La empresa sigue viva pero necesita más capital. Si no pones, tu parte se diluye.",
     o: [
       { t: "Poner otra vez", azar: { s: "cri", esc: [
@@ -4629,7 +4629,7 @@ const CONSECUENCIAS = [
         { p: 15, r: "Se cae", nivel: "fallo", d: { cash: -3000, cri: 5, msg: "Pierde a su cliente grande y vale menos que al principio." } },
       ] } },
     ] },
-  { id: 7343, min: 0, max: 6, por: HUELLAS.revisaste, t: "Lo que viste en el modelo",
+  { id: 7343, min: 0, max: 6, por: HUELLAS.revisaste, t: "Ya sabes cuánto vale la empresa de tu amigo",
     x: "Encontraste el número que no cuadraba y tu amigo lo arregló. Ahora sabes mejor que nadie cuánto vale.",
     o: [
       { t: "Entrar ahora, sabiendo lo que sabes", d: { cash: -3000, deja: "ticket",
@@ -4663,25 +4663,25 @@ const CONSECUENCIAS = [
       { t: "Apretarte hasta el próximo sueldo", d: { ene: -4, cri: 3, msg: "Arroz, transporte público y nada de planes. Aprendes lo que dura un sueldo." } },
       { t: "Pedirle prestado a un amigo", d: { red: -2, msg: "Te presta sin preguntar. Le devuelves con el próximo sueldo y un poco de vergüenza." } },
     ] },
-  { id: 24103, min: 0, max: 6, por: HUELLAS.nov_gusto, t: "El gusto se volvió costumbre",
+  { id: 24103, min: 0, max: 6, por: HUELLAS.nov_gusto, t: "Darte gustos se volvió un gasto de cada mes",
     x: "Lo que fue una vez ahora es cada mes: la cena, la ropa, la comida a domicilio. El sueldo sube y lo que sobra no.",
     o: [
       { t: "Revisar en qué se va el dinero", d: { cri: 4, ene: -2, msg: "Haces la lista. La mitad son cosas que ni recordabas haber comprado." } },
       { t: "No pasa nada: para eso trabajas", d: { ene: 3, cash: -600, msg: "Disfrutas. El ahorro puede esperar, piensas, y el mes siguiente piensas lo mismo." } },
     ] },
-  { id: 24104, min: 0, max: 6, por: HUELLAS.nov_familia, t: "Tu familia te devuelve el favor",
+  { id: 24104, min: 0, max: 6, por: HUELLAS.nov_familia, t: "Tu tía te presenta a alguien que busca gente joven",
     x: "Tu tía se entera de lo que hiciste y te presenta a un conocido que busca gente joven para un proyecto.",
     o: [
       { t: "Ir a la reunión", d: { red: 6, ene: -2, msg: "Un café que no lleva a nada inmediato, pero ahora alguien más sabe quién eres." } },
       { t: "Agradecer y dejarlo pasar", d: { ene: 2, msg: "Le das las gracias. Tu tía insiste dos veces más y después se olvida." } },
     ] },
-  { id: 24105, min: 0, max: 6, por: HUELLAS.nov_familia, t: "Ahora cuentan con eso cada mes",
+  { id: 24105, min: 0, max: 6, por: HUELLAS.nov_familia, t: "Tu familia ya cuenta con tu ayuda cada mes",
     x: "Lo que fue una ayuda se volvió parte del presupuesto de la casa. Nadie lo dijo, pero ya cuentan con eso.",
     o: [
       { t: "Seguir ayudando", d: { red: 3, cash: -600, ene: -2, msg: "Lo sigues mandando. Es tu familia, y el ahorro tendrá que esperar." } },
       { t: "Hablarlo y poner un límite", d: { cri: 3, red: -2, msg: "Una conversación incómoda. Acuerdan una ayuda fija, más pequeña y sin sorpresas." } },
     ] },
-  { id: 24110, min: 0, max: 6, por: HUELLAS.nov_tarjeta_bien, t: "Tu historial empieza a contar",
+  { id: 24110, min: 0, max: 6, por: HUELLAS.nov_tarjeta_bien, t: "Por pagar a tiempo, el banco te ofrece más crédito",
     x: "Dos años pagando a tiempo se notan. El banco te sube el cupo y te ofrece un préstamo a buena tasa, por si lo necesitas.",
     o: [
       { t: "Dejarlo ahí por si hace falta", d: { cri: 3, msg: "No lo usas, pero sabes que está. Tu historial ya trabaja por ti." } },
@@ -4699,7 +4699,7 @@ const CONSECUENCIAS = [
       { t: "Guardar la tarjeta y pagarla en serio", d: { cash: -2000, cri: 5, ene: -4, msg: "Seis meses de apretarte. Cuando llega a cero, entiendes el interés compuesto, pero al revés." } },
       { t: "Seguir pagando el mínimo", d: { cash: -1200, ene: -3, msg: "Pagas y no avanzas. La deuda te sigue a todas partes, como una sombra cara." } },
     ] },
-  { id: 24120, min: 0, max: 6, por: HUELLAS.nov_piso, t: "La casa se volvió tu gente",
+  { id: 24120, min: 0, max: 6, por: HUELLAS.nov_piso, t: "Un compañero de casa puede recomendarte en su empresa",
     x: "Tus compañeros de apartamento te presentan a medio mundo. Uno trabaja en una empresa que busca a alguien como tú.",
     o: [
       { t: "Pedirle que te recomiende", d: { red: 5, car: 2, msg: "Te pasa el contacto. No sale nada este año, pero ya estás en una lista." } },
@@ -4717,7 +4717,7 @@ const CONSECUENCIAS = [
       { t: "Buscar algo más barato", d: { cash: 800, ene: -3, msg: "Te mudas a un lugar más chico y más lejos. El ahorro vuelve a aparecer." } },
       { t: "Quedarte: tu espacio vale", d: { ene: 3, cash: -500, msg: "Te quedas. Es caro, pero llegas a casa y descansas de verdad." } },
     ] },
-  { id: 24123, min: 0, max: 6, por: HUELLAS.nov_solo, t: "Tu casa, tu ritmo",
+  { id: 24123, min: 0, max: 6, por: HUELLAS.nov_solo, t: "Vivir solo te ayuda a rendir más en el trabajo",
     x: "Vivir por tu cuenta te ordenó: cocinas, duermes bien y llegas temprano. En el trabajo se nota.",
     o: [
       { t: "Aprovechar para estudiar de noche", d: { mod: 4, ene: -2, msg: "Tienes silencio y lo usas. Una hora al día suma más de lo que parece." } },
@@ -4735,19 +4735,19 @@ const CONSECUENCIAS = [
       { t: "Pedir algo a cambio: un proyecto mejor", d: { car: 3, rep: 2, msg: "Lo pides y te lo dan. Aquella tarde de domingo empezó a pagar." } },
       { t: "Agradecer y seguir igual", d: { rep: 2, msg: "Sonríes. La fama de confiable se gana lento y se pierde rápido." } },
     ] },
-  { id: 24132, min: 0, max: 6, por: HUELLAS.nov_lunes, t: "Nadie dijo nada",
+  { id: 24132, min: 0, max: 6, por: HUELLAS.nov_lunes, t: "Entregaste el lunes y a tu jefa no le importó",
     x: "El lunes entregaste temprano y tu jefa no comentó nada del domingo. Parece que no era tan urgente.",
     o: [
       { t: "Hacerlo costumbre: el fin de semana es tuyo", d: { ene: 5, msg: "Descubres que casi nada es urgente un domingo. Llegas al lunes con ganas." } },
       { t: "Por si acaso, mirar el correo los domingos", d: { ene: -2, rep: 1, msg: "Lo miras sin contestar. Medio descanso es peor que uno entero." } },
     ] },
-  { id: 24133, min: 0, max: 6, por: HUELLAS.nov_lunes, t: "Era urgente, después de todo",
+  { id: 24133, min: 0, max: 6, por: HUELLAS.nov_lunes, t: "El cliente sí necesitaba el trabajo el domingo",
     x: "Resulta que el cliente quería el documento el domingo. Tu jefa lo resolvió sola y te lo recuerda.",
     o: [
       { t: "Disculparte y pedir que avise cuando urja", d: { cri: 3, rep: 1, msg: "Le pides una señal clara para lo urgente. Le parece justo." } },
       { t: "Defender que era domingo", d: { rep: -3, ene: 2, msg: "Tienes razón en el fondo. En la forma, tu jefa se queda con la duda." } },
     ] },
-  { id: 24140, min: 0, max: 6, por: HUELLAS.nov_cuotas, t: "Las cuotas se juntaron",
+  { id: 24140, min: 0, max: 6, por: HUELLAS.nov_cuotas, t: "Las cuotas ya se llevan buena parte de tu sueldo",
     x: "Al celular se sumaron la computadora y un sofá, también a cuotas. Cada una es poca cosa; juntas son buena parte del sueldo.",
     o: [
       { t: "No sumar ninguna cuota más", d: { cri: 4, ene: -2, msg: "Haces la cuenta y te asustas. Hasta que terminen, nada más a cuotas." } },
@@ -4759,13 +4759,13 @@ const CONSECUENCIAS = [
       { t: "Reclamar y cancelar los cargos", d: { cri: 4, ene: -3, cash: 200, msg: "Tres llamadas y un correo. Te devuelven una parte y aprendes a leer antes de firmar." } },
       { t: "Pagarlos y olvidarlo", d: { cash: -300, msg: "No vale la pena la pelea, piensas. La tienda piensa lo mismo, con todo el mundo." } },
     ] },
-  { id: 24142, min: 0, max: 6, por: HUELLAS.nov_esperar, t: "Esperar salió más barato",
+  { id: 24142, min: 0, max: 6, por: HUELLAS.nov_esperar, t: "Esperaste y el celular bajó de precio",
     x: "Cuando juntaste el dinero, el modelo había bajado de precio. Te sobra para una funda y algo más.",
     o: [
       { t: "Guardar lo que sobró", d: { cri: 3, cash: 300, msg: "Lo que sobró va al ahorro. Esperar también es una forma de ganar." } },
       { t: "Darte un pequeño gusto", d: { ene: 3, msg: "Unos audífonos con lo que sobró. Comprar sin deber se siente distinto." } },
     ] },
-  { id: 24143, min: 0, max: 6, por: HUELLAS.nov_esperar, t: "El viejo se rompió antes",
+  { id: 24143, min: 0, max: 6, por: HUELLAS.nov_esperar, t: "Tu celular viejo se dañó antes de comprar el nuevo",
     x: "Tu celular viejo murió a mitad de mes y te quedaste sin teléfono justo cuando tu jefa te buscaba.",
     o: [
       { t: "Comprar uno barato de transición", d: { cash: -300, ene: -2, msg: "Un teléfono simple por unas semanas. Funciona, aunque las fotos dan pena." } },
@@ -4777,68 +4777,68 @@ const CONSECUENCIAS = [
       { t: "Hacerlo y explicar cómo lo hiciste", d: { rep: 4, car: 2, ene: -3, msg: "Entregas en una tarde y enseñas el truco. Ahora te preguntan a ti." } },
       { t: "Hacerlo rápido y sin contar cómo", d: { car: 3, ene: -2, msg: "Lo entregas antes de tiempo. Nadie sabe cómo; eso también tiene su valor." } },
     ] },
-  { id: 24151, min: 0, max: 6, por: HUELLAS.nov_sabados, t: "El grupo de los sábados",
+  { id: 24151, min: 0, max: 6, por: HUELLAS.nov_sabados, t: "Tus compañeros de clase quieren seguir reuniéndose",
     x: "De las clases salió un grupo de compañeros que se ayudan y se pasan datos. Te proponen seguir viéndose.",
     o: [
       { t: "Seguir con el grupo", d: { red: 5, ene: -2, msg: "Un sábado al mes y un chat que no para. Es tu primera red de contactos, y la armaste tú." } },
       { t: "Agradecer y volver a tus sábados", d: { ene: 3, msg: "Te despides con cariño. Lo aprendido se queda; el grupo sigue sin ti." } },
     ] },
-  { id: 24160, min: 0, max: 6, por: HUELLAS.nov_extra_si, t: "Quedarse se volvió obligación",
+  { id: 24160, min: 0, max: 6, por: HUELLAS.nov_extra_si, t: "Ahora esperan que te quedes tarde todas las semanas",
     x: "Desde aquel viernes, quedarte tarde ya no es un gesto: es lo que se espera de ti, todas las semanas.",
     o: [
       { t: "Hablar con tu jefa del horario", d: { ene: 4, rep: -1, cri: 2, msg: "Le explicas que así no rindes. Acuerdan quedarte solo cuando de verdad haga falta." } },
       { t: "Aguantar: ya vendrá el ascenso", d: { car: 3, ene: -8, msg: "Aguantas. El ascenso quizá llegue; el cansancio llegó primero." } },
     ] },
-  { id: 24161, min: 0, max: 6, por: HUELLAS.nov_extra_si, t: "Las horas se notaron",
+  { id: 24161, min: 0, max: 6, por: HUELLAS.nov_extra_si, t: "Tu jefa premia tus horas extra con un proyecto",
     x: "En la evaluación del año, tu jefa menciona tu compromiso y te propone para un proyecto más visible.",
     o: [
       { t: "Aceptar el proyecto", d: { car: 4, ene: -4, msg: "Más visible, más trabajo y tu nombre en la presentación final." } },
       { t: "Aceptar, con un horario claro", d: { car: 3, ene: -1, cri: 2, msg: "Dices que sí y pones tus condiciones. Te las aceptan: ya demostraste que cumples." } },
     ] },
-  { id: 24162, min: 0, max: 6, por: HUELLAS.nov_extra_no, t: "Te pasaron por alto",
+  { id: 24162, min: 0, max: 6, por: HUELLAS.nov_extra_no, t: "Le dan a otro el proyecto interesante",
     x: "Un proyecto interesante le tocó a alguien que siempre se queda hasta tarde. Nadie te dijo que fuera por eso.",
     o: [
       { t: "Preguntar qué hace falta para el próximo", d: { cri: 3, rep: 1, msg: "Preguntas directo. Te dicen que el próximo es tuyo si muestras iniciativa." } },
       { t: "Aceptarlo: tu tiempo vale", d: { ene: 3, car: -1, msg: "Lo dejas pasar. No todos los proyectos valen tus noches." } },
     ] },
-  { id: 24163, min: 0, max: 6, por: HUELLAS.nov_extra_no, t: "Rendir en horario también cuenta",
+  { id: 24163, min: 0, max: 6, por: HUELLAS.nov_extra_no, t: "Tu jefa nota que cumples sin quedarte tarde",
     x: "Tu jefa nota que entregas todo a tiempo sin quedarte tarde y te pregunta cómo te organizas.",
     o: [
       { t: "Contarle tu método", d: { rep: 4, cri: 2, msg: "Le explicas cómo planificas la semana. Lo copia para el equipo." } },
       { t: "Restarle importancia", d: { rep: 2, msg: "«Nada especial», dices. Ella sabe que sí." } },
     ] },
-  { id: 24170, min: 0, max: 6, por: HUELLAS.nov_dentista, t: "Ahora duele de verdad",
+  { id: 24170, min: 0, max: 6, por: HUELLAS.nov_dentista, t: "La muela empeora y el tratamiento cuesta el triple",
     x: "La muela se complicó un fin de semana. Urgencias, un tratamiento más largo y una cuenta tres veces mayor.",
     o: [
       { t: "Pagarlo todo de una vez", d: { cash: -2500, ene: -4, msg: "Lo pagas y aprendes que lo barato de esperar sale caro." } },
       { t: "Pedir un plan de pagos", d: { cash: -2800, ene: -2, msg: "Te dan un plan. Vas a recordar esta muela cada mes durante un año." } },
     ] },
-  { id: 24171, min: 0, max: 6, por: HUELLAS.nov_dentista, t: "Se te pasó sin hacer nada",
+  { id: 24171, min: 0, max: 6, por: HUELLAS.nov_dentista, t: "El dolor de muela se fue solo",
     x: "La molestia se fue sola. En la siguiente revisión, el dentista dice que tuviste suerte.",
     o: [
       { t: "Ir a revisión cada año", d: { cri: 2, cash: -200, msg: "Agendas una revisión anual. La suerte no es un plan." } },
       { t: "Seguir igual", d: { ene: 1, msg: "Salió bien. La próxima, quién sabe." } },
     ] },
-  { id: 24180, min: 0, max: 6, por: HUELLAS.nov_posgrado, t: "El posgrado abrió una puerta",
+  { id: 24180, min: 0, max: 6, por: HUELLAS.nov_posgrado, t: "Un profesor del posgrado te ofrece una entrevista",
     x: "Un profesor del posgrado dirige un área en otra firma y te ofrece una entrevista.",
     o: [
       { t: "Ir a la entrevista", d: { red: 5, car: 2, msg: "Vas, te va bien y te quedas con un contacto que vale más que el diploma." } },
       { t: "Agradecer: estás bien donde estás", d: { red: 2, rep: 1, msg: "Le das las gracias. Saber que hay puertas afuera también tranquiliza." } },
     ] },
-  { id: 24181, min: 0, max: 6, por: HUELLAS.nov_posgrado, t: "El posgrado te está ganando",
+  { id: 24181, min: 0, max: 6, por: HUELLAS.nov_posgrado, t: "El trabajo y el posgrado te dejan sin dormir",
     x: "Entre el trabajo y las clases duermes cinco horas. Te queda un semestre y no sabes si llegas.",
     o: [
       { t: "Terminarlo como sea", d: { mod: 3, ene: -8, rep: 2, msg: "Llegas al final a rastras. El diploma pesa menos que el cansancio, por ahora." } },
       { t: "Congelarlo un semestre", d: { ene: 6, cri: 1, msg: "Lo pausas. No es rendirse: es elegir cuándo." } },
     ] },
   /* ---------- el primer día en una firma nueva, según su cultura ---------- */
-  { id: 24200, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma que no para",
+  { id: 24200, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma muy exigente",
     x: "Te dan computadora, clave y un proyecto que vence el viernes. Nadie te pregunta si te instalaste: aquí se aprende corriendo.",
     o: [
       { t: "Seguirles el ritmo desde el primer día", d: { car: 3, rep: 2, ene: -6, msg: "Entregas el viernes y el lunes ya te dan otro. Así se gana el respeto aquí." } },
       { t: "Pedir una semana para ver cómo trabajan", d: { cri: 3, rep: -1, ene: 2, msg: "Te la dan, de mala gana. Cuando arrancas, no fallas en lo básico." } },
     ] },
-  { id: 24201, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma con nombre",
+  { id: 24201, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma muy famosa",
     x: "Recepción de mármol, tarjeta con el logo y una advertencia amable: aquí un error se cuenta en el sector entero.",
     o: [
       { t: "Revisar todo dos veces, aunque tardes", d: { rep: 3, ene: -3, msg: "Lento pero sin errores. En una firma así, eso es lo que se recuerda." } },
@@ -5122,7 +5122,7 @@ const LOTES = {
   {
    "id": 11011,
    "por": "Blindaste un modelo de valoración celda por celda",
-   "t": "Tu modelo anda suelto por la plaza",
+   "t": "Un analista de otra firma usa tu modelo como base",
    "x": "Un analista de otra firma usa tu modelo de aquella venta como plantilla. Te escribe porque encontró una fórmula tuya que nadie logra descifrar.",
    "o": [
     {
@@ -5189,7 +5189,7 @@ const LOTES = {
   {
    "id": 11013,
    "por": "Pusiste la cifra en la portada de una venta",
-   "t": "Un minoritario impugna la valoración",
+   "t": "Un accionista demanda y te citan a declarar",
    "x": "Un accionista minoritario de aquella empresa demanda: dice que la cifra se armó para complacer al comprador. Te citan a declarar.",
    "o": [
     {
@@ -5259,7 +5259,7 @@ const LOTES = {
   {
    "id": 11015,
    "por": "Defendiste tu valoración ante un juez",
-   "t": "El perito contrario lee una celda tuya",
+   "t": "En el juicio, el experto contrario lee una cifra tuya",
    "x": "El perito de la otra parte encontró la celda donde tu número se acerca demasiado al del comprador. La lee en voz alta, despacio.",
    "o": [
     {
@@ -5283,7 +5283,7 @@ const LOTES = {
   {
    "id": 11020,
    "por": "Hiciste una due diligence de tres días",
-   "t": "Aparece lo que nadie revisó",
+   "t": "Aparece un contrato con una multa que nadie vio",
    "x": "Un año después del cierre, el comprador encuentra un contrato que obliga a pagar una penalidad por cambio de dueño. Estaba en la sala de datos.",
    "o": [
     {
@@ -5359,7 +5359,7 @@ const LOTES = {
   {
    "id": 11022,
    "por": "Fuiste directo a los números que suelen fallar",
-   "t": "Tu lista de atajos circula",
+   "t": "Alguien presenta tu lista como si fuera suya",
    "x": "La lista de números que suelen fallar que armaste aquella semana circula entre analistas. Alguien la presentó como suya en un seminario.",
    "o": [
     {
@@ -5418,7 +5418,7 @@ const LOTES = {
   {
    "id": 11024,
    "por": "Diste la cara por un contrato que no abriste",
-   "t": "La penalidad se negocia a la mitad",
+   "t": "Comprador y vendedor pagan la multa a medias",
    "x": "Tu franqueza cambió el tono. Comprador y vendedor se reparten la penalidad, y alguien sugiere que hagas tú la próxima revisión.",
    "o": [
     {
@@ -5536,7 +5536,7 @@ const LOTES = {
   {
    "id": 11032,
    "por": "Negociaste tus honorarios con un cliente difícil",
-   "t": "Una firma nueva cobra solo por éxito",
+   "t": "Una firma nueva cobra solo si el negocio sale bien",
    "x": "Una firma recién llegada ofrece hacer lo mismo sin cobrar cuota fija. Tu cliente de entonces te reenvía la propuesta sin comentario.",
    "o": [
     {
@@ -5569,7 +5569,7 @@ const LOTES = {
   {
    "id": 11033,
    "por": "Negociaste tus honorarios con un cliente difícil",
-   "t": "Cierras antes de lo previsto",
+   "t": "El negocio termina en cuatro meses en vez de ocho",
    "x": "La operación cierra en cuatro meses y no en ocho. El cliente pregunta si lo que te paga se ajusta, ya que trabajaste la mitad.",
    "o": [
     {
@@ -5790,7 +5790,7 @@ const LOTES = {
   {
    "id": 11044,
    "por": "Le metiste más dinero a la misma acción",
-   "t": "La apuesta de vuelta funciona",
+   "t": "Lo que volviste a comprar te da ganancias",
    "x": "Lo que compraste de nuevo rinde bien. No fue el doble, pero alcanzó para que dejes de pensar en lo que vendiste.",
    "o": [
     {
@@ -5815,7 +5815,7 @@ const LOTES = {
   {
    "id": 11045,
    "por": "Le metiste más dinero a la misma acción",
-   "t": "La apuesta de vuelta se tuerce",
+   "t": "Lo que volviste a comprar baja de precio",
    "x": "Lo que compraste de nuevo cae por debajo de tu precio. El gráfico tiene la forma exacta de tu exceso de confianza.",
    "o": [
     {
@@ -5883,7 +5883,7 @@ const LOTES = {
   {
    "id": 11051,
    "por": "Presentaste una estructura ante el comité",
-   "t": "Tu estructura se vuelve plantilla",
+   "t": "Otras tres operaciones copian el esquema que creaste",
    "x": "La estructura que presentaste aquel día ya se usa en otras tres operaciones del sector. Te piden que la dejes documentada para el resto.",
    "o": [
     {
@@ -5908,7 +5908,7 @@ const LOTES = {
   {
    "id": 11052,
    "por": "Presentaste una estructura ante el comité",
-   "t": "Uno de los duros te invita a almorzar",
+   "t": "Un miembro duro del comité te invita a almorzar",
    "x": "Uno de los dos miembros del comité que venían buscando sangre te invita a almorzar. Dice que tiene un proyecto aparte y busca a alguien así.",
    "o": [
     {
@@ -5941,7 +5941,7 @@ const LOTES = {
   {
    "id": 11053,
    "por": "Presentaste una estructura ante el comité",
-   "t": "El sector volátil tiene un buen año",
+   "t": "Las facturas que financiaste se pagan antes de tiempo",
    "x": "Las facturas de aquel sector se pagaron antes de tiempo y la estructura rinde más de lo previsto. Ahora todos dicen que era obvio.",
    "o": [
     {
@@ -6017,7 +6017,7 @@ const LOTES = {
   {
    "id": 11060,
    "por": "Asesoraste a un comprador en una subasta",
-   "t": "Un postor rival quiere contratarte",
+   "t": "Un comprador rival quiere contratarte",
    "x": "Uno de los postores de aquella subasta ahora compra en otro proceso y quiere tu asesoría. Dice que aprendió mirando cómo jugaste.",
    "o": [
     {
@@ -6052,7 +6052,7 @@ const LOTES = {
   {
    "id": 11061,
    "por": "Asesoraste a un comprador en una subasta",
-   "t": "El vendedor cambia las reglas",
+   "t": "El banco cambia las reglas de sus subastas",
    "x": "El banco que organizó aquella subasta añadió una ronda sorpresa a sus procesos. En los pasillos dicen que fue por estrategias como la tuya.",
    "o": [
     {
@@ -6077,7 +6077,7 @@ const LOTES = {
   {
    "id": 11062,
    "por": "Asesoraste a un comprador en una subasta",
-   "t": "Tu cliente quiere repetir la jugada",
+   "t": "Tu cliente quiere repetir la misma estrategia",
    "x": "Tu cliente de aquella subasta va por otro activo y quiere la misma estrategia de precio, al pie de la letra. Los postores son casi los mismos.",
    "o": [
     {
@@ -6116,7 +6116,7 @@ const LOTES = {
   {
    "id": 11063,
    "por": "Asesoraste a un comprador en una subasta",
-   "t": "Te acusan de saber de más",
+   "t": "Un rival acusa trampa y piden revisar tus correos",
    "x": "Un postor perdedor dice que tu cliente supo cosas de más en aquella subasta. El vendedor abre una revisión del proceso y pide tus correos.",
    "o": [
     {
@@ -6141,7 +6141,7 @@ const LOTES = {
   {
    "id": 11064,
    "por": "Repetiste una estrategia de subasta",
-   "t": "La jugada funciona dos veces",
+   "t": "La misma estrategia vuelve a funcionar",
    "x": "Los rivales no aprendieron nada. Tu cliente gana el segundo activo con la misma táctica y ya habla de ti como de un amuleto.",
    "o": [
     {
@@ -6165,7 +6165,7 @@ const LOTES = {
   {
    "id": 11065,
    "por": "Repetiste una estrategia de subasta",
-   "t": "Los rivales te esperaban",
+   "t": "Los rivales ya conocían tu estrategia",
    "x": "Esta vez los rivales sabían lo que venía. Ofrecen justo por encima de tu cliente y se quedan con el activo.",
    "o": [
     {
@@ -6237,7 +6237,7 @@ const LOTES = {
   {
    "id": 11071,
    "por": "Defendiste una tesis ante un comité de inversión",
-   "t": "La tesis empieza a fallar",
+   "t": "Tu idea de inversión empieza a fallar",
    "x": "Dos de los supuestos de aquella tesis no se cumplen. El comité pide una actualización en una semana y ya nadie recuerda lo bien que la contaste.",
    "o": [
     {
@@ -6295,7 +6295,7 @@ const LOTES = {
   {
    "id": 11073,
    "por": "Defendiste una tesis ante un comité de inversión",
-   "t": "Una pregunta que no estaba en la lámina",
+   "t": "El comité te hace una pregunta que no preparaste",
    "x": "En la siguiente reunión, el comité te hace una pregunta que no estaba en ninguna lámina. Siete personas esperan en silencio.",
    "o": [
     {
@@ -6353,7 +6353,7 @@ const LOTES = {
   {
    "id": 11075,
    "por": "Improvisaste en un foro con trescientas personas",
-   "t": "Tu tropiezo circula en video",
+   "t": "Circula un video donde olvidas lo que ibas a decir",
    "x": "En el foro te quedaste en blanco a la mitad. Alguien lo grabó y ahora circula con una música de fondo que no ayuda.",
    "o": [
     {
@@ -6378,7 +6378,7 @@ const LOTES = {
   {
    "id": 11080,
    "por": "Compraste un bono en problemas y lo aguantaste",
-   "t": "La reestructuración se estanca",
+   "t": "La empresa endeudada sigue sin llegar a un acuerdo",
    "x": "El acuerdo de aquel bono lleva otro año sin cerrarse. El papel cotiza por debajo de treinta y los que lo compraron se miran de reojo.",
    "o": [
     {
@@ -6413,7 +6413,7 @@ const LOTES = {
   {
    "id": 11081,
    "por": "Compraste un bono en problemas y lo aguantaste",
-   "t": "El acuerdo llega por fin",
+   "t": "La empresa endeudada por fin firma un acuerdo",
    "x": "La empresa firma con sus acreedores. Te ofrecen cobrar ya en efectivo o cambiar tu bono por acciones de la empresa reestructurada.",
    "o": [
     {
@@ -6453,7 +6453,7 @@ const LOTES = {
   {
    "id": 11082,
    "por": "Le vendiste a un fondo tu tesis sobre un bono",
-   "t": "El fondo ganó mucho con tu tesis",
+   "t": "El fondo que siguió tu idea ganó mucho dinero",
    "x": "El fondo que compró tu tesis multiplicó su dinero cuando llegó el acuerdo. Tú cobraste tu comisión y nada más. Su socio te invita a cenar.",
    "o": [
     {
@@ -6478,7 +6478,7 @@ const LOTES = {
   {
    "id": 11083,
    "por": "Estudiaste un bono que cotizaba a treinta",
-   "t": "Un acreedor grande te busca",
+   "t": "Alguien a quien la empresa le debe mucho te busca",
    "x": "Un acreedor con mucho papel de aquel bono quiere tu análisis para negociar con la empresa. Paga bien y lo necesita para ayer.",
    "o": [
     {
@@ -6504,7 +6504,7 @@ const LOTES = {
   {
    "id": 11084,
    "por": "Cambiaste tu bono por acciones nuevas",
-   "t": "Las acciones nuevas suben",
+   "t": "Las acciones que recibiste a cambio del bono suben",
    "x": "La empresa reestructurada empieza a ganar dinero y sus acciones suben. Tu apuesta de treinta centavos ya parece de otro siglo.",
    "o": [
     {
@@ -6529,7 +6529,7 @@ const LOTES = {
   {
    "id": 11085,
    "por": "Cambiaste tu bono por acciones nuevas",
-   "t": "Las acciones nuevas no levantan",
+   "t": "Las acciones que recibiste a cambio del bono no suben",
    "x": "La empresa reestructurada sigue perdiendo dinero. Las acciones que recibiste valen menos que el bono que entregaste.",
    "o": [
     {
@@ -6555,7 +6555,7 @@ const LOTES = {
   {
    "id": 11086,
    "por": "Le vendiste a un fondo tu tesis sobre un bono",
-   "t": "El fondo pierde con tu tesis",
+   "t": "El fondo que siguió tu idea pierde dinero",
    "x": "La reestructuración de aquel bono se estancó y el fondo que compró tu tesis lleva un año en pérdida. Su socio te pide una explicación.",
    "o": [
     {
@@ -6632,7 +6632,7 @@ const LOTES = {
   {
    "id": 11092,
    "por": "Acompañaste una auditoría sorpresa del regulador",
-   "t": "Un expediente que nadie pidió",
+   "t": "Aparece un expediente con una aprobación sin firma",
    "x": "Un expediente de aquel periodo, que los inspectores no pidieron, aparece mal archivado. Tiene una aprobación sin firma.",
    "o": [
     {
@@ -6684,7 +6684,7 @@ const LOTES = {
   {
    "id": 11093,
    "por": "Ordenaste los expedientes para el regulador",
-   "t": "Te encargan ordenar todo lo demás",
+   "t": "Te piden diseñar cómo archivar todos los papeles",
    "x": "Después de aquella auditoría, quieren que diseñes cómo se archiva todo de aquí en adelante. Nadie más quiso el encargo, por algo será.",
    "o": [
     {
@@ -6761,7 +6761,7 @@ const LOTES = {
   {
    "id": 11100,
    "por": "Fijaste el precio de una colocación",
-   "t": "La acción cae bajo el precio de salida",
+   "t": "Las acciones caen bajo el precio al que se vendieron",
    "x": "Un año después, la emisión cotiza por debajo del precio de colocación. Los inversores que entraron quieren una explicación, y la quieren de ti.",
    "o": [
     {
@@ -6786,7 +6786,7 @@ const LOTES = {
   {
    "id": 11101,
    "por": "Sondeaste a los inversores ancla uno por uno",
-   "t": "Los anclas piden trato especial",
+   "t": "Los inversionistas principales piden trato especial",
    "x": "Los inversores ancla de aquella colocación quieren asignación garantizada en la próxima emisión. Lo dicen como si ya estuviera pactado.",
    "o": [
     {
@@ -6811,7 +6811,7 @@ const LOTES = {
   {
    "id": 11102,
    "por": "Fijaste el precio de una colocación",
-   "t": "La emisora vuelve por más capital",
+   "t": "La empresa quiere vender más acciones con tu ayuda",
    "x": "La empresa de aquella colocación quiere salir otra vez al mercado y pide repetir equipo y método. El mercado está más nervioso que entonces.",
    "o": [
     {
@@ -6855,7 +6855,7 @@ const LOTES = {
   {
    "id": 11103,
    "por": "Fijaste el precio de una colocación",
-   "t": "El regulador revisa la asignación",
+   "t": "El regulador revisa cómo se repartieron las acciones",
    "x": "El regulador revisa cómo se repartió aquella emisión entre los inversores. Quiere ver quién pidió qué y quién recibió cuánto.",
    "o": [
     {
@@ -6881,7 +6881,7 @@ const LOTES = {
   {
    "id": 11104,
    "por": "Repetiste una colocación con la misma empresa",
-   "t": "La segunda emisión vuela",
+   "t": "La segunda venta de acciones es un éxito",
    "x": "La segunda colocación se cubre cuatro veces. La empresa te manda una caja de vino y otra emisora te pide una reunión.",
    "o": [
     {
@@ -6906,7 +6906,7 @@ const LOTES = {
   {
    "id": 11105,
    "por": "Repetiste una colocación con la misma empresa",
-   "t": "La segunda emisión se queda corta",
+   "t": "La segunda venta de acciones no se completa",
    "x": "El mercado se puso nervioso a mitad del proceso y la colocación no se cubrió entera. La empresa culpa al precio, y el precio lo pusiste tú.",
    "o": [
     {
@@ -6931,7 +6931,7 @@ const LOTES = {
   {
    "id": 11110,
    "por": "Negociaste con el inversor ancla de tu fondo",
-   "t": "El ancla quiere voz en las decisiones",
+   "t": "Tu mayor inversionista pide un lugar en el comité",
    "x": "El inversor ancla de tu fondo pide un asiento en el comité de inversión. Dice que el tamaño de su aporte lo justifica, y lo dice sonriendo.",
    "o": [
     {
@@ -7031,7 +7031,7 @@ const LOTES = {
   {
    "id": 11113,
    "por": "Levantaste el primer cierre de tu fondo",
-   "t": "Hay fila para el segundo cierre",
+   "t": "Muchos inversionistas quieren entrar ahora a tu fondo",
    "x": "Los primeros meses del fondo corrieron la voz. Inversores que antes no te contestaban ahora piden entrar al segundo cierre.",
    "o": [
     {
@@ -7057,7 +7057,7 @@ const LOTES = {
   {
    "id": 11114,
    "por": "Pusiste el primer dinero de tu fondo en tu convicción",
-   "t": "La primera operación sale bien",
+   "t": "Tu primera inversión del fondo sale bien",
    "x": "La empresa en la que invertiste primero supera su plan. En la reunión anual, los inversores aplauden con la discreción de quien cobra.",
    "o": [
     {
@@ -7082,7 +7082,7 @@ const LOTES = {
   {
    "id": 11115,
    "por": "Pusiste el primer dinero de tu fondo en tu convicción",
-   "t": "La primera operación se complica",
+   "t": "Tu primera inversión pierde a su mayor cliente",
    "x": "La empresa en la que invertiste primero pierde a su mayor cliente. Los inversores piden una llamada, todos a la vez.",
    "o": [
     {
@@ -7107,7 +7107,7 @@ const LOTES = {
   {
    "id": 11120,
    "por": "Cerraste dos mandatos el mismo viernes",
-   "t": "Un cliente se enteró del otro cierre",
+   "t": "Un cliente supo que atendías a otro a la misma hora",
    "x": "El cliente de aquel viernes supo que estabas en otro cierre a la misma hora. Lo menciona sin enojo, pero lo menciona.",
    "o": [
     {
@@ -7174,7 +7174,7 @@ const LOTES = {
   {
    "id": 11122,
    "por": "Cerraste dos mandatos el mismo viernes",
-   "t": "Otra vez dos fechas cruzadas",
+   "t": "Otra vez dos clientes firman el mismo día",
    "x": "Dos clientes quieren cerrar el mismo día, otra vez. Ya tienes fama de poder con eso, y la fama no pregunta si dormiste.",
    "o": [
     {
@@ -7200,7 +7200,7 @@ const LOTES = {
   {
    "id": 11123,
    "por": "Cerraste dos mandatos el mismo viernes",
-   "t": "El cuerpo te pasa la factura",
+   "t": "El médico te pide bajar el ritmo de trabajo",
    "x": "Llevas meses viviendo de cierres encadenados. El médico te dice que bajes el ritmo, y te lo dice sin anestesia.",
    "o": [
     {
@@ -7387,7 +7387,7 @@ const LOTES = {
   {
    "id": 11133,
    "por": "Indexaste tu patrimonio y no pensaste más",
-   "t": "Un año aburrido y correcto",
+   "t": "Un año tranquilo ganando lo mismo que el mercado",
    "x": "Pasó un año con el índice. Rindió lo que el mercado, ni más ni menos, y en una cena alguien presume de haber triplicado su dinero.",
    "o": [
     {
@@ -7425,7 +7425,7 @@ const LOTES = {
   {
    "id": 11134,
    "por": "Pusiste dinero extra en una apuesta propia",
-   "t": "La apuesta sale bien",
+   "t": "La parte que arriesgaste da ganancias",
    "x": "Lo que pusiste aparte rinde bien en un año. No te vuelves rico, pero tienes una historia para la próxima cena.",
    "o": [
     {
@@ -7450,7 +7450,7 @@ const LOTES = {
   {
    "id": 11135,
    "por": "Pusiste dinero extra en una apuesta propia",
-   "t": "La apuesta sale mal",
+   "t": "La parte que arriesgaste pierde un tercio",
    "x": "Lo que pusiste aparte cae un tercio en pocos meses. Lo revisas cada mañana, como quien mira una herida.",
    "o": [
     {
@@ -7515,7 +7515,7 @@ const LOTES = {
   {
    "id": 11141,
    "por": "Ayudaste a que un fondo entrara en una posición",
-   "t": "La posición del fondo se da vuelta",
+   "t": "La inversión que recomendaste al fondo cae fuerte",
    "x": "La posición que salió de aquella reunión con el fondo cae fuerte. El fondo pregunta quién la recomendó, y la pregunta llega con copia a todos.",
    "o": [
     {
@@ -7622,7 +7622,7 @@ const LOTES = {
   {
    "id": 11145,
    "por": "Le respondiste al fondo a espaldas de tu jefe",
-   "t": "Tu jefe ve el correo",
+   "t": "Tu jefe vio un correo que no debía ver",
    "x": "Tu jefe estaba en copia de un reenvío que no debía tener. Te llama a su oficina y deja la puerta abierta, para que se oiga.",
    "o": [
     {
@@ -7687,7 +7687,7 @@ const LOTES = {
   {
    "id": 11151,
    "por": "Postergaste tu examen de idoneidad",
-   "t": "Quien te presta la licencia se retira",
+   "t": "Quien te deja firmar con su licencia se retira",
    "x": "La persona bajo cuya licencia firmas anuncia que se retira el año que viene. Tus operaciones se van a quedar sin firma.",
    "o": [
     {
@@ -7793,7 +7793,7 @@ const LOTES = {
   {
    "id": 11154,
    "por": "Te presentaste al examen de idoneidad",
-   "t": "Un cliente revisa tu registro",
+   "t": "Un cliente revisa tu historial público",
    "x": "Antes de contratarte, un cliente grande revisa el registro público del regulador. Te llama para preguntarte por lo que vio con tu nombre.",
    "o": [
     {
@@ -7817,7 +7817,7 @@ const LOTES = {
   {
    "id": 11155,
    "por": "Presentaste por fin el examen de idoneidad",
-   "t": "Aprobado, con lo justo",
+   "t": "Apruebas el examen oficial por muy poco",
    "x": "Los resultados tardaron, pero ahí está tu nombre: aprobado, con lo justo. Ya puedes firmar operaciones a tu nombre.",
    "o": [
     {
@@ -7844,7 +7844,7 @@ const LOTES = {
   {
    "id": 11156,
    "por": "Presentaste por fin el examen de idoneidad",
-   "t": "Reprobaste el primer intento",
+   "t": "Reprobaste el examen oficial la primera vez",
    "x": "No alcanzó. El registro público ahora dice que reprobaste una vez, y te queda un solo intento.",
    "o": [
     {
@@ -7870,7 +7870,7 @@ const LOTES = {
   {
    "id": 11160,
    "por": "Propusiste sobreponderar un sector completo",
-   "t": "El sector se desploma",
+   "t": "El sector en el que apostaste se desploma",
    "x": "El sector de tu tesis cae en un trimestre lo que subió en dos años. El comité pide una reunión extraordinaria, y ya sabes quién la abre.",
    "o": [
     {
@@ -7913,7 +7913,7 @@ const LOTES = {
   {
    "id": 11161,
    "por": "Propusiste tu tesis como un piloto pequeño",
-   "t": "El comité quiere escalar el piloto",
+   "t": "El comité quiere invertir diez veces más en tu prueba",
    "x": "El piloto rindió bien y ahora el comité quiere multiplicarlo por diez, justo cuando el sector ya está caro.",
    "o": [
     {
@@ -7960,7 +7960,7 @@ const LOTES = {
   {
    "id": 11162,
    "por": "Propusiste sobreponderar un sector completo",
-   "t": "Te copian la tesis",
+   "t": "Un competidor publica tu misma idea",
    "x": "Un competidor publica una tesis casi idéntica a la tuya, con mejores gráficos. La prensa se la atribuye a él.",
    "o": [
     {
@@ -8011,7 +8011,7 @@ const LOTES = {
   {
    "id": 11164,
    "por": "Te jugaste más fuerte por tu sector",
-   "t": "El sector rebota",
+   "t": "El sector en el que apostaste vuelve a subir",
    "x": "El sector vuelve a subir y tu posición termina en ganancia. En el comité, alguien dice que siempre lo supo.",
    "o": [
     {
@@ -8037,7 +8037,7 @@ const LOTES = {
   {
    "id": 11165,
    "por": "Te jugaste más fuerte por tu sector",
-   "t": "El sector no vuelve",
+   "t": "El sector en el que apostaste sigue cayendo",
    "x": "El sector sigue cayendo un año entero. Tu tesis pasa de ser la idea del año a ser el ejemplo que se cita en la capacitación de los nuevos.",
    "o": [
     {
@@ -8061,7 +8061,7 @@ const LOTES = {
   {
    "id": 11170,
    "por": "Jugaste dominó con el dueño de una empresa familiar",
-   "t": "Falta uno para la partida",
+   "t": "El dueño te invita a jugar dominó un sábado",
    "x": "El dueño de aquella empresa familiar te llama un sábado. Falta uno para la mesa de dominó y pensó en ti antes que en su cuñado.",
    "o": [
     {
@@ -8100,7 +8100,7 @@ const LOTES = {
   {
    "id": 11171,
    "por": "Negociaste con una empresa familiar",
-   "t": "El hijo toma el mando",
+   "t": "El hijo del dueño toma el control de la empresa",
    "x": "El dueño de aquella empresa familiar le pasa el mando a su hijo. El hijo no juega dominó y lee todos los contratos con su abogado.",
    "o": [
     {
@@ -8175,7 +8175,7 @@ const LOTES = {
   {
    "id": 11174,
    "por": "Volviste a la mesa de dominó del empresario",
-   "t": "De aquella mesa sale un negocio",
+   "t": "Alguien del dominó quiere que vendas su empresa",
    "x": "Uno de los que jugaban aquel sábado vende su empresa. Quiere que lo asesores tú, porque en la mesa no hiciste trampa.",
    "o": [
     {
@@ -8200,7 +8200,7 @@ const LOTES = {
   {
    "id": 11175,
    "por": "Volviste a la mesa de dominó del empresario",
-   "t": "Le ganaste a quien no sabe perder",
+   "t": "El que perdió contigo en dominó no lo olvida",
    "x": "Aquel sábado le ganaste tres partidas al socio del dueño. Te lo cruzas en un negocio y todavía se acuerda del marcador.",
    "o": [
     {
@@ -8224,7 +8224,7 @@ const LOTES = {
   {
    "id": 11180,
    "por": "Negociaste con un comprador estratégico",
-   "t": "El veterano te manda un cliente",
+   "t": "Tu rival en la negociación te recomienda a un cliente",
    "x": "El director de fusiones de aquel comprador recomienda tu nombre a un amigo que vende su empresa. Prefiere tenerte de su lado que enfrente.",
    "o": [
     {
@@ -8274,7 +8274,7 @@ const LOTES = {
   {
    "id": 11182,
    "por": "Llevaste a un comprador estratégico a competir",
-   "t": "Un postor perdedor vuelve",
+   "t": "Un comprador que perdió quiere contratarte",
    "x": "Uno de los competidores que trajiste a aquel proceso perdió, pero quiere comprar otra empresa. Y te quiere a ti al frente.",
    "o": [
     {
@@ -8425,7 +8425,7 @@ const LOTES = {
   {
    "id": 11191,
    "por": "Jugaste con el socio director y te dejaste leer",
-   "t": "El socio director saca otra vez el juego",
+   "t": "El socio director te pide jugar con un cliente",
    "x": "Un viernes, el socio director vuelve a sacar el juego. Esta vez el invitado es un cliente importante, y quiere que juegues tú.",
    "o": [
     {
@@ -8466,7 +8466,7 @@ const LOTES = {
   {
    "id": 11192,
    "por": "Competiste por una silla de socio",
-   "t": "Ahora te toca decidir a ti",
+   "t": "Te toca decidir a quién ascender",
    "x": "Te toca decidir una promoción: dos candidatos y la tentación de hacerles la misma prueba que te hicieron a ti.",
    "o": [
     {
@@ -8524,7 +8524,7 @@ const LOTES = {
   {
    "id": 11194,
    "por": "Jugaste con un cliente en la mesa del socio",
-   "t": "El cliente firma después de la partida",
+   "t": "El cliente con el que jugaste firma un gran contrato",
    "x": "El cliente de aquel viernes firma un mandato grande con la firma y pide que lo lleves tú. El socio director lo anuncia sin sorpresa.",
    "o": [
     {
@@ -8551,7 +8551,7 @@ const LOTES = {
   {
    "id": 11195,
    "por": "Jugaste con un cliente en la mesa del socio",
-   "t": "El cliente se aburrió en la mesa",
+   "t": "El cliente al que pusieron a jugar contrata a otra firma",
    "x": "El cliente de aquel viernes contrató a otra firma. Le contó a un conocido que vino a hablar de negocios y lo pusieron a jugar.",
    "o": [
     {
@@ -8576,7 +8576,7 @@ const LOTES = {
   {
    "id": 11200,
    "por": "Aceptaste dirigir la oficina de otro país",
-   "t": "La oficina necesita otro año",
+   "t": "La oficina en el exterior aún no da ganancias",
    "x": "La oficina que montaste afuera necesita otro año de inversión antes de dar ganancia. En la casa matriz empiezan a dudar.",
    "o": [
     {
@@ -8648,7 +8648,7 @@ const LOTES = {
   {
    "id": 11202,
    "por": "Te quedaste a consolidar en vez de irte afuera",
-   "t": "Quien fue en tu lugar vuelve",
+   "t": "La persona que fue en tu lugar vuelve y trabaja a tu lado",
    "x": "La persona que aceptó la oficina de afuera vuelve con galones, y la ponen a cargo de un área al lado de la tuya.",
    "o": [
     {
@@ -8674,7 +8674,7 @@ const LOTES = {
   {
    "id": 11203,
    "por": "Te quedaste a consolidar en vez de irte afuera",
-   "t": "La franquicia local crece",
+   "t": "Tu oficina local tiene su mejor año",
    "x": "Tu negocio local tuvo su mejor año. Te ofrecen más responsabilidad sin salir del país, y más horas sin salir de la oficina.",
    "o": [
     {
@@ -8756,7 +8756,7 @@ const LOTES = {
   {
    "id": 11206,
    "por": "Pediste un año más para la oficina de afuera",
-   "t": "La casa matriz cierra la oficina",
+   "t": "La sede central cierra la oficina del exterior",
    "x": "La casa matriz decide cerrar la oficina de afuera antes de tiempo. Vuelves con buenos contactos, un idioma mejorado y sin galones.",
    "o": [
     {
@@ -8883,7 +8883,7 @@ const LOTES = {
   {
    "id": 12003,
    "por": "Elegiste la carrera antes que a alguien",
-   "t": "Te cruzas con esa persona",
+   "t": "Ves a tu expareja en un café con alguien más",
    "x": "Un café un sábado. Esa persona está en la mesa de al lado, con alguien más, y se ríe como se reía contigo.",
    "o": [
     {
@@ -8931,7 +8931,7 @@ const LOTES = {
   {
    "id": 12010,
    "por": "Te fuiste a otra ciudad y probaste a distancia",
-   "t": "La distancia pesa",
+   "t": "La relación a distancia empieza a fallar",
    "x": "Ya no hay videollamada todas las noches. Hay mensajes cortos, un vuelo cancelado y una pregunta que nadie hace.",
    "o": [
     {
@@ -8956,7 +8956,7 @@ const LOTES = {
   {
    "id": 12011,
    "por": "Te fuiste a otra ciudad y probaste a distancia",
-   "t": "La distancia funciona",
+   "t": "La relación a distancia funciona",
    "x": "Contra todas las estadísticas, aguanta. Cada visita parece un fin de semana robado y hablan más que cuando vivían cerca.",
    "o": [
     {
@@ -9011,7 +9011,7 @@ const LOTES = {
   {
    "id": 12051,
    "por": "Fuiste a todo en la boda de tu mejor amigo",
-   "t": "El grupo de la despedida",
+   "t": "Tus amigos de la despedida planean un viaje al año",
    "x": "El chat de la despedida no murió. Ahora organizan un viaje cada año y dan por hecho que vas.",
    "o": [
     {
@@ -9095,7 +9095,7 @@ const LOTES = {
   {
    "id": 12053,
    "por": "No fuiste a la boda de tu mejor amigo",
-   "t": "Ya no te escriben para todo",
+   "t": "Tus amigos viajan sin invitarte",
    "x": "Te enteras por las fotos de un viaje del grupo al que nadie te invitó. No hubo pelea, solo distancia.",
    "o": [
     {
@@ -9257,7 +9257,7 @@ const LOTES = {
   {
    "id": 12102,
    "por": "Te quedaste en casa de tus padres para ahorrar",
-   "t": "Tu ahorro tiene nombre",
+   "t": "Decides qué hacer con lo que ahorraste",
    "x": "Juntaste lo que no vas a volver a juntar tan rápido. Ahora hay que decidir qué hacer con eso.",
    "o": [
     {
@@ -9354,7 +9354,7 @@ const LOTES = {
   {
    "id": 12110,
    "por": "Invertiste tu ahorro en un fondo indexado",
-   "t": "El mercado se cae justo después",
+   "t": "Tu inversión pierde un cuarto a los tres meses",
    "x": "Tres meses después de entrar, el mercado baja un cuarto. Tu ahorro de dos años vale mucho menos en la pantalla.",
    "o": [
     {
@@ -9378,7 +9378,7 @@ const LOTES = {
   {
    "id": 12111,
    "por": "Invertiste tu ahorro en un fondo indexado",
-   "t": "Sube como en los folletos",
+   "t": "Tu inversión sube dos años seguidos",
    "x": "Dos años buenos seguidos. Lo que juntaste en casa de tus padres ya hace su propio trabajo.",
    "o": [
     {
@@ -9402,7 +9402,7 @@ const LOTES = {
   {
    "id": 12150,
    "por": "Ganaste con la importadora de un conocido",
-   "t": "Te invita a la segunda ronda",
+   "t": "Tu amigo te pide el triple para la importadora",
    "x": "Tu amigo del gimnasio vuelve: la importadora crece y quiere que metas el triple. Sigue sin haber balances.",
    "o": [
     {
@@ -9482,7 +9482,7 @@ const LOTES = {
   {
    "id": 12152,
    "por": "Perdiste dinero con la importadora de un conocido",
-   "t": "Lo ves en el gimnasio",
+   "t": "Ves en el gimnasio al que te hizo perder dinero",
    "x": "Tu amigo volvió al gimnasio como si nada. Te saluda de lejos, entre dos series de pecho.",
    "o": [
     {
@@ -9514,7 +9514,7 @@ const LOTES = {
   {
    "id": 12153,
    "por": "Perdiste dinero con la importadora de un conocido",
-   "t": "Los demás afectados",
+   "t": "Los que también perdieron quieren demandar",
    "x": "Hay un grupo de gente que también perdió. Quieren demandar y piden que cada uno ponga su parte para el abogado.",
    "o": [
     {
@@ -9537,7 +9537,7 @@ const LOTES = {
   {
    "id": 12154,
    "por": "No metiste dinero en la importadora",
-   "t": "El que sí entró",
+   "t": "Un conocido que perdió dinero te pide consejo",
    "x": "La importadora del gimnasio se hundió. Un conocido que sí metió dinero te pregunta cómo lo viste venir.",
    "o": [
     {
@@ -9561,7 +9561,7 @@ const LOTES = {
   {
    "id": 12160,
    "por": "Metiste el triple en la importadora",
-   "t": "La segunda ronda se hunde",
+   "t": "La importadora se hunde con tu dinero dentro",
    "x": "Un contenedor retenido en aduana y una explicación cada vez más larga. Tu amigo ya no manda audios.",
    "o": [
     {
@@ -9586,7 +9586,7 @@ const LOTES = {
   {
    "id": 12161,
    "por": "Metiste el triple en la importadora",
-   "t": "Sale otra vez, de milagro",
+   "t": "La importadora vuelve a pagarte",
    "x": "Contra toda lógica, la importadora vuelve a pagar. Tu amigo te llama inversor estrella y ya prepara la tercera ronda.",
    "o": [
     {
@@ -9610,7 +9610,7 @@ const LOTES = {
   {
    "id": 12200,
    "por": "Decidiste casarte",
-   "t": "La cuenta común",
+   "t": "Juntar o separar el dinero con tu pareja",
    "x": "Ya casados, toca decidir: todo junto, todo separado o un poco de cada cosa. Ninguno de los dos quiere parecer tacaño.",
    "o": [
     {
@@ -9692,7 +9692,7 @@ const LOTES = {
   {
    "id": 12202,
    "por": "Seguiste con tu pareja sin firmar nada",
-   "t": "El tema vuelve",
+   "t": "Tu pareja vuelve a hablar de casarse",
    "x": "Volviendo de la boda de unos amigos, silencio en el carro. Tu pareja vuelve a sacar el tema, esta vez sin sonreír.",
    "o": [
     {
@@ -9753,7 +9753,7 @@ const LOTES = {
   {
    "id": 12204,
    "por": "Dejaste una relación de años",
-   "t": "El año del trabajo",
+   "t": "Solo trabajas y casi no duermes",
    "x": "Te volcaste en el trabajo. Los números salen y tú no tanto: duermes poco y comes delante de la pantalla.",
    "o": [
     {
@@ -9861,7 +9861,7 @@ const LOTES = {
   {
    "id": 12251,
    "por": "Aceptaste que tu relación se terminó",
-   "t": "Seis meses de oficina",
+   "t": "Seis meses trabajando sin parar te agotan",
    "x": "Trabajaste como nunca. Tu rendimiento se nota y tu cuerpo también: duermes cuatro horas y el café ya no hace efecto.",
    "o": [
     {
@@ -9926,7 +9926,7 @@ const LOTES = {
   {
    "id": 12253,
    "por": "Peleaste por tu relación",
-   "t": "La tarea de la terapia",
+   "t": "La terapeuta les pide una cena a la semana",
    "x": "La terapeuta les pide algo raro: una cena por semana sin hablar de logística. Ni cuentas, ni horarios, ni compras.",
    "o": [
     {
@@ -9954,7 +9954,7 @@ const LOTES = {
   {
    "id": 12254,
    "por": "Peleaste por tu relación",
-   "t": "En la oficina lo notan",
+   "t": "En la oficina critican que salgas temprano",
    "x": "Sales temprano dos veces por semana. Alguien comenta en voz alta que ya no te comprometes como antes.",
    "o": [
     {
@@ -9986,7 +9986,7 @@ const LOTES = {
   {
    "id": 12260,
    "por": "Seguiste a fondo después de la ruptura",
-   "t": "El cuerpo pasa factura",
+   "t": "Te mareas en una reunión por la presión alta",
    "x": "Un mareo en una reunión. El médico te dice que tu tensión es la de alguien que te dobla la edad.",
    "o": [
     {
@@ -10011,7 +10011,7 @@ const LOTES = {
   {
    "id": 12261,
    "por": "Seguiste a fondo después de la ruptura",
-   "t": "El impulso se convierte en reputación",
+   "t": "Ahora te dan los casos difíciles",
    "x": "Un año a fondo dejó huella: ahora eres la persona a la que le pasan los casos difíciles. Y tienes fuerzas para ello, por ahora.",
    "o": [
     {
@@ -10035,7 +10035,7 @@ const LOTES = {
   {
    "id": 12300,
    "por": "Tuviste tu primer hijo",
-   "t": "Las noches",
+   "t": "El bebé no los deja dormir",
    "x": "Lleva tres meses durmiendo a ratos. Tú también. En la reunión de la mañana lees el mismo párrafo cuatro veces.",
    "o": [
     {
@@ -10103,7 +10103,7 @@ const LOTES = {
   {
    "id": 12302,
    "por": "Tuviste tu primer hijo",
-   "t": "El seguro de vida",
+   "t": "Tienes que elegir un seguro de vida",
    "x": "Alguien depende de ti por primera vez. El corredor te enseña tres planes y uno tiene un folleto mucho más bonito.",
    "o": [
     {
@@ -10152,7 +10152,7 @@ const LOTES = {
   {
    "id": 12303,
    "por": "Decidiste esperar para tener un hijo",
-   "t": "La pregunta en cada cena",
+   "t": "La familia insiste en que tengan un hijo",
    "x": "En las cenas familiares ya nadie pregunta directamente. Solo hay suspiros cada vez que pasa un bebé.",
    "o": [
     {
@@ -10175,7 +10175,7 @@ const LOTES = {
   {
    "id": 12304,
    "por": "Decidiste esperar para tener un hijo",
-   "t": "Un año que es solo de ustedes",
+   "t": "Sin hijos, les sobra tiempo y dinero",
    "x": "Sin pañales que comprar, les sobra tiempo y algo de dinero. Tu pareja propone usarlo antes de que se escape.",
    "o": [
     {
@@ -10236,7 +10236,7 @@ const LOTES = {
   {
    "id": 12311,
    "por": "Firmaste el seguro con ahorro incluido",
-   "t": "El plan resultó decente",
+   "t": "El seguro con ahorro rinde algo",
    "x": "Revisas el estado y, sorpresa, rinde algo. No es una maravilla, pero el seguro está y el ahorro también.",
    "o": [
     {
@@ -10315,7 +10315,7 @@ const LOTES = {
   {
    "id": 12352,
    "por": "Tuviste un segundo hijo",
-   "t": "Uno de los dos baja el ritmo",
+   "t": "Uno de los dos podría trabajar menos horas",
    "x": "Con dos en guardería, las cuentas dicen que a uno de los dos le sale casi gratis trabajar menos horas.",
    "o": [
     {
@@ -10378,7 +10378,7 @@ const LOTES = {
   {
    "id": 12354,
    "por": "Decidiste quedarte con un hijo",
-   "t": "El tiempo que quedó libre",
+   "t": "Te ofrecen dar clases los sábados",
    "x": "Con uno, los fines de semana vuelven a tener huecos. Una universidad te ofrece dar clases los sábados.",
    "o": [
     {
@@ -10404,7 +10404,7 @@ const LOTES = {
   {
    "id": 12400,
    "por": "Pagaste el colegio caro",
-   "t": "La cuota voluntaria",
+   "t": "El colegio pide una cuota para un edificio",
    "x": "El colegio anuncia un edificio nuevo. Lo pagan los padres con una cuota especial que llaman voluntaria y nadie se atreve a no pagar.",
    "o": [
     {
@@ -10428,7 +10428,7 @@ const LOTES = {
   {
    "id": 12401,
    "por": "Pagaste el colegio caro",
-   "t": "Los padres del colegio",
+   "t": "Los padres del colegio te invitan a una parrilla",
    "x": "En la reunión de representantes hay dos gerentes de banco y la socia de un fondo. Te invitan a la parrilla del sábado.",
    "o": [
     {
@@ -10492,7 +10492,7 @@ const LOTES = {
   {
    "id": 12403,
    "por": "Invertiste para tus hijos la diferencia",
-   "t": "El fondo a su nombre cae",
+   "t": "Baja la inversión que abriste para tus hijos",
    "x": "El fondo que abriste para ellos iba bien. Llega un año malo y todo el estado de cuenta está en rojo.",
    "o": [
     {
@@ -10541,7 +10541,7 @@ const LOTES = {
   {
    "id": 12404,
    "por": "Elegiste el colegio razonable",
-   "t": "La comparación",
+   "t": "Un conocido presume del colegio de su hijo",
    "x": "Un conocido comenta que su hijo ya habla tres idiomas en el colegio privado. Lo dice dos veces en la misma cena.",
    "o": [
     {
@@ -10597,7 +10597,7 @@ const LOTES = {
   {
    "id": 12411,
    "por": "Aportaste al fondo de tus hijos en plena caída",
-   "t": "Tarda más de lo que creías",
+   "t": "La inversión de tus hijos sigue perdiendo",
    "x": "Dos años después sigue en rojo. Lo que parecía barato se abarató todavía más.",
    "o": [
     {
@@ -10673,7 +10673,7 @@ const LOTES = {
   {
    "id": 12451,
    "por": "Metiste dinero en la empresa del 4% mensual",
-   "t": "Te escriben los que recuperan fondos",
+   "t": "Te ofrecen recuperar el dinero de la estafa",
    "x": "Un bufete dice que recupera dinero de estafas como la tuya. Solo hay que pagar un adelanto por los gastos.",
    "o": [
     {
@@ -10769,7 +10769,7 @@ const LOTES = {
   {
    "id": 12454,
    "por": "Dudaste de la empresa del 4% mensual",
-   "t": "La misma web, otro nombre",
+   "t": "La misma estafa vuelve con otro nombre",
    "x": "Meses después te llega otra empresa por otro contacto. Mismo diseño, otro logo, y ahora promete el 3% mensual.",
    "o": [
     {
@@ -10826,7 +10826,7 @@ const LOTES = {
   {
    "id": 12461,
    "por": "Denunciaste al contacto que te metió en la estafa",
-   "t": "Recuperas una parte",
+   "t": "Recuperas parte del dinero de la estafa",
    "x": "Encuentran cuentas a nombre de los organizadores. Hay un reparto entre los afectados y a ti te toca algo.",
    "o": [
     {
@@ -10889,7 +10889,7 @@ const LOTES = {
   {
    "id": 12501,
    "por": "Frenaste tu carrera para salvar tu pareja",
-   "t": "El año que perdiste",
+   "t": "Tu pareja pregunta si te arrepientes",
    "x": "Un colega de tu generación cerró el año con el doble de clientes. Tu pareja lo nota antes que tú y te pregunta si te arrepientes.",
    "o": [
     {
@@ -10925,7 +10925,7 @@ const LOTES = {
   {
    "id": 12502,
    "por": "Tu pareja tuvo más paciencia de la que merecías",
-   "t": "La paciencia tiene fondo",
+   "t": "Tu pareja te avisa que no aguanta otro año así",
    "x": "Tu pareja te dice, con mucha calma, que no va a aguantar otro año igual. La calma es lo que más miedo da.",
    "o": [
     {
@@ -10962,7 +10962,7 @@ const LOTES = {
   {
    "id": 12503,
    "por": "Te divorciaste",
-   "t": "El primer domingo sin plan",
+   "t": "Tu primer domingo solo tras el divorcio",
    "x": "Un apartamento más pequeño y una nevera vacía. El primer domingo después del divorcio dura una semana entera.",
    "o": [
     {
@@ -10995,7 +10995,7 @@ const LOTES = {
   {
    "id": 12504,
    "por": "Te divorciaste",
-   "t": "Rehacer las cuentas desde la mitad",
+   "t": "Después del divorcio tienes la mitad del dinero",
    "x": "Después del reparto, tu patrimonio es la mitad de lo que era. El asesor del banco ya tiene una propuesta para ti.",
    "o": [
     {
@@ -11044,7 +11044,7 @@ const LOTES = {
   {
    "id": 12510,
    "por": "Apostaste fuerte para recuperarte del divorcio",
-   "t": "La apuesta sale",
+   "t": "Tu inversión arriesgada sube mucho",
    "x": "La apuesta sube como pocas. En un año recuperas una parte grande de lo que se fue en el reparto.",
    "o": [
     {
@@ -11068,7 +11068,7 @@ const LOTES = {
   {
    "id": 12511,
    "por": "Apostaste fuerte para recuperarte del divorcio",
-   "t": "La apuesta no sale",
+   "t": "Tu inversión arriesgada cae a la mitad",
    "x": "La empresa en la que apostaste anuncia malos resultados y cae a la mitad. Ahora tienes la mitad de la mitad.",
    "o": [
     {
@@ -11191,7 +11191,7 @@ const LOTES = {
   {
    "id": 12553,
    "por": "Pagaste una buena residencia para tu padre",
-   "t": "Nadie le pregunta nada",
+   "t": "Tu padre se siente solo en la residencia",
    "x": "En la visita del domingo, tu padre te dice que el sitio está bien, pero que allí nadie le pregunta nada.",
    "o": [
     {
@@ -11223,7 +11223,7 @@ const LOTES = {
   {
    "id": 12554,
    "por": "Repartiste a tu padre entre los hermanos",
-   "t": "La hoja de cálculo de los hermanos",
+   "t": "Tu hermano lleva las cuentas y dice que debes",
    "x": "Uno de tus hermanos lleva la cuenta de quién pagó qué y a quién le tocó qué domingo. Tú sales en rojo.",
    "o": [
     {
@@ -11273,7 +11273,7 @@ const LOTES = {
   {
    "id": 12560,
    "por": "Discutiste las cuentas con tus hermanos",
-   "t": "Sale lo de hace treinta años",
+   "t": "La discusión revive peleas de la infancia",
    "x": "La discusión de la hoja se convierte en otra: quién estudió fuera, quién se quedó, a quién quisieron más.",
    "o": [
     {
@@ -11298,7 +11298,7 @@ const LOTES = {
   {
    "id": 12561,
    "por": "Discutiste las cuentas con tus hermanos",
-   "t": "Al final, una tregua",
+   "t": "Los hermanos hacen las paces y un plan nuevo",
    "x": "Después de la pelea, alguien trae comida y nadie se va. A las once de la noche hay un plan nuevo, escrito a mano.",
    "o": [
     {
@@ -11323,7 +11323,7 @@ const LOTES = {
   {
    "id": 12600,
    "por": "Perdiste a alguien cercano",
-   "t": "Las cosas que dejó",
+   "t": "Hay que vaciar la casa de quien murió",
    "x": "Hay que vaciar su casa. Cajas de papeles, fotos sin fecha y una colección de discos que nadie quiere y nadie tira.",
    "o": [
     {
@@ -11356,7 +11356,7 @@ const LOTES = {
   {
    "id": 12601,
    "por": "Paraste todo para despedir a alguien cercano",
-   "t": "Volver después de un trimestre",
+   "t": "Vuelves al trabajo tras tres meses fuera",
    "x": "Vuelves al trabajo. Hay gente nueva, otra forma de hacer las cosas y un proyecto que ya no es tuyo.",
    "o": [
     {
@@ -11389,7 +11389,7 @@ const LOTES = {
   {
    "id": 12602,
    "por": "Enterraste el duelo en el trabajo",
-   "t": "El duelo llega tarde",
+   "t": "Te quedas sin aire en una reunión",
    "x": "En una reunión cualquiera te quedas sin aire. No es el corazón, dice el médico. Es lo que no lloraste.",
    "o": [
     {
@@ -11438,7 +11438,7 @@ const LOTES = {
   {
    "id": 12603,
    "por": "Enterraste el duelo en el trabajo",
-   "t": "Un año de números récord",
+   "t": "Tu mejor año y casi no lo recuerdas",
    "x": "Cerraste el mejor año de tu carrera. En la cena de fin de año brindan por ti y no recuerdas casi nada de ese año.",
    "o": [
     {
@@ -11471,7 +11471,7 @@ const LOTES = {
   {
    "id": 12604,
    "por": "Paraste todo para despedir a alguien cercano",
-   "t": "La libreta de sus cuentas",
+   "t": "Encuentras la libreta de cuentas de quien murió",
    "x": "En sus papeles aparece una libreta con las cuentas de toda su vida. Ahorró para muchas cosas que nunca hizo.",
    "o": [
     {
@@ -11502,7 +11502,7 @@ const LOTES = {
   {
    "id": 12610,
    "por": "Seguiste sin parar después del duelo",
-   "t": "Otra vez, en público",
+   "t": "Te falta el aire en plena presentación",
    "x": "Te vuelve a pasar, esta vez en medio de una presentación importante. Sales de la sala sin terminar la frase.",
    "o": [
     {
@@ -11527,7 +11527,7 @@ const LOTES = {
   {
    "id": 12611,
    "por": "Seguiste sin parar después del duelo",
-   "t": "Se fue apagando",
+   "t": "Las crisis por el duelo dejan de venir",
    "x": "Las crisis se espacian y un día dejan de venir. No sabes si se fue o solo cambió de sitio.",
    "o": [
     {
@@ -11550,7 +11550,7 @@ const LOTES = {
   {
    "id": 13001,
    "por": "Volviste a salir con alguien",
-   "t": "Un fin de semana que no era tuyo",
+   "t": "Un cliente te pide trabajo antes de tu viaje",
    "x": "Tenían un viaje reservado hace meses. El viernes a las seis te escribe un cliente: necesita la versión final para el lunes.",
    "o": [
     {
@@ -11601,7 +11601,7 @@ const LOTES = {
   {
    "id": 13002,
    "por": "Volviste a salir con alguien",
-   "t": "Te presentan a su gente",
+   "t": "Conoces a los amigos de tu nueva pareja",
    "x": "En una cena conoces a sus amigos. Una maneja el dinero de una familia rica y quiere saber a qué te dedicas.",
    "o": [
     {
@@ -11625,7 +11625,7 @@ const LOTES = {
   {
    "id": 13003,
    "por": "Dijiste que no a alguien por trabajo",
-   "t": "La persona de las excusas",
+   "t": "Tus amigos ya no te invitan a nada",
    "x": "Tus amigos ya no te invitan a nada. Te enteras de los cumpleaños por las fotos del día siguiente.",
    "o": [
     {
@@ -11651,7 +11651,7 @@ const LOTES = {
   {
    "id": 13004,
    "por": "Te viste con alguien sin prometer nada",
-   "t": "Lo que no tenía nombre se terminó",
+   "t": "La persona con la que salías deja de escribir",
    "x": "Un día deja de escribir. No hay pelea ni explicación, porque nunca hubo nada que explicar.",
    "o": [
     {
@@ -11674,7 +11674,7 @@ const LOTES = {
   {
    "id": 13005,
    "por": "Dijiste que no a alguien por trabajo",
-   "t": "Un año sin distracciones se nota",
+   "t": "Tu jefe te ofrece un proyecto difícil",
    "x": "Entregaste todo antes de tiempo. Tu jefe te ofrece liderar el proyecto que nadie quiere y que todos van a mirar.",
    "o": [
     {
@@ -11709,7 +11709,7 @@ const LOTES = {
   {
    "id": 13006,
    "por": "Cancelaste un viaje por un cliente",
-   "t": "La cuenta de los planes cancelados",
+   "t": "Tu pareja cuenta los planes que cancelaste",
    "x": "Te enseña el calendario del año: de los planes que hicieron, cumpliste la mitad. No levanta la voz. Pregunta qué va a cambiar.",
    "o": [
     {
@@ -11759,7 +11759,7 @@ const LOTES = {
   {
    "id": 13051,
    "por": "Bajaste tú el ritmo por la relación",
-   "t": "Te pasaron por la derecha",
+   "t": "Alguien que entró contigo ahora es tu jefe",
    "x": "Alguien que entró contigo ahora es tu jefe directo. Lo saludan todos en el ascensor, y tú también.",
    "o": [
     {
@@ -11785,7 +11785,7 @@ const LOTES = {
   {
    "id": 13052,
    "por": "Hiciste espacio en tu vida para la relación",
-   "t": "La casa por fin funciona",
+   "t": "Por fin cenas a tu hora y te sobra tiempo",
    "x": "Cenas a una hora decente. Lees. Descubres que tus mejores ideas de trabajo llegan cuando no estás trabajando.",
    "o": [
     {
@@ -11811,7 +11811,7 @@ const LOTES = {
   {
    "id": 13053,
    "por": "Dejaste que tu pareja bajara el ritmo",
-   "t": "La factura del ajuste",
+   "t": "Tu pareja recuerda el ascenso que dejó pasar",
    "x": "Tu pareja dejó pasar un ascenso por ti. Hoy lo menciona por primera vez, de pasada, en una cena con amigos.",
    "o": [
     {
@@ -11865,7 +11865,7 @@ const LOTES = {
   {
    "id": 13054,
    "por": "Dejaste que tu pareja bajara el ritmo",
-   "t": "Tu mejor año, con una silla vacía",
+   "t": "Celebras tu mejor año sin tu pareja al lado",
    "x": "Cierras el mejor año de tu carrera. En la foto de la celebración del equipo hay una silla vacía a tu lado.",
    "o": [
     {
@@ -11890,7 +11890,7 @@ const LOTES = {
   {
    "id": 13055,
    "por": "Reorganizaste la vida para que cupiera todo",
-   "t": "El calendario de los domingos",
+   "t": "Cada domingo reparten las tareas de la semana",
    "x": "Cada domingo se sientan veinte minutos a repartir la semana. El sistema aguanta, y hay semanas en que no alcanza.",
    "o": [
     {
@@ -11952,7 +11952,7 @@ const LOTES = {
   {
    "id": 13057,
    "por": "Le cediste a tu pareja el turno de acelerar",
-   "t": "La ventana ya se había cerrado",
+   "t": "Tu pareja ya no consigue el ascenso",
    "x": "Lo intentó, pero el ascenso que dejó pasar no volvió. Ahora sus colegas son más jóvenes y más baratos.",
    "o": [
     {
@@ -11977,7 +11977,7 @@ const LOTES = {
   {
    "id": 13101,
    "por": "Te volviste a casar con las cuentas claras",
-   "t": "Las capitulaciones, a prueba",
+   "t": "Inviertes en un negocio: ¿tu dinero o el de los dos?",
    "x": "Quieres poner parte de tu cartera en un negocio. Tu pareja pregunta, con todo derecho, si eso sale de lo tuyo o de lo de los dos.",
    "o": [
     {
@@ -12056,7 +12056,7 @@ const LOTES = {
   {
    "id": 13103,
    "por": "Fuiste despacio con alguien, sin etiquetas",
-   "t": "Despacio también llega",
+   "t": "Cada uno en su casa y la relación funciona",
    "x": "Cada uno en su casa, cada uno con su cuenta. Funciona tan bien que nadie quiere tocarlo, y a veces eso preocupa.",
    "o": [
     {
@@ -12080,7 +12080,7 @@ const LOTES = {
   {
    "id": 13104,
    "por": "Elegiste estar solo",
-   "t": "Los domingos largos",
+   "t": "Te ofrecen entrenar a un equipo juvenil",
    "x": "Tienes tiempo, dinero y la casa en silencio. Un amigo te propone entrenar los sábados a un equipo juvenil de su barrio.",
    "o": [
     {
@@ -12114,7 +12114,7 @@ const LOTES = {
   {
    "id": 13105,
    "por": "Elegiste estar solo",
-   "t": "Nadie te frena",
+   "t": "Vendiste todo en pánico y nadie te detuvo",
    "x": "Nadie te pregunta antes de mover la cartera. Esta vez vendiste todo el día del pánico y no hubo quien te dijera espera.",
    "o": [
     {
@@ -12162,7 +12162,7 @@ const LOTES = {
   {
    "id": 13107,
    "por": "Entraste en un negocio con tu pareja",
-   "t": "Números en la cocina",
+   "t": "El negocio con tu pareja llega a cada cena",
    "x": "El negocio va regular y cada cena termina en una hoja de cálculo. Las capitulaciones no previeron esto.",
    "o": [
     {
@@ -12252,7 +12252,7 @@ const LOTES = {
   {
    "id": 13153,
    "por": "Dejaste que tu hijo pagara la carrera con crédito",
-   "t": "La cuota le pesa",
+   "t": "Tu hijo pagará un tercio de su sueldo en deuda",
    "x": "Se gradúa en meses y ya hizo las cuentas: el sueldo que le ofrecen es menor que el del folleto y la cuota se llevará un tercio.",
    "o": [
     {
@@ -12327,7 +12327,7 @@ const LOTES = {
   {
    "id": 13155,
    "por": "Pagaste toda la universidad de tu hijo",
-   "t": "La cuenta del retiro no cuadra",
+   "t": "No te alcanza el dinero para jubilarte",
    "x": "Haces los números de tu jubilación y faltan justo los años que pusiste en la matrícula. Tu asesor lo dice con mucho tacto.",
    "o": [
     {
@@ -12361,7 +12361,7 @@ const LOTES = {
   {
    "id": 13156,
    "por": "Le pagaste a tu hijo parte de su deuda",
-   "t": "Te devuelve el favor",
+   "t": "Tu hijo te devuelve el dinero cada mes",
    "x": "Ahora le va bien. Cada mes te transfiere un poco de lo que le diste, aunque le dices que no hace falta.",
    "o": [
     {
@@ -12385,7 +12385,7 @@ const LOTES = {
   {
    "id": 13157,
    "por": "Le pagaste a tu hijo parte de su deuda",
-   "t": "Se acostumbró",
+   "t": "Tu hijo te vuelve a pedir dinero",
    "x": "Vuelve a pedirte ayuda, esta vez para un carro. Lo dice con la naturalidad de quien ya sabe la respuesta.",
    "o": [
     {
@@ -12409,7 +12409,7 @@ const LOTES = {
   {
    "id": 13201,
    "por": "Cambiaste de vida después del chequeo",
-   "t": "El médico casi sonríe",
+   "t": "Tus análisis médicos salen normales",
    "x": "Los números del control salen normales. El médico no dice 'todavía' ni una sola vez, y tú lo notas.",
    "o": [
     {
@@ -12442,7 +12442,7 @@ const LOTES = {
   {
    "id": 13202,
    "por": "Cambiaste de vida después del chequeo",
-   "t": "La rutina contra el cierre",
+   "t": "El exceso de trabajo amenaza tu rutina de ejercicio",
    "x": "Tres semanas de cierre seguidas. El gimnasio te manda un correo preguntando si todo está bien.",
    "o": [
     {
@@ -12551,7 +12551,7 @@ const LOTES = {
   {
    "id": 13205,
    "por": "Cambiaste de vida después del chequeo",
-   "t": "Te volviste el de la salud",
+   "t": "Todos te preguntan por tu vida sana",
    "x": "Medio equipo te pregunta qué haces. Un cliente te invita a su grupo de ciclismo de los sábados.",
    "o": [
     {
@@ -12576,7 +12576,7 @@ const LOTES = {
   {
    "id": 13206,
    "por": "Seguiste igual, ahora con más pastillas",
-   "t": "Esta vez fue en la oficina",
+   "t": "Te desmayas en una reunión de trabajo",
    "x": "Te desplomas en una reunión, delante de todos. Es un aviso serio, y ahora lo sabe medio mercado.",
    "o": [
     {
@@ -12603,7 +12603,7 @@ const LOTES = {
   {
    "id": 13207,
    "por": "Seguiste igual, ahora con más pastillas",
-   "t": "El cuerpo aguanta un año más",
+   "t": "El médico te advierte que tu salud empeora",
    "x": "El control sale regular. El médico ya no dice 'todavía': dice 'por ahora', que es peor.",
    "o": [
     {
@@ -12628,7 +12628,7 @@ const LOTES = {
   {
    "id": 13251,
    "por": "Le preguntaste al asesor cuánto cobraba",
-   "t": "El asesor vuelve, más honesto",
+   "t": "El asesor te dice su comisión desde el inicio",
    "x": "Te llama con un fondo nuevo. Esta vez abre la reunión diciendo su comisión, como quien muestra las manos.",
    "o": [
     {
@@ -12660,7 +12660,7 @@ const LOTES = {
   {
    "id": 13252,
    "por": "Te cruzaste con un producto «garantizado»",
-   "t": "Un amigo te pregunta si entra",
+   "t": "Un amigo te pide opinión sobre el mismo producto",
    "x": "Un amigo te reenvía la misma propuesta, de la misma oficina bonita. Quiere saber qué opinas antes de firmar.",
    "o": [
     {
@@ -12686,7 +12686,7 @@ const LOTES = {
   {
    "id": 13253,
    "por": "Entraste al producto «garantizado» y salió caro",
-   "t": "Lo que cuesta salir",
+   "t": "Salirte antes te cuesta más de lo que ganaste",
    "x": "Quieres salir antes del vencimiento. La comisión de salida es más alta que todo lo que te ha rendido.",
    "o": [
     {
@@ -12762,7 +12762,7 @@ const LOTES = {
   {
    "id": 13256,
    "por": "Reclamaste ante el regulador",
-   "t": "El regulador te da la razón",
+   "t": "Te devuelven parte de las comisiones cobradas",
    "x": "No eras el único. El regulador obliga a devolver parte de las comisiones a todos los que reclamaron.",
    "o": [
     {
@@ -12788,7 +12788,7 @@ const LOTES = {
   {
    "id": 13257,
    "por": "Reclamaste ante el regulador",
-   "t": "El reclamo duerme en una ventanilla",
+   "t": "Tu reclamo lleva meses sin respuesta",
    "x": "Pasan los meses y el expediente sigue abierto. Te piden un papel que ya mandaste dos veces.",
    "o": [
     {
@@ -12894,7 +12894,7 @@ const LOTES = {
   {
    "id": 13303,
    "por": "No le prestaste a tu cuñado, pero le ayudaste",
-   "t": "Tu ayuda sí sirvió",
+   "t": "Tu ayuda le consiguió un crédito a tu cuñado",
    "x": "Las horas que pasaste con su plan de negocio le consiguieron un crédito en el banco. Te invita a la inauguración.",
    "o": [
     {
@@ -12919,7 +12919,7 @@ const LOTES = {
   {
    "id": 13304,
    "por": "No le prestaste a tu cuñado",
-   "t": "Lo consiguió en otra parte",
+   "t": "Tu cuñado se endeudó con un prestamista informal",
    "x": "Consiguió el dinero con un prestamista de los que no mandan cartas. Ahora te llama de noche.",
    "o": [
     {
@@ -12977,7 +12977,7 @@ const LOTES = {
   {
    "id": 13306,
    "por": "Entraste de socio en el negocio de tu cuñado",
-   "t": "Socio de tu cuñado",
+   "t": "El negocio con tu cuñado da ganancias",
    "x": "El negocio da ganancias. Tu cuñado te manda tu parte cada trimestre con una foto del local lleno.",
    "o": [
     {
@@ -13026,7 +13026,7 @@ const LOTES = {
   {
    "id": 13351,
    "por": "Denunciaste el robo de identidad desde el día uno",
-   "t": "Tu historial está limpio cuando hace falta",
+   "t": "Te aprueban un crédito rápido sin problemas",
    "x": "Necesitas una línea de crédito para una oportunidad que no espera. Te la aprueban en días, sin preguntas raras.",
    "o": [
     {
@@ -13051,7 +13051,7 @@ const LOTES = {
   {
    "id": 13352,
    "por": "Te clonaron la identidad",
-   "t": "Aparece un tercer crédito",
+   "t": "Sacan otra tarjeta falsa a tu nombre",
    "x": "Los mismos que usaron tu nombre lo vuelven a hacer, esta vez con una tarjeta en otro banco.",
    "o": [
     {
@@ -13085,7 +13085,7 @@ const LOTES = {
   {
    "id": 13353,
    "por": "Gestionaste por teléfono el robo de identidad",
-   "t": "La mancha sigue ahí",
+   "t": "Te niegan una tarjeta por un préstamo falso",
    "x": "Te niegan una tarjeta de crédito porque la central de riesgo todavía muestra uno de los préstamos falsos.",
    "o": [
     {
@@ -13128,7 +13128,7 @@ const LOTES = {
   {
    "id": 13354,
    "por": "Te clonaron la identidad",
-   "t": "Un colega pasa por lo mismo",
+   "t": "A un colega también le roban la identidad",
    "x": "Un colega descubre créditos a su nombre y te pide que le cuentes qué hiciste tú. Está pálido.",
    "o": [
     {
@@ -13152,7 +13152,7 @@ const LOTES = {
   {
    "id": 13355,
    "por": "Le escribiste a la central de riesgo",
-   "t": "La central corrige",
+   "t": "Borran el préstamo falso de tu historial",
    "x": "Llega una carta: el registro falso fue eliminado. Tardó, pero tu historial queda limpio.",
    "o": [
     {
@@ -13199,7 +13199,7 @@ const LOTES = {
   {
    "id": 13401,
    "por": "No entraste a la oportunidad que caducaba",
-   "t": "El grupo cerrado se cae",
+   "t": "La inversión del grupo era una estafa piramidal",
    "x": "Sale en las noticias: era una pirámide que pagaba a los primeros con el dinero de los últimos. Los de las capturas ya no publican.",
    "o": [
     {
@@ -13224,7 +13224,7 @@ const LOTES = {
   {
    "id": 13402,
    "por": "Te cruzaste con una oportunidad que caducaba",
-   "t": "Otra ventana, otro contador en rojo",
+   "t": "Alguien que respetas te ofrece otra inversión urgente",
    "x": "Otro grupo, otra preventa, otras cuarenta y ocho horas. Esta vez te la recomienda alguien a quien respetas.",
    "o": [
     {
@@ -13332,7 +13332,7 @@ const LOTES = {
   {
    "id": 13405,
    "por": "Volviste a entrar con poco en una preventa",
-   "t": "Saliste justo antes",
+   "t": "Vendiste un día antes de que todo se cayera",
    "x": "Vendiste un martes cualquiera. El miércoles se cayó todo. No fue análisis, y lo sabes.",
    "o": [
     {
@@ -13357,7 +13357,7 @@ const LOTES = {
   {
    "id": 13406,
    "por": "Volviste a entrar con poco en una preventa",
-   "t": "Le compraste a quien quería salir",
+   "t": "Entraste tarde y ya no hay a quién venderle",
    "x": "Entraste cuando los primeros ya estaban vendiendo. Tu dinero sirvió para que ellos salieran, y ya no queda a quién venderle.",
    "o": [
     {
@@ -13406,7 +13406,7 @@ const LOTES = {
   {
    "id": 13452,
    "por": "Cerraste limpio la sociedad del socio que firmaba",
-   "t": "Otro proyecto, con firma conjunta",
+   "t": "Te ofrecen un proyecto donde todo se firma entre dos",
    "x": "Alguien que supo cómo saliste de aquello te propone un proyecto. Ofrece firma conjunta desde el primer día, sin que lo pidas.",
    "o": [
     {
@@ -13431,7 +13431,7 @@ const LOTES = {
   {
    "id": 13453,
    "por": "Perdiste en tribunales contra tu exsocio",
-   "t": "Lo primero que sale al buscarte",
+   "t": "Un cliente busca tu nombre y ve la sentencia",
    "x": "Un cliente potencial busca tu nombre en internet. Lo primero que aparece es la sentencia.",
    "o": [
     {
@@ -13480,7 +13480,7 @@ const LOTES = {
   {
    "id": 13454,
    "por": "Ganaste en parte el juicio contra tu exsocio",
-   "t": "Aparece algo más para cobrar",
+   "t": "Un bien de tu exsocio servirá para pagarte",
    "x": "Aparece un bien a nombre del exsocio. El juez lo asigna para pagarte lo que falta, cuando se venda.",
    "o": [
     {
@@ -13602,7 +13602,7 @@ const LOTES = {
   {
    "id": 13502,
    "por": "Invertiste la herencia de tu tía, toda o una parte",
-   "t": "Ya se nota",
+   "t": "La herencia que invertiste creció mucho",
    "x": "Revisas la cuenta por primera vez en años. Lo que heredaste creció mucho más de lo que esperabas, sin que hicieras nada.",
    "o": [
     {
@@ -13626,7 +13626,7 @@ const LOTES = {
   {
    "id": 13503,
    "por": "Cambiaste el carro con la herencia",
-   "t": "La transmisión",
+   "t": "Se daña el carro y la reparación es cara",
    "x": "Se acabó la garantía y llegó la transmisión. El taller te da el presupuesto con cara de pésame.",
    "o": [
     {
@@ -13651,7 +13651,7 @@ const LOTES = {
   {
    "id": 13504,
    "por": "Cambiaste el carro con la herencia",
-   "t": "Un carro que da conversación",
+   "t": "Un cliente pregunta por tu carro nuevo",
    "x": "Llevas a un cliente a almorzar en el carro nuevo. Pregunta qué tal anda, y la conversación termina en negocios.",
    "o": [
     {
@@ -13675,7 +13675,7 @@ const LOTES = {
   {
    "id": 13505,
    "por": "Compraste más cuando la herencia caía",
-   "t": "La recuperación",
+   "t": "Lo que compraste en la caída ya vale más",
    "x": "Lo que compraste en la caída ahora vale bastante más. Lo hiciste con la mano temblando y funcionó.",
    "o": [
     {
@@ -13700,7 +13700,7 @@ const LOTES = {
   {
    "id": 13506,
    "por": "Compraste más cuando la herencia caía",
-   "t": "Tarda más de lo que pensabas",
+   "t": "Lo que compraste en la caída sigue abajo",
    "x": "Lo que compraste en la caída sigue abajo. No pierdes si no vendes, te repites, y te lo repites a menudo.",
    "o": [
     {
@@ -13766,7 +13766,7 @@ const LOTES = {
   {
    "id": 13552,
    "por": "Le explicaste el dinero a tu hijo con una alcancía",
-   "t": "La alcancía se rompió antes de tiempo",
+   "t": "Tu hijo gastó sus ahorros en un videojuego",
    "x": "Se gastó todo lo ahorrado en un videojuego el primer mes. Te mira esperando el sermón.",
    "o": [
     {
@@ -13816,7 +13816,7 @@ const LOTES = {
   {
    "id": 13554,
    "por": "Le dijiste a tu hijo que lo entendería de grande",
-   "t": "Lo aprendió en otra parte",
+   "t": "Un video le promete a tu hijo hacerse rico",
    "x": "Te cuenta, muy serio, que un señor en un video le explicó cómo hacerse rico en una semana.",
    "o": [
     {
@@ -13863,7 +13863,7 @@ const LOTES = {
   {
    "id": 13556,
    "por": "Invertiste en el negocio de pulseras de tu hijo",
-   "t": "Te paga dividendos",
+   "t": "Tu hijo te paga tu parte de las ganancias",
    "x": "El negocio funciona. A fin de mes te entrega en monedas tu parte de las ganancias, con un informe dibujado.",
    "o": [
     {
@@ -13886,7 +13886,7 @@ const LOTES = {
   {
    "id": 13601,
    "por": "Llevaste el mandato de la década",
-   "t": "Un cazatalentos sabe tu nombre",
+   "t": "Una empresa más grande quiere contratarte",
    "x": "Te llama un cazatalentos de una firma más grande. Leyó todo sobre aquel mandato y quiere hablar 'de lo que aprendiste'.",
    "o": [
     {
@@ -13919,7 +13919,7 @@ const LOTES = {
   {
    "id": 13602,
    "por": "Llevaste el mandato de la década",
-   "t": "Quieren tu versión de la historia",
+   "t": "Un periodista quiere tu versión del gran negocio",
    "x": "Un periodista prepara un reportaje sobre aquella operación. Tiene la versión de todos menos la tuya.",
    "o": [
     {
@@ -13969,7 +13969,7 @@ const LOTES = {
   {
    "id": 13603,
    "por": "Llevaste el mandato de la década",
-   "t": "El cliente de aquel mandato vuelve",
+   "t": "El cliente de aquel gran negocio quiere verte",
    "x": "El cliente de la operación tiene otra. Quiere verte antes que a nadie y no dice si es para contratarte o para entender qué pasó.",
    "o": [
     {
@@ -14004,7 +14004,7 @@ const LOTES = {
   {
    "id": 13604,
    "por": "Apoyaste el mandato desde atrás, sin firmar",
-   "t": "La foto es de otro",
+   "t": "Otro da charlas con las láminas que hiciste tú",
    "x": "La operación cerró y quien la firmó da charlas sobre ella. Las láminas que proyecta las hiciste tú.",
    "o": [
     {
@@ -14038,7 +14038,7 @@ const LOTES = {
   {
    "id": 13605,
    "por": "Apoyaste el mandato desde atrás, sin firmar",
-   "t": "Se cayó, y nadie te miró a ti",
+   "t": "El negocio se cae y culpan solo a quien firmó",
    "x": "La operación se cayó en la recta final. Quien la firmó carga con todo; a ti nadie te pregunta nada, y eso tampoco es gratis.",
    "o": [
     {
@@ -14071,7 +14071,7 @@ const LOTES = {
   {
    "id": 13606,
    "por": "Diste la entrevista sobre el mandato de la década",
-   "t": "El reportaje te deja de pie",
+   "t": "El reportaje cuenta tu versión y te favorece",
    "x": "Sale el reportaje y tu versión es la que queda. Te escriben clientes que no conocías y un par de rivales que sí.",
    "o": [
     {
@@ -14179,7 +14179,7 @@ const LOTES = {
   {
    "id": 13652,
    "por": "Aceptaste un asiento en un fondo soberano",
-   "t": "Una puerta que se abre sola",
+   "t": "Un ministro extranjero quiere hablar contigo",
    "x": "Un ministro de otro país pide verte porque se sienta en el mismo comité que tú. Quiere hablar de inversiones en su país.",
    "o": [
     {
@@ -14213,7 +14213,7 @@ const LOTES = {
   {
    "id": 13653,
    "por": "Aceptaste un asiento en un fondo soberano",
-   "t": "El conflicto de interés",
+   "t": "Debes votar sobre una empresa que asesoras",
    "x": "El fondo estudia invertir en una empresa a la que tú asesoras por fuera. Nadie te ha preguntado nada. Todavía.",
    "o": [
     {
@@ -14248,7 +14248,7 @@ const LOTES = {
   {
    "id": 13654,
    "por": "Declinaste el asiento en el fondo soberano",
-   "t": "Llama otro fondo, el último",
+   "t": "Última oferta para un puesto en otro fondo",
    "x": "Llama otro fondo, más pequeño, con un asiento parecido. Esta vez avisan que no habrá una tercera llamada.",
    "o": [
     {
@@ -14275,7 +14275,7 @@ const LOTES = {
   {
    "id": 13655,
    "por": "Declinaste el asiento en el fondo soberano",
-   "t": "El asiento lo tomó un colega",
+   "t": "Un colega aceptó el puesto que rechazaste",
    "x": "El asiento lo tomó un colega tuyo. Hoy te devuelve las llamadas con un día de retraso; antes era al revés.",
    "o": [
     {
@@ -14308,7 +14308,7 @@ const LOTES = {
   {
    "id": 13656,
    "por": "Votaste solo en contra en el fondo soberano",
-   "t": "El acta lo prueba",
+   "t": "Fracasa la inversión que votaste en contra",
    "x": "La inversión se hundió. En la revisión alguien saca el acta y lee tu voto en voz alta, despacio.",
    "o": [
     {
@@ -14334,7 +14334,7 @@ const LOTES = {
   {
    "id": 13657,
    "por": "Votaste solo en contra en el fondo soberano",
-   "t": "Salió bien sin ti",
+   "t": "Gana la inversión que votaste en contra",
    "x": "La inversión que votaste en contra es la mejor del fondo en años. En la celebración, alguien brinda por los valientes.",
    "o": [
     {
@@ -14360,7 +14360,7 @@ const LOTES = {
   {
    "id": 13701,
    "por": "Entraste fuerte en el activo que nadie quería",
-   "t": "El vendedor vuelve a llamar",
+   "t": "Quien te vendió barato vuelve con otra oferta",
    "x": "Quien te vendió aquel activo tiene otro problema y otro activo. Te llama primero a ti, que es un cumplido o una advertencia.",
    "o": [
     {
@@ -14402,7 +14402,7 @@ const LOTES = {
   {
    "id": 13702,
    "por": "Entraste fuerte en el activo que nadie quería",
-   "t": "Te llueven los activos baratos",
+   "t": "Te llegan muchas ofertas de cosas baratas",
    "x": "Corrió la voz de que compras lo que nadie quiere. Te llegan tres ofertas por semana, y casi todas son baratas por buenas razones.",
    "o": [
     {
@@ -14436,7 +14436,7 @@ const LOTES = {
   {
    "id": 13703,
    "por": "Entraste fuerte en el activo que nadie quería",
-   "t": "El activo pide más capital",
+   "t": "Lo que compraste necesita más dinero",
    "x": "El activo necesita una inversión que nadie había presupuestado. Sin ella vale menos; con ella, quizá bastante más.",
    "o": [
     {
@@ -14471,7 +14471,7 @@ const LOTES = {
   {
    "id": 13704,
    "por": "Dejaste pasar el activo que nadie quería",
-   "t": "Otro lo compró y le fue bien",
+   "t": "Un competidor compró lo que dejaste pasar",
    "x": "Un competidor entró donde tú no. Hoy lo cuenta en las cenas como la mejor compra de su carrera.",
    "o": [
     {
@@ -14495,7 +14495,7 @@ const LOTES = {
   {
    "id": 13705,
    "por": "Dejaste pasar el activo que nadie quería",
-   "t": "Estaba barato por algo",
+   "t": "El terreno que no compraste estaba contaminado",
    "x": "Quien lo compró descubrió por qué: el terreno estaba contaminado y no salía en ningún papel. Te llama para ofrecerte su parte.",
    "o": [
     {
@@ -14527,7 +14527,7 @@ const LOTES = {
   {
    "id": 13706,
    "por": "Estudiaste con calma el segundo activo forzado",
-   "t": "Esta vez el descuento también era real",
+   "t": "Lo que estudiaste es bueno y está barato",
    "x": "Seis días de análisis y el problema era solo de quien vendía. El activo es bueno y el precio sigue siendo una fracción.",
    "o": [
     {
@@ -14553,7 +14553,7 @@ const LOTES = {
   {
    "id": 13707,
    "por": "Estudiaste con calma el segundo activo forzado",
-   "t": "Esta vez el problema se veía",
+   "t": "Encuentras una deuda escondida en la compra",
    "x": "El quinto día lo encuentras: una deuda escondida en una filial. El descuento no era descuento, era el precio justo de una trampa.",
    "o": [
     {
@@ -14578,7 +14578,7 @@ const LOTES = {
   {
    "id": 13751,
    "por": "Aceptaste dirigir la mesa",
-   "t": "El error de otro lleva tu firma",
+   "t": "Alguien de tu equipo pierde mucho dinero",
    "x": "Alguien de tu mesa tomó una posición enorme sin protegerse y perdió mucho. El comité no pregunta quién fue: pregunta qué vas a hacer tú.",
    "o": [
     {
@@ -14631,7 +14631,7 @@ const LOTES = {
   {
    "id": 13752,
    "por": "Aceptaste dirigir la mesa",
-   "t": "El mejor año de la mesa",
+   "t": "Tu equipo tiene su mejor año y repartes el bono",
    "x": "La mesa cierra el mejor año de su historia. Te toca repartir el bono entre quince personas que creen que lo hicieron solas.",
    "o": [
     {
@@ -14667,7 +14667,7 @@ const LOTES = {
   {
    "id": 13753,
    "por": "Aceptaste dirigir la mesa",
-   "t": "Tu tiempo ya no es tuyo",
+   "t": "Llevas un año sin vacaciones completas",
    "x": "Llevas un año sin vacaciones completas. Tu segundo se ofrece a cubrirte dos semanas, y te cuesta decir que sí.",
    "o": [
     {
@@ -14700,7 +14700,7 @@ const LOTES = {
   {
    "id": 13754,
    "por": "Propusiste a otra persona para dirigir la mesa",
-   "t": "Tu aliado dirige la mesa",
+   "t": "Tu recomendado dirige el equipo y te apoya",
    "x": "La persona que propusiste lo hace bien y te defiende en cada comité. Te ofrece el proyecto más interesante del año.",
    "o": [
     {
@@ -14734,7 +14734,7 @@ const LOTES = {
   {
    "id": 13755,
    "por": "Propusiste a otra persona para dirigir la mesa",
-   "t": "Tu recomendación lleva tu nombre",
+   "t": "La persona que recomendaste no está a la altura",
    "x": "La persona que propusiste no está a la altura. El comité recuerda perfectamente quién la recomendó.",
    "o": [
     {
@@ -14769,7 +14769,7 @@ const LOTES = {
   {
    "id": 13756,
    "por": "Arreglaste en silencio el error de tu mesa",
-   "t": "Nadie lo supo",
+   "t": "Tapaste la pérdida sin que nadie lo notara",
    "x": "Cerraste la posición sin que el mercado lo notara. La pérdida quedó en algo manejable y el responsable sabe que lo salvaste.",
    "o": [
     {
@@ -14794,7 +14794,7 @@ const LOTES = {
   {
    "id": 13757,
    "por": "Arreglaste en silencio el error de tu mesa",
-   "t": "La auditoría lo encuentra",
+   "t": "Los auditores descubren la pérdida que callaste",
    "x": "La auditoría encuentra la posición y cómo la cerraste. La pregunta ya no es por la pérdida: es por qué no lo dijiste.",
    "o": [
     {
@@ -14949,7 +14949,7 @@ const LOTES = {
   {
    "id": 14003,
    "por": "Pediste más por tu firma y los hiciste esperar",
-   "t": "Tu precio corre por el mercado",
+   "t": "Todos saben cuánto pediste por tu empresa",
    "x": "Se sabe cuánto pediste por tu firma. Unos lo leen como ambición y otros como señal de que estás de salida.",
    "o": [
     {
@@ -15017,7 +15017,7 @@ const LOTES = {
   {
    "id": 14005,
    "por": "No vendiste tu firma",
-   "t": "Un año flojo y sin colchón",
+   "t": "Un año malo y sin ahorros en la empresa",
    "x": "Se caen dos mandatos seguidos y la caja aprieta. Aquel cheque que no firmaste ahora pesa más en la memoria que en la cuenta.",
    "o": [
     {
@@ -15113,7 +15113,7 @@ const LOTES = {
   {
    "id": 14053,
    "por": "Le diste a tu socio una parte de la firma",
-   "t": "Tu socio quiere cambiar el rumbo",
+   "t": "Tu socio quiere solo clientes grandes",
    "x": "Con su parte en la mano, propone dejar los mandatos chicos y perseguir solo operaciones grandes. La firma la construiste con los chicos.",
    "o": [
     {
@@ -15165,7 +15165,7 @@ const LOTES = {
   {
    "id": 14060,
    "por": "Dejaste que tu socio apostara por lo grande",
-   "t": "Salió la operación grande",
+   "t": "Tu socio cierra uno de los negocios grandes",
    "x": "De las tres apuestas de tu socio, una se cerró. Paga más que todos los mandatos chicos de un año, y él lo sabe.",
    "o": [
     {
@@ -15191,7 +15191,7 @@ const LOTES = {
   {
    "id": 14061,
    "por": "Dejaste que tu socio apostara por lo grande",
-   "t": "Las apuestas grandes se cayeron",
+   "t": "Se caen los tres negocios grandes de tu socio",
    "x": "Las tres operaciones se cayeron en la recta final. Los clientes chicos que soltaste ya trabajan con otra firma.",
    "o": [
     {
@@ -15252,7 +15252,7 @@ const LOTES = {
   {
    "id": 14055,
    "por": "Dejaste que tu mejor socio se fuera",
-   "t": "Los clientes que quedan valen más",
+   "t": "Un cliente te encarga el doble de trabajo",
    "x": "Sin la agenda de tu socio, los clientes que quedaron reciben todo tu tiempo. Uno lo nota y te encarga el doble.",
    "o": [
     {
@@ -15279,7 +15279,7 @@ const LOTES = {
   {
    "id": 14101,
    "por": "Repartiste los bonos con generosidad",
-   "t": "Nadie contesta a los headhunters",
+   "t": "Otra empresa intenta llevarse a tus analistas",
    "x": "Un fondo intentó llevarse a tres de tus analistas. Los tres te reenviaron el correo con un emoji de risa.",
    "o": [
     {
@@ -15304,7 +15304,7 @@ const LOTES = {
   {
    "id": 14102,
    "por": "Repartiste los bonos con generosidad",
-   "t": "La caja quedó corta",
+   "t": "No alcanza el dinero para pagar sueldos",
    "x": "Repartiste bien y después vino un trimestre seco. La nómina del mes que viene no cuadra.",
    "o": [
     {
@@ -15415,7 +15415,7 @@ const LOTES = {
   {
    "id": 14110,
    "por": "Retuviste a tu analista con una contraoferta",
-   "t": "Tu analista retenido ya no es el mismo",
+   "t": "Tu analista se quedó por dinero y se nota",
    "x": "Se quedó por el dinero. Cumple el horario exacto y cada tanto mira el celular como quien espera otra oferta.",
    "o": [
     {
@@ -15441,7 +15441,7 @@ const LOTES = {
   {
    "id": 14111,
    "por": "Retuviste a tu analista con una contraoferta",
-   "t": "Tu analista retenido se volvió clave",
+   "t": "El analista que retuviste resuelve el caso más difícil",
    "x": "La contraoferta lo hizo sentir valorado. Este año saca casi sin ayuda el mandato más difícil de la firma.",
    "o": [
     {
@@ -15467,7 +15467,7 @@ const LOTES = {
   {
    "id": 14105,
    "por": "Te quedaste con la mayor parte de los bonos",
-   "t": "Con lo que te quedaste, puedes elegir",
+   "t": "Decides en qué gastar tu parte de los bonos",
    "x": "Tu parte de los bonos alcanza para algo que la firma pedía a gritos: mejores sistemas, un colchón para años malos o un capricho tuyo.",
    "o": [
     {
@@ -15501,7 +15501,7 @@ const LOTES = {
   {
    "id": 14151,
    "por": "Fusionaste tu firma con un competidor",
-   "t": "Dos firmas, dos maneras de trabajar",
+   "t": "Las dos empresas unidas trabajan muy distinto",
    "x": "Su gente llega a las siete y se va a las cinco; la tuya llega a las diez y se va de madrugada. Ya discuten hasta por la plantilla de Excel.",
    "o": [
     {
@@ -15536,7 +15536,7 @@ const LOTES = {
   {
    "id": 14152,
    "por": "Fusionaste tu firma con un competidor",
-   "t": "El tamaño te abre una puerta grande",
+   "t": "Un cliente grande ahora sí se fija en ustedes",
    "x": "Juntos tienen el tamaño que pedía un cliente que antes ni los miraba. Quiere una propuesta en dos semanas.",
    "o": [
     {
@@ -15562,7 +15562,7 @@ const LOTES = {
   {
    "id": 14153,
    "por": "Fusionaste tu firma con un competidor",
-   "t": "Tu socio de fusión quiere tu cliente",
+   "t": "Tu nuevo socio quiere quedarse con tu cliente",
    "x": "Propone que tu mejor cliente pase a su cartera: dice que conoce mejor el sector. Ese cliente es tuyo desde hace años.",
    "o": [
     {
@@ -15616,7 +15616,7 @@ const LOTES = {
   {
    "id": 14160,
    "por": "Te plantaste ante tu socio de fusión",
-   "t": "La fusión cruje",
+   "t": "Tu socio quiere deshacer la unión de empresas",
    "x": "Tu socio empieza a llevar a sus clientes a reuniones donde tú no estás. Su abogado pregunta cómo se deshace una fusión.",
    "o": [
     {
@@ -15643,7 +15643,7 @@ const LOTES = {
   {
    "id": 14161,
    "por": "Te plantaste ante tu socio de fusión",
-   "t": "Tu socio retrocede y te respeta",
+   "t": "Tu socio cede y te pide liderar",
    "x": "Tu socio deja el tema. Un mes después te pide que lideres la próxima propuesta grande. Ahora se sabe quién manda en lo que es tuyo.",
    "o": [
     {
@@ -15704,7 +15704,7 @@ const LOTES = {
   {
    "id": 14155,
    "por": "Rechazaste fusionarte con un competidor",
-   "t": "Un cliente huye de una fusión",
+   "t": "Un cliente prefiere tu empresa por ser pequeña",
    "x": "Un cliente deja a una firma recién fusionada porque ya no sabe quién lo atiende. Te busca a ti justamente por ser chica.",
    "o": [
     {
@@ -15730,7 +15730,7 @@ const LOTES = {
   {
    "id": 14201,
    "por": "Abriste una oficina en Miami",
-   "t": "Miami cuesta más de lo que factura",
+   "t": "La oficina de Miami gasta más de lo que gana",
    "x": "El alquiler, los permisos y la asistente bilingüe se comen lo que paga tu cliente. Fuera de él, la oficina no tiene a quién atender.",
    "o": [
     {
@@ -15782,7 +15782,7 @@ const LOTES = {
   {
    "id": 14210,
    "por": "Contrataste a alguien para vender en Miami",
-   "t": "Tu fichaje de Miami empieza a vender",
+   "t": "Tu vendedor en Miami consigue clientes",
    "x": "Trae dos clientes en un año: una familia con negocios en tres países y un fondo pequeño que busca socio local.",
    "o": [
     {
@@ -15808,7 +15808,7 @@ const LOTES = {
   {
    "id": 14211,
    "por": "Contrataste a alguien para vender en Miami",
-   "t": "Tu fichaje de Miami se lleva la agenda",
+   "t": "Tu vendedor de Miami se va con sus clientes",
    "x": "Al año se independiza y se lleva a los dos clientes que había conseguido. Dice que eran suyos desde antes de conocerte.",
    "o": [
     {
@@ -15860,7 +15860,7 @@ const LOTES = {
   {
    "id": 14203,
    "por": "Abriste una oficina en Miami",
-   "t": "Partido entre dos ciudades",
+   "t": "Vives viajando entre dos ciudades",
    "x": "Pasas la mitad del mes en aviones. En la oficina de aquí, las decisiones esperan a que aterrices.",
    "o": [
     {
@@ -15923,7 +15923,7 @@ const LOTES = {
   {
    "id": 14205,
    "por": "Atendiste a tu cliente de Miami a distancia",
-   "t": "La distancia te favorece",
+   "t": "Tu cliente de Miami te pide consejo en algo grande",
    "x": "A tu cliente le sirve tener a alguien lejos del ruido de Miami. Te pide tu opinión sobre la compra más grande de su vida.",
    "o": [
     {
@@ -15948,7 +15948,7 @@ const LOTES = {
   {
    "id": 14251,
    "por": "Te dejaron un DCF urgente a las once de la noche",
-   "t": "Otra carpeta encima del teclado",
+   "t": "Tu jefe te vuelve a dejar trabajo urgente",
    "x": "Ya tienes fama de resolver urgencias. El VP vuelve a dejarte una carpeta a última hora, esta vez un viernes.",
    "o": [
     {
@@ -16011,7 +16011,7 @@ const LOTES = {
   {
    "id": 14253,
    "por": "Armaste un DCF rápido, confiando en tu ojo",
-   "t": "Tu modelo de aquella noche vuelve",
+   "t": "El cliente usará los cálculos que hiciste de prisa",
    "x": "El cliente lo va a usar para su oferta final. Tu jefe te pide revisarlo antes de que lo vea nadie más.",
    "o": [
     {
@@ -16065,7 +16065,7 @@ const LOTES = {
   {
    "id": 14260,
    "por": "Mandaste tu modelo rápido sin revisarlo",
-   "t": "El cliente encontró algo",
+   "t": "El cliente encuentra un error en tus cálculos",
    "x": "El equipo del cliente señala una tasa de descuento que no cuadra con nada. Tu jefe pregunta quién lo revisó.",
    "o": [
     {
@@ -16092,7 +16092,7 @@ const LOTES = {
   {
    "id": 14261,
    "por": "Mandaste tu modelo rápido sin revisarlo",
-   "t": "Nadie notó nada",
+   "t": "Nadie nota que no revisaste tus cálculos",
    "x": "El modelo pasa sin preguntas y la oferta sale. Tú sabes que hubo suerte. Tu jefe no.",
    "o": [
     {
@@ -16202,7 +16202,7 @@ const LOTES = {
   {
    "id": 14302,
    "por": "Avisaste de inmediato del error en el modelo",
-   "t": "Te quedó la fama del error",
+   "t": "Todos siguen bromeando con tu error",
    "x": "En cada reunión alguien recuerda, medio en broma, la deuda neta mal sumada. Ya va para un año.",
    "o": [
     {
@@ -16237,7 +16237,7 @@ const LOTES = {
   {
    "id": 14303,
    "por": "Te tocó corregir un error ya enviado al cliente",
-   "t": "Te toca diseñar la revisión",
+   "t": "Te toca crear una lista para evitar errores",
    "x": "Después del error, alguien tiene que diseñar el control que debió existir: una lista de chequeo para cada modelo que salga.",
    "o": [
     {
@@ -16263,7 +16263,7 @@ const LOTES = {
   {
    "id": 14304,
    "por": "Corregiste en silencio los errores del modelo",
-   "t": "El cliente pregunta por qué cambió",
+   "t": "El cliente ve que cambió el valor de la empresa",
    "x": "El cliente compara versiones y ve que el equity value se movió. Quiere saber desde cuándo lo sabías.",
    "o": [
     {
@@ -16307,7 +16307,7 @@ const LOTES = {
   {
    "id": 14310,
    "por": "Disfrazaste una corrección como actualización",
-   "t": "El cliente lo dejó pasar",
+   "t": "El cliente no pregunta y el error queda oculto",
    "x": "Nadie preguntó más. El cliente firmó con el número corregido y el tema quedó enterrado debajo de otros temas.",
    "o": [
     {
@@ -16445,7 +16445,7 @@ const LOTES = {
   {
    "id": 14353,
    "por": "Le soltaste al socio una idea de originación",
-   "t": "Tu idea aparece en boca de otro",
+   "t": "Otro presenta una idea igual a la tuya",
    "x": "Meses después, un vicepresidente presenta en el comité una idea muy parecida a la tuya. El socio está en la sala.",
    "o": [
     {
@@ -16616,7 +16616,7 @@ const LOTES = {
   {
    "id": 14401,
    "por": "Estudiaste en serio para la certificación",
-   "t": "Lo que estudiaste aparece en la mesa",
+   "t": "Alguien se equivoca en algo que tú estudiaste",
    "x": "En plena negociación, alguien confunde dos métodos de valoración. Tú lo estudiaste un sábado de lluvia y lo recuerdas entero.",
    "o": [
     {
@@ -16676,7 +16676,7 @@ const LOTES = {
   {
    "id": 14403,
    "por": "Estudiaste en serio para la certificación",
-   "t": "Los sábados pasaron factura",
+   "t": "Te enfermas tras seis meses sin descanso",
    "x": "Seis meses sin descanso y el cuerpo cobra: te enfermas justo en la semana de un cierre importante.",
    "o": [
     {
@@ -16702,7 +16702,7 @@ const LOTES = {
   {
    "id": 14404,
    "por": "Te saltaste la certificación",
-   "t": "La propuesta pide credenciales",
+   "t": "El cliente exige que todos estén certificados",
    "x": "Un cliente institucional pide que todo el equipo de la propuesta esté certificado. Tu nombre no puede ir en la lista.",
    "o": [
     {
@@ -16754,7 +16754,7 @@ const LOTES = {
   {
    "id": 14410,
    "por": "Peleaste tu lugar en la propuesta sin certificado",
-   "t": "El cliente hizo una excepción",
+   "t": "El cliente te acepta aunque no tienes certificado",
    "x": "El cliente leyó tu análisis y pidió que estuvieras en la reunión. Sin certificado, pero en la primera fila.",
    "o": [
     {
@@ -16781,7 +16781,7 @@ const LOTES = {
   {
    "id": 14411,
    "por": "Peleaste tu lugar en la propuesta sin certificado",
-   "t": "El cliente no hizo excepciones",
+   "t": "El cliente te deja fuera por no tener certificado",
    "x": "El cliente agradece el análisis, lo usa entero y deja tu nombre fuera de la propuesta. Las reglas son las reglas.",
    "o": [
     {
@@ -16807,7 +16807,7 @@ const LOTES = {
   {
    "id": 14405,
    "por": "Te saltaste la certificación",
-   "t": "Tu escuela fue la mesa",
+   "t": "Un cliente busca a alguien que conozca el sector",
    "x": "Mientras otros estudiaban los sábados, tú cerraste tres mandatos. Un cliente pide justamente a alguien que conozca el sector por dentro.",
    "o": [
     {
@@ -16834,7 +16834,7 @@ const LOTES = {
   {
    "id": 14451,
    "por": "Fuiste a la fiesta de cierre con el fondo comprador",
-   "t": "Alguien del fondo te escribe",
+   "t": "Un inversionista busca empresas para comprar",
    "x": "Uno de los del fondo comprador se acordó de ti. Te pregunta si conoces a alguien que quiera vender una empresa del sector.",
    "o": [
     {
@@ -16877,7 +16877,7 @@ const LOTES = {
   {
    "id": 14460,
    "por": "Pusiste en contacto a un fondo con un vendedor",
-   "t": "Tu presentación se volvió operación",
+   "t": "Los que presentaste cierran el negocio",
    "x": "El fondo y la empresa que presentaste firmaron. En el anuncio no sale tu nombre, pero los dos saben quién los juntó.",
    "o": [
     {
@@ -16902,7 +16902,7 @@ const LOTES = {
   {
    "id": 14461,
    "por": "Pusiste en contacto a un fondo con un vendedor",
-   "t": "Tu presentación terminó mal",
+   "t": "Los que presentaste terminan peleados",
    "x": "Las conversaciones se rompieron feo. El vendedor dice que el fondo lo trató como a un número, y te lo cuenta a ti.",
    "o": [
     {
@@ -16993,7 +16993,7 @@ const LOTES = {
   {
    "id": 14454,
    "por": "Te quedaste a adelantar el pitch en vez de celebrar",
-   "t": "Tu pitch adelantado gana",
+   "t": "El cliente elige tu propuesta entre cuatro",
    "x": "El pitch que adelantaste aquella noche llega pulido a la reunión. El cliente elige a tu equipo entre cuatro.",
    "o": [
     {
@@ -17021,7 +17021,7 @@ const LOTES = {
   {
    "id": 14455,
    "por": "No te quedaste en la fiesta de cierre",
-   "t": "En el próximo proceso nadie te conoce",
+   "t": "Todos se conocen menos tú por faltar a la fiesta",
    "x": "Vuelves a trabajar con aquel fondo. Todos se saludan por el nombre y por el apodo. Tú te presentas otra vez.",
    "o": [
     {
@@ -17047,7 +17047,7 @@ const LOTES = {
   {
    "id": 14501,
    "por": "Ordenaste un data room de cuatrocientos archivos",
-   "t": "Ahora los desórdenes son tuyos",
+   "t": "Te mandan todos los archivos desordenados",
    "x": "Desde aquel data room, cada proceso desordenado llega a tu escritorio con una nota: «Tú sabes de esto».",
    "o": [
     {
@@ -17156,7 +17156,7 @@ const LOTES = {
   {
    "id": 14511,
    "por": "Detectaste una cláusula escondida en el data room",
-   "t": "Nadie le dio importancia",
+   "t": "Tu jefe ignoró tu aviso y el cliente se fue",
    "x": "Tu jefe dijo que era un detalle legal. Se firmó igual y, un año después, el cliente grande se fue.",
    "o": [
     {
@@ -17183,7 +17183,7 @@ const LOTES = {
   {
    "id": 14503,
    "por": "Ordenaste un data room de cuatrocientos archivos",
-   "t": "El índice te comió la semana",
+   "t": "Ordenar archivos te costó toda la semana",
    "x": "Ordenar cuatrocientos archivos te costó la semana entera. Lo que te habían pedido de verdad quedó a medias.",
    "o": [
     {
@@ -17246,7 +17246,7 @@ const LOTES = {
   {
    "id": 14505,
    "por": "Revisaste solo lo que te pidieron del data room",
-   "t": "Tu jefe valora que no te desvíes",
+   "t": "Tu jefe valora que entregues justo lo pedido",
    "x": "Tu jefe nota que entregas exactamente lo pedido y a tiempo. Te pone en un proceso donde eso vale más que la creatividad.",
    "o": [
     {
@@ -17275,7 +17275,7 @@ const LOTES = {
   {
    "id": 14551,
    "por": "Escribiste mensajes en frío todos los días",
-   "t": "La reunión de hace dos años vuelve",
+   "t": "Te contesta alguien a quien escribiste hace dos años",
    "x": "Uno de los siete que te contestaron aquella vez escribe: van a vender una división y quieren hablar con quien tuvo paciencia.",
    "o": [
     {
@@ -17318,7 +17318,7 @@ const LOTES = {
   {
    "id": 14560,
    "por": "Llevaste una propuesta nacida de un mensaje en frío",
-   "t": "Te firman el mandato",
+   "t": "Se cierra la venta que conseguiste tú",
    "x": "La división se vende con tu nombre en el mandato. Te cuesta ocho meses y te deja la primera historia propia que vale la pena contar.",
    "o": [
     {
@@ -17345,7 +17345,7 @@ const LOTES = {
   {
    "id": 14561,
    "por": "Llevaste una propuesta nacida de un mensaje en frío",
-   "t": "El mandato se cae en la última reunión",
+   "t": "La venta se cancela tras ocho meses de trabajo",
    "x": "Te dicen que la división finalmente no se vende. Ocho meses de trabajo terminan en un correo amable.",
    "o": [
     {
@@ -17370,7 +17370,7 @@ const LOTES = {
   {
    "id": 14552,
    "por": "Escribiste mensajes en frío todos los días",
-   "t": "Te marcaron como spam",
+   "t": "Se burlan de tus correos a desconocidos",
    "x": "Un fondo mandó tu correo a su filtro de basura y otro lo leyó en voz alta en un evento, entre risas.",
    "o": [
     {
@@ -17403,7 +17403,7 @@ const LOTES = {
   {
    "id": 14553,
    "por": "Escribiste solo a diez contactos bien elegidos",
-   "t": "Uno de tus diez te pide un favor",
+   "t": "Uno de tus contactos te pide trabajo gratis",
    "x": "Un contacto de tu lista corta te pide que le revises un modelo. Gratis, para mañana y sin decir para qué es.",
    "o": [
     {
@@ -17437,7 +17437,7 @@ const LOTES = {
   {
    "id": 14554,
    "por": "Armaste tu propia lista de fondos",
-   "t": "Te piden tu lista de fondos",
+   "t": "Un colega te pide tu lista de contactos",
    "x": "Un colega se enteró de tu base de contactos y te la pide para su propio proceso. Dice que te va a mencionar.",
    "o": [
     {
@@ -17473,7 +17473,7 @@ const LOTES = {
   {
    "id": 14555,
    "por": "Escribiste solo a diez contactos bien elegidos",
-   "t": "Uno de tus diez contesta tarde",
+   "t": "Un contacto te responde un año después",
    "x": "Un contacto que nunca te respondió escribe un año después: «Ahora sí es el momento. ¿Hablamos el martes?»",
    "o": [
     {
@@ -17499,7 +17499,7 @@ const LOTES = {
   {
    "id": 14601,
    "por": "Rehiciste entero un teaser lleno de comentarios",
-   "t": "Ahora corriges los teasers ajenos",
+   "t": "Ahora revisas los resúmenes de otros",
    "x": "Aprendiste el formato tan bien que te pasan los teasers de otros para revisar. Llegan con la misma cara que traías tú.",
    "o": [
     {
@@ -17526,7 +17526,7 @@ const LOTES = {
   {
    "id": 14602,
    "por": "Rehiciste entero un teaser lleno de comentarios",
-   "t": "Tu teaser suena como todos",
+   "t": "Tu resumen está bien, pero nadie lo recuerda",
    "x": "Un cliente dice que tu teaser está impecable y que no recuerda nada de lo que decía. El formato se comió la idea.",
    "o": [
     {
@@ -17580,7 +17580,7 @@ const LOTES = {
   {
    "id": 14604,
    "por": "Defendiste tus puntos de un teaser marcado",
-   "t": "El cliente preguntó por tu punto",
+   "t": "El cliente pregunta justo por lo que defendiste",
    "x": "En la reunión, el cliente pregunta justo por el punto que defendiste en aquella discusión. Todos se giran hacia ti.",
    "o": [
     {
@@ -17648,7 +17648,7 @@ const LOTES = {
   {
    "id": 14611,
    "por": "Le contestaste tú al cliente en una reunión",
-   "t": "Te pasaste de confianza",
+   "t": "Respondiste sin estar seguro y el cliente duda",
    "x": "En la siguiente reunión respondiste algo que no sabías del todo. El cliente lo comprobó y ahora duda de todo lo demás.",
    "o": [
     {
@@ -17700,7 +17700,7 @@ const LOTES = {
   {
    "id": 14651,
    "por": "Operaste tú mismo al cierre del mercado",
-   "t": "La pantalla te persigue",
+   "t": "No puedes dejar de mirar los precios",
    "x": "Desde aquella tarde miras cotizaciones en reuniones, en la fila del banco y en la cena. El celular conoce tu ansiedad mejor que tú.",
    "o": [
     {
@@ -17734,7 +17734,7 @@ const LOTES = {
   {
    "id": 14652,
    "por": "Dejaste una orden limitada y apagaste todo",
-   "t": "Tu orden quedó a medias",
+   "t": "Solo se compró la mitad de lo que pediste",
    "x": "La orden se ejecutó a medias y al día siguiente el precio subió. Tienes la mitad de lo que querías y el doble de dudas.",
    "o": [
     {
@@ -17793,7 +17793,7 @@ const LOTES = {
   {
    "id": 14654,
    "por": "Dejaste una orden limitada y apagaste todo",
-   "t": "Tu orden limitada te salvó",
+   "t": "Tu precio tope te evitó comprar en el pánico",
    "x": "En una tarde de pánico, tu orden limitada no se ejecutó. Te ahorró comprar en el peor momento del año.",
    "o": [
     {
@@ -17819,7 +17819,7 @@ const LOTES = {
   {
    "id": 14655,
    "por": "Operaste tú mismo al cierre del mercado",
-   "t": "Una mala tarde al cierre",
+   "t": "Compras justo en el precio más alto del día",
    "x": "Otra orden a mano, otra media hora mirando. Esta vez el precio se te escapa y compras justo en lo más alto del día.",
    "o": [
     {
@@ -17870,7 +17870,7 @@ const LOTES = {
   {
    "id": 14660,
    "por": "Aguantaste una mala compra esperando que volviera",
-   "t": "El precio volvió",
+   "t": "Lo que compraste caro recupera su precio",
    "x": "Tras meses en rojo, la posición se recupera. Podrías salir sin pérdida o quedarte a ver si sigue subiendo.",
    "o": [
     {
@@ -17895,7 +17895,7 @@ const LOTES = {
   {
    "id": 14661,
    "por": "Aguantaste una mala compra esperando que volviera",
-   "t": "El precio no volvió",
+   "t": "Lo que compraste caro sigue cayendo",
    "x": "La posición sigue cayendo. Ya vale la mitad de lo que pagaste y cada mañana te recuerda aquella media hora.",
    "o": [
     {
@@ -17921,7 +17921,7 @@ const LOTES = {
   {
    "id": 14701,
    "por": "Operaste cada titular en el momento",
-   "t": "Las comisiones se comieron el año",
+   "t": "Por comprar y vender tanto, ganaste menos",
    "x": "Haces la cuenta del año: decenas de operaciones por titulares. Entre comisiones y diferencias de precio, ganaste menos que sin tocar nada.",
    "o": [
     {
@@ -17954,7 +17954,7 @@ const LOTES = {
   {
    "id": 14702,
    "por": "Operaste cada titular en el momento",
-   "t": "Un titular de verdad te encuentra listo",
+   "t": "Llega una noticia grande y reaccionas rápido",
    "x": "Un día llega una noticia de las que mueven el año. Tienes los dedos entrenados y reaccionas antes que casi todos.",
    "o": [
     {
@@ -17997,7 +17997,7 @@ const LOTES = {
   {
    "id": 14710,
    "por": "Doblaste la apuesta tras un titular grande",
-   "t": "La apuesta doble salió bien",
+   "t": "Aumentaste tu inversión y te salió bien",
    "x": "La noticia era tan grande como parecía. Tu posición doblada pesa ahora en tu patrimonio y en tu ego, por igual.",
    "o": [
     {
@@ -18023,7 +18023,7 @@ const LOTES = {
   {
    "id": 14711,
    "por": "Doblaste la apuesta tras un titular grande",
-   "t": "La apuesta doble se dio vuelta",
+   "t": "Aumentaste tu inversión y perdiste lo ganado",
    "x": "El mercado digirió la noticia y luego la escupió. Lo que ganaste se va en dos semanas, y un poco más.",
    "o": [
     {
@@ -18073,7 +18073,7 @@ const LOTES = {
   {
    "id": 14704,
    "por": "Cerraste la pantalla en un día de titulares",
-   "t": "Tu portafolio aguantó la tormenta",
+   "t": "No tocas nada en el pánico y no pierdes",
    "x": "Llega una semana de pánico de verdad. No tocas nada y, cuando se calma, estás donde estabas. Muchos no.",
    "o": [
     {
@@ -18099,7 +18099,7 @@ const LOTES = {
   {
    "id": 14705,
    "por": "Cerraste la pantalla en un día de titulares",
-   "t": "El titular que sí importaba",
+   "t": "Te enteras tarde de una noticia importante",
    "x": "Entre tanto ruido, uno era señal: un cambio de regulación en tu posición más grande. Te enteras una semana tarde.",
    "o": [
     {
@@ -18134,7 +18134,7 @@ const LOTES = {
   {
    "id": 14751,
    "por": "Hiciste un roadshow por tres ciudades",
-   "t": "Una carta de interés se vuelve oferta",
+   "t": "Un comprador que visitaste hace una oferta firme",
    "x": "Uno de los fondos que viste en persona manda una oferta firme. En el correo cita algo que dijiste en la reunión.",
    "o": [
     {
@@ -18160,7 +18160,7 @@ const LOTES = {
   {
    "id": 14752,
    "por": "Fuiste a las tres ciudades del roadshow",
-   "t": "El roadshow te pasó la cuenta",
+   "t": "Vuelves de la gira con gripe y mucho atraso",
    "x": "Volviste con dos cartas de interés y una gripe de tres semanas. Mientras tanto, en la oficina se acumula todo.",
    "o": [
     {
@@ -18185,7 +18185,7 @@ const LOTES = {
   {
    "id": 14753,
    "por": "Mandaste a tu asociado a una plaza del roadshow",
-   "t": "Tu asociado quiere su propio fondo",
+   "t": "Tu asociado quiere atender solo a un inversionista",
    "x": "Al asociado le fue bien en su ciudad. Ahora pide llevar él solo la relación con ese fondo.",
    "o": [
     {
@@ -18238,7 +18238,7 @@ const LOTES = {
   {
    "id": 14760,
    "por": "Le diste a tu asociado la relación con un fondo",
-   "t": "Tu asociado cierra con su fondo",
+   "t": "El inversionista de tu asociado cierra una compra",
    "x": "El fondo que le dejaste entra como comprador en un proceso y cierra. Tu asociado te da las gracias delante de todos.",
    "o": [
     {
@@ -18264,7 +18264,7 @@ const LOTES = {
   {
    "id": 14761,
    "por": "Le diste a tu asociado la relación con un fondo",
-   "t": "Tu asociado se fue a ese fondo",
+   "t": "Tu asociado se va a trabajar con ese inversionista",
    "x": "Tu asociado se va a trabajar a ese mismo fondo. Ahora es tu contraparte, y conoce todos tus trucos.",
    "o": [
     {
@@ -18289,7 +18289,7 @@ const LOTES = {
   {
    "id": 14754,
    "por": "Hiciste el roadshow por videollamada",
-   "t": "Los fondos te mandan al final de la fila",
+   "t": "Por no viajar, te dan reuniones poco importantes",
    "x": "En el siguiente proceso, los fondos que viste por pantalla te dan reunión con un analista junior, a las seis de la tarde.",
    "o": [
     {
@@ -18315,7 +18315,7 @@ const LOTES = {
   {
    "id": 14755,
    "por": "Hiciste el roadshow por videollamada",
-   "t": "Un fondo prefiere la pantalla",
+   "t": "Un inversionista prefiere las videollamadas",
    "x": "Uno de los fondos te agradece no haber viajado: odia las reuniones de cortesía. Quiere números, no corbatas.",
    "o": [
     {
@@ -18341,7 +18341,7 @@ const LOTES = {
   {
    "id": 14801,
    "por": "Mantuviste el puente con tu analista que se fue",
-   "t": "Tu exanalista habla de más",
+   "t": "Tu exanalista te cuenta cuánto pagaría su empresa",
    "x": "Tu exanalista, ahora del lado comprador, te deja caer en una cena cuánto está dispuesto a pagar su fondo en tu proceso.",
    "o": [
     {
@@ -18391,7 +18391,7 @@ const LOTES = {
   {
    "id": 14810,
    "por": "Usaste lo que te contó tu exanalista",
-   "t": "Nadie se enteró",
+   "t": "Nadie descubre que usaste su secreto",
    "x": "El proceso cerró en el máximo y nadie preguntó nada. Tu exanalista te sigue invitando a cenar, y tú sigues yendo.",
    "o": [
     {
@@ -18416,7 +18416,7 @@ const LOTES = {
   {
    "id": 14811,
    "por": "Usaste lo que te contó tu exanalista",
-   "t": "Su fondo se enteró",
+   "t": "Descubren que tu exanalista te contó el secreto",
    "x": "El fondo descubre que tu exanalista habló de más. Lo despiden, y en el informe interno aparece tu nombre.",
    "o": [
     {
@@ -18478,7 +18478,7 @@ const LOTES = {
   {
    "id": 14803,
    "por": "Le hiciste una contraoferta a tu mejor analista",
-   "t": "El equipo supo de la contraoferta",
+   "t": "El equipo sabe cuánto le ofreciste para quedarse",
    "x": "Se corrió lo que le ofreciste para que se quedara. Ahora el resto quiere saber si para ganar más hay que amenazar con irse.",
    "o": [
     {
@@ -18513,7 +18513,7 @@ const LOTES = {
   {
    "id": 14804,
    "por": "Un fondo intentó llevarse a tu mejor analista",
-   "t": "El fondo viene por el segundo",
+   "t": "Quieren llevarse a otro de tus mejores analistas",
    "x": "El fondo que tentó a tu analista ahora va por el segundo mejor del equipo. Ya saben dónde está el talento.",
    "o": [
     {
@@ -18582,7 +18582,7 @@ const LOTES = {
   {
    "id": 14852,
    "por": "Aceptaste una silla en una junta directiva",
-   "t": "Ves una operación desde adentro",
+   "t": "Desde la junta, ves un negocio que podrías asesorar",
    "x": "Desde la junta ves que la compañía necesita comprar un proveedor. Tú podrías asesorarla, si no fuera porque estás en la mesa.",
    "o": [
     {
@@ -18626,7 +18626,7 @@ const LOTES = {
   {
    "id": 14860,
    "por": "Asesoraste a la compañía de cuya junta eres parte",
-   "t": "El conflicto pasó sin ruido",
+   "t": "Asesoraste a tu empresa y nadie lo cuestiona",
    "x": "La compra sale bien y nadie cuestiona tu doble papel. Los papeles estaban en regla y los números también.",
    "o": [
     {
@@ -18652,7 +18652,7 @@ const LOTES = {
   {
    "id": 14861,
    "por": "Asesoraste a la compañía de cuya junta eres parte",
-   "t": "Un accionista denuncia el conflicto",
+   "t": "Un accionista te denuncia en la prensa",
    "x": "Un accionista minoritario le escribe a la prensa: el director que asesoró la compra cobró por ella. Ese director eres tú.",
    "o": [
     {
@@ -18732,7 +18732,7 @@ const LOTES = {
   {
    "id": 14855,
    "por": "Declinaste una silla en la junta por conflicto",
-   "t": "Otra junta te ofrece una silla",
+   "t": "Otra empresa te ofrece un puesto en su junta",
    "x": "Se supo por qué declinaste. Otra empresa, sin ninguna relación con tus clientes, te ofrece un asiento en su junta.",
    "o": [
     {
@@ -18758,7 +18758,7 @@ const LOTES = {
   {
    "id": 15010,
    "por": "Metiste algo en la cripto de tu primo",
-   "t": "La cripto se multiplicó",
+   "t": "Tu criptomoneda vale cuatro veces más",
    "x": "Lo que metiste vale cuatro veces más. Tu primo ya habla de cambiar el carro y de dejar el trabajo.",
    "o": [
     {
@@ -18799,7 +18799,7 @@ const LOTES = {
   {
    "id": 15011,
    "por": "Escuchaste a tu primo hablar de su cripto",
-   "t": "La cripto se desplomó",
+   "t": "La criptomoneda de tu primo pierde casi todo",
    "x": "La moneda perdió casi todo en una semana. En la cena familiar todos miran a la misma persona: tu primo.",
    "o": [
     {
@@ -18898,7 +18898,7 @@ const LOTES = {
   {
    "id": 15014,
    "por": "Dejaste correr tu ganancia en la cripto",
-   "t": "La subida no para",
+   "t": "Tu criptomoneda vale diez veces más",
    "x": "Lo que metiste ya vale diez veces lo inicial. Tu primo quiere que se la recomiendes a tus colegas.",
    "o": [
     {
@@ -18923,7 +18923,7 @@ const LOTES = {
   {
    "id": 15016,
    "por": "Dejaste correr tu ganancia en la cripto",
-   "t": "La subida se dio vuelta",
+   "t": "Tu criptomoneda vuelve a su precio inicial",
    "x": "En un mes la moneda vuelve al punto de partida. Tu primo jura que es una corrección sana.",
    "o": [
     {
@@ -18947,7 +18947,7 @@ const LOTES = {
   {
    "id": 15020,
    "por": "Bloqueaste una hora diaria para tu salud",
-   "t": "Cierre de trimestre contra tu hora",
+   "t": "Todos se quedan tarde y tú vas a hacer ejercicio",
    "x": "Todos se quedan hasta tarde. Tu hora de ejercicio, vista desde fuera, se parece mucho a irte temprano.",
    "o": [
     {
@@ -18980,7 +18980,7 @@ const LOTES = {
   {
    "id": 15021,
    "por": "Escuchaste al médico hablar de tu espalda",
-   "t": "Los análisis salen limpios",
+   "t": "Tus análisis médicos salen bien",
    "x": "El médico revisa los resultados y levanta las cejas. Todo en rango, por esta vez.",
    "o": [
     {
@@ -19013,7 +19013,7 @@ const LOTES = {
   {
    "id": 15022,
    "por": "Escuchaste al médico hablar de tu espalda",
-   "t": "La espalda dice basta",
+   "t": "Amaneces sin poder levantarte por la espalda",
    "x": "Una mañana no puedes levantarte de la cama. Tienes una presentación importante a las diez.",
    "o": [
     {
@@ -19099,7 +19099,7 @@ const LOTES = {
   {
    "id": 15024,
    "por": "Bloqueaste una hora diaria para tu salud",
-   "t": "Te guardaron un dorsal",
+   "t": "Tu grupo te invita a correr una media maratón",
    "x": "Los del grupo de las seis de la mañana se inscribieron en una media maratón. Cuentan contigo.",
    "o": [
     {
@@ -19132,7 +19132,7 @@ const LOTES = {
   {
    "id": 15025,
    "por": "Presentaste con la espalda rota",
-   "t": "La espalda te cobra la presentación",
+   "t": "Tu espalda necesita dos semanas de terapia",
    "x": "Dos semanas de fisioterapia y un médico que ya no sonríe cuando entras.",
    "o": [
     {
@@ -19157,7 +19157,7 @@ const LOTES = {
   {
    "id": 15026,
    "por": "Presentaste con la espalda rota",
-   "t": "El susto te ordena la agenda",
+   "t": "Tras el susto, miras tu agenda con miedo",
    "x": "La espalda se recupera sola, pero el susto te dura. Por primera vez miras el calendario con miedo.",
    "o": [
     {
@@ -19213,7 +19213,7 @@ const LOTES = {
   {
    "id": 15031,
    "por": "Preparaste el pitch el domingo de la boda",
-   "t": "El comité pide rehacer los anexos",
+   "t": "El comité pide rehacer parte de tu propuesta",
    "x": "El pitch se aprobó, pero el comité pidió rehacer la mitad de los anexos para el jueves.",
    "o": [
     {
@@ -19246,7 +19246,7 @@ const LOTES = {
   {
    "id": 15032,
    "por": "Faltaste a la boda de tu mejor amigo",
-   "t": "Tu amigo se enfría",
+   "t": "Tu amigo deja de invitarte",
    "x": "Ya no te invitan al asado de los domingos. Te enteras por las fotos.",
    "o": [
     {
@@ -19297,7 +19297,7 @@ const LOTES = {
   {
    "id": 15033,
    "por": "Presentaste el pitch al comité",
-   "t": "El pitch te abre una puerta",
+   "t": "Te ofrecen dirigir un proyecto grande",
    "x": "El comité se acordó de tu presentación. Te ofrecen liderar el próximo mandato grande.",
    "o": [
     {
@@ -19388,7 +19388,7 @@ const LOTES = {
   {
    "id": 15036,
    "por": "Le pediste perdón a tu amigo",
-   "t": "Algo quedó roto",
+   "t": "Tu amigo te habla, pero con distancia",
    "x": "Tu amigo te contesta, pero en corto. Las conversaciones duran lo que dura un café.",
    "o": [
     {
@@ -19412,7 +19412,7 @@ const LOTES = {
   {
    "id": 15040,
    "por": "Atendiste la llamada de un periodista",
-   "t": "El periodista quiere una fuente fija",
+   "t": "Un periodista quiere citarte cada mes",
    "x": "El mismo periodista insiste. Quiere una voz para su columna mensual y te tiene en la lista.",
    "o": [
     {
@@ -19464,7 +19464,7 @@ const LOTES = {
   {
    "id": 15041,
    "por": "Diste una entrevista técnica en vivo",
-   "t": "Un clip tuyo circula",
+   "t": "Un pedazo de tu entrevista se vuelve viral",
    "x": "Un fragmento de la entrevista se volvió viral, cortado a la mitad. Dicen que predijiste una crisis.",
    "o": [
     {
@@ -19565,7 +19565,7 @@ const LOTES = {
   {
    "id": 15044,
    "por": "Le pasaste la entrevista al socio",
-   "t": "El socio sale bien parado",
+   "t": "El socio da la entrevista que le preparaste",
    "x": "El socio dio la entrevista y salió citado con elegancia. En la reunión de equipo te agradece la preparación.",
    "o": [
     {
@@ -19658,7 +19658,7 @@ const LOTES = {
   {
    "id": 15050,
    "por": "Viste a un colega presentar tu análisis",
-   "t": "El colega te pide una mano",
+   "t": "El colega que usó tu trabajo te pide ayuda",
    "x": "El mismo colega necesita ayuda con un modelo urgente. Esta vez promete poner tu nombre en la portada.",
    "o": [
     {
@@ -19693,7 +19693,7 @@ const LOTES = {
   {
    "id": 15051,
    "por": "Viste a un colega presentar tu análisis",
-   "t": "El comité dice tu nombre",
+   "t": "El comité cita tu análisis con tu nombre",
    "x": "El comité abre la sesión citando tu análisis por nombre. El colega estudia la mesa con mucho interés.",
    "o": [
     {
@@ -19719,7 +19719,7 @@ const LOTES = {
   {
    "id": 15052,
    "por": "Escalaste al socio lo de tu colega",
-   "t": "Fama de conflictivo",
+   "t": "Tu evaluación dice que debes colaborar más",
    "x": "En tu evaluación anual aparece la palabra «colaboración» tres veces, siempre junto a «mejorar».",
    "o": [
     {
@@ -19753,7 +19753,7 @@ const LOTES = {
   {
    "id": 15053,
    "por": "Dejaste pasar que un colega usara tu trabajo",
-   "t": "Vuelve a pasar",
+   "t": "El colega vuelve a presentar tu trabajo como suyo",
    "x": "El mismo colega presenta otro trabajo tuyo. Ahora lo hace con más soltura, como quien practica.",
    "o": [
     {
@@ -19839,7 +19839,7 @@ const LOTES = {
   {
    "id": 15055,
    "por": "Llevaste tus notas al socio",
-   "t": "Tus notas convencen",
+   "t": "El socio te cree y saca al colega del caso",
    "x": "El socio lee tus notas con fecha y hora. Al colega lo sacan del caso esa misma tarde.",
    "o": [
     {
@@ -19890,7 +19890,7 @@ const LOTES = {
   {
    "id": 15060,
    "por": "Invertiste parte de tu bono",
-   "t": "El portafolio cae fuerte",
+   "t": "Tus inversiones caen fuerte",
    "x": "El mercado corrige y tu portafolio queda en rojo. En la oficina todos hablan de vender.",
    "o": [
     {
@@ -19942,7 +19942,7 @@ const LOTES = {
   {
    "id": 15061,
    "por": "Invertiste parte de tu bono",
-   "t": "El portafolio rinde",
+   "t": "Tus inversiones dan ganancias",
    "x": "Un buen año. Lo que invertiste del bono ya rinde como otro bono pequeño.",
    "o": [
     {
@@ -19974,7 +19974,7 @@ const LOTES = {
   {
    "id": 15062,
    "por": "Repartiste el bono entre disfrute y ahorro",
-   "t": "El viaje te cambió la cabeza",
+   "t": "Vuelves del viaje descansado y con ideas",
    "x": "El viaje corto te devolvió el descanso y las ideas. Tu jefe nota que estás más filoso.",
    "o": [
     {
@@ -20041,7 +20041,7 @@ const LOTES = {
   {
    "id": 15064,
    "por": "Decidiste qué hacer con tu bono",
-   "t": "Un colega busca socios",
+   "t": "Un colega te invita a invertir en alquileres",
    "x": "Un colega arma un negocio de apartamentos en alquiler y busca socios con el bono fresco.",
    "o": [
     {
@@ -20075,7 +20075,7 @@ const LOTES = {
   {
    "id": 15065,
    "por": "Compraste más en la caída",
-   "t": "El rebote",
+   "t": "El mercado se recupera y lo que compraste sube",
    "x": "El mercado se recupera y lo que compraste en la caída sube con fuerza.",
    "o": [
     {
@@ -20100,7 +20100,7 @@ const LOTES = {
   {
    "id": 15066,
    "por": "Compraste más en la caída",
-   "t": "La caída siguió",
+   "t": "El mercado sigue bajando tres meses más",
    "x": "El mercado baja un trimestre más. Revisas la cuenta menos de lo que te gustaría admitir.",
    "o": [
     {
@@ -20125,7 +20125,7 @@ const LOTES = {
   {
    "id": 15070,
    "por": "Te posicionaste temprano en la fusión",
-   "t": "Los que llegan cambian de jefe",
+   "t": "Llega un director nuevo que desconfía de ti",
    "x": "La casa regional rota a su director. El nuevo no conoce a nadie y desconfía de todos los que llegaron primero.",
    "o": [
     {
@@ -20160,7 +20160,7 @@ const LOTES = {
   {
    "id": 15071,
    "por": "Te posicionaste temprano en la fusión",
-   "t": "Te ofrecen la oficina regional",
+   "t": "Te ofrecen un cargo mayor en otra ciudad",
    "x": "Te proponen dirigir la cobertura en otra ciudad. Más cargo, más horas y otro aeropuerto.",
    "o": [
     {
@@ -20248,7 +20248,7 @@ const LOTES = {
   {
    "id": 15073,
    "por": "Bajaste la cabeza durante la fusión",
-   "t": "Nadie sabe quién eres",
+   "t": "Tras la fusión, casi no te invitan a reuniones",
    "x": "En el nuevo organigrama tu nombre aparece en una caja sin líneas. Te invitan a pocas reuniones.",
    "o": [
     {
@@ -20284,7 +20284,7 @@ const LOTES = {
   {
    "id": 15074,
    "por": "Atravesaste la fusión de tu firma",
-   "t": "Un cazatalentos llama",
+   "t": "Te llaman con una oferta de la competencia",
    "x": "Sabe que hubo fusión y supone que estás inquieto. Trae una oferta de la competencia.",
    "o": [
     {
@@ -20318,7 +20318,7 @@ const LOTES = {
   {
    "id": 15075,
    "por": "Defendiste a tu equipo en los recortes",
-   "t": "Salvaste a casi todos",
+   "t": "Salvaste a casi todo tu equipo del despido",
    "x": "La lista se recorta a la mitad. Tu equipo lo sabe, y el nuevo director también.",
    "o": [
     {
@@ -20344,7 +20344,7 @@ const LOTES = {
   {
    "id": 15076,
    "por": "Defendiste a tu equipo en los recortes",
-   "t": "Te cobraron la defensa",
+   "t": "Te quitan trabajo por defender a tu equipo",
    "x": "Salvaste a dos, pero te quitan una línea de cobertura. Queda claro que hubo un precio.",
    "o": [
     {
@@ -20369,7 +20369,7 @@ const LOTES = {
   {
    "id": 15080,
    "por": "Rehiciste los modelos en dólares de urgencia",
-   "t": "Tus supuestos se vuelven referencia",
+   "t": "Otros analistas copian tus cálculos en dólares",
    "x": "Otros analistas citan tus supuestos en dólares. Algunos sin decir de dónde salieron.",
    "o": [
     {
@@ -20393,7 +20393,7 @@ const LOTES = {
   {
    "id": 15081,
    "por": "Rehiciste los modelos en dólares de urgencia",
-   "t": "Un error en la conversión",
+   "t": "Un cliente encuentra un tipo de cambio viejo",
    "x": "Un cliente encontró una celda con el tipo de cambio viejo. Justo en el modelo que más circuló.",
    "o": [
     {
@@ -20476,7 +20476,7 @@ const LOTES = {
   {
    "id": 15083,
    "por": "Esperaste a que el tipo de cambio se calmara",
-   "t": "El cliente que se fue",
+   "t": "Un cliente se va con la firma que publicó primero",
    "x": "Un cliente se pasó a la firma que publicó primero. Te manda un correo cortés y definitivo.",
    "o": [
     {
@@ -20510,7 +20510,7 @@ const LOTES = {
   {
    "id": 15084,
    "por": "Esperaste a que el tipo de cambio se calmara",
-   "t": "Esperar tenía su lógica",
+   "t": "Esperar fue lo correcto: el tipo de cambio baja",
    "x": "El tipo de cambio rebota a la mitad del salto. Los que corrieron tienen que rehacer todo otra vez.",
    "o": [
     {
@@ -20534,7 +20534,7 @@ const LOTES = {
   {
    "id": 15085,
    "por": "Armaste un modelo que se ajusta solo",
-   "t": "Todos quieren tu plantilla",
+   "t": "Colegas de otras áreas quieren tu modelo",
    "x": "Colegas de otras áreas te piden la plantilla. Algunos ofrecen pagar por ella.",
    "o": [
     {
@@ -20583,7 +20583,7 @@ const LOTES = {
   {
    "id": 15090,
    "por": "Le dedicaste horas al pasante nuevo",
-   "t": "El pasante te salva un cierre",
+   "t": "El pasante encuentra tu error a las once de la noche",
    "x": "A las once de la noche encuentra el error que llevabas una hora buscando.",
    "o": [
     {
@@ -20755,7 +20755,7 @@ const LOTES = {
   {
    "id": 15095,
    "por": "Diste la cara por el error del pasante",
-   "t": "El cliente lo tomó bien",
+   "t": "El cliente valora que admitieras el error",
    "x": "Al cliente le pareció honesto. Hasta le gustó leer tus comentarios internos, dice.",
    "o": [
     {
@@ -20804,7 +20804,7 @@ const LOTES = {
   {
    "id": 15100,
    "por": "Enfrentaste un comité de crédito difícil",
-   "t": "Uno de los duros te busca",
+   "t": "Un miembro duro del comité te invita a un café",
    "x": "Uno de los dos miembros que vinieron buscando sangre te invita a un café. Quiere entender cómo piensas.",
    "o": [
     {
@@ -20837,7 +20837,7 @@ const LOTES = {
   {
    "id": 15101,
    "por": "Defendiste un factoring en un sector volátil",
-   "t": "El sector se cae",
+   "t": "El sector que defendiste tiene un mal trimestre",
    "x": "El sector que defendiste tiene su peor trimestre. En los pasillos todos repiten la palabra «volátil».",
    "o": [
     {
@@ -20871,7 +20871,7 @@ const LOTES = {
   {
    "id": 15102,
    "por": "Defendiste un factoring en un sector volátil",
-   "t": "El sector repunta",
+   "t": "El sector que defendiste paga antes de tiempo",
    "x": "Los deudores del sector pagan antes de tiempo. Alguien en el comité recuerda que lo dijiste.",
    "o": [
     {
@@ -20913,7 +20913,7 @@ const LOTES = {
   {
    "id": 15103,
    "por": "Retiraste tu caso del comité",
-   "t": "Tu caso reforzado hace escuela",
+   "t": "El comité pide que todos presenten como tú",
    "x": "El caso que retiraste volvió bien armado y se aprobó. Ahora el comité pide que todos presenten así.",
    "o": [
     {
@@ -20938,7 +20938,7 @@ const LOTES = {
   {
    "id": 15105,
    "por": "Ampliaste la línea de factoring",
-   "t": "La línea ampliada rinde",
+   "t": "Nadie dejó de pagar el crédito que ampliaste",
    "x": "La línea cierra el año sin un solo impago. Tu nombre aparece en la presentación al directorio.",
    "o": [
     {
@@ -21144,7 +21144,7 @@ const LOTES = {
   {
    "id": 15114,
    "por": "Te reuniste con una familia dueña",
-   "t": "Aparece la madre",
+   "t": "La madre de los hermanos pide conocerte",
    "x": "La madre de los tres, dueña de una parte que nadie había mencionado, pide conocerte.",
    "o": [
     {
@@ -21168,7 +21168,7 @@ const LOTES = {
   {
    "id": 15115,
    "por": "Guardaste el secreto de un hermano",
-   "t": "El secreto vale oro",
+   "t": "Lo que te contó el hermano menor era cierto",
    "x": "Lo que te contó el menor era cierto y cambia la valoración. Llegas a la mesa con ventaja.",
    "o": [
     {
@@ -21193,7 +21193,7 @@ const LOTES = {
   {
    "id": 15116,
    "por": "Guardaste el secreto de un hermano",
-   "t": "Los otros dos se enteran",
+   "t": "Los hermanos mayores saben que te reuniste a solas",
    "x": "Los dos mayores supieron de la reunión a solas. Te acusan de jugar para un bando.",
    "o": [
     {
@@ -21217,7 +21217,7 @@ const LOTES = {
   {
    "id": 15120,
    "por": "Sostuviste tus honorarios ante un cliente grande",
-   "t": "El cliente vuelve",
+   "t": "El cliente que se fue quiere volver",
    "x": "El cliente que se fue pide reunirse. El asesor que contrató en tu lugar no le funcionó.",
    "o": [
     {
@@ -21249,7 +21249,7 @@ const LOTES = {
   {
    "id": 15121,
    "por": "Sostuviste tus honorarios ante un cliente grande",
-   "t": "La caja se resiente",
+   "t": "Sin el cliente grande, falta dinero este trimestre",
    "x": "Sin la cuenta grande, el trimestre cierra corto. Hay que decidir qué se recorta.",
    "o": [
     {
@@ -21315,7 +21315,7 @@ const LOTES = {
   {
    "id": 15123,
    "por": "Negociaste el fee con un cliente grande",
-   "t": "El cliente pide más",
+   "t": "El cliente quiere repetir el acuerdo dos veces más",
    "x": "Contento con el esquema, el cliente propone extenderlo a dos mandatos más.",
    "o": [
     {
@@ -21365,7 +21365,7 @@ const LOTES = {
   {
    "id": 15124,
    "por": "Negociaste el fee con un cliente grande",
-   "t": "El mandato contingente cierra",
+   "t": "El encargo sale bien y llega el pago por éxito",
    "x": "El éxito llega. La parte fija era baja, pero la variable paga el año entero.",
    "o": [
     {
@@ -21390,7 +21390,7 @@ const LOTES = {
   {
    "id": 15125,
    "por": "Aceptaste extender el fee castigado",
-   "t": "El equipo se planta",
+   "t": "Tu equipo llega con una lista de condiciones",
    "x": "El equipo pide una reunión sin ti. Al día siguiente llegan con una lista de condiciones.",
    "o": [
     {
@@ -21415,7 +21415,7 @@ const LOTES = {
   {
    "id": 15126,
    "por": "Aceptaste extender el fee castigado",
-   "t": "Los mandatos pagan",
+   "t": "Los dos encargos salen bien y pagan más de lo previsto",
    "x": "Los dos mandatos cierran rápido y la parte variable paga más de lo previsto. El equipo, agotado.",
    "o": [
     {
@@ -21515,7 +21515,7 @@ const LOTES = {
   {
    "id": 15132,
    "por": "Pediste tiempo antes de entregar a la auditoría",
-   "t": "En la lista de seguimiento",
+   "t": "El auditor revisa tus archivos cada trimestre",
    "x": "El auditor anotó que pediste tiempo. Desde entonces revisan tus expedientes cada trimestre.",
    "o": [
     {
@@ -21579,7 +21579,7 @@ const LOTES = {
   {
    "id": 15135,
    "por": "Buscaste al que aprobó el mandato",
-   "t": "La constancia llega",
+   "t": "El que aprobó lo confirma por escrito",
    "x": "El antiguo aprobador firma una constancia con fecha. El auditor cierra el hallazgo.",
    "o": [
     {
@@ -21627,7 +21627,7 @@ const LOTES = {
   {
    "id": 16000,
    "por": "Viviste una caída fuerte con tu portafolio",
-   "t": "La caída siguió un año entero",
+   "t": "El mercado sigue bajando un año entero",
    "x": "No fue una corrección: el mercado siguió bajando doce meses. En la oficina ya nadie hace chistes sobre comprar barato.",
    "o": [
     {
@@ -21661,7 +21661,7 @@ const LOTES = {
   {
    "id": 16001,
    "por": "Te quedaste invertido durante la caída",
-   "t": "El rebote te encontró adentro",
+   "t": "El mercado se recupera y tú seguías invertido",
    "x": "En pocos meses el mercado recupera casi todo. Tu portafolio vuelve a verse sano y tú te ves más sabio de lo que fuiste.",
    "o": [
     {
@@ -21713,7 +21713,7 @@ const LOTES = {
   {
    "id": 16002,
    "por": "Vendiste y te refugiaste en efectivo",
-   "t": "El rebote te encontró en efectivo",
+   "t": "El mercado se recupera y tú ya habías vendido",
    "x": "El mercado recuperó casi todo en pocos meses. Tu efectivo sigue intacto y bastante más chico en comparación.",
    "o": [
     {
@@ -21777,7 +21777,7 @@ const LOTES = {
   {
    "id": 16004,
    "por": "Compraste la caída en tramos desde la oficina",
-   "t": "Cumplimiento pregunta por tus operaciones",
+   "t": "El área de control revisa tus inversiones personales",
    "x": "El área de cumplimiento revisa las operaciones personales del equipo durante la caída. Las tuyas están en la lista.",
    "o": [
     {
@@ -21802,7 +21802,7 @@ const LOTES = {
   {
    "id": 16005,
    "por": "Te endeudaste para invertir después del rebote",
-   "t": "Llegó la llamada de margen",
+   "t": "El corredor te exige más dinero hoy mismo",
    "x": "El mercado corrigió otra vez. El corredor te pide poner más dinero hoy o venderá tus posiciones a precio de remate.",
    "o": [
     {
@@ -21826,7 +21826,7 @@ const LOTES = {
   {
    "id": 16006,
    "por": "Te endeudaste para invertir después del rebote",
-   "t": "La deuda te salió bien",
+   "t": "Invertiste con deuda y el mercado siguió subiendo",
    "x": "El mercado siguió subiendo y tu cuenta con deuda también. Lo peligroso es que ahora crees que sabes.",
    "o": [
     {
@@ -21851,7 +21851,7 @@ const LOTES = {
   {
    "id": 16010,
    "por": "Negociaste con un fondo que pedía condiciones aparte",
-   "t": "El fondo grande vuelve por más",
+   "t": "El fondo grande quiere invertir más y pagar menos",
    "x": "Quiere entrar en tu próximo fondo con un ticket mayor. A cambio pide una comisión más baja que la de los demás.",
    "o": [
     {
@@ -21900,7 +21900,7 @@ const LOTES = {
   {
    "id": 16011,
    "por": "Le concediste un acuerdo aparte a un fondo",
-   "t": "Otro inversionista quiere lo mismo",
+   "t": "Un inversionista chico pide el mismo trato especial",
    "x": "Un inversionista chico leyó el informe. Su contrato dice que recibe cualquier beneficio que le des a otro, y lo quiere.",
    "o": [
     {
@@ -21933,7 +21933,7 @@ const LOTES = {
   {
    "id": 16012,
    "por": "Negociaste con un fondo que pedía condiciones aparte",
-   "t": "Los demás agradecen la claridad",
+   "t": "Tus inversionistas agradecen saber qué firmó cada uno",
    "x": "En la reunión anual, varios inversionistas dicen que les gusta saber exactamente qué firmó cada uno.",
    "o": [
     {
@@ -21990,7 +21990,7 @@ const LOTES = {
   {
    "id": 16014,
    "por": "Negociaste con un fondo que pedía condiciones aparte",
-   "t": "El regulador pide tus acuerdos",
+   "t": "El regulador pide todos tus contratos con inversionistas",
    "x": "Una revisión de rutina pide todos los acuerdos firmados con inversionistas. Todos significa todos.",
    "o": [
     {
@@ -22063,7 +22063,7 @@ const LOTES = {
   {
    "id": 16021,
    "por": "Atendiste a un inversionista que no entendía la cascada",
-   "t": "Reclama su primera distribución",
+   "t": "Un inversionista cobra menos de lo esperado y se queja",
    "x": "Llegó la primera distribución y es menos de lo que esperaba. Te escribe un correo largo, todo en mayúsculas.",
    "o": [
     {
@@ -22314,7 +22314,7 @@ const LOTES = {
   {
    "id": 16032,
    "por": "Cerraste una venta con dos ofertas sobre la mesa",
-   "t": "La integración salió mal",
+   "t": "Tras la venta, el comprador despide a medio equipo",
    "x": "El comprador despide a medio equipo de la empresa vendida y la prensa local te nombra como asesor del trato.",
    "o": [
     {
@@ -22347,7 +22347,7 @@ const LOTES = {
   {
    "id": 16033,
    "por": "Se te cayó una venta en la recta final",
-   "t": "Toca rearmar la venta",
+   "t": "La venta se cayó y hay que empezar de nuevo",
    "x": "El vendedor sigue queriendo vender, pero ahora te mira raro. El otro comprador vuelve con un precio de remate.",
    "o": [
     {
@@ -22405,7 +22405,7 @@ const LOTES = {
   {
    "id": 16035,
    "por": "Te plantaste en el precio firmado de una venta",
-   "t": "El precio se sostuvo",
+   "t": "El comprador acepta pagar el precio firmado",
    "x": "Después de una semana de silencio, el comprador firma al precio original. Solo quería ver si cedías.",
    "o": [
     {
@@ -22455,7 +22455,7 @@ const LOTES = {
   {
    "id": 16040,
    "por": "Contestaste en el momento frente a la mesa",
-   "t": "Tu respuesta quedó en un memo",
+   "t": "Lo que dijiste aparece citado en un informe",
    "x": "Lo que dijiste en la mesa terminó citado en un memo para un cliente. Con tu nombre, y sin el contexto.",
    "o": [
     {
@@ -22505,7 +22505,7 @@ const LOTES = {
   {
    "id": 16041,
    "por": "Te preguntaron en la mesa qué harías",
-   "t": "La mesa vuelve a mirarte",
+   "t": "En otra reunión todos esperan tu respuesta",
    "x": "Otra reunión, otra pregunta sin contexto. Esta vez todos se voltean hacia ti antes de que la terminen.",
    "o": [
     {
@@ -22571,7 +22571,7 @@ const LOTES = {
   {
    "id": 16043,
    "por": "Pediste el archivo y contestaste después",
-   "t": "Ahora el archivo lo armas tú",
+   "t": "Ahora te toca preparar los datos de cada reunión",
    "x": "Como siempre pides el archivo, ahora te toca prepararlo antes de cada reunión. Nadie más se ofreció.",
    "o": [
     {
@@ -22671,7 +22671,7 @@ const LOTES = {
   {
    "id": 16050,
    "por": "Operaste una sesión completa en tu cuenta",
-   "t": "Le agarraste el gusto a operar",
+   "t": "Ahora revisas el mercado a toda hora",
    "x": "Desde aquella sesión revisas el mercado en el almuerzo, en el baño y en las reuniones. Tu energía lo nota.",
    "o": [
     {
@@ -22788,7 +22788,7 @@ const LOTES = {
   {
    "id": 16053,
    "por": "Compraste y apagaste la pantalla",
-   "t": "La compra olvidada se desinfló",
+   "t": "Lo que compraste y olvidaste cayó a la mitad",
    "x": "Lo que compraste aquel día cayó a la mitad y no te enteraste hasta hoy.",
    "o": [
     {
@@ -22845,7 +22845,7 @@ const LOTES = {
   {
    "id": 16055,
    "por": "Abriste una cuenta más grande para operar",
-   "t": "La cuenta grande te premió",
+   "t": "Tu cuenta grande gana más que el mercado",
    "x": "Un buen trimestre: tu cuenta grande sube bastante más que el mercado. Empiezas a pensar en dejar tu trabajo.",
    "o": [
     {
@@ -22870,7 +22870,7 @@ const LOTES = {
   {
    "id": 16056,
    "por": "Abriste una cuenta más grande para operar",
-   "t": "La cuenta grande te comió",
+   "t": "Pierdes buena parte de tu cuenta grande",
    "x": "Un mal trimestre se llevó buena parte de la cuenta. Lo peor no es la pérdida: es que quieres recuperarla mañana.",
    "o": [
     {
@@ -22896,7 +22896,7 @@ const LOTES = {
   {
    "id": 16060,
    "por": "Le armaste la deuda a un cliente que compraba",
-   "t": "La compañía comprada aprieta",
+   "t": "La empresa comprada no puede con su deuda",
    "x": "Las ventas bajaron un trimestre y la deuda pesa. El cliente te llama antes que al banco.",
    "o": [
     {
@@ -22929,7 +22929,7 @@ const LOTES = {
   {
    "id": 16061,
    "por": "Le armaste la deuda a un cliente que compraba",
-   "t": "El cliente quiere repetir",
+   "t": "El cliente quiere comprar otra empresa",
    "x": "La primera compra va bien y el cliente quiere otra empresa del mismo sector. Te llama a ti primero.",
    "o": [
     {
@@ -23052,7 +23052,7 @@ const LOTES = {
   {
    "id": 16065,
    "por": "Aceptaste una parte de la empresa en vez de comisión",
-   "t": "Tu pedacito vale",
+   "t": "Tu parte de la empresa ahora vale mucho",
    "x": "El cliente vendió la empresa. Tu pedacito, que olvidaste en un cajón, vale varias veces la comisión que no cobraste.",
    "o": [
     {
@@ -23076,7 +23076,7 @@ const LOTES = {
   {
    "id": 16066,
    "por": "Aceptaste una parte de la empresa en vez de comisión",
-   "t": "Tu pedacito no vale nada",
+   "t": "Tu parte de la empresa ya no vale nada",
    "x": "La empresa se refinanció dos veces y tu participación quedó al final de la fila. Vale lo que el papel en que está.",
    "o": [
     {
@@ -23134,7 +23134,7 @@ const LOTES = {
   {
    "id": 16071,
    "por": "Filtraste los hallazgos de una revisión",
-   "t": "El comité quiere tu filtro siempre",
+   "t": "El comité quiere que revises todo antes que ellos",
    "x": "El comité aprobó rápido y ahora quiere que todas las revisiones pasen por tus manos antes de llegarle.",
    "o": [
     {
@@ -23308,7 +23308,7 @@ const LOTES = {
   {
    "id": 16080,
    "por": "Te ofrecieron coinvertir junto a un fondo amigo",
-   "t": "El fondo te invita a otra coinversión",
+   "t": "El fondo te invita a invertir con él otra vez",
    "x": "Ticket un poco más grande, plazo más corto y el mismo archivo comprimido de siempre.",
    "o": [
     {
@@ -23383,7 +23383,7 @@ const LOTES = {
   {
    "id": 16082,
    "por": "Entraste en una coinversión confiando en el fondo",
-   "t": "La coinversión reparte ganancias",
+   "t": "La inversión que hiciste con el fondo da ganancias",
    "x": "Primera distribución, sin haber movido un dedo. La tentación es creer que esto siempre funciona así.",
    "o": [
     {
@@ -23408,7 +23408,7 @@ const LOTES = {
   {
    "id": 16083,
    "por": "Entraste en una coinversión que salió mal",
-   "t": "La compañía pide más capital",
+   "t": "La empresa necesita dinero para salvarse",
    "x": "Necesita una ronda de rescate. Si no pones tu parte, tu participación queda reducida a casi nada.",
    "o": [
     {
@@ -23466,7 +23466,7 @@ const LOTES = {
   {
    "id": 16085,
    "por": "Entraste a una coinversión sin revisarla",
-   "t": "La segunda también salió bien",
+   "t": "Otra inversión sin revisar vuelve a dar ganancias",
    "x": "Otra distribución sin haber abierto el archivo. Ya ni recuerdas qué hace la compañía.",
    "o": [
     {
@@ -23491,7 +23491,7 @@ const LOTES = {
   {
    "id": 16086,
    "por": "Entraste a una coinversión sin revisarla",
-   "t": "La segunda salió mal",
+   "t": "La inversión que no revisaste sale mal",
    "x": "La compañía perdió a su principal cliente. Estaba en la página tres del archivo que no abriste.",
    "o": [
     {
@@ -23515,7 +23515,7 @@ const LOTES = {
   {
    "id": 16090,
    "por": "Revisaste la cláusula de ajuste de precio",
-   "t": "El ajuste de precio llega al cierre",
+   "t": "Discuten cómo leer la cláusula del precio",
    "x": "Llega el cálculo del ajuste. La cláusula dice lo que tiene que decir y el otro lado intenta leerla a su manera.",
    "o": [
     {
@@ -23597,7 +23597,7 @@ const LOTES = {
   {
    "id": 16093,
    "por": "Firmaste una cláusula sin revisarla",
-   "t": "La cláusula vuelve a aparecer",
+   "t": "Llega otro contrato con la misma cláusula",
    "x": "El mismo modelo de contrato llega en otro trato. Mismo texto, misma tentación de firmar sin leer.",
    "o": [
     {
@@ -23673,7 +23673,7 @@ const LOTES = {
   {
    "id": 16095,
    "por": "Firmaste otra cláusula sin leerla",
-   "t": "Tampoco pasó nada esta vez",
+   "t": "Firmaste otra vez sin leer y no pasó nada",
    "x": "El segundo trato cerró sin problemas. Ahora tienes dos casos que prueban que leer es opcional.",
    "o": [
     {
@@ -23696,7 +23696,7 @@ const LOTES = {
   {
    "id": 16096,
    "por": "Firmaste otra cláusula sin leerla",
-   "t": "La segunda firma te costó",
+   "t": "Firmar sin leer esta vez sí te costó",
    "x": "La coma que no viste cambió el reparto del ajuste. El cliente lo descubre antes que tú.",
    "o": [
     {
@@ -23721,7 +23721,7 @@ const LOTES = {
   {
    "id": 16100,
    "por": "Escribiste un script para rehacer un modelo",
-   "t": "Tres equipos quieren tu script",
+   "t": "Tres equipos quieren tu programa",
    "x": "Aunque te costó, el script quedó en una carpeta compartida. Tres equipos lo encontraron y quieren usarlo.",
    "o": [
     {
@@ -23780,7 +23780,7 @@ const LOTES = {
   {
    "id": 16102,
    "por": "Rehiciste un modelo a mano en catorce horas",
-   "t": "Te ganaste fama de aguantar",
+   "t": "Ahora todos los modelos rotos te llegan a ti",
    "x": "Desde aquella noche, cada modelo roto termina en tu escritorio. Nadie pregunta si tienes tiempo.",
    "o": [
     {
@@ -23815,7 +23815,7 @@ const LOTES = {
   {
    "id": 16103,
    "por": "Entregaste la versión vieja de un modelo",
-   "t": "Alguien comparó las versiones",
+   "t": "El cliente nota que le mandaste el modelo viejo",
    "x": "Un analista del cliente cruzó el modelo con el de hace un mes. Son idénticos, incluyendo el error.",
    "o": [
     {
@@ -23856,7 +23856,7 @@ const LOTES = {
   {
    "id": 16104,
    "por": "Entregaste la versión vieja de un modelo",
-   "t": "Nadie comparó nada",
+   "t": "Nadie nota que mandaste el modelo viejo",
    "x": "Pasaron meses y nadie notó nada. El trato cerró con los números viejos y el error adentro.",
    "o": [
     {
@@ -23881,7 +23881,7 @@ const LOTES = {
   {
    "id": 16105,
    "por": "Dijiste que el modelo viejo fue un error de archivo",
-   "t": "El cliente te creyó",
+   "t": "El cliente cree tu excusa del archivo",
    "x": "El cliente acepta la explicación y sigue trabajando contigo. Tú sabes lo que pasó y él no.",
    "o": [
     {
@@ -23905,7 +23905,7 @@ const LOTES = {
   {
    "id": 16106,
    "por": "Dijiste que el modelo viejo fue un error de archivo",
-   "t": "El cliente pidió el historial",
+   "t": "El historial del archivo contradice tu excusa",
    "x": "El cliente pide el historial de cambios del archivo. Muestra que nadie lo tocó en un mes.",
    "o": [
     {
@@ -23983,7 +23983,7 @@ const LOTES = {
   {
    "id": 16111,
    "por": "Pediste estados auditados antes de valorar",
-   "t": "Los auditados confirman tus dudas",
+   "t": "Las cuentas oficiales muestran menos ganancia",
    "x": "Llegaron un mes tarde y con la mitad de los ajustes eliminados. El EBITDA real es bastante menor.",
    "o": [
     {
@@ -24031,7 +24031,7 @@ const LOTES = {
   {
    "id": 16113,
    "por": "Valoraste con el EBITDA ajustado que te dieron",
-   "t": "Los ajustes aguantaron",
+   "t": "Los números que no revisaste eran correctos",
    "x": "La revisión a fondo confirmó los ajustes. Nadie sabe que no los miraste, salvo tú.",
    "o": [
     {
@@ -24056,7 +24056,7 @@ const LOTES = {
   {
    "id": 16114,
    "por": "Valoraste sobre un EBITDA que resultó ser humo",
-   "t": "La valoración se cayó en la revisión",
+   "t": "El comprador descubre que la ganancia era inflada",
    "x": "El comprador descubrió que los ajustes eran humo. Pregunta quién validó el número que le presentaste.",
    "o": [
     {
@@ -24091,7 +24091,7 @@ const LOTES = {
   {
    "id": 16115,
    "por": "Aceptaste los números de un vendedor conocido",
-   "t": "El vendedor cumplió",
+   "t": "Los números del vendedor eran correctos",
    "x": "Los ajustes eran legítimos y el trato cerró rápido. Ahora tu equipo cree que siempre se puede trabajar así.",
    "o": [
     {
@@ -24115,7 +24115,7 @@ const LOTES = {
   {
    "id": 16116,
    "por": "Aceptaste los números de un vendedor conocido",
-   "t": "Los ajustes eran humo otra vez",
+   "t": "El vendedor volvió a inflar sus números",
    "x": "La revisión a fondo encontró los mismos trucos de la primera vez. Esta vez no hay excusa de que no lo conocías.",
    "o": [
     {
@@ -24190,7 +24190,7 @@ const LOTES = {
   {
    "id": 16121,
    "por": "Diste tu lectura del tipo de cambio en una entrevista",
-   "t": "La moneda hizo lo que dijiste",
+   "t": "El tipo de cambio se movió como dijiste",
    "x": "El banco central subió tasas, el déficit siguió y la moneda se movió como dijiste en la entrevista. O casi.",
    "o": [
     {
@@ -24215,7 +24215,7 @@ const LOTES = {
   {
    "id": 16122,
    "por": "Diste tu lectura del tipo de cambio en una entrevista",
-   "t": "La moneda te contradijo",
+   "t": "El tipo de cambio hizo lo contrario de lo que dijiste",
    "x": "Pasó justo lo contrario de lo que dijiste. Había un factor que nadie mencionó en aquella sala.",
    "o": [
     {
@@ -24265,7 +24265,7 @@ const LOTES = {
   {
    "id": 16124,
    "por": "Te hicieron la pregunta de macro en una entrevista",
-   "t": "Otra vez la misma pregunta",
+   "t": "En otra entrevista te hacen la misma pregunta",
    "x": "Otra entrevista, otra sala, la misma pregunta de tasas y déficit. Parece la pregunta favorita de todos.",
    "o": [
     {
@@ -24463,7 +24463,7 @@ const LOTES = {
   {
    "id": 17004,
    "por": "Pasaste por un control cambiario de un día a otro",
-   "t": "Levantan el control sin avisar",
+   "t": "Quitan el control al dólar de un día a otro",
    "x": "Tan rápido como llegó, el control se cae. El dólar del mercado paralelo baja a la mitad y todo el mundo hace cuentas de lo que hizo aquel día.",
    "o": [
     {
@@ -24746,7 +24746,7 @@ const LOTES = {
   {
    "id": 17055,
    "por": "Rechazaste Miami para quedarte con tu red",
-   "t": "Tu red te devuelve el favor",
+   "t": "Un viejo contacto te trae un negocio",
    "x": "Un contacto de años te trae un negocio que no le enseñó a nadie más. Dice que te lo trae a ti porque tú no te fuiste.",
    "o": [
     {
@@ -24780,7 +24780,7 @@ const LOTES = {
   {
    "id": 17056,
    "por": "Propusiste cubrir a los clientes de tu país",
-   "t": "La mesa latinoamericana es tuya",
+   "t": "Te ponen a cargo de los clientes latinoamericanos",
    "x": "La firma aprueba tu propuesta y te pone a cargo de los clientes de la región. Por fin tu agenda de allá vale algo aquí.",
    "o": [
     {
@@ -25049,7 +25049,7 @@ const LOTES = {
   {
    "id": 17107,
    "por": "Compraste una empresa con alguien de una cena",
-   "t": "La empresa pide más capital",
+   "t": "Tu socio te pide más dinero para la empresa",
    "x": "La empresa que compraron juntos no despega. Tu socio dice que con otra ronda de dinero lo logran y te pide poner tu parte.",
    "o": [
     {
@@ -25149,7 +25149,7 @@ const LOTES = {
   {
    "id": 17153,
    "por": "Pediste estudiar la pizarra y volver al otro día",
-   "t": "Tus apuntes circulan por el piso",
+   "t": "Tus apuntes de estudio circulan por la oficina",
    "x": "La hoja que armaste para estudiar aquella noche te la pidió un compañero. Ahora la tiene medio piso y nadie sabe de quién es.",
    "o": [
     {
@@ -25258,7 +25258,7 @@ const LOTES = {
   {
    "id": 17156,
    "por": "Mandaste al socio un análisis que nadie te pidió",
-   "t": "Tu análisis se quedó en la bandeja",
+   "t": "El socio nunca abre el análisis que le mandaste",
    "x": "El socio nunca contesta el correo. Meses después ves el archivo sin abrir en la carpeta compartida.",
    "o": [
     {
@@ -25283,7 +25283,7 @@ const LOTES = {
   {
    "id": 17201,
    "por": "Rotaste entre activos durante todo un año",
-   "t": "El peaje de tanto movimiento",
+   "t": "Tanto comprar y vender te costó en comisiones",
    "x": "Llega el estado de cuenta anual. Entre comisiones e impuestos por cada venta, se fue una tajada que no habías contado.",
    "o": [
     {
@@ -25315,7 +25315,7 @@ const LOTES = {
   {
    "id": 17202,
    "por": "Rotaste entre activos durante todo un año",
-   "t": "Vives pegado a la pantalla",
+   "t": "Revisas los precios a toda hora y duermes peor",
    "x": "Revisas cotizaciones en la cena, en el ascensor y a medianoche. Duermes peor y no tienes claro si ganas más.",
    "o": [
     {
@@ -25430,7 +25430,7 @@ const LOTES = {
   {
    "id": 17205,
    "por": "Te quedaste quieto en tu cartera todo un año",
-   "t": "La cartera aburrida ganó",
+   "t": "Sin tocar tus inversiones ganaste más que otros",
    "x": "Haces cuentas con amigos del sector. Tu cartera quieta le ganó a la de casi todos los que pasaron el año comprando y vendiendo.",
    "o": [
     {
@@ -25602,7 +25602,7 @@ const LOTES = {
   {
    "id": 17253,
    "por": "Mandaste una propuesta cerrada y no negociaste",
-   "t": "Te enteras de cuánto habrían cedido",
+   "t": "Te enteras de que pudiste conseguir más",
    "x": "Un abogado de la contraparte, con dos copas encima, te cuenta que habrían aceptado condiciones bastante mejores para ti.",
    "o": [
     {
@@ -25634,7 +25634,7 @@ const LOTES = {
   {
    "id": 17254,
    "por": "Cerraste un acuerdo con una contraparte difícil",
-   "t": "La relación quedó fría",
+   "t": "Firmaron, pero ya no te contestan rápido",
    "x": "Firmaron, pero del otro lado ya nadie te contesta rápido. Cada pedido menor se vuelve una negociación propia.",
    "o": [
     {
@@ -25666,7 +25666,7 @@ const LOTES = {
   {
    "id": 17255,
    "por": "Negociaste por encargo de otra empresa",
-   "t": "La segunda mesa sale mejor",
+   "t": "Tu segunda negociación sale mejor",
    "x": "Aprendiste de la primera. Esta vez cierras en tres sesiones y con el centro del tablero de tu lado.",
    "o": [
     {
@@ -25691,7 +25691,7 @@ const LOTES = {
   {
    "id": 17256,
    "por": "Negociaste por encargo de otra empresa",
-   "t": "Apretaste de más y se rompió",
+   "t": "Exigiste de más y la otra parte se fue",
    "x": "En la tercera sesión aprietas una cláusula que no hacía falta. La otra parte se levanta de la mesa y no vuelve.",
    "o": [
     {
@@ -25715,7 +25715,7 @@ const LOTES = {
   {
    "id": 17301,
    "por": "Pujaste en una subasta de cuatro postores",
-   "t": "Los bancos de la subasta te tienen en cuenta",
+   "t": "Te invitan primero a otra subasta",
    "x": "Los bancos que llevaban la venta tomaron nota de cómo pujaste. Te llega la invitación a otro proceso antes que a nadie.",
    "o": [
     {
@@ -25748,7 +25748,7 @@ const LOTES = {
   {
    "id": 17302,
    "por": "Estuviste en una subasta de cuatro postores",
-   "t": "Sale a la venta otra del mismo sector",
+   "t": "Sale a la venta otra empresa del mismo sector",
    "x": "Otra compañía del mismo sector sale a la venta. Esta vez conoces el sector por dentro gracias a aquella subasta.",
    "o": [
     {
@@ -25860,7 +25860,7 @@ const LOTES = {
   {
    "id": 17305,
    "por": "Pujaste en una subasta de cuatro postores",
-   "t": "Tu estimación estaba lejos",
+   "t": "Tu cálculo del precio estaba muy errado",
    "x": "Con los resultados públicos de la compañía, revisas el número que llevaste aquel día. Estabas lejos, y no por poco.",
    "o": [
     {
@@ -25944,7 +25944,7 @@ const LOTES = {
   {
    "id": 17351,
    "por": "Usaste las mañanas para estudiar a fondo",
-   "t": "El tema de tus mañanas sale en una reunión",
+   "t": "En una reunión sale el tema que estudiaste",
    "x": "En una reunión con un cliente sale justo el tema que estudiaste. Todos miran a tu jefe, que no tiene idea.",
    "o": [
     {
@@ -26011,7 +26011,7 @@ const LOTES = {
   {
    "id": 17353,
    "por": "Adelantaste el trabajo del viernes",
-   "t": "Te llegan los urgentes de todo el piso",
+   "t": "Toda la oficina te pasa sus trabajos urgentes",
    "x": "Desde que entregas antes, te pasan los encargos urgentes de todo el piso. Nadie pregunta si tienes tiempo.",
    "o": [
     {
@@ -26094,7 +26094,7 @@ const LOTES = {
   {
    "id": 17356,
    "por": "Sacaste todos los urgentes del piso",
-   "t": "Alguien notó quién saca todo",
+   "t": "Tu jefe anota todo el trabajo que hiciste",
    "x": "En la evaluación de fin de año, tu jefe trae una lista de todo lo que sacaste. Dice que eso no se olvida.",
    "o": [
     {
@@ -26119,7 +26119,7 @@ const LOTES = {
   {
    "id": 17357,
    "por": "Sacaste todos los urgentes del piso",
-   "t": "El cuerpo pasa la cuenta",
+   "t": "El médico te manda a casa por agotamiento",
    "x": "Un lunes no te levantas. El médico dice agotamiento y te manda dos semanas a casa. El piso sobrevive sin ti.",
    "o": [
     {
@@ -26287,7 +26287,7 @@ const LOTES = {
   {
    "id": 17405,
    "por": "Dejaste la certificación para otro año",
-   "t": "Los sábados son tuyos",
+   "t": "Tienes los sábados libres por primera vez",
    "x": "Mientras otros van a clases, tú tienes los sábados libres. Por primera vez en años, tiempo sin dueño.",
    "o": [
     {
@@ -26320,7 +26320,7 @@ const LOTES = {
   {
    "id": 17406,
    "por": "Pusiste dinero en el fondo de un compañero",
-   "t": "El fondo de tu compañero despega",
+   "t": "Al fondo de tu compañero le va muy bien",
    "x": "El fondo pequeño de tu compañero de sábados tuvo dos años muy buenos. Te manda el informe con una nota de agradecimiento.",
    "o": [
     {
@@ -26345,7 +26345,7 @@ const LOTES = {
   {
    "id": 17407,
    "por": "Pusiste dinero en el fondo de un compañero",
-   "t": "El fondo de tu compañero no arranca",
+   "t": "El fondo de tu compañero cierra y pierdes dinero",
    "x": "Tu compañero no consiguió suficientes inversores. El fondo cierra y devuelve lo que queda, que es menos de lo que pusiste.",
    "o": [
     {
@@ -26519,7 +26519,7 @@ const LOTES = {
   {
    "id": 17456,
    "por": "Diste la charla del equipo ante un cliente",
-   "t": "El cliente pide más",
+   "t": "El cliente quiere que lleves la relación con su equipo",
    "x": "Al cliente le gustó tanto la charla que pide que lleves tú la relación con su equipo de finanzas.",
    "o": [
     {
@@ -26545,7 +26545,7 @@ const LOTES = {
   {
    "id": 17457,
    "por": "Diste la charla del equipo ante un cliente",
-   "t": "La sala de directorio te comió",
+   "t": "Una pregunta del cliente te deja sin respuesta",
    "x": "A la mitad, el director financiero te interrumpe con una pregunta que no esperabas. Te trabas y el socio tiene que rescatarte.",
    "o": [
     {
@@ -26767,7 +26767,7 @@ const LOTES = {
   {
    "id": 17551,
    "por": "Recomendaste una de tres operaciones al comité",
-   "t": "La que recomendaste va por debajo",
+   "t": "La compra que recomendaste va peor de lo previsto",
    "x": "La operación que defendiste tiene su primer año de resultados. Están por debajo del plan, aunque no lejos.",
    "o": [
     {
@@ -26801,7 +26801,7 @@ const LOTES = {
   {
    "id": 17552,
    "por": "Recomendaste una de tres operaciones al comité",
-   "t": "La que recomendaste supera el plan",
+   "t": "La empresa que recomendaste crece más de lo previsto",
    "x": "La empresa que defendiste crece más rápido de lo previsto. En el comité empiezan a preguntarte a ti primero.",
    "o": [
     {
@@ -26864,7 +26864,7 @@ const LOTES = {
   {
    "id": 17554,
    "por": "Le dijiste que no al comité y tuviste razón",
-   "t": "El comité quiere tu no primero",
+   "t": "El comité te manda primero los casos dudosos",
    "x": "Desde que pasaste de las tres, el comité te manda las carpetas más dudosas antes que a nadie. Quieren oír tu no antes que el sí de otros.",
    "o": [
     {
@@ -26897,7 +26897,7 @@ const LOTES = {
   {
    "id": 17555,
    "por": "Dejaste pasar la empresa que triplicó",
-   "t": "La broma ya no es tan broma",
+   "t": "En el comité te recuerdan la empresa que dejaste pasar",
    "x": "Cada vez que opinas en el comité, alguien menciona la empresa que triplicó. Lo dicen sonriendo, pero lo dicen.",
    "o": [
     {
@@ -26969,7 +26969,7 @@ const LOTES = {
   {
    "id": 17557,
    "por": "Recomendaste una operación para compensar un error",
-   "t": "El miedo también recomienda mal",
+   "t": "La compra que recomendaste para compensar va mal",
    "x": "La operación que recomendaste para que olvidaran la otra va mal. Ahora el comité recuerda las dos.",
    "o": [
     {
@@ -27074,7 +27074,7 @@ const LOTES = {
   {
    "id": 17603,
    "por": "Le mandaste un libro al analista nuevo",
-   "t": "El libro no le alcanzó",
+   "t": "Tu analista leyó el libro y aun así se equivoca",
    "x": "El analista se leyó el libro entero y aun así eligió mal en su primera carpeta. El comité pregunta quién lo supervisa.",
    "o": [
     {
@@ -27140,7 +27140,7 @@ const LOTES = {
   {
    "id": 17605,
    "por": "Convenciste a tu analista de quedarse",
-   "t": "Se quedó y despegó",
+   "t": "El analista que se quedó ya lleva sus propios casos",
    "x": "El analista que convenciste de quedarse ya lleva sus propias operaciones. Dice en público que se quedó por ti.",
    "o": [
     {
@@ -27165,7 +27165,7 @@ const LOTES = {
   {
    "id": 17606,
    "por": "Convenciste a tu analista de quedarse",
-   "t": "Se quedó y se arrepintió",
+   "t": "Tu analista se va y dice que debió irse antes",
    "x": "La firma rival vuelve a buscarlo y esta vez no te pregunta. Se va, y en la despedida dice que debió irse antes.",
    "o": [
     {
@@ -27189,7 +27189,7 @@ const LOTES = {
   {
    "id": 18010,
    "por": "Publicaste tu primer pronóstico de inflación",
-   "t": "El dato salió a tu favor",
+   "t": "Tu pronóstico de inflación fue de los más cercanos",
    "x": "El dato oficial salió y tu número quedó entre los más cercanos del mes. Un cliente de la firma pregunta quién lo hizo.",
    "o": [
     {
@@ -27240,7 +27240,7 @@ const LOTES = {
   {
    "id": 18011,
    "por": "Publicaste tu primer pronóstico de inflación",
-   "t": "Fallaste por mucho y con firma",
+   "t": "Tu pronóstico falla por mucho y lleva tu nombre",
    "x": "El dato salió muy lejos de tu número. Los que se pegaron al consenso fallaron poco. Tú fallaste sin compañía y con tu nombre al pie.",
    "o": [
     {
@@ -27325,7 +27325,7 @@ const LOTES = {
   {
    "id": 18013,
    "por": "Acercaste tu primer pronóstico al consenso",
-   "t": "Fallaron todos juntos",
+   "t": "Todos fallan el pronóstico, incluido tú",
    "x": "El dato sorprendió a todo el mercado. Tu número, pegado al consenso, falló como los demás. Tu modelo original había acertado.",
    "o": [
     {
@@ -27359,7 +27359,7 @@ const LOTES = {
   {
    "id": 18014,
    "por": "Publicaste un pronóstico con un rango muy ancho",
-   "t": "Tu rango no le sirve a nadie",
+   "t": "Tu pronóstico es tan amplio que no le sirve a nadie",
    "x": "Un cliente te escribe: necesita un número para su presupuesto y en tu rango cabe cualquier cosa. Te pide que te mojes.",
    "o": [
     {
@@ -27393,7 +27393,7 @@ const LOTES = {
   {
    "id": 18015,
    "por": "Escribiste una nota sobre tu pronóstico",
-   "t": "Un fondo quiere tu lectura cada mes",
+   "t": "Un fondo quiere recibir tu análisis cada mes",
    "x": "Un fondo leyó tu nota y pide recibir tu lectura todos los meses, antes que nadie. Tu firma no tiene ese producto.",
    "o": [
     {
@@ -27541,7 +27541,7 @@ const LOTES = {
   {
    "id": 18112,
    "por": "Advertiste que la curva anunciaba recesión",
-   "t": "Tu jefe presentó tu lectura",
+   "t": "Tu jefe presenta tu advertencia como suya",
    "x": "En el comité trimestral, tu jefe presenta la curva invertida como su gran advertencia del año. Tu gráfico, con otro color.",
    "o": [
     {
@@ -27610,7 +27610,7 @@ const LOTES = {
   {
    "id": 18114,
    "por": "Viste la curva invertida y no dijiste nada",
-   "t": "La fiesta siguió un año más",
+   "t": "La economía siguió creciendo un año más",
    "x": "La economía no se frenó. La mesa ganó, hubo bonos para todos y tu silencio pasó por prudencia.",
    "o": [
     {
@@ -27635,7 +27635,7 @@ const LOTES = {
   {
    "id": 18115,
    "por": "Sostuviste tu tesis de recesión contra la mesa",
-   "t": "Llegó, tarde y fuerte",
+   "t": "La recesión que anunciaste llega tarde y fuerte",
    "x": "La recesión por fin llegó, mucho después de tu nota. Los que se reían ahora te preguntan qué viene.",
    "o": [
     {
@@ -27664,7 +27664,7 @@ const LOTES = {
   {
    "id": 18116,
    "por": "Sostuviste tu tesis de recesión contra la mesa",
-   "t": "Te quitan el tema del ciclo",
+   "t": "Tu jefe te pide dejar de pronosticar la recesión",
    "x": "Pasó otro año sin recesión. Tu jefe te pide que dejes el ciclo a otros y vuelvas a lo operativo.",
    "o": [
     {
@@ -27692,7 +27692,7 @@ const LOTES = {
   {
    "id": 18210,
    "por": "Publicaste tu propio índice de precios",
-   "t": "Tu índice se volvió referencia",
+   "t": "Medios y embajadas citan tu índice de precios",
    "x": "Medios, fondos y hasta alguna embajada citan tu índice cada mes. Mantenerlo te come los fines de semana.",
    "o": [
     {
@@ -27781,7 +27781,7 @@ const LOTES = {
   {
    "id": 18212,
    "por": "Dudaste del dato oficial de inflación",
-   "t": "El banco central corrige la serie",
+   "t": "El banco central corrige la inflación hacia arriba",
    "x": "Meses después, el banco central revisa la inflación hacia arriba sin hacer ruido. Tu número estaba más cerca que el suyo.",
    "o": [
     {
@@ -27911,7 +27911,7 @@ const LOTES = {
   {
    "id": 18216,
    "por": "Seguiste publicando tu índice tras la llamada",
-   "t": "Se cierran las puertas oficiales",
+   "t": "El gobierno deja de invitarte y pierdes clientes",
    "x": "Ninguna institución pública vuelve a invitarte. Dos clientes que dependen de contratos con el gobierno se van sin explicar.",
    "o": [
     {
@@ -27937,7 +27937,7 @@ const LOTES = {
   {
    "id": 18310,
    "por": "Avisaste a tus clientes de una devaluación",
-   "t": "Devaluaron y tus clientes estaban cubiertos",
+   "t": "Devaluaron y tus clientes estaban protegidos",
    "x": "El tipo de cambio saltó en una noche. Tus clientes cubiertos amanecieron tranquilos y ahora quieren saber qué viene.",
    "o": [
     {
@@ -27972,7 +27972,7 @@ const LOTES = {
   {
    "id": 18311,
    "por": "Anticipaste una devaluación que tardaba",
-   "t": "El ancla aguantó más de la cuenta",
+   "t": "El tipo de cambio sigue fijo un año más",
    "x": "Pasó un año y el tipo de cambio sigue fijo. Cubrirse costó dinero y los que no se cubrieron se ríen en las reuniones.",
    "o": [
     {
@@ -28060,7 +28060,7 @@ const LOTES = {
   {
    "id": 18313,
    "por": "Viste venir la devaluación y no avisaste",
-   "t": "Devaluaron y nadie estaba cubierto",
+   "t": "Devaluaron y tus clientes no estaban protegidos",
    "x": "El salto llegó de madrugada. Tus clientes con deuda en dólares ven crecer lo que deben y te llaman todos el mismo día.",
    "o": [
     {
@@ -28096,7 +28096,7 @@ const LOTES = {
   {
    "id": 18314,
    "por": "Te cubriste de la devaluación sin avisar a nadie",
-   "t": "Tus clientes saben que te cubriste",
+   "t": "Tus clientes saben que tú te pasaste a dólares",
    "x": "Devaluaron. En una cena alguien comenta que tú estabas en dólares desde hacía meses. Tus clientes no lo estaban.",
    "o": [
     {
@@ -28130,7 +28130,7 @@ const LOTES = {
   {
    "id": 18315,
    "por": "Sostuviste tu tesis de devaluación un año más",
-   "t": "El ancla por fin se rompió",
+   "t": "La devaluación que anunciaste por fin llega",
    "x": "La devaluación llegó mucho después de tu primer aviso. Los que se rieron ahora te llaman para entender qué viene.",
    "o": [
     {
@@ -28184,7 +28184,7 @@ const LOTES = {
   {
    "id": 18410,
    "por": "Operaste tu propia lectura del ciclo",
-   "t": "El ciclo giró como dijiste",
+   "t": "Tu apuesta sobre la economía da ganancias",
    "x": "Tu tesis se cumplió y la posición ganó. El comité ya hace cuentas de lo que podrías hacer con más dinero.",
    "o": [
     {
@@ -28238,7 +28238,7 @@ const LOTES = {
   {
    "id": 18411,
    "por": "Operaste tu propia lectura del ciclo",
-   "t": "Tenías razón, pero tarde",
+   "t": "Acertaste, pero te cerraron la apuesta antes",
    "x": "El mercado fue en contra unas semanas, riesgo cerró tu posición y después todo se movió como decías. Ganar tarde no paga.",
    "o": [
     {
@@ -28274,7 +28274,7 @@ const LOTES = {
   {
    "id": 18412,
    "por": "Operaste tu lectura del ciclo con una posición grande",
-   "t": "La posición se hundió",
+   "t": "Tu apuesta grande pierde más de lo permitido",
    "x": "El ciclo no giró. La posición perdió lo que el comité tolera y un poco más. Te citan el lunes a primera hora.",
    "o": [
     {
@@ -28310,7 +28310,7 @@ const LOTES = {
   {
    "id": 18413,
    "por": "Te ofrecieron operar tu propia lectura del ciclo",
-   "t": "Otro operó tu tesis",
+   "t": "Otro gestor gana dinero usando tu análisis",
    "x": "Un gestor del fondo leyó tu informe, operó tu tesis con más tamaño que tú y ganó. Su bono tiene tu análisis adentro.",
    "o": [
     {
@@ -28382,7 +28382,7 @@ const LOTES = {
   {
    "id": 18415,
    "por": "Pediste más capital para operar el ciclo",
-   "t": "Tu estrategia se vuelve producto",
+   "t": "El fondo quiere vender tu estrategia a sus clientes",
    "x": "Tu lectura del ciclo ganó dos veces seguidas. El fondo quiere ofrecerla a sus clientes como estrategia propia, con tu nombre.",
    "o": [
     {
@@ -28439,7 +28439,7 @@ const LOTES = {
   {
    "id": 18510,
    "por": "Te llamaron a asesorar un plan contra la inflación",
-   "t": "El plan está funcionando",
+   "t": "El plan contra la inflación funciona",
    "x": "La inflación cede mes tras mes y la prensa de afuera ya habla del plan como caso de estudio.",
    "o": [
     {
@@ -28474,7 +28474,7 @@ const LOTES = {
   {
    "id": 18511,
    "por": "Asesoraste un plan del gobierno contra la inflación",
-   "t": "El plan se cayó",
+   "t": "Fracasa el plan contra la inflación que asesoraste",
    "x": "La inflación volvió con fuerza y el plan se desarma. La prensa publica la lista del consejo asesor y tu nombre está en ella.",
    "o": [
     {
@@ -28628,7 +28628,7 @@ const LOTES = {
   {
    "id": 18515,
    "por": "Diste la cara cuando el plan se cayó",
-   "t": "La plaza respeta que dieras la cara",
+   "t": "Te respetan por explicar en público qué falló",
    "x": "Eres de los pocos del consejo que explicó en público qué falló. Te buscan para hablar del siguiente intento.",
    "o": [
     {
@@ -28655,7 +28655,7 @@ const LOTES = {
   {
    "id": 18516,
    "por": "Diste la cara cuando el plan se cayó",
-   "t": "Un cliente grande se va por el ruido",
+   "t": "Tu cliente más grande se aleja por los titulares",
    "x": "Tu entrevista fue buena, pero tu nombre sigue en los titulares. Tu cliente más grande decide tomar distancia.",
    "o": [
     {
@@ -28682,7 +28682,7 @@ const LOTES = {
   {
    "id": 18610,
    "por": "Sostuviste tu número frente a tu mayor cliente",
-   "t": "El banco se fue y llegaron otros",
+   "t": "El banco no renueva, pero llegan nuevos clientes",
    "x": "El banco no renovó. Pero la historia circuló, y tres fondos te escriben porque quieren un número que nadie pueda comprar.",
    "o": [
     {
@@ -28718,7 +28718,7 @@ const LOTES = {
   {
    "id": 18611,
    "por": "Sostuviste tu número frente a tu mayor cliente",
-   "t": "El banco se fue y no llegó nadie",
+   "t": "El banco no renueva y no llegan otros clientes",
    "x": "El banco no renovó y nadie más tocó la puerta. Tus ingresos bajan a la mitad y el siguiente informe trimestral se acerca.",
    "o": [
     {
@@ -28769,7 +28769,7 @@ const LOTES = {
   {
    "id": 18612,
    "por": "Te pidieron cambiar tu pronóstico de recesión",
-   "t": "Tu escenario se cumplió",
+   "t": "Se cumple el pronóstico que te pidieron cambiar",
    "x": "La economía se frenó como decía tu primer borrador. Los bonos del banco cayeron y sus compradores buscan a quién culpar.",
    "o": [
     {
@@ -28942,7 +28942,7 @@ const LOTES = {
   {
    "id": 19101,
    "por": "Te topaste con una partida en tránsito vieja",
-   "t": "La partida tenía dueño",
+   "t": "Un empleado del cliente se está llevando dinero",
    "x": "Aquella partida no era un error. Alguien de la tesorería del cliente se transfiere plata poco a poco, y el patrón ya está a la vista.",
    "o": [
     {
@@ -28996,7 +28996,7 @@ const LOTES = {
   {
    "id": 19102,
    "por": "Te topaste con una partida en tránsito vieja",
-   "t": "Era un depósito duplicado",
+   "t": "El error era un depósito anotado dos veces",
    "x": "La partida era un depósito registrado dos veces por un auxiliar que ya no trabaja ahí. Aburrido, inocente y ocho meses inflando la caja.",
    "o": [
     {
@@ -29022,7 +29022,7 @@ const LOTES = {
   {
    "id": 19103,
    "por": "Te topaste con una partida en tránsito vieja",
-   "t": "Control de calidad pregunta por la partida",
+   "t": "Revisan por qué nadie investigó un movimiento raro",
    "x": "La revisión de calidad de la firma toma ese encargo al azar y pregunta por qué nadie investigó una partida de ocho meses.",
    "o": [
     {
@@ -29134,7 +29134,7 @@ const LOTES = {
   {
    "id": 19201,
    "por": "Un cliente te pidió adelantar un ingreso",
-   "t": "Otro auditor mira aquel cierre",
+   "t": "Otro auditor revisa las cuentas de aquel año",
    "x": "El cliente cambió de auditor y la firma nueva revisa el cierre de aquel año. Pregunta quién decidió cómo se registró el contrato de enero.",
    "o": [
     {
@@ -29188,7 +29188,7 @@ const LOTES = {
   {
    "id": 19203,
    "por": "Un cliente te pidió adelantar un ingreso",
-   "t": "Aquel gerente ahora es director",
+   "t": "El gerente de aquel contrato te quiere de auditor",
    "x": "El gerente del contrato de enero ahora dirige las finanzas de otra empresa. Te llama: necesita un auditor en quien confiar.",
    "o": [
     {
@@ -29215,7 +29215,7 @@ const LOTES = {
   {
    "id": 19204,
    "por": "Le moviste la fecha a un contrato",
-   "t": "El regulador pide los papeles de aquel cierre",
+   "t": "El regulador investiga al cliente y pide tus papeles",
    "x": "El regulador investiga al cliente por adelantar ingresos. Pide los papeles de trabajo de aquel año, y tu nombre está en la revisión.",
    "o": [
     {
@@ -29349,7 +29349,7 @@ const LOTES = {
   {
    "id": 19302,
    "por": "Pasaste una temporada de cinco cierres",
-   "t": "La revisión elige un cliente chico",
+   "t": "Revisan el trabajo que hiciste para un cliente chico",
    "x": "La revisión interna de calidad escoge uno de los clientes chicos de aquel enero. Piden ver las muestras y las confirmaciones.",
    "o": [
     {
@@ -29473,7 +29473,7 @@ const LOTES = {
   {
    "id": 19306,
    "por": "Respondiste por todo en una revisión de calidad",
-   "t": "La observación queda en tu legajo",
+   "t": "Te anotan una falta y congelan tu ascenso",
    "x": "La revisión concluye que las pruebas fueron insuficientes y la observación queda a tu nombre. Tu ascenso de este año se congela.",
    "o": [
     {
@@ -29499,7 +29499,7 @@ const LOTES = {
   {
    "id": 19401,
    "por": "Revisaste un inventario que no cuadraba",
-   "t": "El comprador cierra y vuelve por más",
+   "t": "El comprador te agradece y te ofrece otro encargo",
    "x": "La compra se cerró a un precio que al comprador le pareció justo. Te escribe para darte las gracias y ofrecerte otro encargo.",
    "o": [
     {
@@ -29525,7 +29525,7 @@ const LOTES = {
   {
    "id": 19402,
    "por": "Revisaste un inventario que no cuadraba",
-   "t": "El vendedor se levanta de la mesa",
+   "t": "El vendedor se ofende y cancela la venta",
    "x": "La operación se cayó. El vendedor dice que lo trataron como a un ladrón y el comprador no sabe si darte las gracias o la culpa.",
    "o": [
     {
@@ -29550,7 +29550,7 @@ const LOTES = {
   {
    "id": 19403,
    "por": "Revisaste un inventario que no cuadraba",
-   "t": "Después del cierre, falta mercancía",
+   "t": "Tras la compra, falta la mitad de la mercancía",
    "x": "Seis meses después de la compra, el comprador cuenta la bodega. Falta casi la mitad del inventario que estaba en el balance.",
    "o": [
     {
@@ -29594,7 +29594,7 @@ const LOTES = {
   {
    "id": 19404,
    "por": "Exigiste contar de nuevo un inventario",
-   "t": "Te buscan para encontrar lo escondido",
+   "t": "Dos fondos te piden revisar sus compras",
    "x": "Se corrió la voz del conteo del sábado. Dos fondos te llaman para que revises sus próximas compras antes de firmar.",
    "o": [
     {
@@ -29674,7 +29674,7 @@ const LOTES = {
   {
    "id": 19501,
    "por": "Te tocó una fiscalización a un cliente",
-   "t": "El cliente quiere que pagues el recargo",
+   "t": "El cliente quiere que pagues el recargo de impuestos",
    "x": "El cliente dice que el criterio fue de tu equipo y que el recargo y los intereses los debería pagar quien lo aconsejó: tú.",
    "o": [
     {
@@ -29701,7 +29701,7 @@ const LOTES = {
   {
    "id": 19502,
    "por": "Te tocó una fiscalización a un cliente",
-   "t": "La fiscalización se cierra a favor",
+   "t": "La revisión de impuestos termina bien para el cliente",
    "x": "El fisco cierra el expediente sin ajustes mayores. El cliente, con alivio, quiere que lleves los impuestos de todo su grupo.",
    "o": [
     {
@@ -29728,7 +29728,7 @@ const LOTES = {
   {
    "id": 19503,
    "por": "Te tocó una fiscalización a un cliente",
-   "t": "La misma deducción en otros clientes",
+   "t": "Otros cuatro clientes pueden tener el mismo problema",
    "x": "Revisas y encuentras el mismo criterio en las declaraciones de otros cuatro clientes. Si el fisco tira del hilo, tira de todos.",
    "o": [
     {
@@ -29946,7 +29946,7 @@ const LOTES = {
   {
    "id": 19604,
    "por": "Firmaste con una salvedad que nadie quería",
-   "t": "Los bancos piden tu firma",
+   "t": "Empresas te buscan porque sus bancos confían en ti",
    "x": "Te llaman empresas que nunca te habían buscado: sus bancos les pidieron un auditor que no firme cualquier cosa.",
    "o": [
     {
@@ -29973,7 +29973,7 @@ const LOTES = {
   {
    "id": 19605,
    "por": "Mostraste lo que firmaste de un juicio perdido",
-   "t": "El regulador archiva tu parte",
+   "t": "El regulador te deja fuera de la investigación",
    "x": "El regulador revisó tus papeles y concluyó que lo que sabías estaba dicho donde tenía que estar. Tu parte del expediente se archiva.",
    "o": [
     {
@@ -30053,7 +30053,7 @@ const LOTES = {
   {
    "id": 19702,
    "por": "Le compraste la cartera a un auditor retirado",
-   "t": "Un cliente heredado trae sorpresa",
+   "t": "El auditor anterior firmó sin contar el inventario",
    "x": "Revisando a un cliente de la cartera, descubres que el veterano firmó tres años de inventarios sin contarlos ni una vez.",
    "o": [
     {
@@ -30098,7 +30098,7 @@ const LOTES = {
   {
    "id": 19703,
    "por": "Le compraste la cartera a un auditor retirado",
-   "t": "La cartera paga sola",
+   "t": "Casi todos los clientes que compraste renovaron",
    "x": "Pasó el primer ciclo completo y casi todos renovaron. Ingresos que llegan en cada cierre, sin pitch y sin licitación.",
    "o": [
     {
@@ -30125,7 +30125,7 @@ const LOTES = {
   {
    "id": 19704,
    "por": "Te ofrecieron la cartera de un auditor retirado",
-   "t": "Una firma grande quiere integrarte",
+   "t": "Una firma grande quiere sumar tus clientes a los suyos",
    "x": "Una firma internacional busca crecer en tu plaza y te ofrece integrar tus clientes a los suyos, con permanencia obligada por tres años.",
    "o": [
     {
@@ -30153,7 +30153,7 @@ const LOTES = {
   {
    "id": 19705,
    "por": "Declinaste la cartera de un auditor retirado",
-   "t": "El que compró la cartera no da abasto",
+   "t": "El colega que compró los clientes te ofrece una parte",
    "x": "El colega que se quedó con aquella cartera no da abasto y te ofrece pasarte una parte, ya revisada y a buen precio.",
    "o": [
     {
@@ -30343,7 +30343,7 @@ const LOTES = {
   {
    "id": 20013,
    "por": "Señalaste un equipo dudoso en una visita a planta",
-   "t": "Tu nota terminó en el contrato",
+   "t": "El banco exige reponer el compresor que señalaste",
    "x": "El banco exigió una reserva para reponer el compresor antes del desembolso. El cliente refunfuñó y firmó.",
    "o": [
     {
@@ -30423,7 +30423,7 @@ const LOTES = {
   {
    "id": 20021,
    "por": "Contaste lo que viste en la planta",
-   "t": "El equipo te hace el vacío",
+   "t": "Tu compañero de la visita deja de hablarte",
    "x": "Quien hizo la visita contigo quedó mal frente al comité. Ahora no te copia en los correos y almuerza con todos menos contigo.",
    "o": [
     {
@@ -30476,7 +30476,7 @@ const LOTES = {
   {
    "id": 20111,
    "por": "Dudaste de la producción de un parque solar",
-   "t": "El parque produce lo que temías",
+   "t": "El parque solar produce menos de lo previsto",
    "x": "Primer año: el parque produce bastante menos de lo previsto. La cobertura de la deuda queda justa y los bancos piden explicaciones.",
    "o": [
     {
@@ -30521,7 +30521,7 @@ const LOTES = {
   {
    "id": 20112,
    "por": "Corregiste el cálculo de un parque solar",
-   "t": "El sponsor quiere sacarte del equipo",
+   "t": "El dueño del proyecto quiere sacarte del equipo",
    "x": "El dueño del proyecto vio tu cálculo de producción y dice que asusta a los bancos. Le pide al VP que te saquen del deal.",
    "o": [
     {
@@ -30549,7 +30549,7 @@ const LOTES = {
   {
    "id": 20113,
    "por": "Dudaste de la producción de un parque solar",
-   "t": "El parque produce de más",
+   "t": "El parque solar produce más de lo previsto",
    "x": "Año de sol excepcional: el parque supera el caso base. Nadie recuerda las dudas, salvo quien las tuvo.",
    "o": [
     {
@@ -30576,7 +30576,7 @@ const LOTES = {
   {
    "id": 20114,
    "por": "Escondiste un caso conservador en un modelo",
-   "t": "Encontraron tu pestaña escondida",
+   "t": "Encuentran el cálculo prudente que escondiste",
    "x": "Revisando el modelo, el VP da con tu caso conservador. Pregunta por qué está ahí y por qué nadie lo sabía.",
    "o": [
     {
@@ -30603,7 +30603,7 @@ const LOTES = {
   {
    "id": 20120,
    "por": "Propusiste un plan para el parque que producía poco",
-   "t": "Los bancos firman el ajuste",
+   "t": "Los bancos aceptan tu plan para el parque solar",
    "x": "Los bancos aceptan usar la reserva y estirar dos cuotas. El sponsor te manda un mensaje corto: gracias.",
    "o": [
     {
@@ -30630,7 +30630,7 @@ const LOTES = {
   {
    "id": 20121,
    "por": "Propusiste un plan para el parque que producía poco",
-   "t": "Un banco se planta",
+   "t": "Un banco rechaza tu plan y pide más dinero",
    "x": "Uno de los bancos rechaza el ajuste y exige que el sponsor ponga más capital. El sponsor dice que la idea fue tuya.",
    "o": [
     {
@@ -30692,7 +30692,7 @@ const LOTES = {
   {
    "id": 20211,
    "por": "Financiaste una autopista que iba atrasada",
-   "t": "La obra recupera el ritmo",
+   "t": "El constructor recupera el atraso de la obra",
    "x": "El constructor metió un segundo turno y recuperó buena parte del atraso. En la reunión de seguimiento te mira como esperando algo.",
    "o": [
     {
@@ -30718,7 +30718,7 @@ const LOTES = {
   {
    "id": 20212,
    "por": "Financiaste una autopista que iba atrasada",
-   "t": "Sobrecosto: alguien tiene que ponerlo",
+   "t": "La obra cuesta más y nadie quiere pagarlo",
    "x": "El atraso trajo sobrecosto y la obra necesita más dinero del previsto. El sponsor dice que lo cubre el banco; el banco, que el sponsor.",
    "o": [
     {
@@ -30828,7 +30828,7 @@ const LOTES = {
   {
    "id": 20221,
    "por": "Repartiste el sobrecosto de una autopista",
-   "t": "El sponsor no pone su parte",
+   "t": "El dueño del proyecto no pone su dinero",
    "x": "Llegó la fecha y el sponsor no aportó su capital. El tramo nuevo de deuda queda colgando y tu comité quiere un culpable.",
    "o": [
     {
@@ -30856,7 +30856,7 @@ const LOTES = {
   {
    "id": 20310,
    "por": "Viste venir que una refinería tardaría más",
-   "t": "La parada se alarga",
+   "t": "El cierre de la refinería dura dos meses más",
    "x": "La refinería anuncia que la parada se alarga dos meses. El margen de refinación se dispara y en la mesa no se habla de otra cosa.",
    "o": [
     {
@@ -30910,7 +30910,7 @@ const LOTES = {
   {
    "id": 20312,
    "por": "Llamaste a alguien de dentro de una refinería",
-   "t": "Cumplimiento quiere saber",
+   "t": "Te investigan por tu llamada a la refinería",
    "x": "Alguien de la mesa mencionó tu llamada a la planta. Cumplimiento te cita para preguntar qué te dijeron y con quién lo compartiste.",
    "o": [
     {
@@ -30952,7 +30952,7 @@ const LOTES = {
   {
    "id": 20313,
    "por": "Armaste una tesis sobre una refinería",
-   "t": "Una mesa de materias primas te quiere",
+   "t": "Una inversora en materias primas quiere contratarte",
    "x": "Una trader de materias primas vio tu tesis y te invita a almorzar. Busca a alguien que entienda las plantas por dentro.",
    "o": [
     {
@@ -30979,7 +30979,7 @@ const LOTES = {
   {
    "id": 20320,
    "por": "Le dijiste a cumplimiento que fue una charla social",
-   "t": "Aparecieron tus mensajes",
+   "t": "Aparecen tus mensajes con la refinería",
    "x": "Revisando los teléfonos de la mesa aparecieron tus mensajes con la planta. Ya no es una charla: es tu palabra contra tus mensajes.",
    "o": [
     {
@@ -31007,7 +31007,7 @@ const LOTES = {
   {
    "id": 20321,
    "por": "Le dijiste a cumplimiento que fue una charla social",
-   "t": "El caso quedó archivado",
+   "t": "Cierran el caso sin sancionarte",
    "x": "Cumplimiento cerró el caso sin sanción. Tu excompañero, en cambio, perdió el puesto en la refinería por hablar de más.",
    "o": [
     {
@@ -31034,7 +31034,7 @@ const LOTES = {
   {
    "id": 20410,
    "por": "Pujaste por una carretera de peaje",
-   "t": "La carretera es tuya",
+   "t": "Tu equipo gana la carretera de peaje",
    "x": "Ganaron la puja. Ahora hay que operarla: casetas, cuadrillas, sensores y un concedente que llama todas las semanas.",
    "o": [
     {
@@ -31060,7 +31060,7 @@ const LOTES = {
   {
    "id": 20411,
    "por": "Le pusiste precio a las grietas de una carretera",
-   "t": "Otro fondo se la llevó",
+   "t": "Otro fondo pagó más y compró la carretera",
    "x": "Un fondo extranjero se llevó la carretera pagando bastante más de lo que tú querías poner. En la industria comentan que te faltó apetito.",
    "o": [
     {
@@ -31163,7 +31163,7 @@ const LOTES = {
   {
    "id": 20414,
    "por": "No quisiste pagar de más por una carretera",
-   "t": "El vendedor vuelve a llamar",
+   "t": "El vendedor te llama con un precio más bajo",
    "x": "El proceso se cayó: nadie pagó lo que el vendedor quería. Ahora te llama directo, con un precio más bajo y un tono más amable.",
    "o": [
     {
@@ -31277,7 +31277,7 @@ const LOTES = {
   {
    "id": 20511,
    "por": "Ayudaste a armar una oferta de obra pública",
-   "t": "La obra se come el margen",
+   "t": "El acero sube y la obra deja de dar ganancia",
    "x": "El acero subió a mitad de obra y el margen de la constructora se evaporó. Tu compañero pregunta qué se hace ahora.",
    "o": [
     {
@@ -31354,7 +31354,7 @@ const LOTES = {
   {
    "id": 20513,
    "por": "Pusiste tus ahorros en una constructora pequeña",
-   "t": "Te ofrece la mitad de la empresa",
+   "t": "Tu compañero te ofrece la mitad de la constructora",
    "x": "La constructora creció y tu compañero quiere que la mitad sea tuya. A cambio: más capital y que lleves tú las finanzas.",
    "o": [
     {
@@ -31381,7 +31381,7 @@ const LOTES = {
   {
    "id": 20514,
    "por": "Tu compañero de facultad fue a una licitación",
-   "t": "Perdió la licitación por poco",
+   "t": "Tu compañero pierde la licitación por poco",
    "x": "Tu compañero perdió por muy poco. El ganador ofertó tan bajo que en el gremio apuestan cuándo va a abandonar la obra.",
    "o": [
     {
@@ -31433,7 +31433,7 @@ const LOTES = {
   {
    "id": 20521,
    "por": "Fuiste a cobrarle en persona a un municipio",
-   "t": "Llegó un alcalde nuevo",
+   "t": "El alcalde nuevo no quiere pagar la deuda",
    "x": "Hubo elecciones y el alcalde nuevo dice que esa deuda es de la gestión anterior. La constructora se queda sin aire.",
    "o": [
     {
@@ -31460,7 +31460,7 @@ const LOTES = {
   {
    "id": 20610,
    "por": "Te metiste en el financiamiento de una central",
-   "t": "La tuneladora dio con una falla",
+   "t": "La excavación del túnel encuentra una falla en la roca",
    "x": "La tuneladora encontró una falla geológica que nadie esperaba. La obra se frena y el costo sube con cada semana parada.",
    "o": [
     {
@@ -31558,7 +31558,7 @@ const LOTES = {
   {
    "id": 20613,
    "por": "No firmaste a ciegas el túnel de una central",
-   "t": "Otro banco se quedó el mandato",
+   "t": "Otro banco se quedó con el proyecto de la central",
    "x": "Otro banco tomó el mandato con condiciones más blandas y el ministerio lo anunció a lo grande. En tu comité preguntan qué pasó.",
    "o": [
     {
@@ -31612,7 +31612,7 @@ const LOTES = {
   {
    "id": 20620,
    "por": "Rediseñaste el túnel de una central",
-   "t": "El rodeo funcionó",
+   "t": "El túnel nuevo esquiva la falla y funciona",
    "x": "El túnel nuevo esquiva la falla y la central entra en operación con un año de retraso. Los bancos cobran todas sus cuotas.",
    "o": [
     {
@@ -31638,7 +31638,7 @@ const LOTES = {
   {
    "id": 20621,
    "por": "Rediseñaste el túnel de una central",
-   "t": "La reserva no alcanzó",
+   "t": "Rehacer el túnel costó más de lo previsto",
    "x": "El rodeo costó más de lo que nadie había previsto. Los bancos piden más capital al sponsor y el sponsor pide tu cabeza.",
    "o": [
     {
@@ -31702,7 +31702,7 @@ const LOTES = {
   {
    "id": 21011,
    "por": "Facturaste solo las horas que trabajaste",
-   "t": "El cliente audita cada hora",
+   "t": "El cliente revisa un año de tus facturas",
    "x": "Un cliente grande revisa un año de facturas con lupa. Las tuyas son las únicas que no tienen nada que explicar. El socio lo nota.",
    "o": [
     {
@@ -31738,7 +31738,7 @@ const LOTES = {
   {
    "id": 21012,
    "por": "Redondeaste tus horas hacia arriba",
-   "t": "El auditor encontró tus llamadas",
+   "t": "El cliente descubre las horas que cobraste de más",
    "x": "El cliente audita un año de facturas. Tus llamadas de cinco minutos que se volvieron reuniones de una hora están marcadas en amarillo.",
    "o": [
     {
@@ -31827,7 +31827,7 @@ const LOTES = {
   {
    "id": 21014,
    "por": "Cerraste un mes de horas facturables",
-   "t": "Un compañero te pide prestadas horas",
+   "t": "Un compañero quiere cargar sus horas a tu cliente",
    "x": "Tu compañero de escritorio no llega a la meta y te pide cargar a tu cliente unas horas que hizo para otro. Nadie lo notaría.",
    "o": [
     {
@@ -31862,7 +31862,7 @@ const LOTES = {
   {
    "id": 21015,
    "por": "Juraste ante el auditor que tus horas eran reales",
-   "t": "El auditor cierra el tema",
+   "t": "El auditor no puede probar nada y cierra el caso",
    "x": "El auditor no puede probar nada y cierra el informe. El socio te felicita en el pasillo y, desde entonces, revisa cada planilla tuya.",
    "o": [
     {
@@ -31917,7 +31917,7 @@ const LOTES = {
   {
    "id": 21110,
    "por": "Revisaste una compraventa línea por línea",
-   "t": "El socio quiere tus ojos en cada cierre",
+   "t": "El socio quiere que leas todo antes de firmar",
    "x": "Desde aquella compraventa, el socio no firma nada sin que lo leas tú antes. Es un honor que se paga en madrugadas.",
    "o": [
     {
@@ -31953,7 +31953,7 @@ const LOTES = {
   {
    "id": 21111,
    "por": "Revisaste una compraventa línea por línea",
-   "t": "El abogado de enfrente te llama",
+   "t": "El abogado de la otra parte quiere contratarte",
    "x": "El abogado de la otra parte en aquella compraventa te llama. Dice que necesita en su equipo a alguien que lea como tú.",
    "o": [
     {
@@ -31989,7 +31989,7 @@ const LOTES = {
   {
    "id": 21112,
    "por": "Revisaste una cláusula de indemnización",
-   "t": "La cláusula aguantó el reclamo",
+   "t": "La cláusula que cuidaste protege a tu cliente",
    "x": "Aparece una deuda fiscal escondida de antes del cierre. Tu cliente reclama y la cláusula que cuidaste lo cubre hasta el último peso.",
    "o": [
     {
@@ -32143,7 +32143,7 @@ const LOTES = {
   {
    "id": 21116,
    "por": "Litigaste una cláusula cambiada sin avisar",
-   "t": "Pierden el reclamo",
+   "t": "Tu cliente pierde el juicio por la cláusula",
    "x": "El tribunal dice que la versión firmada manda, la hayan marcado o no. El cliente pierde y alguien tiene que explicar quién no comparó.",
    "o": [
     {
@@ -32205,7 +32205,7 @@ const LOTES = {
   {
    "id": 21211,
    "por": "Te citaron como testigo en un litigio",
-   "t": "El contrainterrogatorio te desarma",
+   "t": "Te muestran un correo tuyo que te contradice",
    "x": "El abogado contrario saca un correo tuyo de aquel cierre que contradice lo que acabas de decir. La sala entera te mira.",
    "o": [
     {
@@ -32249,7 +32249,7 @@ const LOTES = {
   {
    "id": 21212,
    "por": "Te citaron como testigo en un litigio",
-   "t": "Ahora buscan a los asesores",
+   "t": "Buscan culpar a los asesores de la venta",
    "x": "Aquel pleito terminó en un acuerdo caro. La parte que pagó busca a quién culpar, y los asesores de la compraventa encabezan la lista.",
    "o": [
     {
@@ -32319,7 +32319,7 @@ const LOTES = {
   {
    "id": 21214,
    "por": "Declaraste en un pleito con tus notas",
-   "t": "Te buscan como perito",
+   "t": "Quieren contratarte como experto en un juicio",
    "x": "Un bufete de litigio leyó tu declaración y quiere contratarte como perito en otro pleito de compraventa. Paga bien y expone más.",
    "o": [
     {
@@ -32383,7 +32383,7 @@ const LOTES = {
   {
    "id": 21216,
    "por": "Insististe en tu versión ante el tribunal",
-   "t": "El juez lo deja pasar",
+   "t": "El juez dice que tu testimonio es poco confiable",
    "x": "El juez anota la contradicción y sigue. En la sentencia tu testimonio aparece como «poco confiable». Lo lee todo el gremio.",
    "o": [
     {
@@ -32443,7 +32443,7 @@ const LOTES = {
   {
    "id": 21311,
    "por": "Firmaste un dictamen con salvedades",
-   "t": "El regulador lee tus salvedades",
+   "t": "El regulador ve que tú advertiste los riesgos",
    "x": "El ente cambiario investiga la estructura del cliente. Tu dictamen es el único que avisó de los riesgos. Te llaman a explicarlo.",
    "o": [
     {
@@ -32471,7 +32471,7 @@ const LOTES = {
   {
    "id": 21312,
    "por": "Firmaste un dictamen limpio para un cliente",
-   "t": "Tu firma está en el expediente",
+   "t": "Investigan al cliente y tu firma aparece primero",
    "x": "El ente cambiario investiga la estructura del cliente. Tu dictamen sin salvedades está en la primera página del expediente.",
    "o": [
     {
@@ -32557,7 +32557,7 @@ const LOTES = {
   {
    "id": 21314,
    "por": "Te pidieron firmar un dictamen dudoso",
-   "t": "Tu firma ya no se consigue fácil",
+   "t": "Un banco pide que sus clientes traigan tu opinión",
    "x": "Un banco empieza a pedir a sus clientes que traigan opinión tuya. Dice que tus dictámenes se pueden leer sin miedo.",
    "o": [
     {
@@ -32620,7 +32620,7 @@ const LOTES = {
   {
    "id": 21316,
    "por": "Colaboraste tras firmar un dictamen limpio",
-   "t": "El colegio te suspende",
+   "t": "Te suspenden seis meses sin poder firmar",
    "x": "El tribunal disciplinario concluye que firmaste sin diligencia. Seis meses sin poder firmar. Tus clientes se enteran antes que tú.",
    "o": [
     {
@@ -32718,7 +32718,7 @@ const LOTES = {
   {
    "id": 21412,
    "por": "Hablaste por fuera con alguien del regulador",
-   "t": "Se publica quién habló con quién",
+   "t": "Un periódico publica tu reunión con el regulador",
    "x": "Un periódico publica las reuniones informales de la superintendencia durante la consulta. Tu café aparece con fecha y hora.",
    "o": [
     {
@@ -32752,7 +32752,7 @@ const LOTES = {
   {
    "id": 21413,
    "por": "Opinaste sobre una norma del regulador",
-   "t": "El regulador te invita a una mesa técnica",
+   "t": "El regulador te invita a redactar el reglamento",
    "x": "La superintendencia arma un grupo para redactar el reglamento de la norma. Quiere a alguien del sector que sepa leer y escribir contratos.",
    "o": [
     {
@@ -32788,7 +32788,7 @@ const LOTES = {
   {
    "id": 21414,
    "por": "Opinaste sobre una norma del regulador",
-   "t": "Un cliente quiere impugnar la norma",
+   "t": "Un cliente quiere demandar para anular la norma",
    "x": "Un fondo grande quiere pedir la nulidad de la norma ante el tribunal administrativo. Te pide que lleves el caso y dice que el costo no importa.",
    "o": [
     {
@@ -32931,7 +32931,7 @@ const LOTES = {
   {
    "id": 21511,
    "por": "Redactaste un testamento al dictado del cliente",
-   "t": "El testamento se cae en tribunales",
+   "t": "Un juez anula el testamento que redactaste",
    "x": "Murió el patriarca. El hijo excluido impugna y el juez le da la razón: la ley le reservaba su parte. La familia pregunta quién redactó eso.",
    "o": [
     {
@@ -32985,7 +32985,7 @@ const LOTES = {
   {
    "id": 21512,
    "por": "Sentaste a una familia antes de un testamento",
-   "t": "La reunión familiar estalla",
+   "t": "La reunión familiar termina en pelea",
    "x": "Sentaste a los cuatro hijos con el padre. A los veinte minutos dos se van dando un portazo. El patriarca te mira como si fuera culpa tuya.",
    "o": [
     {
@@ -33020,7 +33020,7 @@ const LOTES = {
   {
    "id": 21513,
    "por": "Ayudaste a una familia con su herencia",
-   "t": "Los hermanos firman un protocolo",
+   "t": "Los hermanos firman reglas para la familia",
    "x": "Tras meses de reuniones, la familia firma reglas escritas sobre quién manda y quién hereda qué. El hijo más difícil es ahora quien más las defiende.",
    "o": [
     {
@@ -33055,7 +33055,7 @@ const LOTES = {
   {
    "id": 21514,
    "por": "Redactaste el testamento de un patriarca",
-   "t": "Otra familia toca la puerta",
+   "t": "Otra familia quiere que la ayudes igual",
    "x": "Un amigo del patriarca, con otro grupo y otros hijos peleados, quiere que hagas por su familia lo mismo que hiciste por aquella.",
    "o": [
     {
@@ -33145,7 +33145,7 @@ const LOTES = {
   {
    "id": 21610,
    "por": "Aceptaste arbitrar una disputa entre fondos",
-   "t": "Tu laudo queda firme",
+   "t": "Nadie discute tu decisión como árbitro",
    "x": "Dictas el laudo y ninguna de las partes lo impugna. La que perdió paga en plazo, que en este oficio casi nunca pasa.",
    "o": [
     {
@@ -33180,7 +33180,7 @@ const LOTES = {
   {
    "id": 21611,
    "por": "Callaste un vínculo viejo al aceptar un arbitraje",
-   "t": "La parte perdedora te recusa",
+   "t": "El que perdió pide anular tu decisión",
    "x": "Tras el laudo, la parte que perdió descubre a tu antiguo cliente y pide anularlo todo. Dice que callaste un vínculo que debías revelar.",
    "o": [
     {
@@ -33232,7 +33232,7 @@ const LOTES = {
   {
    "id": 21612,
    "por": "Aceptaste arbitrar una disputa entre fondos",
-   "t": "Una parte presiona por debajo",
+   "t": "Un abogado del caso te invita a almorzar",
    "x": "En mitad del proceso, el abogado de uno de los fondos te invita a almorzar. Dice que solo quiere hablar del clima.",
    "o": [
     {
@@ -33266,7 +33266,7 @@ const LOTES = {
   {
    "id": 21613,
    "por": "Te propusieron como árbitro",
-   "t": "La cámara te llama otra vez",
+   "t": "Te vuelven a proponer como árbitro",
    "x": "La cámara de comercio vuelve a proponerte, esta vez para un caso más grande. No conoces a nadie de las partes, o eso parece.",
    "o": [
     {
@@ -33337,7 +33337,7 @@ const LOTES = {
   {
    "id": 21615,
    "por": "Defendiste un laudo frente a una recusación",
-   "t": "El tribunal sostiene tu laudo",
+   "t": "El tribunal confirma tu decisión como árbitro",
    "x": "El tribunal dice que el vínculo era viejo y no pesó. Tu laudo queda firme, y tú con una advertencia que nadie más lee.",
    "o": [
     {
@@ -33362,7 +33362,7 @@ const LOTES = {
   {
    "id": 21616,
    "por": "Defendiste un laudo frente a una recusación",
-   "t": "Anulan tu laudo",
+   "t": "El tribunal anula tu decisión como árbitro",
    "x": "El tribunal anula el laudo por falta de revelación. Las partes tienen que empezar de cero y la cámara te saca de la lista.",
    "o": [
     {
@@ -33389,7 +33389,7 @@ const LOTES = {
   {
    "id": 22110,
    "por": "Recomendaste a un compañero de promoción",
-   "t": "Tu recomendado es el mejor de su camada",
+   "t": "Tu recomendado resulta mejor de lo esperado",
    "x": "Tu compañero resultó mejor en lo suyo de lo que nadie esperaba. Tu jefe te lo comenta con un tono que no sabes si es elogio.",
    "o": [
     {
@@ -33425,7 +33425,7 @@ const LOTES = {
   {
    "id": 22111,
    "por": "Recomendaste a un compañero de promoción",
-   "t": "Tu recomendado no da la talla",
+   "t": "Tu recomendado entrega todo tarde",
    "x": "Lleva tres entregas tarde y tu jefe te pregunta, delante de todo el equipo, de dónde salió.",
    "o": [
     {
@@ -33548,7 +33548,7 @@ const LOTES = {
   {
    "id": 22114,
    "por": "Le dijiste que no a un compañero de promoción",
-   "t": "Entró igual, por otra puerta",
+   "t": "Tu compañero entra sin tu ayuda",
    "x": "Tu compañero consiguió el puesto sin tu ayuda. Ahora se sientan a dos escritorios y te saluda con una cortesía exacta.",
    "o": [
     {
@@ -33585,7 +33585,7 @@ const LOTES = {
   {
    "id": 22115,
    "por": "Ayudaste a enderezarse a un recomendado tuyo",
-   "t": "Tu recomendado se enderezó",
+   "t": "Tu recomendado mejora y ya no falla",
    "x": "Seis meses de cafés y correcciones. Hoy presentó solo ante el comité y nadie le encontró nada.",
    "o": [
     {
@@ -33612,7 +33612,7 @@ const LOTES = {
   {
    "id": 22116,
    "por": "Ayudaste a enderezarse a un recomendado tuyo",
-   "t": "Lo despiden igual",
+   "t": "Despiden a tu recomendado pese a tu ayuda",
    "x": "No alcanzó. Lo despiden un viernes y tu jefe te mira como quien ya lo sabía desde el principio.",
    "o": [
     {
@@ -33639,7 +33639,7 @@ const LOTES = {
   {
    "id": 22210,
    "por": "Tuviste que resolver un pleito en tu equipo",
-   "t": "La tregua aguanta",
+   "t": "Los dos analistas logran trabajar juntos",
    "x": "Los dos analistas trabajan juntos en la entrega más grande del año. No son amigos, pero el modelo cuadra a la primera.",
    "o": [
     {
@@ -33708,7 +33708,7 @@ const LOTES = {
   {
    "id": 22212,
    "por": "Tuviste que resolver un pleito en tu equipo",
-   "t": "El pleito estalla frente al cliente",
+   "t": "Los dos analistas pelean frente al cliente",
    "x": "En plena reunión, uno corrige al otro con una frialdad que el cliente nota. Al salir, el cliente te pregunta si todo está bien.",
    "o": [
     {
@@ -33761,7 +33761,7 @@ const LOTES = {
   {
    "id": 22213,
    "por": "Mediaste tú en un pleito entre dos analistas",
-   "t": "Otra área quiere tu receta",
+   "t": "Otra área te pide ayuda con un pleito igual",
    "x": "Se corrió la voz de cómo arreglaste lo de los dos analistas. Otra área tiene un pleito parecido y quiere que les hables.",
    "o": [
     {
@@ -33796,7 +33796,7 @@ const LOTES = {
   {
    "id": 22214,
    "por": "Separaste a dos analistas que no se hablaban",
-   "t": "Te sobra un analista",
+   "t": "Un analista lleva dos semanas sin trabajo",
    "x": "Al separarlos, a uno le tocó un proyecto que se cayó. Lleva dos semanas sin nada que hacer y todo el piso lo sabe.",
    "o": [
     {
@@ -33883,7 +33883,7 @@ const LOTES = {
   {
    "id": 22310,
    "por": "Heredaste la cartera de un banquero privado",
-   "t": "Te confían a los nietos",
+   "t": "Te piden asesorar a los nietos de un cliente",
    "x": "El patriarca de una de las familias quiere que asesores a sus nietos, que acaban de heredar y quieren invertir en todo lo que ven en redes.",
    "o": [
     {
@@ -34049,7 +34049,7 @@ const LOTES = {
   {
    "id": 22315,
    "por": "Fuiste a preguntar por qué se fue una familia",
-   "t": "La familia vuelve",
+   "t": "La familia que se fue vuelve con su dinero",
    "x": "Te escucharon y reconocieron que se fueron por un descuido de antes, no tuyo. Vuelven con la mitad de su dinero.",
    "o": [
     {
@@ -34076,7 +34076,7 @@ const LOTES = {
   {
    "id": 22316,
    "por": "Fuiste a preguntar por qué se fue una familia",
-   "t": "Te dicen la verdad incómoda",
+   "t": "La familia te dice por qué se fue",
    "x": "Se fueron porque tus reportes les parecían de banco y no de familia. No vuelven, pero te lo dicen sin rodeos.",
    "o": [
     {
@@ -34141,7 +34141,7 @@ const LOTES = {
   {
    "id": 22411,
    "por": "Asesoraste la sucesión de una empresa familiar",
-   "t": "El fundador te quita el mandato",
+   "t": "El fundador te despide como asesor",
    "x": "No le gustó lo que escuchó. Paga la última factura con retraso y les dice a sus amigos del club que lo tuyo es pura teoría.",
    "o": [
     {
@@ -34230,7 +34230,7 @@ const LOTES = {
   {
    "id": 22413,
    "por": "Asesoraste la sucesión de una empresa familiar",
-   "t": "El fundador no suelta",
+   "t": "El fundador sigue mandando aunque ya se retiró",
    "x": "Plan firmado, sucesor nombrado, y el fundador sigue llegando a las siete a firmar cheques. Nadie se atreve a decirle nada.",
    "o": [
     {
@@ -34265,7 +34265,7 @@ const LOTES = {
   {
    "id": 22414,
    "por": "Le diste a un fundador el plan que pedía",
-   "t": "El hijo te pide que lo rescates",
+   "t": "El hijo te pide ayuda a escondidas de su padre",
    "x": "El hijo mayor lleva dos años al frente y la empresa pierde clientes. Te llama de noche y pide un plan discreto, sin que su padre sepa.",
    "o": [
     {
@@ -34326,7 +34326,7 @@ const LOTES = {
   {
    "id": 22416,
    "por": "Le escribiste una carta sin rencor a un fundador",
-   "t": "Tu carta circula por el club",
+   "t": "El fundador enseña tu carta para criticarte",
    "x": "El fundador enseña tu carta en el club como prueba de que los asesores no entienden a las familias. Dos posibles clientes la leen.",
    "o": [
     {
@@ -34352,7 +34352,7 @@ const LOTES = {
   {
    "id": 22510,
    "por": "Le pusiste límites a tu mejor vendedor",
-   "t": "El equipo respira",
+   "t": "El equipo trabaja mejor sin los gritos",
    "x": "Sin gritos en el pasillo, los analistas empiezan a proponer ideas. Uno de ellos trae un cliente que nadie esperaba.",
    "o": [
     {
@@ -34388,7 +34388,7 @@ const LOTES = {
   {
    "id": 22511,
    "por": "Tuviste que lidiar con un vendedor que maltrataba",
-   "t": "Se lleva a sus clientes",
+   "t": "Tu exvendedor se lleva a sus clientes",
    "x": "Se fue a la competencia y en tres semanas llamó a cada uno de sus clientes. La mitad ya firmó con él.",
    "o": [
     {
@@ -34442,7 +34442,7 @@ const LOTES = {
   {
    "id": 22512,
    "por": "Tuviste que lidiar con un vendedor que maltrataba",
-   "t": "Los juniors se van",
+   "t": "Tres analistas renuncian por culpa del vendedor",
    "x": "Tres analistas renuncian en el mismo mes. En las entrevistas de salida, los tres mencionan a la misma persona.",
    "o": [
     {
@@ -34478,7 +34478,7 @@ const LOTES = {
   {
    "id": 22513,
    "por": "Le pusiste condiciones a tu mejor vendedor",
-   "t": "Cambió de verdad",
+   "t": "Tu vendedor cambió y ya no maltrata",
    "x": "Pasaron seis meses. Sigue vendiendo como siempre y ahora almuerza con los analistas. Uno dice que aprende más de él que de nadie.",
    "o": [
     {
@@ -34512,7 +34512,7 @@ const LOTES = {
   {
    "id": 22514,
    "por": "Tuviste que lidiar con un vendedor que maltrataba",
-   "t": "Volvió a las andadas",
+   "t": "Tu vendedor maltrata a un analista ante un cliente",
    "x": "Ayer le tiró un informe a un analista delante de un cliente. Ya no es un asunto interno.",
    "o": [
     {
@@ -34548,7 +34548,7 @@ const LOTES = {
   {
    "id": 22515,
    "por": "Le mandaste abogados a un vendedor que se fue",
-   "t": "Llegan a un acuerdo",
+   "t": "El vendedor firma un acuerdo y devuelve clientes",
    "x": "La carta funcionó. Firma un acuerdo, te devuelve dos clientes y promete no tocar al resto durante un año.",
    "o": [
     {
@@ -34574,7 +34574,7 @@ const LOTES = {
   {
    "id": 22516,
    "por": "Le mandaste abogados a un vendedor que se fue",
-   "t": "La pelea sale a la luz",
+   "t": "El vendedor te critica en una entrevista",
    "x": "Respondió con una entrevista donde dice que tu equipo era un infierno y que él era lo único que funcionaba. Tu red la leyó entera.",
    "o": [
     {
@@ -34601,7 +34601,7 @@ const LOTES = {
   {
    "id": 22610,
    "por": "Le abriste puertas a un fondo extranjero",
-   "t": "Una de tus presentaciones cierra",
+   "t": "Una reunión que conseguiste termina en una compra",
    "x": "Una de las reuniones que conseguiste termina en compra. El fondo te paga lo pactado y te ofrece un extra si consigues otra igual.",
    "o": [
     {
@@ -34690,7 +34690,7 @@ const LOTES = {
   {
    "id": 22612,
    "por": "Un fondo extranjero buscó tus contactos",
-   "t": "El fondo quedó mal con medio mercado",
+   "t": "El fondo rompe un trato y todos hablan de eso",
    "x": "El fondo extranjero rompió una oferta a última hora con una empresa local. Todo el mercado lo comenta y te preguntan qué sabes de ellos.",
    "o": [
     {
@@ -34786,7 +34786,7 @@ const LOTES = {
   {
    "id": 22615,
    "por": "Le explicaste a un amigo por qué cobraste",
-   "t": "Tu amigo lo entiende",
+   "t": "Tu amigo entiende por qué cobraste",
    "x": "Escuchó, se rió y te dijo que la próxima vez le avises antes. Después te presentó a su cuñado, que también busca un fondo.",
    "o": [
     {
@@ -34812,7 +34812,7 @@ const LOTES = {
   {
    "id": 22616,
    "por": "Le explicaste a un amigo por qué cobraste",
-   "t": "La promoción se entera",
+   "t": "Tus excompañeros se enteran de que cobraste",
    "x": "Tu amigo lo contó en el grupo de la promoción. Nadie te dice nada directamente, pero tres invitaciones dejan de llegar.",
    "o": [
     {
@@ -34892,7 +34892,7 @@ const LOTES = {
   {
    "id": 22711,
    "por": "Tu promoción cumplió veinte años",
-   "t": "Un compañero en apuros",
+   "t": "Un compañero perdió su empresa y te pide trabajo",
    "x": "El más brillante de la carrera perdió su empresa y te escribe. No pide dinero: pide trabajo o, al menos, una presentación.",
    "o": [
     {
@@ -34961,7 +34961,7 @@ const LOTES = {
   {
    "id": 22713,
    "por": "Fuiste al reencuentro de tu promoción",
-   "t": "La noche termina mal",
+   "t": "Dos compañeros pelean en el reencuentro",
    "x": "Dos compañeros resucitan una pelea de hace veinte años en tu mesa. Uno es cliente tuyo y el otro quiere serlo.",
    "o": [
     {
@@ -35056,7 +35056,7 @@ const LOTES = {
   {
    "id": 22716,
    "por": "Llevaste la venta de un compañero de promoción",
-   "t": "La amistad no resiste la negociación",
+   "t": "Pierdes un amigo por la venta de su empresa",
    "x": "En la última ronda le recomendaste aceptar menos de lo que quería. Vendió, cobraste y ya no te saluda en el grupo.",
    "o": [
     {
@@ -35082,7 +35082,7 @@ const LOTES = {
   {
    "id": 23110,
    "por": "Automatizaste las conciliaciones del área",
-   "t": "El script se cae el día del cierre",
+   "t": "Tu programa falla el día del cierre de mes",
    "x": "El banco cambió el formato de sus archivos y tu script lleva dos horas escupiendo errores. Es día de cierre y quedan pocos que sepan hacerlo a mano.",
    "o": [
     {
@@ -35137,7 +35137,7 @@ const LOTES = {
   {
    "id": 23111,
    "por": "Automatizaste las conciliaciones del área",
-   "t": "Quieren lo mismo en tesorería",
+   "t": "Quieren que automatices otra área",
    "x": "Funcionó tan bien que ahora quieren lo mismo en tesorería. Más gente, más procesos y otra lista que alguien tendrá que firmar.",
    "o": [
     {
@@ -35176,7 +35176,7 @@ const LOTES = {
   {
    "id": 23112,
    "por": "Entregaste la lista de quién sobraba",
-   "t": "Te escribe alguien de la lista",
+   "t": "Una persona que despidieron te pide ayuda",
    "x": "Una de las personas que salió te manda un mensaje. No reclama nada: pregunta si sabes de algún trabajo y si le firmarías una carta.",
    "o": [
     {
@@ -35210,7 +35210,7 @@ const LOTES = {
   {
    "id": 23113,
    "por": "Dijiste que el área no se podía automatizar",
-   "t": "Una consultora te pasa por encima",
+   "t": "Una consultora hace lo que dijiste imposible",
    "x": "Tu jefe trajo una consultora. En seis semanas automatizan lo que dijiste que era imposible y despiden a la mitad igual. Ahora te miran raro a ti.",
    "o": [
     {
@@ -35283,7 +35283,7 @@ const LOTES = {
   {
    "id": 23115,
    "por": "Admitiste que tu script falló en el cierre",
-   "t": "Te ponen a vigilar a los robots",
+   "t": "Te encargan revisar todos los procesos automáticos",
    "x": "Tu jefe valoró que no escondieras la falla. Ahora quiere que diseñes los controles de todos los procesos automáticos de la casa.",
    "o": [
     {
@@ -35311,7 +35311,7 @@ const LOTES = {
   {
    "id": 23116,
    "por": "Admitiste que tu script falló en el cierre",
-   "t": "Auditoría lo anota como falla de control",
+   "t": "Auditoría señala que todo dependía de ti",
    "x": "El informe de auditoría dice que un proceso crítico dependía de una persona y un script sin respaldo. La persona eres tú.",
    "o": [
     {
@@ -35338,7 +35338,7 @@ const LOTES = {
   {
    "id": 23210,
    "por": "Usaste datos de clientes sin permiso",
-   "t": "Cumplimiento pregunta por tus consultas",
+   "t": "Te piden explicar por qué revisaste datos de clientes",
    "x": "Una revisión de accesos encontró tus consultas a la base de clientes. Cumplimiento quiere una explicación por escrito antes del viernes.",
    "o": [
     {
@@ -35417,7 +35417,7 @@ const LOTES = {
   {
    "id": 23212,
    "por": "Usaste datos de clientes sin permiso",
-   "t": "Una filtración con tu copia en el medio",
+   "t": "Se filtran datos de clientes con tu archivo",
    "x": "Se filtró una base de clientes del banco. Entre los archivos que circulan hay uno que lleva el nombre de tu modelo.",
    "o": [
     {
@@ -35445,7 +35445,7 @@ const LOTES = {
   {
    "id": 23213,
    "por": "Llevaste a cumplimiento un problema de datos",
-   "t": "Cumplimiento te pide ayuda",
+   "t": "Te piden revisar quién tiene accesos indebidos",
    "x": "En cumplimiento nadie entiende de bases de datos. Te piden que revises quién más tiene accesos que no debería tener.",
    "o": [
     {
@@ -35482,7 +35482,7 @@ const LOTES = {
   {
    "id": 23214,
    "por": "Respetaste los datos de clientes del banco",
-   "t": "Otra área llegó primero",
+   "t": "Otra área presenta un modelo mejor que el tuyo",
    "x": "Otra área presentó un modelo de riesgo mejor que el tuyo. Usaron datos de un proveedor que nadie revisó. Tu jefe pregunta por qué no se te ocurrió.",
    "o": [
     {
@@ -35548,7 +35548,7 @@ const LOTES = {
   {
    "id": 23216,
    "por": "Dijiste que tu jefe sabía lo de los datos",
-   "t": "Tu jefe te cubre y te pasa la cuenta",
+   "t": "Tu jefe te cubre y luego te pide firmar sin revisar",
    "x": "Tu jefe confirma tu versión ante cumplimiento. Una semana después te pide que firmes unas cifras que no revisaste.",
    "o": [
     {
@@ -35576,7 +35576,7 @@ const LOTES = {
   {
    "id": 23310,
    "por": "Sacaste adelante un cierre durante un ataque",
-   "t": "Te piden el plan de continuidad",
+   "t": "Te piden un plan por si hay otro ataque",
    "x": "La dirección quiere que nunca más un cierre dependa de la suerte. Te piden diseñar el plan de continuidad, además de tu trabajo.",
    "o": [
     {
@@ -35693,7 +35693,7 @@ const LOTES = {
   {
    "id": 23313,
    "por": "Recuperaste los sistemas después de un ataque",
-   "t": "Vuelven a entrar",
+   "t": "Los atacantes vuelven a entrar",
    "x": "Tres meses después, el mismo mensaje en las mismas pantallas. Los atacantes nunca se fueron del todo. Esta vez es el cierre trimestral.",
    "o": [
     {
@@ -35730,7 +35730,7 @@ const LOTES = {
   {
    "id": 23314,
    "por": "Recomendaste pagarles el rescate a unos atacantes",
-   "t": "El regulador pregunta por el pago",
+   "t": "El regulador pregunta quién pagó el rescate",
    "x": "El regulador quiere saber quién autorizó pagarles a los atacantes y adónde fue el dinero. Tu nombre está en el acta, recomendándolo.",
    "o": [
     {
@@ -35784,7 +35784,7 @@ const LOTES = {
   {
    "id": 23316,
    "por": "Rastreaste el origen de un ataque",
-   "t": "La puerta era tu servidor de pruebas",
+   "t": "Entraron por un servidor que olvidaste apagar",
    "x": "El rastro termina en un servidor de pruebas que montaste hace un año y olvidaste apagar. Nadie más lo sabe todavía.",
    "o": [
     {
@@ -36061,7 +36061,7 @@ const LOTES = {
   {
    "id": 23510,
    "por": "Ayudaste a construir la fintech de unos amigos",
-   "t": "La fintech levanta capital",
+   "t": "Un fondo invierte en la empresa de tus amigos",
    "x": "Un fondo entra en la fintech. Tus acciones, que eran papel, de pronto tienen precio. El fondo pide que nadie del equipo venda en años.",
    "o": [
     {
@@ -36110,7 +36110,7 @@ const LOTES = {
   {
    "id": 23511,
    "por": "Te ofrecieron entrar a una fintech de amigos",
-   "t": "La fintech cierra",
+   "t": "La empresa de tus amigos cierra",
    "x": "Se acabó el dinero antes que las ideas. Tus amigos cierran la fintech y te invitan a una última cerveza para contarlo.",
    "o": [
     {
@@ -36180,7 +36180,7 @@ const LOTES = {
   {
    "id": 23513,
    "por": "Ayudaste a construir la fintech de unos amigos",
-   "t": "La fintech te pide más horas",
+   "t": "La empresa de tus amigos te pide más horas",
    "x": "Los fundadores dicen que así no llegan: necesitan más de ti. Te ofrecen el doble de acciones a cambio de más noches.",
    "o": [
     {
@@ -36216,7 +36216,7 @@ const LOTES = {
   {
    "id": 23514,
    "por": "Le dijiste que no a la fintech de unos amigos",
-   "t": "La fintech triunfa sin ti",
+   "t": "La empresa que rechazaste triunfa sin ti",
    "x": "La fintech que rechazaste acaba de levantar una ronda grande. El CTO que contrataron sale en una revista con una sudadera que podría ser tuya.",
    "o": [
     {
@@ -36249,7 +36249,7 @@ const LOTES = {
   {
    "id": 23515,
    "por": "Pediste más acciones de la fintech",
-   "t": "Más acciones y tu firma en todo",
+   "t": "Te dan más acciones, pero respondes por todo",
    "x": "Los fundadores aceptan: más acciones, pero firmas como responsable técnico ante el fondo. Si algo se cae, el nombre que suena es el tuyo.",
    "o": [
     {
@@ -36276,7 +36276,7 @@ const LOTES = {
   {
    "id": 23516,
    "por": "Pediste más acciones de la fintech",
-   "t": "Te sacan de la tabla de socios",
+   "t": "Te recompran tus acciones y quedas fuera",
    "x": "El fondo dice que tu pedido rompe la tabla de accionistas. Los fundadores eligen al fondo y te recompran lo tuyo al precio de antes.",
    "o": [
     {
@@ -36302,7 +36302,7 @@ const LOTES = {
   {
    "id": 23610,
    "por": "Pusiste tu algoritmo a operar con dinero real",
-   "t": "Un desplome en cuatro minutos",
+   "t": "El mercado se desploma en cuatro minutos",
    "x": "El mercado cae fuerte en cuatro minutos. Tu algoritmo vende, el precio cae más y vuelve a vender. Tienes el dedo sobre el botón de apagado.",
    "o": [
     {
@@ -36387,7 +36387,7 @@ const LOTES = {
   {
    "id": 23612,
    "por": "Pusiste tu algoritmo a operar con dinero real",
-   "t": "La mesa te triplica el capital",
+   "t": "Te triplican el dinero para tu algoritmo",
    "x": "El algoritmo cierra el año arriba y sin sustos. La mesa triplica el capital asignado y te pregunta si escala igual.",
    "o": [
     {
@@ -36424,7 +36424,7 @@ const LOTES = {
   {
    "id": 23613,
    "por": "Le pusiste límites de pérdida a tu algoritmo",
-   "t": "El interruptor lo apagó en mal momento",
+   "t": "Tu algoritmo se apagó antes de una subida",
    "x": "Un susto de una tarde dispara tu límite y el algoritmo se apaga. Al día siguiente el mercado sube con fuerza y tú estás fuera.",
    "o": [
     {
@@ -36449,7 +36449,7 @@ const LOTES = {
   {
    "id": 23614,
    "por": "Probaste tu algoritmo seis meses más en papel",
-   "t": "Tu algoritmo memorizaba el pasado",
+   "t": "Tu algoritmo deja de ganar con datos nuevos",
    "x": "Con datos nuevos, el algoritmo deja de ganar. No había descubierto nada: había memorizado tres años de historia. La prueba te salvó.",
    "o": [
     {
@@ -36509,7 +36509,7 @@ const LOTES = {
   {
    "id": 23616,
    "por": "Dejaste tu algoritmo vendiendo en un desplome",
-   "t": "Tu algoritmo recompró en el piso",
+   "t": "Tu algoritmo volvió a comprar en lo más bajo",
    "x": "Tu algoritmo vendió en la caída y recompró en el piso. Al cerrar el día, la cuenta está arriba. Nadie entiende cómo, y tú tampoco del todo.",
    "o": [
     {
@@ -36537,7 +36537,7 @@ const LOTES = {
   {
    "id": 23710,
    "por": "Revisaste un modelo que rechazaba a un barrio",
-   "t": "Encuentras la variable escondida",
+   "t": "El modelo rechazaba por el código postal",
    "x": "El modelo usaba el código postal como atajo. Quitarlo es fácil; explicar por qué estuvo años ahí, no tanto.",
    "o": [
     {
@@ -36590,7 +36590,7 @@ const LOTES = {
   {
    "id": 23711,
    "por": "Apagaste un modelo de crédito con sesgo",
-   "t": "Te exigen volver a encenderlo",
+   "t": "Te exigen volver a encender el modelo",
    "x": "Las solicitudes atrasadas ya son miles y el área comercial grita. La dirección te da una semana para encender el modelo, entendido o no.",
    "o": [
     {
@@ -36724,7 +36724,7 @@ const LOTES = {
   {
    "id": 23715,
    "por": "Propusiste una norma para revisar sesgos",
-   "t": "Tu norma se vuelve estándar",
+   "t": "Los bancos adoptan tu forma de revisar modelos",
    "x": "La asociación de bancos adopta tu norma de revisión de sesgos. Te invitan a explicarla en un foro lleno de gente que antes no te contestaba.",
    "o": [
     {
@@ -42418,7 +42418,7 @@ const LOTES = {
     "l1_domino",
     "l1_te_dejaste_leer"
    ],
-   "t": "Los negocios se cierran en la mesa",
+   "t": "Cerraste negocios jugando dominó",
    "x": "Jugaste dominó con dueños de empresas y dejaste que el socio director te leyera en la mesa. Cerraste más negocios entre fichas que en salas de juntas."
   },
   {
@@ -42427,7 +42427,7 @@ const LOTES = {
     "l1_dejaste_correr",
     "l1_compraste_distressed"
    ],
-   "t": "Dejaste correr lo que otros vendían",
+   "t": "Aguantaste inversiones que otros vendían",
    "x": "Aguantaste una ganadora cuando todos vendían y un bono en problemas cuando nadie lo quería. Tu dinero aprendió a esperar antes que tú."
   },
   {
@@ -42436,7 +42436,7 @@ const LOTES = {
     "l1_blindaste_modelo",
     "l1_legajo_completo"
    ],
-   "t": "Celda por celda",
+   "t": "Revisaste cada modelo sin atajos",
    "x": "Blindaste modelos y peinaste revisiones enteras cuando había atajos. Nadie te recuerda por rápido; todos te recuerdan por no equivocarte."
   },
   {
@@ -42444,7 +42444,7 @@ const LOTES = {
    "huellas": [
     "l2_viste_estafa"
    ],
-   "t": "Nadie te vendió humo",
+   "t": "Dijiste a tiempo que era una estafa",
    "x": "Cuando todos cobraban el 4% mensual, dijiste que no existía. Tuviste razón en voz alta, que es la forma más incómoda de tenerla."
   },
   {
@@ -42452,7 +42452,7 @@ const LOTES = {
    "huellas": [
     "l2_frenaste_por_pareja"
    ],
-   "t": "Frenaste a tiempo",
+   "t": "Bajaste el ritmo un año por tu pareja",
    "x": "Perdiste un año de impulso para no perder lo demás. En tu hoja de vida no se nota; en tu casa, sí."
   },
   {
@@ -42460,7 +42460,7 @@ const LOTES = {
    "huellas": [
     "l2_duelo_pendiente"
    ],
-   "t": "La factura que llegó tarde",
+   "t": "Trabajaste de más en vez de vivir tu duelo",
    "x": "Cuando más dolía, trabajaste más que nunca. Los números de ese año fueron buenos. El resto lo fuiste pagando después, a plazos."
   },
   {
@@ -42468,7 +42468,7 @@ const LOTES = {
    "huellas": [
     "l3_llevaste_mandato"
    ],
-   "t": "La operación de la década",
+   "t": "Llevaste el negocio más grande de tu época",
    "x": "Pediste el mandato que todos miraban y lo llevaste tú. Saliera como saliera, durante años bastó decir «la operación» para que supieran de quién se hablaba."
   },
   {
@@ -42476,7 +42476,7 @@ const LOTES = {
    "huellas": [
     "l3_asiento_soberano"
    ],
-   "t": "Un asiento en la mesa grande",
+   "t": "Un puesto cerca de quienes manejan países",
    "x": "Aceptaste un asiento que pagaba poco y lo abría todo. Pasaste años viendo de cerca cómo decide la gente que mueve el dinero de países enteros."
   },
   {
@@ -42484,7 +42484,7 @@ const LOTES = {
    "huellas": [
     "l3_olfato"
    ],
-   "t": "A ti no te vendieron humo",
+   "t": "Aprendiste a no caer en estafas",
    "x": "Aprendiste a preguntar quién cobra y por qué hay tanta prisa. No te hiciste rico por eso: solo dejaste de regalarle tu dinero a gente con oficina bonita."
   },
   {
@@ -42493,7 +42493,7 @@ const LOTES = {
     "l4_no_vendiste",
     "l4_por_tu_cuenta"
    ],
-   "t": "Lo tuyo no estaba en venta",
+   "t": "No vendiste tu firma ni la uniste a otra",
    "x": "Te quisieron comprar y no vendiste; te propusieron fusionarte y seguiste por tu cuenta. Tu firma es chica, lenta y entera tuya. La última hoja la firmas tú."
   },
   {
@@ -42502,7 +42502,7 @@ const LOTES = {
     "l4_avisaste_error",
     "l4_board"
    ],
-   "t": "La verdad, temprano",
+   "t": "Avisaste del error antes de que te preguntaran",
    "x": "Avisaste del error cuando dolía y años después te sentaron en una junta. Llegaste arriba con una fama rara en este oficio: decir la verdad antes de que te la pregunten."
   },
   {
@@ -42510,7 +42510,7 @@ const LOTES = {
    "huellas": [
     "l4_informacion_usada"
    ],
-   "t": "Sabías el número",
+   "t": "Usaste un precio que te contaron en secreto",
    "x": "Una vez alguien te contó el precio del otro lado y lo usaste. Ganaste esa negociación y muchas más, y en cada una alguien se preguntó qué sabías tú."
   },
   {
@@ -42518,7 +42518,7 @@ const LOTES = {
    "huellas": [
     "l5_hora_diaria"
    ],
-   "t": "La hora que no se negoció",
+   "t": "Guardaste una hora diaria para ti",
    "x": "Bloqueaste una hora diaria y la cumpliste aunque los cierres te miraran feo. Llegaste al final con la espalda derecha y la cabeza fría."
   },
   {
@@ -42526,7 +42526,7 @@ const LOTES = {
    "huellas": [
     "l5_mentor"
    ],
-   "t": "Dejaste escuela",
+   "t": "Enseñaste a gente que hoy trabaja como tú",
    "x": "Le enseñaste al pasante que no sabía usar buscarv. Hoy hay gente en el sector que trabaja con tus manías y ni sabe de dónde las sacó."
   },
   {
@@ -42543,7 +42543,7 @@ const LOTES = {
     "l6_aguantaste_caida",
     "l6_metodo"
    ],
-   "t": "Mano firme",
+   "t": "No vendiste cuando el mercado se cayó",
    "x": "Cuando el mercado se cayó, no vendiste. Cuando decidir era difícil, ordenaste los criterios antes de mirar precios. Nadie te aplaudió, y no te hizo falta."
   },
   {
@@ -42551,7 +42551,7 @@ const LOTES = {
    "huellas": [
     "l6_atajo"
    ],
-   "t": "La letra chica",
+   "t": "Firmaste sin leer",
    "x": "Firmaste sin leer más de una vez. A veces salió bien, y eso fue lo peor: te enseñó que se podía. La letra chica nunca se olvidó de ti."
   },
   {
@@ -42560,7 +42560,7 @@ const LOTES = {
     "l6_honesto",
     "l6_maestro"
    ],
-   "t": "Cuentas claras",
+   "t": "Explicaste lo que otros escondían",
    "x": "Explicaste lo que otros escondían en anexos y dijiste no sé cuando inventar era más fácil. La gente aprendió que contigo no hacía falta leer la letra chica."
   },
   {
@@ -42568,7 +42568,7 @@ const LOTES = {
    "huellas": [
     "l7_emigraste"
    ],
-   "t": "Otra liga",
+   "t": "Empezaste de cero en Miami",
    "x": "Te fuiste a Miami con una agenda que allá no servía. Armaste otra red desde cero, en otro idioma, y aprendiste que el talento viaja mejor que los contactos."
   },
   {
@@ -42593,7 +42593,7 @@ const LOTES = {
     "l8_contra_consenso",
     "l8_sostuviste_numero"
    ],
-   "t": "Tu número, con tu nombre",
+   "t": "Sostuviste tu pronóstico contra todos",
    "x": "Publicaste lejos del consenso desde el primer informe y no moviste tu pronóstico cuando lo pidió el cliente que más pagaba. Fallaste a veces, pero siempre con tu número."
   },
   {
@@ -42602,7 +42602,7 @@ const LOTES = {
     "l8_con_consenso",
     "l8_cambiaste_numero"
    ],
-   "t": "Cerca del consenso, lejos del riesgo",
+   "t": "Ajustaste tus pronósticos a los de los demás",
    "x": "Acercaste tu primer pronóstico al de todos y, años después, cambiaste otro para no perder un cliente. Nunca fallaste sin compañía. Tampoco acertaste sin ella."
   },
   {
@@ -42611,7 +42611,7 @@ const LOTES = {
     "l9_rastreaste",
     "l9_salvedad"
    ],
-   "t": "El número que no cuadra",
+   "t": "Revisaste las cuentas que todos daban por buenas",
    "x": "Rastreaste partidas que todos daban por buenas y firmaste con salvedad cuando nadie quería leerla. Ganaste menos que otros y te creyeron más que a nadie."
   },
   {
@@ -42620,7 +42620,7 @@ const LOTES = {
     "l9_creativo",
     "l9_firmaste_limpio"
    ],
-   "t": "Contabilidad creativa",
+   "t": "Cambiaste fechas para que los números cuadraran",
    "x": "Le moviste la fecha a un contrato y firmaste limpio con un juicio encima. Los números siempre te cuadraron a tiempo. Lo demás fue cuadrando a plazos."
   },
   {
@@ -42629,7 +42629,7 @@ const LOTES = {
     "l10_sala_maquinas",
     "l10_frenaste_desembolso"
    ],
-   "t": "Botas antes que modelo",
+   "t": "Fuiste a ver cada obra antes de pagar",
    "x": "Te metiste en salas de máquinas y frenaste desembolsos hasta ver la obra. Tus modelos tenían menos celdas que los de otros y muchas más visitas."
   },
   {
@@ -42638,7 +42638,7 @@ const LOTES = {
     "l10_constructora",
     "l10_oferta_tecnica"
    ],
-   "t": "Tus obras, tu balance",
+   "t": "Pusiste tus ahorros en una constructora",
    "x": "Pusiste tus ahorros en una constructora y pujaste con el costo del asfalto en la cabeza. Aprendiste que una obra buena sale muy bien y la mala te la llevas puesta."
   },
   {
@@ -42647,7 +42647,7 @@ const LOTES = {
     "l11_marcaste_cambio",
     "l11_salvedades"
    ],
-   "t": "La letra chica era tuya",
+   "t": "Marcaste los riesgos que otros callaban",
    "x": "Marcaste el cambio que nadie marcó y firmaste con salvedades cuando te pagaban por no ponerlas. Cobraste menos que otros y dormiste mejor que todos."
   },
   {
@@ -42656,7 +42656,7 @@ const LOTES = {
     "l11_firmaste_limpio",
     "l11_horas_infladas"
    ],
-   "t": "Una firma fácil de conseguir",
+   "t": "Firmabas lo que el cliente quería",
    "x": "Redondeaste horas y firmaste lo que el cliente quería leer. Tu firma circuló por todas partes y cada vez valió un poco menos."
   },
   {
@@ -42665,7 +42665,7 @@ const LOTES = {
     "l12_organizaste",
     "l12_presentaste_claro"
    ],
-   "t": "La red como patrimonio",
+   "t": "Presentaste gente y dijiste lo que cobrabas",
    "x": "Armaste el reencuentro de tu promoción y presentaste gente con la comisión dicha de frente. Tu agenda fue tu capital y nunca tuviste que explicar de dónde salía."
   },
   {
@@ -42674,7 +42674,7 @@ const LOTES = {
     "l12_mediaste",
     "l12_sacaste_estrella"
    ],
-   "t": "Primero la gente",
+   "t": "Cuidaste a tu equipo antes que las ventas",
    "x": "Sentaste a dos analistas peleados en la misma mesa y sacaste a tu mejor vendedor por cómo trataba al equipo. Facturaste menos de lo que podías y nadie lloró en tu pasillo."
   },
   {
@@ -42683,7 +42683,7 @@ const LOTES = {
     "l13_automatizaste",
     "l13_sin_freno"
    ],
-   "t": "Lo que no cabe en el código, sobra",
+   "t": "Automatizaste todo y dejaste gente atrás",
    "x": "Automatizaste un área entera y encendiste tu algoritmo sin freno. Fuiste rápido en todo, también en dejar atrás a la gente que no cabía en el código."
   },
   {
@@ -42692,7 +42692,7 @@ const LOTES = {
     "l13_reconvertiste",
     "l13_apagaste_modelo"
    ],
-   "t": "Máquinas con alguien detrás",
+   "t": "Nunca dejaste que una máquina decidiera sola",
    "x": "Protegiste a un equipo de tu propio script y apagaste un modelo que discriminaba. Escribiste máquinas toda la vida, pero nunca las dejaste decidir sin nadie detrás."
   }
  ],
@@ -42702,7 +42702,7 @@ const LOTES = {
    "est": "eco",
    "min": 0,
    "max": 2,
-   "t": "Tu primer pronóstico con firma",
+   "t": "Tu primer pronóstico de inflación lleva tu nombre",
    "x": "El informe mensual llevará tu proyección de inflación. El consenso del mercado dice una cosa; tu modelo, bastante otra.",
    "o": [
     {
@@ -42796,7 +42796,7 @@ const LOTES = {
    "est": "eco",
    "min": 0,
    "max": 3,
-   "t": "La curva se invirtió",
+   "t": "Prestar a corto plazo paga más que a largo",
    "x": "Prestar a corto plazo paga más que prestar a largo. En tus clases eso anunciaba recesión. La mesa sigue comprando como si nada.",
    "o": [
     {
@@ -42980,7 +42980,7 @@ const LOTES = {
    "est": "eco",
    "min": 2,
    "max": 4,
-   "t": "El ancla cambiaria no aguanta",
+   "t": "El dólar oficial sigue fijo y las reservas caen",
    "x": "Las reservas caen cada mes y el tipo de cambio oficial sigue fijo. Tus números dicen que se rompe pronto. Tus clientes deben en dólares.",
    "o": [
     {
@@ -43073,7 +43073,7 @@ const LOTES = {
    "est": "eco",
    "min": 3,
    "max": 6,
-   "t": "Te dejan operar tu lectura del ciclo",
+   "t": "Te dan dinero del fondo para invertir según tu análisis",
    "x": "El director de inversiones lee tus informes y te ofrece una parte del fondo para operar tu tesis. Si gana, es mérito tuyo. Si pierde, también.",
    "o": [
     {
@@ -43266,7 +43266,7 @@ const LOTES = {
    "est": "eco",
    "min": 4,
    "max": 6,
-   "t": "Tu mayor cliente quiere otro número",
+   "t": "Tu mayor cliente quiere que cambies tu pronóstico",
    "x": "El banco que más te paga va a colocar bonos y tu pronóstico de recesión le estorba. Te piden «revisar» el escenario antes del informe trimestral.",
    "o": [
     {
@@ -43367,7 +43367,7 @@ const LOTES = {
    "est": "con",
    "min": 0,
    "max": 2,
-   "t": "Una partida en tránsito de hace ocho meses",
+   "t": "Un depósito anotado hace ocho meses nunca llegó",
    "x": "Conciliando los bancos de un cliente, encuentras un depósito registrado que nunca llegó al banco. Tu supervisor dice que siempre ha estado ahí.",
    "o": [
     {
@@ -43473,7 +43473,7 @@ const LOTES = {
    "est": "con",
    "min": 1,
    "max": 3,
-   "t": "El cliente quiere ser creativo",
+   "t": "El cliente quiere anotar ya un contrato de enero",
    "x": "Último día del año. El gerente de un cliente pide registrar ya un contrato que se firma en enero. «Es lo mismo, solo cambia la fecha», dice.",
    "o": [
     {
@@ -43577,7 +43577,7 @@ const LOTES = {
    "est": "con",
    "min": 2,
    "max": 4,
-   "t": "Cinco cierres el mismo mes",
+   "t": "Cinco clientes cierran su año contable a la vez",
    "x": "Enero. Cinco clientes cierran a la vez, tu equipo tiene la mitad de la gente y el socio quiere todo listo para el quince.",
    "o": [
     {
@@ -43776,7 +43776,7 @@ const LOTES = {
    "est": "con",
    "min": 2,
    "max": 5,
-   "t": "Fiscalización de tres años",
+   "t": "Revisan tres años de impuestos de un cliente",
    "x": "El fisco cita a un cliente por tres años de declaraciones que preparó tu equipo. En uno hay una deducción que hoy no aprobarías.",
    "o": [
     {
@@ -43873,7 +43873,7 @@ const LOTES = {
    "est": "con",
    "min": 4,
    "max": 6,
-   "t": "Firmar o no firmar",
+   "t": "La empresa no quiere apartar dinero para un juicio",
    "x": "Firmas la auditoría de un cliente grande. La gerencia se niega a reservar plata para un juicio que puede perder. El informe vence el viernes.",
    "o": [
     {
@@ -43972,7 +43972,7 @@ const LOTES = {
    "est": "con",
    "min": 5,
    "max": 6,
-   "t": "Un auditor se retira y vende su cartera",
+   "t": "Un auditor se jubila y te ofrece sus clientes",
    "x": "Un colega veterano se jubila y te ofrece sus clientes: veinte empresas que cierran cada año y que solo cambiarían de auditor a disgusto.",
    "o": [
     {
@@ -44071,7 +44071,7 @@ const LOTES = {
    "est": "ing",
    "min": 0,
    "max": 2,
-   "t": "La visita a la planta",
+   "t": "Un compresor de la planta suena mal",
    "x": "Acompañas al equipo a la planta que van a financiar. En el recorrido oyes un compresor que suena peor de lo que dice el informe técnico.",
    "o": [
     {
@@ -44168,7 +44168,7 @@ const LOTES = {
    "est": "ing",
    "min": 0,
    "max": 3,
-   "t": "El número técnico no cuadra",
+   "t": "El cálculo del parque solar no cuadra con el estudio",
    "x": "El modelo del parque solar supone una producción que el estudio de radiación no respalda. Lo sacas de cabeza y te da bastante menos.",
    "o": [
     {
@@ -44362,7 +44362,7 @@ const LOTES = {
    "est": "ing",
    "min": 2,
    "max": 5,
-   "t": "La parada de la refinería",
+   "t": "Una refinería cierra un mes por mantenimiento",
    "x": "Una refinería grande anuncia un mes de parada por mantenimiento. Por cómo es esa unidad por dentro, sabes que un mes no alcanza.",
    "o": [
     {
@@ -44551,7 +44551,7 @@ const LOTES = {
    "est": "ing",
    "min": 1,
    "max": 5,
-   "t": "La constructora de tu compañero",
+   "t": "Un compañero con una constructora te pide ser socio",
    "x": "Un compañero de la facultad tiene una constructora pequeña y va a una licitación municipal. Te pide que le armes la oferta y entres en la sociedad.",
    "o": [
     {
@@ -44648,7 +44648,7 @@ const LOTES = {
    "est": "ing",
    "min": 4,
    "max": 6,
-   "t": "Una central en la montaña",
+   "t": "Te ofrecen financiar una central hidroeléctrica",
    "x": "Te ofrecen liderar el financiamiento de una central hidroeléctrica. El estudio geológico cubre solo la mitad del túnel y el gobierno quiere firmar ya.",
    "o": [
     {
@@ -44843,7 +44843,7 @@ const LOTES = {
    "est": "der",
    "min": 0,
    "max": 3,
-   "t": "La versión limpia no está tan limpia",
+   "t": "La otra parte cambió una cláusula sin avisar",
    "x": "Comparas el borrador de compraventa con el anterior. La otra parte cambió la cláusula de indemnización y no lo marcó. El cierre es el viernes.",
    "o": [
     {
@@ -45044,7 +45044,7 @@ const LOTES = {
    "est": "der",
    "min": 2,
    "max": 5,
-   "t": "El cliente quiere tu firma en un dictamen",
+   "t": "El cliente quiere tu firma en una opinión legal",
    "x": "Un cliente necesita una opinión legal que diga que su estructura cumple la norma cambiaria. El banco la exige para pagar. Tu lectura es menos optimista.",
    "o": [
     {
@@ -45636,7 +45636,7 @@ const LOTES = {
    "est": "adm",
    "min": 2,
    "max": 4,
-   "t": "Heredas las familias de un banquero",
+   "t": "Te pasan los clientes de un banquero que se jubila",
    "x": "Un banquero privado se jubila y te pasan sus clientes: doce familias con dinero viejo que lo conocían a él, no a ti. Tienes un trimestre.",
    "o": [
     {
@@ -45959,7 +45959,7 @@ const LOTES = {
    "est": "adm",
    "min": 4,
    "max": 6,
-   "t": "Te ofrecen cobrar por abrir puertas",
+   "t": "Te ofrecen cobrar por presentar a tus contactos",
    "x": "Un fondo extranjero quiere entrar al país y no conoce a nadie. Te ofrece una comisión por cada reunión que le consigas con tus contactos.",
    "o": [
     {
@@ -46061,7 +46061,7 @@ const LOTES = {
    "est": "adm",
    "min": 5,
    "max": 6,
-   "t": "Veinte años de la promoción",
+   "t": "Te piden organizar el reencuentro de tu promoción",
    "x": "Te piden organizar el reencuentro de la universidad. Media promoción dirige empresas, la otra media busca trabajo y todos tienen algo que pedir.",
    "o": [
     {
@@ -46368,7 +46368,7 @@ const LOTES = {
    "est": "sis",
    "min": 2,
    "max": 5,
-   "t": "Pantallas en negro antes del cierre",
+   "t": "Un ataque bloquea las computadoras y piden rescate",
    "x": "Faltan veinte minutos para el cierre de mes y los servidores aparecen cifrados. Una nota pide rescate en cripto. Nadie en el piso sabe más de sistemas que tú.",
    "o": [
     {
@@ -46579,7 +46579,7 @@ const LOTES = {
    "est": "sis",
    "min": 1,
    "max": 4,
-   "t": "Una fintech te quiere de CTO",
+   "t": "Dos amigos te piden programar su empresa de pagos",
    "x": "Dos amigos montan una fintech de pagos y necesitan quien escriba el producto. No hay sueldo: hay acciones de algo que todavía no existe.",
    "o": [
     {
@@ -46677,7 +46677,7 @@ const LOTES = {
    "est": "sis",
    "min": 2,
    "max": 5,
-   "t": "Tu algoritmo de trading está terminado",
+   "t": "Tu programa para invertir está listo para dinero real",
    "x": "En tres años de datos históricos, tu algoritmo no tiene una sola semana mala. Ya puedes ponerle dinero real. Eso es justo lo que te preocupa.",
    "o": [
     {
@@ -46873,7 +46873,7 @@ const LOTES = {
   {
    "escena": 23,
    "est": "eco",
-   "t": "Calcular primero dónde debería asentarse la moneda",
+   "t": "Calcular primero cuánto debería valer el dólar",
    "d": {
     "cri": 5,
     "mod": 2,
@@ -46884,7 +46884,7 @@ const LOTES = {
   {
    "escena": 54,
    "est": "eco",
-   "t": "Medir la brecha con el dólar de la calle primero",
+   "t": "Comparar primero el dólar oficial con el de la calle",
    "d": {
     "cri": 4,
     "cash": 1500,
@@ -46895,7 +46895,7 @@ const LOTES = {
   {
    "escena": 30,
    "est": "eco",
-   "t": "Leer si es recesión o pánico antes de comprar",
+   "t": "Revisar si es recesión o solo pánico antes de comprar",
    "d": {
     "cri": 4,
     "cash": 1000,
@@ -46906,7 +46906,7 @@ const LOTES = {
   {
    "escena": 19,
    "est": "eco",
-   "t": "Dar tu pronóstico del ciclo con número y fecha",
+   "t": "Decir en público tu pronóstico con número y fecha",
    "d": {
     "rep": 5,
     "red": 3,
@@ -46918,7 +46918,7 @@ const LOTES = {
   {
    "escena": 102,
    "est": "con",
-   "t": "Conciliar la caja contra los bancos antes que todo",
+   "t": "Revisar primero que el efectivo coincida con el banco",
    "d": {
     "cri": 6,
     "mod": 2,
@@ -46929,7 +46929,7 @@ const LOTES = {
   {
    "escena": 42,
    "est": "con",
-   "t": "Fijar un umbral de importancia y aplicarlo a todos",
+   "t": "Usar una misma regla de importancia para todos",
    "d": {
     "cri": 5,
     "rep": 3,
@@ -46940,7 +46940,7 @@ const LOTES = {
   {
    "escena": 23,
    "est": "con",
-   "t": "Remedir partida por partida lo que está en dólares",
+   "t": "Revisar una por una las cuentas en dólares",
    "d": {
     "mod": 4,
     "cri": 4,
@@ -46964,7 +46964,7 @@ const LOTES = {
   {
    "escena": 34,
    "est": "ing",
-   "t": "Estimarlo de cabeza por órdenes de magnitud",
+   "t": "Calcularlo de cabeza con números redondos",
    "d": {
     "cri": 4,
     "mod": 2,
@@ -46975,7 +46975,7 @@ const LOTES = {
   {
    "escena": 102,
    "est": "ing",
-   "t": "Ir a ver la planta en vez de quedarte en el data room",
+   "t": "Ir a ver la planta en vez de leer los archivos",
    "d": {
     "cri": 5,
     "red": 2,
@@ -46987,7 +46987,7 @@ const LOTES = {
   {
    "escena": 108,
    "est": "ing",
-   "t": "Tasar tú las plantas que respaldan el bono",
+   "t": "Ir a valorar tú las plantas que garantizan la deuda",
    "d": {
     "cri": 4,
     "mod": 3,
@@ -46999,7 +46999,7 @@ const LOTES = {
   {
    "escena": 42,
    "est": "ing",
-   "t": "Ordenarlos en una matriz de severidad y probabilidad",
+   "t": "Ordenarlos en una tabla por gravedad y probabilidad",
    "d": {
     "mod": 3,
     "cri": 3,
@@ -47011,7 +47011,7 @@ const LOTES = {
   {
    "escena": 31,
    "est": "der",
-   "t": "Concederla con derecho de los demás a igualarla",
+   "t": "Dar la carta, pero que los demás puedan pedir lo mismo",
    "d": {
     "cri": 4,
     "rep": 3,
@@ -47023,7 +47023,7 @@ const LOTES = {
   {
    "escena": 15,
    "est": "der",
-   "t": "Aceptar solo con seguro e indemnidad negociados",
+   "t": "Aceptar solo con un seguro y una carta que te cubra",
    "d": {
     "cri": 3,
     "rep": 3,
@@ -47047,7 +47047,7 @@ const LOTES = {
   {
    "escena": 27,
    "est": "der",
-   "t": "Proponer un protocolo familiar por escrito",
+   "t": "Proponer reglas familiares por escrito",
    "d": {
     "cri": 3,
     "rep": 2,
@@ -47059,7 +47059,7 @@ const LOTES = {
   {
    "escena": 27,
    "est": "adm",
-   "t": "Proponer un protocolo familiar antes que los números",
+   "t": "Proponer reglas familiares antes que los números",
    "d": {
     "cri": 4,
     "red": 3,
@@ -47083,7 +47083,7 @@ const LOTES = {
   {
    "escena": 9,
    "est": "adm",
-   "t": "Pedirle presentaciones a tu promoción, no escribir en frío",
+   "t": "Pedir a tus excompañeros que te presenten gente",
    "d": {
     "red": 5,
     "car": 2,
@@ -47095,7 +47095,7 @@ const LOTES = {
   {
    "escena": 22,
    "est": "adm",
-   "t": "Ofrecerte a liderar la integración de los equipos",
+   "t": "Ofrecerte a dirigir la unión de los dos equipos",
    "d": {
     "car": 5,
     "cri": 2,
@@ -47107,7 +47107,7 @@ const LOTES = {
   {
    "escena": 6,
    "est": "sis",
-   "t": "Escribir un clasificador que lo ordene en una tarde",
+   "t": "Escribir un programa que lo ordene en una tarde",
    "d": {
     "mod": 5,
     "red": 2,
@@ -47119,7 +47119,7 @@ const LOTES = {
   {
    "escena": 23,
    "est": "sis",
-   "t": "Parametrizar el tipo de cambio en todos los modelos",
+   "t": "Dejar el tipo de cambio en una sola celda para todo",
    "d": {
     "mod": 6,
     "car": 2,
@@ -47130,7 +47130,7 @@ const LOTES = {
   {
    "escena": 40,
    "est": "sis",
-   "t": "Dejar un bot operando y vigilar los registros",
+   "t": "Dejar un programa invirtiendo solo y revisar sus errores",
    "d": {
     "mod": 4,
     "ene": 2,
@@ -47141,7 +47141,7 @@ const LOTES = {
   {
    "escena": 109,
    "est": "sis",
-   "t": "Reconstruir la trazabilidad desde los servidores",
+   "t": "Sacar de los servidores quién tocó qué y cuándo",
    "d": {
     "cri": 4,
     "mod": 3,
@@ -47170,7 +47170,7 @@ const IDS_CONSEC = CONSECUENCIAS.map((e) => e.id);
    en otro árbol (si y sin las separan).
    ============================================================ */
 const TRONCOS = [
-  { id: 7300, clave: true, min: 1, max: 6, t: "Un atajo en la conciliación",
+  { id: 7300, clave: true, min: 1, max: 6, t: "Tu jefe quiere anotar este año ingresos del próximo",
     x: "Tu jefe quiere adelantar ingresos del trimestre que viene para cerrar el año en verde. Solo le falta tu firma.",
     o: [
       { t: "Firmar: son solo unos meses", d: { cash: 3000, car: 4, rep: -2, deja: "maquillaste", luego: [{ id: 7301, en: 2 }], msg: "Firmas. El año cierra en verde y tu jefe te da una palmada en la espalda." } },
@@ -47193,21 +47193,21 @@ const TRONCOS = [
         luego: [{ en: 2, azar: [{ p: 50, id: 7334 }, { p: 50, id: 7359 }] }],
         msg: "Le revisas los números una tarde entera. El dinero, que lo pida al banco." } },
     ] },
-  { id: 7310, min: 1, max: 6, sin: ["sancionado"], t: "Tu amiga monta una startup",
+  { id: 7310, min: 1, max: 6, sin: ["sancionado"], t: "Tu amiga deja su trabajo para crear una empresa",
     x: "Tu amiga de la universidad deja su trabajo para montar una fintech. Te ofrece entrar de socio: medio sueldo y el 5% de la empresa.",
     o: [
       { t: "Entrar de socio a medio tiempo", d: { cash: -2000, ene: -8, car: -3, deja: "startup", luego: [{ id: 7311, en: 2 }], msg: "Te pasas las noches en un local sin ventanas. Es lo más divertido que has hecho en años." } },
       { t: "Poner tus ahorros sin dejar tu trabajo", d: { cash: -4000, red: 3, deja: "angel", luego: [{ id: 7313, en: 3 }], msg: "Le haces una transferencia y un abrazo. Ahora es tu dinero el que trabaja con ella." } },
       { t: "Desearle suerte y quedarte fuera", d: { ene: 3, deja: "fuera", luego: [{ id: 7315, en: 3 }], msg: "Le deseas suerte de verdad. Y sigues con lo tuyo." } },
     ] },
-  { id: 7317, min: 1, max: 6, si: ["sancionado"], t: "La única que todavía te llama",
+  { id: 7317, min: 1, max: 6, si: ["sancionado"], t: "Tras tu sanción, una amiga te ofrece ser su socio",
     x: "Desde la sanción nadie te ofrece nada. Tu amiga de la universidad sí: monta una fintech y te quiere de socio, sabiendo lo que pasó.",
     o: [
       { t: "Entrar de socio a medio tiempo", d: { cash: -2000, ene: -8, rep: 3, deja: "startup", luego: [{ id: 7311, en: 2 }], msg: "Te da una segunda oportunidad y la tomas con las dos manos." } },
       { t: "Poner tus ahorros sin dejar tu trabajo", d: { cash: -4000, red: 3, deja: "angel", luego: [{ id: 7313, en: 3 }], msg: "Le das tu dinero. Tu nombre, de momento, mejor que no." } },
       { t: "Decirle que no, para no ensuciarla", d: { rep: 2, ene: 2, deja: "fuera", luego: [{ id: 7315, en: 3 }], msg: "No quieres que tu sanción salga en su ronda. Te lo agradece." } },
     ] },
-  { id: 7320, clave: true, min: 2, max: 6, sin: ["heroe"], t: "Guerra por dirigir tu firma",
+  { id: 7320, clave: true, min: 2, max: 6, sin: ["heroe"], t: "Dos socias pelean por dirigir tu firma",
     x: "En la firma donde trabajas, dos socias se disputan quién la dirige. Las dos te quieren de su lado y ninguna acepta un no.",
     o: [
       { t: "Ponerte del lado de la veterana", d: { red: 5, deja: "veterana", luego: [{ id: 7321, en: 1 }], msg: "Se lo dices en su oficina. Te sirve un café y te cuenta cómo va a ganar." } },
@@ -47216,7 +47216,7 @@ const TRONCOS = [
         ok: { red: 8, deja: "dos_bandas", luego: [{ id: 7323, en: 1 }], msg: "Las dos creen que estás con ellas. Por ahora." },
         no: { rep: -8, red: -6, deja: "descubierto", luego: [{ id: 7324, en: 1 }], msg: "Te pillan en una semana. Las dos." } } },
     ] },
-  { id: 7326, clave: true, min: 2, max: 6, si: ["heroe"], t: "Las dos socias te necesitan",
+  { id: 7326, clave: true, min: 2, max: 6, si: ["heroe"], t: "Dos socias pelean por dirigir y quieren tu apoyo",
     x: "En la firma donde trabajas, dos socias se disputan quién la dirige. Desde la investigación eres la persona limpia de la casa, y las dos quieren tu nombre a su lado.",
     o: [
       { t: "Apoyar a la veterana", d: { red: 5, rep: 3, deja: "veterana", luego: [{ id: 7321, en: 1 }], msg: "Tu apoyo vale doble. Ella lo sabe." } },
@@ -47309,22 +47309,22 @@ const RAICES = [
 
 /* ---------- eventos de los modos nuevos ---------- */
 const E4 = [
-  { id: 60, min: 0, max: 3, t: "La pizarra del comité", x: "El socio borra el pizarrón y escribe seis conceptos con sus definiciones cruzadas. Dice que si no los tienes automatizados, no puedes hablar en una reunión.",
+  { id: 60, min: 0, max: 3, t: "El socio te pide unir seis conceptos en el pizarrón", x: "El socio borra el pizarrón y escribe seis conceptos con sus definiciones cruzadas. Dice que si no los tienes automatizados, no puedes hablar en una reunión.",
     o: [
       { t: "Resolverla en el momento", j: "pares", stat: "cri", d: { cri: 6, mod: 5, car: 4, rep: 4, msg: "Te paras frente al pizarrón con seis pares desordenados." } },
       { t: "Pedir estudiarlo y volver mañana", d: { mod: 3, rep: -3, ene: -3, msg: "Vuelves al día siguiente sabiéndotelo. La oportunidad de impresionar ya pasó." } },
     ] },
-  { id: 61, min: 0, max: 6, t: "Rotar entre activos", x: "Tienes un año movido por delante y la sensación de que quedarte quieto en una sola clase de activo es dejar plata en la mesa.",
+  { id: 61, min: 0, max: 6, t: "Mover tu dinero entre inversiones durante el año", x: "Tienes un año movido por delante y la sensación de que quedarte quieto en una sola clase de activo es dejar plata en la mesa.",
     o: [
       { t: "Rotar activamente durante el año", j: "carril", stat: "cri", d: { cash: 4000, cri: 4, ene: -5, msg: "Te pasas el año cambiándote de carril según lo que va pasando." } },
       { t: "Quedarte quieto donde estás", d: { cri: 3, ene: 5, msg: "No tocas nada. Algunos años eso es lo mejor que puedes hacer y otros te cuesta caro." } },
     ] },
-  { id: 62, min: 1, max: 6, t: "El tablero de la negociación", x: "Cuatro sesiones de negociación, cada una con concesiones que se acumulan. Quien controle el centro del tablero al final se lleva los términos.",
+  { id: 62, min: 1, max: 6, t: "Una negociación de cuatro sesiones", x: "Cuatro sesiones de negociación, cada una con concesiones que se acumulan. Quien controle el centro del tablero al final se lleva los términos.",
     o: [
       { t: "Sentarte tú a llevar el tablero", j: "cuatro", stat: "red", d: { car: 7, rep: 6, cash: 6000, msg: "Cada concesión que sueltas cambia la posición de todo lo demás." } },
       { t: "Mandar la propuesta cerrada y no negociar", d: { car: 2, rep: 3, ene: 4, msg: "Tómalo o déjalo. Lo toman, con menos entusiasmo del que hubieras querido." } },
     ] },
-  { id: 63, min: 2, max: 6, t: "Cuatro postores por el mismo activo", x: "Sala llena, sobre cerrado y nadie sabe con certeza cuánto vale la compañía. Tu estimación es solo eso, una estimación.",
+  { id: 63, min: 2, max: 6, t: "Cuatro compradores pujan por la misma empresa", x: "Sala llena, sobre cerrado y nadie sabe con certeza cuánto vale la compañía. Tu estimación es solo eso, una estimación.",
     o: [
       { t: "Entrar a la puja", j: "subasta", stat: "cri", d: { cash: 9000, car: 6, rep: 5, msg: "Levantas la mano en la primera ronda." } },
       { t: "Quedarte fuera y esperar el próximo proceso", d: { cri: 4, ene: 4, car: -1, msg: "No pujas. Meses después te enteras de a cuánto cerró y haces las cuentas de lo que te habría pasado." } },
@@ -47346,7 +47346,7 @@ const E5 = [
         fallo: { cri: 2, estudia: 4, ene: -2, msg: "Lees en diagonal pensando en otra cosa. Algo entra igual, poco." } } },
       { t: "Adelantar el trabajo del viernes", d: { car: 6, rep: 2, ene: -3, msg: "Entregas antes de tiempo. Te lo reconocen y el manual sigue sin abrirse." } },
     ] },
-  { id: 941, min: 1, max: 3, t: "La certificación",
+  { id: 941, min: 1, max: 3, t: "Te ofrecen un curso con un examen muy difícil",
     x: "El equipo paga la mitad de un programa de formación. Son seis meses de clases los sábados y un examen que reprueba a la mitad.",
     o: [
       { t: "Presentarte al examen", juego: "catedra", stat: "cri", res: {
@@ -47355,7 +47355,7 @@ const E5 = [
         fallo: { cri: 2, estudia: 6, cash: -900, ene: -6, rep: -2, msg: "No apruebas. Pierdes seis sábados y el dinero, y sabes bastante más que antes." } } },
       { t: "Este año no, ya vas ahogado", d: { ene: 6, car: -3, msg: "Lo dejas para el año que viene. Como el año pasado." } },
     ] },
-  { id: 942, min: 2, max: 4, t: "Te toca explicarlo tú",
+  { id: 942, min: 2, max: 4, t: "Te toca enseñar el trabajo a los pasantes",
     x: "El socio te pide que le expliques a los pasantes cómo funciona lo que el equipo hace todos los días. No hay mejor forma de descubrir lo que no entiendes que tener que explicarlo.",
     o: [
       { t: "Preparártelo en serio y darlo tú", juego: "catedra", stat: "cri", res: {
@@ -47378,7 +47378,7 @@ E.push.apply(E, E5);
 
 /* ---------- el criterio de inversión, que se entrena ---------- */
 const E6 = [
-  { id: 950, min: 3, max: 6, t: "Tres carpetas y un solo cheque",
+  { id: 950, min: 3, max: 6, t: "Hay que elegir en cuál de tres negocios invertir",
     x: "El comité tiene capital para una operación y tres candidatas sobre la mesa. Cada una brilla por un lado distinto y falla por otro. Te piden la recomendación.",
     o: [
       { t: "Estudiar los tres negocios y recomendar uno", juego: "comite", stat: "cri", res: {
@@ -48896,16 +48896,16 @@ const DUENO = [
       { t: "Darle una parte de la firma", d: { cash: -25000, red: 5, rep: 3, msg: "Ahora también es dueño de una parte. Se queda, y se queda por otra razón." } },
       { t: "Dejarlo ir y quedarte con lo que queda", d: { red: -8, ene: 4, cri: 2, msg: "Se va con dos clientes. Duele, pero la firma sigue siendo toda tuya." } },
     ] },
-  { id: 9603, dueno: true, min: 3, max: 6, t: "Los bonos de fin de año los pones tú",
+  { id: 9603, dueno: true, min: 3, max: 6, t: "Tú decides los premios de fin de año del equipo",
     x: "Cerró el año y el reparto depende de ti. Lo que te quedas tú es exactamente lo que no le das a tu equipo.",
     o: [
       { t: "Repartir con generosidad", d: { cash: -15000, rep: 6, red: 4, msg: "El equipo lo nota. Este año nadie contesta a los headhunters." } },
       { t: "Quedarte con la mayor parte", d: { cash: 20000, rep: -5, red: -3, msg: "Tu cuenta sube y la sala se enfría un poco." } },
     ] },
-  { id: 9604, dueno: true, min: 4, max: 6, t: "Un competidor propone fusionaros",
+  { id: 9604, dueno: true, min: 4, max: 6, t: "Otra firma te propone unirse a la tuya",
     x: "Una firma parecida a la tuya quiere unir fuerzas: el doble de clientes y dos personas diciendo que mandan.",
     o: [
-      { t: "Fusionaros", d: { cash: 40000, red: 8, rep: -3, ene: -6, msg: "Más escala, más reuniones y un socio con el que discutirlo todo." } },
+      { t: "Unir las dos firmas", d: { cash: 40000, red: 8, rep: -3, ene: -6, msg: "Más escala, más reuniones y un socio con el que discutirlo todo." } },
       { t: "Seguir por tu cuenta", d: { rep: 3, cri: 2, car: -2, msg: "Creces más lento, pero decides tú." } },
     ] },
   { id: 9605, dueno: true, min: 3, max: 6, t: "Tu cliente grande te pide abrir en Miami",
@@ -52164,7 +52164,7 @@ const FINALES = [
     x: "Un trimestre maquillado te persiguió el resto de la carrera. Una firma dura más que el año que arregla." },
   { id: "heroe", c: (st) => hu(st, "heroe"), t: "Levantaste la mano",
     x: "Denunciaste un ajuste contable y la investigación te dio la razón. En la firma, tu nombre quiere decir limpio." },
-  { id: "unicornio", c: (st) => hu(st, "ticket_unicornio"), t: "Una de cada cien",
+  { id: "unicornio", c: (st) => hu(st, "ticket_unicornio"), t: "Tu pequeña inversión en un amigo salió enorme",
     x: "Pusiste un ticket pequeño en el negocio de un amigo y salió de esas que salen una de cada cien. Casi nunca pasa; a ti te pasó." },
   { id: "fundador", c: (st) => hu(st, "fundador"), t: "Fundaste algo que alguien compró",
     x: "Entraste a medio tiempo en la startup de tu amiga y salió vendida. Muchas historias de éxito empiezan con un sí a medias." },
