@@ -861,17 +861,14 @@ const CSS6 = `
 .ea-opsMentor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .ea-op.ea-opMentor{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;padding:16px 10px 14px}
 .ea-opMentorN{font-family:var(--f-dis);font-weight:800;font-size:17px;color:var(--crema);line-height:1.1}
-.ea-opMentorL{font-size:12.5px;font-weight:600;color:var(--tenue);line-height:1.35}
 .ea-consejo{display:flex;gap:12px;align-items:center;margin-top:4px;padding:10px 14px 10px 10px;
   background:var(--crema);border-radius:16px;box-shadow:inset 0 0 0 2px rgba(42,36,64,.08)}
 .ea-consejoK{font-size:11px;letter-spacing:.08em;color:var(--cobre)}
-.ea-consejoX{font-size:14px;line-height:1.4;color:var(--tinta);margin-top:2px}
 .ea-jugaste{display:flex;gap:16px;align-items:center;text-align:left;margin:22px auto 6px;max-width:560px;
   background:var(--tinta);color:var(--crema);border-radius:22px;padding:18px 20px;box-shadow:0 14px 32px rgba(42,36,64,.22)}
 .ea-jugasteK{font-size:11.5px;letter-spacing:.14em;color:var(--mostaza)}
 .ea-jugasteN{font-family:var(--f-dis);font-weight:800;font-size:26px;line-height:1.1;margin-top:2px}
 .ea-jugasteX{font-size:14px;line-height:1.45;color:var(--tenue);margin-top:6px}
-.ea-jugasteL{font-size:14px;font-style:italic;color:var(--crema);margin-top:6px}
 /* ---- elegir edad, país y carrera: tarjetas enteras que se tocan ---- */
 .ea-elige{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;cursor:pointer;
   background:var(--papel);color:var(--tinta);border:none;border-radius:20px;padding:16px;margin-bottom:10px;
@@ -49055,11 +49052,10 @@ const escenaPretemporada = (st) => {
 /* ============================================================
    LOS MENTORES
    Siete personajes de parodia, cada uno con su forma de hacerse rico.
-   Eliges uno al empezar y en cada decisión te dice qué haría él, con una
-   frase suya. Al final ves con quién coincidiste más: «Jugaste como…».
-   Son parodias: los nombres están cambiados, las frases son del juego
-   (algunas inspiradas en cosas que dijeron, retorcidas) y ninguno habla
-   por la persona real.
+   Eliges uno al empezar y en las decisiones importantes te dice qué
+   opción elegiría. Al final ves con quién coincidiste más: «Jugaste
+   como…». Son parodias: los nombres están cambiados y ninguno habla por
+   la persona real. Ya no dicen frases: César, 5-nov.
    peso: lo que le importa a cada uno al elegir. cash va en miles; riesgo
    es cuánto puede salir mal (0 a 0,7): positivo si le gusta, negativo si
    lo evita; cashPierde multiplica las pérdidas de dinero; grande premia
@@ -49068,82 +49064,19 @@ const escenaPretemporada = (st) => {
 const ID_MENTOR = 9795;
 const MENTORES = [
   { id: "tusk", n: "Elon Tusk", k: "car", aconseja: "Te aconseja arriesgar",
-    lema: "Si no da un poco de miedo, es demasiado pequeño.",
-    peso: { cash: 0.9, car: 0.4, hab: 0, red: 0.1, rep: 0, ene: 0, riesgo: 14, grande: 0.6 },
-    frases: [
-      "Si es lo bastante grande, se hace aunque todo diga que no.",
-      "Y si explota, se hace otro.",
-      "Lo seguro es aburrido. Y lo aburrido no sale en las noticias.",
-      "Duerme cuando llegues a Marte.",
-      "Las probabilidades están en contra. Mejor: así nadie más lo intenta.",
-      "Apuesta grande. Lo pequeño también cuesta trabajo.",
-    ] },
+    peso: { cash: 0.9, car: 0.4, hab: 0, red: 0.1, rep: 0, ene: 0, riesgo: 14, grande: 0.6 } },
   { id: "bufalo", n: "Warren Búfalo", k: "cri", aconseja: "Te aconseja paciencia",
-    lema: "Compra barato, siéntate y espera.",
-    peso: { cash: 0.1, car: 0.2, hab: 1.6, red: 0.1, rep: 0.6, ene: 0.3, riesgo: -10 },
-    frases: [
-      "Cuando todos compran, yo me escondo. Cuando todos corren, yo compro.",
-      "El precio es lo que pagas. El valor es lo que te llevas a casa.",
-      "Cuando baja la marea se ve quién nadaba sin traje de baño. Yo siempre llevo dos.",
-      "Si no lo entiendes, no lo toques.",
-      "La paciencia también rinde intereses.",
-      "Lo bueno se compra una vez y se guarda toda la vida.",
-    ] },
+    peso: { cash: 0.1, car: 0.2, hab: 1.6, red: 0.1, rep: 0.6, ene: 0.3, riesgo: -10 } },
   { id: "kardashow", n: "Kim Kardashow", k: "red", aconseja: "Te aconseja contactos",
-    lema: "Tu nombre vale más que tu sueldo.",
-    peso: { cash: 0.2, car: 0.5, hab: 0.1, red: 1.4, rep: 1.2, ene: 0.1, riesgo: -1 },
-    frases: [
-      "Levántate, arréglate y trabaja. Y súbelo a redes, que si no, no cuenta.",
-      "Rodéate de gente que trabaje. Y que te siga.",
-      "Un contacto hoy es un contrato mañana.",
-      "Si nadie te vio hacerlo, ¿de verdad lo hiciste?",
-      "La reputación se construye en público.",
-      "Di que sí al café. Siempre al café.",
-    ] },
+    peso: { cash: 0.2, car: 0.5, hab: 0.1, red: 1.4, rep: 1.2, ene: 0.1, riesgo: -1 } },
   { id: "pesos", n: "Jeff Pesos", k: "car", aconseja: "Te aconseja crecer",
-    lema: "Hoy es el día uno, otra vez.",
-    peso: { cash: 0, car: 1.6, hab: 0.9, red: 0.4, rep: 0.2, ene: -0.2, riesgo: 0 },
-    frases: [
-      "Hoy es el día uno. Mañana también.",
-      "Reinvierte hasta el último peso.",
-      "Crecer duele. No crecer también, pero más tarde.",
-      "El cliente primero. Tu fin de semana, después.",
-      "El día dos es para los que ya se jubilaron.",
-      "Si no lo puedes hacer más grande, hazlo más rápido.",
-    ] },
+    peso: { cash: 0, car: 1.6, hab: 0.9, red: 0.4, rep: 0.2, ene: -0.2, riesgo: 0 } },
   { id: "thrift", n: "Taylor Thrift", k: "cash", aconseja: "Te aconseja ahorrar",
-    lema: "Lo mío es mío.",
-    peso: { cash: 1.2, cashPierde: 2.5, car: 0.1, hab: 0.2, red: 0.1, rep: 0.3, ene: 0.4, riesgo: -8 },
-    frases: [
-      "Antes de firmar, pregunta de quién es lo que haces.",
-      "Si no es tuyo, vuelve a hacerlo.",
-      "Guarda una parte de cada gira. Las giras se acaban.",
-      "La letra chica también es letra.",
-      "No prestes lo que no puedes perder.",
-      "Gastar es fácil. Volver a ganarlo, no tanto.",
-    ] },
+    peso: { cash: 1.2, cashPierde: 2.5, car: 0.1, hab: 0.2, red: 0.1, rep: 0.3, ene: 0.4, riesgo: -8 } },
   { id: "rinaldo", n: "Cristiano Rinaldo", k: "ene", aconseja: "Te aconseja cuidar tu energía",
-    lema: "El talento sin descanso no dura.",
-    peso: { cash: 0.1, car: 0.5, hab: 0.3, red: 0.2, rep: 0.4, ene: 1.5, riesgo: -2 },
-    frases: [
-      "El talento sin trabajo no llega ni al banquillo.",
-      "Duerme ocho horas. Los campeones no se desvelan.",
-      "Tu cuerpo es tu mejor inversión.",
-      "Entrena hoy, cobra mañana.",
-      "Un mal partido se olvida. Una lesión, no.",
-      "Cuida tu energía: sin ella no hay segundo tiempo.",
-    ] },
+    peso: { cash: 0.1, car: 0.5, hab: 0.3, red: 0.2, rep: 0.4, ene: 1.5, riesgo: -2 } },
   { id: "nakamotto", n: "Satoshi Nakamotto", k: "rep", aconseja: "Te aconseja especular",
-    lema: "Nadie sabe quién soy, y nadie sabe cuánto vale.",
-    peso: { cash: 0.8, car: 0.2, hab: 0.2, red: 0, rep: -0.1, ene: 0, riesgo: 12 },
-    frases: [
-      "Si no lo entiendes, no tengo tiempo de explicártelo.",
-      "Lo que tú pierdes, lo ganan los demás. Piénsalo como una donación.",
-      "Lo nuevo da miedo hasta que da dinero.",
-      "Llegar primero es la mitad del negocio.",
-      "No confíes en nadie. Ni en mí.",
-      "Sube, baja, vuelve a subir. Eso también es un plan.",
-    ] },
+    peso: { cash: 0.8, car: 0.2, hab: 0.2, red: 0, rep: -0.1, ene: 0, riesgo: 12 } },
 ];
 const IDS_MENTOR = MENTORES.map((m) => m.id);
 const MENTOR = (id) => MENTORES.find((m) => m.id === id) || null;
@@ -49206,12 +49139,6 @@ const decisionImportante = (e) => {
     return ["car", "cri", "mod", "red", "rep", "ene"].some((k) => Math.abs(numero(d[k], 0)) >= MUCHO_EN_JUEGO.attr);
   });
 };
-/* una frase del mentor para esta escena: siempre la misma en la misma escena */
-const fraseMentor = (m, idEscena) => {
-  if (!m) return "";
-  const n = Math.abs(entero(idEscena, 0, -1e9, 1e9));
-  return m.frases[n % m.frases.length];
-};
 /* con quién coincidiste más, para el final */
 const jugasteComo = (st) => {
   const total = entero(st && st.nDec, 0, 0, 99999);
@@ -49230,7 +49157,7 @@ const escenaMentor = () => ({
   x: "Siete personas que se hicieron ricas de siete formas distintas. Elige a quién quieres oír en cada decisión. Su consejo es solo eso: un consejo.",
   o: MENTORES.map((m) => ({
     t: m.n, mentorId: m.id,
-    d: { msg: m.n + " te va a aconsejar a partir de ahora: «" + m.lema + "»" },
+    d: { msg: m.n + " te va a aconsejar a partir de ahora." },
   })),
 });
 
@@ -56816,14 +56743,13 @@ function Motor() {
                         const falta = faltas[i];
                         const bits = [];
                         if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Conocimiento") + " " + Math.round(ayudaDe(o)));
-                        /* la elección de mentor: su avatar, su lema y lo que aconseja */
+                        /* la elección de mentor: su avatar, su nombre y lo que aconseja */
                         if (o.mentorId) {
                           const m = MENTOR(o.mentorId);
                           return m ? (
                             <button className="ea-op ea-opMentor" key={i} style={{ "--i": i }} onClick={() => elegir(o)}>
                               <AvatarMentor id={m.id} tam={64} />
                               <span className="ea-opMentorN">{o.t}</span>
-                              <span className="ea-opMentorL">«{m.lema}»</span>
                               <span className={"ea-ef pos k-" + m.k}>{m.aconseja}</span>
                             </button>
                           ) : null;
@@ -56884,7 +56810,7 @@ function Motor() {
                         );
                       });
                     })()}
-                    {/* lo que haría tu mentor, con una frase suya */}
+                    {/* lo que haría tu mentor */}
                     {(() => {
                       const m = MENTOR(s.mentor);
                       const ops = opcionesDe(ev);
@@ -56896,7 +56822,6 @@ function Motor() {
                           <AvatarMentor id={m.id} tam={44} />
                           <div>
                             <div className="ea-consejoK ea-dis">{m.n} elegiría la {String.fromCharCode(65 + k)}</div>
-                            <div className="ea-consejoX">«{fraseMentor(m, ev.id)}»</div>
                           </div>
                         </div>
                       );
@@ -57358,7 +57283,6 @@ function Motor() {
                     {j.segundo && j.segundo.pct > 0 ? ", y con " + j.segundo.m.n + " en el " + j.segundo.pct + "%" : ""}.
                     {s.mentor && MENTOR(s.mentor) && s.mentor !== j.primero.m.id ? " Tu mentor era " + MENTOR(s.mentor).n + "." : ""}
                   </div>
-                  <div className="ea-jugasteL">«{j.primero.m.lema}»</div>
                 </div>
               </div>
             );
