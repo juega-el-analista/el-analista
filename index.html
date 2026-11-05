@@ -52277,7 +52277,8 @@ const mentorElige = (m, ops, riesgo) => {
        eligiendo lo que más pagaba y coincidían casi siempre (Tusk y
        Nakamotto en el 90% de las decisiones importantes). Con la raíz,
        1.000 pesan 2, 5.000 pesan 4,5 y 20.000 pesan 9. */
-    const crudo = numero(d.cash, 0);
+    /* repartir el patrimonio cuenta como una pérdida grande, igual que en las fichas */
+    const crudo = numero(d.cash, 0) - (numero(d.patPct, 0) > 0 ? 20000 : 0);
     const cash = Math.sign(crudo) * Math.sqrt(Math.abs(crudo) / 1000) * 2;
     let r = 0;
     try {
@@ -53333,7 +53334,10 @@ const efectosDe = o => {
   const out = [];
   CLAVES_ATRIB.forEach(k => {
     if (k === "mod") return; /* va junto con criterio, como conocimiento */
-    const v = k === "cri" ? juntarHab(d.mod, d.cri) : numero(d[k], 0);
+    let v = k === "cri" ? juntarHab(d.mod, d.cri) : numero(d[k], 0);
+    /* repartir el patrimonio (un divorcio) es perder dinero, y mucho:
+       sin esto «mitad y mitad» parecía la opción barata (nov-2026) */
+    if (k === "cash" && numero(d.patPct, 0) > 0) v = Math.min(v, 0) - 20000;
     if (v) out.push({
       k,
       v
