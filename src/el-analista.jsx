@@ -2019,14 +2019,14 @@ const PERKS = [
    taller de negociación (a un director le venden el programa ejecutivo),
    la licencia de modelos (la versión institucional) y el agente de
    prensa (cobra según tu perfil). Esos salen de precioBoost y suben con
-   tu sueldo anual. El café, la cábala, las bebidas y el profesor cuestan
+   tu sueldo anual. El café, el amuleto, las bebidas y el profesor cuestan
    lo mismo seas pasante o socio, como en la vida.
    ============================================================ */
 const BOOSTS = [
   { id: "cafe", e: "☕", n: "Café de especialidad todo el año", c: 300, anos: 1, cierre: { ene: 6 },
     d: "Recuperas 6 de energía al cerrar el año." },
-  { id: "cabala", e: "🍀", n: "Cábala del analista", c: 250, anos: 1, suerte: 0.12,
-    d: "Las tiradas a la suerte se inclinan un poco a tu favor." },
+  { id: "cabala", e: "🍀", n: "Amuleto de la suerte", c: 250, anos: 1, suerte: 0.12,
+    d: "Durante un año, lo que depende de la suerte te sale bien más seguido." },
   { id: "energia", e: "⚡", n: "Bebidas energéticas y siesta programada", c: 400, anos: 1, ayuda: 15,
     juegos: ["reaccion", "precision", "carril", "trading", "memoria", "pares"],
     d: "Más reflejos en los minijuegos contra reloj." },
@@ -2035,7 +2035,7 @@ const BOOSTS = [
     d: "Llegas mejor preparado a exámenes, cátedras y comités." },
   { id: "negocia", e: "🎤", n: "Taller intensivo de negociación", c: 900, anos: 2, ayuda: 20, escala: true,
     juegos: ["anclaje", "subasta", "cuatro", "tresraya"],
-    d: "Lees mejor a la otra parte en negociaciones y subastas." },
+    d: "Entiendes mejor qué quiere la otra parte en negociaciones y subastas." },
   { id: "modelos", e: "📊", n: "Licencia de software de modelos", c: 1200, anos: 2, ayuda: 20, escala: true,
     juegos: ["ojo", "calculo", "estructura", "banderas", "orden"],
     d: "Los números salen más rápido y con menos errores." },
