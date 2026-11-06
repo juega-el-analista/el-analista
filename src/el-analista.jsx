@@ -67,6 +67,7 @@ const CSS = `
 .ea-nombre{font-size:25px;line-height:1;color:var(--papel)}
 .ea-sub{font-size:11.5px;color:var(--tenue);letter-spacing:.14em;margin-top:5px}
 .ea-reloj{text-align:right;font-size:11.5px;color:var(--tenue);letter-spacing:.1em}
+.ea-xpFill.ea-xpVida{background:var(--cobre)}
 .ea-plata{font-size:23px;color:var(--papel)}
 .ea-plata.neg{color:var(--rojo)}
 
@@ -48208,7 +48209,20 @@ const EDAD_DE = (e) => EDADES.find((x) => x.e === e) || EDADES[0];
    registro— casi nadie la veia. Una decada se termina de una sentada, y
    quien se enganche sigue con el mismo boton de siempre. */
 const META_MIN = 8;
-const META_MAX = 30;
+const META_MAX = 45;
+/* ============================================================
+   PARTIDA CORTA (César, 6-nov-2026)
+   La partida entera, de tu edad a los 65, tenía que caber en 15-20
+   minutos. Antes eran unas 75 decisiones por década. Ahora cada turno
+   es una ETAPA de cinco años: juegas dos escenas y los otros cuatro
+   años se cierran solos (sueldo, gastos, mercados, ascensos), con un
+   poco de carrera por cada año trabajado. Al final de la etapa, un
+   resumen y a la siguiente.
+   ============================================================ */
+const ETAPA = 5;
+const EDAD_RETIRO = 65;
+const ESCENAS_ETAPA = 2;
+const PASIVO_ANO = { carrera: 1, rep: 1, red: 1 };
 const TOPE_ABSOLUTO = 55;   /* empezando a los 20, eso son los 75 */
 const DURACIONES = [
   { id: "decada", meta: 10, n: "Una década",
@@ -49016,7 +49030,7 @@ const IDS_FIRMA = [9720, 9721];
    ============================================================ */
 const ID_PRE = 9790;
 /* cuántas escenas con minijuego trae cada año, como mínimo */
-const MIN_JUEGOS_ANO = 2;
+const MIN_JUEGOS_ANO = 1;   /* partida corta: un minijuego por etapa */
 const CARTAS_PRE = {
   ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
   /* modelaje y criterio son ya una sola habilidad: un solo mazo, para
@@ -49051,25 +49065,74 @@ const escenaPretemporada = (st) => {
     const r = rnd();
     /* Raras y doradas salen poco pero se notan muchísimo (Alessandro,
        8-oct-2026): dorada 3% (+15), rara 10% (+8), común +2. */
-    const v = r < 0.03 ? 15 : r < 0.13 ? 8 : 2;
+    /* partida corta: el empujón dura toda la etapa, así que pesa el doble */
+    const v = r < 0.03 ? 30 : r < 0.13 ? 16 : 4;
     const lista = CARTAS_PRE[k];
     const titulo = lista[Math.floor(rnd() * lista.length)];
     /* la rareza va aparte, para pintarla: rara en morado, dorada en dorado */
-    const rareza = v === 15 ? "dorada" : v === 8 ? "rara" : null;
+    const rareza = v === 30 ? "dorada" : v === 16 ? "rara" : null;
     cartas.push({
       t: titulo, rareza,
       d: { [k]: v, msg: VACACIONES_OPCIONES.indexOf(titulo) >= 0
-        ? "Inicio de año: vuelves de las vacaciones con la energía al 100%."
+        ? "Inicio de etapa: vuelves de las vacaciones con la energía al 100%."
         /* sin la cifra: lo que sube de verdad depende de dónde estés,
            y la pantalla de resultado ya enseña el número exacto */
-        : "Inicio de año: " + (v >= 8 ? "un empujón grande de " : "ganas algo de ") + NOMBRE_ATRIB[k] + "." },
+        : "Inicio de etapa: " + (v >= 16 ? "un empujón grande de " : "ganas algo de ") + NOMBRE_ATRIB[k] + "." },
     });
   }
   return {
     id: ID_PRE, min: 0, max: 6, pretemporada: true,
-    t: "Inicio de año",   /* se llamaba «Pretemporada»; Alessandro, 8-oct */
-    x: "Empieza el año. Antes de que lleguen el trabajo y las obligaciones, puedes dedicarte a una sola cosa. Elige cuál.",
+    t: "Inicio de etapa",   /* se llamaba «Pretemporada»; Alessandro, 8-oct. Etapa: partida corta */
+    x: "Empiezan cinco años nuevos. Antes de que lleguen el trabajo y las obligaciones, puedes dedicarte a una sola cosa. Elige cuál.",
     o: cartas,
+  };
+};
+
+/* Partida corta: varios cierres de año en uno solo, para el resumen de
+   la etapa. Lo que se suma se suma (ingresos, gastos, de dónde salió el
+   cambio); lo que es una foto (patrimonio, deuda, cobertura) es la del
+   último año; y la cartera rinde lo que rindieron los cinco seguidos. */
+const juntarCierres = (cs) => {
+  if (!Array.isArray(cs) || cs.length === 0) return null;
+  if (cs.length === 1) return { ...cs[0], anos: 1 };
+  const pri = cs[0], ult = cs[cs.length - 1];
+  const porNombre = (k) => {
+    const m = new Map();
+    cs.forEach((c) => (Array.isArray(c[k]) ? c[k] : []).forEach((x) => m.set(x.n, (m.get(x.n) || 0) + numero(x.v, 0))));
+    return Array.from(m, ([n, v]) => ({ n, v }));
+  };
+  const cat = (k) => cs.reduce((a, c) => a.concat(Array.isArray(c[k]) ? c[k] : []), []);
+  const suma = (k) => cs.reduce((a, c) => a + numero(c[k], 0), 0);
+  const partes = {};
+  ["decisiones", "sueldo", "mercados", "otros"].forEach((k) => {
+    partes[k] = cs.reduce((a, c) => a + numero(c.partes && c.partes[k], 0), 0);
+  });
+  const ascensos = cs.map((c) => c.ascenso).filter(Boolean);
+  const ingreso = suma("ingreso"), neto = suma("neto");
+  const carteraJunta = ult.cartera ? {
+    ...ult.cartera,
+    antes: pri.cartera ? pri.cartera.antes : ult.cartera.antes,
+    ret: cs.reduce((a, c) => a * (1 + numero(c.cartera && c.cartera.ret, 0)), 1) - 1,
+    aporte: cs.reduce((a, c) => a + numero(c.cartera && c.cartera.aporte, 0), 0),
+    camino: cs.reduce((a, c, i) => a.concat(c.cartera && Array.isArray(c.cartera.camino)
+      ? (i ? c.cartera.camino.slice(1) : c.cartera.camino) : []), []),
+    hitos: [],
+  } : ult.cartera;
+  return {
+    ...ult,
+    anos: cs.length,
+    ing: porNombre("ing"), egr: porNombre("egr"),
+    ingreso, egreso: suma("egreso"), neto,
+    ahorro: ingreso > 0 ? clamp(neto / ingreso, -2, 1) : 0,
+    notis: cat("notis").slice(0, 3),
+    notas: Array.from(new Set(cat("notas"))).filter((n) => !/^Este año fuiste a ritmo/.test(n)).slice(-8),
+    hitos: Array.from(new Set(cat("hitos"))),
+    galas: cat("galas"), logros: cat("logros"),
+    ascenso: ascensos.length ? ascensos[ascensos.length - 1] : null,
+    patAntes: pri.patAntes, patIni: pri.patIni, partes,
+    cartera: carteraJunta,
+    hitosDec: pri.hitosDec,
+    leccion: cs.map((c) => c.leccion).filter(Boolean).pop() || null,
   };
 };
 
@@ -52603,7 +52666,7 @@ const ICONO_VIDA = {
 /* El simbolo, el rotulo y el color de cada clase de escena. */
 const CLASE_ESCENA = (ev) => {
   if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
-  if (ev.pretemporada) return { k: "documento", n: "Inicio de año", c: "var(--cobre)" };
+  if (ev.pretemporada) return { k: "documento", n: "Inicio de etapa", c: "var(--cobre)" };
   if (ev.mentores) return { k: "persona", n: "Tu mentor", c: "var(--cobre)" };
   if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "#B8901C" };   /* dorado, como las cartas doradas */
   if (ev.rama) return { k: "bifurca", n: "Bifurcación", c: "var(--cobre)" };
@@ -54103,6 +54166,20 @@ function Motor() {
       const e = sacar(fuenteJuego, st, usados, true);
       if (e) { lista.push(e); usados.push(e.id); }
     }
+    /* Partida corta: de todo lo que el año quería contar, se quedan las
+       dos primeras (lo forzado va delante: apertura, contrato, firma...).
+       Lo que no entra no se pierde: vuelve a intentarlo la etapa que viene.
+       Si ninguna de las dos trae minijuego, la segunda se cambia por una
+       que sí. */
+    {
+      let corta = lista.slice(0, ESCENAS_ETAPA);
+      if (!corta.some(conJuego)) {
+        const j = lista.slice(ESCENAS_ETAPA).find(conJuego) || sacar(fuenteJuego, st, usados, true);
+        if (j) corta = corta.slice(0, ESCENAS_ETAPA - 1).concat(j);
+      }
+      lista.length = 0;
+      corta.forEach((e) => lista.push(e));
+    }
     /* La pretemporada abre el año y va por fuera del presupuesto: se pone
        delante cuando todo lo demás ya está contado. */
     lista.unshift(escenaPretemporada(st));
@@ -54191,7 +54268,8 @@ function Motor() {
     st.guiaVistas = [];
 
     /* cuánto va a durar esto antes de que se le pregunte si se retira */
-    st.meta = DURACION("decada").meta;   /* siempre diez años; luego, seguir si quieres */
+    /* partida corta: de tu edad a los 65, sin «¿sigues cinco años más?» */
+    st.meta = entero(EDAD_RETIRO - ed.e, 10, META_MIN, META_MAX);
 
     /* la edad: años de trayectoria, ahorro y desgaste */
     st.edadIni = ed.e;
@@ -54366,7 +54444,7 @@ function Motor() {
     const otros = (Array.isArray(st.boosts) ? st.boosts : []).filter((x) => x.id !== b.id);
     return {
       ...st, cash: r.cash, cartera: r.cartera,
-      boosts: otros.concat({ id: b.id, hasta: st.turno + b.anos }),
+      boosts: otros.concat({ id: b.id, hasta: st.turno + b.anos * ETAPA }),   /* partida corta: etapas */
       titulares: st.titulares.concat({ q: String(2026 + st.turno), t: "Activas " + b.n.toLowerCase() }),
     };
   });
@@ -54786,8 +54864,17 @@ function Motor() {
     }
   };
 
-  const cierreDelAno = () => {
-    let st = { ...s, valores: { ...s.valores } };
+  /* Partida corta: el cierre de UN año, sin tocar la pantalla. El año
+     con decisiones lleva lo que decidiste; los otros cuatro de la etapa
+     se cierran solos y suman un poco de carrera por el año trabajado. */
+  const calcularCierre = (s0, conDecisiones) => {
+    let st = { ...s0, valores: { ...s0.valores } };
+    const hDec = conDecisiones ? hitosAno.current : [];
+    if (!conDecisiones) {
+      st.carrera = numero(st.carrera, 0) + PASIVO_ANO.carrera;
+      st.rep = clamp(numero(st.rep, 0) + PASIVO_ANO.rep, 0, 100);
+      st.red = clamp(numero(st.red, 0) + PASIVO_ANO.red, 0, 100);
+    }
     const ing = [], egr = [], notas = [];
     const na = NACIONES.find((x) => x.id === st.pais) || NACIONES[0];
     const patAntes = st.cash + st.cartera + valorBienes(st) - numero(st.deuda, 0);
@@ -55055,8 +55142,8 @@ function Motor() {
     const camino = caminoAnual(carteraAntes, st.cartera, est.sd, 12);
     /* las decisiones se reparten a lo largo del año en el orden en que se
        tomaron: con tres escenas caen en marzo, junio y septiembre */
-    const cuantos = hitosAno.current.length;
-    const hitosDecision = hitosAno.current.map((x, i) => ({
+    const cuantos = hDec.length;
+    const hitosDecision = hDec.map((x, i) => ({
       ...x, mes: Math.max(1, Math.min(12, Math.round(((i + 1) * 12) / (cuantos + 1)))),
     }));
     st.curva = (Array.isArray(st.curva) ? st.curva : []).concat(camino.slice(1)).slice(-TOPE_CURVA);
@@ -55197,9 +55284,9 @@ function Motor() {
        que dieron o quitaron tus decisiones, lo que te quedó del sueldo,
        lo que hicieron los mercados y lo demás (compras, comisiones, lo que
        cambió el valor de tus bienes o de tu fondo). */
-    const decisionesAno = hitosAno.current.reduce((a, x) => a + numero(x && x.cash, 0), 0);
+    const decisionesAno = hDec.reduce((a, x) => a + numero(x && x.cash, 0), 0);
     const patVisible = patrimonio + valorFondoDe(st);
-    const patIni = patAno.current != null && Number.isFinite(patAno.current) ? patAno.current : patAntes - decisionesAno;
+    const patIni = conDecisiones && patAno.current != null && Number.isFinite(patAno.current) ? patAno.current : patAntes - decisionesAno;
     const mercadosAno = cartera.despues - cartera.antes;
     const sueldoAno = neto - pagoDeuda;
     const partes = { decisiones: decisionesAno, sueldo: sueldoAno, mercados: mercadosAno,
@@ -55230,8 +55317,7 @@ function Motor() {
     st.boosts = (Array.isArray(st.boosts) ? st.boosts : []).filter((b) => b.hasta > st.turno + 1);
     st.turno += 1;
     st = sanear(st);
-    setS(st);
-    setCierre({
+    return { st, terminar, cierre: {
       logros, galas,
       ano, notis, ascenso, cartera, notas, ing, egr, ingreso, egreso: egreso + pagoDeuda, neto: neto - pagoDeuda, ahorro,
       patAntes, patrimonio, bienesV, histo: st.histo, leccion, hitos, deuda,
@@ -55241,8 +55327,21 @@ function Motor() {
       hitosDec: cartera.hitos,
       cobertura, gastos, indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0,
       ...hiloDelAno(st, ano - 2026),
-    });
-    if (terminar) setFin(terminar);
+    } };
+  };
+
+  /* La etapa: el año que jugaste y, detrás, los que se cierran solos,
+     hasta cinco o hasta el retiro. Un solo resumen para todos. */
+  const cierreDelAno = () => {
+    let r = calcularCierre(s, true);
+    const todos = [r.cierre];
+    for (let k = 1; k < ETAPA && !r.terminar && r.st.turno < tope; k++) {
+      r = calcularCierre(r.st, false);
+      todos.push(r.cierre);
+    }
+    setS(r.st);
+    setCierre({ ...juntarCierres(todos), anoIni: todos[0].ano });
+    if (r.terminar) setFin(r.terminar);
     setAnuncio(true);       /* primero el rodillo, y despues el informe */
     setVerLeccion(false);   /* la leccion del año nuevo vuelve a su titular */
     irA("cierre");
@@ -55349,8 +55448,8 @@ function Motor() {
     if (s.turno >= tope) {
       /* Antes el juego te jubilaba por decreto a la segunda prórroga.
          Ahora solo se acaba solo cuando ya no queda tabla que estirar. */
-      if (topeDe(s) >= TOPE_ABSOLUTO) { tirarPartida(); setFin("completo"); irA("fin"); return; }
-      persistir(s); irA("retiro"); return;
+      /* partida corta: a los 65 te retiras, sin preguntar si sigues */
+      tirarPartida(); setFin("retiro"); irA("fin"); return;
     }
     persistir(s);
     arrancarAno(s);
@@ -55995,6 +56094,16 @@ function Motor() {
                 experiencia: cuanto te falta para el siguiente cargo. Y
                 debajo los cinco atributos, cada uno con su anillo. */}
             <div className="ea-stats">
+              {/* Partida corta: la vida entera en una barra, de tu edad
+                  inicial a los 65, encima de la del cargo. Con nueve
+                  etapas, ver cuánto queda ayuda a decidir. */}
+              <div className="ea-xp" title={"Vas por los " + edad(s.turno, s.edadIni) + " de " + EDAD_RETIRO + " años"}>
+                <div className="ea-xpTop ea-dis">
+                  <span><Icono k="reloj" tam={12} />Tu vida · {edad(s.turno, s.edadIni)} años</span>
+                  <span className="ea-xpSig">retiro a los {EDAD_RETIRO}</span>
+                </div>
+                <div className="ea-xpBar"><div className="ea-xpFill ea-xpVida" style={{ width: (clamp(s.turno / Math.max(1, metaDe(s)), 0, 1) * 100).toFixed(1) + "%" }} /></div>
+              </div>
               {(() => {
                 const r = entero(s.rango, 0, 0, RANGOS.length - 1);
                 const techo = RANGO(r).umbral;
@@ -56336,7 +56445,7 @@ function Motor() {
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(precio)}</span>
                           </div>
                           <div className="ea-etqs">
-                            <span className="ea-etq act">dura {b.anos === 1 ? "un año" : b.anos + " años"}</span>
+                            <span className="ea-etq act">dura {b.anos === 1 ? "una etapa (5 años)" : b.anos + " etapas (" + b.anos * ETAPA + " años)"}</span>
                             {b.escala && <span className="ea-etq">sube con tu sueldo</span>}
                           </div>
                           <div className="ea-itemD">{b.d}</div>
@@ -57170,19 +57279,19 @@ function Motor() {
         const sube = fin >= ini;
         const dif = Math.abs(fin - ini);
         return (
-          <div className="ea-anuncio" onClick={() => setAnuncio(false)}>
+          <div className="ea-anuncio">
             {/* Ojo al tocar esta linea: «Asi terminó» es lo que cuenta
                 finales.js para saber cuantos años se jugaron, y esta en
                 la cabecera del informe. Repetirla aqui hacia que cada
                 año se contara dos veces. */}
-            <div className="ea-anuncioK ea-dis">Cierre de {cierre.ano}</div>
+            <div className="ea-anuncioK ea-dis">{cierre.anoIni && cierre.anoIni !== cierre.ano ? "De " + cierre.anoIni + " a " + cierre.ano : "Cierre de " + cierre.ano}</div>
             <div className="ea-anuncioN ea-mono">
               <span className="ea-anuncioU ea-dis">USD</span>
               <Rodillo v={fin} />
             </div>
             <div className={"ea-anuncioD ea-mono " + (sube ? "sube" : "baja")}
               style={{ animationDelay: "1.5s" }}>
-              {sube ? "+" : "−"}{fmt(dif)} en el año
+              {sube ? "+" : "−"}{fmt(dif)} {cierre.anos > 1 ? "en estos " + cierre.anos + " años" : "en el año"}
             </div>
             <Desglose partes={cierre.partes} oscuro />
             {cierre.ascenso && (
@@ -57194,9 +57303,15 @@ function Motor() {
               <div className="ea-anuncioL" style={{ animationDelay: "2s" }}>{cierre.hitos.join(" · ")}</div>
             )}
             <div className="ea-anuncioB" style={{ animationDelay: "2.2s" }}>
+              {/* partida corta: de aquí se sigue directo a la etapa que
+                  viene; el informe largo queda a un toque, para quien quiera */}
               <button className="ea-jugarYa ea-dis" style={{ fontSize: 15, padding: "13px 30px" }}
+                onClick={(e) => { e.stopPropagation(); if (cierre.galas && cierre.galas.length) setAnuncio(false); else siguienteAno(); }}>
+                Seguir
+              </button>
+              <button className="ea-mini" style={{ marginTop: 12, background: "transparent", color: "var(--crema)", boxShadow: "none" }}
                 onClick={(e) => { e.stopPropagation(); setAnuncio(false); }}>
-                Ver el año
+                Ver el detalle
               </button>
             </div>
           </div>
