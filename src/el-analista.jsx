@@ -55892,7 +55892,7 @@ function Motor() {
           </h2>
           <div className="ea-rastro ea-mono">{rastro()}</div>
           <p className="ea-lede" style={{ marginBottom: 18 }}>
-            Decide en qué eres bueno y te abre decisiones que nadie más tiene. Al elegir, empieza la partida.
+            Decide en qué eres bueno y te abre decisiones que nadie más tiene.
           </p>
           {(() => {
             /* Al elegir la carrera empieza la partida. Sin las ventanas de
