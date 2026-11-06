@@ -55873,8 +55873,8 @@ function Motor() {
                 <span className="ea-eligeG">{p.gancho}</span>
                 <Etiquetas lista={[
                   { k: "cash", n: "Sueldos " + nivelPais(p.sal), sube: p.sal >= 0.8 },
-                  { k: "ene", n: "Vida " + nivelPais(p.gas, true), sube: p.gas < 0.8 },
-                  p.cash < 0 ? { k: "rep", n: "Empiezas con deuda", sube: false } : null,
+                  /* Sin «Vida barata/cara» ni «Empiezas con deuda» junto a la bandera:
+                     quedaba recargado (César, 6-nov-2026). El sueldo sigue. */
                 ].filter(Boolean)} />
               </span>
               <button className="ea-eligeBtn ea-dis" onClick={(ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); if (enFase("pais")) elige("pais", p.id, "estudio"); }}>Elegir</button>
