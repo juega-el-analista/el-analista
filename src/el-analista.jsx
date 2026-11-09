@@ -1088,14 +1088,14 @@ const JUEGOS = {
     ensena: "En una revisión nadie te señala el error. El número raro está ahí y hay que verlo.",
   },
   anclaje: {
-    n: "La negociación", tema: "Negociación", dur: "3 rondas",
-    i: "Enfrente hay alguien con un carácter que no ves. Léelo por lo que dice y juega tus cartas.",
+    n: "La negociación", tema: "Negociación", dur: "3 propuestas",
+    i: "Una mesa como la de un fichaje: lo que te ofrecen, lo que pides y, en un contrato, tu sueldo de hoy y los años.",
     pasos: [
-      "Puede estar apurado, ser duro u orgulloso. Cada ronda dice algo que lo delata, o no.",
-      "Juegas una carta: pedir más, ceder un poco, mostrar la competencia (una vez) o plantarte.",
-      "Cada carta le mueve el precio y la paciencia según quién sea. Sin paciencia, se levanta.",
+      "Pones cuánto pides y le das a Proponer. Acepta, te contraoferta o te dice que no.",
+      "Tienes tres propuestas. En cualquier momento puedes aceptar lo que te ofrecen.",
+      "Pedir de más le gasta la paciencia; si se acaba, se levanta. Tu lectura te dice hasta dónde llegaría.",
     ],
-    gana: "Cerrar en 68 o más es éxito; desde 52, a medias. Si se levanta, no hay trato.",
+    gana: "Cerrar en +18% o más es éxito; desde +7%, a medias. Si se levanta, no hay trato.",
     ensena: "La misma jugada que funciona con uno espanta a otro: negociar es leer a la persona antes que el número.",
   },
   suerte: {
@@ -1547,6 +1547,22 @@ const CSS4 = `
 .ea-pct.on{border-color:var(--cobre);background:rgba(185,83,42,.1);color:var(--cobre)}
 /* la negociación: lo que dice la otra parte y tus cuatro cartas */
 .ea-negFrase{font-style:italic;margin:6px 0 10px}
+/* la mesa de la negociación: términos en filas, como un fichaje */
+.ea-negMesa{border:1px solid var(--borde);border-radius:12px;overflow:hidden;margin:6px 0 12px;background:rgba(255,255,255,.35)}
+.ea-negFila{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;align-items:center;padding:10px 12px;border-top:1px solid var(--borde);font-size:15px}
+.ea-negFila.c4{grid-template-columns:1.2fr 1fr 1fr 1fr}
+.ea-negFila:first-child{border-top:0}
+.ea-negFila small{display:block;font-size:11px;color:var(--gris);margin-top:2px}
+.ea-negCab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);padding-top:8px;padding-bottom:8px}
+.ea-negPide{font-weight:700;color:var(--cobre)}
+.ea-negCtl{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:8px 0}
+.ea-negPaso{width:40px;height:40px;border-radius:50%;border:1px solid var(--borde);background:transparent;font:inherit;font-size:20px;cursor:pointer;color:var(--tintaPapel)}
+.ea-negPaso:disabled{opacity:.35;cursor:default}
+.ea-negAno{border:1px solid var(--borde);background:transparent;border-radius:999px;padding:7px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--tintaPapel)}
+.ea-negAno.on{border-color:var(--cobre);color:var(--cobre);background:rgba(185,83,42,.08)}
+.ea-negLee{font-size:13px;color:var(--gris);text-align:center;margin:6px 0}
+.ea-negResp{font-size:15px;margin:8px 0 10px}
+@media (max-width:520px){.ea-negFila,.ea-negFila.c4{font-size:13px;gap:6px;padding:9px 10px}}
 .ea-negCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
 /* la carrera del día, en la portada */
 /* tu gente, en la pestaña Vida */
@@ -47698,13 +47714,16 @@ const VIDA = [
    pasó en tus números. Con treinta cierres, el juego termina
    habiéndote explicado un curso entero sin haberte cobrado uno.
    ============================================================ */
+/* Un porcentaje como se lee: «2,6%», con la coma y con el signo de
+   porcentaje. «Este dio 2.6» no se entendía (Alessandro, 9-nov-2026). */
+const pctL = (x, d = 1) => (numero(x, 0) * 100).toFixed(d).replace(".", ",") + "%";
 const LECCIONES = [
   { id: "ahorro", pri: 9, cuando: (c) => c.turno <= 3,
     t: "La tasa de ahorro manda",
     x: (c) => `De cada dólar que entró este año te quedaste con ${Math.round(c.ahorro * 100)} centavos. A los veinte, esa proporción decide más tu patrimonio final que cualquier acción que elijas: el que ahorra 20% y rinde seis termina mejor que el que ahorra cinco y rinde doce.` },
   { id: "compuesto", pri: 8, cuando: (c) => c.cartera > 3000 && c.turno <= 12,
     t: "Interés compuesto, en tus números",
-    x: (c) => `Tus ${fmt(c.cartera)} al ${(c.muC * 100).toFixed(1)}% esperado serían cerca de ${fmt(c.cartera * Math.pow(1 + c.muC, 10))} en diez años sin poner un dólar más, y ${fmt(c.cartera * Math.pow(1 + c.muC, 20))} en veinte. No hace falta acertar nada: hace falta no interrumpirlo.` },
+    x: (c) => `Tus ${fmt(c.cartera)} rindiendo ${pctL(c.muC)} al año serían cerca de ${fmt(c.cartera * Math.pow(1 + c.muC, 10))} en diez años sin poner un dólar más, y ${fmt(c.cartera * Math.pow(1 + c.muC, 20))} en veinte. No hace falta acertar nada: hace falta no interrumpirlo.` },
   { id: "colchon", pri: 8, cuando: (c) => c.cash < c.gastos * 0.2 && c.turno >= 1,
     t: "Te quedaste sin colchón",
     x: (c) => `Tienes ${fmt(c.cash)} líquidos contra gastos de ${fmt(c.gastos)} al año, o sea menos de tres meses. Sin colchón, cualquier imprevisto te obliga a vender cartera justo cuando el mercado está mal. Esa venta forzada es la que de verdad hace daño.` },
@@ -47719,13 +47738,13 @@ const LECCIONES = [
     x: (c) => `Llevas ${Math.round((c.pesos.cripto || 0) * 100)}% en cripto. Un activo que puede caer 70% no se mide por su retorno esperado sino por cuánto de tu patrimonio aguanta ese escenario sin que cambies de estrategia a mitad del camino.` },
   { id: "vol", pri: 10, cuando: (c) => c.ret <= -0.09,
     t: "Volatilidad no es pérdida",
-    x: (c) => `Perdiste ${Math.abs(c.ret * 100).toFixed(1)}% este año, unos ${fmt(Math.abs(c.deltaC))}. Con una cartera de tu perfil, un año así entra dentro de lo esperado: la desviación es ${(c.sdC * 100).toFixed(1)} puntos. La pérdida se hace definitiva solo si vendes ahora.` },
+    x: (c) => `Tu cartera perdió ${pctL(Math.abs(c.ret))} el último año, unos ${fmt(Math.abs(c.deltaC))}. Con una cartera como la tuya es normal: en un año cualquiera puede subir o bajar cerca de ${pctL(c.sdC, 0)}. La pérdida se hace definitiva solo si vendes ahora.` },
   { id: "recup", pri: 8, cuando: (c) => c.ret <= -0.15,
     t: "La aritmética de las caídas",
-    x: (c) => `Caer ${Math.abs(c.ret * 100).toFixed(0)}% exige subir ${((1 / (1 + c.ret) - 1) * 100).toFixed(0)} para volver al punto de partida. Por eso se cuida la caída máxima antes que el retorno: las pérdidas y las ganancias no son simétricas.` },
+    x: (c) => `Caer ${pctL(Math.abs(c.ret), 0)} exige subir ${pctL(1 / (1 + c.ret) - 1, 0)} para volver al punto de partida. Por eso se cuida la caída máxima antes que el retorno: las pérdidas y las ganancias no son simétricas.` },
   { id: "buen", pri: 5, cuando: (c) => c.ret >= 0.16,
     t: "Cuidado con el año bueno",
-    x: (c) => `Ganaste ${(c.ret * 100).toFixed(1)}%. El riesgo ahora es concluir que tu criterio es excelente y subir la apuesta. Un año no distingue habilidad de suerte: para eso hacen falta muchos, y aún así cuesta.` },
+    x: (c) => `Tu cartera ganó ${pctL(c.ret)} el último año. El riesgo ahora es concluir que tu criterio es excelente y subir la apuesta. Un año no distingue habilidad de suerte: para eso hacen falta muchos, y aún así cuesta.` },
   { id: "gasto", pri: 9, cuando: (c) => c.gastoAnt > 0 && c.gastos > c.gastoAnt * 1.16,
     t: "El gasto persigue al sueldo",
     x: (c) => `La frase significa que cuando sube lo que ganas sube casi igual lo que gastas, sin que llegues a decidirlo. Tus gastos pasaron de ${fmt(c.gastoAnt)} a ${fmt(c.gastos)}, un ${Math.round((c.gastos / c.gastoAnt - 1) * 100)}% más, y por eso el aumento se nota bastante menos de lo que esperabas. Es la razón por la que hay gente que gana mucho y no acumula nada: el sueldo sube, el nivel de vida lo persigue, y la distancia entre los dos nunca crece. Y cada dólar de gasto fijo nuevo son 25 dólares que necesitas tener guardados para poder dejar de trabajar.` },
@@ -47749,10 +47768,10 @@ const LECCIONES = [
     x: (c) => `Llevas ${fmt(c.comisiones)} pagados en comisiones por rebalancear. Cada movimiento tiene un costo cierto contra un beneficio incierto. Rebalancear una vez al año es sano; rebalancear cada vez que hay una noticia es pagar por sentirte activo.` },
   { id: "divers", pri: 7, cuando: (c) => c.sdC > 0 && c.sdCsuma > 0 && c.sdC < c.sdCsuma * 0.86,
     t: "Diversificación medida",
-    x: (c) => `Tus activos por separado suman ${(c.sdCsuma * 100).toFixed(1)} puntos de volatilidad, pero tu cartera tiene ${(c.sdC * 100).toFixed(1)}. Esa diferencia es el único almuerzo gratis que existe en finanzas, y aparece porque no todo se cae el mismo día.` },
+    x: (c) => `Cada cosa que tienes, por separado, sube o baja cerca de ${pctL(c.sdCsuma, 0)} en un año; tu cartera junta, solo ${pctL(c.sdC, 0)}. Esa diferencia es lo único que en finanzas te sale gratis, y aparece porque no todo se cae el mismo día.` },
   { id: "beta", pri: 6, cuando: (c) => c.betaC >= 0.8,
     t: "Todo tu riesgo es el mismo riesgo",
-    x: (c) => `La beta de tu cartera es ${c.betaC.toFixed(2)}: casi todo lo que tienes se mueve con el mercado global. Tener siete líneas distintas no es diversificar si las siete responden al mismo factor.` },
+    x: (c) => `Tu cartera se mueve casi igual que la bolsa mundial: cuando ella cae un 10%, la tuya cae cerca de ${pctL(c.betaC * 0.1, 0)}. Tener siete líneas distintas no es diversificar si las siete responden al mismo factor.` },
   { id: "secuencia", pri: 9, cuando: (c) => c.edad >= 45 && c.cobertura >= 0.6,
     t: "El orden de los retornos",
     x: (c) => `Ya estás cerca de vivir de tu capital. A partir de aquí importa el orden: dos años malos al principio del retiro hacen más daño que los mismos dos años al final, porque vendes cuando está barato. Por eso se baja el riesgo antes de retirarse, no después.` },
@@ -47761,7 +47780,7 @@ const LECCIONES = [
     x: (c) => `Vives y cobras en un país donde la moneda y las reglas cambian. Buena parte de tu patrimonio debería estar en activos que no dependan de esa decisión, no por pesimismo sino por la misma razón por la que no se pone todo en una sola empresa.` },
   { id: "millon", pri: 10, cuando: (c) => c.patrimonio >= 1000000 && c.patAntes < 1000000,
     t: "El primer millón",
-    x: (c) => `Cruzaste el millón. Lo interesante es lo que viene: al ${(c.muC * 100).toFixed(1)}% esperado, tu cartera sola genera cerca de ${fmt(c.cartera * c.muC)} al año, comparado con tu sueldo de ${fmt(c.salario)}. A partir de cierto punto el capital trabaja más que tú.` },
+    x: (c) => `Cruzaste el millón. Lo interesante es lo que viene: rindiendo ${pctL(c.muC)} al año, tu cartera sola genera cerca de ${fmt(c.cartera * c.muC)} al año, comparado con tu sueldo de ${fmt(c.salario)}. A partir de cierto punto el capital trabaja más que tú.` },
   { id: "fondo", pri: 8, cuando: (c) => c.fondo && c.turno >= 12,
     t: "Comisiones del otro lado",
     x: (c) => `Tu fondo te paga 2% sobre ${fmt(c.fondo.tam)} todos los años sin importar cómo rinda, más 20% de las ganancias. Ahora lo ves desde el lado del gestor: por eso el negocio es levantar capital, y por eso al invertir hay que mirar la comisión antes que el track record.` },
@@ -47770,7 +47789,7 @@ const LECCIONES = [
     x: (c) => `Tu cartera son ${fmt(c.cartera)} y tu sueldo ${fmt(c.salario)} al año. A esta edad el retorno más alto disponible no está en el mercado: está en volverte más caro de reemplazar. Ese es el activo que compone más rápido en la primera década.` },
   { id: "burnout", pri: 10, cuando: (c) => c.ene <= 25,
     t: "El activo que no aparece en el balance",
-    x: (c) => `Tu energía está en ${Math.round(c.ene)} de cien. Nada de esto sirve si te rompes a los cuarenta: el capital humano se deprecia sin mantenimiento igual que un galpón, solo que nadie te lo factura hasta que ya pasó.` },
+    x: (c) => `Tu energía está en ${Math.round(c.ene)} de cien. Nada de esto sirve si te rompes a los cuarenta: el capital humano se gasta sin mantenimiento igual que una máquina, solo que nadie te lo factura hasta que ya pasó.` },
   { id: "ladrillo", pri: 8, cuando: (c) => c.bienesV > c.patrimonio * 0.55 && c.patrimonio > 100000,
     t: "Patrimonio en ladrillo",
     x: (c) => `${Math.round(c.bienesV / c.patrimonio * 100)}% de lo que tienes está en inmuebles y bienes. Rinden y aprecian, pero no se venden en una semana ni por partes. La iliquidez no se siente hasta el día que necesitas efectivo.` },
@@ -47779,7 +47798,7 @@ const LECCIONES = [
     x: (c) => `Mantener tus bienes te cuesta ${fmt(c.mantenimiento)} al año, ${Math.round(c.mantenimiento / c.gastos * 100)}% de tu costo de vida. Cada compra grande trae un gasto fijo detrás, y el gasto fijo es lo que decide cuánto capital necesitas para dejar de trabajar.` },
   { id: "rotar", pri: 7, cuando: (c) => c.rotado >= 1.6,
     t: "Moverse no es lo mismo que avanzar",
-    x: (c) => `Llevas el equivalente a ${c.rotado.toFixed(1)} veces tu cartera rotada entre activos. Cada rotación tiene un costo cierto y un beneficio incierto. La cartera que menos se toca casi siempre le gana a la que se ajusta con cada titular.` },
+    x: (c) => `Ya moviste de un activo a otro ${c.rotado.toFixed(1).replace(".", ",")} veces el valor de tu cartera. Cada rotación tiene un costo cierto y un beneficio incierto. La cartera que menos se toca casi siempre le gana a la que se ajusta con cada titular.` },
   { id: "seguro", pri: 6, cuando: (c) => c.patrimonio > 250000 && c.turno >= 10,
     t: "Lo que puede borrar treinta años",
     x: (c) => `Tienes ${fmt(c.patrimonio)} construidos con trabajo de años. Un juicio, una enfermedad larga o un accidente pueden borrar una parte enorme de eso en un mes. A partir de cierto patrimonio, protegerlo rinde más que hacerlo crecer un punto extra.` },
@@ -47788,7 +47807,7 @@ const LECCIONES = [
     x: (c) => `Cuando empieces a vivir de tus ${fmt(c.cartera)} de cartera, importa de dónde retiras primero y qué impuesto paga cada retiro. Dos personas con el mismo patrimonio pueden terminar con años de diferencia de duración solo por ese orden.` },
   { id: "menosriesgo", pri: 9, cuando: (c) => c.edad >= 44 && c.sdC >= 0.16,
     t: "Ya no necesitas tanto riesgo",
-    x: (c) => `Tu cartera tiene ${(c.sdC * 100).toFixed(0)} puntos de volatilidad y ya cubres ${Math.round(c.cobertura * 100)}% de tus gastos. Cuando el objetivo está a la vista, el riesgo deja de ser una herramienta y pasa a ser una amenaza: puedes perder lo que ya ganaste sin necesitarlo.` },
+    x: (c) => `Tu cartera puede subir o bajar ${pctL(c.sdC, 0)} en un año normal y ya cubres ${Math.round(c.cobertura * 100)}% de tus gastos. Cuando el objetivo está a la vista, el riesgo deja de ser una herramienta y pasa a ser una amenaza: puedes perder lo que ya ganaste sin necesitarlo.` },
   { id: "gastoreal", pri: 7, cuando: (c) => c.turno >= 8 && c.gastos > 0,
     t: "El número que de verdad manda",
     x: (c) => `Todo tu plan se reduce a una resta: entran ${fmt(c.ingreso)} y se van ${fmt(c.gastos + c.impuesto)} entre gastos e impuestos. Puedes trabajar años en subir el primer número, pero bajar el segundo tiene efecto inmediato y además reduce el capital que necesitas para siempre.` },
@@ -47800,7 +47819,7 @@ const LECCIONES = [
     x: (c) => `Llevas ${c.turno + 1} años y ${fmt(c.patrimonio)}. Casi todo el patrimonio de una vida se forma en los últimos diez años, no porque ahorres más, sino porque el interés compuesto trabaja sobre una base que ya es grande. La parte difícil es la de ahora, cuando todavía no se ve.` },
   { id: "media", pri: 4, cuando: () => true,
     t: "El promedio no existe en un solo año",
-    x: (c) => `Tu cartera espera ${(c.muC * 100).toFixed(1)}% al año, pero casi ningún año va a dar eso. Este dio ${(c.ret * 100).toFixed(1)}. El promedio aparece al final del camino, no en el camino, y esa es la razón por la que la mayoría abandona antes de cobrarlo.` },
+    x: (c) => `En promedio, tu cartera debería rendir ${pctL(c.muC)} al año, pero casi ningún año da justo eso: el último rindió ${c.ret >= 0 ? "+" : "−"}${pctL(Math.abs(c.ret))}. El promedio aparece al final del camino, no en el camino, y esa es la razón por la que la mayoría abandona antes de cobrarlo.` },
   { id: "decision", pri: 4, cuando: (c) => c.turno >= 4,
     t: "Casi todo se decide con poca información",
     x: (c) => `Cada año de esto son tres o cuatro decisiones tomadas con datos incompletos y sin saber cómo terminan. El oficio no es acertar siempre: es que ninguna decisión suelta pueda sacarte del juego. Ese criterio se nota en tu patrimonio de ${fmt(c.patrimonio)} más que cualquier acierto puntual.` },
@@ -48554,16 +48573,6 @@ const sueldoCon = (st, mult) => {
   return RANGO(st && st.rango).salario * 12 * na.sal * clamp(numero(st && st.sueldoMult, 1) * numero(mult, 1), 0.6, TOPE_MULT);
 };
 
-/* Negociar el aumento con tu firma. El precio de la mesa (0 a 100) se
-   lee como el aumento sobre lo que cobras hoy: se empieza en 50, que es
-   lo mismo que renovar sin discutir (+6%), y cada punto más son 0,7
-   puntos de aumento, hasta un 40%. Lo que cierras es lo que cobras.
-   (Alessandro, 9-nov-2026: «que se refleje tu salario actual y con base
-   a eso se pueda negociar un aumento».) */
-const aumentoNeg = (precio) => clamp(Math.round((numero(precio, 50) - 42) * 0.7), 0, 40) / 100;
-/* el sueldo nuevo con ese aumento, sin pasar del techo de la carrera */
-const sueldoNeg = (ctx, precio) =>
-  Math.round(Math.min(numero(ctx && ctx.techo, Infinity), numero(ctx && ctx.actual, 0) * (1 + aumentoNeg(precio))));
 
 /* ============================================================
    EL CONTRATO, COMO UN MERCADO DE PASES
@@ -50383,135 +50392,192 @@ function JuegoOjo({ ayuda, onFin }) {
   );
 }
 
-/* ---- La negociación ----
-   Esto era una barra de 0 a 100 con un número escondido: adivinar, sin
-   nadie enfrente y sin nada que perder. Ahora enfrente hay alguien con
-   un carácter que no ves, y cada carta que juegas le mueve el precio y
-   la paciencia de forma distinta según quién sea. Leerlo bien gana;
-   leerlo mal hace que se levante y te quedes sin trato.
-   Se sigue llamando «anclaje» para que ninguna escena tenga que cambiar. */
+/* ---- La negociación, como una mesa de fichajes ----
+   La barra de 0 a 100 y las cuatro cartas no se entendían: «¿50 de
+   qué?» (Alessandro, 9-nov-2026: «que sean como en modo carrera de
+   FIFA»). Ahora hay una mesa con cifras: lo que te ofrecen, lo que
+   pides y, en el contrato, tu sueldo de hoy y los años. Pones tu cifra
+   y propones; la otra parte acepta, te contraoferta o te dice que no.
+   Tres propuestas como mucho, y una paciencia que se acaba si pides de
+   más. Tu atributo te da una lectura de hasta dónde llegaría.
+   Se sigue llamando «anclaje» para que ninguna escena tenga que cambiar.
+   Todo se mide en % sobre lo de hoy: en el contrato, de aumento de
+   sueldo; en otra escena, por encima de su primera oferta. */
 const TIPOS_NEG = ["apurado", "duro", "orgulloso"];
-/* [cuánto mueve el precio, cuánto mueve la paciencia] */
-const NEG_EFECTO = {
-  pedir: { apurado: [12, -1], duro: [6, -1], orgulloso: [10, -2] },
-  ceder: { apurado: [-6, 0], duro: [-4, 1], orgulloso: [-2, 2] },
-  competencia: { apurado: [15, 0], duro: [4, -2], orgulloso: [14, -1] },
-  plantarse: { apurado: [8, -1], duro: [10, 0], orgulloso: [0, -2] },
+/* hasta dónde llega cada carácter (en %), cuánto se acerca al
+   contraofertar y cuánta paciencia pierde con un pedido fuera de lugar */
+const NEG_CARACTER = {
+  apurado: { tope: [19, 26], acerca: 0.75, enfado: 1 },
+  duro: { tope: [12, 18], acerca: 0.45, enfado: 1 },
+  orgulloso: { tope: [15, 22], acerca: 0.6, enfado: 2 },
 };
-const CARTAS_NEG = [
-  { k: "pedir", n: "Pedir más" },
-  { k: "ceder", n: "Ceder un poco" },
-  { k: "competencia", n: "Mostrar la oferta de la competencia" },
-  { k: "plantarse", n: "Plantarte" },
-];
+const NEG_ABRE = 4;          /* su primera oferta: +4% */
+const NEG_MAX = 40;          /* nadie pide más de +40% */
+const NEG_RONDAS = 3;
+const NEG_EXITO = 18;        /* cerrar en +18% o más: muy buen trato */
+const NEG_PARCIAL = 7;       /* desde +7%: trato justo */
+/* los años del contrato: más años, más te pagan por quedarte */
+const NEG_ANOS = [{ anos: 2, extra: -3 }, { anos: 3, extra: 0 }, { anos: 4, extra: 3 }];
 const FRASES_NEG = {
   apurado: ["Necesito cerrarlo hoy: mañana tengo comité.", "Si lo firmamos ahora nos ahorramos una semana de correos.", "Miro el reloj y te escucho. Dime tu número."],
-  duro: ["Esto lo hago todas las semanas. No me impresionas.", "Si me vienes con otra oferta, sé que es un farol.", "Respeto a quien sabe lo que vale y no se mueve."],
-  orgulloso: ["Nadie me había hablado así en esta mesa.", "Quiero salir de aquí sintiendo que también gané algo.", "Si me arrinconas, me levanto. Dame algo y hablamos."],
+  duro: ["Esto lo hago todas las semanas. No me impresionas.", "Mi presupuesto es el que es. No lo estiro por nadie.", "Respeto a quien sabe lo que vale, pero no pago de más."],
+  orgulloso: ["Nadie me había hablado así en esta mesa.", "Quiero salir de aquí sintiendo que también gané algo.", "Si me arrinconas, me levanto. Pide con respeto y hablamos."],
   neutras: ["Bueno... veamos qué propones.", "Mmm. Sigue.", "Te escucho."],
 };
 const REVELA_NEG = {
-  apurado: "La otra parte estaba APURADA: quería cerrar ya, y presionar le sumaba.",
-  duro: "La otra parte era DURA: respetaba a quien se planta, y los faroles no le movían.",
-  orgulloso: "La otra parte era ORGULLOSA: necesitaba ganar algo antes de ceder.",
+  apurado: "La otra parte estaba APURADA: quería cerrar ya y estiraba bastante.",
+  duro: "La otra parte era DURA: tenía un techo bajo y no lo movía.",
+  orgulloso: "La otra parte era ORGULLOSA: pedir de más le ofendía el doble.",
 };
-/* Con más ayuda, la frase es más a menudo una pista del carácter real. */
+/* con más ayuda, la frase es más a menudo una pista del carácter real */
 const fraseRival = (c, rnd) => {
   const pozo = rnd() < c.claridad ? FRASES_NEG[c.tipo] : FRASES_NEG.neutras;
   return pozo[Math.min(pozo.length - 1, Math.floor(rnd() * pozo.length))];
 };
-const casoNegociacion = (ayuda, rnd = Math.random) => {
+/* hasta dónde llega con esos años de contrato (sin años, tal cual) */
+const topeNeg = (c, anos) => {
+  const a = NEG_ANOS.find((x) => x.anos === anos);
+  return clamp(c.tope + (a ? a.extra : 0), NEG_ABRE, NEG_MAX);
+};
+const casoNegociacion = (ayuda, rnd = Math.random, conAnos = false) => {
   const tipo = TIPOS_NEG[Math.min(2, Math.floor(numero(rnd(), 0) * 3))];
-  const c = { tipo, precio: 50, paciencia: 3, ronda: 1, usada: false, jugadas: [], fin: null,
-    claridad: clamp(0.4 + numero(ayuda, 30) / 180, 0.4, 0.95) };
+  const car = NEG_CARACTER[tipo];
+  const ay = clamp(numero(ayuda, 30), 0, 100);
+  /* tu atributo estira un poco lo que están dispuestos a dar */
+  const tope = Math.round(car.tope[0] + numero(rnd(), 0) * (car.tope[1] - car.tope[0]) + ay / 30);
+  const claridad = clamp(0.4 + ay / 180, 0.4, 0.95);
+  /* tu lectura: un rango que contiene su techo, más estrecho cuanto más sabes */
+  const ancho = Math.round(clamp(14 - ay / 9, 3, 14));
+  const bajo = Math.max(NEG_ABRE, tope - Math.round(numero(rnd(), 0) * ancho));
+  const c = { tipo, tope, paciencia: 3, ronda: 1, oferta: NEG_ABRE, anos: conAnos ? 3 : null,
+    claridad, lectura: [bajo, bajo + ancho], jugadas: [], fin: null, cierre: null };
   c.frases = [0, 1, 2].map(() => fraseRival(c, rnd));
   return c;
 };
-const jugadaNegociacion = (c, carta, ruido = 0) => {
-  if (!c || c.fin || !NEG_EFECTO[carta]) return c;
-  if (carta === "competencia" && c.usada) return c;
-  const [dp, dq] = NEG_EFECTO[carta][c.tipo];
-  const n = {
-    ...c,
-    precio: clamp(c.precio + dp + (dp ? ruido : 0), 0, 100),
-    paciencia: clamp(c.paciencia + dq, 0, 5),
-    usada: c.usada || carta === "competencia",
-    jugadas: c.jugadas.concat(carta),
-  };
+/* Propones «pide» % (y, en el contrato, unos años). Acepta si cabe; si
+   te pasas poco, contraoferta acercándose a su techo; si te pasas mucho,
+   te dice que no y pierde más paciencia. */
+const proponerNeg = (c, pideBruto, anosBruto) => {
+  if (!c || c.fin) return c;
+  const pide = clamp(Math.round(numero(pideBruto, 0)), 0, NEG_MAX);
+  const anos = c.anos == null ? null : (NEG_ANOS.find((x) => x.anos === anosBruto) || NEG_ANOS[1]).anos;
+  const tope = topeNeg(c, anos);
+  const car = NEG_CARACTER[c.tipo];
+  let n = { ...c, anos };
+  if (pide <= tope) {
+    return { ...n, fin: "acuerdo", cierre: Math.max(pide, c.oferta), jugadas: c.jugadas.concat({ pide, anos, r: "acepta" }) };
+  }
+  const lejos = pide - tope > 6;
+  const oferta = Math.max(c.oferta, Math.min(tope, Math.round(c.oferta + (tope - c.oferta) * car.acerca)));
+  /* pedir un poco de más gasta paciencia pero no te echa de la mesa;
+     solo un pedido fuera de lugar puede hacer que se levante */
+  n = { ...n, oferta, paciencia: lejos ? clamp(c.paciencia - car.enfado - 1, 0, 5) : Math.max(1, c.paciencia - 1),
+    jugadas: c.jugadas.concat({ pide, anos, r: lejos ? "no" : "contra", oferta }) };
   if (n.paciencia <= 0) return { ...n, fin: "levanta" };
-  if (c.ronda >= 3) return { ...n, fin: "acuerdo" };
+  if (c.ronda >= NEG_RONDAS) return { ...n, fin: "ultima" };
   return { ...n, ronda: c.ronda + 1 };
 };
+/* aceptar lo que hay sobre la mesa (también su última oferta) */
+const aceptarNeg = (c) => (!c || (c.fin && c.fin !== "ultima") ? c
+  : { ...c, fin: "acuerdo", cierre: c.oferta, jugadas: c.jugadas.concat({ acepto: c.oferta }) });
+const irseNeg = (c) => (!c || (c.fin && c.fin !== "ultima") ? c : { ...c, fin: "levanta" });
 const nivelNegociacion = (c) =>
-  !c || c.fin !== "acuerdo" ? "fallo" : c.precio >= 68 ? "exito" : c.precio >= 52 ? "parcial" : "fallo";
+  !c || c.fin !== "acuerdo" ? "fallo" : c.cierre >= NEG_EXITO ? "exito" : c.cierre >= NEG_PARCIAL ? "parcial" : "fallo";
+/* el sueldo con un aumento de pct %, sin pasar del techo de la carrera */
+const sueldoNeg = (ctx, pct) =>
+  Math.round(Math.min(numero(ctx && ctx.techo, Infinity), numero(ctx && ctx.actual, 0) * (1 + numero(pct, 0) / 100)));
 
 function JuegoAnclaje({ ayuda, onFin, ctx }) {
-  const [c, setC] = useState(() => casoNegociacion(ayuda));
-  const jugar = (k) => {
-    if (c.fin) return;
-    setC(jugadaNegociacion(c, k, Math.round(Math.random() * 2) - 1));
-  };
-  const nombre = (k) => (CARTAS_NEG.find((x) => x.k === k) || {}).n || k;
-  const nivel = c.fin ? nivelNegociacion(c) : null;
-  /* En el contrato la mesa habla en dinero: tu sueldo de hoy y el que
-     estás pidiendo. En el resto de escenas, el precio de 0 a 100. */
-  const sueldo = ctx && numero(ctx.actual, 0) > 0;
-  const pct = Math.round(aumentoNeg(c.precio) * 100);
-  const terminar = () => onFin(nivel, { precio: c.precio, acuerdo: c.fin === "acuerdo" });
+  const contrato = !!(ctx && numero(ctx.actual, 0) > 0);
+  const [c, setC] = useState(() => casoNegociacion(ayuda, Math.random, contrato));
+  const [pide, setPide] = useState(NEG_ABRE + 12);
+  const [anos, setAnos] = useState(3);
+  const nivel = c.fin === "acuerdo" || c.fin === "levanta" ? nivelNegociacion(c) : null;
+  const abierta = !c.fin || c.fin === "ultima";
+  const pctTxt = (pct) => (pct > 0 ? "+" + pct + "%" : contrato ? "sin aumento" : "+0%");
+  const plata = (pct) => (contrato ? "USD " + fmt(sueldoNeg(ctx, pct)) : pctTxt(pct));
+  const conPct = (pct) => plata(pct) + (contrato ? " (" + pctTxt(pct) + ")" : "");
+  const ult = c.jugadas[c.jugadas.length - 1];
+  const respuesta = !ult || ult.acepto != null ? null
+    : ult.r === "acepta" ? "«Acepto. Trato hecho.»"
+    : ult.r === "contra" ? "«No llego a tanto. Te ofrezco " + conPct(ult.oferta) + ".»"
+    : "«Eso está fuera de lugar. Lo mío sigue en " + conPct(ult.oferta) + ".»";
+  const terminar = () => onFin(nivel, { pct: c.fin === "acuerdo" ? c.cierre : 0, acuerdo: c.fin === "acuerdo", anos: c.anos });
+  const paso = (d) => setPide((p) => clamp(p + d, 0, NEG_MAX));
+  const tuyo = abierta ? pide : (c.cierre != null ? c.cierre : pide);
 
   return (
     <div className="ea-jw">
       <div className="ea-jinfo ea-dis">
-        <span>{c.fin ? "Negociación cerrada" : "Ronda " + c.ronda + " de 3"}</span>
-        <span>Paciencia {"●".repeat(c.paciencia)}{"○".repeat(Math.max(0, 5 - c.paciencia))}</span>
+        <span>{c.fin === "ultima" ? "Su última oferta" : c.fin ? "Negociación cerrada" : "Propuesta " + c.ronda + " de " + NEG_RONDAS}</span>
+        <span>Paciencia {"●".repeat(c.paciencia)}{"○".repeat(Math.max(0, 3 - c.paciencia))}</span>
       </div>
-      {sueldo ? (
-        <div>
-          <div className="ea-anclaE ea-dis"><span>Hoy cobras</span><span>USD {fmt(ctx.actual)} al año</span></div>
-          <div className="ea-anclaN">USD {fmt(c.fin === "levanta" ? ctx.actual : sueldoNeg(ctx, c.precio))}</div>
-          <div className="ea-anclaE ea-dis">
-            <span>{c.fin === "levanta" ? "sin trato: sin aumento"
-              : (c.fin ? "lo que cerraste: " : "lo que pides: ") + (pct > 0 ? "+" + pct + "%" : "sin aumento")}</span>
-            <span>muy buen trato desde +{Math.round(aumentoNeg(68) * 100)}%</span>
+      {/* la mesa: cada término, lo que hay y lo que pides */}
+      <div className="ea-negMesa">
+        <div className={"ea-negFila ea-negCab ea-dis" + (contrato ? " c4" : "")}>
+          <span></span>{contrato && <span>Hoy</span>}<span>Su oferta</span><span>Tú pides</span>
+        </div>
+        <div className={"ea-negFila" + (contrato ? " c4" : "")}>
+          <span className="ea-dis">{contrato ? "Sueldo al año" : "Sobre su oferta"}</span>
+          {contrato && <span className="ea-mono">USD {fmt(ctx.actual)}</span>}
+          <span className="ea-mono">{plata(c.oferta)}{contrato && <small>{pctTxt(c.oferta)}</small>}</span>
+          <span className="ea-mono ea-negPide">{plata(tuyo)}{contrato && <small>{pctTxt(tuyo)}</small>}</span>
+        </div>
+        {contrato && (
+          <div className="ea-negFila c4">
+            <span className="ea-dis">Años de contrato</span>
+            <span className="ea-mono">—</span>
+            <span className="ea-mono">3</span>
+            <span className="ea-mono ea-negPide">{c.fin ? (c.anos || 3) : anos}</span>
           </div>
-        </div>
-      ) : (
-        <div>
-          <div className="ea-anclaN">{c.precio}</div>
-          <div className="ea-anclaE ea-dis"><span>tu precio, de 0 a 100</span><span>éxito desde 68</span></div>
-        </div>
-      )}
+        )}
+      </div>
       {!c.fin && (
-        <p className="ea-memoTxt ea-negFrase">«{c.frases[c.ronda - 1]}»</p>
+        <div>
+          <div className="ea-negCtl">
+            <button className="ea-negPaso" aria-label="Pedir menos" onClick={() => paso(-2)} disabled={pide <= 0}>−</button>
+            <span className="ea-dis">{contrato ? "Aumento que pides: " + pctTxt(pide) : "Pides " + pctTxt(pide) + " sobre su oferta"}</span>
+            <button className="ea-negPaso" aria-label="Pedir más" onClick={() => paso(2)} disabled={pide >= NEG_MAX}>+</button>
+          </div>
+          {contrato && (
+            <div className="ea-negCtl">
+              {NEG_ANOS.map((x) => (
+                <button key={x.anos} className={"ea-negAno" + (anos === x.anos ? " on" : "")} onClick={() => setAnos(x.anos)}>
+                  {x.anos} años{x.extra > 0 ? " · pagan más" : x.extra < 0 ? " · pagan menos" : ""}
+                </button>
+              ))}
+            </div>
+          )}
+          <p className="ea-negLee">
+            Tu lectura: aceptaría hasta entre {pctTxt(c.lectura[0])} y {pctTxt(c.lectura[1])}{contrato ? ", con 3 años" : ""}.
+          </p>
+          <p className="ea-memoTxt ea-negFrase">«{c.frases[c.ronda - 1]}»</p>
+        </div>
       )}
+      {respuesta && <p className="ea-negResp ea-dis">{respuesta}</p>}
       {!c.fin && (
         <div className="ea-negCartas">
-          {CARTAS_NEG.map((x) => (
-            <button key={x.k} className="ea-mini" style={{ marginTop: 0 }}
-              disabled={x.k === "competencia" && c.usada}
-              onClick={() => jugar(x.k)}>{x.n}</button>
-          ))}
+          <button className="ea-btn" style={{ marginTop: 0 }} onClick={() => setC(proponerNeg(c, pide, contrato ? anos : null))}>Proponer</button>
+          {c.ronda > 1 && (
+            <button className="ea-mini" style={{ marginTop: 0 }} onClick={() => setC(aceptarNeg(c))}>Aceptar su oferta: {conPct(c.oferta)}</button>
+          )}
         </div>
       )}
-      {c.jugadas.length > 0 && (
-        <div style={{ marginTop: 10, fontSize: 13, color: "var(--gris)" }}>
-          {c.jugadas.map((k, i) => <div key={i}>{i + 1}. {nombre(k)}</div>)}
+      {c.fin === "ultima" && (
+        <div className="ea-negCartas">
+          <button className="ea-btn" style={{ marginTop: 0 }} onClick={() => setC(aceptarNeg(c))}>Aceptar {conPct(c.oferta)}</button>
+          <button className="ea-mini" style={{ marginTop: 0 }} onClick={() => setC(irseNeg(c))}>Levantarte sin trato</button>
         </div>
       )}
-      {c.fin && (
+      {(c.fin === "acuerdo" || c.fin === "levanta") && (
         <div style={{ marginTop: 12 }}>
           <div className="ea-dis" style={{ fontSize: 15, color: nivel === "exito" ? "var(--verde)" : nivel === "parcial" ? "var(--cobre)" : "var(--rojo)" }}>
-            {sueldo
-              ? (c.fin === "levanta" ? "Se levantó de la mesa. Te quedas con lo que cobras: USD " + fmt(ctx.actual) + " al año."
-                : "Cerraste en USD " + fmt(sueldoNeg(ctx, c.precio)) + " al año: "
-                  + (pct > 0 ? "+" + pct + "% sobre lo que cobrabas. " : "sin aumento. ")
-                  + (nivel === "exito" ? "Muy buen trato." : nivel === "parcial" ? "Trato justo, sin más." : "Dejaste demasiado sobre la mesa."))
-              : c.fin === "levanta" ? "Se levantó de la mesa. No hay trato."
-              : nivel === "exito" ? "Cerraste en " + c.precio + ". Muy buen trato."
-              : nivel === "parcial" ? "Cerraste en " + c.precio + ". Trato justo, sin más."
-              : "Cerraste en " + c.precio + ". Dejaste demasiado sobre la mesa."}
+            {c.fin === "levanta"
+              ? (contrato ? "No hay trato. Te quedas con lo que cobras: USD " + fmt(ctx.actual) + " al año." : "Se levantó de la mesa. No hay trato.")
+              : (contrato ? "Firmas por " + conPct(c.cierre) + " al año, " + (c.anos || 3) + " años. " : "Cerraste en " + pctTxt(c.cierre) + " sobre su primera oferta. ")
+                + (nivel === "exito" ? "Muy buen trato." : nivel === "parcial" ? "Trato justo, sin más." : "Dejaste demasiado sobre la mesa.")}
           </div>
-          <p className="ea-memoTxt">{REVELA_NEG[c.tipo]}</p>
+          <p className="ea-memoTxt">{REVELA_NEG[c.tipo]} Llegaba hasta {pctTxt(topeNeg(c, c.anos))}.</p>
           <button className="ea-btn" onClick={terminar}>Continuar</button>
         </div>
       )}
@@ -54740,8 +54806,10 @@ function Motor() {
          cerró en la mesa, ni más ni menos. */
       const pactado = o.negocia ? aumentoPactado.current : null;
       aumentoPactado.current = null;
+      /* los años que se firmaron en la mesa, si se firmaron */
+      if (pactado && pactado.anos) st.contrato = { ...st.contrato, anos: entero(pactado.anos, 3, 2, 4) };
       const parte = pactado || !negociada ? 1 : nivel === "exito" ? 1 : nivel === "parcial" ? 0.55 : 0;
-      const mult = pactado || 1 + (numero(o.contrato.mult, 1) - 1) * parte;
+      const mult = pactado ? numero(pactado.mult, 1) : 1 + (numero(o.contrato.mult, 1) - 1) * parte;
       st.sueldoMult = clamp(numero(st.sueldoMult, 1) * mult, 0.6, TOPE_MULT);
       /* Y si la negociación se cayó del todo, tampoco te mudas de firma:
          te quedas donde estabas, con el plazo nuevo y sin subida. */
@@ -55576,15 +55644,16 @@ function Motor() {
     /* Negociar el contrato: firmas exactamente el aumento que cerraste
        en la mesa. Si se levantó, sigues con lo que cobrabas. */
     if (op.negocia && op.contrato && extra) {
-      const pct = extra.acuerdo ? aumentoNeg(extra.precio) : 0;
-      const nuevo = extra.acuerdo ? sueldoNeg(op.negocia, extra.precio) : numero(op.negocia.actual, 0);
+      const pct = extra.acuerdo ? clamp(numero(extra.pct, 0), 0, NEG_MAX) / 100 : 0;
+      const nuevo = extra.acuerdo ? sueldoNeg(op.negocia, pct * 100) : numero(op.negocia.actual, 0);
+      const anosNeg = extra.acuerdo && extra.anos ? entero(extra.anos, 3, 2, 4) : null;
       const b = { ...(base || {}) };
       b.msg = (b.msg ? b.msg + " " : "") + (pct > 0
-        ? "Firmas por USD " + fmt(nuevo) + " al año: +" + Math.round(pct * 100) + "% sobre lo que cobrabas."
+        ? "Firmas por USD " + fmt(nuevo) + " al año: +" + Math.round(pct * 100) + "% sobre lo que cobrabas" + (anosNeg ? ", por " + anosNeg + " años." : ".")
         : "Sigues cobrando USD " + fmt(nuevo) + " al año.");
       /* la opción tiene que seguir siendo la misma (los mentores y los
          árboles la buscan por identidad): el aumento va aparte */
-      aumentoPactado.current = 1 + pct;
+      aumentoPactado.current = { mult: 1 + pct, anos: anosNeg };
       resolverEscena(b, nivel, op);
       return;
     }
@@ -57253,7 +57322,7 @@ function Motor() {
                     <div className="ea-hilo">
                       {(cierre.ecos || []).length > 0 && (
                         <>
-                          <div className="ea-hiloK ea-dis">Lo que volvió de tus decisiones</div>
+                          <div className="ea-hiloK ea-dis">Consecuencias de lo que decidiste antes</div>
                           {cierre.ecos.map((e, i) => (
                             <div className="ea-hiloL" key={"e" + i}><b>{e.t}</b><span>porque {e.por.charAt(0).toLowerCase() + e.por.slice(1)}</span></div>
                           ))}
@@ -57261,9 +57330,9 @@ function Motor() {
                       )}
                       {(cierre.abiertos || []).length > 0 && (
                         <>
-                          <div className="ea-hiloK ea-dis" style={{ marginTop: (cierre.ecos || []).length ? 10 : 0 }}>Lo que sigue abierto</div>
+                          <div className="ea-hiloK ea-dis" style={{ marginTop: (cierre.ecos || []).length ? 10 : 0 }}>Puede tener consecuencias más adelante</div>
                           {cierre.abiertos.map((t, i) => (
-                            <div className="ea-hiloL" key={"a" + i}><span>{t}: puede volver en los próximos años.</span></div>
+                            <div className="ea-hiloL" key={"a" + i}><span>{t}.</span></div>
                           ))}
                           {cierre.masAbiertos > 0 && <div className="ea-hiloL"><span>Y {cierre.masAbiertos} cosa{cierre.masAbiertos > 1 ? "s" : ""} más.</span></div>}
                         </>
