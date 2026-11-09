@@ -105,8 +105,10 @@ async function unaVida(semilla) {
        bucle sumaba uno. Con el anuncio delante son dos vueltas por año y
        el promedio salia al doble. Se cuenta el año concreto, y solo
        cuando cambia. */
-    const mA = t.match(/Así terminó (\d{4})/);
-    if (mA && mA[1] !== ultimoAno) { ultimoAno = mA[1]; ano++; }
+    /* partida corta: el resumen de etapa dice «De 2026 a 2030»; se cuentan
+       los años que cubre, no las pantallas */
+    const mA = t.match(/(?:Así terminó|Cierre de|De \d{4} a) (\d{4})/);
+    if (mA && mA[1] !== ultimoAno) { ano += ultimoAno ? Number(mA[1]) - Number(ultimoAno) : Number(mA[1]) - 2025; ultimoAno = mA[1]; }
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
     if (ops.length) { await pulsa(ops[Math.floor(Math.random() * ops.length) % ops.length]); continue; }
@@ -117,7 +119,7 @@ async function unaVida(semilla) {
     /* «Ver el año» cierra el anuncio del rodillo. Va PRIMERO porque el
        informe sigue montado debajo: sin esto la prueba pulsaba el boton
        de abajo y se saltaba el anuncio entero sin llegar a probarlo. */
-    if (await pulsa(porRot(/^Ver el año$/))) continue;
+    if (await pulsa(porRot(/^(Ver el año|Seguir)$/))) continue;
     if (await pulsa(porRot(/^(Lo siguiente|Cerrar el año|Continuar|Entendido, empezar|Ya lo tengo|Terminar|Siguiente|Entregar el informe|Cerrar el trato|Fijar|Poner el número|Cerrar posición|Aguantar|Comprar|Empezar 20|Poner el capital|Sentarte a hacer|Ver el balance)/))) continue;
     /* Una casilla al azar, no siempre la primera: en el Cuatro en raya,
        cuando la primera columna se llena, tocarla ya no hace nada, y en
@@ -155,7 +157,7 @@ async function unaVida(semilla) {
      partidas llegan a cerrarse. Antes, con treinta anios fijos, solo 6 de
      20 llegaban al final y la pantalla final quedaba practicamente sin
      probar. */
-  const META = 10;
+  const META = 45;   /* partida corta: de los 20 a los 65 */
   const llegan = res.filter((x) => x.ano >= META).length;
   const acaban = res.filter((x) => x.fin !== "se quedó colgada" && x.fin !== "error").length;
   const media = (res.reduce((a, x) => a + x.ano, 0) / res.length).toFixed(1);

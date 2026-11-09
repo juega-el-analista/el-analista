@@ -16,7 +16,7 @@ cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
 const comp = path.join(__dirname, "compilado.js");
 const tmp = path.join(__dirname, "probeBoosts.js");
 fs.writeFileSync(tmp, fs.readFileSync(comp, "utf8").replace("module.exports = ElAnalista;",
-  "module.exports = { BOOSTS, boostActivo, quedaBoost, ayudaBoosts, probsAzar, sanear, EMOJI_COMPRA, CAPRICHOS, PROPIEDADES, PERKS, JUEGOS };"));
+  "module.exports = { BOOSTS, precioBoost, boostActivo, quedaBoost, ayudaBoosts, probsAzar, sanear, EMOJI_COMPRA, CAPRICHOS, PROPIEDADES, PERKS, JUEGOS };"));
 const J = require(tmp);
 
 let fallos = 0;
@@ -26,6 +26,19 @@ ok(J.BOOSTS.length >= 6, "hay al menos seis boosts (" + J.BOOSTS.map((b) => b.e 
 ok(J.BOOSTS.every((b) => b.e && b.n && b.c > 0 && b.c <= 2000 && (b.anos === 1 || b.anos === 2) && b.d),
   "cada uno tiene emoji, nombre, precio accesible, dura uno o dos años y dice qué hace");
 ok(J.BOOSTS.every((b) => (b.juegos || []).every((k) => !!J.JUEGOS[k])), "los minijuegos que nombran existen");
+
+/* algunos precios suben con la carrera (César, 5-nov-2026) */
+const cafe = J.BOOSTS.find((b) => b.id === "cafe");
+const prensa = J.BOOSTS.find((b) => b.id === "prensa2");
+ok(J.precioBoost(cafe, { pais: "us", rango: 6 }) === cafe.c && J.precioBoost(cafe, { pais: "ve", rango: 0 }) === cafe.c,
+  "el café cuesta lo mismo a un pasante que a un socio (" + cafe.c + ")");
+const pasante = J.precioBoost(prensa, { pais: "ve", rango: 0 });
+const vp = J.precioBoost(prensa, { pais: "ve", rango: 4 });
+const socio = J.precioBoost(prensa, { pais: "us", rango: 6 });
+ok(pasante >= prensa.c * 1.5, "un pasante paga al menos vez y media la base del agente de prensa (" + pasante + ")");
+ok(vp > pasante && socio > vp, "el agente de prensa sube con el cargo (pasante " + pasante + " < VP " + vp + " < socio " + socio + ")");
+const escalan = J.BOOSTS.filter((b) => b.escala).map((b) => b.id);
+ok(escalan.length >= 2 && escalan.length < J.BOOSTS.length, "solo algunos suben con el sueldo (" + escalan.join(", ") + ")");
 
 const neg = J.BOOSTS.find((b) => (b.juegos || []).indexOf("anclaje") >= 0);
 const st = { turno: 5, boosts: [{ id: neg.id, hasta: 7 }] };
