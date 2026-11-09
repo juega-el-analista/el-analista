@@ -48211,17 +48211,19 @@ const EDAD_DE = (e) => EDADES.find((x) => x.e === e) || EDADES[0];
 const META_MIN = 8;
 const META_MAX = 45;
 /* ============================================================
-   PARTIDA CORTA (César, 6-nov-2026)
-   La partida entera, de tu edad a los 65, tenía que caber en 15-20
-   minutos. Antes eran unas 75 decisiones por década. Ahora cada turno
-   es una ETAPA de cinco años: juegas dos escenas y los otros cuatro
-   años se cierran solos (sueldo, gastos, mercados, ascensos), con un
-   poco de carrera por cada año trabajado. Al final de la etapa, un
-   resumen y a la siguiente.
+   PARTIDA CORTA (César, 6-nov-2026; turnos de dos años, Alessandro,
+   9-nov-2026)
+   La partida entera, de tu edad a los 65, en un rato. César la llevó a
+   etapas de cinco años con dos escenas, y la vida pasaba demasiado
+   rápido: «se pierde el alma del juego y es mucho más aburrido». Ahora
+   cada turno es una ETAPA de dos años: juegas tres escenas y el otro
+   año se cierra solo (sueldo, gastos, mercados, ascensos), con un poco
+   de carrera por el año trabajado. Al final de la etapa, un resumen y a
+   la siguiente.
    ============================================================ */
-const ETAPA = 5;
+const ETAPA = 2;
 const EDAD_RETIRO = 65;
-const ESCENAS_ETAPA = 2;
+const ESCENAS_ETAPA = 3;
 const PASIVO_ANO = { carrera: 1, rep: 1, red: 1 };
 const TOPE_ABSOLUTO = 55;   /* empezando a los 20, eso son los 75 */
 const DURACIONES = [
@@ -49096,7 +49098,7 @@ const escenaPretemporada = (st) => {
   return {
     id: ID_PRE, min: 0, max: 6, pretemporada: true,
     t: "Inicio de etapa",   /* se llamaba «Pretemporada»; Alessandro, 8-oct. Etapa: partida corta */
-    x: "Empiezan cinco años nuevos. Antes de que lleguen el trabajo y las obligaciones, puedes dedicarte a una sola cosa. Elige cuál.",
+    x: "Empiezan dos años nuevos. Antes de que lleguen el trabajo y las obligaciones, puedes dedicarte a una sola cosa. Elige cuál.",
     o: cartas,
   };
 };
@@ -54210,10 +54212,10 @@ function Motor() {
       if (e) { lista.push(e); usados.push(e.id); }
     }
     /* Partida corta: de todo lo que el año quería contar, se quedan las
-       dos primeras (lo forzado va delante: apertura, contrato, firma...).
-       Lo que no entra no se pierde: vuelve a intentarlo la etapa que viene.
-       Si ninguna de las dos trae minijuego, la segunda se cambia por una
-       que sí. */
+       ESCENAS_ETAPA primeras (lo forzado va delante: apertura, contrato,
+       firma...). Lo que no entra no se pierde: vuelve a intentarlo la
+       etapa que viene. Si ninguna trae minijuego, la última se cambia por
+       una que sí. */
     {
       let corta = lista.slice(0, ESCENAS_ETAPA);
       if (!corta.some(conJuego)) {
@@ -54912,8 +54914,8 @@ function Motor() {
   };
 
   /* Partida corta: el cierre de UN año, sin tocar la pantalla. El año
-     con decisiones lleva lo que decidiste; los otros cuatro de la etapa
-     se cierran solos y suman un poco de carrera por el año trabajado. */
+     con decisiones lleva lo que decidiste; el resto de la etapa se
+     cierra solo y suman un poco de carrera por el año trabajado. */
   const calcularCierre = (s0, conDecisiones) => {
     let st = { ...s0, valores: { ...s0.valores } };
     const hDec = conDecisiones ? hitosAno.current : [];
@@ -55378,7 +55380,7 @@ function Motor() {
   };
 
   /* La etapa: el año que jugaste y, detrás, los que se cierran solos,
-     hasta cinco o hasta el retiro. Un solo resumen para todos. */
+     hasta completar la etapa o hasta el retiro. Un solo resumen. */
   const cierreDelAno = () => {
     let r = calcularCierre(s, true);
     const todos = [r.cierre];
@@ -56157,7 +56159,7 @@ function Motor() {
                 debajo los cinco atributos, cada uno con su anillo. */}
             <div className="ea-stats">
               {/* Partida corta: la vida entera en una barra, de tu edad
-                  inicial a los 65, encima de la del cargo. Con nueve
+                  inicial a los 65, encima de la del cargo. Con veinte
                   etapas, ver cuánto queda ayuda a decidir. */}
               <div className="ea-xp" title={"Vas por los " + edad(s.turno, s.edadIni) + " de " + EDAD_RETIRO + " años"}>
                 <div className="ea-xpTop ea-dis">
@@ -56507,7 +56509,7 @@ function Motor() {
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(precio)}</span>
                           </div>
                           <div className="ea-etqs">
-                            <span className="ea-etq act">dura {b.anos === 1 ? "una etapa (5 años)" : b.anos + " etapas (" + b.anos * ETAPA + " años)"}</span>
+                            <span className="ea-etq act">dura {b.anos === 1 ? "una etapa (" + ETAPA + " años)" : b.anos + " etapas (" + b.anos * ETAPA + " años)"}</span>
                             {b.escala && <span className="ea-etq">sube con tu sueldo</span>}
                           </div>
                           <div className="ea-itemD">{b.d}</div>
