@@ -95,6 +95,7 @@ async function unaVida(semilla) {
   const nueva = () => ({ dec: 0, juegos: [], pantallas: 0, seg: 0 });
   let et = nueva(), ultT = "", ultimoAno = null, enJuego = false, fin = "colgada";
   const jugados = new Set();
+  const cines = []; let ultCine = null;
   for (let pasos = 0; pasos < 2500; pasos++) {
     await act(async () => { reloj(2500); await micro(); });
     const t = norm(txtDe(r.toJSON()));
@@ -116,13 +117,25 @@ async function unaVida(semilla) {
       jugados.add(k);
     }
     enJuego = tj.length > 0;
+    /* las cinemáticas: el golpe de dinero y los momentos de la vida */
+    try {
+      const mv = r.root.findAll((x) => x.type && x.type.name === "MomentoVida")[0];
+      const gd = r.root.findAll((x) => x.type && x.type.name === "GolpeDinero")[0];
+      const clave = mv ? "m:" + mv.props.m.tipo + ":" + mv.props.m.t : gd ? "g:" + (gd.props.golpe.sube ? "sube" : "baja") + ":" + gd.props.golpe.monto : null;
+      if (clave && clave !== ultCine) { cines.push(clave.split(":").slice(0, 2).join(":")); if (process.env.RITMO_TRAZA) console.log("  [cine] " + clave); }
+      ultCine = clave;
+    } catch (e) {}
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
     if (ops.length) {
       /* las respuestas del examen y de las cuentas también son ea-op:
          dentro de un minijuego no cuentan como decisiones */
       if (!enJuego) { et.dec++; et.seg += 8; }
-      await pulsa(ops[Math.floor(Math.random() * ops.length) % ops.length]);
+      /* RITMO_PREFIERE: una expresión para elegir esas opciones cuando
+         salgan (para comprobar, por ejemplo, que la boda se ve) */
+      const pref = process.env.RITMO_PREFIERE ? ops.find((b) => new RegExp(process.env.RITMO_PREFIERE).test(rot(b))) : null;
+      if (pref && process.env.RITMO_TRAZA) console.log("  [elige] " + rot(pref).slice(0, 60) + " · en: " + t.slice(t.indexOf("REPUTACIÓN") + 10, t.indexOf("REPUTACIÓN") + 120));
+      await pulsa(pref || ops[Math.floor(Math.random() * ops.length) % ops.length]);
       continue;
     }
     if (await pulsa(porRot(/^(Entendido|Después|Ver la sección|Cerrar y volver|Aplica o descarta|✕)$/))) continue;
@@ -143,7 +156,7 @@ async function unaVida(semilla) {
     await act(async () => { reloj(5000); await micro(); });
   }
   if (et.dec || et.juegos.length) etapas.push(et);
-  return { fin, etapas: etapas.filter((e) => e.dec || e.juegos.length) };
+  return { fin, cines, etapas: etapas.filter((e) => e.dec || e.juegos.length) };
 }
 
 (async () => {
@@ -178,6 +191,9 @@ async function unaVida(semilla) {
   vidas.forEach((v) => { const l = v.etapas.reduce((a, e) => a.concat(e.juegos), []); for (let i = 1; i < l.length; i++) if (l[i] === l[i - 1]) seguidas++; });
   console.log("  etapas con un minijuego repetido: " + Math.round(rep * 100 / todas.length) + "% · el mismo dos veces seguidas: " + f(seguidas / N) + " por vida");
   console.log("  los que más salen (por vida): " + Object.keys(cuenta).sort((a, b) => cuenta[b] - cuenta[a]).slice(0, 8).map((k) => k + " " + f(cuenta[k] / N)).join(" · "));
+  const cc = {};
+  vidas.forEach((v) => (v.cines || []).forEach((k) => { cc[k] = (cc[k] || 0) + 1; }));
+  console.log("  cinemáticas por vida: " + (Object.keys(cc).length ? Object.keys(cc).sort().map((k) => k.replace(/^[gm]:/, "") + " " + f(cc[k] / N)).join(" · ") : "ninguna"));
   const nunca = JUEGOS.filter((j) => !cuenta[j.k]).map((j) => j.k);
   if (nunca.length) console.log("  nunca salieron: " + nunca.join(", "));
   if (vidas.some((v) => v.fin !== "fin")) { console.log("  NO TERMINAN: " + vidas.filter((v) => v.fin !== "fin").length); process.exitCode = 1; }

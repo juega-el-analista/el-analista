@@ -1635,6 +1635,25 @@ const CSS4 = `
 .ea-animoFila b{font:800 13px 'Bricolage Grotesque',sans-serif;margin-left:6px}
 .ea-animoEf{display:block;font-size:12.5px;margin-top:6px;opacity:.85}
 .ea-quieto .ea-golpeBillete,.ea-quieto .ea-golpeGota{display:none}
+/* los momentos de la vida */
+.ea-vidaCine{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-golpeEntra .45s ease-out}
+.ea-vidaCine svg{position:absolute;inset:0;width:100%;height:100%}
+.ea-vidaT{font:800 clamp(28px,7vw,50px) 'Bricolage Grotesque',sans-serif;line-height:1.05;margin:4px 0 8px}
+.ea-vidaEf{display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.ea-vidaEf span{font:700 12.5px Nunito,sans-serif;background:rgba(255,244,220,.14);padding:5px 10px;border-radius:999px}
+.ea-vidaFlota{animation:ea-vidaFlota 3s ease-in-out infinite}
+@keyframes ea-vidaFlota{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-90px);opacity:0}}
+.ea-vidaPetalo{animation:ea-vidaCae 3.2s linear infinite}
+@keyframes ea-vidaCae{from{transform:translateY(-60px) rotate(0)}to{transform:translateY(520px) rotate(300deg)}}
+.ea-vidaLluvia{animation:ea-vidaLlueve .8s linear infinite}
+@keyframes ea-vidaLlueve{from{transform:translateY(-40px)}to{transform:translateY(480px)}}
+.ea-vidaMece{animation:ea-vidaMece 1.6s ease-in-out infinite alternate}
+@keyframes ea-vidaMece{from{transform:translate(252px,250px) rotate(-3deg)}to{transform:translate(252px,250px) rotate(3deg)}}
+.ea-vidaAplaude{animation:ea-vidaAplaude .35s ease-in-out infinite alternate}
+@keyframes ea-vidaAplaude{to{transform:translateY(-6px)}}
+.ea-vidaLlave{animation:ea-vidaLlave 1.2s ease-in-out infinite alternate}
+@keyframes ea-vidaLlave{to{transform:translateY(-8px)}}
+.ea-quieto .ea-vidaFlota,.ea-quieto .ea-vidaPetalo,.ea-quieto .ea-vidaLluvia{display:none}
 /* tu ánimo, junto a los atributos */
 .ea-animoPill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--crema);background:rgba(255,244,220,.1);padding:4px 10px 4px 6px;border-radius:999px}
@@ -51658,6 +51677,221 @@ function GolpeDinero({ golpe, antes, despues, onFin }) {
   );
 }
 
+/* ============================================================
+   LOS MOMENTOS DE LA VIDA
+   Cuando te casas, cuando nace un hijo y cuando muere alguien cercano,
+   un destello de cuatro segundos sin diálogo: la iglesia, la clínica,
+   el cementerio con lluvia (Alessandro, 9-nov-2026: «cuando tienes un
+   hijo (una clínica y un bebé), cuando te casas (una iglesia y boda),
+   cuando muere un familiar (que aparezca un funeral)»). Debajo, lo que
+   de verdad cambió en tu partida y el golpe en el ánimo.
+   ============================================================ */
+const MESES_VIDA = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const VIDA_BOCA = { feliz: "M-9 12 Q0 22 9 12", triste: "M-8 17 Q0 10 8 17" };
+function PersonaVida({ x, y, s = 1, piel, pelo, colorPelo, ropa, falda, velo, cara = "feliz", lagrima, corbata }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      {falda ? <path d={`M-40 96 Q0 86 40 96 L66 ${falda} L-66 ${falda} Z`} fill={ropa} /> : <path d="M-46 170 Q-46 96 0 92 Q46 96 46 170 Z" fill={ropa} />}
+      {corbata && <path d="M-4 96 L4 96 L7 132 L0 142 L-7 132 Z" fill={corbata} />}
+      <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+      {pelo === "largo" && <path d="M-33 74 Q-40 10 0 4 Q40 10 33 74 Q28 32 18 22 Q0 28 -18 22 Q-28 32 -33 74 Z" fill={colorPelo} />}
+      <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+      {pelo === "corto" && <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={colorPelo} />}
+      {velo && <path d="M-36 30 Q0 -6 36 30 L48 150 Q0 160 -48 150 Z" fill="#FFFFFF" opacity=".55" />}
+      {cara === "feliz"
+        ? <g fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round"><path d="M-16 44 Q-11 38 -6 44" /><path d="M6 44 Q11 38 16 44" /></g>
+        : <g fill="#2A2440"><circle cx="-11" cy="44" r="3" /><circle cx="11" cy="44" r="3" />
+            <rect x="-16" y="33" width="10" height="3" rx="1.5" transform="rotate(-12 -11 34)" /><rect x="6" y="33" width="10" height="3" rx="1.5" transform="rotate(12 11 34)" /></g>}
+      <g transform="translate(0 42)"><path d={VIDA_BOCA[cara]} fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" /></g>
+      {lagrima && <path d="M-14 50 q-2 6 0 9" stroke="#8CC4E8" strokeWidth="3" fill="none" strokeLinecap="round" />}
+      <circle cx="-20" cy="54" r="5" fill="#E9875A" opacity=".35" /><circle cx="20" cy="54" r="5" fill="#E9875A" opacity=".35" />
+    </g>
+  );
+}
+/* tú y tu pareja: el aspecto sigue el género que elegiste al empezar */
+const LOOK_CORTO = { piel: "#E7B48A", pelo: "corto", colorPelo: "#2A2440" };
+const LOOK_LARGO = { piel: "#C68B62", pelo: "largo", colorPelo: "#3B2A22" };
+const looksVida = (genero) => (genero === "f" ? { tu: LOOK_LARGO, pareja: LOOK_CORTO } : { tu: LOOK_CORTO, pareja: LOOK_LARGO });
+function EscenaVida({ tipo, genero }) {
+  const L = looksVida(genero);
+  const ella = genero === "f" ? L.tu : L.pareja;      /* quien lleva el vestido y carga al bebé */
+  const el = genero === "f" ? L.pareja : L.tu;
+  if (tipo === "hijo") {
+    return (
+      <g>
+        <defs><linearGradient id="ea-amanecer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#F6C59A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+        <rect width="720" height="450" fill="#EAF2E8" /><rect y="300" width="720" height="150" fill="#D5E6D3" />
+        <rect x="460" y="50" width="200" height="170" rx="12" fill="url(#ea-amanecer)" /><circle cx="560" cy="200" r="40" fill="#FFF4DC" opacity=".9" />
+        <rect x="556" y="50" width="8" height="170" fill="#FFF8EA" />
+        <rect x="96" y="70" width="6" height="230" fill="#B7C9B5" /><rect x="80" y="70" width="38" height="50" rx="10" fill="#FFFFFF" opacity=".9" />
+        <path d="M640 250 L640 300" stroke="#665C7A" strokeWidth="2" /><ellipse cx="640" cy="232" rx="22" ry="26" fill="#D9643A" />
+        <rect x="150" y="240" width="300" height="60" rx="16" fill="#FFFFFF" /><rect x="150" y="280" width="300" height="70" rx="10" fill="#8CC4E8" />
+        <rect x="140" y="200" width="22" height="160" rx="8" fill="#B7C9B5" />
+        <PersonaVida x={250} y={130} s={1.1} {...ella} ropa="#FFFFFF" />
+        <g transform="translate(252 250)" className="ea-vidaMece">
+          <ellipse cx="0" cy="12" rx="34" ry="22" fill="#F2B632" /><circle cx="0" cy="-4" r="17" fill="#F0C7A0" />
+          <g fill="none" stroke="#2A2440" strokeWidth="2" strokeLinecap="round"><path d="M-8 -4 Q-5 -7 -2 -4" /><path d="M2 -4 Q5 -7 8 -4" /><path d="M-3 4 Q0 7 3 4" /></g>
+          <path d="M-17 -8 Q0 -30 17 -8 Q0 -16 -17 -8" fill="#F2B632" />
+        </g>
+        <PersonaVida x={410} y={110} s={1.25} {...el} ropa="#2F5D8A" />
+        <g className="ea-vidaFlota"><path d="M330 150 c-10-14 -30-4 -18 12 l18 16 l18-16 c12-16 -8-26 -18-12z" fill="#D9643A" /></g>
+        <g className="ea-vidaFlota" style={{ animationDelay: "1.4s" }}><path d="M370 170 c-7-10 -21-3 -13 8 l13 11 l13-11 c8-11 -6-18 -13-8z" fill="#E9875A" /></g>
+      </g>
+    );
+  }
+  if (tipo === "boda") {
+    return (
+      <g>
+        <rect width="720" height="450" fill="#F3E2BF" />
+        <path d="M260 260 L260 90 Q360 0 460 90 L460 260 Z" fill="#5B4785" />
+        <path d="M280 250 L280 100 Q360 26 440 100 L440 250 Z" fill="#8C6BB1" />
+        <path d="M360 40 L360 250" stroke="#F3E2BF" strokeWidth="6" /><path d="M280 150 L440 150" stroke="#F3E2BF" strokeWidth="6" />
+        <circle cx="360" cy="110" r="26" fill="#F2B632" /><rect x="290" y="160" width="62" height="84" fill="#D9643A" /><rect x="368" y="160" width="62" height="84" fill="#E9875A" />
+        <rect y="300" width="720" height="150" fill="#E2CFA8" />
+        <path d="M300 450 L340 300 L380 300 L420 450 Z" fill="#B24E27" opacity=".85" />
+        <rect x="40" y="320" width="200" height="26" rx="6" fill="#8A3A1C" /><rect x="480" y="320" width="200" height="26" rx="6" fill="#8A3A1C" />
+        <circle cx="200" cy="260" r="26" fill="#FFFFFF" /><circle cx="226" cy="250" r="18" fill="#F2B632" /><circle cx="520" cy="260" r="26" fill="#FFFFFF" /><circle cx="494" cy="250" r="18" fill="#F2B632" />
+        <PersonaVida x={300} y={150} s={1.15} {...el} ropa="#2A2440" corbata="#F2B632" />
+        <PersonaVida x={420} y={150} s={1.15} {...ella} ropa="#FFFFFF" falda={300} velo />
+        {[40, 120, 200, 300, 380, 470, 560, 640, 700].map((x, i) => (
+          <ellipse key={x} className="ea-vidaPetalo" cx={x} cy="0" rx="7" ry="4" fill={i % 2 ? "#F2B632" : "#D9643A"} style={{ animationDelay: (i * 0.35) + "s" }} />
+        ))}
+      </g>
+    );
+  }
+  return (
+    <g>
+      <defs><linearGradient id="ea-cieloGris" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4A4166" /><stop offset="1" stopColor="#8C82A3" /></linearGradient></defs>
+      <rect width="720" height="450" fill="url(#ea-cieloGris)" />
+      <path d="M0 260 Q180 220 360 250 T720 236 L720 450 L0 450 Z" fill="#5B5577" />
+      <path d="M0 300 Q200 280 400 300 T720 290 L720 450 L0 450 Z" fill="#3B3358" />
+      <g fill="#2A2440" opacity=".7"><rect x="80" y="230" width="30" height="44" rx="12" /><rect x="600" y="222" width="34" height="50" rx="14" /><rect x="660" y="236" width="24" height="36" rx="10" /></g>
+      <path d="M470 330 L470 230 Q510 196 550 230 L550 330 Z" fill="#CFC4EA" />
+      <rect x="490" y="252" width="40" height="4" rx="2" fill="#8C82A3" /><rect x="482" y="264" width="56" height="4" rx="2" fill="#8C82A3" />
+      <circle cx="486" cy="330" r="9" fill="#D9643A" /><circle cx="500" cy="334" r="9" fill="#F2B632" /><circle cx="514" cy="330" r="9" fill="#FFF4DC" />
+      <g stroke="#CFE4F2" strokeWidth="2" opacity=".5" strokeLinecap="round">
+        {Array.from({ length: 22 }, (_, i) => (
+          <line key={i} className="ea-vidaLluvia" x1={i * 34 + 10} y1="0" x2={i * 34 + 4} y2="18" style={{ animationDelay: (i % 7) * 0.11 + "s" }} />
+        ))}
+      </g>
+      <g transform="translate(290 150)"><path d="M-90 0 Q0 -70 90 0 Z" fill="#2A2440" /><path d="M0 0 L0 90" stroke="#2A2440" strokeWidth="5" /></g>
+      <PersonaVida x={250} y={150} s={1.1} {...L.tu} ropa="#2A2440" cara="triste" lagrima />
+      <PersonaVida x={340} y={156} s={1.05} {...L.pareja} ropa="#3B3358" cara="triste" />
+    </g>
+  );
+}
+/* el ascenso, el despido y la primera casa */
+function OficinaVida({ gris }) {
+  return (
+    <g>
+      <defs><linearGradient id={gris ? "ea-tardeGris" : "ea-tardeOro"} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={gris ? "#6E6788" : "#5B4785"} /><stop offset="1" stopColor={gris ? "#A9A1BD" : "#F2B632"} /></linearGradient></defs>
+      <rect width="720" height="450" fill={gris ? "#D9D2C4" : "#F3E2BF"} />
+      <rect x="140" y="40" width="440" height="200" rx="14" fill={gris ? "url(#ea-tardeGris)" : "url(#ea-tardeOro)"} />
+      <g fill={gris ? "#565072" : "#3B3358"}><rect x="160" y="150" width="34" height="90" /><rect x="202" y="120" width="40" height="120" /><rect x="420" y="140" width="40" height="100" /><rect x="470" y="110" width="44" height="130" /></g>
+      <rect x="356" y="40" width="8" height="200" fill="#FFF4DC" />
+      <rect y="290" width="720" height="160" fill={gris ? "#C4BBA9" : "#E2CFA8"} />
+    </g>
+  );
+}
+function EscenaCarrera({ tipo, genero, cargo }) {
+  const L = looksVida(genero);
+  if (tipo === "ascenso") {
+    return (
+      <g>
+        <OficinaVida />
+        <rect x="270" y="88" width="180" height="34" rx="6" fill="#2A2440" />
+        <text x="360" y="111" textAnchor="middle" fill="#F2B632" fontFamily="Bricolage Grotesque, sans-serif" fontWeight="800" fontSize="15">{texto(cargo, "", 22).toUpperCase()}</text>
+        <g className="ea-vidaAplaude"><PersonaVida x={150} y={170} {...LOOK_LARGO} ropa="#5B4785" /></g>
+        <g className="ea-vidaAplaude"><PersonaVida x={570} y={170} piel="#8D5A3B" pelo="corto" colorPelo="#2A2440" ropa="#2F8A54" /></g>
+        <g stroke="#2A2440" strokeWidth="23" strokeLinecap="round"><path d="M313 285 L277 210" /><path d="M407 285 L443 210" /></g>
+        <g fill={L.tu.piel}><circle cx="276" cy="208" r="13" /><circle cx="444" cy="208" r="13" /></g>
+        <PersonaVida x={360} y={150} s={1.3} {...L.tu} ropa="#2A2440" corbata="#F2B632" />
+        {[50, 130, 210, 290, 430, 510, 590, 670].map((x, i) => (
+          <rect key={x} className="ea-vidaPetalo" x={x} y="0" width="10" height="16" rx="2" fill={["#F2B632", "#D9643A", "#8C6BB1", "#2F8A54"][i % 4]} style={{ animationDelay: (i * 0.3) + "s" }} />
+        ))}
+      </g>
+    );
+  }
+  if (tipo === "despido") {
+    return (
+      <g>
+        <OficinaVida gris />
+        <PersonaVida x={540} y={168} {...LOOK_LARGO} ropa="#5B4785" cara="triste" />
+        <PersonaVida x={290} y={150} s={1.3} {...L.tu} ropa="#3B3358" cara="triste" lagrima />
+        <rect x="216" y="280" width="150" height="90" rx="6" fill="#B07A4A" /><rect x="216" y="280" width="150" height="18" fill="#8E5F36" />
+        <path d="M250 280 Q236 236 256 214 Q262 250 250 280 M262 280 Q262 230 290 222 Q280 256 262 280" fill="#2F8A54" />
+        <g transform="rotate(8 320 264)"><rect x="300" y="244" width="40" height="40" rx="3" fill="#FFF4DC" /><rect x="306" y="250" width="28" height="26" fill="#8C6BB1" /></g>
+      </g>
+    );
+  }
+  return (
+    <g>
+      <defs><linearGradient id="ea-cieloCasa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8C6BB1" /><stop offset=".6" stopColor="#E9875A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+      <rect width="720" height="450" fill="url(#ea-cieloCasa)" />
+      <circle cx="600" cy="150" r="46" fill="#F2B632" />
+      <path d="M0 300 Q200 270 400 296 T720 284 L720 450 L0 450 Z" fill="#5B4785" />
+      <rect y="330" width="720" height="120" fill="#2F8A54" />
+      <rect x="380" y="170" width="250" height="170" fill="#FFF4DC" /><path d="M360 176 L505 70 L650 176 Z" fill="#D9643A" />
+      <rect x="480" y="250" width="54" height="90" rx="4" fill="#8A3A1C" /><circle cx="524" cy="298" r="4" fill="#F2B632" />
+      <rect x="406" y="210" width="50" height="44" rx="4" fill="#8CC4E8" /><rect x="556" y="210" width="50" height="44" rx="4" fill="#8CC4E8" />
+      <rect x="300" y="250" width="6" height="90" fill="#8A3A1C" /><rect x="250" y="236" width="110" height="40" rx="6" fill="#FFF8EA" />
+      <text x="305" y="263" textAnchor="middle" fill="#B0321F" fontFamily="Bricolage Grotesque, sans-serif" fontWeight="800" fontSize="17" transform="rotate(-6 305 258)">¡VENDIDA!</text>
+      <path d="M213 285 L259 244" stroke="#2F5D8A" strokeWidth="22" strokeLinecap="round" />
+      <PersonaVida x={170} y={160} s={1.2} {...L.tu} ropa="#2F5D8A" />
+      <g className="ea-vidaLlave">
+        <circle cx="262" cy="232" r="12" fill="none" stroke="#F2B632" strokeWidth="6" /><path d="M272 240 L296 262 M286 252 L280 258 M292 258 L286 264" stroke="#F2B632" strokeWidth="6" strokeLinecap="round" />
+      </g>
+    </g>
+  );
+}
+function MomentoVida({ m, onFin }) {
+  useEffect(() => {
+    if (typeof setTimeout !== "function") { onFin(); return; }
+    const t = setTimeout(onFin, sinMovimiento() ? 2500 : 4000);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, []);
+  return (
+    <div className="ea-golpeCapa">
+      <div className="ea-vidaCine" onClick={onFin}>
+        <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          {["ascenso", "despido", "casa"].indexOf(m.tipo) >= 0
+            ? <EscenaCarrera tipo={m.tipo} genero={m.genero} cargo={m.cargo} />
+            : <EscenaVida tipo={m.tipo} genero={m.genero} />}
+        </svg>
+        <div className="ea-golpeTxt">
+          <div className="ea-golpeK">{m.k}</div>
+          <div className="ea-vidaT">{m.t}</div>
+          <div className="ea-vidaEf">{(m.ef || []).map((x, i) => <span key={i}>{x}</span>)}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+/* el momento que toca: qué fue, cuándo, dónde y qué cambió */
+const ANIMO_MOMENTO = { boda: 2, hijo: 1, funeral: -2, ascenso: 1, despido: -2, casa: 1 };
+const LUGAR_MOMENTO = { boda: "La iglesia del barrio", hijo: "La clínica", funeral: "El cementerio", casa: "Tu barrio" };
+const momentoDe = (tipo, st, cambios, extra) => {
+  const x = extra || {};
+  const t = entero(st && st.turno, 0, 0, 99);
+  const mes = MESES_VIDA[(entero(st && st.semilla, 0, 0, 2e9) + t * 5 + Object.keys(ANIMO_MOMENTO).indexOf(tipo) * 3) % 12];
+  const lugar = LUGAR_MOMENTO[tipo] || texto(st && st.patron, "Tu firma", 48);
+  const n = entero(st && st.hijos, 1, 1, 8);
+  const titulo = x.titulo || (tipo === "boda" ? "Te casas"
+    : tipo === "hijo" ? (n === 1 ? "Nace tu primer hijo" : n === 2 ? "Nace tu segundo hijo" : "Nace otro hijo")
+    : tipo === "funeral" ? (x.quien ? "Despides a " + x.quien : "Despides a alguien cercano")
+    : tipo === "ascenso" ? "Ascenso a " + texto(x.cargo, "un cargo nuevo", 40)
+    : tipo === "despido" ? "Te dejan ir" : "Tu primera casa");
+  const animo = ANIMO_MOMENTO[tipo] || 0;
+  const ef = (x.antes || []).concat(["Ánimo " + (animo > 0 ? "+" : "−") + Math.abs(animo)]);
+  (Array.isArray(cambios) ? cambios : []).forEach((c) => {
+    if (!c || !c.v || c.nota) return;
+    if (c.k === "cash") ef.push((c.v > 0 ? "+" : "−") + "USD " + fmt(Math.abs(c.v)));
+    else if (ETIQ[c.k]) ef.push(ETIQ[c.k] + " " + (c.v > 0 ? "+" : "−") + Math.abs(c.v));
+  });
+  return { tipo, genero: st && st.genero, cargo: x.cargo,
+    k: mes.charAt(0).toUpperCase() + mes.slice(1) + " de " + (2026 + t) + " · " + lugar, t: titulo, ef: ef.slice(0, 4) };
+};
+
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
@@ -54410,6 +54644,10 @@ function Motor() {
   const [galaVista, setGalaVista] = useState(0);
   /* el golpe de dinero de la etapa, si lo hubo: va antes del rodillo */
   const [golpe, setGolpe] = useState(null);
+  /* los momentos que se ven en pantalla, uno tras otro (boda, hijo,
+     funeral, ascenso, despido, primera casa) */
+  const [momentos, setMomentos] = useState([]);
+  const setMomento = (m) => { if (m) setMomentos((c) => c.concat(m).slice(-4)); };
   useEffect(() => { setGalaVista(0); }, [cierre]);
   /* la segunda mitad de la leccion del año, la de las cifras propias */
   const [verLeccion, setVerLeccion] = useState(false);
@@ -54788,7 +55026,9 @@ function Motor() {
       const corta = lista.slice(0, ESCENAS_ETAPA);
       const resto = lista.slice(ESCENAS_ETAPA).filter(conJuego);
       for (let i = corta.length - 1; i >= forzadas && corta.filter(conJuego).length < minJ; i--) {
-        if (conJuego(corta[i])) continue;
+        /* la escena de vida no se cambia nunca: si no, la cadena novio,
+           boda, hijos casi no arrancaba (en 3 vidas, 0 veces) */
+        if (conJuego(corta[i]) || VIDA.indexOf(corta[i]) >= 0) continue;
         const j = resto.shift() || sacarJuego(fuenteJuego, st, usados);
         if (!j) break;
         if (usados.indexOf(j.id) < 0) usados.push(j.id);
@@ -54818,6 +55058,12 @@ function Motor() {
   const pesada = (e) => !!(e && (e.legendaria || e.rama || DRAMA_IDS.indexOf(e.id) >= 0));
   /* presenta una escena, con anuncio si toca */
   const ponerEscena = (e) => {
+    /* «Se murió»: primero el funeral, después la carta */
+    if (e && e.id === 9022) {
+      const ed = edad(s.turno, s.edadIni);
+      const quien = ed < 45 ? "tu abuela" : entero(s.semilla, 0, 0, 2e9) % 2 ? "tu papá" : "tu mamá";
+      setMomento(momentoDe("funeral", s, [], { quien }));
+    }
     setEv(e);
     setOp(null);
     irA("evento");
@@ -55086,6 +55332,8 @@ function Motor() {
       : dado < 0.44 ? elegirAzar(SORPRESAS_MALAS) : null;
     aplicarCompra(c, sor);
     if (sor) setAviso(sor.msg);
+    if (c.id === "apto") setMomento(momentoDe("casa", s, [{ k: "cash", v: -c.c }], { antes: c.up ? ["Mantenimiento USD " + fmt(c.up) + " al año"] : [] }));
+    if (c.id === "boda" && s.pareja === "noviazgo") setMomento(momentoDe("boda", s, [{ k: "cash", v: -c.c }]));
   };
 
   const aplicarCompra = (c, sor) => setS((st) => {
@@ -55100,6 +55348,7 @@ function Motor() {
     /* Si pagas la boda estando de novios, te casas: no tendria sentido
        pagarla y seguir figurando como pareja sin mas. */
     if (c.id === "boda" && st.pareja === "noviazgo") n.pareja = "casado";
+    if (c.id === "apto" || (c.id === "boda" && st.pareja === "noviazgo")) n.animo = clamp(entero(n.animo, 0, -2, 2) + (c.id === "boda" ? 2 : 1), -2, 2);
 
     if (sor) {
       if (sor.pct) n.valores = { ...n.valores, [c.id]: clamp(numero(n.valores[c.id], 0) * (1 + sor.pct), 0, TOPE_PLATA) };
@@ -55301,8 +55550,13 @@ function Motor() {
     }
 
     /* --- la vida --- */
+    /* la boda y los hijos se viven en pantalla; la muerte de alguien
+       cercano ya se vio antes de la carta, y aquí pega en el ánimo */
+    const momentoTipo = d.pareja === "casado" && s.pareja !== "casado" ? "boda"
+      : numero(d.hijos, 0) > 0 ? "hijo" : ev && ev.id === 9022 ? "funeral" : null;
     if (d.pareja && PAREJAS.indexOf(d.pareja) >= 0) st.pareja = d.pareja;
     if (d.hijos) st.hijos = entero(st.hijos + d.hijos, 0, 0, 8);
+    if (momentoTipo) st.animo = clamp(entero(st.animo, 0, -2, 2) + ANIMO_MOMENTO[momentoTipo], -2, 2);
     if (d.estudia) st.estudia = clamp(st.estudia + numero(d.estudia, 0), 0, 500);
     /* un divorcio no resta una cifra fija: se lleva un porcentaje de todo */
     if (d.patPct) {
@@ -55464,6 +55718,7 @@ function Motor() {
        que ganas sale como aviso encima de la escena siguiente y se sigue
        sin parar (23 pantallas menos en una vida desde los 20). */
     const auto = !!(ev && ev.pretemporada);
+    if (momentoTipo && momentoTipo !== "funeral") setMomento(momentoDe(momentoTipo, st, cambios));
     setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600), nivel, cambios, azar: azar || null, auto });
     irA("resultado");
   };
@@ -55978,6 +56233,18 @@ function Motor() {
       todos.push(r.cierre);
     }
     const cj = { ...juntarCierres(todos), anoIni: todos[0].ano };
+    /* el ascenso o el despido de la etapa se viven en pantalla, antes del golpe */
+    const despedido = entero(r.st.despidos, 0, 0, 9) > entero(s.despidos, 0, 0, 9);
+    if (despedido) {
+      r.st = { ...r.st, animo: clamp(entero(r.st.animo, 0, -2, 2) + ANIMO_MOMENTO.despido, -2, 2) };
+      setMomento(momentoDe("despido", r.st, [], r.st.rango < s.rango
+        ? { titulo: "Te bajan a " + cargoDe(r.st), antes: ["Cargo: " + cargoDe(r.st)] }
+        : { antes: ["Empiezas en otra firma"] }));
+    } else if (cj.ascenso) {
+      r.st = { ...r.st, animo: clamp(entero(r.st.animo, 0, -2, 2) + ANIMO_MOMENTO.ascenso, -2, 2) };
+      const subio = Math.round(sueldoCon(r.st, 1) - sueldoCon(s, 1));
+      setMomento(momentoDe("ascenso", r.st, [], { cargo: cj.ascenso, antes: subio > 0 ? ["Sueldo +USD " + fmt(subio) + " al año"] : [] }));
+    }
     const animoAntes = entero(r.st.animo, 0, -2, 2);
     let animo = animoAntes > 0 ? animoAntes - 1 : animoAntes < 0 ? animoAntes + 1 : 0;
     const g = golpeDe(cj, cj.anoIni && cj.anoIni !== cj.ano ? cj.anoIni + " y " + cj.ano : String(cj.ano));
@@ -57958,10 +58225,11 @@ function Motor() {
           el unico momento del juego que no pide leer nada: un numero
           grande girando y cuanto se movio. El informe espera debajo.
           ============================================================ */}
-      {fase === "cierre" && cierre && golpe && (
+      {momentos.length > 0 && <MomentoVida key={momentos[0].t + momentos.length} m={momentos[0]} onFin={() => setMomentos((c) => c.slice(1))} />}
+      {fase === "cierre" && cierre && golpe && !momentos.length && (
         <GolpeDinero golpe={golpe} antes={golpe.antes} despues={golpe.despues} onFin={() => setGolpe(null)} />
       )}
-      {fase === "cierre" && cierre && anuncio && !golpe && (() => {
+      {fase === "cierre" && cierre && anuncio && !golpe && !momentos.length && (() => {
         const fin = cierre.patVisible != null ? cierre.patVisible : cierre.patrimonio;
         const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
         const sube = fin >= ini;
