@@ -2829,8 +2829,10 @@ const nivelDe = (turno, estudia) => clamp(
   1 + Math.floor(entero(turno, 0, 0, 60) / 7) + Math.floor(clamp(numero(estudia, 0), 0, 500) / 55),
   1, 5
 );
-/* cuántas preguntas trae el examen según el nivel */
-const largoExamen = (nv) => (nv <= 1 ? 3 : nv <= 3 ? 4 : 5);
+/* cuántas preguntas trae el examen: tres siempre. Subían a cinco con el
+   nivel y un examen largo pesaba más que la escena que lo traía; la
+   dificultad ya la da el nivel de las preguntas. */
+const largoExamen = () => 3;
 
 /* mayoría del nivel que te toca, una de repaso y una del nivel siguiente */
 const armarExamen = (nv, cuantas, temasVistos) => {
@@ -48071,6 +48073,8 @@ const BASE = {
   /* minijuegos cuyas reglas ya se leyeron: la segunda vez no se vuelven
      a explicar enteras */
   jugados: [],
+  /* los últimos minijuegos jugados, para no repetir el mismo seguido */
+  recientes: [],
   /* movimiento: null sigue al sistema, true encendido, false apagado */
   animar: null,
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
@@ -49045,7 +49049,14 @@ const IDS_FIRMA = [9720, 9721];
    ============================================================ */
 const ID_PRE = 9790;
 /* cuántas escenas con minijuego trae cada año, como mínimo */
-const MIN_JUEGOS_ANO = 1;   /* partida corta: un minijuego por etapa */
+/* De las tres escenas de cada etapa, dos traen minijuego en una etapa y
+   una en la siguiente (Alessandro, 9-nov-2026: «que el juego se sienta
+   dinámico pero que no se sienta pesado»). No alarga la etapa: cambia
+   lectura por juego. Con una sola siempre, el 63% de las etapas acababa
+   sin jugar nada; con dos siempre, la vida pasaba de 45 minutos. */
+const MIN_JUEGOS_ANO = 2;
+/* las etapas alternan: dos minijuegos en una, uno en la siguiente */
+const juegosEtapa = (turno) => (Math.floor(entero(turno, 0, 0, 99) / 2) % 2 === 0 ? MIN_JUEGOS_ANO : 1);
 const CARTAS_PRE = {
   ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
   /* modelaje y criterio son ya una sola habilidad: un solo mazo, para
@@ -49579,6 +49590,7 @@ const sanear = (bruto) => {
      de lo que ya tenía en pantalla. */
   st.temas = unicos(listaDe(r.temas, (x) => TEMAS.some((t) => t.id === x), 60));
   st.jugados = unicos(listaDe(r.jugados, (x) => !!JUEGOS[x], 30));
+  st.recientes = listaDe(r.recientes, (x) => !!JUEGOS[x], 6);
   st.animar = r.animar === true ? true : r.animar === false ? false : null;
   /* El patrón puede ser una firma de la tabla o una firma tuya, así que
      se acota por longitud en vez de por lista cerrada. */
@@ -51171,9 +51183,9 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
      veces no tiene por que esperar */
   useEffect(() => {
     if (paso !== "anuncio") return;
-    if (typeof setTimeout !== "function") { setPaso("reglas"); return; }
+    if (typeof setTimeout !== "function") { trasAnuncio(); return; }
     const espera = sinMovimiento() ? 60 : 1150;
-    const t = setTimeout(() => setPaso("reglas"), espera);
+    const t = setTimeout(trasAnuncio, espera);
     return () => { try { clearTimeout(t); } catch (e) {} };
   }, [paso]);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
@@ -51201,13 +51213,17 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
   }
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
   const empezar = () => { if (onVisto) onVisto(tipo); setListo(true); };
+  /* Un minijuego que ya jugaste no vuelve a pedir que leas las reglas:
+     del anuncio se entra a jugar (Alessandro, 9-nov-2026: «que no se
+     sienta pesado»). Las reglas siguen a un toque desde el anuncio. */
+  const trasAnuncio = () => { if (visto) empezar(); else setPaso("reglas"); };
 
   /* ---- paso uno: el anuncio ----
      Una pantalla de color que no pide leer nada. Solo avisa de que esto
      ya no es una decision, es otra cosa. */
   if (paso === "anuncio") {
     return (
-      <div className="ea-anuncioJuego" onClick={() => setPaso("reglas")}>
+      <div className="ea-anuncioJuego" onClick={trasAnuncio}>
         <div className="ea-anuncioJK ea-dis">Hora de jugar</div>
         <div className="ea-anuncioJN ea-dis">{j.n}</div>
         <div className="ea-anuncioJT ea-dis">{j.tema} · {j.dur}</div>
@@ -54023,6 +54039,33 @@ function Motor() {
     return pool.length ? elegirAzar(pool) : null;
   };
 
+  /* Como sacar, pero para las escenas con minijuego: pesa más lo que no
+     has jugado nunca y mucho menos lo que jugaste hace poco. Al azar
+     puro, de veinte minijuegos se veían cinco por vida y la negociación
+     se llevaba un tercio. */
+  const sacarJuego = (fuente, st, usados) => {
+    const cabe = (e) => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0
+      && !(e.cultura && (!culturaDe(st) || culturaDe(st).k !== e.cultura))
+      && !(sinJefe(st) && esDeEmpleado(e)) && !(e.dueno && !sinJefe(st)) && huellasOk(e, st);
+    const pool = fuente.filter((e) => cabe(e) && st.vistos.indexOf(e.id) < 0);
+    if (!pool.length) return null;
+    const jug = Array.isArray(st.jugados) ? st.jugados : [];
+    const rec = Array.isArray(st.recientes) ? st.recientes : [];
+    const peso = (e) => {
+      const tipos = (e.o || []).map((o) => o && (o.j || o.juego)).filter(Boolean);
+      if (!tipos.length) return 1;
+      return Math.max.apply(null, tipos.map((k) => {
+        const i = rec.lastIndexOf(k);
+        if (i >= 0) return i >= rec.length - 2 ? 0.08 : 0.35;
+        return jug.indexOf(k) < 0 ? 3 : 1;
+      }));
+    };
+    const total = pool.reduce((a, e) => a + peso(e), 0);
+    let x = azar() * total;
+    for (let i = 0; i < pool.length; i++) { x -= peso(pool[i]); if (x <= 0) return pool[i]; }
+    return pool[pool.length - 1];
+  };
+
   /* escenas de vida disponibles: filtran por edad y por estado familiar,
      y las marcadas "una" no se repiten nunca en la misma partida */
   const vidaDisponible = (st) => {
@@ -54201,26 +54244,32 @@ function Motor() {
     const conJuego = (e) => !!(e && Array.isArray(e.o) && e.o.some((o) => o && (o.j || o.juego)));
     const fuenteJuego = fuente.filter(conJuego);
     let juegos = lista.filter(conJuego).length;
+    const minJ = juegosEtapa(st.turno);
     while (lista.length < objetivo) {
-      const e = (juegos < MIN_JUEGOS_ANO && sacar(fuenteJuego, st, usados, true)) || sacar(fuente, st, usados);
+      const e = (juegos < minJ && sacarJuego(fuenteJuego, st, usados)) || sacar(fuente, st, usados);
       if (!e) break;
       lista.push(e); usados.push(e.id);
       if (conJuego(e)) juegos += 1;
     }
-    if (juegos < MIN_JUEGOS_ANO) {
-      const e = sacar(fuenteJuego, st, usados, true);
+    if (juegos < minJ) {
+      const e = sacarJuego(fuenteJuego, st, usados);
       if (e) { lista.push(e); usados.push(e.id); }
     }
     /* Partida corta: de todo lo que el año quería contar, se quedan las
        ESCENAS_ETAPA primeras (lo forzado va delante: apertura, contrato,
        firma...). Lo que no entra no se pierde: vuelve a intentarlo la
-       etapa que viene. Si ninguna trae minijuego, la última se cambia por
-       una que sí. */
+       etapa que viene. Si traen menos minijuegos de los que toca, las
+       últimas sin juego se cambian por escenas que sí (nunca lo forzado:
+       contrato, apertura, firma...). */
     {
-      let corta = lista.slice(0, ESCENAS_ETAPA);
-      if (!corta.some(conJuego)) {
-        const j = lista.slice(ESCENAS_ETAPA).find(conJuego) || sacar(fuenteJuego, st, usados, true);
-        if (j) corta = corta.slice(0, ESCENAS_ETAPA - 1).concat(j);
+      const corta = lista.slice(0, ESCENAS_ETAPA);
+      const resto = lista.slice(ESCENAS_ETAPA).filter(conJuego);
+      for (let i = corta.length - 1; i >= forzadas && corta.filter(conJuego).length < minJ; i--) {
+        if (conJuego(corta[i])) continue;
+        const j = resto.shift() || sacarJuego(fuenteJuego, st, usados);
+        if (!j) break;
+        if (usados.indexOf(j.id) < 0) usados.push(j.id);
+        corta[i] = j;
       }
       lista.length = 0;
       corta.forEach((e) => lista.push(e));
@@ -54604,6 +54653,10 @@ function Motor() {
     const d = dBruto && typeof dBruto === "object" ? dBruto : {};
     const nivel = nivelBruto === "exito" || nivelBruto === "parcial" || nivelBruto === "fallo" ? nivelBruto : "parcial";
     let st = { ...s, valores: { ...s.valores } };
+    /* el minijuego que se acaba de jugar, para variar los que vienen */
+    if (o && (o.j || o.juego) && JUEGOS[o.j || o.juego]) {
+      st.recientes = (Array.isArray(st.recientes) ? st.recientes : []).concat(o.j || o.juego).slice(-6);
+    }
     const cambios = [];
     /* los minijuegos ganados: uno de los objetivos del día los cuenta */
     if (nivel === "exito" && o && (o.j || o.juego)) st.ganados = entero(numero(st.ganados, 0) + 1, 0, 0, 999);
@@ -54882,7 +54935,11 @@ function Motor() {
       nivel, cash: numero(enCaja, 0),
     }).slice(-6);
 
-    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600), nivel, cambios, azar: azar || null });
+    /* La carta del «Inicio de etapa» no tiene pantalla de resultado: lo
+       que ganas sale como aviso encima de la escena siguiente y se sigue
+       sin parar (23 pantallas menos en una vida desde los 20). */
+    const auto = !!(ev && ev.pretemporada);
+    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600), nivel, cambios, azar: azar || null, auto });
     irA("resultado");
   };
 
@@ -55497,14 +55554,21 @@ function Motor() {
     resolverEscena(base || {}, nivel, op);
   };
 
+  /* el aviso de lo que dio la carta del inicio de etapa */
+  const [flash, setFlash] = useState(null);
   const siguienteEscena = () => {
     if (!enFase("resultado")) return;
+    setFlash(res && res.auto ? { msg: res.msg, cambios: res.cambios } : null);
     const resto = (Array.isArray(cola) ? cola : []).filter(escenaValida);
     if (resto.length > 0) {
       setCola(resto.slice(1)); ponerEscena(resto[0]);
       guardarEscena(s, resto);
     } else cerrarAno();
   };
+  /* el resultado de la carta del inicio de etapa se pasa solo */
+  useEffect(() => {
+    if (fase === "resultado" && res && res.auto) siguienteEscena();
+  }, [fase, res]);
 
   const siguienteAno = () => {
     if (!enFase("cierre")) return;
@@ -56903,6 +56967,17 @@ function Motor() {
                   {/* De donde viene. Sin esta linea una consecuencia se lee
                       como una escena mas y el jugador no ve que fue EL
                       quien la provoco, que es todo lo que se busca. */}
+                  {/* lo que dio la carta del inicio de etapa, sin pantalla propia */}
+                  {flash && !ev.pretemporada && Array.isArray(flash.cambios) && flash.cambios.some((c) => (c.nota || c.v) && c.k !== "cash") && (
+                    <div className="ea-cambios" style={{ marginTop: 0, marginBottom: 10 }}>
+                      <span className="ea-chip ea-dis">Inicio de etapa</span>
+                      {flash.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").map((c, i) => (
+                        <span className={"ea-chip ea-mono k-" + c.k + " " + (c.k === "deuda" || c.neg ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}>
+                          {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v)}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   {ev.por && (
                     <div className="ea-porQue"><Icono k="eco" tam={14} /><span>Viene de: {ev.por}{(() => {
                       const pp = (Array.isArray(s.pendientes) ? s.pendientes : []).find((x) => x.id === ev.id && x.p != null);
