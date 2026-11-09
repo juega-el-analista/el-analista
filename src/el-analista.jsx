@@ -47822,16 +47822,21 @@ const escogerLeccion = (c, usadas) => {
 };
 
 /* hitos: solo se celebran la primera vez que se cruzan */
+/* Dicen qué pasó, con la cifra: «Cincuenta mil» suelto no se entendía
+   (Alessandro, 9-nov-2026: «¿cincuenta mil qué?»). */
 const HITOS = [
-  { v: 10000, t: "Primeros diez mil" },
-  { v: 50000, t: "Cincuenta mil" },
-  { v: 100000, t: "Seis cifras" },
-  { v: 250000, t: "Un cuarto de millón" },
-  { v: 500000, t: "Medio millón" },
-  { v: 1000000, t: "El primer millón" },
-  { v: 3000000, t: "Tres millones" },
-  { v: 10000000, t: "Ocho cifras" },
+  { v: 10000, t: "Pasaste los USD 10.000" },
+  { v: 50000, t: "Pasaste los USD 50.000" },
+  { v: 100000, t: "Pasaste los USD 100.000" },
+  { v: 250000, t: "Pasaste los USD 250.000" },
+  { v: 500000, t: "Llegaste a medio millón de dólares" },
+  { v: 1000000, t: "Tu primer millón de dólares" },
+  { v: 3000000, t: "Pasaste los USD 3 millones" },
+  { v: 10000000, t: "Pasaste los USD 10 millones" },
 ];
+/* el nombre corto de cada activo, para decir en qué ganaste o perdiste */
+const NOMBRE_CORTO = { bonos: "Bonos", corp: "Deuda de empresas", acciones: "Acciones", reits: "Inmuebles en bolsa",
+  oro: "Oro", distressed: "Deuda en problemas", cripto: "Cripto", efectivo: "Efectivo", otros: "Otros" };
 
 /* ============================================================
    GUARDAR LA PARTIDA
@@ -49140,6 +49145,12 @@ const juntarCierres = (cs) => {
     antes: pri.cartera ? pri.cartera.antes : ult.cartera.antes,
     ret: cs.reduce((a, c) => a * (1 + numero(c.cartera && c.cartera.ret, 0)), 1) - 1,
     aporte: cs.reduce((a, c) => a + numero(c.cartera && c.cartera.aporte, 0), 0),
+    ganancias: (() => {
+      const m = new Map();
+      cs.forEach((c) => (c.cartera && Array.isArray(c.cartera.ganancias) ? c.cartera.ganancias : [])
+        .forEach((g) => m.set(g.k, (m.get(g.k) || 0) + numero(g.v, 0))));
+      return Array.from(m, ([k, v]) => ({ k, v }));
+    })(),
     camino: cs.reduce((a, c, i) => a.concat(c.cartera && Array.isArray(c.cartera.camino)
       ? (i ? c.cartera.camino.slice(1) : c.cartera.camino) : []), []),
     hitos: [],
@@ -52365,12 +52376,33 @@ function Desglose({ partes, oscuro }) {
   const filas = [
     ["Tus decisiones", partes.decisiones],
     ["Sueldo menos gastos", partes.sueldo],
-    ["Mercados", partes.mercados],
+    ["Tus inversiones", partes.mercados],
     ["Compras y lo demás", partes.otros],
   ].filter(([, v]) => Number.isFinite(v) && Math.abs(v) >= 1);
   if (!filas.length) return null;
   return (
     <div className={"ea-desglose" + (oscuro ? " oscuro" : "")}>
+      {filas.map(([n, v]) => (
+        <span key={n}><i>{n}</i> <b className={"ea-mono " + (v >= 0 ? "sube" : "baja")}>{v >= 0 ? "+" : "−"}{fmt(Math.abs(v))}</b></span>
+      ))}
+    </div>
+  );
+}
+
+/* En qué ganaste o perdiste lo invertido, con nombres de todos los días:
+   «Acciones +1.500 · Bonos −200». Las cuatro que más movieron; el resto
+   junto. Sin nada invertido, no sale. */
+function EnQueInvertiste({ cartera }) {
+  const gs = (cartera && Array.isArray(cartera.ganancias) ? cartera.ganancias : [])
+    .filter((g) => g && Number.isFinite(g.v) && Math.abs(g.v) >= 1)
+    .sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
+  if (!gs.length) return null;
+  const filas = gs.slice(0, 4).map((g) => [NOMBRE_CORTO[g.k] || "Otros", g.v]);
+  const resto = gs.slice(4).reduce((a, g) => a + g.v, 0);
+  if (Math.abs(resto) >= 1) filas.push(["Lo demás", resto]);
+  return (
+    <div className="ea-desglose oscuro" style={{ marginTop: 6 }}>
+      <span><i>En qué:</i></span>
       {filas.map(([n, v]) => (
         <span key={n}><i>{n}</i> <b className={"ea-mono " + (v >= 0 ? "sube" : "baja")}>{v >= 0 ? "+" : "−"}{fmt(Math.abs(v))}</b></span>
       ))}
@@ -55231,9 +55263,9 @@ function Motor() {
       const rA = a.mu + a.sd * vol * (a.b * zm + idio * gauss()) + imp;
       ret += x * rA;
       beta += x * a.b;
-      detalle.push({ n: a.n, w: x, r: rA });
+      detalle.push({ n: a.n, k: a.k, w: x, r: rA });
     });
-    if (wEf > 0.005) detalle.push({ n: "Efectivo dentro de la cartera", w: wEf, r: EFECTIVO_MU });
+    if (wEf > 0.005) detalle.push({ n: "Efectivo dentro de la cartera", k: "efectivo", w: wEf, r: EFECTIVO_MU });
     detalle.sort((a, b) => b.w - a.w);
     if (tiene(st, "terminal")) ret += 0.01;
     if (tipoRama(st) === "patrimonio") ret += 0.02;
@@ -55253,7 +55285,12 @@ function Motor() {
       ...x, mes: Math.max(1, Math.min(12, Math.round(((i + 1) * 12) / (cuantos + 1)))),
     }));
     st.curva = (Array.isArray(st.curva) ? st.curva : []).concat(camino.slice(1)).slice(-TOPE_CURVA);
-    const cartera = { antes: carteraAntes, despues: st.cartera, ret, detalle, aporte, obj, mu: est.mu, sd: est.sd, beta, camino, hitos: hitosDecision };
+    /* lo que ganó o perdió cada cosa en la que tienes dinero; lo que no
+       sale de un activo (la terminal, la rama, un golpe) va en «Otros» */
+    const ganancias = detalle.map((d) => ({ k: d.k, v: carteraAntes * d.w * d.r }));
+    const restoG = (st.cartera - carteraAntes) - ganancias.reduce((a, g) => a + g.v, 0);
+    if (Math.abs(restoG) >= 1) ganancias.push({ k: "otros", v: restoG });
+    const cartera = { antes: carteraAntes, despues: st.cartera, ret, detalle, ganancias, aporte, obj, mu: est.mu, sd: est.sd, beta, camino, hitos: hitosDecision };
 
     /* ---- bienes ---- */
     st.bienes.forEach((id) => {
@@ -57425,16 +57462,21 @@ function Motor() {
                 finales.js para saber cuantos años se jugaron, y esta en
                 la cabecera del informe. Repetirla aqui hacia que cada
                 año se contara dos veces. */}
-            <div className="ea-anuncioK ea-dis">{cierre.anoIni && cierre.anoIni !== cierre.ano ? "De " + cierre.anoIni + " a " + cierre.ano : "Cierre de " + cierre.ano}</div>
+            {/* Los años de la etapa, uno y otro, y lo que tienes hoy.
+                «De 2028 a 2029» y luego «en estos 2 años» no se entendía
+                (Alessandro, 9-nov-2026). */}
+            <div className="ea-anuncioK ea-dis">{cierre.anoIni && cierre.anoIni !== cierre.ano ? cierre.anoIni + " y " + cierre.ano : "Cierre de " + cierre.ano}</div>
+            <div className="ea-anuncioL" style={{ marginTop: 0, marginBottom: 6, animation: "none" }}>Tu patrimonio</div>
             <div className="ea-anuncioN ea-mono">
               <span className="ea-anuncioU ea-dis">USD</span>
               <Rodillo v={fin} />
             </div>
-            <div className={"ea-anuncioD ea-mono " + (sube ? "sube" : "baja")}
+            <div className={"ea-anuncioD ea-dis " + (sube ? "sube" : "baja")}
               style={{ animationDelay: "1.5s" }}>
-              {sube ? "+" : "−"}{fmt(dif)} {cierre.anos > 1 ? "en estos " + cierre.anos + " años" : "en el año"}
+              {dif < 1 ? "Te quedaste igual" : (sube ? "Ganaste USD " : "Perdiste USD ") + fmt(dif)}
             </div>
             <Desglose partes={cierre.partes} oscuro />
+            <EnQueInvertiste cartera={cierre.cartera} />
             {cierre.ascenso && (
               <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.8s", color: "var(--cobre)", fontSize: 16 }}>
                 Ascenso a {cierre.ascenso}

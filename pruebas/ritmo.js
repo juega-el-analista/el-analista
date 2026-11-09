@@ -101,7 +101,7 @@ async function unaVida(semilla) {
     if (/Algo se rompió/.test(t)) { fin = "error"; break; }
     if (/Vivir otra vida/.test(t)) { fin = "fin"; break; }
     if (t !== ultT) { et.pantallas++; et.seg += 4; ultT = t; }
-    const mA = t.match(/(?:Así terminó|Cierre de|De \d{4} a) (\d{4})/);
+    const mA = t.match(/(?:Así terminó|Cierre de|De \d{4} a|\d{4} y) (\d{4})/);
     if (mA && mA[1] !== ultimoAno) { ultimoAno = mA[1]; etapas.push(et); et = nueva(); }
     /* el minijuego se reconoce por su tarjeta montada y su tipo */
     let tj = [];
