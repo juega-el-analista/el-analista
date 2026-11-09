@@ -1066,7 +1066,7 @@ const JUEGOS = {
     ensena: "Ejecutar dentro de un rango de precio. Entrar a 100 o a 103 en la misma idea es la diferencia entre ganar y empatar.",
   },
   memoria: {
-    n: "Peinar el legajo", tema: "Memoria de trabajo", dur: "30 s",
+    n: "Repasar el expediente", tema: "Memoria de trabajo", dur: "30 s",
     i: "Tres rondas. Las casillas se encienden en un orden y tienes que repetirlo. Cada ronda es un recorrido nuevo.",
     pasos: [
       "Ronda uno: se encienden 3 casillas. Tócalas en el mismo orden.",
@@ -1080,7 +1080,7 @@ const JUEGOS = {
     n: "Ojo clínico", tema: "Detalle contable", dur: "20 s",
     i: "Una cifra no cuadra con las demás. Encuéntrala antes de que se acabe el tiempo.",
     pasos: [
-      "Aparece una grilla de cifras casi idénticas.",
+      "Aparece una cuadrícula de cifras casi idénticas.",
       "Una sola rompe el patrón del resto.",
       "Tócala antes de que corra el reloj.",
     ],
@@ -1111,9 +1111,9 @@ const JUEGOS = {
   },
   tresraya: {
     n: "El pulso", tema: "Negociación", dur: "40 s",
-    i: "Tres en raya contra la contraparte, con lo que eso significa en una mesa.",
+    i: "Tres en línea contra la contraparte, con lo que eso significa en una mesa.",
     pasos: [
-      "Juegas tres en raya contra el otro lado de la mesa.",
+      "Juegas tres en línea contra el otro lado de la mesa.",
       "Ganar es cerrar en tus términos.",
       "Empatar es partir la diferencia, que muchas veces es el resultado realista.",
     ],
@@ -2206,7 +2206,7 @@ const BANCO = [
   { q: "En un earn out, parte del precio se paga", o: ["contra resultados futuros del negocio", "por adelantado en efectivo", "siempre en acciones del comprador"], c: 0, e: "Sirve para cerrar la brecha entre lo que el vendedor cree que vale y lo que el comprador paga hoy." },
   { q: "El costo del capital propio comparado con el costo de la deuda de la misma empresa", o: ["es mayor", "es menor", "es igual"], c: 0, e: "El accionista cobra último, así que exige más." },
   { q: "Una empresa con flujo de caja libre negativo y utilidad contable positiva probablemente", o: ["está financiando capital de trabajo o inversión", "está inflando ingresos siempre", "no tiene deuda"], c: 0, e: "No es fraude por definición, pero es la primera pregunta que hay que hacer." },
-  { q: "Regla del 4%: para retirar cuarenta mil al año necesitas un patrimonio de", o: ["un millón", "cuatrocientos mil", "cuatro millones"], c: 0, e: "Es una regla gruesa, pero sirve para saber cuánto te falta.", pista: "Al revés de como suena: si puedes retirar el 4% al año, el patrimonio que necesitas es 25 veces lo que quieres retirar." },
+  { q: "Regla del 4%: para retirar cuarenta mil dólares al año necesitas un patrimonio de", o: ["un millón", "cuatrocientos mil", "cuatro millones"], c: 0, e: "Es una regla gruesa, pero sirve para saber cuánto te falta.", pista: "Al revés de como suena: si puedes retirar el 4% al año, el patrimonio que necesitas es 25 veces lo que quieres retirar." },
   { q: "Si tu portafolio cae 50%, para volver al punto de partida necesitas", o: ["subir 100%", "subir 50%", "subir 75%"], c: 0, e: "La asimetría de las pérdidas es la razón por la que se cuida la caída máxima." },
 ];
 
@@ -2238,7 +2238,7 @@ const BANCO0 = [
   { q: "Un seguro tiene sentido cuando", o: ["el evento es improbable pero te arruinaría", "el evento es frecuente y barato", "quieres invertir con ventaja"], c: 0, e: "Se asegura lo catastrófico, no lo molesto. Mezclar seguro con inversión suele salir caro." },
   { q: "Aportar la misma cantidad todos los meses sin importar el precio", o: ["te evita tener que adivinar el momento de entrar", "garantiza mejor retorno que entrar de golpe", "solo funciona en mercados alcistas"], c: 0, e: "No maximiza el retorno esperado, pero elimina la peor decisión: no entrar nunca por miedo." },
   { q: "Regla del setenta y dos: al 9% anual, tu capital se duplica en cerca de", o: ["ocho años", "doce años", "cinco años"], c: 0, e: "Setenta y dos entre la tasa da los años. Sirve para hacer la cuenta sin calculadora.", pista: "Divide 72 entre la tasa anual y obtienes los años que tarda el capital en duplicarse. Es una aproximación de cabeza, no una fórmula exacta." },
-  { q: "El costo de oportunidad de dejar veinte mil parados en la cuenta corriente durante diez años es", o: ["todo lo que habrían rendido invertidos", "cero, porque no perdiste nada", "solo la inflación de un año"], c: 0, e: "Lo que no hiciste con el dinero también cuenta, aunque nunca aparezca en un estado de cuenta." },
+  { q: "El costo de oportunidad de dejar veinte mil dólares parados en la cuenta durante diez años es", o: ["todo lo que habrían rendido invertidos", "cero, porque no perdiste nada", "solo la inflación de un año"], c: 0, e: "Lo que no hiciste con el dinero también cuenta, aunque nunca aparezca en un estado de cuenta." },
   { q: "En un país con devaluación recurrente, ahorrar en moneda local a largo plazo", o: ["te expone a perder valor frente a la moneda dura", "es más seguro porque es tu moneda", "solo importa si viajas"], c: 0, e: "Tus gastos futuros grandes suelen estar indexados al dólar aunque los pagues en local." },
   { q: "Dos fondos con la misma estrategia, uno cobra 0,2% al año y el otro dos. En treinta años", o: ["la diferencia de comisión se come una parte enorme del capital final", "la diferencia es marginal", "gana el más caro por mejor gestión"], c: 0, e: "La comisión se compone igual que el retorno, solo que en tu contra y con total certeza." },
   { q: "Antes de invertir en algo, la primera pregunta debería ser", o: ["cómo pierdo dinero en esto", "cuánto puedo ganar", "quién más está entrando"], c: 0, e: "Si no puedes explicar el escenario en que pierdes, todavía no entiendes la inversión." },
@@ -2394,7 +2394,7 @@ const BANCO2 = [
   { q: "El carried interest estándar de un fondo es", o: ["20% sobre un retorno preferente", "20% sobre todo el capital", "2% anual"], c: 0, e: "El 2% es la comisión de administración, el veinte es la participación en las ganancias." },
   { q: "El retorno preferente típico que se paga a los LP antes del carry ronda", o: ["8% anual", "20% anual", "2% anual"], c: 0, e: "Debajo de ese umbral el gestor no participa de las ganancias." },
   { q: "Un fondo con TVPI de dos y DPI de cero coma cinco significa que", o: ["la mayor parte del valor todavía no se ha realizado", "ya se devolvió todo el capital", "el fondo perdió dinero"], c: 0, e: "El valor está en el papel hasta que haya salidas de verdad." },
-  { q: "La curva J de un fondo describe", o: ["retornos negativos al principio por comisiones y costos", "el crecimiento exponencial del capital", "la caída del mercado al final del ciclo"], c: 0, e: "Se cobran comisiones desde el día uno y las salidas llegan años después." },
+  { q: "La curva J de un fondo describe", o: ["retornos negativos al principio por comisiones y costos", "el crecimiento exponencial del capital", "la caída del mercado al final del ciclo"], c: 0, e: "Se cobran comisiones desde el primer día y las salidas llegan años después." },
   { q: "El dry powder de un fondo es", o: ["capital comprometido y todavía no invertido", "las utilidades no distribuidas", "la reserva legal"], c: 0, e: "Es la munición disponible para nuevas operaciones." },
   { q: "Una empresa con alto apalancamiento operativo tiene", o: ["utilidades que se mueven más que sus ventas", "utilidades muy estables", "poca deuda por definición"], c: 0, e: "Los costos fijos amplifican tanto las subidas como las caídas." },
   { q: "Si suben los costos fijos, el punto de equilibrio", o: ["sube", "baja", "no cambia"], c: 0, e: "Hay que vender más unidades para cubrir la misma estructura." },
@@ -2445,7 +2445,7 @@ const GLOSARIO = {
   interesCompuesto: { n: "Interés compuesto", x: "Cuando lo que ganas empieza a generar ganancias por su cuenta. Ganas sobre tu dinero, y al año siguiente ganas sobre tu dinero más lo que ganaste. Al principio es imperceptible; a los veinte años es la mayor parte de tu patrimonio." },
   inflacion: { n: "Inflación", x: "Que las cosas cuesten más cada año. Si tu dinero está quieto y la inflación es 5%, dentro de un año compras 5% menos con lo mismo. Guardar efectivo no es neutral: es perder despacio." },
   volatilidad: { n: "Volatilidad", x: "Cuánto se mueve el precio de algo. Alta volatilidad significa años de subir mucho y años de caer mucho. No es lo mismo que riesgo de perderlo todo, pero se siente parecido cuando estás mirando." },
-  diversificar: { n: "Diversificar", x: "No poner todo en el mismo sitio. La gracia es que si las cosas que tienes no suben y bajan al mismo tiempo, el conjunto se mueve menos que cada parte por separado." },
+  diversificar: { n: "Diversificar", x: "No poner todo en el mismo lugar. La gracia es que si las cosas que tienes no suben y bajan al mismo tiempo, el conjunto se mueve menos que cada parte por separado." },
   liquidez: { n: "Liquidez", x: "Qué tan rápido puedes convertir algo en dinero sin malbaratar. El efectivo es líquido, un apartamento no. Un activo excelente pero ilíquido no te sirve si mañana necesitas pagar algo." },
   riesgo: { n: "Riesgo", x: "La posibilidad de que el resultado no sea el que esperabas. En finanzas casi nunca se elimina, se cambia de forma: menos riesgo de perder suele venir con menos posibilidad de ganar." },
   rendimiento: { n: "Rendimiento o retorno", x: "Lo que ganaste, en porcentaje de lo que pusiste. Si pusiste 100 y ahora tienes 107, tu rendimiento fue 7%." },
@@ -2462,7 +2462,7 @@ const GLOSARIO = {
   opcion: { n: "Opción", x: "El derecho, no la obligación, de comprar o vender algo a un precio fijado. Se paga una prima por ese derecho. Gana valor cuando el precio se mueve a favor y también cuando hay más incertidumbre." },
   cobertura: { n: "Cobertura", x: "Montar una posición que gane justo cuando tu negocio pierde, para que el conjunto se mueva menos. No busca ganar dinero: busca que un movimiento de precios o de moneda no te descoloque." },
   activo: { n: "Activo", x: "Cualquier cosa que tengas y que valga algo: dinero, una acción, un local, una máquina. La prueba de fuego es si alguien te lo compraría. Un gasto ya hecho no es un activo por mucho que costara." },
-  costoOportunidad: { n: "Costo de oportunidad", x: "Lo que dejas de ganar por elegir una cosa en vez de otra. Tener dinero parado en la cuenta no es gratis: cuesta exactamente lo que habría rendido en otro sitio." },
+  costoOportunidad: { n: "Costo de oportunidad", x: "Lo que dejas de ganar por elegir una cosa en vez de otra. Tener dinero parado en la cuenta no es gratis: cuesta exactamente lo que habría rendido en otro lado." },
   seguro: { n: "Seguro", x: "Pagar una cantidad pequeña y segura para no tener que pagar una enorme e improbable. Tiene sentido cuando el golpe que cubre te arruinaría; no lo tiene para cosas que podrías pagar de tu bolsillo." },
   multiplo: { n: "Múltiplo de valoración", x: "Cuántas veces sus ganancias vale una empresa. Un múltiplo alto significa que el mercado espera crecimiento; también significa que estás pagando por un futuro que aún no ocurrió." },
   distressed: { n: "Deuda distressed", x: "Deuda de empresas en problemas, que se compra muy por debajo de su valor nominal. Se apuesta a que la empresa se recupere o a que al liquidarla quede más de lo que pagaste." },
@@ -2492,7 +2492,7 @@ const TEMAS = [
   {
     id: "invertir", nv: 1, n: "Qué significa invertir",
     x: "Invertir es entregarle tu dinero a algo que trabaja mientras tú no estás: una empresa, un gobierno, un inmueble. A cambio de ese uso, esperas recibir más de lo que pusiste. No es apostar, porque apostar es un juego de suma cero donde alguien gana lo que otro pierde; invertir es participar de algo que produce valor nuevo.",
-    ej: "Le prestas 1.000 a una panadería que abre un local nuevo. El local vende, la panadería te devuelve 1.080. Los 80 no se los quitaste a nadie: los produjo el pan que se vendió.",
+    ej: "Le prestas USD 1.000 a una panadería que abre un local nuevo. El local vende, la panadería te devuelve 1.080. Los 80 no se los quitaste a nadie: los produjo el pan que se vendió.",
     q: [
       { q: "¿Cuál es la diferencia de fondo entre invertir y apostar?", ops: ["Invertir participa de algo que produce valor; apostar solo reparte el dinero que ya existe", "Invertir siempre gana y apostar siempre pierde", "Invertir es legal y apostar no", "No hay diferencia real, solo el nombre"], correcta: "Invertir participa de algo que produce valor; apostar solo reparte el dinero que ya existe", e: "En la apuesta, lo que tú ganas alguien lo perdió. En la inversión productiva puede crecer el total, y por eso a largo plazo hay un retorno esperado positivo." },
       { q: "Si una inversión te promete rendimiento alto y garantizado, ¿qué es lo más sensato pensar?", ops: ["Que algo no cuadra: rendimiento alto y garantía no van juntos", "Que hay que entrar rápido antes de que se acabe", "Que el que la ofrece encontró una fórmula mejor", "Que es una buena forma de empezar por ser segura"], correcta: "Que algo no cuadra: rendimiento alto y garantía no van juntos", e: "Es la señal más confiable de una estafa. Si de verdad existiera rendimiento alto sin riesgo, el dinero institucional lo habría absorbido antes de que llegara a ti." },
@@ -2502,19 +2502,19 @@ const TEMAS = [
   {
     id: "compuesto", nv: 1, n: "El interés compuesto",
     x: "Si ganas 8% sobre 100, tienes 108. Al año siguiente ganas 8% sobre 108, no sobre 100. Esa diferencia mínima, repetida treinta veces, es lo que separa a alguien que terminó con dinero de alguien que no. Lo importante no es la tasa: es el número de años que dejas que corra.",
-    ej: "1.000 al 8% anual: a los 10 años son 2.159, a los 20 son 4.661, a los 30 son 10.063. Los primeros diez años aportaron 1.159; los últimos diez aportaron 5.400.",
+    ej: "USD 1.000 al 8% anual: a los 10 años son 2.159, a los 20 son 4.661, a los 30 son 10.063. Los primeros diez años aportaron 1.159; los últimos diez aportaron 5.400.",
     q: [
       { q: "¿Cuál de estos dos factores pesa más en el resultado final a treinta años?", ops: ["Los años que el dinero lleva invertido", "Acertar el mejor momento para entrar", "La cantidad de operaciones que hagas", "El nombre del fondo que elijas"], correcta: "Los años que el dinero lleva invertido", e: "El tiempo entra al cálculo como exponente y la tasa como base. Por eso empezar diez años antes suele ganarle a rendir dos puntos más." },
-      { q: "Alguien invierte 200 al mes desde los 25 y para a los 35. Otro invierte lo mismo desde los 35 hasta los 65. ¿Quién suele terminar con más a los 65?", ops: ["Depende de la tasa, pero el primero muchas veces gana aunque puso mucho menos", "Siempre el segundo, porque puso tres veces más dinero", "Siempre empatan", "El primero, con seguridad, en cualquier escenario"], correcta: "Depende de la tasa, pero el primero muchas veces gana aunque puso mucho menos", e: "Es el ejemplo clásico del coste de esperar. Con tasas altas el que empezó antes gana; con tasas bajas no siempre. Lo que nunca cambia es que sus aportes valieron mucho más por unidad." },
+      { q: "Alguien invierte USD 200 al mes desde los 25 y para a los 35. Otro invierte lo mismo desde los 35 hasta los 65. ¿Quién suele terminar con más a los 65?", ops: ["Depende de la tasa, pero el primero muchas veces gana aunque puso mucho menos", "Siempre el segundo, porque puso tres veces más dinero", "Siempre empatan", "El primero, con seguridad, en cualquier escenario"], correcta: "Depende de la tasa, pero el primero muchas veces gana aunque puso mucho menos", e: "Es el ejemplo clásico del costo de esperar. Con tasas altas el que empezó antes gana; con tasas bajas no siempre. Lo que nunca cambia es que sus aportes valieron mucho más por unidad." },
       { q: "Una pérdida del 50%, ¿con qué ganancia se recupera?", ops: ["100%", "50%", "75%", "Depende del activo"], correcta: "100%", e: "De 100 caes a 50; para volver a 100 necesitas duplicar. Esta asimetría es la razón de fondo por la que evitar caídas grandes importa más que capturar subidas grandes." },
     ],
   },
   {
     id: "inflacion", nv: 1, n: "La inflación",
     x: "La inflación es la subida general de los precios. Si es 5%, lo que hoy cuesta 100 el año que viene cuesta 105. Tu sueldo y tus ahorros valen en función de lo que compran, no de la cifra que dicen. Por eso el rendimiento que importa es el real: lo que ganaste menos la inflación.",
-    ej: "Ganaste 3% en el año y la inflación fue seis. Tu número subió, tu poder de compra bajó 3%. Ganaste nominalmente y perdiste realmente.",
+    ej: "Ganaste 3% en el año y la inflación fue de 6%. Tu número subió, tu poder de compra bajó 3%. Ganaste nominalmente y perdiste realmente.",
     q: [
-      { q: "Tu inversión rindió 4% y la inflación fue siete. ¿Qué pasó de verdad?", ops: ["Perdiste alrededor de 3% de poder de compra", "Ganaste 4%", "Quedaste igual", "Ganaste 11%"], correcta: "Perdiste alrededor de 3% de poder de compra", e: "El rendimiento real es lo nominal menos la inflación. Es el único que se puede comer." },
+      { q: "Tu inversión rindió 4% y la inflación fue de 7%. ¿Qué pasó de verdad?", ops: ["Perdiste alrededor de 3% de poder de compra", "Ganaste 4%", "Quedaste igual", "Ganaste 11%"], correcta: "Perdiste alrededor de 3% de poder de compra", e: "El rendimiento real es lo nominal menos la inflación. Es el único que se puede comer." },
       { q: "¿A quién beneficia la inflación alta e inesperada?", ops: ["Al que debe dinero a tasa fija", "Al que tiene todo en efectivo", "Al que prestó dinero a tasa fija", "A nadie, perjudica igual a todos"], correcta: "Al que debe dinero a tasa fija", e: "La deuda se devuelve en dinero que vale menos. Por eso la inflación transfiere riqueza de acreedores a deudores, y por eso los países muy endeudados rara vez la odian tanto como dicen." },
       { q: "En un país con inflación alta y persistente, ¿qué error es más caro?", ops: ["Mantener el grueso del patrimonio en moneda local sin remunerar", "Tener una parte en efectivo para emergencias", "Invertir en activos reales", "Diversificar por monedas"], correcta: "Mantener el grueso del patrimonio en moneda local sin remunerar", e: "En inflación alta el efectivo quieto es el activo que más rápido se destruye. Tener un colchón está bien; tener el patrimonio ahí, no." },
     ],
@@ -2522,10 +2522,10 @@ const TEMAS = [
   {
     id: "emergencia", nv: 1, n: "El fondo de emergencia",
     x: "Antes de invertir un solo peso hay que tener dinero aburrido y disponible: entre 3 y 6 meses de tus gastos, en efectivo o en algo que se convierta en efectivo mañana. No está ahí para rendir. Está ahí para que cuando se dañe el carro, se caiga un cliente o te enfermes, no tengas que vender tus inversiones justo cuando están abajo.",
-    ej: "Gastas 1.200 al mes. Tu fondo de emergencia son entre 3.600 y 7.200. Rinde poco y eso está bien: su trabajo es estar, no crecer.",
+    ej: "Gastas USD 1.200 al mes. Tu fondo de emergencia son entre 3.600 y 7.200. Rinde poco y eso está bien: su trabajo es estar, no crecer.",
     q: [
       { q: "¿Cuál es la función real del fondo de emergencia?", ops: ["Evitar que vendas tus inversiones en el peor momento", "Maximizar el rendimiento de tu efectivo", "Sustituir a un seguro", "Aprovechar caídas del mercado"], correcta: "Evitar que vendas tus inversiones en el peor momento", e: "Es un instrumento de comportamiento, no de rentabilidad. Su valor aparece exactamente el año en que todo lo demás está en rojo." },
-      { q: "Tienes deudas de tarjeta al 60% anual y estás armando el fondo de emergencia. ¿Qué conviene?", ops: ["Un fondo mínimo y atacar la tarjeta: ninguna inversión rinde 60% seguro", "Ignorar la tarjeta hasta tener seis meses de gastos", "Invertir en acciones para ganarle a la tarjeta", "Pagar solo el mínimo y ahorrar el resto"], correcta: "Un fondo mínimo y atacar la tarjeta: ninguna inversión rinde 60% seguro", e: "Pagar una deuda al sesenta es un rendimiento garantizado del sesenta. No existe inversión legal que compita con eso." },
+      { q: "Tienes deudas de tarjeta al 60% anual y estás armando el fondo de emergencia. ¿Qué conviene?", ops: ["Un fondo mínimo y atacar la tarjeta: ninguna inversión rinde 60% seguro", "Ignorar la tarjeta hasta tener seis meses de gastos", "Invertir en acciones para ganarle a la tarjeta", "Pagar solo el mínimo y ahorrar el resto"], correcta: "Un fondo mínimo y atacar la tarjeta: ninguna inversión rinde 60% seguro", e: "Pagar una deuda al 60% es un rendimiento garantizado del 60%. No existe inversión legal que compita con eso." },
     ],
   },
   {
@@ -2550,7 +2550,7 @@ const TEMAS = [
   {
     id: "presupuesto", nv: 1, n: "Ingreso, gasto y la resta",
     x: "El patrimonio no lo construye lo que ganas: lo construye la diferencia entre lo que ganas y lo que gastas. Alguien con un sueldo enorme y un tren de vida a la altura no acumula nada. La tasa de ahorro, el porcentaje de lo que entra que no se gasta, predice tu futuro financiero mucho mejor que tu sueldo.",
-    ej: "Ganas 5.000 y gastas 4.800: ahorras 4% y necesitas décadas. Ganas 3.000 y gastas 2.100: ahorras 30% y llegas antes que el primero.",
+    ej: "Ganas USD 5.000 y gastas USD 4.800: ahorras 4% y necesitas décadas. Ganas 3.000 y gastas 2.100: ahorras 30% y llegas antes que el primero.",
     q: [
       { q: "¿Qué predice mejor tu patrimonio a veinte años?", ops: ["Tu tasa de ahorro", "Tu sueldo bruto", "El sector en el que trabajas", "El país donde vives"], correcta: "Tu tasa de ahorro", e: "El sueldo abre la posibilidad; la tasa de ahorro la ejecuta. Es la razón por la que hay médicos quebrados y maestros con patrimonio." },
       { q: "Te suben el sueldo 30% y subes tu tren de vida 30%. ¿Qué pasó con tu independencia financiera?", ops: ["Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", "Se acercó, porque ganas más", "No cambió", "Se acercó solo si invertiste el aumento"], correcta: "Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", e: "Se llama inflación del estilo de vida. Como la meta es 25 veces tu gasto anual, subir el gasto mueve la meta hacia adelante más rápido de lo que ahorras." },
@@ -2559,7 +2559,7 @@ const TEMAS = [
   {
     id: "deuda", nv: 1, n: "Deuda que suma y deuda que resta",
     x: "La deuda no es buena ni mala por sí sola: depende de qué compra y a qué tasa. Deuda barata que compra algo que produce ingreso o se aprecia puede tener sentido. Deuda cara que compra consumo que pierde valor es la forma más rápida y silenciosa de destruir patrimonio.",
-    ej: "Hipoteca al 7% sobre un inmueble que renta seis y se aprecia tres: el conjunto suma. Tarjeta al 60% sobre un viaje: el viaje ya pasó y la deuda sigue creciendo.",
+    ej: "Hipoteca al 7% sobre un inmueble que renta 6% y se aprecia 3%: el conjunto suma. Tarjeta al 60% sobre un viaje: el viaje ya pasó y la deuda sigue creciendo.",
     q: [
       { q: "¿Qué hace que una deuda sea 'buena'?", ops: ["Que su tasa sea menor que el retorno de lo que compra", "Que sea de un banco grande", "Que el plazo sea largo", "Que la cuota quepa en tu sueldo"], correcta: "Que su tasa sea menor que el retorno de lo que compra", e: "Que la cuota quepa es una condición para no quebrar, no una razón para endeudarse. La comparación relevante es tasa contra retorno del activo." },
       { q: "Pagar una tarjeta que cobra 40% anual equivale a...", ops: ["Una inversión con rendimiento garantizado del 40%", "Un gasto sin retorno", "Una inversión de riesgo medio", "Nada, es solo saldar una cuenta"], correcta: "Una inversión con rendimiento garantizado del 40%", e: "Es el mejor rendimiento ajustado por riesgo al que la mayoría de la gente tiene acceso en su vida, y casi nadie lo ve así." },
@@ -2570,7 +2570,7 @@ const TEMAS = [
   {
     id: "comobanco", nv: 1, n: "De dónde sale el dinero de un banco",
     x: "Un banco no guarda tu dinero en una caja fuerte esperando a que vuelvas. Lo presta. Toma los depósitos de mucha gente, presta la mayor parte y se queda con la diferencia entre lo que paga por tus ahorros y lo que cobra por los préstamos. Por eso puede pagarte poco y cobrar mucho: ese diferencial es su negocio entero.",
-    ej: "Te paga 2% por tu depósito y presta ese mismo dinero al 14. Los 12 puntos de diferencia son su margen, antes de gastos y de los préstamos que no le devuelvan.",
+    ej: "Te paga 2% por tu depósito y presta ese mismo dinero al 14%. Los 12 puntos de diferencia son su margen, antes de gastos y de los préstamos que no le devuelvan.",
     q: [
       { q: "¿Qué hace un banco con el dinero que depositas?", ops: ["Prestarlo a otros y quedarse con la diferencia de tasa", "Guardarlo íntegro hasta que lo pidas", "Invertirlo todo en bolsa", "Enviarlo al banco central"], correcta: "Prestarlo a otros y quedarse con la diferencia de tasa", e: "Se llama intermediación financiera. Si todos los depositantes pidieran su dinero el mismo día, ningún banco del mundo podría pagarlo: por eso existe la regulación." },
       { q: "El diferencial entre lo que el banco te paga y lo que cobra se llama", ops: ["Margen de intermediación", "Comisión de apertura", "Encaje", "Prima de riesgo"], correcta: "Margen de intermediación", e: "Es la principal fuente de ingresos de la banca tradicional, y la razón por la que la cuenta de ahorro rinde tan poco." },
@@ -2578,8 +2578,8 @@ const TEMAS = [
   },
   {
     id: "encaje", nv: 2, n: "El encaje legal",
-    x: "El encaje es la parte de los depósitos que un banco está obligado a NO prestar: se queda inmovilizada en el banco central. Sirve para dos cosas: que quede algo si mucha gente retira a la vez, y para que el banco central pueda abrir o cerrar el grifo del crédito de todo un país cambiando un solo número.",
-    ej: "Con encaje del 20%, de cada 100 que depositas el banco solo puede prestar 80. Si el banco central lo sube al 30, ese banco tiene que recortar crédito de golpe, aunque no haya cambiado nada más.",
+    x: "El encaje es la parte de los depósitos que un banco está obligado a NO prestar: se queda inmovilizada en el banco central. Sirve para dos cosas: que quede algo si mucha gente retira a la vez, y para que el banco central pueda abrir o cerrar la llave del crédito de todo un país cambiando un solo número.",
+    ej: "Con encaje del 20%, de cada 100 que depositas el banco solo puede prestar 80. Si el banco central lo sube al 30%, ese banco tiene que recortar crédito de golpe, aunque no haya cambiado nada más.",
     q: [
       { q: "Si el banco central sube el encaje legal, ¿qué pasa con el crédito?", ops: ["Se encarece y se reduce: hay menos dinero disponible para prestar", "Se abarata, porque los bancos tienen más reservas", "No cambia nada", "Solo afecta a los depósitos, no a los préstamos"], correcta: "Se encarece y se reduce: hay menos dinero disponible para prestar", e: "Es una de las herramientas más directas que existen para enfriar una economía, y una de las más bruscas." },
       { q: "¿Para qué sirve principalmente el encaje?", ops: ["Para que el banco pueda responder a los retiros y para controlar cuánto crédito hay en la economía", "Para pagar los sueldos del banco", "Para garantizar la rentabilidad del depositante", "Para financiar al gobierno"], correcta: "Para que el banco pueda responder a los retiros y para controlar cuánto crédito hay en la economía", e: "Es a la vez un colchón de liquidez y una palanca de política monetaria." },
@@ -2592,26 +2592,26 @@ const TEMAS = [
     ej: "Sube la tasa de referencia del 6 al 11%: tu hipoteca variable sube, tu banco te paga algo más por ahorrar, las empresas posponen inversiones y la bolsa suele caer. Un solo número mueve todo eso.",
     q: [
       { q: "El banco central sube la tasa de referencia. ¿Qué es lo más probable?", ops: ["Que el crédito se encarezca y la economía se enfríe", "Que suban los salarios", "Que la bolsa suba de inmediato", "Que baje el desempleo"], correcta: "Que el crédito se encarezca y la economía se enfríe", e: "Es exactamente lo que se busca cuando hay inflación alta: bajar la demanda a costa de frenar el crecimiento." },
-      { q: "¿Por qué las bolsas suelen caer cuando suben las tasas?", ops: ["Porque los beneficios futuros valen menos hoy y la deuda cuesta más", "Porque las empresas dejan de vender", "Porque los inversores se asustan sin motivo", "Porque el gobierno lo prohíbe"], correcta: "Porque los beneficios futuros valen menos hoy y la deuda cuesta más", e: "Es la misma mecánica del valor presente: sube la tasa de descuento, baja lo que vale hoy cualquier flujo futuro." },
+      { q: "¿Por qué las bolsas suelen caer cuando suben las tasas?", ops: ["Porque las ganancias futuras valen menos hoy y la deuda cuesta más", "Porque las empresas dejan de vender", "Porque los inversionistas se asustan sin motivo", "Porque el gobierno lo prohíbe"], correcta: "Porque las ganancias futuras valen menos hoy y la deuda cuesta más", e: "Es la misma mecánica del valor presente: sube la tasa de descuento, baja lo que vale hoy cualquier flujo futuro." },
     ],
   },
   {
     id: "interescomo", nv: 1, n: "Qué es de verdad una tasa de interés",
-    x: "Una tasa de interés es el precio de usar dinero ajeno durante un tiempo. Nada más. Cuando pides prestado la pagas; cuando ahorras o inviertes la cobras. Lo importante es mirar tres cosas: si es anual o mensual, si es fija o variable, y si incluye todos los costes o solo el interés puro.",
-    ej: "Un 3% mensual suena poco al lado de un 30 anual, y no lo es: 3% mensual compuesto son más del 42% al año.",
+    x: "Una tasa de interés es el precio de usar dinero ajeno durante un tiempo. Nada más. Cuando pides prestado la pagas; cuando ahorras o inviertes la cobras. Lo importante es mirar tres cosas: si es anual o mensual, si es fija o variable, y si incluye todos los costos o solo el interés puro.",
+    ej: "Un 3% mensual suena poco al lado de un 30% anual, y no lo es: 3% mensual compuesto son más del 42% al año.",
     q: [
       { q: "Una tarjeta cobra 3% mensual. ¿Cuánto es al año, aproximadamente?", ops: ["Más del 42%", "36% exactos", "3%", "18%"], correcta: "Más del 42%", e: "El interés se compone también en tu contra. Multiplicar por doce se queda corto: hay que elevar a doce." },
-      { q: "Te ofrecen un préstamo al 12% anual más comisión de apertura del 4 y seguro obligatorio. ¿Qué te cuesta de verdad?", ops: ["Bastante más del 12: hay que mirar el coste total, no la tasa suelta", "Exactamente 12%", "16%, sumando la comisión", "Depende solo del plazo"], correcta: "Bastante más del 12: hay que mirar el coste total, no la tasa suelta", e: "Por eso existe la tasa efectiva o coste total: la tasa nominal a solas casi nunca dice lo que vas a pagar." },
+      { q: "Te ofrecen un préstamo al 12% anual más comisión de apertura del 4% y seguro obligatorio. ¿Qué te cuesta de verdad?", ops: ["Bastante más del 12%: hay que mirar el costo total, no la tasa suelta", "Exactamente 12%", "16%, sumando la comisión", "Depende solo del plazo"], correcta: "Bastante más del 12%: hay que mirar el costo total, no la tasa suelta", e: "Por eso existe la tasa efectiva o costo total: la tasa nominal a solas casi nunca dice lo que vas a pagar." },
       { q: "Tasa fija o variable, ¿cuál es la diferencia que importa?", ops: ["Con la fija sabes la cuota siempre; con la variable asumes tú el riesgo de que suban las tasas", "La fija siempre es más barata", "La variable es ilegal en préstamos largos", "No hay diferencia real"], correcta: "Con la fija sabes la cuota siempre; con la variable asumes tú el riesgo de que suban las tasas", e: "La fija suele empezar más cara: esa diferencia es lo que cuesta el seguro contra subidas." },
     ],
   },
   {
     id: "ahorrar", nv: 1, n: "Ahorrar no es lo mismo que invertir",
     x: "Ahorrar es apartar dinero y que siga estando ahí mañana: seguro, disponible y con rendimiento bajo o nulo. Invertir es poner ese dinero a producir aceptando que puede bajar. Las dos cosas hacen falta y sirven para cosas distintas: el ahorro es para lo que necesitas pronto o de repente, la inversión para lo que no vas a tocar en años.",
-    ej: "La cuota del colegio de enero se ahorra. La jubilación de dentro de treinta años se invierte. Cambiarlas de sitio es el error más caro que se comete con los dos.",
+    ej: "La cuota del colegio de enero se ahorra. La jubilación de dentro de treinta años se invierte. Cambiarlas de lugar es el error más caro que se comete con los dos.",
     q: [
-      { q: "El dinero que vas a necesitar dentro de seis meses, ¿dónde debería estar?", ops: ["En algo seguro y disponible, aunque rinda poco", "En acciones, para que crezca mientras tanto", "En cripto, por el rendimiento", "En un inmueble"], correcta: "En algo seguro y disponible, aunque rinda poco", e: "En seis meses una cartera de riesgo puede estar en cualquier sitio. Para plazos cortos, lo que importa es que el dinero esté, no que crezca." },
-      { q: "¿Cuál es el riesgo real de solo ahorrar y nunca invertir?", ops: ["Que la inflación te vaya quitando poder de compra año tras año", "Ninguno, el ahorro es seguro", "Que el banco quiebre", "Que pagues más impuestos"], correcta: "Que la inflación te vaya quitando poder de compra año tras año", e: "El ahorro protege del susto y no protege del tiempo. A treinta años, no invertir es una decisión con coste, aunque no lo parezca." },
+      { q: "El dinero que vas a necesitar dentro de seis meses, ¿dónde debería estar?", ops: ["En algo seguro y disponible, aunque rinda poco", "En acciones, para que crezca mientras tanto", "En cripto, por el rendimiento", "En un inmueble"], correcta: "En algo seguro y disponible, aunque rinda poco", e: "En seis meses una cartera de riesgo puede estar en cualquier nivel. Para plazos cortos, lo que importa es que el dinero esté, no que crezca." },
+      { q: "¿Cuál es el riesgo real de solo ahorrar y nunca invertir?", ops: ["Que la inflación te vaya quitando poder de compra año tras año", "Ninguno, el ahorro es seguro", "Que el banco quiebre", "Que pagues más impuestos"], correcta: "Que la inflación te vaya quitando poder de compra año tras año", e: "El ahorro protege del susto y no protege del tiempo. A treinta años, no invertir es una decisión con costo, aunque no lo parezca." },
     ],
   },
   {
@@ -2630,7 +2630,7 @@ const TEMAS = [
     ej: "Ganas 2.000.000 al mes y el dólar pasa de 4.000 a 6.000. Tu sueldo sigue diciendo lo mismo y pasó de valer 500 dólares a 333. No te bajaron el sueldo: te lo devaluaron.",
     q: [
       { q: "Tu moneda se devalúa un 30% y tú cobras y ahorras en ella. ¿Qué te pasó?", ops: ["Perdiste poder de compra sobre todo lo importado, sin que cambiara el número de tu cuenta", "Nada, mientras no cambies a dólares", "Ganaste, porque exportar es más barato", "Solo te afecta si viajas"], correcta: "Perdiste poder de compra sobre todo lo importado, sin que cambiara el número de tu cuenta", e: "Es la pérdida más silenciosa que existe: el saldo no baja, baja lo que compra." },
-      { q: "¿Quién suele beneficiarse de una devaluación?", ops: ["El que exporta o cobra en moneda fuerte", "El que importa insumos", "El que tiene deuda en dólares", "El asalariado local"], correcta: "El que exporta o cobra en moneda fuerte", e: "Cobra en una moneda que subió y paga costes en la que bajó. El que debe en dólares y gana en local está en el lado exactamente opuesto." },
+      { q: "¿Quién suele beneficiarse de una devaluación?", ops: ["El que exporta o cobra en moneda fuerte", "El que importa insumos", "El que tiene deuda en dólares", "El asalariado local"], correcta: "El que exporta o cobra en moneda fuerte", e: "Cobra en una moneda que subió y paga costos en la que bajó. El que debe en dólares y gana en local está en el lado exactamente opuesto." },
     ],
   },
   {
@@ -2645,7 +2645,7 @@ const TEMAS = [
   {
     id: "burbuja", nv: 4, n: "Ciclos, burbujas y recesiones",
     x: "Las economías se mueven en ciclos: expansión, euforia, contracción, recuperación. En la euforia el crédito es fácil, todo el mundo tiene una historia de por qué esta vez es distinto, y los precios se despegan de lo que las cosas producen. La recesión no es un accidente del sistema: es la parte del ciclo en la que se corrige lo que se estiró.",
-    ej: "Precios de vivienda subiendo el 20% anual mientras los alquileres suben el 3. Esa brecha no la cierra el alquiler subiendo: la cierra el precio bajando.",
+    ej: "Precios de vivienda subiendo el 20% anual mientras las rentas suben el 3%. Esa brecha no la cierra el alquiler subiendo: la cierra el precio bajando.",
     q: [
       { q: "¿Cuál es la señal más común de una burbuja?", ops: ["Que el precio se separe de lo que el activo produce, y que el crédito sea fácil", "Que suba mucho en un mes", "Que salga en las noticias", "Que suba el volumen negociado"], correcta: "Que el precio se separe de lo que el activo produce, y que el crédito sea fácil", e: "La subida sola no dice nada. Lo que la delata es el divorcio entre precio y flujo, financiado con deuda barata." },
       { q: "En la parte alta del ciclo, ¿qué error se comete más?", ops: ["Confundir un mercado alcista con criterio propio y subir el apalancamiento", "Vender demasiado pronto", "Diversificar en exceso", "Guardar demasiado efectivo"], correcta: "Confundir un mercado alcista con criterio propio y subir el apalancamiento", e: "Cuando todo sube, cualquiera acierta. La factura llega cuando el ciclo gira y encuentra a la gente apalancada." },
@@ -2655,27 +2655,27 @@ const TEMAS = [
   /* ---------------- nivel 2 · intermedio ---------------- */
   {
     id: "indexado", nv: 2, n: "Fondos indexados",
-    x: "Un fondo indexado compra todas las empresas de un mercado en proporción a su tamaño, sin intentar escoger. Como no paga analistas ni opera mucho, cobra comisiones mínimas. A treinta años, la mayoría de los fondos que sí intentan escoger terminan por debajo del índice, y la causa principal no es que sean tontos: son las comisiones y el coste de operar.",
+    x: "Un fondo indexado compra todas las empresas de un mercado en proporción a su tamaño, sin intentar escoger. Como no paga analistas ni opera mucho, cobra comisiones mínimas. A treinta años, la mayoría de los fondos que sí intentan escoger terminan por debajo del índice, y la causa principal no es que sean tontos: son las comisiones y el costo de operar.",
     ej: "Un índice rinde 8%. Un fondo activo que cobra 1,8% tiene que acertar lo suficiente para superar al índice por 1,8 puntos solo para empatar. Muy pocos lo logran de forma sostenida.",
     q: [
-      { q: "¿Por qué la mayoría de los fondos activos pierde contra su índice a largo plazo?", ops: ["Por las comisiones y los costes de operar acumulados", "Porque sus gestores no saben de finanzas", "Porque los índices hacen trampa", "Porque el mercado siempre sube"], correcta: "Por las comisiones y los costes de operar acumulados", e: "En agregado, los activos son el mercado. Antes de costes empatan con el índice por definición; después de costes quedan por debajo. Es aritmética, no talento." },
-      { q: "Un fondo cobra 2% anual en vez de 0,2. Sobre treinta años, esa diferencia se lleva aproximadamente...", ops: ["Alrededor de un tercio o más del capital final", "Un 2% del total", "Un 10% del total", "Nada relevante"], correcta: "Alrededor de un tercio o más del capital final", e: "La comisión se cobra cada año sobre el saldo completo, así que también se compone. Es el gasto que más gente subestima por venir expresado en números pequeños." },
-      { q: "Trampa: 'el fondo que más rindió el año pasado' es una buena forma de elegir. ¿Verdadero o falso?", ops: ["Falso: el rendimiento pasado reciente no predice el futuro y suele revertir", "Verdadero, indica un buen gestor", "Verdadero si rindió mucho más que el resto", "Depende del sector"], correcta: "Falso: el rendimiento pasado reciente no predice el futuro y suele revertir", e: "Perseguir al ganador del año pasado es la conducta más común y más cara del inversor particular. Suele comprar caro justo antes de la reversión." },
+      { q: "¿Por qué la mayoría de los fondos activos pierde contra su índice a largo plazo?", ops: ["Por las comisiones y los costos de operar acumulados", "Porque sus gestores no saben de finanzas", "Porque los índices hacen trampa", "Porque el mercado siempre sube"], correcta: "Por las comisiones y los costos de operar acumulados", e: "En agregado, los activos son el mercado. Antes de costos empatan con el índice por definición; después de costos quedan por debajo. Es aritmética, no talento." },
+      { q: "Un fondo cobra 2% anual en vez de 0,2%. Sobre treinta años, esa diferencia se lleva aproximadamente...", ops: ["Alrededor de un tercio o más del capital final", "Un 2% del total", "Un 10% del total", "Nada relevante"], correcta: "Alrededor de un tercio o más del capital final", e: "La comisión se cobra cada año sobre el saldo completo, así que también se compone. Es el gasto que más gente subestima por venir expresado en números pequeños." },
+      { q: "Trampa: 'el fondo que más rindió el año pasado' es una buena forma de elegir. ¿Verdadero o falso?", ops: ["Falso: el rendimiento pasado reciente no predice el futuro y suele revertir", "Verdadero, indica un buen gestor", "Verdadero si rindió mucho más que el resto", "Depende del sector"], correcta: "Falso: el rendimiento pasado reciente no predice el futuro y suele revertir", e: "Perseguir al ganador del año pasado es la conducta más común y más cara del inversionista particular. Suele comprar caro justo antes de la reversión." },
     ],
   },
   {
-    id: "comisiones", nv: 2, n: "Comisiones y costes ocultos",
-    x: "Toda operación tiene fricción: comisión de compraventa, diferencia entre precio de compra y de venta, impuestos al realizar ganancias, y la comisión anual del producto. Ninguna se siente en el momento porque se descuenta del saldo, pero son de lo poco en la inversión que es seguro: el rendimiento es incierto, el coste no.",
-    ej: "Rotar el 20% de tu cartera cada año con 0,5% de coste te quita 0,1% anual. Suena a nada; sobre treinta años y con interés compuesto, es dinero real.",
+    id: "comisiones", nv: 2, n: "Comisiones y costos ocultos",
+    x: "Toda operación tiene fricción: comisión de compraventa, diferencia entre precio de compra y de venta, impuestos al realizar ganancias, y la comisión anual del producto. Ninguna se siente en el momento porque se descuenta del saldo, pero son de lo poco en la inversión que es seguro: el rendimiento es incierto, el costo no.",
+    ej: "Rotar el 20% de tu cartera cada año con 0,5% de costo te quita 0,1% anual. Suena a nada; sobre treinta años y con interés compuesto, es dinero real.",
     q: [
-      { q: "De todo lo que compone tu resultado final, ¿qué es lo único que controlas con certeza?", ops: ["Los costes", "El rendimiento del mercado", "El momento de las crisis", "La inflación"], correcta: "Los costes", e: "Es la razón por la que la gestión de costes es la primera decisión seria de cualquier inversor: es la única variable con resultado garantizado." },
-      { q: "¿Qué es el diferencial entre precio de compra y venta?", ops: ["Un coste implícito que pagas cada vez que operas, aunque no aparezca como comisión", "Un impuesto del gobierno", "La ganancia del vendedor anterior", "Una comisión que solo pagan los profesionales"], correcta: "Un coste implícito que pagas cada vez que operas, aunque no aparezca como comisión", e: "No sale en ningún recibo, pero se lo llevas puesto en cada operación. Por eso operar mucho es caro incluso donde la comisión declarada es cero." },
+      { q: "De todo lo que compone tu resultado final, ¿qué es lo único que controlas con certeza?", ops: ["Los costos", "El rendimiento del mercado", "El momento de las crisis", "La inflación"], correcta: "Los costos", e: "Es la razón por la que la gestión de costos es la primera decisión seria de cualquier inversionista: es la única variable con resultado garantizado." },
+      { q: "¿Qué es el diferencial entre precio de compra y venta?", ops: ["Un costo implícito que pagas cada vez que operas, aunque no aparezca como comisión", "Un impuesto del gobierno", "La ganancia del vendedor anterior", "Una comisión que solo pagan los profesionales"], correcta: "Un costo implícito que pagas cada vez que operas, aunque no aparezca como comisión", e: "No sale en ningún recibo, pero lo pagas en cada operación. Por eso operar mucho es caro incluso donde la comisión declarada es cero." },
     ],
   },
   {
     id: "aportes", nv: 2, n: "Aportar de forma periódica",
     x: "Aportar la misma cantidad cada mes, pase lo que pase, hace dos cosas. Compra más unidades cuando los precios están bajos y menos cuando están altos, sin que tengas que adivinar nada. Y sobre todo, convierte la inversión en un hábito automático en vez de una decisión que tomas cuando tienes ánimo, que suele ser cuando todo va bien y está caro.",
-    ej: "Aportas 100 al mes. Un mes la unidad cuesta 10 y compras 10; al mes siguiente cuesta 5 y compras 20. Tu precio medio queda por debajo del precio medio del periodo.",
+    ej: "Aportas USD 100 al mes. Un mes la unidad cuesta 10 y compras 10; al mes siguiente cuesta 5 y compras 20. Tu precio medio queda por debajo del precio medio del periodo.",
     q: [
       { q: "El principal beneficio de aportar periódicamente es...", ops: ["Que elimina la necesidad de acertar el momento y te vuelve constante", "Que garantiza mayor rendimiento que invertir todo de golpe", "Que evita las pérdidas", "Que reduce las comisiones"], correcta: "Que elimina la necesidad de acertar el momento y te vuelve constante", e: "Matemáticamente, invertir todo de golpe suele rendir algo más porque el dinero está más tiempo dentro. El aporte periódico gana en lo que de verdad falla: la conducta." },
       { q: "El mercado cae 30% y tú aportas mensualmente. ¿Qué haces?", ops: ["Sigues aportando: estás comprando lo mismo más barato", "Paras hasta que se recupere", "Vendes para no perder más", "Cambias todo a efectivo y esperas la señal"], correcta: "Sigues aportando: estás comprando lo mismo más barato", e: "Si tu horizonte es largo, una caída es un descuento sobre compras futuras. Parar de aportar en la caída es cancelar la parte buena del plan." },
@@ -2684,19 +2684,19 @@ const TEMAS = [
   {
     id: "rebalanceo", nv: 2, n: "Rebalancear",
     x: "Con el tiempo, lo que más sube ocupa un porcentaje cada vez mayor de tu cartera, y tu riesgo aumenta sin que tú decidas nada. Rebalancear es volver a los porcentajes que elegiste: vender un poco de lo que subió y comprar de lo que bajó. Es incómodo precisamente porque funciona: te obliga a hacer lo contrario del impulso.",
-    ej: "Elegiste 60 acciones y 40 bonos. Tras dos años buenos quedaste en 75 y 25. Sin haber decidido nada, ahora tienes una cartera mucho más agresiva que la que querías.",
+    ej: "Elegiste 60% acciones y 40% bonos. Tras dos años buenos quedaste en 75% y 25%. Sin haber decidido nada, ahora tienes una cartera mucho más agresiva que la que querías.",
     q: [
       { q: "¿Qué problema resuelve el rebalanceo?", ops: ["Que el riesgo de tu cartera crezca solo, sin que lo hayas decidido", "Que ganes más que el mercado", "Que pagues menos impuestos", "Que evites las caídas"], correcta: "Que el riesgo de tu cartera crezca solo, sin que lo hayas decidido", e: "Es control de riesgo, no una estrategia de rentabilidad. A veces rinde algo más, a veces algo menos; lo que siempre hace es mantenerte donde decidiste estar." },
-      { q: "¿Con qué frecuencia tiene sentido rebalancear para un inversor particular?", ops: ["Una vez al año, o cuando algo se desvíe bastante de su objetivo", "Cada semana", "Cada vez que el mercado se mueve", "Nunca"], correcta: "Una vez al año, o cuando algo se desvíe bastante de su objetivo", e: "Rebalancear muy seguido añade costes e impuestos sin añadir control. Una vez al año captura casi todo el beneficio." },
+      { q: "¿Con qué frecuencia tiene sentido rebalancear para un inversionista particular?", ops: ["Una vez al año, o cuando algo se desvíe bastante de su objetivo", "Cada semana", "Cada vez que el mercado se mueve", "Nunca"], correcta: "Una vez al año, o cuando algo se desvíe bastante de su objetivo", e: "Rebalancear muy seguido agrega costos e impuestos sin agregar control. Una vez al año captura casi todo el beneficio." },
     ],
   },
   {
     id: "regla4", nv: 2, n: "Cuánto necesitas para no depender del sueldo",
     x: "La referencia más usada es la regla del 4%: si cada año retiras el 4% de tu patrimonio inicial ajustado por inflación, históricamente el dinero aguantó unos treinta años. Dicho al revés, necesitas alrededor de 25 veces tu gasto anual. Fíjate que la meta la fija tu gasto, no tu sueldo.",
-    ej: "Gastas 30.000 al año. Tu número es 750.000. Si reduces tu gasto a 24.000, tu número baja a 600.000: recortar gasto acerca la meta por los dos lados a la vez.",
+    ej: "Gastas USD 30.000 al año. Tu número es USD 750.000. Si reduces tu gasto a 24.000, tu número baja a 600.000: recortar gasto acerca la meta por los dos lados a la vez.",
     q: [
       { q: "Tu meta de independencia financiera la determina...", ops: ["Tu gasto anual", "Tu sueldo", "Tu edad", "El país donde vives"], correcta: "Tu gasto anual", e: "Por eso dos personas con el mismo sueldo pueden tener metas que difieren en cientos de miles: lo que cuenta es el tren de vida que hay que sostener." },
-      { q: "Reducir tu gasto anual en 500 baja tu meta en aproximadamente...", ops: ["12.500", "500", "5.000", "50.000"], correcta: "12.500", e: "Veinticinco veces 500. Cada recorte permanente de gasto trabaja dos veces: te deja ahorrar más y baja la meta." },
+      { q: "Reducir tu gasto anual en USD 500 baja tu meta en aproximadamente...", ops: ["12.500", "500", "5.000", "50.000"], correcta: "12.500", e: "Veinticinco veces 500. Cada recorte permanente de gasto trabaja dos veces: te deja ahorrar más y baja la meta." },
       { q: "Trampa: la regla del 4% garantiza que el dinero nunca se acabe. ¿Verdadero o falso?", ops: ["Falso: es una regla histórica y aproximada, no una garantía", "Verdadero, está demostrado matemáticamente", "Verdadero si inviertes en bonos", "Falso, en realidad es la del 10%"], correcta: "Falso: es una regla histórica y aproximada, no una garantía", e: "Sale de datos históricos de un mercado concreto y un horizonte de treinta años. Es una brújula útil, no una ley física." },
     ],
   },
@@ -2713,11 +2713,11 @@ const TEMAS = [
   /* ---------------- nivel 3 · avanzado ---------------- */
   {
     id: "valorpresente", nv: 3, n: "Valor presente",
-    x: "Mil dentro de cinco años no valen mil hoy, porque hoy podrías invertirlos. Descontar es traer un flujo futuro al presente dividiéndolo por uno más la tasa, elevado a los años. Toda valoración seria, de una empresa o de un bono, es en el fondo esta operación repetida sobre los flujos que se esperan.",
+    x: "Mil dólares dentro de cinco años no valen mil dólares hoy, porque hoy podrías invertirlos. Descontar es traer un flujo futuro al presente dividiéndolo por uno más la tasa, elevado a los años. Toda valoración seria, de una empresa o de un bono, es en el fondo esta operación repetida sobre los flujos que se esperan.",
     ej: "Mil dentro de 5 años, descontados al 10%, valen 1.000 dividido entre 1,1 elevado a 5, es decir 621 hoy.",
     q: [
-      { q: "Si sube la tasa de descuento, el valor presente de un flujo futuro...", ops: ["Baja", "Sube", "No cambia", "Depende del flujo"], correcta: "Baja", e: "Es la mecánica detrás de que las bolsas caigan cuando suben los tipos: el mismo beneficio futuro vale menos hoy." },
-      { q: "¿Qué activos sufren más cuando suben las tasas?", ops: ["Los que prometen sus flujos más lejos en el futuro", "Los que pagan mucho ahora", "Los de corto plazo", "Todos exactamente igual"], correcta: "Los que prometen sus flujos más lejos en el futuro", e: "Cuanto más lejos está el flujo, más veces se le aplica el descuento. Por eso las empresas de crecimiento sin beneficios presentes son las más sensibles a los tipos." },
+      { q: "Si sube la tasa de descuento, el valor presente de un flujo futuro...", ops: ["Baja", "Sube", "No cambia", "Depende del flujo"], correcta: "Baja", e: "Es la mecánica detrás de que las bolsas caigan cuando suben las tasas: la misma ganancia futura vale menos hoy." },
+      { q: "¿Qué activos sufren más cuando suben las tasas?", ops: ["Los que prometen sus flujos más lejos en el futuro", "Los que pagan mucho ahora", "Los de corto plazo", "Todos exactamente igual"], correcta: "Los que prometen sus flujos más lejos en el futuro", e: "Cuanto más lejos está el flujo, más veces se le aplica el descuento. Por eso las empresas de crecimiento que todavía no ganan dinero son las más sensibles a las tasas." },
     ],
   },
   {
@@ -2732,7 +2732,7 @@ const TEMAS = [
   {
     id: "sharpe", nv: 3, n: "Retorno por unidad de riesgo",
     x: "Comparar inversiones solo por rendimiento es engañoso, porque siempre se puede subir el rendimiento esperado asumiendo más riesgo. El ratio de Sharpe divide el rendimiento que excede a la tasa segura entre la volatilidad. Responde a la pregunta correcta: cuánto te pagaron por cada unidad de sobresalto.",
-    ej: "Cartera A rinde 12 con volatilidad 20; cartera B rinde 8 con volatilidad 8. Con tasa segura 2: A da 0,50 y B da 0,75. B es mejor negocio aunque rinda menos.",
+    ej: "Cartera A rinde 12% con volatilidad de 20%; cartera B rinde 8% con volatilidad de 8%. Con una tasa segura de 2%: A da 0,50 y B da 0,75. B es mejor negocio aunque rinda menos.",
     q: [
       { q: "¿Qué pregunta responde el ratio de Sharpe?", ops: ["Cuánto rendimiento extra obtuviste por cada unidad de riesgo asumido", "Cuánto vas a ganar el año que viene", "Cuál es la probabilidad de perder dinero", "Qué comisión estás pagando"], correcta: "Cuánto rendimiento extra obtuviste por cada unidad de riesgo asumido", e: "Permite comparar estrategias con perfiles de riesgo distintos, que es justo lo que el rendimiento a secas no deja hacer." },
       { q: "Trampa: un Sharpe muy alto y muy estable durante años es señal inequívoca de excelencia. ¿Verdadero o falso?", ops: ["Falso: también es el perfil típico de un fraude o de una estrategia que esconde riesgo de cola", "Verdadero, es la mejor señal posible", "Verdadero si el fondo está regulado", "Falso, el Sharpe no significa nada"], correcta: "Falso: también es el perfil típico de un fraude o de una estrategia que esconde riesgo de cola", e: "Rendimientos suavemente positivos mes tras mes, sin volatilidad, describen tanto a un genio como a un esquema Ponzi o a alguien vendiendo seguros contra catástrofes que aún no ocurrieron." },
@@ -2752,7 +2752,7 @@ const TEMAS = [
     x: "El EBITDA es lo que gana la operación antes de intereses, impuestos, depreciación y amortización. Sirve para comparar empresas con estructuras financieras distintas. Valorar por múltiplos es decir: negocios como este se pagan a ocho veces EBITDA, luego este vale ocho veces el suyo. Es rápido y por eso mismo peligroso.",
     ej: "EBITDA de 20 millones y múltiplo del sector de 8: valor de empresa 160 millones. Si tiene 60 de deuda, a los accionistas les corresponden 100.",
     q: [
-      { q: "¿Cuál es la crítica más seria al EBITDA como medida de beneficio?", ops: ["Ignora que las máquinas se gastan y hay que reponerlas, y que los intereses se pagan de verdad", "Que es muy difícil de calcular", "Que solo sirve para bancos", "Que no lo aceptan los auditores"], correcta: "Ignora que las máquinas se gastan y hay que reponerlas, y que los intereses se pagan de verdad", e: "La depreciación es un gasto real diferido: llega el día que hay que reponer el activo. Por eso se dice que el EBITDA es el beneficio antes de los gastos que no te gustan." },
+      { q: "¿Cuál es la crítica más seria al EBITDA como medida de ganancia?", ops: ["Ignora que las máquinas se gastan y hay que reponerlas, y que los intereses se pagan de verdad", "Que es muy difícil de calcular", "Que solo sirve para bancos", "Que no lo aceptan los auditores"], correcta: "Ignora que las máquinas se gastan y hay que reponerlas, y que los intereses se pagan de verdad", e: "La depreciación es un gasto real diferido: llega el día que hay que reponer el activo. Por eso se dice que el EBITDA es la ganancia antes de los gastos que no te gustan." },
       { q: "Una empresa se compra a 8 veces EBITDA y se vende cinco años después a 8 veces un EBITDA mayor. ¿De dónde salió la ganancia?", ops: ["Del crecimiento operativo y de haber amortizado deuda, no de la expansión del múltiplo", "De la expansión del múltiplo", "De la inflación", "De las comisiones"], correcta: "Del crecimiento operativo y de haber amortizado deuda, no de la expansión del múltiplo", e: "Son las tres palancas del private equity: crecer, pagar deuda y vender más caro en múltiplo. Solo las dos primeras dependen de ti." },
     ],
   },
@@ -2760,7 +2760,7 @@ const TEMAS = [
   /* ---------------- nivel 4 · profesional ---------------- */
   {
     id: "duration", nv: 4, n: "Duración de un bono",
-    x: "La duración mide cuánto cae el precio de un bono cuando suben las tasas. Aproximadamente, un bono con duración 7 pierde 7% si las tasas suben un punto. Cuanto más largo el plazo y menor el cupón, mayor la duración y más te duele un movimiento de tipos.",
+    x: "La duración mide cuánto cae el precio de un bono cuando suben las tasas. Aproximadamente, un bono con duración 7 pierde 7% si las tasas suben un punto. Cuanto más largo el plazo y menor el cupón, mayor la duración y más te duele un movimiento de tasas.",
     ej: "Bono a 10 años con duración 8: las tasas suben de 3 a 4% y su precio cae alrededor de 8%, aunque el emisor siga siendo igual de solvente.",
     q: [
       { q: "Las tasas suben un punto y tienes un bono de duración 6. Tu precio cae aproximadamente...", ops: ["6%", "1%", "Seis puntos básicos", "Nada si lo mantienes"], correcta: "6%", e: "La caída de precio es real aunque no vendas: si lo mantienes hasta vencimiento cobras lo pactado, pero durante el camino tu patrimonio marcado a mercado bajó." },
@@ -2770,7 +2770,7 @@ const TEMAS = [
   {
     id: "curva", nv: 4, n: "La curva de rendimientos",
     x: "La curva compara lo que paga la deuda de un mismo emisor a distintos plazos. Normalmente el plazo largo paga más que el corto, porque comprometerse más tiempo merece premio. Cuando se invierte, el corto pagando más que el largo, el mercado está diciendo que espera tasas más bajas en el futuro, y eso suele asociarse a recesión.",
-    ej: "El bono a 2 años paga 5% y el de 10 paga 4. La curva está invertida: el mercado apuesta a que habrá que bajar tasas, y eso normalmente pasa cuando la economía se enfría.",
+    ej: "El bono a 2 años paga 5% y el de 10 paga 4%. La curva está invertida: el mercado apuesta a que habrá que bajar tasas, y eso normalmente pasa cuando la economía se enfría.",
     q: [
       { q: "Una curva invertida se interpreta habitualmente como...", ops: ["Una señal de expectativas de recesión", "Una señal de crecimiento fuerte", "Un error del mercado", "Un buen momento para endeudarse largo"], correcta: "Una señal de expectativas de recesión", e: "Ha precedido a la mayoría de las recesiones recientes, aunque con retrasos muy variables. Es una señal, no un cronómetro." },
     ],
@@ -2781,7 +2781,7 @@ const TEMAS = [
     ej: "Fondo de 100 millones, 2% anual son 2 millones al año. Si devuelve 200, hay 100 de ganancia; por encima del hurdle el gestor se lleva alrededor de 20.",
     q: [
       { q: "¿Qué mide el múltiplo sobre capital invertido y qué mide la tasa interna de retorno?", ops: ["Cuánto multiplicaste el dinero, y a qué velocidad lo lograste", "Lo mismo, expresado distinto", "Comisiones y gastos", "Riesgo y volatilidad"], correcta: "Cuánto multiplicaste el dinero, y a qué velocidad lo lograste", e: "Duplicar en dos años y duplicar en diez dan el mismo múltiplo y tasas internas radicalmente distintas. Por eso quien quiere lucir bien acelera salidas." },
-      { q: "¿Para qué sirve el hurdle o rendimiento mínimo?", ops: ["Para que el gestor no cobre comisión de éxito por rendimientos que el mercado habría dado igual", "Para limitar las pérdidas del inversor", "Para pagar los impuestos del fondo", "Para fijar el tamaño del fondo"], correcta: "Para que el gestor no cobre comisión de éxito por rendimientos que el mercado habría dado igual", e: "Alinea incentivos: el carry debería pagarse por valor añadido, no por haber estado invertido durante un buen ciclo." },
+      { q: "¿Para qué sirve el hurdle o rendimiento mínimo?", ops: ["Para que el gestor no cobre comisión de éxito por rendimientos que el mercado habría dado igual", "Para limitar las pérdidas del inversionista", "Para pagar los impuestos del fondo", "Para fijar el tamaño del fondo"], correcta: "Para que el gestor no cobre comisión de éxito por rendimientos que el mercado habría dado igual", e: "Alinea incentivos: el carry debería pagarse por valor agregado, no por haber estado invertido durante un buen ciclo." },
     ],
   },
 
@@ -2798,7 +2798,7 @@ const TEMAS = [
   {
     id: "supervivencia", nv: 5, n: "Sesgo de supervivencia",
     x: "Las estadísticas de rendimiento suelen calcularse sobre los fondos y empresas que siguen existiendo. Los que quebraron desaparecen de la muestra, así que el promedio que ves está inflado por definición. Lo mismo ocurre con las historias de éxito: nadie escribe el libro del que hizo lo mismo y fracasó.",
-    ej: "Un índice de fondos que muestra 9% anual puede estar excluyendo a los que cerraron por malos resultados. El rendimiento real del inversor medio fue bastante menor.",
+    ej: "Un índice de fondos que muestra 9% anual puede estar excluyendo a los que cerraron por malos resultados. El rendimiento real del inversionista medio fue bastante menor.",
     q: [
       { q: "¿Por qué el rendimiento medio histórico de una categoría de fondos suele estar sobrestimado?", ops: ["Porque los que quebraron o cerraron salen de la muestra", "Porque los gestores mienten", "Porque no se descuenta la inflación", "Porque se calculan en distintas monedas"], correcta: "Porque los que quebraron o cerraron salen de la muestra", e: "Es un sesgo estructural, no un fraude. Para corregirlo hay que construir el índice incluyendo a los muertos, y muy pocos lo hacen." },
       { q: "Alguien tomó una apuesta muy concentrada y se hizo rico. ¿Qué se puede concluir?", ops: ["Poco: no vemos a los que hicieron lo mismo y perdieron", "Que la estrategia es buena", "Que tenía información privilegiada", "Que hay que copiarlo"], correcta: "Poco: no vemos a los que hicieron lo mismo y perdieron", e: "Con suficientes participantes, alguien acierta diez veces seguidas por pura estadística. El resultado no separa la habilidad de la suerte cuando la muestra visible ya está filtrada." },
@@ -3142,8 +3142,8 @@ const BANDERAS = [
       { t: "Facturan poco pero el crecimiento mensual es consistente hace un año", x: "Poca facturación es normal en etapa temprana; lo que importa es la pendiente, y esa es buena." },
       { t: "El equipo técnico es propio y no subcontratado", x: "Tener el conocimiento dentro de casa es una fortaleza, sobre todo si el producto es el negocio." },
       { t: "Tienen la propiedad intelectual registrada a nombre de la sociedad", x: "Es exactamente como debe ser. La bandera sería que estuviera a nombre personal de un fundador." },
-      { t: "Levantaron una ronda anterior con inversores conocidos", x: "Alguien con reputación ya hizo su propia revisión y puso dinero. No es garantía, pero suma." },
-      { t: "Publican métricas mensuales a sus inversores", x: "Transparencia periódica desde el principio es una señal de cómo van a tratarte cuando algo salga mal." },
+      { t: "Levantaron una ronda anterior con inversionistas conocidos", x: "Alguien con reputación ya hizo su propia revisión y puso dinero. No es garantía, pero suma." },
+      { t: "Publican métricas mensuales a sus inversionistas", x: "Transparencia periódica desde el principio es una señal de cómo van a tratarte cuando algo salga mal." },
     ],
   },
   {
@@ -3157,7 +3157,7 @@ const BANDERAS = [
     ],
     ok: [
       { t: "Te pide tu horizonte de inversión antes de proponer nada", x: "Es la primera pregunta que debe hacer cualquiera que vaya a recomendarte algo en serio." },
-      { t: "Explica el coste total anual en euros, no solo en porcentaje", x: "Traducir la comisión a dinero contante es lo que casi nadie hace, precisamente porque asusta. Que lo haga es buena señal." },
+      { t: "Explica el costo total anual en dólares, no solo en porcentaje", x: "Traducir la comisión a dinero contante es lo que casi nadie hace, precisamente porque asusta. Que lo haga es buena señal." },
       { t: "Sugiere mantener un fondo de emergencia aparte", x: "Está protegiendo tu liquidez antes que su comisión. Es lo correcto." },
       { t: "Te entrega el folleto informativo antes de la reunión", x: "Darte tiempo para leer con calma es lo contrario de la presión comercial." },
       { t: "Acepta que lo consultes con un tercero", x: "Quien no teme una segunda opinión suele ser porque no tiene nada que esconder." },
@@ -3192,7 +3192,7 @@ const BANDERAS = [
     ok: [
       { t: "Quiere revisar la cartera solo una vez al año", x: "Es una conducta excelente: mirar menos suele producir mejores resultados que mirar todos los días." },
       { t: "Tiene tolerancia al riesgo baja y lo dice claramente", x: "Un cliente que conoce y comunica su límite es el más fácil de servir bien." },
-      { t: "Pregunta por los costes antes que por la rentabilidad", x: "Está preguntando por lo único seguro antes que por lo incierto. Sabe lo que hace." },
+      { t: "Pregunta por los costos antes que por la rentabilidad", x: "Está preguntando por lo único seguro antes que por lo incierto. Sabe lo que hace." },
       { t: "Tiene el patrimonio repartido en tres entidades", x: "Es diversificación de riesgo de contraparte, una precaución sensata." },
       { t: "Quiere dejar una parte a sus nietos", x: "Es una preferencia de horizonte y de sucesión, perfectamente normal." },
     ],
@@ -3202,7 +3202,7 @@ const BANDERAS = [
     doc: "Carpeta de venta de una compañía familiar de segunda generación",
     pista: "En una empresa familiar la línea entre la caja de la empresa y el bolsillo de la familia es lo primero que hay que mirar.",
     mal: [
-      { t: "Los gastos personales de la familia pasan por la empresa", x: "El beneficio real no es el que ves, y una vez comprada esos gastos desaparecen o se convierten en un conflicto. Tampoco sabes qué más se coló ahí." },
+      { t: "Los gastos personales de la familia pasan por la empresa", x: "La utilidad real no es la que ves, y una vez comprada esos gastos desaparecen o se convierten en un conflicto. Tampoco sabes qué más se coló ahí." },
       { t: "El proveedor clave trabaja sin contrato, todo de palabra", x: "Ese acuerdo era con el fundador, no con la empresa. El día que tú entras, puede evaporarse." },
       { t: "Dos hermanos están en litigio por la propiedad de las acciones", x: "Puedes acabar comprándole a alguien que un juez decida que no era el dueño. Se compra la demanda junto con la empresa." },
     ],
@@ -3562,7 +3562,7 @@ const E = [
         luego: [{ en: 2, s: "cri", azar: [{ p: 45, id: 7371, bueno: false }, { p: 30, id: 7341 }, { p: 20, id: 7342, bueno: true }, { p: 5, id: 7372, bueno: true }] }],
         msg: "Entras por un monto que no te cambia la vida si se pierde. Papeles en orden." } },
       { t: "Revisarle el modelo antes de decidir", min: { mod: 30 }, j: "ojo", stat: "mod", d: { red: 6, cri: 4, deja: "revisaste", luego: [{ id: 7343, en: 1 }], msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
-      { t: "No invertir y seguir siendo su amigo", d: { ene: 2, red: 2, msg: "Le dices que no con cariño. El dinero y la amistad se quedan cada uno en su sitio." } },
+      { t: "No invertir y seguir siendo su amigo", d: { ene: 2, red: 2, msg: "Le dices que no con cariño. El dinero y la amistad se quedan cada uno en su lugar." } },
     ] },
   { id: 26, min: 2, max: 6, t: "Defiendes un préstamo ante un comité exigente", x: "Defiendes un préstamo respaldado por facturas de un sector inestable. Dos miembros vienen decididos a tumbarlo.",
     o: [
@@ -3635,7 +3635,7 @@ const E = [
     x: "Necesitas dónde vivir cerca del trabajo. Compartir sale a la mitad; un lugar propio te da silencio.",
     o: [
       { t: "Compartir con dos amigos", d: { cash: 1500, red: 3, ene: -3, deja: "nov_piso", luego: [{ en: 1, azar: [{ p: 65, id: 24120 }, { p: 35, id: 24121 }] }], msg: "Casa con ruido, nevera compartida y un alquiler que te deja respirar." } },
-      { t: "Alquilar un lugar para ti", d: { ene: 5, cash: -1500, deja: "nov_solo", luego: [{ en: 1, azar: [{ p: 60, id: 24122 }, { p: 40, id: 24123 }] }], msg: "Silencio, tus cosas en su sitio y un alquiler que se lleva buena parte del sueldo." } },
+      { t: "Alquilar un lugar para ti", d: { ene: 5, cash: -1500, deja: "nov_solo", luego: [{ en: 1, azar: [{ p: 60, id: 24122 }, { p: 40, id: 24123 }] }], msg: "Silencio, tus cosas en su lugar y una renta que se lleva buena parte del sueldo." } },
     ] },
   { id: 24030, novato: true, min: 0, max: 1, t: "Tu jefa te escribe un domingo",
     x: "Domingo a las cuatro. Un mensaje: «¿Puedes revisar esto antes del lunes?». No dice que sea urgente.",
@@ -3683,7 +3683,7 @@ const E = [
   { id: 24211, cultura: "exigente", min: 0, max: 5, t: "Cada año ordenan al equipo de mejor a peor",
     x: "Aquí cada año se ordena al equipo de mejor a peor. Los primeros cobran el doble; los últimos, se van.",
     o: [
-      { t: "Ir a por el primer puesto", d: { car: 4, cash: 2000, ene: -8, red: -3, msg: "Llegas primero. Dos compañeros dejan de hablarte." } },
+      { t: "Ir por el primer puesto", d: { car: 4, cash: 2000, ene: -8, red: -3, msg: "Llegas primero. Dos compañeros dejan de hablarte." } },
       { t: "Quedarte en la mitad, sin pelear", d: { ene: 3, msg: "Cobras lo normal y duermes bien. En esta firma, eso es casi una rareza." } },
     ] },
   { id: 24212, cultura: "prestigio", min: 0, max: 6, t: "Tu análisis va en la portada",
@@ -3743,7 +3743,7 @@ const D = [
     ] },
   { id: 102, clave: true, min: 2, max: 3, t: "Tres días para revisar todos los papeles de una empresa", x: "La sala con los documentos de la empresa abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
     o: [
-      { t: "Peinar el legajo completo en orden", juego: "memoria", stat: "cri", sigue: 601,
+      { t: "Repasar el expediente completo en orden", juego: "memoria", stat: "cri", sigue: 601,
         res: { exito: { cri: 9, rep: 8, car: 6, ene: -9, msg: "Reconstruyes la cadena de contratos y aparece un pasivo laboral no declarado. Ajustan el precio." },
                parcial: { cri: 4, car: 3, ene: -9, msg: "Cubres lo esencial. Queda una carpeta sin abrir que probablemente no importaba." },
                fallo: { rep: -10, ene: -11, msg: "Te pierdes en el volumen. La contingencia aparece cuando ya firmaron." } } },
@@ -3796,12 +3796,12 @@ const D = [
                parcial: { car: 3, cash: 2000, msg: "Llegas a la final y pierdes por poco." },
                fallo: { rep: -8, cash: -4500, ene: -6, msg: "Los eliminan antes de la segunda ronda por no mostrar seriedad temprano." } } },
     ] },
-  { id: 107, clave: true, min: 2, max: 6, t: "Veinte minutos para convencer al comité de inversión", x: "Veinte minutos, siete personas y una idea de inversión que tienes que defender sin leer la lámina.",
+  { id: 107, clave: true, min: 2, max: 6, t: "Veinte minutos para convencer al comité de inversión", x: "Veinte minutos, siete personas y una idea de inversión que tienes que defender sin leer la diapositiva.",
     o: [
       { t: "Ensayar hasta tenerlo memorizado", juego: "memoria", stat: "red",
         res: { exito: { car: 8, rep: 9, red: 6, msg: "Hablas sin mirar la pantalla veinte minutos. Aprueban el mandato ese mismo día." },
                parcial: { car: 4, rep: 3, msg: "Sólido con dos tropiezos. Aprueban con dudas." },
-               fallo: { rep: -9, ene: -5, msg: "Pierdes el hilo en la lámina de riesgos y ya no lo recuperas." } } },
+               fallo: { rep: -9, ene: -5, msg: "Pierdes el hilo en la diapositiva de riesgos y ya no lo recuperas." } } },
       { t: "Improvisar sobre los números y cerrar en el punto justo", juego: "precision", stat: "mod",
         res: { exito: { car: 7, rep: 8, mod: 5, msg: "Cierras exactamente en el minuto veinte con la conclusión más fuerte." },
                parcial: { car: 3, rep: 2, msg: "Te pasas del tiempo y cortan la parte de valoración." },
@@ -4282,7 +4282,7 @@ const CONSECUENCIAS = [
   { id: 7221, min: 0, max: 6, por: POR_RAMA, t: "Una familia te confía su patrimonio",
     x: "Tres generaciones, una empresa familiar y la mitad de su dinero en una sola cuenta.",
     o: [
-      { t: "Protegerlo: repartirlo y que duerman tranquilos", d: { red: 5, rep: 4, deja: "conservaste", luego: [{ id: 7222, en: 2 }], msg: "Lo repartes en diez sitios. El abuelo te da la mano y no la suelta." } },
+      { t: "Protegerlo: repartirlo y que duerman tranquilos", d: { red: 5, rep: 4, deja: "conservaste", luego: [{ id: 7222, en: 2 }], msg: "Lo repartes en diez lugares. El abuelo te da la mano y no la suelta." } },
       { t: "Ponerlo a crecer: más acciones, menos bonos", d: { cash: 3000, cri: 3, deja: "agresivo", luego: [{ id: 7223, en: 2 }], msg: "El nieto está encantado. El abuelo pregunta dos veces si es seguro." } },
     ] },
   { id: 7222, min: 0, max: 6, por: HUELLAS.conservaste, t: "El abuelo murió y los hijos no se hablan",
@@ -4417,7 +4417,7 @@ const CONSECUENCIAS = [
       { t: "Abrirlo", chk: { s: "cri", dif: 65,
         ok: { cash: 26000, rep: 4, msg: "Vendieron la empresa. Tus ahorros se multiplicaron por seis." },
         no: { cri: 6, msg: "Cierran. Lo pierdes todo, y aprendes para siempre a no meter lo que no puedes perder." } } },
-      { t: "Vender tu parte a otro inversor sin leerlo", d: { cash: 5000, cri: 2, msg: "Vendes a ciegas y recuperas un poco más de lo que pusiste. Nunca sabrás." } },
+      { t: "Vender tu parte a otro inversionista sin leerlo", d: { cash: 5000, cri: 2, msg: "Vendes a ciegas y recuperas un poco más de lo que pusiste. Nunca sabrás." } },
     ] },
   { id: 7315, min: 0, max: 6, por: HUELLAS.fuera, t: "Tu amiga sale en la prensa",
     x: "La startup vale cien millones. El 5% que rechazaste habría pagado tu casa.",
@@ -4486,7 +4486,7 @@ const CONSECUENCIAS = [
     x: "No contesta el teléfono. El local está cerrado y nadie en la familia sabe dónde está.",
     o: [
       { t: "Buscarlo hasta encontrarlo", d: { ene: -6, luego: [{ en: 1, azar: [{ p: 40, id: 7367 }, { p: 60, id: 7331 }] }], msg: "Preguntas a sus amigos, a su exnovia, a su madre." } },
-      { t: "Darlo por perdido", d: { cri: 5, ene: 3, deja: "estafado", msg: "Cinco mil que no vuelven. Los anotas como lo que costó aprender." } },
+      { t: "Darlo por perdido", d: { cri: 5, ene: 3, deja: "estafado", msg: "Cinco mil dólares que no vuelven. Los anotas como lo que costó aprender." } },
     ] },
   { id: 7352, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo te paga a tiempo",
     x: "Todas las cuotas, sin falta: ya te devolvió los 5.000. Ahora te pide otro préstamo para abrir un segundo local.",
@@ -4549,7 +4549,7 @@ const CONSECUENCIAS = [
     x: "Pasaron dos años. Ni una cuota, y en la familia nadie lo menciona.",
     o: [
       { t: "Sacarlo en la cena de Navidad", d: { red: -2, luego: [{ id: 7331, en: 1 }], msg: "Lo anotas para diciembre. No va a ser una cena tranquila." } },
-      { t: "Darlo por perdido", d: { cri: 5, deja: "estafado", msg: "Lo das por perdido. Familia es familia, y esta vez te costó cinco mil." } },
+      { t: "Darlo por perdido", d: { cri: 5, deja: "estafado", msg: "Lo das por perdido. Familia es familia, y esta vez te costó cinco mil dólares." } },
     ] },
   { id: 7364, min: 0, max: 6, por: "Lo dejaste pasar", t: "Te paga todo de golpe",
     x: "Dos años tarde, sin explicaciones y con una transferencia por el total.",
@@ -4567,7 +4567,7 @@ const CONSECUENCIAS = [
     x: "Vive en casa de un amigo y no tiene ni para el transporte.",
     o: [
       { t: "Ayudarle a volver a empezar", d: { cash: -1500, red: 8, ene: -4, msg: "Le pagas un mes de alquiler. El dinero no vuelve; tu primo, sí." } },
-      { t: "Pedirle lo que pueda y despedirte", d: { cash: 500, red: -4, deja: "estafado", msg: "Te da quinientos. No lo vuelves a ver en mucho tiempo." } },
+      { t: "Pedirle lo que pueda y despedirte", d: { cash: 500, red: -4, deja: "estafado", msg: "Te da quinientos dólares. No lo vuelves a ver en mucho tiempo." } },
     ] },
   { id: 7368, min: 0, max: 6, por: HUELLAS.primo_exito, t: "El negocio de tu primo crece sin parar",
     x: "El negocio de tu primo crece sin parar. Tu 20% vale una fortuna.",
@@ -4639,7 +4639,7 @@ const CONSECUENCIAS = [
       { t: "Dejar que te diluyan", d: { cri: 3, msg: "Te quedas con menos de la mitad de lo que tenías. Sin poner más, que era lo importante." } },
     ] },
   { id: 7342, min: 0, max: 6, por: HUELLAS.ticket, t: "Te ofrecen comprar tu parte",
-    x: "Un fondo quiere las participaciones de los primeros inversores. Te ofrece cinco veces lo que pusiste.",
+    x: "Un fondo quiere las participaciones de los primeros inversionistas. Te ofrece cinco veces lo que pusiste.",
     o: [
       { t: "Vender ya", d: { cash: 15000, cri: 3, msg: "Cinco veces lo que pusiste, en tu cuenta, hoy. Nadie se arruinó vendiendo con ganancia." } },
       { t: "Aguantar hasta la salida", azar: { s: "cri", esc: [
@@ -4866,7 +4866,7 @@ const CONSECUENCIAS = [
   { id: 24202, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma que enseña",
     x: "Te asignan una mentora y un plan de formación. Aquí los nuevos aprenden unos meses antes de que les confíen un cliente.",
     o: [
-      { t: "Aprovechar a la mentora al máximo", d: { mod: 4, cri: 3, ene: -3, msg: "Le preguntas todo. En tres meses sabes lo que en otro sitio te habría llevado un año." } },
+      { t: "Aprovechar a la mentora al máximo", d: { mod: 4, cri: 3, ene: -3, msg: "Le preguntas todo. En tres meses sabes lo que en otro lado te habría llevado un año." } },
       { t: "Pedir un cliente ya: aprendes haciendo", d: { car: 2, rep: -1, msg: "Te dan uno pequeño. Aprendes rápido y con algún tropiezo a la vista de todos." } },
     ] },
   { id: 24203, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma sin prisa",
@@ -4912,8 +4912,8 @@ const LOTES = {
   "l1_trazabilidad_memoria": "Reconstruiste de memoria una auditoría del regulador",
   "l1_ordenaste_expedientes": "Ordenaste los expedientes antes de dárselos al regulador",
   "l1_leiste_libro": "Fijaste el precio de una emisión leyendo el libro",
-  "l1_sondeaste_anclas": "Sondeaste a los inversores ancla uno por uno",
-  "l1_peso_ancla": "Le diste mucho peso al inversor ancla de tu fondo",
+  "l1_sondeaste_anclas": "Sondeaste a los inversionistas ancla uno por uno",
+  "l1_peso_ancla": "Le diste mucho peso al inversionista ancla de tu fondo",
   "l1_aguantaste_ronda": "Aguantaste la ronda de tu fondo hasta tener el tamaño",
   "l1_dos_cierres": "Coordinaste dos cierres al minuto el mismo viernes",
   "l1_delegaste": "Delegaste un cierre en tu asociado",
@@ -5708,7 +5708,7 @@ const LOTES = {
    "id": 11041,
    "por": "Decidiste qué hacer con una posición ganadora",
    "t": "La empresa admite cifras infladas",
-   "x": "La empresa de aquella inversión admite que infló sus ingresos. La acción abre a la mitad y los foros de inversores arden desde temprano.",
+   "x": "La empresa de aquella inversión admite que infló sus ingresos. La acción abre a la mitad y los foros de inversionistas arden desde temprano.",
    "o": [
     {
      "t": "Vender lo que quede en la apertura",
@@ -6072,7 +6072,7 @@ const LOTES = {
    "id": 11061,
    "por": "Asesoraste a un comprador en una subasta",
    "t": "El banco cambia las reglas de sus subastas",
-   "x": "El banco que organizó aquella subasta añadió una ronda sorpresa a sus procesos. En los pasillos dicen que fue por estrategias como la tuya.",
+   "x": "El banco que organizó aquella subasta agregó una ronda sorpresa a sus procesos. En los pasillos dicen que fue por estrategias como la tuya.",
    "o": [
     {
      "t": "Estudiar el nuevo formato",
@@ -6210,7 +6210,7 @@ const LOTES = {
    "id": 11070,
    "por": "Defendiste una tesis ante un comité de inversión",
    "t": "Te invitan a un foro con público",
-   "x": "Alguien contó cómo defendiste aquella idea de inversión y te invitan a presentarla en un foro de inversores con trescientas personas.",
+   "x": "Alguien contó cómo defendiste aquella idea de inversión y te invitan a presentarla en un foro de inversionistas con trescientas personas.",
    "o": [
     {
      "t": "Aceptar y ensayarlo de nuevo",
@@ -6225,7 +6225,7 @@ const LOTES = {
      "t": "Aceptar e improvisar",
      "d": {
       "ene": -1,
-      "msg": "Llegas con tres números en la cabeza y ninguna lámina. El público no sabe lo que viene; tú tampoco.",
+      "msg": "Llegas con tres números en la cabeza y ninguna diapositiva. El público no sabe lo que viene; tú tampoco.",
       "luego": [
        {
         "en": 1,
@@ -6248,7 +6248,7 @@ const LOTES = {
      "d": {
       "ene": 2,
       "red": -1,
-      "msg": "Otro presenta en tu lugar. Usa una lámina tuya sin citarte."
+      "msg": "Otro presenta en tu lugar. Usa una diapositiva tuya sin citarte."
      }
     }
    ]
@@ -6315,7 +6315,7 @@ const LOTES = {
    "id": 11073,
    "por": "Defendiste una tesis ante un comité de inversión",
    "t": "El comité te hace una pregunta que no preparaste",
-   "x": "En la siguiente reunión, el comité te hace una pregunta que no estaba en ninguna lámina. Siete personas esperan en silencio.",
+   "x": "En la siguiente reunión, el comité te hace una pregunta que no estaba en ninguna diapositiva. Siete personas esperan en silencio.",
    "o": [
     {
      "t": "Responder con lo que sabes, sin adornos",
@@ -6347,8 +6347,8 @@ const LOTES = {
   {
    "id": 11074,
    "por": "Improvisaste en un foro con trescientas personas",
-   "t": "Un inversor del público te busca",
-   "x": "Un inversor que estaba en el foro se acordó de tu cierre. Te busca para invertir en la próxima idea que tengas, sin lámina de por medio.",
+   "t": "Un inversionista del público te busca",
+   "x": "Un inversionista que estaba en el foro se acordó de tu cierre. Te busca para invertir en la próxima idea que tengas, sin diapositiva de por medio.",
    "o": [
     {
      "t": "Presentarle una idea en serio",
@@ -6389,7 +6389,7 @@ const LOTES = {
      "d": {
       "rep": -2,
       "ene": -2,
-      "msg": "Lo borran en un sitio y aparece en dos. Internet tiene memoria y poco humor."
+      "msg": "Lo borran en un lado y aparece en dos. Internet tiene memoria y poco humor."
      }
     }
    ]
@@ -6781,7 +6781,7 @@ const LOTES = {
    "id": 11100,
    "por": "Fijaste el precio de una colocación",
    "t": "Las acciones caen bajo el precio al que se vendieron",
-   "x": "Un año después, las acciones que ayudaste a vender valen menos que el precio al que se vendieron. Los inversores que compraron quieren una explicación, y la quieren de ti.",
+   "x": "Un año después, las acciones que ayudaste a vender valen menos que el precio al que se vendieron. Los inversionistas que compraron quieren una explicación, y la quieren de ti.",
    "o": [
     {
      "t": "Organizar una reunión con la empresa",
@@ -6789,7 +6789,7 @@ const LOTES = {
       "red": 3,
       "rep": 2,
       "ene": -3,
-      "msg": "Pones a la empresa frente a sus inversores. Nadie sale feliz, pero todos salen informados."
+      "msg": "Pones a la empresa frente a sus inversionistas. Nadie sale feliz, pero todos salen informados."
      }
     },
     {
@@ -6797,23 +6797,23 @@ const LOTES = {
      "d": {
       "rep": -2,
       "cri": 1,
-      "msg": "Tienes razón técnica. Los inversores tienen memoria, que no es técnica pero pesa más."
+      "msg": "Tienes razón técnica. Los inversionistas tienen memoria, que no es técnica pero pesa más."
      }
     }
    ]
   },
   {
    "id": 11101,
-   "por": "Sondeaste a los inversores ancla uno por uno",
+   "por": "Sondeaste a los inversionistas ancla uno por uno",
    "t": "Los inversionistas principales piden trato especial",
-   "x": "Los grandes inversores que se comprometieron primero en aquella venta de acciones quieren que les aseguren una parte en la próxima. Lo dicen como si ya estuviera pactado.",
+   "x": "Los grandes inversionistas que se comprometieron primero en aquella venta de acciones quieren que les aseguren una parte en la próxima. Lo dicen como si ya estuviera pactado.",
    "o": [
     {
      "t": "Concedérselo",
      "d": {
       "red": 4,
       "rep": -2,
-      "msg": "Quedan contentos. Los demás inversores lo notan en la próxima asignación."
+      "msg": "Quedan contentos. Los demás inversionistas lo notan en la próxima asignación."
      }
     },
     {
@@ -6875,7 +6875,7 @@ const LOTES = {
    "id": 11103,
    "por": "Fijaste el precio de una colocación",
    "t": "El regulador revisa cómo se repartieron las acciones",
-   "x": "El regulador revisa cómo se repartieron aquellas acciones entre los inversores. Quiere ver quién pidió qué y quién recibió cuánto.",
+   "x": "El regulador revisa cómo se repartieron aquellas acciones entre los inversionistas. Quiere ver quién pidió qué y quién recibió cuánto.",
    "o": [
     {
      "t": "Entregar los registros completos",
@@ -6901,7 +6901,7 @@ const LOTES = {
    "id": 11104,
    "por": "Repetiste una colocación con la misma empresa",
    "t": "La segunda venta de acciones es un éxito",
-   "x": "En la segunda venta, los inversores piden cuatro veces más acciones de las que hay. La empresa te manda una caja de vino y otra empresa que quiere vender acciones te pide una reunión.",
+   "x": "En la segunda venta, los inversionistas piden cuatro veces más acciones de las que hay. La empresa te manda una caja de vino y otra empresa que quiere vender acciones te pide una reunión.",
    "o": [
     {
      "t": "Tomar la reunión",
@@ -6949,9 +6949,9 @@ const LOTES = {
   },
   {
    "id": 11110,
-   "por": "Negociaste con el inversor ancla de tu fondo",
+   "por": "Negociaste con el inversionista ancla de tu fondo",
    "t": "Tu mayor inversionista pide un lugar en el comité",
-   "x": "El inversor más grande de tu fondo pide un asiento en el comité de inversión. Dice que el tamaño de su aporte lo justifica, y lo dice sonriendo.",
+   "x": "El inversionista más grande de tu fondo pide un asiento en el comité de inversión. Dice que el tamaño de su aporte lo justifica, y lo dice sonriendo.",
    "o": [
     {
      "t": "Darle el asiento",
@@ -6984,7 +6984,7 @@ const LOTES = {
    "id": 11111,
    "por": "Levantaste el primer cierre de tu fondo",
    "t": "La primera inversión del fondo",
-   "x": "Toca poner el primer dinero del fondo. Todos los inversores van a mirar esa primera operación con lupa, y la van a recordar.",
+   "x": "Toca poner el primer dinero del fondo. Todos los inversionistas van a mirar esa primera operación con lupa, y la van a recordar.",
    "o": [
     {
      "t": "Ir por una apuesta segura",
@@ -7025,15 +7025,15 @@ const LOTES = {
   {
    "id": 11112,
    "por": "Levantaste el primer cierre de tu fondo",
-   "t": "Un inversor quiere salir antes",
-   "x": "A un inversor de tu fondo le falta efectivo y quiere vender su parte antes de tiempo. Te llama a ti antes que a su abogado.",
+   "t": "Un inversionista quiere salir antes",
+   "x": "A un inversionista de tu fondo le falta efectivo y quiere vender su parte antes de tiempo. Te llama a ti antes que a su abogado.",
    "o": [
     {
      "t": "Buscarle comprador entre los demás",
      "d": {
       "red": 3,
       "ene": -3,
-      "msg": "Otro inversor compra su parte con descuento. Todos contentos, menos el que vendió."
+      "msg": "Otro inversionista compra su parte con descuento. Todos contentos, menos el que vendió."
      }
     },
     {
@@ -7051,7 +7051,7 @@ const LOTES = {
    "id": 11113,
    "por": "Levantaste el primer cierre de tu fondo",
    "t": "Muchos inversionistas quieren entrar ahora a tu fondo",
-   "x": "Los buenos primeros meses del fondo se supieron. Inversores que antes no te contestaban ahora piden entrar en la segunda ronda de aportes.",
+   "x": "Los buenos primeros meses del fondo se supieron. Inversionistas que antes no te contestaban ahora piden entrar en la segunda ronda de aportes.",
    "o": [
     {
      "t": "Ampliar el fondo",
@@ -7077,14 +7077,14 @@ const LOTES = {
    "id": 11114,
    "por": "Pusiste el primer dinero de tu fondo en tu convicción",
    "t": "Tu primera inversión del fondo sale bien",
-   "x": "La empresa en la que invertiste primero supera su plan. En la reunión anual, los inversores aplauden con la discreción de quien cobra.",
+   "x": "La empresa en la que invertiste primero supera su plan. En la reunión anual, los inversionistas aplauden con la discreción de quien cobra.",
    "o": [
     {
      "t": "Contarlo con humildad",
      "d": {
       "rep": 3,
       "red": 2,
-      "msg": "Explicas qué salió bien y qué fue suerte. Los inversores aprecian sobre todo la parte de la suerte."
+      "msg": "Explicas qué salió bien y qué fue suerte. Los inversionistas aprecian sobre todo la parte de la suerte."
      }
     },
     {
@@ -7093,7 +7093,7 @@ const LOTES = {
       "cash": 6000,
       "car": 3,
       "ene": -3,
-      "msg": "Un caso de éxito vale más que diez láminas. El próximo fondo arranca con fila."
+      "msg": "Un caso de éxito vale más que diez diapositivas. El próximo fondo arranca con fila."
      }
     }
    ]
@@ -7102,7 +7102,7 @@ const LOTES = {
    "id": 11115,
    "por": "Pusiste el primer dinero de tu fondo en tu convicción",
    "t": "Tu primera inversión pierde a su mayor cliente",
-   "x": "La empresa en la que invertiste primero pierde a su mayor cliente. Los inversores piden una llamada, todos a la vez.",
+   "x": "La empresa en la que invertiste primero pierde a su mayor cliente. Los inversionistas piden una llamada, todos a la vez.",
    "o": [
     {
      "t": "Llamarlos uno por uno",
@@ -8604,7 +8604,7 @@ const LOTES = {
       "mod": 3,
       "cri": 2,
       "ene": -3,
-      "msg": "Presentas un plan mes por mes. Te dan el año, con una condición en letra pequeña.",
+      "msg": "Presentas un plan mes por mes. Te dan el año, con una condición en letra chica.",
       "luego": [
        {
         "en": 1,
@@ -9072,7 +9072,7 @@ const LOTES = {
      "d": {
       "red": 4,
       "deja": "l2_fiador",
-      "msg": "Firmas. Te abraza en la puerta del banco y tú lees la letra pequeña en el carro.",
+      "msg": "Firmas. Te abraza en la puerta del banco y tú lees la letra chica en el carro.",
       "luego": [
        {
         "en": 2,
@@ -9171,7 +9171,7 @@ const LOTES = {
       "red": 3,
       "ene": 2,
       "cash": -500,
-      "msg": "Te invita a cenar en la casa que ayudaste a comprar. Te sientas en el mejor sitio."
+      "msg": "Te invita a cenar en la casa que ayudaste a comprar. Te sientas en el mejor lugar."
      }
     },
     {
@@ -9244,7 +9244,7 @@ const LOTES = {
      "d": {
       "cri": 2,
       "cash": -500,
-      "msg": "El comprador es un inversor que solo quiere el alquiler. Te suben un poco y te quedas."
+      "msg": "El comprador es un inversionista que solo quiere el alquiler. Te suben un poco y te quedas."
      }
     }
    ]
@@ -9606,7 +9606,7 @@ const LOTES = {
    "id": 12161,
    "por": "Metiste el triple en la importadora",
    "t": "La importadora vuelve a pagarte",
-   "x": "Contra toda lógica, la importadora vuelve a pagar. Tu amigo te llama inversor estrella y ya se prepara para pedir dinero por tercera vez.",
+   "x": "Contra toda lógica, la importadora vuelve a pagar. Tu amigo te llama inversionista estrella y ya se prepara para pedir dinero por tercera vez.",
    "o": [
     {
      "t": "Cobrar todo y no volver jamás",
@@ -9858,7 +9858,7 @@ const LOTES = {
    "id": 12250,
    "por": "Aceptaste que tu relación se terminó",
    "t": "Quedó una caja con sus cosas",
-   "x": "Unos libros, una chaqueta, un cargador. Tu ex escribe para pasar a buscarla y pregunta si estarás en casa.",
+   "x": "Unos libros, una sudadera, un cargador. Tu ex escribe para pasar a buscarla y pregunta si estarás en casa.",
    "o": [
     {
      "t": "Entregarla en persona",
@@ -10232,7 +10232,7 @@ const LOTES = {
   {
    "id": 12310,
    "por": "Firmaste el seguro con ahorro incluido",
-   "t": "Lees la letra pequeña",
+   "t": "Lees la letra chica",
    "x": "Tres años después pides retirar lo ahorrado en el seguro. Las comisiones se llevaron casi todo lo que aportaste.",
    "o": [
     {
@@ -11211,7 +11211,7 @@ const LOTES = {
    "id": 12553,
    "por": "Pagaste una buena residencia para tu padre",
    "t": "Tu padre se siente solo en la residencia",
-   "x": "En la visita del domingo, tu padre te dice que el sitio está bien, pero que allí nadie le pregunta nada.",
+   "x": "En la visita del domingo, tu padre te dice que el lugar está bien, pero que allí nadie le pregunta nada.",
    "o": [
     {
      "t": "Ir también un día entre semana",
@@ -11547,7 +11547,7 @@ const LOTES = {
    "id": 12611,
    "por": "Seguiste sin parar después del duelo",
    "t": "Las crisis por el duelo dejan de venir",
-   "x": "Las crisis se espacian y un día dejan de venir. No sabes si se fue o solo cambió de sitio.",
+   "x": "Las crisis se espacian y un día dejan de venir. No sabes si se fue o solo cambió de lugar.",
    "o": [
     {
      "t": "Visitar su tumba por primera vez",
@@ -12504,7 +12504,7 @@ const LOTES = {
       "car": -4,
       "cash": -1500,
       "deja": "l3_cambiaste_vida",
-      "msg": "Ahora sí. Llegas por el camino largo al mismo sitio al que te mandaron hace años."
+      "msg": "Ahora sí. Llegas por el camino largo al mismo lugar al que te mandaron hace años."
      }
     },
     {
@@ -12755,7 +12755,7 @@ const LOTES = {
   },
   {
    "id": 13254,
-   "por": "Leíste a tiempo la letra pequeña del producto",
+   "por": "Leíste a tiempo la letra chica del producto",
    "t": "Ahora lees todo hasta el final",
    "x": "Desde aquel producto lees los contratos enteros. En uno de un cliente encuentras una cláusula que nadie había visto.",
    "o": [
@@ -13044,7 +13044,7 @@ const LOTES = {
   },
   {
    "id": 13351,
-   "por": "Denunciaste el robo de identidad desde el día uno",
+   "por": "Denunciaste el robo de identidad desde el primer día",
    "t": "Te aprueban un crédito rápido sin problemas",
    "x": "Necesitas un préstamo del banco para una oportunidad que no espera. Te lo aprueban en días, sin preguntas raras.",
    "o": [
@@ -13662,7 +13662,7 @@ const LOTES = {
       "cash": 1500,
       "cri": 3,
       "rep": -1,
-      "msg": "Lo vendes con pérdida y compras uno modesto. Llegas a los mismos sitios, a la misma hora."
+      "msg": "Lo vendes con pérdida y compras uno modesto. Llegas a los mismos lugares, a la misma hora."
      }
     }
    ]
@@ -14023,8 +14023,8 @@ const LOTES = {
   {
    "id": 13604,
    "por": "Apoyaste el mandato desde atrás, sin firmar",
-   "t": "Otro da charlas con las láminas que hiciste tú",
-   "x": "El negocio se cerró y quien lo firmó da charlas sobre él. Las láminas que proyecta las hiciste tú.",
+   "t": "Otro da charlas con las diapositivas que hiciste tú",
+   "x": "El negocio se cerró y quien lo firmó da charlas sobre él. Las diapositivas que proyecta las hiciste tú.",
    "o": [
     {
      "t": "Decirlo en voz alta",
@@ -14124,7 +14124,7 @@ const LOTES = {
      "d": {
       "rep": 1,
       "ene": -4,
-      "msg": "Pides la corrección. Sale en letra pequeña tres días después. El titular sigue arriba."
+      "msg": "Pides la corrección. Sale en letra chica tres días después. El titular sigue arriba."
      }
     },
     {
@@ -14464,7 +14464,7 @@ const LOTES = {
       "cash": -8000,
       "cri": 3,
       "rep": 2,
-      "msg": "Pones el capital. Es apostar dos veces en el mismo sitio, sabiendo ahora lo que antes no sabías."
+      "msg": "Pones el capital. Es apostar dos veces en el mismo lugar, sabiendo ahora lo que antes no sabías."
      }
     },
     {
@@ -19653,7 +19653,7 @@ const LOTES = {
       "rep": 2,
       "red": -2,
       "ene": -2,
-      "msg": "Sale en letra pequeña, tres días después. El periodista te habla menos."
+      "msg": "Sale en letra chica, tres días después. El periodista te habla menos."
      }
     },
     {
@@ -22149,7 +22149,7 @@ const LOTES = {
       "red": 3,
       "cri": 2,
       "deja": "l6_maestro",
-      "msg": "Preparas una lámina con el orden del reparto. Se hacen preguntas entre ellos y aprenden más."
+      "msg": "Preparas una diapositiva con el orden del reparto. Se hacen preguntas entre ellos y aprenden más."
      }
     }
    ]
@@ -26228,7 +26228,7 @@ const LOTES = {
    "id": 17403,
    "por": "Estudiaste los sábados para una certificación",
    "t": "Uno del grupo de estudio arma un fondo",
-   "x": "Del grupo de los sábados salieron amistades. Uno de ellos arma un fondo pequeño y busca inversores que confíen en él.",
+   "x": "Del grupo de los sábados salieron amistades. Uno de ellos arma un fondo pequeño y busca inversionistas que confíen en él.",
    "o": [
     {
      "t": "Poner algo de dinero",
@@ -26365,7 +26365,7 @@ const LOTES = {
    "id": 17407,
    "por": "Pusiste dinero en el fondo de un compañero",
    "t": "El fondo de tu compañero cierra y pierdes dinero",
-   "x": "Tu compañero no consiguió suficientes inversores. El fondo cierra y devuelve lo que queda, que es menos de lo que pusiste.",
+   "x": "Tu compañero no consiguió suficientes inversionistas. El fondo cierra y devuelve lo que queda, que es menos de lo que pusiste.",
    "o": [
     {
      "t": "Recibir lo que queda y agradecer",
@@ -26573,7 +26573,7 @@ const LOTES = {
       "rep": 1,
       "cri": 2,
       "ene": -2,
-      "msg": "Te la dan meses después. Esta vez llevas la respuesta a esa pregunta en la primera lámina."
+      "msg": "Te la dan meses después. Esta vez llevas la respuesta a esa pregunta en la primera diapositiva."
      }
     },
     {
@@ -27029,7 +27029,7 @@ const LOTES = {
      "d": {
       "cri": 2,
       "red": -2,
-      "msg": "Le corriges cada lámina. Presenta tu recomendación con su voz."
+      "msg": "Le corriges cada diapositiva. Presenta tu recomendación con su voz."
      }
     },
     {
@@ -27463,7 +27463,7 @@ const LOTES = {
       "car": 2,
       "rep": 2,
       "red": -2,
-      "msg": "Te lo concede a medias: tu nombre va, pero en letra pequeña y al final."
+      "msg": "Te lo concede a medias: tu nombre va, pero en letra chica y al final."
      }
     }
    ],
@@ -28302,7 +28302,7 @@ const LOTES = {
       "cri": 4,
       "rep": 1,
       "car": -3,
-      "msg": "Llevas el error ordenado en tres láminas. Te quitan el cupo y te dejan el respeto."
+      "msg": "Llevas el error ordenado en tres diapositivas. Te quitan el cupo y te dejan el respeto."
      }
     },
     {
@@ -28553,7 +28553,7 @@ const LOTES = {
      "d": {
       "rep": 4,
       "ene": -2,
-      "msg": "Pones en tu sitio con quién trabajas y en qué. Te creen más, aunque sabe raro escribirlo."
+      "msg": "Publicas en tu página web con quién trabajas y en qué. Te creen más, aunque sabe raro escribirlo."
      }
     },
     {
@@ -28796,7 +28796,7 @@ const LOTES = {
      "d": {
       "rep": 4,
       "red": -4,
-      "msg": "Lo pones en tu sitio. Todo el mercado entiende lo que pasó, incluido el banco."
+      "msg": "Lo subes a tu página web. Todo el mercado entiende lo que pasó, incluido el banco."
      }
     },
     {
@@ -28858,7 +28858,7 @@ const LOTES = {
    "id": 18614,
    "por": "Ajustaste tu informe al gusto de tu mayor cliente",
    "t": "El banco vuelve con otro pedido",
-   "x": "Quedaron contentos. Ahora quieren que presentes el escenario a sus inversores, con su logo al lado del tuyo.",
+   "x": "Quedaron contentos. Ahora quieren que presentes el escenario a sus inversionistas, con su logo al lado del tuyo.",
    "o": [
     {
      "t": "Aceptar y presentar",
@@ -28866,7 +28866,7 @@ const LOTES = {
       "cash": 4000,
       "rep": -2,
       "ene": -2,
-      "msg": "Presentas con su logo detrás. Los inversores te miran como se mira a un vendedor.",
+      "msg": "Presentas con su logo detrás. Los inversionistas te miran como se mira a un vendedor.",
       "luego": [
        {
         "en": 1,
@@ -28891,7 +28891,7 @@ const LOTES = {
       "rep": 3,
       "cri": 2,
       "red": -3,
-      "msg": "Llegas con la recesión de vuelta en la lámina. Al banco no le gusta. A los inversores, sí."
+      "msg": "Llegas con la recesión de vuelta en la diapositiva. Al banco no le gusta. A los inversionistas, sí."
      }
     },
     {
@@ -28935,8 +28935,8 @@ const LOTES = {
   {
    "id": 18616,
    "por": "Presentaste tu pronóstico con el logo de un banco",
-   "t": "Los inversores te reclaman",
-   "x": "La economía se frenó más de lo que dijiste en esa presentación. Dos inversores del banco te escriben pidiendo explicaciones.",
+   "t": "Los inversionistas te reclaman",
+   "x": "La economía se frenó más de lo que dijiste en esa presentación. Dos inversionistas del banco te escriben pidiendo explicaciones.",
    "o": [
     {
      "t": "Mostrarles tu número original",
@@ -29377,7 +29377,7 @@ const LOTES = {
       "rep": 2,
       "cri": 2,
       "ene": -3,
-      "msg": "Respondes por todo, incluso por lo que no hiciste. El revisor anota cada cosa con letra pequeña.",
+      "msg": "Respondes por todo, incluso por lo que no hiciste. El revisor anota cada cosa con letra chica.",
       "luego": [
        {
         "en": 1,
@@ -30680,7 +30680,7 @@ const LOTES = {
    "x": "Sin el dinero del préstamo, el constructor dice que no puede pagar la nómina y que el lunes para la obra. Ya llamó a tu jefe y al ministerio.",
    "o": [
     {
-     "t": "Desembolsar solo lo que se midió en sitio",
+     "t": "Desembolsar solo lo que se midió en obra",
      "d": {
       "cri": 4,
       "car": 2,
@@ -30971,7 +30971,7 @@ const LOTES = {
   {
    "id": 20313,
    "por": "Armaste una tesis sobre una refinería",
-   "t": "Una inversora en materias primas quiere contratarte",
+   "t": "Una inversionista en materias primas quiere contratarte",
    "x": "Una operadora que compra y vende materias primas vio tu análisis y te invita a almorzar. Busca a alguien que entienda las plantas por dentro.",
    "o": [
     {
@@ -47414,7 +47414,7 @@ const E6 = [
       { t: "Sentarte con él y decidir juntos", juego: "comite", stat: "cri", res: {
         exito: { cri: 6, red: 5, rep: 4, estudia: 12, msg: "Le explicas por qué el que más crece no era el mejor. Se le queda para siempre, y a ti también." },
         parcial: { cri: 3, red: 3, estudia: 7, msg: "Lo resuelven a medias. Aprende algo, aunque no lo más importante." },
-        fallo: { cri: 2, rep: -2, estudia: 6, msg: "Escoges mal delante de él. Al menos aprendéis los dos, por el camino caro." } } },
+        fallo: { cri: 2, rep: -2, estudia: 6, msg: "Escoges mal delante de él. Al menos aprenden los dos, por el camino caro." } } },
       { t: "Mandarle un libro y volver a lo tuyo", d: { car: 3, red: -3, msg: "Le pasas un libro. Es mejor que nada y bastante peor que media hora tuya." } },
     ] },
 ];
@@ -47428,7 +47428,7 @@ E.push.apply(E, E6);
    enferma, quién se muere y quién te estafa.
 
    Cada escena tiene rango de edad, condiciones de estado y, casi
-   siempre, un coste que no aparece en ninguna hoja de cálculo.
+   siempre, un costo que no aparece en ninguna hoja de cálculo.
    Campos: eMin y eMax son edades, no rangos de carrera. "una" marca
    las que solo pueden ocurrir una vez en la partida.
    ============================================================ */
@@ -47633,7 +47633,7 @@ const VIDA = [
     o: [
       { t: "Preguntar directamente cuánto se lleva él y cómo", d: { cri: 7, msg: "Preguntas por la comisión. Se pone incómodo, y en ese silencio está toda la información que necesitabas." } },
       { t: "Entrar, suena bien y el capital está garantizado", chk: { s: "cri", dif: 48 },
-        ok: { cri: 5, cash: -300, msg: "Lees la letra pequeña a tiempo: la garantía solo aplica a vencimiento y a diez años. Sales con una comisión de salida y una lección." },
+        ok: { cri: 5, cash: -300, msg: "Lees la letra chica a tiempo: la garantía solo aplica a vencimiento y a diez años. Sales con una comisión de salida y una lección." },
         no: { cash: -5500, cri: 8, msg: "El producto rinde la mitad que un índice y te cobra tres veces más. La garantía era real y valía mucho menos de lo que costó." } },
     ],
   },
@@ -47657,7 +47657,7 @@ const VIDA = [
     t: "Te clonaron la identidad", clave: false,
     x: "Aparecen dos créditos a tu nombre que nunca pediste. El banco dice que investigará. Investigar, aquí, significa entre tres y nueve meses.",
     o: [
-      { t: "Abogado y denuncia formal desde el día uno", d: { cash: -2200, rep: 3, cri: 4, msg: "Actúas rápido y formal. Recuperas casi todo y tu historial queda limpio antes de que te haga falta." } },
+      { t: "Abogado y denuncia formal desde el primer día", d: { cash: -2200, rep: 3, cri: 4, msg: "Actúas rápido y formal. Recuperas casi todo y tu historial queda limpio antes de que te haga falta." } },
       { t: "Gestionarlo tú por teléfono para ahorrarte el abogado", d: { cash: -3800, ene: -8, msg: "Pierdes ocho meses en llamadas. Al final se resuelve y el ahorro en abogado se lo comió el tiempo." } },
     ],
   },
@@ -48416,7 +48416,7 @@ const LEGENDARIAS = [
    Independizarse no puede significar lo mismo para todo el mundo: a un
    ingeniero de sistemas no le interesa montar una boutique de banca de
    inversion, le interesa montar algo que escale sin pedirle mas horas.
-   Cada titulo tiene su salida, con su coste de montarla y su forma de
+   Cada titulo tiene su salida, con su costo de montarla y su forma de
    pagar. El multiplicador se acumula sobre el sueldo que ya tenias.
    ============================================================ */
 const FIRMAS = {
@@ -48433,7 +48433,7 @@ const FIRMAS = {
   ing: {
     n: "Tu propia constructora", corto: "Constructora",
     costo: 62000, mult: 1.46, mods: { car: 9, mod: 4, ene: -9 },
-    d: "Obras, márgenes finos y un balance lleno de maquinaria. Cuando una obra sale bien, sale muy bien; cuando sale mal, te la llevas puesta.",
+    d: "Obras, márgenes finos y un balance lleno de maquinaria. Cuando una obra sale bien, sale muy bien; cuando sale mal, te pega de lleno.",
   },
   der: {
     n: "Tu propio bufete", corto: "Bufete",
@@ -48700,7 +48700,7 @@ const APERTURAS = [
         { t: "Repartirlo entre varios tipos de activo", abre: "cartera",
           d: { cri: 4, msg: "Abres tu primera cartera. Arriba aparece la sección Cartera: ahí decides cuánto inviertes y cómo, con un toque." } },
         { t: "Empezar prudente, casi todo en efectivo", abre: "cartera",
-          d: { cri: 2, ene: 3, msg: "Prefieres mojarte los pies antes de nadar. La cartera queda en Prudente y puedes cambiarla cuando quieras." } },
+          d: { cri: 2, ene: 3, msg: "Prefieres probar el agua antes de tirarte. La cartera queda en Prudente y puedes cambiarla cuando quieras." } },
       ] } },
   { id: "vida", rango: 1, ano: 4,
     guia: { t: "Vida", x: "Lo que te cuesta vivir como vives, y cuánto necesitas para no depender del sueldo.",
@@ -48730,7 +48730,7 @@ const APERTURAS = [
       x: "Te llega la carta que le llega a todo el que ya gana lo suficiente: una línea de crédito preaprobada, redactada en tono de felicitación. No te están premiando, te están vendiendo.",
       o: [
         { t: "Entender qué te ofrecen antes de necesitarlo", abre: "banco",
-          d: { cri: 6, msg: "Lees la letra pequeña sin firmar nada. En Ficha se abre El banco: cuánto te prestarían, a qué tasa, y cómo pagar lo que debas." } },
+          d: { cri: 6, msg: "Lees la letra chica sin firmar nada. En Ficha se abre El banco: cuánto te prestarían, a qué tasa, y cómo pagar lo que debas." } },
         { t: "Guardar la carta y no pensarlo hoy", abre: "banco",
           d: { ene: 2, msg: "La carta va al cajón. La sección del banco queda disponible en Ficha el día que la necesites." } },
       ] } },
@@ -49976,7 +49976,7 @@ const JERGA_ESCENA = [
   [/\bvp\b/, { n: "VP", x: "Vicepresidente: en banca es un cargo intermedio, el jefe directo de los analistas. No dirige la firma: dirige el trabajo del día." }],
   [/\bcompliance\b/i, { n: "Compliance", x: "El área que vigila que la firma y su gente cumplan las reglas: nada de usar información secreta, nada de conflictos de interés." }],
   [/\bposici[óo]n(es)?\b/i, { n: "Posición", x: "Lo que tienes comprado de algo. «Una posición que sube 70%» es una inversión tuya que ya vale 70% más de lo que pagaste." }],
-  [/headhunter|cazatalentos/i, { n: "Headhunter", x: "Alguien a quien las empresas pagan para encontrar y convencer a gente que ya trabaja en otro sitio." }],
+  [/headhunter|cazatalentos/i, { n: "Headhunter", x: "Alguien a quien las empresas pagan para encontrar y convencer a gente que ya trabaja en otro lado." }],
   [/roadshow/i, { n: "Roadshow", x: "Una gira de reuniones con inversionistas, ciudad por ciudad, para venderles una emisión o una empresa." }],
   [/colocaci[óo]n/i, { n: "Colocación", x: "Vender acciones o bonos nuevos de una empresa a inversionistas para que la empresa consiga dinero." }],
   [/retainer/i, { n: "Retainer", x: "Un pago fijo cada mes por estar disponible para un cliente, aparte de lo que se cobra si la operación sale." }],
@@ -50128,7 +50128,7 @@ function JuegoPrecision({ ayuda, onFin }) {
   );
 }
 
-/* ---- Peinar el legajo · memoria de trabajo ----
+/* ---- Repasar el expediente · memoria de trabajo ----
    Reescrito: cada casilla tiene su propio color y su propio nombre, así
    que la secuencia se recuerda como "cobre, verde, vino" y no como tres
    cuadrados grises indistinguibles. Y ahora hay tres vidas: fallar una
@@ -50939,13 +50939,13 @@ const CUENTAS = [
     const v = [80, 100, 120, 150, 200][Math.floor(Math.random() * 5)];
     const mrg = [10, 15, 20, 25][Math.floor(Math.random() * 4)];
     const u = v * mrg / 100;
-    return { q: `Ventas de ${v} y utilidad de ${u}. El margen es`, ops: [mrg, mrg + 5, Math.round(u / (v + u) * 100)], c: mrg, u: "%" };
+    return { q: `Ventas de ${v} millones y utilidad de ${u} millones. El margen es`, ops: [mrg, mrg + 5, Math.round(u / (v + u) * 100)], c: mrg, u: "%" };
   } },
   { min: 1, f: () => {
     const compra = [40, 50, 80, 120][Math.floor(Math.random() * 4)];
     const f = [1.25, 1.5, 1.75, 2][Math.floor(Math.random() * 4)];
     const c = Math.round((f - 1) * 100);
-    return { q: `Compraste a ${compra} y vendiste a ${compra * f}. Tu retorno es`, ops: [c, Math.round((1 - 1 / f) * 100), c + 10], c, u: "%" };
+    return { q: `Compraste a USD ${compra} y vendiste a USD ${String(compra * f).replace(".", ",")}. Tu retorno es`, ops: [c, Math.round((1 - 1 / f) * 100), c + 10], c, u: "%" };
   } },
   { min: 1, f: () => {
     const r = [4, 6, 8, 9, 12][Math.floor(Math.random() * 5)];
@@ -50975,7 +50975,7 @@ const CUENTAS = [
     const tasa = [8, 10, 12][Math.floor(Math.random() * 3)];
     const int = d * tasa / 100;
     const c = +(eb / int).toFixed(1);
-    return { q: `EBITDA de ${eb} y deuda de ${d} al ${tasa}%. La cobertura de intereses es`, ops: [c, +(eb / d * 10).toFixed(1), +(int / eb).toFixed(1)], c, u: " veces" };
+    return { q: `EBITDA de ${eb} millones y deuda de ${d} millones al ${tasa}%. La cobertura de intereses es`, ops: [c, +(eb / d * 10).toFixed(1), +(int / eb).toFixed(1)], c, u: " veces" };
   } },
   { min: 3, f: () => {
     const acc = [80, 100, 120][Math.floor(Math.random() * 3)];
@@ -50989,7 +50989,7 @@ const CUENTAS = [
     const dep = [10, 15, 20][Math.floor(Math.random() * 3)];
     const capex = [15, 25, 30][Math.floor(Math.random() * 3)];
     const c = Math.round(ebit * (1 - tax / 100) + dep - capex);
-    return { q: `EBIT de ${ebit}, impuesto ${tax}%, depreciación ${dep} y capex ${capex}, sin cambio en capital de trabajo. El flujo libre a la firma es`, ops: [c, Math.round(ebit + dep - capex), Math.round(ebit * (1 - tax / 100) - dep + capex)], c, u: "" };
+    return { q: `EBIT de ${ebit} millones, impuesto ${tax}%, depreciación ${dep} millones y capex ${capex} millones, sin cambio en capital de trabajo. El flujo libre a la firma es`, ops: [c, Math.round(ebit + dep - capex), Math.round(ebit * (1 - tax / 100) - dep + capex)], c, u: "" };
   } },
   { min: 4, f: () => {
     const we = [40, 50, 60][Math.floor(Math.random() * 3)];
@@ -50997,27 +50997,27 @@ const CUENTAS = [
     const kd = [8, 9, 10][Math.floor(Math.random() * 3)];
     const tax = 30;
     const c = +((we / 100) * ke + (1 - we / 100) * kd * (1 - tax / 100)).toFixed(1);
-    return { q: `Capital propio ${we}% al ${ke}, deuda al ${kd} con impuesto de 30. El WACC es`, ops: [c, +((we / 100) * ke + (1 - we / 100) * kd).toFixed(1), +(((ke + kd) / 2)).toFixed(1)], c, u: "%" };
+    return { q: `Capital propio ${we}% al ${ke}%, deuda al ${kd}% con impuesto de 30%. El WACC es`, ops: [c, +((we / 100) * ke + (1 - we / 100) * kd).toFixed(1), +(((ke + kd) / 2)).toFixed(1)], c, u: "%" };
   } },
   { min: 4, f: () => {
     const eq = [30, 40, 50][Math.floor(Math.random() * 3)];
     const m = [2, 2.5, 3][Math.floor(Math.random() * 3)];
     const anos = [4, 5][Math.floor(Math.random() * 2)];
     const c = Math.round((Math.pow(m, 1 / anos) - 1) * 100);
-    return { q: `Pusiste ${eq} de capital y sales en ${Math.round(eq * m)} a los ${anos} años. Tu TIR anual es cerca de`, ops: [c, Math.round((m - 1) * 100), Math.round((m - 1) * 100 / anos)], c, u: "%" };
+    return { q: `Pusiste ${eq} millones de capital y sales con ${Math.round(eq * m)} millones a los ${anos} años. Tu TIR anual es cerca de`, ops: [c, Math.round((m - 1) * 100), Math.round((m - 1) * 100 / anos)], c, u: "%" };
   } },
   { min: 4, f: () => {
     const cf = [1000, 1500, 2000][Math.floor(Math.random() * 3)];
     const g = [2, 3][Math.floor(Math.random() * 2)];
     const wacc = [9, 10, 12][Math.floor(Math.random() * 3)];
     const c = Math.round(cf * (1 + g / 100) / ((wacc - g) / 100));
-    return { q: `Flujo de ${cf} que crece al ${g}% a perpetuidad y se descuenta al ${wacc}. El valor terminal es`, ops: [c, Math.round(cf / (wacc / 100)), Math.round(cf * (1 + g / 100) / (wacc / 100))], c, u: "" };
+    return { q: `Flujo de ${cf} millones que crece al ${g}% a perpetuidad y se descuenta al ${wacc}%. El valor terminal es`, ops: [c, Math.round(cf / (wacc / 100)), Math.round(cf * (1 + g / 100) / (wacc / 100))], c, u: "" };
   } },
   { min: 5, f: () => {
     const local = [24, 30, 36][Math.floor(Math.random() * 3)];
     const usd = [4, 5, 6][Math.floor(Math.random() * 3)];
     const c = local - usd;
-    return { q: `Tasa local ${local}% y tasa en dólares ${usd}. Cubrir el riesgo cambiario a un año te cuesta cerca de`, ops: [c, local + usd, Math.round(local / usd)], c, u: "%" };
+    return { q: `Tasa local ${local}% y tasa en dólares ${usd}%. Cubrir el riesgo cambiario a un año te cuesta cerca de`, ops: [c, local + usd, Math.round(local / usd)], c, u: "%" };
   } },
   { min: 5, f: () => {
     const pat = [1, 2, 3][Math.floor(Math.random() * 3)];
@@ -55421,7 +55421,7 @@ function Motor() {
            Nunca termina la partida: quedarse sin trabajo no es morirse. */
         st.rep = 26; st.carrera = Math.max(0, st.carrera - 6);
         st.cash -= 2000;
-        notas.push("Te dejan ir. Encuentras sitio en otra casa, pero llegas de cero y con la reputación por reconstruir.");
+        notas.push("Te dejan ir. Encuentras lugar en otra firma, pero llegas de cero y con la reputación por reconstruir.");
         st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Te dejan ir y empiezas en otra casa" });
       } else {
         st.rango = Math.max(0, st.rango - 1);
@@ -55902,7 +55902,7 @@ function Motor() {
                   Las empresas, los fondos, las noticias y los números están inventados. No existe ninguna
                   de las oportunidades que vas a ver, no hay dinero de verdad en juego y nada de lo que
                   decidas aquí tiene la menor consecuencia fuera de esta pantalla. Puedes arruinarte
-                  tranquilo: es el mejor sitio para hacerlo.
+                  tranquilo: es el mejor lugar para hacerlo.
                 </p>
               </div>
 
@@ -55910,7 +55910,7 @@ function Motor() {
                 <div className="ea-avisoK ea-dis">Es para aprender, no para hacerte caso</div>
                 <p>
                   El juego enseña cómo funcionan el interés compuesto, la diversificación, el riesgo, la deuda
-                  y el coste de vivir por encima de tus posibilidades. Eso son conceptos, y los conceptos sí
+                  y el costo de vivir por encima de tus posibilidades. Eso son conceptos, y los conceptos sí
                   se trasladan a la vida. Las cifras concretas, no: <strong>esto no es asesoría financiera</strong>.
                   Ninguna decisión de tu dinero real debería basarse en lo que pase en una partida.
                 </p>
@@ -55940,7 +55940,7 @@ function Motor() {
                 <div className="ea-avisoK ea-dis">Tu partida no sale de tu navegador</div>
                 <p>
                   Lo que juegas se guarda en tu propio dispositivo para que puedas retomarlo. No se envía
-                  a ningún sitio, no se pide ningún dato tuyo y no hay cuenta que crear.
+                  a ningún lado, no se pide ningún dato tuyo y no hay cuenta que crear.
                 </p>
               </div>
             </div>
@@ -57728,7 +57728,7 @@ function Motor() {
                 </div>
                 <div className="ea-fila"><span style={{ fontSize: 13 }}>Tu patrimonio a los 65, sin tocarlo</span><span className="ea-mono">USD {fmt(sinTocar)}</span></div>
                 <div className="ea-fila"><span style={{ fontSize: 13 }}>Solo por dejarlo quieto</span><span className="ea-mono">+USD {fmt(sinTocar - patrimonio)}</span></div>
-                <div className="ea-fila"><span style={{ fontSize: 13 }}>Sueldo neto que dejaste sobre la mesa</span><span className="ea-mono">USD {fmt(deSueldo)}</span></div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Sueldo neto que dejaste de cobrar</span><span className="ea-mono">USD {fmt(deSueldo)}</span></div>
                 <div className="ea-fila"><span style={{ fontSize: 13 }}>Retirando 4% al año</span><span className="ea-mono">USD {fmt(retiroAnual)} · gastas {fmt(gastosAnuales)}</span></div>
                 <div className="ea-itemD" style={{ marginTop: 9 }}>
                   {mu > 0
