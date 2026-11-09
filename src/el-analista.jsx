@@ -55805,7 +55805,7 @@ function Motor() {
             <circle className="ea-paPunto" cx="300" cy="8" r="5.5" />
           </svg>
           <p className="ea-lede">
-            Un año por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
+            Dos años por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
           </p>
           </div>
           <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
