@@ -48543,6 +48543,17 @@ const sueldoCon = (st, mult) => {
   return RANGO(st && st.rango).salario * 12 * na.sal * clamp(numero(st && st.sueldoMult, 1) * numero(mult, 1), 0.6, TOPE_MULT);
 };
 
+/* Negociar el aumento con tu firma. El precio de la mesa (0 a 100) se
+   lee como el aumento sobre lo que cobras hoy: se empieza en 50, que es
+   lo mismo que renovar sin discutir (+6%), y cada punto más son 0,7
+   puntos de aumento, hasta un 40%. Lo que cierras es lo que cobras.
+   (Alessandro, 9-nov-2026: «que se refleje tu salario actual y con base
+   a eso se pueda negociar un aumento».) */
+const aumentoNeg = (precio) => clamp(Math.round((numero(precio, 50) - 42) * 0.7), 0, 40) / 100;
+/* el sueldo nuevo con ese aumento, sin pasar del techo de la carrera */
+const sueldoNeg = (ctx, precio) =>
+  Math.round(Math.min(numero(ctx && ctx.techo, Infinity), numero(ctx && ctx.actual, 0) * (1 + aumentoNeg(precio))));
+
 /* ============================================================
    EL CONTRATO, COMO UN MERCADO DE PASES
    Antes eran tres renovaciones casi iguales y ningún sueldo a la vista.
@@ -48593,8 +48604,10 @@ const escenaContrato = (st) => {
   };
   const negociar = {
     t: "Negociar un aumento con " + actual,
-    contrato: { anos: 3, mult: 1.22 }, j: "anclaje", stat: "red", etq: "Si negocias bien",
+    contrato: { anos: 3, mult: 1.22 }, j: "anclaje", stat: "red", etq: "Hoy cobras",
     sueldo: Math.round(sueldoCon(st, 1.22)),
+    /* lo que cobras hoy y el techo de tu carrera: la mesa parte de ahí */
+    negocia: { actual: Math.round(sueldoCon(st, 1)), techo: Math.round(sueldoCon(st, TOPE_MULT * 10)) },
     d: { car: 3, red: 2, msg: "Te sientas con tu jefe y pones tu número sobre la mesa." },
   };
   return { ...ESCENA_CONTRATO, o: [renovar].concat(ofertas, [negociar]) };
@@ -50407,7 +50420,7 @@ const jugadaNegociacion = (c, carta, ruido = 0) => {
 const nivelNegociacion = (c) =>
   !c || c.fin !== "acuerdo" ? "fallo" : c.precio >= 68 ? "exito" : c.precio >= 52 ? "parcial" : "fallo";
 
-function JuegoAnclaje({ ayuda, onFin }) {
+function JuegoAnclaje({ ayuda, onFin, ctx }) {
   const [c, setC] = useState(() => casoNegociacion(ayuda));
   const jugar = (k) => {
     if (c.fin) return;
@@ -50415,6 +50428,11 @@ function JuegoAnclaje({ ayuda, onFin }) {
   };
   const nombre = (k) => (CARTAS_NEG.find((x) => x.k === k) || {}).n || k;
   const nivel = c.fin ? nivelNegociacion(c) : null;
+  /* En el contrato la mesa habla en dinero: tu sueldo de hoy y el que
+     estás pidiendo. En el resto de escenas, el precio de 0 a 100. */
+  const sueldo = ctx && numero(ctx.actual, 0) > 0;
+  const pct = Math.round(aumentoNeg(c.precio) * 100);
+  const terminar = () => onFin(nivel, { precio: c.precio, acuerdo: c.fin === "acuerdo" });
 
   return (
     <div className="ea-jw">
@@ -50422,8 +50440,22 @@ function JuegoAnclaje({ ayuda, onFin }) {
         <span>{c.fin ? "Negociación cerrada" : "Ronda " + c.ronda + " de 3"}</span>
         <span>Paciencia {"●".repeat(c.paciencia)}{"○".repeat(Math.max(0, 5 - c.paciencia))}</span>
       </div>
-      <div className="ea-anclaN">{c.precio}</div>
-      <div className="ea-anclaE ea-dis"><span>tu precio, de 0 a 100</span><span>éxito desde 68</span></div>
+      {sueldo ? (
+        <div>
+          <div className="ea-anclaE ea-dis"><span>Hoy cobras</span><span>USD {fmt(ctx.actual)} al año</span></div>
+          <div className="ea-anclaN">USD {fmt(c.fin === "levanta" ? ctx.actual : sueldoNeg(ctx, c.precio))}</div>
+          <div className="ea-anclaE ea-dis">
+            <span>{c.fin === "levanta" ? "sin trato: sin aumento"
+              : (c.fin ? "lo que cerraste: " : "lo que pides: ") + (pct > 0 ? "+" + pct + "%" : "sin aumento")}</span>
+            <span>muy buen trato desde +{Math.round(aumentoNeg(68) * 100)}%</span>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="ea-anclaN">{c.precio}</div>
+          <div className="ea-anclaE ea-dis"><span>tu precio, de 0 a 100</span><span>éxito desde 68</span></div>
+        </div>
+      )}
       {!c.fin && (
         <p className="ea-memoTxt ea-negFrase">«{c.frases[c.ronda - 1]}»</p>
       )}
@@ -50444,13 +50476,18 @@ function JuegoAnclaje({ ayuda, onFin }) {
       {c.fin && (
         <div style={{ marginTop: 12 }}>
           <div className="ea-dis" style={{ fontSize: 15, color: nivel === "exito" ? "var(--verde)" : nivel === "parcial" ? "var(--cobre)" : "var(--rojo)" }}>
-            {c.fin === "levanta" ? "Se levantó de la mesa. No hay trato."
+            {sueldo
+              ? (c.fin === "levanta" ? "Se levantó de la mesa. Te quedas con lo que cobras: USD " + fmt(ctx.actual) + " al año."
+                : "Cerraste en USD " + fmt(sueldoNeg(ctx, c.precio)) + " al año: "
+                  + (pct > 0 ? "+" + pct + "% sobre lo que cobrabas. " : "sin aumento. ")
+                  + (nivel === "exito" ? "Muy buen trato." : nivel === "parcial" ? "Trato justo, sin más." : "Dejaste demasiado sobre la mesa."))
+              : c.fin === "levanta" ? "Se levantó de la mesa. No hay trato."
               : nivel === "exito" ? "Cerraste en " + c.precio + ". Muy buen trato."
               : nivel === "parcial" ? "Cerraste en " + c.precio + ". Trato justo, sin más."
               : "Cerraste en " + c.precio + ". Dejaste demasiado sobre la mesa."}
           </div>
           <p className="ea-memoTxt">{REVELA_NEG[c.tipo]}</p>
-          <button className="ea-btn" onClick={() => onFin(nivel)}>Continuar</button>
+          <button className="ea-btn" onClick={terminar}>Continuar</button>
         </div>
       )}
     </div>
@@ -51093,7 +51130,7 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema, ctx }) {
   if (tipo === "precision") return <JuegoPrecision ayuda={ayuda} onFin={onFin} />;
   if (tipo === "memoria") return <JuegoMemoria ayuda={ayuda} onFin={onFin} />;
   if (tipo === "ojo") return <JuegoOjo ayuda={ayuda} onFin={onFin} />;
-  if (tipo === "anclaje") return <JuegoAnclaje ayuda={ayuda} onFin={onFin} />;
+  if (tipo === "anclaje") return <JuegoAnclaje ayuda={ayuda} onFin={onFin} ctx={ctx} />;
   if (tipo === "tresraya") return <JuegoTresRaya ayuda={ayuda} onFin={onFin} />;
   if (tipo === "quiz") return <JuegoQuiz ayuda={ayuda} nivel={nivel} onFin={onFin} modo={modo} temas={temas} />;
   if (tipo === "catedra") return <JuegoCatedra ayuda={ayuda} nivel={nivel} onFin={onFin} onTema={onTema} />;
@@ -51143,11 +51180,13 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
      Un resultado por escena, ni uno mas. */
   const gastado = useRef(false);
   useEffect(() => () => { gastado.current = true; }, []);
-  const cerrarUnaVez = (nivelBruto) => {
+  const cerrarUnaVez = (nivelBruto, extra) => {
     if (gastado.current) return;
     gastado.current = true;
     const nv = nivelBruto === "exito" || nivelBruto === "parcial" || nivelBruto === "fallo" ? nivelBruto : "fallo";
-    try { onFin(nv); } catch (e) { try { console.error("[El Analista] fin de juego", e); } catch (_) {} }
+    /* algunos juegos traen además su resultado exacto (la negociación,
+       el precio en que cerró); los demás no mandan nada */
+    try { onFin(nv, extra && typeof extra === "object" ? extra : null); } catch (e) { try { console.error("[El Analista] fin de juego", e); } catch (_) {} }
   };
   const j = JUEGOS[tipo];
   if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} ctx={ctx} />;
@@ -53810,7 +53849,11 @@ function Motor() {
   const [op, setOp] = useState(null);
   /* el monto de «Armar la estructura» se sortea una vez por opción elegida:
      calcularlo en cada pintado lo haría cambiar solo */
+  /* el aumento que se cerró en la mesa del contrato, hasta aplicarlo */
+  const aumentoPactado = useRef(null);
   const ctxJuego = useMemo(() => {
+    /* la negociación del contrato: lo que cobras hoy */
+    if (op && (op.juego || op.j) === "anclaje") return op.negocia || null;
     if (!op || (op.juego || op.j) !== "estructura") return null;
     try { return contextoEstructura(op, s); } catch (e) { return null; }
   }, [op]);
@@ -54606,8 +54649,12 @@ function Motor() {
          fue negociando: firmar bien y firmar mal no pueden pagar igual.
          Las opciones sin minijuego dan lo que prometen. */
       const negociada = !!(o.j || o.juego);
-      const parte = !negociada ? 1 : nivel === "exito" ? 1 : nivel === "parcial" ? 0.55 : 0;
-      const mult = 1 + (numero(o.contrato.mult, 1) - 1) * parte;
+      /* Negociando con tu firma se cobra exactamente el aumento que se
+         cerró en la mesa, ni más ni menos. */
+      const pactado = o.negocia ? aumentoPactado.current : null;
+      aumentoPactado.current = null;
+      const parte = pactado || !negociada ? 1 : nivel === "exito" ? 1 : nivel === "parcial" ? 0.55 : 0;
+      const mult = pactado || 1 + (numero(o.contrato.mult, 1) - 1) * parte;
       st.sueldoMult = clamp(numero(st.sueldoMult, 1) * mult, 0.6, TOPE_MULT);
       /* Y si la negociación se cayó del todo, tampoco te mudas de firma:
          te quedas donde estabas, con el plazo nuevo y sin subida. */
@@ -55426,10 +55473,25 @@ function Motor() {
     } else resolverEscena(o.d, "exito", o);
   };
 
-  const finJuego = (nivel) => {
+  const finJuego = (nivel, extra) => {
     if (!enFase("minijuego") || !op) return;
     const base = op.res ? op.res[nivel] : escalar(op.d || {}, nivel);
     if (nivel === "fallo" && !op.res && base) base.msg = msgFallo(op);
+    /* Negociar el contrato: firmas exactamente el aumento que cerraste
+       en la mesa. Si se levantó, sigues con lo que cobrabas. */
+    if (op.negocia && op.contrato && extra) {
+      const pct = extra.acuerdo ? aumentoNeg(extra.precio) : 0;
+      const nuevo = extra.acuerdo ? sueldoNeg(op.negocia, extra.precio) : numero(op.negocia.actual, 0);
+      const b = { ...(base || {}) };
+      b.msg = (b.msg ? b.msg + " " : "") + (pct > 0
+        ? "Firmas por USD " + fmt(nuevo) + " al año: +" + Math.round(pct * 100) + "% sobre lo que cobrabas."
+        : "Sigues cobrando USD " + fmt(nuevo) + " al año.");
+      /* la opción tiene que seguir siendo la misma (los mentores y los
+         árboles la buscan por identidad): el aumento va aparte */
+      aumentoPactado.current = 1 + pct;
+      resolverEscena(b, nivel, op);
+      return;
+    }
     resolverEscena(base || {}, nivel, op);
   };
 
@@ -56903,7 +56965,9 @@ function Motor() {
                             {o.sueldo > 0 && (
                               <span className="ea-opSueldo">
                                 {o.etq && <span className="ea-opEtq ea-dis">{o.etq}</span>}
-                                <span className="ea-mono">{o.j ? "hasta " : ""}USD {fmt(o.sueldo)} al año</span>
+                                <span className="ea-mono">{o.negocia
+                                  ? "USD " + fmt(o.negocia.actual) + " al año · tú pides el aumento"
+                                  : (o.j ? "hasta " : "") + "USD " + fmt(o.sueldo) + " al año"}</span>
                               </span>
                             )}
                             {o.req && !falta && <span className="ea-opSolo ea-dis">solo tú</span>}

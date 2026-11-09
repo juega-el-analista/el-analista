@@ -16,7 +16,7 @@ cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
 const comp = path.join(__dirname, "compilado.js");
 const tmp = path.join(__dirname, "probeContrato.js");
 fs.writeFileSync(tmp, fs.readFileSync(comp, "utf8").replace("module.exports = ElAnalista;",
-  "module.exports = { escenaContrato, escenaDeId, sueldoCon, PATRONES, ESCENA_CONTRATO };"));
+  "module.exports = { escenaContrato, escenaDeId, sueldoCon, PATRONES, ESCENA_CONTRATO, aumentoNeg, sueldoNeg, TOPE_MULT };"));
 const J = require(tmp);
 
 let fallos = 0;
@@ -42,6 +42,17 @@ ok(JSON.stringify(J.escenaContrato(st)) === JSON.stringify(e), "mismo año y sem
 ok(JSON.stringify(J.escenaDeId(J.ESCENA_CONTRATO.id, st)) === JSON.stringify(e), "y se rearma desde su id");
 ok(JSON.stringify(J.escenaContrato({ ...st, turno: 7 })) !== JSON.stringify(e), "otro año, otras ofertas");
 ok(Object.keys(J.PATRONES).every((k) => J.PATRONES[k].length >= 6), "cada carrera tiene al menos seis firmas");
+
+/* Negociar con tu firma parte de lo que cobras hoy (Alessandro, 9-nov-2026) */
+const neg = negociar[0] || {};
+ok(neg.negocia && neg.negocia.actual === Math.round(J.sueldoCon(st, 1)), "negociar muestra lo que cobras hoy (USD " + (neg.negocia || {}).actual + ")");
+ok(J.aumentoNeg(50) === 0.06, "la mesa empieza donde renovar sin discutir: +6%");
+ok(J.aumentoNeg(68) > J.aumentoNeg(52) && J.aumentoNeg(52) > J.aumentoNeg(50), "cuanto más cierras, más aumento");
+ok(J.aumentoNeg(0) === 0 && J.aumentoNeg(100) === 0.4, "nunca baja el sueldo y el tope es +40%");
+ok(J.sueldoNeg(neg.negocia, 68) === Math.round(neg.negocia.actual * 1.18), "cerrar en 68 es cobrar un 18% más");
+const alTope = { ...st, sueldoMult: J.TOPE_MULT };
+const negTope = (J.escenaContrato(alTope).o.find((o) => o.j === "anclaje") || {}).negocia;
+ok(negTope && J.sueldoNeg(negTope, 100) === negTope.actual, "en el techo de tu carrera ya no hay aumento que pedir");
 
 try { fs.unlinkSync(tmp); } catch (e2) {}
 console.log("\n  " + (fallos ? fallos + " FALLO(S)" : "todo en verde"));
