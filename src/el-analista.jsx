@@ -1609,6 +1609,36 @@ const CSS4 = `
 .ea-selloHoja.tarde{animation-delay:1.2s}
 @keyframes ea-sellaHoja{from{opacity:0;transform:translateY(-50%) rotate(-10deg) scale(1.8)}to{opacity:1;transform:translateY(-50%) rotate(-10deg) scale(1)}}
 .ea-hojaBotones{display:flex;gap:8px;margin-top:32px;flex-wrap:wrap}
+/* el golpe de dinero */
+.ea-golpeCapa{position:fixed;inset:0;z-index:80;background:var(--tinta);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+.ea-golpe{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-golpeEntra .35s ease-out}
+@keyframes ea-golpeEntra{from{transform:scale(.96);opacity:0}}
+.ea-golpe svg{position:absolute;inset:0;width:100%;height:100%}
+.ea-golpe.baja{animation:ea-golpeEntra .35s ease-out,ea-golpeSacude .5s .3s}
+@keyframes ea-golpeSacude{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.ea-golpeSalta{animation:ea-golpeSalta .55s ease-in-out infinite alternate}
+@keyframes ea-golpeSalta{to{transform:translateY(-22px)}}
+.ea-golpeAgacha{animation:ea-golpeAgacha 2.4s ease-in-out infinite alternate}
+@keyframes ea-golpeAgacha{to{transform:translateY(6px)}}
+.ea-golpeBillete{animation:ea-golpeCae 2.6s linear infinite}
+@keyframes ea-golpeCae{from{transform:translateY(-120px) rotate(0)}to{transform:translateY(560px) rotate(260deg)}}
+.ea-golpeGota{animation:ea-golpeLlueve .9s linear infinite}
+@keyframes ea-golpeLlueve{from{transform:translateY(-30px)}to{transform:translateY(260px)}}
+.ea-golpeTxt{position:absolute;left:0;right:0;bottom:0;padding:70px 16px 20px;text-align:center;color:var(--crema);background:linear-gradient(transparent,rgba(42,36,64,.92))}
+.ea-golpeK{font:700 12px Nunito,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mostaza)}
+.ea-golpeN{font:800 clamp(32px,8vw,58px) 'Bricolage Grotesque',sans-serif;line-height:1.05;margin:4px 0}
+.ea-golpe.sube .ea-golpeN{color:#9BE3A8}
+.ea-golpe.baja .ea-golpeN{color:#F2A08E}
+.ea-animoFila{display:inline-flex;gap:6px;align-items:center;margin-top:8px;background:rgba(255,244,220,.12);padding:6px 10px;border-radius:999px}
+.ea-animoFila span{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;opacity:.35;transition:all .4s}
+.ea-animoFila span.on{opacity:1;background:var(--mostaza);transform:scale(1.2)}
+.ea-animoFila b{font:800 13px 'Bricolage Grotesque',sans-serif;margin-left:6px}
+.ea-animoEf{display:block;font-size:12.5px;margin-top:6px;opacity:.85}
+.ea-quieto .ea-golpeBillete,.ea-quieto .ea-golpeGota{display:none}
+/* tu ánimo, junto a los atributos */
+.ea-animoPill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--crema);background:rgba(255,244,220,.1);padding:4px 10px 4px 6px;border-radius:999px}
+.ea-animoPill span{font-size:15px;letter-spacing:0}
 .ea-btnC{flex:1;border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);font:800 15px 'Bricolage Grotesque',sans-serif;
   padding:13px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12;min-width:150px}
 .ea-btnS{flex:1;border:2px solid var(--tinta);border-radius:999px;background:transparent;color:var(--tinta);font:800 14px 'Bricolage Grotesque',sans-serif;padding:11px 14px;cursor:pointer;min-width:150px}
@@ -48151,6 +48181,8 @@ const BASE = {
   jugados: [],
   /* los últimos minijuegos jugados, para no repetir el mismo seguido */
   recientes: [],
+  /* el ánimo de corto plazo: de −2 (hundido) a +2 (eufórico) */
+  animo: 0,
   /* movimiento: null sigue al sistema, true encendido, false apagado */
   animar: null,
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
@@ -49664,6 +49696,7 @@ const sanear = (bruto) => {
   st.temas = unicos(listaDe(r.temas, (x) => TEMAS.some((t) => t.id === x), 60));
   st.jugados = unicos(listaDe(r.jugados, (x) => !!JUEGOS[x], 30));
   st.recientes = listaDe(r.recientes, (x) => !!JUEGOS[x], 6);
+  st.animo = entero(r.animo, 0, -2, 2);
   st.animar = r.animar === true ? true : r.animar === false ? false : null;
   /* El patrón puede ser una firma de la tabla o una firma tuya, así que
      se acota por longitud en vez de por lista cerrada. */
@@ -51477,6 +51510,150 @@ function ContratoFichaje({ ayuda, ctx, onFin }) {
       {paso === "destello"
         ? <DestelloOficina look={look} sub="Se te vence el contrato" titulo="Renovación de contrato" onFin={() => setPaso("hoja")} />
         : <HojaContrato ayuda={ayuda} ctx={ctx} look={look} onFin={onFin} />}
+    </div>
+  );
+}
+
+/* ============================================================
+   EL GOLPE DE DINERO Y EL ÁNIMO
+   Ganar o perder mucho tiene que sentirse (Alessandro, 9-nov-2026:
+   «que el personaje se ponga feliz… que sea un golpe que sientas en el
+   juego»). Al cerrar una etapa en la que tus inversiones o tus
+   decisiones movieron mucho dinero, un destello en tu sala: saltas con
+   los billetes cayendo, o te hundes con la lluvia en la ventana. Y tu
+   Ánimo se mueve: de −2 (Hundido) a +2 (Eufórico). El Ánimo da o quita
+   ayuda en los minijuegos y cansancio la etapa siguiente, y vuelve un
+   paso hacia Normal en cada etapa. El sueldo no cuenta: es lo esperado.
+   ============================================================ */
+const ANIMOS = [
+  { v: -2, n: "Hundido", e: "😣" }, { v: -1, n: "Bajón", e: "😕" }, { v: 0, n: "Normal", e: "🙂" },
+  { v: 1, n: "Contento", e: "😊" }, { v: 2, n: "Eufórico", e: "🤩" },
+];
+const animoDe = (v) => ANIMOS[clamp(entero(v, 0, -2, 2), -2, 2) + 2];
+/* cuánto dinero tiene que mover la etapa para que sea un golpe */
+const golpeDe = (cierre, ano) => {
+  if (!cierre || !cierre.partes) return null;
+  const mov = numero(cierre.partes.mercados, 0) + numero(cierre.partes.decisiones, 0);
+  const base = Math.max(20000, Math.abs(numero(cierre.patIni != null ? cierre.patIni : cierre.patAntes, 0)));
+  const inv = Math.abs(numero(cierre.partes.mercados, 0)) >= Math.abs(numero(cierre.partes.decisiones, 0));
+  if (mov >= Math.max(15000, base * 0.2)) {
+    return { sube: true, monto: Math.round(mov), de: (inv ? "Tus inversiones se dispararon" : "Tus decisiones dieron fruto") + " en " + ano };
+  }
+  if (mov <= -Math.max(6000, base * 0.1)) {
+    return { sube: false, monto: Math.round(-mov), de: (inv ? "Tus inversiones se desplomaron" : "Tus decisiones te costaron caro") + " en " + ano };
+  }
+  return null;
+};
+/* tú, en tu sala, con los brazos arriba o el ánimo por el piso */
+function TuEnLaSala({ sube }) {
+  const piel = "#E7B48A", ropa = "#2F5D8A", pelo = "#2A2440";
+  return (
+    <g transform={`translate(${sube ? 230 : 190} ${sube ? 120 : 150}) scale(1.25)`}>
+      <g className={sube ? "ea-golpeSalta" : "ea-golpeAgacha"}>
+        <g stroke={ropa} strokeWidth="18" strokeLinecap="round" fill="none">
+          {sube ? <g><path d="M-36 104 L-64 46" /><path d="M36 104 L64 46" /></g> : <g><path d="M-38 106 L-30 150" /><path d="M38 106 L30 150" /></g>}
+        </g>
+        {sube
+          ? <g fill={piel}><circle cx="-66" cy="40" r="10" /><circle cx="66" cy="40" r="10" /></g>
+          : <g fill={piel}><circle cx="-29" cy="156" r="9" /><circle cx="29" cy="156" r="9" /></g>}
+        <path d="M-44 170 Q-46 96 0 92 Q46 96 44 170 Z" fill={ropa} />
+        <path d="M-12 92 L0 106 L12 92 Z" fill="#FFF4DC" />
+        <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+        <g transform={sube ? "" : "rotate(14 0 70) translate(0 8)"}>
+          <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+          <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={pelo} />
+          {sube ? (
+            <g fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round">
+              <path d="M-16 42 Q-11 36 -6 42" /><path d="M6 42 Q11 36 16 42" /><path d="M-12 54 Q0 68 12 54" fill="#2A2440" />
+            </g>
+          ) : (
+            <g>
+              <g fill="#2A2440"><rect x="-16" y="32" width="10" height="3" rx="1.5" transform="rotate(-14 -11 33)" /><rect x="6" y="32" width="10" height="3" rx="1.5" transform="rotate(14 11 33)" />
+                <circle cx="-11" cy="44" r="3" /><circle cx="11" cy="44" r="3" /></g>
+              <path d="M-9 60 Q0 52 9 60" fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" />
+              <path d="M-14 50 q-2 6 0 9" stroke="#8CC4E8" strokeWidth="3" fill="none" strokeLinecap="round" />
+            </g>
+          )}
+          <circle cx="-20" cy="54" r="5" fill="#E9875A" opacity=".35" /><circle cx="20" cy="54" r="5" fill="#E9875A" opacity=".35" />
+        </g>
+      </g>
+    </g>
+  );
+}
+function SalaGolpe({ sube }) {
+  return (
+    <g>
+      <defs>
+        <linearGradient id="ea-cieloSube" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8C6BB1" /><stop offset=".6" stopColor="#E9875A" /><stop offset="1" stopColor="#F2B632" /></linearGradient>
+        <linearGradient id="ea-cieloBaja" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1E1A30" /><stop offset="1" stopColor="#3B3358" /></linearGradient>
+      </defs>
+      <rect width="720" height="450" fill={sube ? "#F3E2BF" : "#4A4166"} />
+      <rect y="310" width="720" height="140" fill={sube ? "#E2CFA8" : "#3B3358"} />
+      <rect x="430" y="50" width="230" height="200" rx="12" fill={sube ? "url(#ea-cieloSube)" : "url(#ea-cieloBaja)"} />
+      {sube ? <circle cx="560" cy="200" r="34" fill="#F2B632" /> : <circle cx="600" cy="100" r="16" fill="#CFC4EA" opacity=".5" />}
+      <g fill={sube ? "#5B4785" : "#15121F"}><rect x="440" y="180" width="30" height="70" /><rect x="476" y="160" width="36" height="90" /><rect x="590" y="176" width="28" height="74" /><rect x="624" y="196" width="30" height="54" /></g>
+      {!sube && (
+        <g stroke="#8CC4E8" strokeWidth="2" opacity=".6" strokeLinecap="round">
+          {[450, 480, 510, 540, 570, 600, 630].map((x, i) => (
+            <line key={x} className="ea-golpeGota" x1={x} y1="40" x2={x - 6} y2="58" style={{ animationDelay: (i * 0.13) + "s" }} />
+          ))}
+        </g>
+      )}
+      <rect x="541" y="50" width="8" height="200" fill={sube ? "#FFF4DC" : "#2A2440"} />
+      <rect x="40" y="250" width="300" height="70" rx="22" fill={sube ? "#D9643A" : "#5B4785"} />
+      <rect x="30" y="290" width="320" height="56" rx="18" fill={sube ? "#B24E27" : "#3B3358"} />
+      <rect x="400" y="330" width="210" height="16" rx="6" fill={sube ? "#8A3A1C" : "#2A2440"} />
+      <rect x="420" y="346" width="12" height="60" fill={sube ? "#8A3A1C" : "#2A2440"} /><rect x="578" y="346" width="12" height="60" fill={sube ? "#8A3A1C" : "#2A2440"} />
+      <rect x="450" y="270" width="110" height="64" rx="6" fill="#2A2440" />
+      <rect x="456" y="276" width="98" height="52" rx="3" fill={sube ? "#FFF8EA" : "#1E1A30"} />
+      <polyline points={sube ? "462,318 480,310 494,314 512,298 528,300 548,282" : "462,284 480,290 494,286 512,304 528,300 548,322"}
+        fill="none" stroke={sube ? "#2F8A54" : "#E0503A"} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="440" y="330" width="130" height="6" rx="3" fill="#3B3358" />
+    </g>
+  );
+}
+function GolpeDinero({ golpe, antes, despues, onFin }) {
+  const [n, setN] = useState(0);
+  const [ya, setYa] = useState(false);
+  useEffect(() => {
+    if (typeof setTimeout !== "function") { setN(golpe.monto); setYa(true); return; }
+    const quieto = sinMovimiento();
+    let v = 0;
+    const paso = Math.max(1, Math.round(golpe.monto / 30));
+    const t = setInterval(() => { v = Math.min(golpe.monto, v + paso); setN(v); if (v >= golpe.monto) clearInterval(t); }, 30);
+    const a = setTimeout(() => setYa(true), quieto ? 100 : 900);
+    const f = setTimeout(onFin, quieto ? 2200 : 4200);
+    return () => { try { clearInterval(t); clearTimeout(a); clearTimeout(f); } catch (e) {} };
+  }, []);
+  const ahora = animoDe(ya ? despues : antes);
+  const efecto = despues > 0 ? "+" + despues * 5 + " en los minijuegos y menos cansancio la próxima etapa."
+    : despues < 0 ? "−" + (-despues * 5) + " en los minijuegos y más cansancio la próxima etapa." : "";
+  return (
+    <div className="ea-golpeCapa">
+      <div className={"ea-golpe " + (golpe.sube ? "sube" : "baja")} onClick={onFin}>
+        <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <SalaGolpe sube={golpe.sube} />
+          <TuEnLaSala sube={golpe.sube} />
+          {golpe.sube && (
+            <g>
+              {[60, 150, 250, 330, 420, 520, 610, 680].map((x, i) => (
+                <g key={x} className="ea-golpeBillete" style={{ animationDelay: (i * 0.32) + "s" }}>
+                  <rect x={x} y="0" width="38" height="20" rx="3" fill="#2F8A54" /><circle cx={x + 19} cy="10" r="5" fill="#9BE3A8" />
+                </g>
+              ))}
+            </g>
+          )}
+        </svg>
+        <div className="ea-golpeTxt">
+          <div className="ea-golpeK">{golpe.de}</div>
+          <div className="ea-golpeN ea-mono">{golpe.sube ? "+" : "−"}USD {fmt(n)}</div>
+          <div className="ea-animoFila">
+            {ANIMOS.map((x) => <span key={x.v} className={x.v === ahora.v ? "on" : ""}>{x.e}</span>)}
+            <b>Ánimo: {ahora.n}</b>
+          </div>
+          <span className="ea-animoEf">{ya && efecto ? efecto : " "}</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -54231,6 +54408,8 @@ function Motor() {
   const [anuncio, setAnuncio] = useState(false);
   /* cuántas galas de este cierre ya se vieron */
   const [galaVista, setGalaVista] = useState(0);
+  /* el golpe de dinero de la etapa, si lo hubo: va antes del rodillo */
+  const [golpe, setGolpe] = useState(null);
   useEffect(() => { setGalaVista(0); }, [cierre]);
   /* la segunda mitad de la leccion del año, la de las cifras propias */
   const [verLeccion, setVerLeccion] = useState(false);
@@ -55626,6 +55805,8 @@ function Motor() {
     }
 
     let desgaste = (tiene(st, "coach") ? 2 : 4) + (tipoRama(st) === "boutique" ? 3 : 0);
+    /* con buen ánimo el año cansa menos; con el ánimo por el piso, más */
+    if (conDecisiones) desgaste -= entero(st.animo, 0, -2, 2) * 2;
     /* la cultura de la firma: cansa más o menos y empuja más o menos */
     const cul = culturaDe(st);
     if (cul) {
@@ -55796,8 +55977,15 @@ function Motor() {
       r = calcularCierre(r.st, false);
       todos.push(r.cierre);
     }
+    const cj = { ...juntarCierres(todos), anoIni: todos[0].ano };
+    const animoAntes = entero(r.st.animo, 0, -2, 2);
+    let animo = animoAntes > 0 ? animoAntes - 1 : animoAntes < 0 ? animoAntes + 1 : 0;
+    const g = golpeDe(cj, cj.anoIni && cj.anoIni !== cj.ano ? cj.anoIni + " y " + cj.ano : String(cj.ano));
+    if (g) animo = clamp(animo + (g.sube ? 2 : -2), -2, 2);
+    r.st = { ...r.st, animo };
     setS(r.st);
-    setCierre({ ...juntarCierres(todos), anoIni: todos[0].ano });
+    setCierre(cj);
+    setGolpe(g ? { ...g, antes: animoAntes, despues: animo } : null);
     if (r.terminar) setFin(r.terminar);
     setAnuncio(true);       /* primero el rodillo, y despues el informe */
     setVerLeccion(false);   /* la leccion del año nuevo vuelve a su titular */
@@ -55816,6 +56004,7 @@ function Motor() {
     a += MODO(s.modo).ayuda;   /* el modo aprendiz perdona más */
     if (culturaDe(s)) a += culturaDe(s).ayuda;   /* en una firma escuela te explican */
     a += ayudaBoosts(s, tipo); /* los boosts activos */
+    a += entero(s.animo, 0, -2, 2) * 5;   /* el ánimo: ±5 por paso */
     return clamp(a, 0, 100);
   };
 
@@ -56602,6 +56791,9 @@ function Motor() {
               })()}
               <div className="ea-anillos">
                 {["ene", "cri", "red", "rep"].map((k) => <Anillo key={k} k={k} v={s[k]} />)}
+              </div>
+              <div className="ea-animoPill ea-dis" title="Tu ánimo da o quita ayuda en los minijuegos y cansancio. Vuelve solo hacia Normal.">
+                <span>{animoDe(s.animo).e}</span>Ánimo: {animoDe(s.animo).n}
               </div>
             </div>
           </div>
@@ -57766,7 +57958,10 @@ function Motor() {
           el unico momento del juego que no pide leer nada: un numero
           grande girando y cuanto se movio. El informe espera debajo.
           ============================================================ */}
-      {fase === "cierre" && cierre && anuncio && (() => {
+      {fase === "cierre" && cierre && golpe && (
+        <GolpeDinero golpe={golpe} antes={golpe.antes} despues={golpe.despues} onFin={() => setGolpe(null)} />
+      )}
+      {fase === "cierre" && cierre && anuncio && !golpe && (() => {
         const fin = cierre.patVisible != null ? cierre.patVisible : cierre.patrimonio;
         const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
         const sube = fin >= ini;

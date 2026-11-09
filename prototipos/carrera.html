@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El Analista · carrera y casa</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Nunito:wght@400..800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<style>
+  html,body{margin:0;background:#2A2440;font-family:Nunito,system-ui,sans-serif}
+  .ea-root{--tinta:#2A2440;--crema:#FFF4DC;--mostaza:#F2B632}
+  .demo{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;box-sizing:border-box}
+  .demoBot{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .demoBot button{border:2px solid var(--crema);border-radius:999px;background:transparent;color:var(--crema);font:800 14px 'Bricolage Grotesque';padding:9px 15px;cursor:pointer}
+  .demoBot button.on{background:var(--mostaza);border-color:var(--mostaza);color:var(--tinta)}
+  .ea-vida{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-entra .5s ease-out}
+  @keyframes ea-entra{from{opacity:0;transform:scale(1.04)}}
+  .ea-vida svg{position:absolute;inset:0;width:100%;height:100%}
+  .ea-txt{position:absolute;left:0;right:0;bottom:0;padding:70px 16px 20px;text-align:center;color:var(--crema);background:linear-gradient(transparent,rgba(42,36,64,.9))}
+  .ea-k{font:700 12px Nunito,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mostaza)}
+  .ea-t{font:800 clamp(28px,7vw,50px) 'Bricolage Grotesque',sans-serif;line-height:1.05;margin:4px 0 8px}
+  .ea-ef{display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .ea-ef span{font:700 12.5px Nunito,sans-serif;background:rgba(255,244,220,.14);padding:5px 10px;border-radius:999px}
+  .ea-papel{animation:ea-cae 3s linear infinite}
+  @keyframes ea-cae{from{transform:translateY(-60px) rotate(0)}to{transform:translateY(520px) rotate(320deg)}}
+  .ea-aplaude{animation:ea-aplaude .35s ease-in-out infinite alternate}
+  @keyframes ea-aplaude{to{transform:translateY(-6px)}}
+  .ea-llave{animation:ea-brilla 1.2s ease-in-out infinite alternate}
+  @keyframes ea-brilla{to{transform:translateY(-8px) rotate(-8deg)}}
+  @media (prefers-reduced-motion:reduce){.ea-root *{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="raiz"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+const BOCAS = { feliz: "M-9 12 Q0 22 9 12", triste: "M-8 17 Q0 10 8 17" };
+function P({ x, y, s = 1, piel = "#E7B48A", pelo = "corto", colorPelo = "#2A2440", ropa, cara = "feliz", lagrima, corbata, clase, brazos }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}><g className={clase}>
+      {brazos}
+      <path d="M-46 170 Q-46 96 0 92 Q46 96 46 170 Z" fill={ropa} />
+      {corbata && <path d="M-4 96 L4 96 L7 132 L0 142 L-7 132 Z" fill={corbata} />}
+      <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+      {pelo === "largo" && <path d="M-33 74 Q-40 10 0 4 Q40 10 33 74 Q28 32 18 22 Q0 28 -18 22 Q-28 32 -33 74 Z" fill={colorPelo} />}
+      <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+      {pelo === "corto" && <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={colorPelo} />}
+      {cara === "feliz"
+        ? <g fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round"><path d="M-16 44 Q-11 38 -6 44" /><path d="M6 44 Q11 38 16 44" /></g>
+        : <g fill="#2A2440"><circle cx="-11" cy="44" r="3" /><circle cx="11" cy="44" r="3" /><rect x="-16" y="33" width="10" height="3" rx="1.5" transform="rotate(-12 -11 34)" /><rect x="6" y="33" width="10" height="3" rx="1.5" transform="rotate(12 11 34)" /></g>}
+      <g transform="translate(0 42)"><path d={BOCAS[cara]} fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" /></g>
+      {lagrima && <path d="M-14 50 q-2 6 0 9" stroke="#8CC4E8" strokeWidth="3" fill="none" strokeLinecap="round" />}
+      <circle cx="-20" cy="54" r="5" fill="#E9875A" opacity=".35" /><circle cx="20" cy="54" r="5" fill="#E9875A" opacity=".35" />
+    </g></g>
+  );
+}
+const Oficina = ({ gris }) => (
+  <g>
+    <defs><linearGradient id="tarde" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={gris ? "#6E6788" : "#5B4785"} /><stop offset="1" stopColor={gris ? "#A9A1BD" : "#F2B632"} /></linearGradient></defs>
+    <rect width="720" height="450" fill={gris ? "#D9D2C4" : "#F3E2BF"} />
+    <rect x="140" y="40" width="440" height="200" rx="14" fill="url(#tarde)" />
+    <g fill={gris ? "#565072" : "#3B3358"}><rect x="160" y="150" width="34" height="90" /><rect x="202" y="120" width="40" height="120" /><rect x="420" y="140" width="40" height="100" /><rect x="470" y="110" width="44" height="130" /></g>
+    <rect x="356" y="40" width="8" height="200" fill="#FFF4DC" />
+    <rect y="290" width="720" height="160" fill={gris ? "#C4BBA9" : "#E2CFA8"} />
+  </g>
+);
+const MOMENTOS = {
+  ascenso: {
+    k: "Marzo de 2036 · Brújula Macro", t: "Ascenso a Vicepresidente", ef: ["Sueldo +USD 18.000 al año", "Ánimo +1", "Tu jefe: confía más en ti"],
+    dibujo: () => (
+      <g>
+        <Oficina />
+        <rect x="290" y="92" width="140" height="34" rx="6" fill="#2A2440" /><text x="360" y="115" textAnchor="middle" fill="#F2B632" fontFamily="Bricolage Grotesque" fontWeight="800" fontSize="16">VICEPRESIDENTE</text>
+        <P x={150} y={170} s={1.0} piel="#C68B62" pelo="largo" colorPelo="#3B2A22" ropa="#5B4785" clase="ea-aplaude" />
+        <P x={570} y={170} s={1.0} piel="#8D5A3B" pelo="corto" ropa="#2F8A54" clase="ea-aplaude" />
+        <P x={360} y={150} s={1.3} ropa="#2A2440" corbata="#F2B632"
+          brazos={<g stroke="#2A2440" strokeWidth="18" strokeLinecap="round"><path d="M-36 104 L-64 46" /><path d="M36 104 L64 46" /></g>} />
+        <g fill="#E7B48A"><circle cx="276" cy="210" r="13" /><circle cx="444" cy="210" r="13" /></g>
+        {[50, 130, 210, 290, 430, 510, 590, 670].map((x, i) => (
+          <rect key={x} className="ea-papel" x={x} y="0" width="10" height="16" rx="2" fill={["#F2B632", "#D9643A", "#8C6BB1", "#2F8A54"][i % 4]} style={{ animationDelay: (i * 0.3) + "s" }} />
+        ))}
+      </g>
+    ),
+  },
+  despido: {
+    k: "Septiembre de 2038 · Brújula Macro", t: "Te despiden", ef: ["Sin sueldo hasta que encuentres otro", "Ánimo −2", "Reputación −6"],
+    dibujo: () => (
+      <g>
+        <Oficina gris />
+        <P x={540} y={168} s={1.0} piel="#C68B62" pelo="largo" colorPelo="#3B2A22" ropa="#5B4785" cara="triste" />
+        <P x={290} y={150} s={1.3} ropa="#3B3358" cara="triste" lagrima />
+        {/* la caja con tus cosas */}
+        <rect x="216" y="280" width="150" height="90" rx="6" fill="#B07A4A" /><rect x="216" y="280" width="150" height="18" fill="#8E5F36" />
+        <path d="M250 280 Q236 236 256 214 Q262 250 250 280 M262 280 Q262 230 290 222 Q280 256 262 280" fill="#2F8A54" />
+        <rect x="300" y="244" width="40" height="40" rx="3" fill="#FFF4DC" transform="rotate(8 320 264)" /><rect x="306" y="250" width="28" height="26" fill="#8C6BB1" transform="rotate(8 320 264)" />
+      </g>
+    ),
+  },
+  casa: {
+    k: "Julio de 2034 · Tu barrio", t: "Tu primera casa", ef: ["Inicial: −USD 40.000", "Hipoteca: USD 1.200 al mes", "Ánimo +1"],
+    dibujo: () => (
+      <g>
+        <defs><linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8C6BB1" /><stop offset=".6" stopColor="#E9875A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+        <rect width="720" height="450" fill="url(#cielo)" />
+        <circle cx="600" cy="150" r="46" fill="#F2B632" />
+        <path d="M0 300 Q200 270 400 296 T720 284 L720 450 L0 450 Z" fill="#5B4785" />
+        <rect y="330" width="720" height="120" fill="#2F8A54" />
+        {/* la casa */}
+        <rect x="380" y="170" width="250" height="170" fill="#FFF4DC" /><path d="M360 176 L505 70 L650 176 Z" fill="#D9643A" />
+        <rect x="480" y="250" width="54" height="90" rx="4" fill="#8A3A1C" /><circle cx="524" cy="298" r="4" fill="#F2B632" />
+        <rect x="406" y="210" width="50" height="44" rx="4" fill="#8CC4E8" /><rect x="556" y="210" width="50" height="44" rx="4" fill="#8CC4E8" />
+        {/* el cartel */}
+        <rect x="300" y="250" width="6" height="90" fill="#8A3A1C" /><rect x="250" y="236" width="110" height="40" rx="6" fill="#FFF8EA" />
+        <text x="305" y="263" textAnchor="middle" fill="#B0321F" fontFamily="Bricolage Grotesque" fontWeight="800" fontSize="17" transform="rotate(-6 305 258)">¡VENDIDA!</text>
+        <P x={170} y={160} s={1.2} ropa="#2F5D8A" brazos={<path d="M36 104 L74 70" stroke="#2F5D8A" strokeWidth="18" strokeLinecap="round" />} />
+        <g className="ea-llave" style={{ transformOrigin: "260px 230px" }}>
+          <circle cx="262" cy="232" r="12" fill="none" stroke="#F2B632" strokeWidth="6" /><path d="M272 240 L296 262 M286 252 L280 258 M292 258 L286 264" stroke="#F2B632" strokeWidth="6" strokeLinecap="round" />
+        </g>
+      </g>
+    ),
+  },
+};
+function Momento({ m, onFin }) {
+  useEffect(() => { const t = setTimeout(onFin, 4000); return () => clearTimeout(t); }, []);
+  return (
+    <div className="ea-vida" onClick={onFin}>
+      <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice">{m.dibujo()}</svg>
+      <div className="ea-txt"><div className="ea-k">{m.k}</div><div className="ea-t">{m.t}</div>
+        <div className="ea-ef">{m.ef.map((x) => <span key={x}>{x}</span>)}</div></div>
+    </div>
+  );
+}
+function Demo() {
+  const [cual, setCual] = useState({ k: "ascenso", vez: 0 });
+  const [fin, setFin] = useState(false);
+  const ver = (k) => { setFin(false); setCual({ k, vez: cual.vez + 1 }); };
+  return (
+    <div className="ea-root demo">
+      {!fin ? <Momento key={cual.k + cual.vez} m={MOMENTOS[cual.k]} onFin={() => setFin(true)} />
+        : <h2 style={{ color: "#FFF4DC", fontFamily: "'Bricolage Grotesque'" }}>Aquí sigue la partida.</h2>}
+      <div className="demoBot">
+        <button className={cual.k === "ascenso" ? "on" : ""} onClick={() => ver("ascenso")}>Ascenso</button>
+        <button className={cual.k === "despido" ? "on" : ""} onClick={() => ver("despido")}>Despido</button>
+        <button className={cual.k === "casa" ? "on" : ""} onClick={() => ver("casa")}>Primera casa</button>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("raiz")).render(<Demo />);
+</script>
+</body>
+</html>
