@@ -58600,7 +58600,9 @@ function Motor() {
       const corta = lista.slice(0, ESCENAS_ETAPA);
       const resto = lista.slice(ESCENAS_ETAPA).filter(conJuego);
       for (let i = corta.length - 1; i >= forzadas && corta.filter(conJuego).length < minJ; i--) {
-        if (conJuego(corta[i])) continue;
+        /* la escena de vida no se cambia nunca: si no, la cadena novio,
+           boda, hijos casi no arrancaba (en 3 vidas, 0 veces) */
+        if (conJuego(corta[i]) || VIDA.indexOf(corta[i]) >= 0) continue;
         const j = resto.shift() || sacarJuego(fuenteJuego, st, usados);
         if (!j) break;
         if (usados.indexOf(j.id) < 0) usados.push(j.id);
