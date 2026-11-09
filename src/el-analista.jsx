@@ -1647,11 +1647,6 @@ const CSS4 = `
 .ea-rodSep{display:inline-block;opacity:.5;width:.3em;text-align:center;
   align-self:flex-end;line-height:1}
 
-/* La pantalla del anuncio: el cierre del anio pasa por aqui antes de
-   ensenar el informe. Es el unico momento del juego que no pide leer. */
-.ea-anuncio{position:fixed;inset:0;z-index:80;background:var(--fieltro);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:24px;text-align:center;animation:ea-entra .3s ease-out;cursor:pointer}
 @keyframes ea-entra{from{opacity:0}to{opacity:1}}
 /* la gala de un premio: dorado, a pantalla completa, por debajo de la capa 100 */
 .ea-gala{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -1666,17 +1661,6 @@ const CSS4 = `
 .ea-galaN{font-size:30px;line-height:1.15;margin:8px 0 10px;color:#FFF6DA;max-width:560px}
 .ea-galaX{font-size:15px;line-height:1.5;max-width:480px;color:#E9DDB8;margin:0}
 .ea-galaP{font-size:13px;color:#D9B54A;margin-top:14px}
-.ea-anuncioK{font-size:12px;letter-spacing:.3em;color:var(--tenue);margin-bottom:10px}
-.ea-anuncioN{font-size:clamp(38px,12vw,86px);color:var(--papel);line-height:1;
-  display:flex;align-items:center;gap:.12em}
-.ea-anuncioU{font-size:.42em;color:var(--tenue);letter-spacing:.1em}
-.ea-anuncioD{margin-top:20px;font-size:clamp(17px,4.5vw,25px);letter-spacing:.04em;
-  animation:ea-pop .4s cubic-bezier(.2,1.5,.4,1) backwards}
-.ea-anuncioD.sube{color:#7FD08C}
-.ea-anuncioD.baja{color:#E0897B}
-.ea-anuncioL{margin-top:8px;font-size:13px;color:var(--tenue);
-  animation:ea-flash .4s ease-out backwards}
-.ea-anuncioB{margin-top:30px;animation:ea-flash .4s ease-out backwards}
 
 /* Hay gente que marea. Si su sistema lo pide, nada se mueve: el juego
    sigue funcionando igual porque ninguna animacion cambia una regla. */
@@ -48267,8 +48251,19 @@ const IDS_FIRMA = [9720, 9721];
    escena desde su id, y la carrera del día da las mismas a todos.
    ============================================================ */
 const ID_PRE = 9790;
+/* Un año son cuatro cartas: el «Inicio de año» y tres escenas. Con todo
+   lo que se empujaba a mano salían siete de media y hasta quince
+   (Alessandro, 27-oct-2026: «el juego es muy largo»). Lo que no cabe no
+   se pierde: casi todo vuelve a pedir sitio el año siguiente. */
+const ESCENAS_ANO = 3;
 /* cuántas escenas con minijuego trae cada año, como mínimo */
-const MIN_JUEGOS_ANO = 2;
+const MIN_JUEGOS_ANO = 1;
+/* Las legendarias salían un 11% al año desde el quinto: tres de cada
+   cuatro partidas no veían ninguna. Ahora la tirada empieza antes y, si
+   al sexto año no ha salido ninguna, sale una sí o sí. */
+const LEYENDA_DESDE = 3;
+const LEYENDA_PROB = 0.14;
+const LEYENDA_GARANTIA = 5;
 const CARTAS_PRE = {
   ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
   cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto"],
@@ -52504,7 +52499,6 @@ function Motor() {
   const [avisoLargo, setAvisoLargo] = useState(false);
   /* la pantalla del rodillo, que tapa el informe hasta que el jugador
      ha visto cuanto tiene ahora */
-  const [anuncio, setAnuncio] = useState(false);
   /* cuántas galas de este cierre ya se vieron */
   const [galaVista, setGalaVista] = useState(0);
   useEffect(() => { setGalaVista(0); }, [cierre]);
@@ -52671,52 +52665,63 @@ function Motor() {
   };
 
   const generarAno = (st) => {
-    const lista = [];
+    /* Todo lo que quiere salir este año se apunta como candidata con su
+       peso, y el año se queda con las ESCENAS_ANO de más peso. Antes cada
+       cosa empujada a mano SUMABA al año, y un año con contrato, apertura,
+       bifurcación, dos consecuencias y dos raíces llegaba a quince
+       escenas. Ahora compiten por tres sitios.
+       Lo que se queda fuera vuelve solo: la apertura, el contrato, la
+       bifurcación, la firma propia, las consecuencias y las raíces se
+       vuelven a pedir cada año mientras no se hayan visto. Lo que sale
+       del sorteo (vida, oportunidad, relleno) se vuelve a sortear. */
+    const cand = [];
     const usados = [];
-    /* Lo primero del año: si algo se abre, se abre como escena y es el
-       acontecimiento del año. Nunca más de una, para que llegar a un
-       sistema nuevo no se sienta como que se destapó un menú. */
-    const nueva = APERTURAS.filter((a) => !abierto(st, a.id) && tocaAbrir(st, a))[0];
-    if (nueva) { lista.push(nueva.escena); usados.push(nueva.escena.id); }
-    /* Y si el contrato llegó a su fin, eso manda sobre cualquier otra
-       cosa del año: es la escena que decide tu sueldo. Se empuja a mano
-       para que pueda repetirse toda la partida. */
+    const poner = (e, peso, pos) => {
+      if (!e || usados.indexOf(e.id) >= 0) return;
+      cand.push({ e, peso, pos, i: cand.length });
+      usados.push(e.id);
+    };
+    /* Por encima de este peso una escena no se cambia por un minijuego:
+       es la que mueve la partida (sueldo, rama, legendaria, sistema
+       nuevo, firma propia). */
+    const FIJA = 80;
+
+    /* Si el contrato llegó a su fin, eso manda sobre cualquier otra cosa
+       del año: es la escena que decide tu sueldo. */
     const con = st.contrato;
     if (con && st.turno >= numero(con.desde, 0) + numero(con.anos, 3)) {
-      lista.push(escenaContrato(st));
+      cand.push({ e: escenaContrato(st), peso: 100, pos: 2, i: cand.length });
       usados.push(ESCENA_CONTRATO.id);
     }
-    /* Lo que decidiste hace uno, dos o tres años y vuelve ahora. Antes se
-       SUMABA al año; con un árbol detrás de casi cada decisión, los años
-       se alargaban sin fin. Ahora ocupa el sitio de las escenas al azar:
-       cuanto más tuya es la historia, menos sorteo, y el año dura lo
-       mismo. Se apartan aquí y entran después de contar las forzadas.
-       Dos como mucho; si coinciden más, las otras esperan al año
-       siguiente. */
-    const vuelven = (Array.isArray(st.pendientes) ? st.pendientes : [])
-      .filter((p) => p.en <= st.turno && pendienteVivo(p, st))
-      .map((p) => escenaDeId(p.id, st))
-      .filter((e) => e && usados.indexOf(e.id) < 0 && huellasOk(e, st))
-      .slice(0, 2);
-    vuelven.forEach((e) => { usados.push(e.id); });
-    /* Una sola tirada al año, y solo pasados los primeros años: una
-       legendaria en el año uno no significaría nada porque todavía no hay
-       carrera que partir en dos. */
-    /* Una oportunidad de mercado, muy de vez en cuando: solo con dinero
-       invertido, desde el tercer año, y como mucho dos por carrera. */
-    if (st.turno >= 2 && abierto(st, "cartera") && numero(st.cartera, 0) >= 2000
-      && OPORTUNIDADES.filter((e) => st.vistos.indexOf(e.id) >= 0).length < OPORT_MAX && azar() < OPORT_PROB) {
-      const opo = elegirAzar(OPORTUNIDADES.filter((e) => st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0));
-      if (opo) { lista.push(opo); usados.push(opo.id); }
-    }
-    if (st.turno >= 4 && azar() < 0.11) {
-      const posibles = LEGENDARIAS.filter((e) =>
-        st.rango >= e.min && st.rango <= e.max && !(sinJefe(st) && esDeEmpleado(e))
-        && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0 && huellasOk(e, st));
-      const leg = elegirAzar(posibles);
-      if (leg) { lista.push(leg); usados.push(leg.id); }
-    }
+    /* La bifurcación pedía ser Asociado, y en una partida de diez años
+       solo una de cada cuatro llegaba: el árbol de tu carrera ni se
+       plantaba. Ahora llega en Analista Senior, o al quinto año si no
+       has subido, con tiempo para que sus consecuencias se vean. */
+    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) poner(decisionRama(st), 95, 8);
 
+    /* La legendaria: una tirada al año desde LEYENDA_DESDE, y si llega
+       LEYENDA_GARANTIA sin haber visto ninguna, sale sí o sí. Una
+       legendaria en el año uno no significaría nada porque todavía no
+       hay carrera que partir en dos. */
+    const sinLeyenda = !LEGENDARIAS.some((e) => st.vistos.indexOf(e.id) >= 0);
+    if (st.turno >= LEYENDA_DESDE && (azar() < LEYENDA_PROB || (sinLeyenda && st.turno >= LEYENDA_GARANTIA))) {
+      const libre = (e) => !(sinJefe(st) && esDeEmpleado(e)) && st.vistos.indexOf(e.id) < 0
+        && usados.indexOf(e.id) < 0 && huellasOk(e, st);
+      let posibles = LEGENDARIAS.filter((e) => libre(e) && st.rango >= e.min && st.rango <= e.max);
+      /* La garantía no puede depender del cargo: quien va lento o montó
+         lo suyo pronto también tiene que vivir una. Se le da la que pide
+         menos cargo de las que le quedan. */
+      if (!posibles.length && sinLeyenda && st.turno >= LEYENDA_GARANTIA) {
+        const resto = LEGENDARIAS.filter((e) => libre(e) && st.rango <= e.max);
+        const minimo = Math.min.apply(null, resto.map((e) => e.min));
+        posibles = resto.filter((e) => e.min === minimo);
+      }
+      poner(elegirAzar(posibles), 90, 4);
+    }
+    /* Si algo se abre, se abre como escena. Nunca más de una, para que
+       llegar a un sistema nuevo no se sienta como que se destapó un menú. */
+    const nueva = APERTURAS.filter((a) => !abierto(st, a.id) && tocaAbrir(st, a))[0];
+    if (nueva) poner(nueva.escena, 85, 1);
     /* Montar lo tuyo se ofrece al llegar a Asociado y otra vez más
        arriba: decir «no ahora» no puede ser decir «no nunca». */
     if (!sinJefe(st)) {
@@ -52724,19 +52729,11 @@ function Motor() {
       for (let k = 0; k < ofertas.length; k++) {
         const rangoMin = ofertas[k][0], idEsc = ofertas[k][1];
         if (st.rango >= rangoMin && st.vistos.indexOf(idEsc) < 0 && usados.indexOf(idEsc) < 0) {
-          lista.push(escenaFirma(st, idEsc));
-          usados.push(idEsc);
+          poner(escenaFirma(st, idEsc), 80, 5);
           break;
         }
       }
     }
-    /* Cuántas escenas se empujaron a mano (apertura, contrato, legendaria,
-       firma propia). Se cuenta AQUÍ, antes de la vida, la bifurcación y la
-       decisión clave: esas tres siempre entraron dentro del presupuesto
-       normal del año, así que contarlas también duplicaba la duración del
-       año. Solo lo empujado a mano tiene que sumar. */
-    const forzadas = lista.length;
-    vuelven.forEach((e) => { lista.push(e); });
 
     /* la vida no espera a que te asciendan: casi todos los años pasa algo */
     const vidas = vidaDisponible(st).filter((v) => usados.indexOf(v.id) < 0 && st.vistos.indexOf(v.id) < 0);
@@ -52754,76 +52751,107 @@ function Motor() {
          preguntan si te casas y solo después aparece la ruptura */
       const maxPri = Math.max.apply(null, pozo.map((v) => numero(v.pri, 2)));
       const top = pozo.filter((v) => numero(v.pri, 2) === maxPri);
-      const v = elegirAzar(top);
-      if (v) { lista.push(v); usados.push(v.id); }
+      poner(elegirAzar(top), 75, 7);
     }
-    /* La bifurcación pedía ser Asociado, y en una partida de diez años
-       solo una de cada cuatro llegaba: el árbol de tu carrera ni se
-       plantaba. Ahora llega en Analista Senior, o al quinto año si no
-       has subido, con tiempo para que sus consecuencias se vean. */
-    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) { lista.push(decisionRama(st)); usados.push(DECISION_RAMA.id); }
-    /* Las raíces de los árboles no pueden depender del sorteo: entre 75
-       escenas, el rumor o el headhunter salían en una partida de cada
-       tres, y con ellos todo lo que cuelga detrás. Cada una sale una vez
-       por partida a partir de su año; una por año, para no amontonar. */
-    const fuenteRaiz = E.concat(TRONCOS);
-    const raiz = RAICES
-      .filter((x) => st.turno >= x.desde && !x.ids.some((id) => st.vistos.indexOf(id) >= 0 || usados.indexOf(id) >= 0))
-      .map((x) => x.ids.map((id) => fuenteRaiz.find((y) => y.id === id))
-        .find((e) => e && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st) && !(sinJefe(st) && esDeEmpleado(e))))
-      .filter(Boolean)
-      /* hay más árboles que años: desde el segundo, caben dos raíces */
-      .slice(0, st.turno >= 2 ? 2 : 1);
-    raiz.forEach((e) => { lista.push(e); usados.push(e.id); });
+    /* Lo que decidiste hace uno, dos o tres años y vuelve ahora. La
+       primera pesa casi como la vida; la segunda ya compite con el resto.
+       Si no caben, esperan al año siguiente. */
+    (Array.isArray(st.pendientes) ? st.pendientes : [])
+      .filter((p) => p.en <= st.turno && pendienteVivo(p, st))
+      .map((p) => escenaDeId(p.id, st))
+      .filter((e) => e && usados.indexOf(e.id) < 0 && huellasOk(e, st))
+      .slice(0, 2)
+      .forEach((e, k) => poner(e, k === 0 ? 70 : 40, 6));
+    /* Una oportunidad de mercado, muy de vez en cuando: solo con dinero
+       invertido, desde el tercer año, y como mucho dos por carrera. Es
+       tan rara que, cuando sale, entra: con menos peso perdía siempre
+       contra la vida y las consecuencias y no se veía nunca. */
+    if (st.turno >= 2 && abierto(st, "cartera") && numero(st.cartera, 0) >= 2000
+      && OPORTUNIDADES.filter((e) => st.vistos.indexOf(e.id) >= 0).length < OPORT_MAX && azar() < OPORT_PROB) {
+      poner(elegirAzar(OPORTUNIDADES.filter((e) => st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0)), 80, 3);
+    }
     /* Con firma propia o startup, cada año trae una decisión de dueño que
        no hayas vivido. Antes se mezclaban cinco escenas de dueño entre
        cuarenta de oficina, y quien montaba lo suyo casi nunca vivía como
        dueño: en ocho partidas de ocho años salía una. */
-    /* Lo que estudiaste también te pasa: una escena propia de tu carrera
-       por año mientras queden y el año tenga sitio. Sin esto, con seis u
-       ocho entre más de cincuenta escenas de oficina, casi no salían. */
-    if (lista.length < 4) {
-      const propia = (LOTES.propias || []).map((x) => E.find((y) => y.id === x.id))
-        .find((e) => e && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0
-          && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st) && !(sinJefe(st) && esDeEmpleado(e)));
-      if (propia) { lista.push(propia); usados.push(propia.id); }
-    }
     if (sinJefe(st)) {
-      const dueno = DUENO.find((e) => st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0
-        && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st));
-      if (dueno) { lista.push(dueno); usados.push(dueno.id); }
+      poner(DUENO.find((e) => st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0
+        && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st)), 55, 11);
     }
-    if (esClave(st.turno)) {
-      const k = sacar(D, st, usados);
-      if (k) { lista.push(k); usados.push(k.id); }
-    }
-    /* La escena de apertura se SUMA al anio, no ocupa el sitio de un
-       evento: si no, el anio en que se abre algo pierde variedad y se
-       dejan de ver minijuegos que solo cuelgan de escenas aleatorias. */
-    /* Todo lo que se empujó a mano hasta aquí (apertura, contrato, firma
-       propia, legendaria) se SUMA al año en vez de ocupar el sitio de un
-       evento normal. Ya me costó una vez: descontar la apertura hacía que
-       se dejara de ver el minijuego de trading. */
-    const objetivo = Math.min(forzadas + 2 + (azar() < 0.45 ? 1 : 0), 5);
-    /* Al menos dos escenas con minijuego por año (Alessandro, 8-oct-2026:
-       «los minijuegos salen mucho menos»). Al rellenar se eligen primero
-       las que traen minijuego, sin repetir escenas ya vistas; si el año
-       quedó corto de juegos, se suma una más. */
+    /* Las raíces de los árboles no pueden depender del sorteo: entre 75
+       escenas, el rumor o el headhunter salían en una partida de cada
+       tres, y con ellos todo lo que cuelga detrás. Cada una sale una vez
+       por partida a partir de su año. */
+    const fuenteRaiz = E.concat(TRONCOS);
+    RAICES
+      .filter((x) => st.turno >= x.desde && !x.ids.some((id) => st.vistos.indexOf(id) >= 0 || usados.indexOf(id) >= 0))
+      .map((x) => x.ids.map((id) => fuenteRaiz.find((y) => y.id === id))
+        .find((e) => e && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st) && !(sinJefe(st) && esDeEmpleado(e))))
+      .filter(Boolean)
+      .slice(0, 2)
+      .forEach((e, k) => poner(e, k === 0 ? 50 : 35, 9));
+    /* Lo que estudiaste también te pasa: una escena propia de tu carrera
+       por año mientras queden. Sin esto, con seis u ocho entre más de
+       cincuenta escenas de oficina, casi no salían. */
+    poner((LOTES.propias || []).map((x) => E.find((y) => y.id === x.id))
+      .find((e) => e && st.vistos.indexOf(e.id) < 0 && usados.indexOf(e.id) < 0
+        && st.rango >= e.min && st.rango <= e.max && huellasOk(e, st) && !(sinJefe(st) && esDeEmpleado(e))), 45, 10);
+
+    /* El año se queda con las de más peso; a igual peso, la que se
+       apuntó antes. Pero un sitio queda para el sorteo: si no, lo que
+       se pide a mano (vida, raíces, consecuencias, tu carrera) llenaba
+       los tres y las escenas sueltas, que son las que traen casi todos
+       los minijuegos, no salían nunca. Ese sitio solo se lo puede quedar
+       lo que mueve la partida (FIJA). */
+    const elegidas = [];
+    cand.slice().sort((a, b) => b.peso - a.peso || a.i - b.i).forEach((x) => {
+      if (elegidas.length < ESCENAS_ANO && (x.peso >= FIJA || elegidas.length < ESCENAS_ANO - 1)) elegidas.push(x);
+    });
+    const fuera = cand.filter((x) => elegidas.indexOf(x) < 0).map((x) => x.e.id);
+    const tomadas = usados.filter((id) => fuera.indexOf(id) < 0);
+
+    /* Al menos un minijuego por año (Alessandro, 8-oct-2026: «los
+       minijuegos salen mucho menos»). Si el año ya está lleno sin
+       ninguno, el minijuego ocupa el sitio de la escena de menos peso,
+       nunca el de una que mueve la partida. */
     const fuente = sinJefe(st) ? E.concat(DUENO) : E;
     const conJuego = (e) => !!(e && Array.isArray(e.o) && e.o.some((o) => o && (o.j || o.juego)));
+    /* Con un solo minijuego seguro al año, el sorteo repetía los de
+       siempre y alguno no salía nunca. Primero los que todavía no has
+       jugado; cuando ya los conoces todos, cualquiera. */
+    const jugados = Array.isArray(st.jugados) ? st.jugados : [];
+    const juegoNuevo = (e) => conJuego(e) && e.o.some((o) => o && (o.j || o.juego) && jugados.indexOf(o.j || o.juego) < 0);
+    const fuenteNuevo = fuente.filter(juegoNuevo);
     const fuenteJuego = fuente.filter(conJuego);
-    let juegos = lista.filter(conJuego).length;
-    while (lista.length < objetivo) {
-      const e = (juegos < MIN_JUEGOS_ANO && sacar(fuenteJuego, st, usados, true)) || sacar(fuente, st, usados);
+    const meter = (e, peso) => { elegidas.push({ e, peso, pos: 13, i: cand.length + elegidas.length }); tomadas.push(e.id); };
+    /* El sitio del sorteo. Un año sí y otro no es para una decisión
+       clave; los demás, para una escena suelta, con minijuego si puede
+       ser. Las clave iban antes como candidatas con el peso más bajo y
+       ya no entraban nunca: se perdían las veinte. */
+    if (elegidas.length < ESCENAS_ANO) {
+      const k = esClave(st.turno) ? sacar(D, st, tomadas) : null;
+      const e = k || sacar(fuenteNuevo, st, tomadas, true) || sacar(fuenteJuego, st, tomadas, true) || sacar(fuente, st, tomadas);
+      /* la clave no se cambia por un minijuego mientras haya otra a mano */
+      if (e) meter(e, k ? FIJA - 1 : 0);
+    }
+    if (elegidas.filter((x) => conJuego(x.e)).length < MIN_JUEGOS_ANO) {
+      const j = sacar(fuenteNuevo, st, tomadas, true) || sacar(fuenteJuego, st, tomadas, true);
+      if (j && elegidas.length < ESCENAS_ANO) meter(j, 0);
+      else if (j) {
+        const floja = elegidas.filter((x) => x.peso < FIJA).sort((a, b) => a.peso - b.peso || b.i - a.i)[0];
+        if (floja) { elegidas.splice(elegidas.indexOf(floja), 1, { e: j, peso: 0, pos: floja.pos, i: floja.i }); tomadas.push(j.id); }
+      }
+    }
+    /* Y si quedan sitios, se rellenan con escenas al azar de tu cargo. */
+    while (elegidas.length < ESCENAS_ANO) {
+      const e = sacar(fuente, st, tomadas);
       if (!e) break;
-      lista.push(e); usados.push(e.id);
-      if (conJuego(e)) juegos += 1;
+      meter(e, 0);
     }
-    if (juegos < MIN_JUEGOS_ANO) {
-      const e = sacar(fuenteJuego, st, usados, true);
-      if (e) { lista.push(e); usados.push(e.id); }
-    }
-    /* La pretemporada abre el año y va por fuera del presupuesto: se pone
+    /* y salen en el orden de siempre: lo que se abre primero, la
+       bifurcación después de la vida, el relleno al final */
+    const lista = elegidas.sort((a, b) => a.pos - b.pos || a.i - b.i).map((x) => x.e);
+    /* El «Inicio de año» abre el año y va por fuera de las tres: se pone
        delante cuando todo lo demás ya está contado. */
     lista.unshift(escenaPretemporada(st));
     return lista;
@@ -53891,7 +53919,6 @@ function Motor() {
       cobertura, gastos, indep: gastos > 0 ? clamp(patrimonio / (gastos * 25), 0, 1.4) : 0,
     });
     if (terminar) setFin(terminar);
-    setAnuncio(true);       /* primero el rodillo, y despues el informe */
     setVerLeccion(false);   /* la leccion del año nuevo vuelve a su titular */
     irA("cierre");
   };
@@ -55463,10 +55490,11 @@ function Motor() {
                     </div>
                   ))}
 
-                  {/* El numero grande ya se vio a pantalla completa en el
-                      rodillo, asi que aqui la cabecera es una linea: como
-                      quedaste, cuanto se movio, cuanto ahorraste y cuanto
-                      cubres. El resto vive en tres cajones, no en seis. */}
+                  {/* El cierre es UNA pantalla (27-oct-2026). Antes pasaba
+                      por un rodillo a pantalla completa y después por este
+                      informe; ahora el rodillo gira aquí mismo, en la
+                      cabecera: como quedaste, cuanto se movio, cuanto
+                      ahorraste y cuanto cubres. */}
                   <div className="ea-titular">
                     <div className="ea-titularK ea-dis">Tu patrimonio</div>
                     {(() => {
@@ -55474,7 +55502,9 @@ function Motor() {
                       const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
                       return (
                         <>
-                          <div className="ea-titularV ea-mono" style={{ fontSize: 26 }}>USD {fmt(fin)}</div>
+                          <div className="ea-titularV ea-mono" style={{ fontSize: "clamp(32px,9vw,48px)" }}>
+                            USD <Rodillo key={cierre.ano} v={fin} />
+                          </div>
                           <div className="ea-titularL">
                             <span className="ea-mono" style={{ color: fin >= ini ? "#2E7A3D" : "#8A2E1E" }}>
                               {fin >= ini ? "+" : "−"}{fmt(Math.abs(fin - ini))} en el año
@@ -55496,6 +55526,47 @@ function Motor() {
                       <div className="ea-indM" style={{ left: "71.4%" }} />
                     </div>
                   </div>
+
+                  {cierre.hitos.length > 0 && (
+                    <div className="ea-hitos">
+                      {cierre.hitos.map((h, i) => (
+                        <span className="ea-hito" key={i} style={{ animationDelay: (i * 100) + "ms" }}>{h}</span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Lo que paso sale a la vista: es lo unico del informe que
+                      cuenta algo en vez de dar un dato, y estaba plegado. */}
+                  {cierre.notas.length > 0 && (
+                    <div style={{ marginTop: 14 }}>
+                      {cierre.notas.map((n, i) => (
+                        <div key={i} className="ea-td" style={{ fontSize: 13.5, marginBottom: 6 }}>{n}</div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Seguir va arriba, antes de la lección y los cajones:
+                      quien quiere el detalle baja a leerlo, y quien quiere
+                      jugar no tiene que atravesarlo. */}
+                  <button className="ea-btn" disabled={carteraPend} onClick={siguienteAno}>
+                    {fin ? "Ver el balance final" : s.turno >= tope ? "Sentarte a hacer cuentas" : "Empezar " + (cierre.ano + 1)}
+                  </button>
+                  {/* Retirarse deja de ser algo que el juego te impone en un año
+                      concreto: en cuanto tu patrimonio cubre lo que cuesta tu
+                      vida, la puerta está abierta y la decisión es tuya. */}
+                  {!fin && cobertura >= 1 && (
+                    <div style={{ marginTop: 10 }}>
+                      <button className="ea-descartar ea-dis" style={{ width: "100%", padding: "12px 18px" }}
+                        disabled={carteraPend} onClick={retirarse}>
+                        Retirarme ya · tu patrimonio cubre {Math.round(cobertura * 100)}% de tu vida
+                      </button>
+                      <div className="ea-td" style={{ fontSize: 11.5, marginTop: 6, textAlign: "center" }}>
+                        Retirando 4% al año dispondrías de USD {fmt(retiroAnual)}
+                        {s.hijos > 0 ? " para ti, tu pareja y " + s.hijos + (s.hijos === 1 ? " hijo" : " hijos") : ""}
+                        {". Nadie te obliga a seguir jugando."}
+                      </div>
+                    </div>
+                  )}
 
                   {/* La leccion era un parrafo de siete lineas, y es lo
                       primero que se ve al cerrar el año. Ahora se lee el
@@ -55519,24 +55590,6 @@ function Motor() {
                       </div>
                     );
                   })()}
-
-                  {cierre.hitos.length > 0 && (
-                    <div className="ea-hitos">
-                      {cierre.hitos.map((h, i) => (
-                        <span className="ea-hito" key={i} style={{ animationDelay: (i * 100) + "ms" }}>{h}</span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Lo que paso sale a la vista: es lo unico del informe que
-                      cuenta algo en vez de dar un dato, y estaba plegado. */}
-                  {cierre.notas.length > 0 && (
-                    <div style={{ marginTop: 14 }}>
-                      {cierre.notas.map((n, i) => (
-                        <div key={i} className="ea-td" style={{ fontSize: 13.5, marginBottom: 6 }}>{n}</div>
-                      ))}
-                    </div>
-                  )}
 
                   <div className="ea-plegs">
 
@@ -55618,25 +55671,6 @@ function Motor() {
 
                   </div>
 
-                  <button className="ea-btn" disabled={carteraPend} onClick={siguienteAno}>
-                    {fin ? "Ver el balance final" : s.turno >= tope ? "Sentarte a hacer cuentas" : "Empezar " + (cierre.ano + 1)}
-                  </button>
-                  {/* Retirarse deja de ser algo que el juego te impone en un año
-                      concreto: en cuanto tu patrimonio cubre lo que cuesta tu
-                      vida, la puerta está abierta y la decisión es tuya. */}
-                  {!fin && cobertura >= 1 && (
-                    <div style={{ marginTop: 10 }}>
-                      <button className="ea-descartar ea-dis" style={{ width: "100%", padding: "12px 18px" }}
-                        disabled={carteraPend} onClick={retirarse}>
-                        Retirarme ya · tu patrimonio cubre {Math.round(cobertura * 100)}% de tu vida
-                      </button>
-                      <div className="ea-td" style={{ fontSize: 11.5, marginTop: 6, textAlign: "center" }}>
-                        Retirando 4% al año dispondrías de USD {fmt(retiroAnual)}
-                        {s.hijos > 0 ? " para ti, tu pareja y " + s.hijos + (s.hijos === 1 ? " hijo" : " hijos") : ""}
-                        {". Nadie te obliga a seguir jugando."}
-                      </div>
-                    </div>
-                  )}
                   {!fin && <div className="ea-td" style={{ fontSize: 11.5, marginTop: 7, textAlign: "center" }}>
                     Al pasar de año la partida se guarda sola. Puedes cerrar y volver después.
                   </div>}
@@ -55672,57 +55706,12 @@ function Motor() {
       )}
 
       {/* ============================================================
-          EL ANUNCIO DEL AÑO
-          Tapa el informe hasta que el jugador ha visto cuanto tiene. Es
-          el unico momento del juego que no pide leer nada: un numero
-          grande girando y cuanto se movio. El informe espera debajo.
-          ============================================================ */}
-      {fase === "cierre" && cierre && anuncio && (() => {
-        const fin = cierre.patVisible != null ? cierre.patVisible : cierre.patrimonio;
-        const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
-        const sube = fin >= ini;
-        const dif = Math.abs(fin - ini);
-        return (
-          <div className="ea-anuncio" onClick={() => setAnuncio(false)}>
-            {/* Ojo al tocar esta linea: «Asi terminó» es lo que cuenta
-                finales.js para saber cuantos años se jugaron, y esta en
-                la cabecera del informe. Repetirla aqui hacia que cada
-                año se contara dos veces. */}
-            <div className="ea-anuncioK ea-dis">Cierre de {cierre.ano}</div>
-            <div className="ea-anuncioN ea-mono">
-              <span className="ea-anuncioU ea-dis">USD</span>
-              <Rodillo v={fin} />
-            </div>
-            <div className={"ea-anuncioD ea-mono " + (sube ? "sube" : "baja")}
-              style={{ animationDelay: "1.5s" }}>
-              {sube ? "+" : "−"}{fmt(dif)} en el año
-            </div>
-            <Desglose partes={cierre.partes} oscuro />
-            {cierre.ascenso && (
-              <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.8s", color: "var(--cobre)", fontSize: 16 }}>
-                Ascenso a {cierre.ascenso}
-              </div>
-            )}
-            {cierre.hitos.length > 0 && (
-              <div className="ea-anuncioL" style={{ animationDelay: "2s" }}>{cierre.hitos.join(" · ")}</div>
-            )}
-            <div className="ea-anuncioB" style={{ animationDelay: "2.2s" }}>
-              <button className="ea-jugarYa ea-dis" style={{ fontSize: 15, padding: "13px 30px" }}
-                onClick={(e) => { e.stopPropagation(); setAnuncio(false); }}>
-                Ver el año
-              </button>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* ============================================================
           LA GALA
           Un premio no puede ser una línea en el informe (Alessandro,
           8-oct-2026, pensando en el Balón de Oro de El Ídolo): sale a
-          pantalla completa después del rodillo, uno por uno.
+          pantalla completa encima del cierre del año, uno por uno.
           ============================================================ */}
-      {fase === "cierre" && cierre && !anuncio && (
+      {fase === "cierre" && cierre && (
         <GalaPremio ids={cierre.galas} ano={cierre.ano} vista={galaVista} onSeguir={() => setGalaVista((v) => v + 1)} />
       )}
 

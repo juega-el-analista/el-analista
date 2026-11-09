@@ -77,10 +77,15 @@ Están explicadas donde toca, pero conviene saber que existen:
   inventar ids nuevos hay que mirar el rango entero: un id repetido **mata la
   otra escena para siempre**, porque el juego marca lo visto por id. Ya pasó una
   vez y silenció seis escenas.
-- **El presupuesto del año.** Toda escena que se empuje a mano en `generarAno`
-  tiene que **sumar** al objetivo, no ocupar el sitio de un evento normal. Pero
-  el conteo va antes de la vida, la bifurcación y la clave: esas tres siempre
-  entraron en el presupuesto normal.
+- **El presupuesto del año.** Un año son cuatro cartas: el «Inicio de año» y
+  `ESCENAS_ANO` (3) escenas. En `generarAno` todo lo que quiere salir se apunta
+  con `poner(escena, peso, posición)` y compite por esos tres sitios: el peso
+  decide qué entra y la posición, en qué orden se ve. Uno de los tres sitios
+  queda para una escena sorteada (con minijuego si puede ser), salvo que lo
+  necesite algo de peso 80 o más. Lo que no cabe tiene que
+  poder volver a pedir sitio el año siguiente; si tu escena nueva solo se
+  ofrece una vez, dale peso suficiente (80 o más no lo desplaza ni el
+  minijuego). `npm run duracion` mide si el año se ha vuelto a alargar.
 - **`src/el-analista.jsx` es el original.** `index.html` se genera con `npm run build`
   y es lo que sirve GitHub Pages. No se edita a mano nunca.
 
