@@ -21,7 +21,7 @@ cargar(path.join(__dirname, "..", "src", "el-analista.jsx"));
 const comp = path.join(__dirname, "compilado.js");
 const tmp = path.join(__dirname, "probeNeg.js");
 fs.writeFileSync(tmp, fs.readFileSync(comp, "utf8").replace("module.exports = ElAnalista;",
-  "module.exports = { JuegoAnclaje, TIPOS_NEG, FRASES_NEG, casoNegociacion, proponerNeg, aceptarNeg, irseNeg, nivelNegociacion, topeNeg, sueldoNeg, fraseRival, JUEGOS, NEG_RONDAS, NEG_ABRE };"));
+  "module.exports = { JuegoAnclaje, ContratoFichaje, TarjetaJuego, TIPOS_NEG, FRASES_NEG, casoNegociacion, proponerNeg, aceptarNeg, irseNeg, nivelNegociacion, topeNeg, sueldoNeg, fraseRival, JUEGOS, NEG_RONDAS, NEG_ABRE };"));
 const J = require(tmp);
 
 let fallos = 0;
@@ -130,6 +130,30 @@ const caso = (tipo, tope, conAnos) => ({ ...J.casoNegociacion(50, Math.random, c
   await act(async () => { r = TR.create(React.createElement(J.JuegoAnclaje, { ayuda: 60, onFin: () => {} })); });
   const t2 = txt(r.toJSON());
   ok(/sobre su oferta/.test(t2) && !/USD/.test(t2) && !/Años de contrato/.test(t2), "en otras escenas, % sobre su oferta, sin sueldo ni años");
+  Math.random = original;
+
+  /* el contrato con tu firma: destello, hoja, propuesta y firma */
+  Math.random = () => 0;
+  let finC = null, extraC = null, rc;
+  const ctxC = { actual: 40000, techo: 999999, firma: "Brújula Macro", ano: 2032 };
+  await act(async () => { rc = TR.create(React.createElement(J.TarjetaJuego, { tipo: "anclaje", ayuda: 60, ctx: ctxC, onFin: (n, x) => { finC = n; extraC = x; } })); });
+  const tc0 = txt(rc.toJSON());
+  ok(/Renovación de contrato/.test(tc0) && !/Hora de jugar/.test(tc0), "el contrato abre con el destello de la oficina, sin tarjeta de reglas");
+  const destello = rc.root.findAll((n) => n.type === "div" && n.props.className === "ea-flash")[0];
+  await act(async () => { destello.props.onClick(); });
+  const tc1 = txt(rc.toJSON());
+  ok(/Contrato de trabajo/.test(tc1) && /Brújula Macro · Renovación 2032/.test(tc1) && /Hoy cobras USD 40\.000/.test(tc1), "y pasa a la hoja con la firma, el año y lo que cobras");
+  const bc = (re) => rc.root.findAll((n) => n.type === "button" && re.test(txt(n)))[0];
+  for (let i = 0; i < 4; i++) await act(async () => { bc(/^−$/).props.onClick(); });
+  await act(async () => { bc(/^Proponer/).props.onClick(); });
+  ok(/Trato hecho/.test(txt(rc.toJSON())) && bc(/^Firmar$/), "pedir +8% cierra trato y deja firmar");
+  await act(async () => { bc(/^Firmar$/).props.onClick(); });
+  ok(/FIRMADO/.test(txt(rc.toJSON())), "al firmar cae el sello");
+  const hoja = rc.root.findAll((n) => n.type === "div" && /ea-hoja firmada/.test(n.props.className || ""))[0];
+  await act(async () => { hoja.props.onClick(); });
+  ok(finC === "parcial" && extraC && extraC.acuerdo && extraC.pct === 8 && extraC.anos === 3,
+    "y al juego le llega el aumento y los años (" + finC + ", " + JSON.stringify(extraC) + ")");
+  try { rc.unmount(); } catch (e) {}
   Math.random = original;
 
   ok(J.JUEGOS.anclaje.n === "La negociación" && /propuestas/.test(J.JUEGOS.anclaje.dur), "la ficha de reglas habla de propuestas");

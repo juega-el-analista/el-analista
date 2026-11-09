@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El Analista · contrato</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Nunito:wght@400..800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<style>
+  html,body{margin:0;background:#2A2440;font-family:Nunito,system-ui,sans-serif}
+  .ea-root{--tinta:#2A2440;--tinta2:#3B3358;--papel:#FFF8EA;--crema:#FFF4DC;--arena:#F3E2BF;--borde:#E2CFA8;--mostaza:#F2B632;
+    --naranja:#E9875A;--terracota:#D9643A;--cobre:#B24E27;--lila:#8C6BB1;--lila2:#5B4785;--verde:#2F8A54;--rojo:#B0321F;--gris:#665C7A}
+  .demo{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+  .demoFin{color:var(--crema);text-align:center;font-family:'Bricolage Grotesque',sans-serif}
+
+  /* ---- el destello: dos segundos de oficina y a la hoja ---- */
+  .ea-flash{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;background:var(--tinta);cursor:pointer}
+  .ea-flash svg{position:absolute;inset:0;width:100%;height:100%;animation:ea-flashZoom 2.2s ease-in forwards}
+  @keyframes ea-flashZoom{0%{transform:scale(1.15)}70%{transform:scale(1)}100%{transform:scale(1.04);filter:brightness(1.1)}}
+  .ea-flashT{position:absolute;left:0;right:0;bottom:0;padding:60px 16px 9%;text-align:center;color:var(--crema);
+    background:linear-gradient(transparent,rgba(42,36,64,.85));
+    font:800 clamp(26px,6vw,46px) 'Bricolage Grotesque',sans-serif;letter-spacing:-.01em;text-shadow:0 3px 0 rgba(42,36,64,.5);
+    animation:ea-flashTitulo 2.2s ease-out forwards}
+  .ea-flashT small{display:block;font:700 12px Nunito,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--mostaza);margin-bottom:6px}
+  @keyframes ea-flashTitulo{0%{opacity:0;transform:translateY(20px)}25%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0}}
+  .ea-flashBlanco{position:absolute;inset:0;background:var(--papel);opacity:0;animation:ea-flashBlanco 2.2s ease-in forwards;pointer-events:none}
+  @keyframes ea-flashBlanco{0%,80%{opacity:0}100%{opacity:1}}
+  .ea-persona.entra-d{animation:ea-entraD .7s ease-out}
+  @keyframes ea-entraD{from{transform:translateX(70px);opacity:0}}
+
+  /* ---- la hoja del contrato ---- */
+  .ea-hoja{position:relative;width:100%;max-width:560px;background:var(--papel);color:var(--tinta);border-radius:16px;
+    padding:22px 22px 20px;box-sizing:border-box;box-shadow:0 18px 50px rgba(0,0,0,.35);animation:ea-hojaSube .45s cubic-bezier(.2,1.2,.4,1)}
+  @keyframes ea-hojaSube{from{transform:translateY(30px) rotate(-1.5deg);opacity:0}}
+  .ea-hojaCab{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:2px solid var(--tinta);padding-bottom:12px}
+  .ea-hojaT{font:800 22px 'Bricolage Grotesque',sans-serif;margin:0}
+  .ea-hojaS{font-size:12px;color:var(--gris);margin:2px 0 0}
+  .ea-hojaPac{font:700 11px Nunito,sans-serif;color:var(--gris);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+  .ea-cara{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .ea-cara svg{width:58px;height:58px;border-radius:50%;background:var(--arena)}
+  .ea-globo{position:relative;background:var(--tinta);color:var(--crema);font-size:13px;line-height:1.3;padding:8px 10px;border-radius:12px;max-width:170px;
+    animation:ea-globo .3s ease-out}
+  @keyframes ea-globo{from{transform:scale(.8);opacity:0}}
+  .ea-term{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:14px 0;border-bottom:1px dashed var(--borde)}
+  .ea-termK{font:700 12px Nunito,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--gris)}
+  .ea-termOf{grid-column:1/-1;font-size:13px;color:var(--gris)}
+  .ea-termOf s{color:var(--rojo);opacity:.7}
+  .ea-escrito{font:600 22px Caveat,cursive;color:#1F3A8A;margin-left:6px}
+  .ea-ctl{display:flex;align-items:center;gap:10px}
+  .ea-paso{width:40px;height:40px;border-radius:50%;border:2px solid var(--tinta);background:transparent;font:800 20px 'Bricolage Grotesque';cursor:pointer;color:var(--tinta)}
+  .ea-paso:disabled{opacity:.25;cursor:default}
+  .ea-monto{font:800 24px 'Bricolage Grotesque',sans-serif;min-width:150px;text-align:center}
+  .ea-monto small{display:block;font:700 12px Nunito,sans-serif;color:var(--cobre)}
+  .ea-anos{display:flex;gap:6px}
+  .ea-ano{border:2px solid var(--borde);background:transparent;border-radius:999px;padding:7px 12px;font:700 13px Nunito;cursor:pointer;color:var(--tinta)}
+  .ea-ano.on{border-color:var(--tinta);background:var(--tinta);color:var(--crema)}
+  .ea-ano small{display:block;font-size:10px;opacity:.75}
+  .ea-lee{font-size:12.5px;color:var(--gris);margin:12px 0 0;text-align:center}
+  .ea-botones{display:flex;gap:8px;margin-top:32px;flex-wrap:wrap}
+  .ea-btnC{flex:1;border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);font:800 15px 'Bricolage Grotesque',sans-serif;
+    padding:13px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12;min-width:150px}
+  .ea-btnS{flex:1;border:2px solid var(--tinta);border-radius:999px;background:transparent;color:var(--tinta);font:800 14px 'Bricolage Grotesque';padding:11px 14px;cursor:pointer;min-width:150px}
+  .ea-firmaLinea{position:relative;margin-top:18px;height:58px;border-bottom:2px solid var(--tinta)}
+  .ea-firmaLinea span{position:absolute;bottom:-20px;left:0;font-size:11px;color:var(--gris)}
+  .ea-trazo{position:absolute;left:6px;bottom:4px;width:200px;height:50px}
+  .ea-trazo path{fill:none;stroke:#1F3A8A;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:600;stroke-dashoffset:600;animation:ea-traza 1.2s ease-out forwards}
+  @keyframes ea-traza{to{stroke-dashoffset:0}}
+  .ea-sello{position:absolute;right:6px;top:50%;font:800 18px 'Bricolage Grotesque',sans-serif;border:3px solid;border-radius:10px;padding:6px 12px;
+    transform:translateY(-50%) rotate(-10deg);animation:ea-sella .35s forwards;opacity:0}
+  .ea-sello.ok{color:var(--verde)} .ea-sello.no{color:var(--rojo)}
+  @keyframes ea-sella{from{opacity:0;transform:translateY(-50%) rotate(-10deg) scale(1.8)}to{opacity:1;transform:translateY(-50%) rotate(-10deg) scale(1)}}
+  .ea-sello.tarde{animation-delay:1.2s}
+  .ea-resultado{margin-top:26px;font:800 15px 'Bricolage Grotesque',sans-serif}
+  @media (max-width:520px){.ea-hoja{padding:18px 16px}.ea-monto{font-size:20px;min-width:120px}.ea-globo{max-width:120px;font-size:12px}}
+  /* con movimiento reducido: la oficina quieta con su título, sin fundido */
+  @media (prefers-reduced-motion:reduce){.ea-root *{animation-duration:1ms!important}
+    .ea-flash svg,.ea-flashT,.ea-persona{animation:none!important}.ea-flashBlanco{display:none}}
+</style>
+</head>
+<body>
+<div id="raiz"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+const fmt = (n) => Math.round(n).toLocaleString("es-ES");
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+/* ---- la mesa (la misma mecánica del juego: proponerNeg) ---- */
+const CAR = { apurado: { tope: [19, 26], acerca: .75, enfado: 1 }, duro: { tope: [12, 18], acerca: .45, enfado: 1 }, orgulloso: { tope: [15, 22], acerca: .6, enfado: 2 } };
+const ANOS = [{ anos: 2, extra: -3 }, { anos: 3, extra: 0 }, { anos: 4, extra: 3 }];
+const nuevaMesa = () => {
+  const tipos = Object.keys(CAR); const tipo = tipos[Math.floor(Math.random() * 3)];
+  const c = CAR[tipo]; const tope = Math.round(c.tope[0] + Math.random() * (c.tope[1] - c.tope[0]) + 2);
+  const bajo = Math.max(4, tope - Math.round(Math.random() * 7));
+  return { tipo, tope, oferta: 4, ofertas: [4], paciencia: 3, ronda: 1, fin: null, cierre: null, anos: 3, lectura: [bajo, bajo + 7], dice: "Te ofrezco lo de siempre: un 4% más y tres años." };
+};
+const topeDe = (m, anos) => clamp(m.tope + (ANOS.find((x) => x.anos === anos) || ANOS[1]).extra, 4, 40);
+const proponer = (m, pide, anos) => {
+  const tope = topeDe(m, anos); const c = CAR[m.tipo];
+  if (pide <= tope) return { ...m, anos, fin: "acuerdo", cierre: Math.max(pide, m.oferta), dice: "Trato hecho. Te lo ganaste.", gesto: "feliz" };
+  const lejos = pide - tope > 6;
+  const oferta = Math.max(m.oferta, Math.min(tope, Math.round(m.oferta + (tope - m.oferta) * c.acerca)));
+  const paciencia = lejos ? clamp(m.paciencia - c.enfado - 1, 0, 3) : Math.max(1, m.paciencia - 1);
+  const n = { ...m, anos, oferta, ofertas: m.ofertas.concat(oferta), paciencia,
+    dice: lejos ? "¿" + pide + "%? Eso está fuera de lugar." : "No llego a tanto. Te doy +" + oferta + "%.", gesto: lejos ? "enojado" : "serio" };
+  if (paciencia <= 0) return { ...n, fin: "levanta", dice: "Así no podemos seguir hablando.", gesto: "enojado" };
+  if (m.ronda >= 3) return { ...n, fin: "ultima", dice: "Mi última oferta: +" + oferta + "%. Lo tomas o lo dejas." };
+  return { ...n, ronda: m.ronda + 1 };
+};
+
+/* ---- la cara de la jefa, que reacciona ---- */
+const BOCAS = { neutro: "M-7 14 Q0 16 7 14", feliz: "M-9 12 Q0 22 9 12", serio: "M-7 15 L7 15", enojado: "M-8 17 Q0 11 8 17" };
+const CEJAS = { neutro: [-2, 0], feliz: [-3, 0], serio: [1, 6], enojado: [3, 14] };
+function Cara({ gesto = "neutro" }) {
+  const [alto, giro] = CEJAS[gesto] || CEJAS.neutro;
+  return (
+    <svg viewBox="-40 -6 80 80">
+      <path d="M-33 70 Q-40 8 0 2 Q40 8 33 70 Q28 30 18 20 Q0 26 -18 20 Q-28 30 -33 70 Z" fill="#3B2A22" />
+      <ellipse cx="0" cy="40" rx="27" ry="31" fill="#C68B62" />
+      <g fill="none" stroke="#2A2440" strokeWidth="2.2"><circle cx="-10" cy="40" r="7" /><circle cx="10" cy="40" r="7" /><path d="M-3 40 L3 40" /></g>
+      <g fill="#2A2440">
+        <rect x="-16" y={27 + alto} width="10" height="3" rx="1.5" transform={`rotate(${giro} -11 ${28 + alto})`} />
+        <rect x="6" y={27 + alto} width="10" height="3" rx="1.5" transform={`rotate(${-giro} 11 ${28 + alto})`} />
+        <circle cx="-10" cy="41" r="3" /><circle cx="10" cy="41" r="3" />
+      </g>
+      <g transform="translate(0 41)"><path d={BOCAS[gesto] || BOCAS.neutro} fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" /></g>
+    </svg>
+  );
+}
+
+/* ---- el destello: la oficina dos segundos, sin diálogo ---- */
+function Destello({ titulo, sub, onFin }) {
+  useEffect(() => { const t = setTimeout(onFin, 2200); return () => clearTimeout(t); }, []);
+  return (
+    <div className="ea-flash" onClick={onFin}>
+      <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice">
+        <defs><linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5B4785" /><stop offset=".55" stopColor="#D9643A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+        <rect width="720" height="450" fill="#F3E2BF" />
+        <rect x="110" y="30" width="500" height="250" rx="14" fill="url(#cielo)" />
+        <circle cx="470" cy="210" r="48" fill="#F2B632" />
+        <path d="M110 236 Q240 196 360 222 T610 206 L610 280 L110 280 Z" fill="#8C6BB1" />
+        <g fill="#3B3358"><rect x="140" y="180" width="30" height="100" /><rect x="178" y="150" width="40" height="130" /><rect x="400" y="170" width="36" height="110" /><rect x="444" y="140" width="46" height="140" /><rect x="520" y="190" width="40" height="90" /></g>
+        <rect x="356" y="30" width="8" height="250" fill="#FFF4DC" />
+        <rect y="290" width="720" height="160" fill="#E2CFA8" />
+        <g className="ea-persona entra-d" transform="translate(470 120) scale(1.4)">
+          <path d="M-46 160 Q-46 92 0 88 Q46 92 46 160 Z" fill="#5B4785" />
+          <rect x="-9" y="66" width="18" height="26" rx="8" fill="#C68B62" />
+          <path d="M-33 70 Q-40 8 0 2 Q40 8 33 70 Q28 30 18 20 Q0 26 -18 20 Q-28 30 -33 70 Z" fill="#3B2A22" />
+          <ellipse cx="0" cy="40" rx="30" ry="34" fill="#C68B62" />
+          <g fill="none" stroke="#2A2440" strokeWidth="2.4"><circle cx="-11" cy="40" r="8" /><circle cx="11" cy="40" r="8" /></g>
+          <path d="M-9 52 Q0 60 9 52" fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" />
+        </g>
+        <rect x="40" y="320" width="640" height="28" rx="8" fill="#B24E27" />
+        <rect x="60" y="348" width="600" height="102" fill="#8A3A1C" />
+        <rect x="290" y="300" width="140" height="22" rx="3" fill="#FFF8EA" transform="rotate(-5 360 311)" />
+      </svg>
+      <div className="ea-flashT"><small>{sub}</small>{titulo}</div>
+      <div className="ea-flashBlanco" />
+    </div>
+  );
+}
+
+/* ---- la hoja: aquí se negocia ---- */
+function Hoja({ actual, firma, onFin }) {
+  const [m, setM] = useState(nuevaMesa);
+  const [pide, setPide] = useState(16);
+  const [anos, setAnos] = useState(3);
+  const [firmado, setFirmado] = useState(false);
+  const usd = (pct) => "USD " + fmt(actual * (1 + pct / 100));
+  const abierta = !m.fin || m.fin === "ultima";
+  const cerrado = m.fin === "acuerdo";
+  const anteriores = m.ofertas.slice(0, -1);
+  return (
+    <div className="ea-hoja">
+      <div className="ea-hojaCab">
+        <div>
+          <p className="ea-hojaT">Contrato de trabajo</p>
+          <p className="ea-hojaS">{firma} · Renovación 2032</p>
+          <div className="ea-hojaPac">Paciencia {"●".repeat(m.paciencia)}{"○".repeat(3 - m.paciencia)}{!m.fin ? " · propuesta " + m.ronda + " de 3" : ""}</div>
+        </div>
+        <div className="ea-cara">
+          <div className="ea-globo" key={m.dice}>{m.dice}</div>
+          <Cara gesto={m.gesto || "neutro"} />
+        </div>
+      </div>
+
+      {/* el sueldo: lo que cobras, su oferta tachada y escrita, y lo que pides */}
+      <div className="ea-term">
+        <div>
+          <div className="ea-termK">Sueldo al año</div>
+        </div>
+        {!m.fin ? (
+          <div className="ea-ctl">
+            <button className="ea-paso" onClick={() => setPide(clamp(pide - 2, 0, 40))} disabled={pide <= 0}>−</button>
+            <div className="ea-monto">{usd(pide)}<small>{pide > 0 ? "+" + pide + "%" : "sin aumento"}</small></div>
+            <button className="ea-paso" onClick={() => setPide(clamp(pide + 2, 0, 40))} disabled={pide >= 40}>+</button>
+          </div>
+        ) : (
+          <div className="ea-monto">{usd(cerrado ? m.cierre : m.fin === "ultima" ? m.oferta : 0)}<small>{cerrado ? "+" + m.cierre + "%" : m.fin === "ultima" ? "+" + m.oferta + "% (su última)" : "sin aumento"}</small></div>
+        )}
+        <div className="ea-termOf">
+          Hoy cobras USD {fmt(actual)} · Su oferta:{" "}
+          {anteriores.map((o, i) => <s key={i}>+{o}%</s>).reduce((a, x) => a.concat(x, " "), [])}
+          <span className="ea-escrito">+{m.oferta}% = {usd(m.oferta)}</span>
+        </div>
+      </div>
+
+      {/* los años */}
+      <div className="ea-term">
+        <div className="ea-termK">Años de contrato</div>
+        <div className="ea-anos">
+          {ANOS.map((x) => (
+            <button key={x.anos} className={"ea-ano" + ((m.fin ? m.anos : anos) === x.anos ? " on" : "")} disabled={!!m.fin} onClick={() => setAnos(x.anos)}>
+              {x.anos} años<small>{x.extra > 0 ? "pagan más" : x.extra < 0 ? "pagan menos" : "lo normal"}</small>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {!m.fin && <p className="ea-lee">Tu lectura: aceptaría hasta entre +{m.lectura[0]}% y +{m.lectura[1]}% con 3 años.</p>}
+
+      {/* la firma */}
+      <div className="ea-firmaLinea">
+        {firmado && (
+          <svg className="ea-trazo" viewBox="0 0 200 50">
+            <path d="M6 34 C 18 6, 30 6, 26 30 S 40 44, 52 22 S 70 8, 74 30 Q 80 40, 92 26 T 120 28 C 130 20, 142 40, 156 22 S 182 30, 194 18" />
+          </svg>
+        )}
+        {firmado && <div className="ea-sello ok tarde">FIRMADO</div>}
+        {m.fin === "levanta" && <div className="ea-sello no">SIN ACUERDO</div>}
+        <span>Tu firma</span>
+      </div>
+
+      <div className="ea-botones">
+        {!m.fin && <button className="ea-btnC" onClick={() => setM(proponer(m, pide, anos))}>Proponer {usd(pide)}</button>}
+        {!m.fin && m.ronda > 1 && <button className="ea-btnS" onClick={() => setM({ ...m, fin: "acuerdo", cierre: m.oferta, dice: "Bien. Trato hecho.", gesto: "feliz" })}>Aceptar +{m.oferta}%</button>}
+        {m.fin === "ultima" && <button className="ea-btnC" onClick={() => setM({ ...m, fin: "acuerdo", cierre: m.oferta, dice: "Trato hecho.", gesto: "feliz" })}>Aceptar +{m.oferta}%</button>}
+        {m.fin === "ultima" && <button className="ea-btnS" onClick={() => setM({ ...m, fin: "levanta", dice: "Tú sabrás.", gesto: "enojado" })}>Irte sin firmar</button>}
+        {/* firmar y seguir: se ve el trazo y el sello, y avanza solo */}
+        {cerrado && !firmado && <button className="ea-btnC" onClick={() => { setFirmado(true); setTimeout(onFin, 1900); }}>Firmar</button>}
+        {m.fin === "levanta" && <button className="ea-btnC" onClick={onFin}>Continuar</button>}
+      </div>
+    </div>
+  );
+}
+
+function Demo() {
+  const [paso, setPaso] = useState("destello");
+  const [vez, setVez] = useState(0);
+  return (
+    <div className="ea-root demo">
+      {paso === "destello" && <Destello key={vez} sub="Se te vence el contrato" titulo="Renovación de contrato" onFin={() => setPaso("hoja")} />}
+      {paso === "hoja" && <Hoja actual={44000} firma="Brújula Macro" onFin={() => setPaso("fin")} />}
+      {paso === "fin" && (
+        <div className="demoFin">
+          <h2>Aquí sigue la partida.</h2>
+          <button className="ea-btnC" style={{ maxWidth: 260 }} onClick={() => { setPaso("destello"); setVez(vez + 1); }}>Ver otra vez</button>
+        </div>
+      )}
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("raiz")).render(<Demo />);
+</script>
+</body>
+</html>

@@ -1561,6 +1561,58 @@ const CSS4 = `
 .ea-negAno{border:1px solid var(--borde);background:transparent;border-radius:999px;padding:7px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--tintaPapel)}
 .ea-negAno.on{border-color:var(--cobre);color:var(--cobre);background:rgba(185,83,42,.08)}
 .ea-negLee{font-size:13px;color:var(--gris);text-align:center;margin:6px 0}
+/* el contrato como fichaje: destello de oficina y hoja para negociar */
+.ea-fichaje{display:flex;justify-content:center;padding:8px 0}
+.ea-flash{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;background:var(--tinta);cursor:pointer}
+.ea-flash svg{position:absolute;inset:0;width:100%;height:100%;animation:ea-flashZoom 2.2s ease-in forwards}
+@keyframes ea-flashZoom{0%{transform:scale(1.15)}70%{transform:scale(1)}100%{transform:scale(1.04)}}
+.ea-flashT{position:absolute;left:0;right:0;bottom:0;padding:60px 16px 9%;text-align:center;color:var(--crema);
+  background:linear-gradient(transparent,rgba(42,36,64,.85));font:800 clamp(26px,6vw,46px) 'Bricolage Grotesque',sans-serif;
+  animation:ea-flashTitulo 2.2s ease-out forwards}
+.ea-flashT small{display:block;font:700 12px Nunito,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--mostaza);margin-bottom:6px}
+@keyframes ea-flashTitulo{0%{opacity:0;transform:translateY(20px)}25%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0}}
+.ea-flashBlanco{position:absolute;inset:0;background:var(--papel);opacity:0;animation:ea-flashBlanco 2.2s ease-in forwards;pointer-events:none}
+@keyframes ea-flashBlanco{0%,80%{opacity:0}100%{opacity:1}}
+.ea-flashJefe{animation:ea-flashEntra .7s ease-out}
+@keyframes ea-flashEntra{from{opacity:0}}
+.ea-quieto .ea-flashBlanco{display:none}
+.ea-quieto .ea-flashT{animation:none !important;opacity:1}
+.ea-hoja{position:relative;width:100%;max-width:560px;background:var(--papel);color:var(--tinta);border-radius:16px;
+  padding:22px 22px 20px;box-sizing:border-box;box-shadow:0 18px 50px rgba(0,0,0,.25);animation:ea-hojaSube .45s cubic-bezier(.2,1.2,.4,1)}
+.ea-hoja.firmada{cursor:pointer}
+@keyframes ea-hojaSube{from{transform:translateY(30px) rotate(-1.5deg);opacity:0}}
+.ea-hojaCab{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:2px solid var(--tinta);padding-bottom:12px}
+.ea-hojaT{font:800 22px 'Bricolage Grotesque',sans-serif;margin:0}
+.ea-hojaS{font-size:12px;color:var(--gris);margin:2px 0 0}
+.ea-hojaPac{font:700 11px Nunito,sans-serif;color:var(--gris);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+.ea-hojaCara{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ea-hojaCara svg{width:58px;height:58px;border-radius:50%;background:var(--arena)}
+.ea-globo{background:var(--tinta);color:var(--crema);font-size:13px;line-height:1.3;padding:8px 10px;border-radius:12px;max-width:170px;animation:ea-globo .3s ease-out}
+@keyframes ea-globo{from{transform:scale(.8);opacity:0}}
+.ea-term{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:14px 0;border-bottom:1px dashed var(--borde)}
+.ea-termK{font:700 12px Nunito,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--gris)}
+.ea-termOf{grid-column:1/-1;font-size:13px;color:var(--gris)}
+.ea-termOf s{color:var(--rojo);opacity:.7;margin-right:4px}
+.ea-escrito{font:italic 700 18px Nunito,sans-serif;color:#1F3A8A;margin-left:4px}
+.ea-termCtl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ea-monto{font:800 24px 'Bricolage Grotesque',sans-serif;min-width:150px;text-align:center}
+.ea-monto small{display:block;font:700 12px Nunito,sans-serif;color:var(--cobre)}
+.ea-negAno small{display:block;font-size:10px;opacity:.75}
+.ea-firmaLinea{position:relative;margin-top:18px;height:58px;border-bottom:2px solid var(--tinta)}
+.ea-firmaLinea>span{position:absolute;bottom:-20px;left:0;font-size:11px;color:var(--gris)}
+.ea-firmaTrazo{position:absolute;left:6px;bottom:4px;width:200px;height:50px}
+.ea-firmaTrazo path{fill:none;stroke:#1F3A8A;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:600;stroke-dashoffset:600;animation:ea-traza 1.2s ease-out forwards}
+@keyframes ea-traza{to{stroke-dashoffset:0}}
+.ea-selloHoja{position:absolute;right:6px;top:50%;font:800 18px 'Bricolage Grotesque',sans-serif;border:3px solid;border-radius:10px;padding:6px 12px;
+  transform:translateY(-50%) rotate(-10deg);animation:ea-sellaHoja .35s forwards;opacity:0}
+.ea-selloHoja.ok{color:var(--verde)} .ea-selloHoja.no{color:var(--rojo)}
+.ea-selloHoja.tarde{animation-delay:1.2s}
+@keyframes ea-sellaHoja{from{opacity:0;transform:translateY(-50%) rotate(-10deg) scale(1.8)}to{opacity:1;transform:translateY(-50%) rotate(-10deg) scale(1)}}
+.ea-hojaBotones{display:flex;gap:8px;margin-top:32px;flex-wrap:wrap}
+.ea-btnC{flex:1;border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);font:800 15px 'Bricolage Grotesque',sans-serif;
+  padding:13px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12;min-width:150px}
+.ea-btnS{flex:1;border:2px solid var(--tinta);border-radius:999px;background:transparent;color:var(--tinta);font:800 14px 'Bricolage Grotesque',sans-serif;padding:11px 14px;cursor:pointer;min-width:150px}
+@media (max-width:520px){.ea-hoja{padding:18px 16px}.ea-monto{font-size:20px;min-width:118px}.ea-globo{max-width:120px;font-size:12px}}
 .ea-negResp{font-size:15px;margin:8px 0 10px}
 @media (max-width:520px){.ea-negFila,.ea-negFila.c4{font-size:13px;gap:6px;padding:9px 10px}}
 .ea-negCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
@@ -48627,7 +48679,8 @@ const escenaContrato = (st) => {
     contrato: { anos: 3, mult: 1.22 }, j: "anclaje", stat: "red", etq: "Hoy cobras",
     sueldo: Math.round(sueldoCon(st, 1.22)),
     /* lo que cobras hoy y el techo de tu carrera: la mesa parte de ahí */
-    negocia: { actual: Math.round(sueldoCon(st, 1)), techo: Math.round(sueldoCon(st, TOPE_MULT * 10)) },
+    negocia: { actual: Math.round(sueldoCon(st, 1)), techo: Math.round(sueldoCon(st, TOPE_MULT * 10)),
+      firma: actual, ano: 2026 + entero(st && st.turno, 0, 0, 99) },
     d: { car: 3, red: 2, msg: "Te sientas con tu jefe y pones tu número sobre la mesa." },
   };
   return { ...ESCENA_CONTRATO, o: [renovar].concat(ofertas, [negociar]) };
@@ -51240,6 +51293,194 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema, ctx }) {
   return <JuegoSuerte ayuda={ayuda} onFin={onFin} />;
 }
 
+/* ============================================================
+   EL CONTRATO, COMO UN FICHAJE
+   Negociar el contrato con tu firma no pasa por la tarjeta de reglas
+   ni por la mesa genérica: un destello de dos segundos en la oficina,
+   sin diálogo, y la hoja del contrato. En la hoja subes o bajas el
+   sueldo, eliges los años y propones; tu jefe reacciona con la cara y
+   una frase corta, y su oferta queda escrita a mano, tachando la
+   anterior. Con acuerdo, firmas y el juego sigue solo (Alessandro,
+   9-nov-2026: «que sea como una cinemática flash que te mande a la
+   hoja del contrato y ahí subes o bajas el salario»; «cuando le dé a
+   firmar que avance de una»).
+   Las reglas son las de la mesa: casoNegociacion, proponerNeg…
+   ============================================================ */
+/* la cara de quien negocia: el mismo dibujo plano de SurEconomics */
+const NEG_BOCA = { neutro: "M-7 14 Q0 16 7 14", feliz: "M-9 12 Q0 22 9 12", serio: "M-7 15 L7 15", enojado: "M-8 17 Q0 11 8 17" };
+const NEG_CEJA = { neutro: [-2, 0], feliz: [-3, 0], serio: [1, 6], enojado: [3, 14] };
+/* el aspecto de tu jefe sale del nombre de la firma: siempre el mismo */
+const LOOKS_JEFE = [
+  { piel: "#C68B62", pelo: "largo", colorPelo: "#3B2A22", ropa: "#5B4785", lentes: true, n: "Tu jefa" },
+  { piel: "#E7B48A", pelo: "corto", colorPelo: "#2A2440", ropa: "#2F5D8A", lentes: false, n: "Tu jefe" },
+  { piel: "#8D5A3B", pelo: "calvo", colorPelo: "#2A2440", ropa: "#B24E27", lentes: true, n: "Tu jefe" },
+  { piel: "#F0C7A0", pelo: "largo", colorPelo: "#B24E27", ropa: "#2F8A54", lentes: false, n: "Tu jefa" },
+];
+const lookJefe = (firma) => {
+  const t = texto(firma, "", 60);
+  let h = 0;
+  for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0;
+  return LOOKS_JEFE[h % LOOKS_JEFE.length];
+};
+function CaraNeg({ look, gesto = "neutro" }) {
+  const [alto, giro] = NEG_CEJA[gesto] || NEG_CEJA.neutro;
+  return (
+    <svg viewBox="-40 -6 80 80" aria-hidden="true">
+      {look.pelo === "largo" && <path d="M-33 70 Q-40 8 0 2 Q40 8 33 70 Q28 30 18 20 Q0 26 -18 20 Q-28 30 -33 70 Z" fill={look.colorPelo} />}
+      <ellipse cx="0" cy="40" rx="27" ry="31" fill={look.piel} />
+      {look.pelo === "corto" && <path d="M-28 34 Q-29 6 0 4 Q29 6 28 34 Q20 18 0 18 Q-18 18 -28 34 Z" fill={look.colorPelo} />}
+      {look.pelo === "calvo" && <path d="M-27 40 Q-27 26 -20 22 L-20 40 Z M27 40 Q27 26 20 22 L20 40 Z" fill={look.colorPelo} />}
+      {look.lentes && <g fill="none" stroke="#2A2440" strokeWidth="2.2"><circle cx="-10" cy="40" r="7" /><circle cx="10" cy="40" r="7" /><path d="M-3 40 L3 40" /></g>}
+      <g fill="#2A2440">
+        <rect x="-16" y={27 + alto} width="10" height="3" rx="1.5" transform={`rotate(${giro} -11 ${28 + alto})`} />
+        <rect x="6" y={27 + alto} width="10" height="3" rx="1.5" transform={`rotate(${-giro} 11 ${28 + alto})`} />
+        <circle cx="-10" cy="41" r="3" /><circle cx="10" cy="41" r="3" />
+      </g>
+      <g transform="translate(0 41)"><path d={NEG_BOCA[gesto] || NEG_BOCA.neutro} fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" /></g>
+    </svg>
+  );
+}
+/* el destello: la oficina al atardecer, tu jefe entra, y a la hoja */
+function DestelloOficina({ look, sub, titulo, onFin }) {
+  useEffect(() => {
+    if (typeof setTimeout !== "function") { onFin(); return; }
+    const t = setTimeout(onFin, sinMovimiento() ? 900 : 2200);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, []);
+  return (
+    <div className="ea-flash" onClick={onFin}>
+      <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs><linearGradient id="ea-cieloTarde" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5B4785" /><stop offset=".55" stopColor="#D9643A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+        <rect width="720" height="450" fill="#F3E2BF" />
+        <rect x="110" y="30" width="500" height="250" rx="14" fill="url(#ea-cieloTarde)" />
+        <circle cx="470" cy="210" r="48" fill="#F2B632" />
+        <path d="M110 236 Q240 196 360 222 T610 206 L610 280 L110 280 Z" fill="#8C6BB1" />
+        <g fill="#3B3358"><rect x="140" y="180" width="30" height="100" /><rect x="178" y="150" width="40" height="130" /><rect x="400" y="170" width="36" height="110" /><rect x="444" y="140" width="46" height="140" /><rect x="520" y="190" width="40" height="90" /></g>
+        <rect x="356" y="30" width="8" height="250" fill="#FFF4DC" />
+        <rect y="290" width="720" height="160" fill="#E2CFA8" />
+        <g className="ea-flashJefe" transform="translate(470 120) scale(1.4)">
+          <path d="M-46 160 Q-46 92 0 88 Q46 92 46 160 Z" fill={look.ropa} />
+          <rect x="-9" y="66" width="18" height="26" rx="8" fill={look.piel} />
+          {look.pelo === "largo" && <path d="M-33 70 Q-40 8 0 2 Q40 8 33 70 Q28 30 18 20 Q0 26 -18 20 Q-28 30 -33 70 Z" fill={look.colorPelo} />}
+          <ellipse cx="0" cy="40" rx="30" ry="34" fill={look.piel} />
+          {look.pelo === "corto" && <path d="M-31 34 Q-32 4 0 2 Q32 4 31 34 Q22 16 0 16 Q-20 16 -31 34 Z" fill={look.colorPelo} />}
+          {look.lentes && <g fill="none" stroke="#2A2440" strokeWidth="2.4"><circle cx="-11" cy="40" r="8" /><circle cx="11" cy="40" r="8" /></g>}
+          <g fill="#2A2440"><circle cx="-11" cy="41" r="3.4" /><circle cx="11" cy="41" r="3.4" /></g>
+          <path d="M-9 52 Q0 60 9 52" fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" />
+        </g>
+        <rect x="40" y="320" width="640" height="28" rx="8" fill="#B24E27" />
+        <rect x="60" y="348" width="600" height="102" fill="#8A3A1C" />
+        <rect x="290" y="300" width="140" height="22" rx="3" fill="#FFF8EA" transform="rotate(-5 360 311)" />
+      </svg>
+      <div className="ea-flashT"><small>{sub}</small>{titulo}</div>
+      <div className="ea-flashBlanco" />
+    </div>
+  );
+}
+/* la hoja del contrato: aquí se negocia y se firma */
+function HojaContrato({ ayuda, ctx, look, onFin }) {
+  const [c, setC] = useState(() => casoNegociacion(ayuda, Math.random, true));
+  const [pide, setPide] = useState(NEG_ABRE + 12);
+  const [anos, setAnos] = useState(3);
+  const [firmado, setFirmado] = useState(false);
+  const usd = (pct) => "USD " + fmt(sueldoNeg(ctx, pct));
+  const pctTxt = (pct) => (pct > 0 ? "+" + pct + "%" : "sin aumento");
+  const nivel = c.fin === "acuerdo" || c.fin === "levanta" ? nivelNegociacion(c) : null;
+  const terminar = () => onFin(nivel, { pct: c.fin === "acuerdo" ? c.cierre : 0, acuerdo: c.fin === "acuerdo", anos: c.anos });
+  /* firmar y seguir: se ve el trazo y el sello, y avanza solo */
+  useEffect(() => {
+    if (!firmado) return;
+    if (typeof setTimeout !== "function") { terminar(); return; }
+    const t = setTimeout(terminar, sinMovimiento() ? 500 : 1900);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [firmado]);
+  /* lo que dice y la cara que pone, según su última respuesta */
+  const ult = c.jugadas[c.jugadas.length - 1];
+  const [dice, gesto] = c.fin === "levanta" ? ["Así no podemos seguir hablando.", "enojado"]
+    : c.fin === "acuerdo" ? [ult && ult.acepto != null ? "Bien. Trato hecho." : "Trato hecho. Te lo ganaste.", "feliz"]
+    : c.fin === "ultima" ? ["Mi última oferta: " + pctTxt(c.oferta) + ". La tomas o la dejas.", "serio"]
+    : !ult ? ["Te ofrezco lo de siempre: " + pctTxt(NEG_ABRE) + " y tres años.", "neutro"]
+    : ult.r === "no" ? ["¿" + pctTxt(ult.pide) + "? Eso está fuera de lugar.", "enojado"]
+    : ["No llego a tanto. Te doy " + pctTxt(ult.oferta) + ".", "serio"];
+  const previas = [NEG_ABRE].concat(c.jugadas.filter((x) => x.oferta != null).map((x) => x.oferta));
+  const enMesa = previas[previas.length - 1];
+  const tachadas = previas.slice(0, -1).filter((x, i, a) => a.indexOf(x) === i && x !== enMesa);
+  const anosVer = c.fin ? (c.anos || 3) : anos;
+  return (
+    <div className={"ea-hoja" + (firmado ? " firmada" : "")} onClick={firmado ? terminar : undefined}>
+      <div className="ea-hojaCab">
+        <div>
+          <p className="ea-hojaT">Contrato de trabajo</p>
+          <p className="ea-hojaS">{texto(ctx.firma, "Tu firma", 60)} · Renovación {ctx.ano}</p>
+          <div className="ea-hojaPac">Paciencia {"●".repeat(c.paciencia)}{"○".repeat(Math.max(0, 3 - c.paciencia))}{!c.fin ? " · propuesta " + c.ronda + " de " + NEG_RONDAS : ""}</div>
+        </div>
+        <div className="ea-hojaCara">
+          <div className="ea-globo" key={dice}>{dice}</div>
+          <CaraNeg look={look} gesto={gesto} />
+        </div>
+      </div>
+      <div className="ea-term">
+        <div className="ea-termK">Sueldo al año</div>
+        {!c.fin ? (
+          <div className="ea-termCtl">
+            <button className="ea-negPaso" aria-label="Pedir menos" onClick={() => setPide((p) => clamp(p - 2, 0, NEG_MAX))} disabled={pide <= 0}>−</button>
+            <div className="ea-monto">{usd(pide)}<small>{pctTxt(pide)}</small></div>
+            <button className="ea-negPaso" aria-label="Pedir más" onClick={() => setPide((p) => clamp(p + 2, 0, NEG_MAX))} disabled={pide >= NEG_MAX}>+</button>
+          </div>
+        ) : (
+          <div className="ea-monto">{c.fin === "levanta" ? "USD " + fmt(ctx.actual) : usd(c.fin === "acuerdo" ? c.cierre : c.oferta)}
+            <small>{c.fin === "levanta" ? "sin aumento" : c.fin === "acuerdo" ? pctTxt(c.cierre) : pctTxt(c.oferta) + " · su última"}</small></div>
+        )}
+        <div className="ea-termOf">
+          Hoy cobras USD {fmt(ctx.actual)} · Su oferta:{" "}
+          {tachadas.map((o) => <s key={o}>{pctTxt(o)} </s>)}
+          <span className="ea-escrito">{pctTxt(enMesa)} = {usd(enMesa)}</span>
+        </div>
+      </div>
+      <div className="ea-term">
+        <div className="ea-termK">Años de contrato</div>
+        <div className="ea-termCtl">
+          {NEG_ANOS.map((x) => (
+            <button key={x.anos} className={"ea-negAno" + (anosVer === x.anos ? " on" : "")} disabled={!!c.fin} onClick={() => setAnos(x.anos)}>
+              {x.anos} años<small>{x.extra > 0 ? "pagan más" : x.extra < 0 ? "pagan menos" : "lo normal"}</small>
+            </button>
+          ))}
+        </div>
+      </div>
+      {!c.fin && <p className="ea-negLee">Tu lectura: aceptaría hasta entre {pctTxt(c.lectura[0])} y {pctTxt(c.lectura[1])} con 3 años.</p>}
+      <div className="ea-firmaLinea">
+        {firmado && (
+          <svg className="ea-firmaTrazo" viewBox="0 0 200 50" aria-hidden="true">
+            <path d="M6 34 C 18 6, 30 6, 26 30 S 40 44, 52 22 S 70 8, 74 30 Q 80 40, 92 26 T 120 28 C 130 20, 142 40, 156 22 S 182 30, 194 18" />
+          </svg>
+        )}
+        {firmado && <div className="ea-selloHoja ok tarde">FIRMADO</div>}
+        {c.fin === "levanta" && <div className="ea-selloHoja no">SIN ACUERDO</div>}
+        <span>Tu firma</span>
+      </div>
+      <div className="ea-hojaBotones">
+        {!c.fin && <button className="ea-btnC" onClick={() => setC(proponerNeg(c, pide, anos))}>Proponer {usd(pide)}</button>}
+        {!c.fin && c.ronda > 1 && <button className="ea-btnS" onClick={() => setC(aceptarNeg(c))}>Aceptar {pctTxt(c.oferta)}</button>}
+        {c.fin === "ultima" && <button className="ea-btnC" onClick={() => setC(aceptarNeg(c))}>Aceptar {pctTxt(c.oferta)}</button>}
+        {c.fin === "ultima" && <button className="ea-btnS" onClick={() => setC(irseNeg(c))}>Irte sin firmar</button>}
+        {c.fin === "acuerdo" && !firmado && <button className="ea-btnC" onClick={() => setFirmado(true)}>Firmar</button>}
+        {c.fin === "levanta" && <button className="ea-btnC" onClick={terminar}>Continuar</button>}
+      </div>
+    </div>
+  );
+}
+function ContratoFichaje({ ayuda, ctx, onFin }) {
+  const [paso, setPaso] = useState("destello");
+  const look = lookJefe(ctx && ctx.firma);
+  return (
+    <div className="ea-fichaje">
+      {paso === "destello"
+        ? <DestelloOficina look={look} sub="Se te vence el contrato" titulo="Renovación de contrato" onFin={() => setPaso("hoja")} />
+        : <HojaContrato ayuda={ayuda} ctx={ctx} look={look} onFin={onFin} />}
+    </div>
+  );
+}
+
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
    qué cuenta como éxito y para qué sirve en la vida real. */
@@ -51256,6 +51497,14 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
   /* y el «para qué sirve», que no hace falta antes de jugar */
   const [porQue, setPorQue] = useState(false);
 
+  const empezar = () => { if (onVisto) onVisto(tipo); setListo(true); };
+  /* Un minijuego que ya jugaste no vuelve a pedir que leas las reglas:
+     del anuncio se entra a jugar (Alessandro, 9-nov-2026: «que no se
+     sienta pesado»). Las reglas siguen a un toque desde el anuncio.
+     Van ANTES del temporizador del anuncio: el componente a veces sale
+     antes de llegar aquí (un juego sin ficha, el contrato) y el
+     temporizador se encontraba la función sin declarar. */
+  const trasAnuncio = () => { if (visto) empezar(); else setPaso("reglas"); };
   /* el anuncio se pasa solo, y tambien al toque: quien ya lo vio veinte
      veces no tiene por que esperar */
   useEffect(() => {
@@ -51279,6 +51528,8 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
        el precio en que cerró); los demás no mandan nada */
     try { onFin(nv, extra && typeof extra === "object" ? extra : null); } catch (e) { try { console.error("[El Analista] fin de juego", e); } catch (_) {} }
   };
+  /* el contrato con tu firma es un fichaje: destello y hoja, sin reglas */
+  if (tipo === "anclaje" && ctx && numero(ctx.actual, 0) > 0) return <ContratoFichaje ayuda={ayuda} ctx={ctx} onFin={cerrarUnaVez} />;
   const j = JUEGOS[tipo];
   if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} ctx={ctx} />;
   if (listo) {
@@ -51289,11 +51540,6 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
     );
   }
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
-  const empezar = () => { if (onVisto) onVisto(tipo); setListo(true); };
-  /* Un minijuego que ya jugaste no vuelve a pedir que leas las reglas:
-     del anuncio se entra a jugar (Alessandro, 9-nov-2026: «que no se
-     sienta pesado»). Las reglas siguen a un toque desde el anuncio. */
-  const trasAnuncio = () => { if (visto) empezar(); else setPaso("reglas"); };
 
   /* ---- paso uno: el anuncio ----
      Una pantalla de color que no pide leer nada. Solo avisa de que esto
