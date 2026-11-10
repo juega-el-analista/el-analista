@@ -3006,6 +3006,114 @@ const nivelDe = (turno, estudia) => clamp(
 const largoExamen = () => 3;
 
 /* mayoría del nivel que te toca, una de repaso y una del nivel siguiente */
+/* Preguntas de la carrera de cada uno: el examen de inversiones mete a
+   veces una (Alessandro, 10-nov-2026). */
+const CARRERA_PREGUNTAS = {
+  eco: [
+    { q: "¿Qué mide la inflación?", o: ["El alza general y sostenida de los precios", "El crecimiento de la producción", "La cantidad de empleo"], c: 0, nv: 1, e: "Es el aumento sostenido del nivel general de precios, que reduce lo que puedes comprar con el mismo dinero." },
+    { q: "Si la oferta de un producto baja y la demanda sigue igual, ¿qué pasa con el precio?", o: ["Se queda igual", "Tiende a subir", "Tiende a bajar"], c: 1, nv: 1, e: "Con menos unidades para la misma demanda, los compradores compiten y el precio sube." },
+    { q: "¿Qué es el PIB?", o: ["La deuda total de un país", "El dinero que imprime el banco central", "El valor de lo que produce un país en un período"], c: 2, nv: 1, e: "El producto interno bruto suma el valor de los bienes y servicios finales producidos en un país durante un período." },
+    { q: "¿Qué suele hacer un banco central para frenar la inflación?", o: ["Bajar la tasa de interés", "Subir la tasa de interés", "Eliminar impuestos"], c: 1, nv: 2, e: "Subir la tasa encarece el crédito, enfría el gasto y baja la presión sobre los precios." },
+    { q: "¿Qué es el costo de oportunidad?", o: ["Lo que dejas de ganar por elegir otra opción", "El precio de lista de un producto", "Un gasto que ya no se puede recuperar"], c: 0, nv: 2, e: "Es el valor de la mejor alternativa a la que renuncias cuando tomas una decisión." },
+    { q: "Si la moneda local se deprecia frente al dólar, ¿a quién suele favorecer?", o: ["A quien importa insumos", "A quien tiene deudas en dólares", "A quien exporta y cobra en dólares"], c: 2, nv: 2, e: "El exportador recibe dólares que ahora valen más moneda local; importar y deber en dólares se vuelve más caro." },
+    { q: "¿Qué es la elasticidad precio de la demanda?", o: ["Cuánto cambia la cantidad comprada cuando cambia el precio", "La capacidad de una empresa de subir precios cada año", "La variación del ingreso de los consumidores"], c: 0, nv: 3, e: "Mide la sensibilidad: si la demanda es elástica, una pequeña alza de precio hace caer mucho la cantidad comprada." },
+    { q: "Si tu sueldo sube 5 % y la inflación del año es 8 %, ¿qué le pasó a tu salario real?", o: ["Subió 3 %", "Bajó cerca de 3 %", "Subió 13 %"], c: 1, nv: 3, e: "El salario real descuenta la inflación: con 5 % de aumento y 8 % de inflación pierdes cerca de 3 % de poder de compra." },
+    { q: "En un mercado con un solo vendedor, ¿qué suele pasar comparado con un mercado con competencia?", o: ["Precio más bajo y más cantidad", "Mismo precio y misma cantidad", "Precio más alto y menos cantidad"], c: 2, nv: 3, e: "Sin rivales, el monopolista vende menos unidades para poder cobrar un precio mayor que en competencia." },
+    { q: "¿Qué es una curva de rendimientos invertida?", o: ["Cuando la bolsa cae dos años seguidos", "Cuando las tasas de largo plazo son menores que las de corto", "Cuando la inflación es negativa"], c: 1, nv: 4, e: "Los bonos cortos rinden más que los largos; históricamente esa señal ha anticipado varias recesiones." },
+    { q: "¿Qué es el multiplicador del gasto público?", o: ["El número de veces que el gobierno se endeuda", "El impuesto extra que se cobra en una crisis", "El efecto total en el PIB por cada dólar que gasta el gobierno"], c: 2, nv: 4, e: "Un dólar de gasto se vuelve ingreso de alguien que a su vez gasta una parte, así que el efecto en el PIB puede ser mayor." },
+    { q: "¿Qué es la estanflación?", o: ["Inflación alta con economía estancada y desempleo", "Crecimiento rápido sin inflación", "Una caída de precios por exceso de oferta"], c: 0, nv: 4, e: "Combina precios que suben con una economía que no crece, lo que complica la respuesta del banco central." },
+    { q: "Según la regla de Taylor, si la inflación supera la meta, el banco central debería…", o: ["Bajar la tasa para cuidar el empleo", "Subir la tasa más que el exceso de inflación", "Dejar la tasa fija hasta que la inflación baje sola"], c: 1, nv: 5, e: "La regla pide subir la tasa nominal más que punto por punto, para que la tasa real también suba y frene los precios." },
+    { q: "¿Qué plantea la equivalencia ricardiana?", o: ["Que cada país debe hacer lo que produce relativamente mejor", "Que el dinero en exceso solo genera inflación", "Que la gente ahorra un recorte de impuestos pagado con deuda"], c: 2, nv: 5, e: "Si la gente ve que la deuda de hoy son impuestos de mañana, ahorra el recorte y el consumo no sube." },
+    { q: "¿Qué es una trampa de liquidez?", o: ["Cuando con tasas cerca de 0 % bajarlas más ya no estimula", "Cuando un banco no puede pagar a sus depositantes", "Cuando una empresa tiene mucho efectivo sin usar"], c: 0, nv: 5, e: "Con tasas casi en 0 %, la gente prefiere guardar efectivo y la política monetaria pierde fuerza." },
+  ],
+  con: [
+    { q: "¿Qué muestra el balance general?", o: ["Las ventas y los gastos del año", "Activos, pasivos y patrimonio en una fecha", "El flujo de efectivo del mes"], c: 1, nv: 1, e: "Es una foto de lo que la empresa tiene, lo que debe y lo que les corresponde a los dueños en una fecha dada." },
+    { q: "¿Cuál es la ecuación contable básica?", o: ["Activo = Pasivo + Patrimonio", "Ingresos = Activo − Gastos", "Pasivo = Activo + Patrimonio"], c: 0, nv: 1, e: "Todo lo que la empresa tiene se financió con deuda (pasivo) o con dinero de los dueños (patrimonio)." },
+    { q: "¿Qué es una cuenta por cobrar?", o: ["Una deuda de la empresa con un banco", "Un gasto pagado por adelantado", "Dinero que un cliente le debe a la empresa"], c: 2, nv: 1, e: "Nace cuando vendes a crédito: el ingreso ya se registró, pero el efectivo todavía no llega." },
+    { q: "¿En qué estado financiero ves si la empresa ganó o perdió en el año?", o: ["Balance general", "Estado de resultados", "Estado de cambios en el patrimonio"], c: 1, nv: 2, e: "El estado de resultados resta costos y gastos a los ingresos del período y llega a la utilidad o pérdida neta." },
+    { q: "¿Qué es la depreciación?", o: ["Repartir el costo de un activo durante su vida útil", "La caída del precio de la acción", "Un impuesto sobre los activos"], c: 0, nv: 2, e: "Reconoce como gasto, año a año, el desgaste del activo en lugar de cargar todo su costo de una sola vez." },
+    { q: "Según el principio de lo devengado, una venta se registra cuando…", o: ["El cliente paga en efectivo", "Se cierra el año fiscal", "Se gana, aunque el cliente pague después"], c: 2, nv: 2, e: "Ingresos y gastos se reconocen cuando ocurren, no cuando entra o sale el dinero." },
+    { q: "¿Por qué una empresa con utilidad puede quedarse sin efectivo?", o: ["Porque la utilidad siempre está inflada", "Porque cobra tarde o mete mucho dinero en inventario", "Porque los impuestos se pagan antes de vender"], c: 1, nv: 3, e: "La utilidad se registra al vender, pero el efectivo llega al cobrar; si clientes e inventario absorben caja, falta liquidez." },
+    { q: "¿Cómo se calcula la prueba ácida?", o: ["(Activo corriente − Inventarios) / Pasivo corriente", "Utilidad neta / Patrimonio", "Pasivo total / Activo total"], c: 0, nv: 3, e: "Mide si la empresa puede pagar sus deudas de corto plazo sin depender de vender su inventario." },
+    { q: "¿Qué es el capital de trabajo?", o: ["El dinero que aportaron los socios", "Las máquinas y los edificios", "Activo corriente menos pasivo corriente"], c: 2, nv: 3, e: "Es el colchón con el que la empresa opera el día a día: lo que cobrará pronto menos lo que pagará pronto." },
+    { q: "Bajo IFRS, ¿qué método para valuar inventarios NO está permitido?", o: ["Promedio ponderado", "UEPS (últimas entradas, primeras salidas)", "PEPS (primeras entradas, primeras salidas)"], c: 1, nv: 4, e: "La NIC 2 no admite UEPS; se aceptan PEPS, promedio ponderado e identificación específica." },
+    { q: "¿Qué es el deterioro de un activo?", o: ["Registrar su depreciación anual normal", "Venderlo por debajo del precio de mercado", "Bajar su valor en libros porque ya no se recuperará ese monto"], c: 2, nv: 4, e: "Si el valor recuperable queda por debajo del valor en libros, se reconoce una pérdida por deterioro." },
+    { q: "Con IFRS 16, el arrendamiento de una oficina por 5 años normalmente…", o: ["Genera un activo por derecho de uso y un pasivo", "Se registra solo como gasto mensual", "No aparece en los estados financieros"], c: 0, nv: 4, e: "IFRS 16 lleva casi todos los arrendamientos al balance: un activo por derecho de uso y un pasivo por los pagos futuros." },
+    { q: "¿Qué es un impuesto diferido?", o: ["Un impuesto que el gobierno perdona", "El efecto fiscal de diferencias temporales entre libros y fisco", "Un recargo por pagar tarde"], c: 1, nv: 5, e: "Surge cuando un ingreso o gasto se reconoce en distinto momento en la contabilidad y en la declaración de impuestos." },
+    { q: "En estados consolidados, ¿qué es la participación no controladora?", o: ["Las acciones que la matriz recompró", "Los préstamos entre empresas del grupo", "La parte de una subsidiaria que no es de la matriz"], c: 2, nv: 5, e: "Si la matriz tiene 80 % de una filial, el 20 % restante de otros socios se muestra aparte dentro del patrimonio." },
+    { q: "En la compra de una empresa, ¿qué es el goodwill o plusvalía?", o: ["Lo pagado por encima del valor razonable de los activos netos", "El valor de las marcas que ya tenía registradas", "La utilidad acumulada de la empresa comprada"], c: 0, nv: 5, e: "Es el sobreprecio sobre los activos netos identificables; bajo IFRS no se amortiza, se revisa cada año por deterioro." },
+  ],
+  ing: [
+    { q: "¿Para qué sirve un diagrama de Gantt?", o: ["Para calcular la resistencia de una viga", "Para ver las tareas de un proyecto en el tiempo", "Para medir el consumo eléctrico"], c: 1, nv: 1, e: "Muestra cada tarea como una barra en un calendario, con su inicio, su duración y su avance." },
+    { q: "En una obra, ¿qué significa EPP?", o: ["Equipo de protección personal", "Estudio previo del proyecto", "Estimación de precio provisional"], c: 0, nv: 1, e: "Casco, guantes, lentes y botas: el equipo de protección personal es la última barrera entre el riesgo y la persona." },
+    { q: "¿Qué material resiste muy bien la compresión pero poco la tensión?", o: ["El acero", "El cobre", "El concreto sin refuerzo"], c: 2, nv: 1, e: "Por eso el concreto lleva varillas de acero: el acero toma la tensión que el concreto solo no aguanta." },
+    { q: "¿Qué es el mantenimiento preventivo?", o: ["Reparar una máquina cuando ya falló", "Revisar y ajustar equipos antes de que fallen", "Cambiar todos los equipos cada año"], c: 1, nv: 2, e: "Se hace según un calendario para evitar paradas imprevistas, que casi siempre salen más caras." },
+    { q: "¿Qué es la ruta crítica de un proyecto?", o: ["El camino más barato para terminar", "Las tareas con más riesgo de accidente", "La cadena de tareas que, si se atrasa, atrasa todo"], c: 2, nv: 2, e: "Son las tareas sin holgura: un día de atraso en cualquiera de ellas mueve la fecha final del proyecto." },
+    { q: "¿Qué significa CAPEX?", o: ["Inversión en activos de largo plazo, como plantas o equipos", "Gastos de operación del día a día", "El costo de las materias primas"], c: 0, nv: 2, e: "El CAPEX es inversión que dura años; el gasto operativo del día a día se llama OPEX." },
+    { q: "Un proyecto cuesta USD 1 millón y genera USD 250.000 al año. ¿Cuál es su período de recuperación simple?", o: ["2 años", "4 años", "25 años"], c: 1, nv: 3, e: "Divides la inversión entre el flujo anual: USD 1 millón entre USD 250.000 da 4 años, sin descontar el valor del tiempo." },
+    { q: "¿Qué es el factor de seguridad en un diseño?", o: ["El porcentaje de trabajadores con seguro", "La relación entre la carga que resiste y la carga esperada", "El número de inspecciones al año"], c: 1, nv: 3, e: "Si una viga resiste el doble de la carga prevista, su factor de seguridad es 2: un margen para lo inesperado." },
+    { q: "¿Por qué el acero se protege con pintura o galvanizado?", o: ["Para evitar la corrosión", "Para que pese menos", "Para que conduzca mejor la electricidad"], c: 0, nv: 3, e: "La humedad y el oxígeno oxidan el acero; la capa protectora alarga su vida útil y baja el mantenimiento." },
+    { q: "Si el VPN de un proyecto es negativo a la tasa de descuento exigida, ¿qué indica?", o: ["Que tendrá pérdidas contables cada año", "Que conviene pedir más deuda", "Que rinde menos que esa tasa exigida"], c: 2, nv: 4, e: "Un VPN negativo dice que los flujos, traídos a hoy, no alcanzan a pagar la inversión con el rendimiento exigido." },
+    { q: "¿Qué es el valor ganado (EVM) en la gestión de proyectos?", o: ["El precio de venta del proyecto terminado", "Comparar avance real, costo real y lo planificado", "La utilidad del contratista"], c: 1, nv: 4, e: "Cruza lo que se hizo, lo que costó y lo que se planeó para saber si vas atrasado o pasado de presupuesto." },
+    { q: "¿Qué es un contrato EPC llave en mano?", o: ["El contratista diseña, compra, construye y entrega listo para operar", "El cliente compra los materiales y el contratista solo construye", "Un contrato que cubre solo el diseño"], c: 0, nv: 4, e: "En un EPC el contratista asume ingeniería, compras y construcción, y con eso buena parte del riesgo de costo y plazo." },
+    { q: "¿Qué es la fatiga de materiales?", o: ["El desgaste por falta de mantenimiento", "La pérdida de color por el sol", "Falla por cargas repetidas, aun por debajo de su resistencia máxima"], c: 2, nv: 5, e: "Ciclos de carga repetidos abren grietas microscópicas que crecen hasta romper la pieza, aunque cada carga sea moderada." },
+    { q: "En la jerarquía de controles de seguridad, ¿cuál es el más eficaz?", o: ["Usar equipo de protección personal", "Eliminar el peligro", "Capacitar al personal"], c: 1, nv: 5, e: "El orden es eliminar, sustituir, controles de ingeniería, controles administrativos y, al final, el EPP." },
+    { q: "En confiabilidad, ¿qué describe la curva de la bañera?", o: ["Fallas altas al inicio, bajas en la vida útil y altas al final", "Un costo de proyecto que baja y luego sube", "La forma de una presa de concreto"], c: 0, nv: 5, e: "Muestra fallas tempranas, un período estable de fallas aleatorias y luego fallas por desgaste." },
+  ],
+  der: [
+    { q: "¿Qué es un contrato?", o: ["Un acuerdo de voluntades que crea obligaciones", "Un documento que solo sirve si lo firma un notario", "Una orden de un juez"], c: 0, nv: 1, e: "Basta el acuerdo entre las partes; muchos contratos valen aunque sean verbales, salvo que la ley pida una forma especial." },
+    { q: "¿Qué es una persona jurídica?", o: ["Un abogado con matrícula", "Una entidad, como una empresa, con derechos y obligaciones propios", "Un ciudadano mayor de edad"], c: 1, nv: 1, e: "La empresa puede firmar contratos, tener bienes y deber dinero a su nombre, separada de sus socios." },
+    { q: "¿Qué protege una marca registrada?", o: ["Un invento técnico", "Una obra literaria", "El nombre o logo que distingue productos o servicios"], c: 2, nv: 1, e: "La marca protege signos distintivos; los inventos se protegen con patentes y las obras con derechos de autor." },
+    { q: "En un contrato, ¿qué es una cláusula penal?", o: ["Una multa pactada si alguien incumple", "Un delito tipificado", "Una forma de rescindir sin causa"], c: 0, nv: 2, e: "Es la multa que las partes acuerdan por adelantado para el caso de incumplimiento." },
+    { q: "¿Qué es un poder notarial?", o: ["Un permiso para abrir una notaría", "Una autorización para que otro actúe en tu nombre", "Una sentencia que ya no se puede apelar"], c: 1, nv: 2, e: "Con un poder, otra persona puede firmar o hacer trámites por ti, dentro de los límites que le diste." },
+    { q: "¿Qué es un acuerdo de confidencialidad (NDA)?", o: ["Un pacto para no competir en el mercado", "Una renuncia a demandar", "Un contrato para no revelar información de la otra parte"], c: 2, nv: 2, e: "Se firma antes de compartir datos sensibles, por ejemplo al negociar la compra de una empresa." },
+    { q: "Si una empresa quiebra y se liquida, ¿quiénes cobran al final, después de todos los acreedores?", o: ["Los bancos con hipoteca", "Los accionistas", "Los proveedores"], c: 1, nv: 2, e: "Los accionistas son dueños, no acreedores: solo reciben lo que sobre después de pagar todas las deudas." },
+    { q: "En una sociedad anónima, ¿hasta dónde responden los accionistas por las deudas de la empresa?", o: ["Con todo su patrimonio personal", "Hasta el monto que aportaron", "No arriesgan ni siquiera su aporte"], c: 1, nv: 3, e: "La responsabilidad limitada protege el patrimonio personal: lo máximo que puedes perder es tu aporte." },
+    { q: "¿Qué es la prescripción?", o: ["La pérdida del derecho a reclamar por el paso del tiempo", "Una receta médica con valor legal", "El primer escrito de una demanda"], c: 0, nv: 3, e: "Si dejas pasar el plazo que fija la ley sin reclamar, ya no puedes exigir el pago ante un juez." },
+    { q: "En un contrato, ¿qué es la fuerza mayor?", o: ["Cuando una parte tiene más poder de negociación", "Una cláusula que obliga a pagar por adelantado", "Un hecho imprevisible e inevitable que impide cumplir"], c: 2, nv: 3, e: "Un terremoto o una prohibición del gobierno pueden liberar o suspender obligaciones si el contrato y la ley lo admiten." },
+    { q: "¿Qué es el levantamiento del velo corporativo?", o: ["La publicación de los estados financieros", "La salida a bolsa de la empresa", "Cuando un juez hace responder a los socios por abuso o fraude"], c: 2, nv: 4, e: "Si usan la sociedad como pantalla para defraudar, el juez puede ignorar la separación y alcanzar a los socios." },
+    { q: "¿Qué es una cláusula de cambio de control?", o: ["Permite terminar o renegociar si cambia el dueño de la otra parte", "Obliga a cambiar el directorio cada año", "Fija el precio del dólar para el contrato"], c: 0, nv: 4, e: "Es clave en una compra: si clientes o bancos pueden salir al cambiar el dueño, la empresa pierde valor." },
+    { q: "Como forma de resolver disputas, ¿qué es el arbitraje?", o: ["Comprar barato en un mercado y vender caro en otro", "Un juicio privado ante árbitros con decisión obligatoria", "Una negociación sin efecto legal"], c: 1, nv: 4, e: "Las partes pactan que un tribunal privado decida; suele ser más rápido y confidencial que un juicio ordinario." },
+    { q: "En un bono, ¿qué es una cláusula pari passu?", o: ["Obliga a pagar intereses cada mes", "Da el mismo rango de pago que las otras deudas sin garantía", "Permite al emisor recomprar el bono antes"], c: 1, nv: 5, e: "Pari passu significa en igualdad de condiciones: ninguna deuda del mismo rango cobra antes que la otra." },
+    { q: "En la compra de una empresa, ¿qué es una cláusula MAC (cambio material adverso)?", o: ["Fija un precio mínimo de venta", "Obliga al vendedor a no competir", "Deja retirarse al comprador si el negocio se hunde antes del cierre"], c: 2, nv: 5, e: "Protege al comprador ante un deterioro grave entre la firma y el cierre; los jueces la aplican con criterio estricto." },
+    { q: "¿Qué protege la regla del juicio empresarial a los directores?", o: ["Decisiones informadas y de buena fe, aunque salgan mal", "Su derecho a ganancias garantizadas", "Su permanencia en el cargo sin importar los resultados"], c: 0, nv: 5, e: "Un juez no castiga una mala decisión de negocios si se tomó con información, sin conflicto de interés y de buena fe." },
+  ],
+  adm: [
+    { q: "¿Cuáles son las 4P del marketing?", o: ["Producto, precio, plaza y promoción", "Plan, presupuesto, personal y procesos", "Precio, publicidad, prensa y público"], c: 0, nv: 1, e: "Son las cuatro palancas clásicas: qué vendes, a cuánto, dónde lo vendes y cómo lo das a conocer." },
+    { q: "¿Qué es un análisis FODA?", o: ["Un estado financiero", "Fortalezas, oportunidades, debilidades y amenazas", "Un método para calcular la nómina"], c: 1, nv: 1, e: "Cruza lo interno (fortalezas y debilidades) con lo externo (oportunidades y amenazas) para definir una estrategia." },
+    { q: "¿Qué es un organigrama?", o: ["Un calendario de pagos", "Un plan de ventas", "El dibujo de la estructura y jerarquía de una organización"], c: 2, nv: 1, e: "Muestra quién reporta a quién y cómo se reparten las áreas de la empresa." },
+    { q: "¿Qué es un KPI?", o: ["Un indicador clave para medir si se cumple un objetivo", "Un tipo de impuesto corporativo", "Un programa contable"], c: 0, nv: 2, e: "Un buen KPI es medible y está ligado a una meta, como la tasa de retención de clientes." },
+    { q: "¿Qué busca el método justo a tiempo (JIT)?", o: ["Pagar a los proveedores antes del plazo", "Producir y recibir insumos solo cuando se necesitan", "Contratar personal temporal en temporada alta"], c: 1, nv: 2, e: "Reduce inventarios y desperdicio, pero exige proveedores confiables porque casi no hay colchón." },
+    { q: "¿Qué es el punto de equilibrio?", o: ["El momento en que la empresa sale a bolsa", "Cuando la oferta y la demanda del sector coinciden", "El nivel de ventas donde los ingresos igualan los costos totales"], c: 2, nv: 2, e: "Por debajo de ese nivel pierdes dinero; por encima, cada venta empieza a dejar utilidad." },
+    { q: "Costos fijos de USD 50.000, precio de USD 100 y costo variable de USD 60 por unidad. ¿Punto de equilibrio?", o: ["500 unidades", "1250 unidades", "833 unidades"], c: 1, nv: 3, e: "Cada unidad deja USD 40 de margen; USD 50.000 entre USD 40 da 1250 unidades para cubrir los costos fijos." },
+    { q: "¿Qué mide el Net Promoter Score (NPS)?", o: ["Qué tan dispuestos están tus clientes a recomendarte", "La rentabilidad de cada cliente", "El número de quejas al mes"], c: 0, nv: 3, e: "Resta el porcentaje de detractores al de promotores según la pregunta de si recomendarían la empresa." },
+    { q: "En gestión, ¿qué dice la regla 80/20 de Pareto?", o: ["Que el 80 % del sueldo se va en impuestos", "Que pocas causas explican la mayoría de los efectos", "Que hay que reinvertir el 20 % de la utilidad"], c: 1, nv: 3, e: "Por ejemplo, cerca del 20 % de los clientes puede generar alrededor del 80 % de las ventas; sirve para priorizar." },
+    { q: "¿Qué es el costo de adquisición de cliente (CAC)?", o: ["El precio que paga el cliente", "El costo de atender reclamos", "Lo que gastas en ventas y marketing para ganar un cliente nuevo"], c: 2, nv: 4, e: "Se calcula dividiendo el gasto comercial de un período entre los clientes nuevos que conseguiste en ese período." },
+    { q: "Si el valor de vida de un cliente (LTV) es USD 300 y el CAC es USD 400, ¿qué pasa?", o: ["El negocio crece sano", "Pierdes dinero con cada cliente nuevo", "Conviene duplicar la publicidad"], c: 1, nv: 4, e: "Gastas USD 400 para ganar a alguien que te deja USD 300: crecer así solo agranda la pérdida." },
+    { q: "¿Qué propone la teoría de restricciones?", o: ["Gestionar todo el sistema a partir de su cuello de botella", "Reducir el personal al mínimo legal", "Limitar la oferta a tres productos"], c: 0, nv: 4, e: "La capacidad del sistema la fija su eslabón más lento; mejorar otra parte no aumenta la producción total." },
+    { q: "En la matriz BCG, ¿qué es una vaca lechera?", o: ["Un producto nuevo con mucho crecimiento", "Un producto líder en un mercado maduro que genera caja", "Un producto sin participación ni crecimiento"], c: 1, nv: 4, e: "Crece poco pero domina su mercado; su caja suele financiar a las estrellas y a los productos en duda." },
+    { q: "¿Qué es el efecto látigo en la cadena de suministro?", o: ["La caída de ventas tras una mala campaña", "El aumento de costos por despidos", "Pequeños cambios en la demanda final que crecen hacia los proveedores"], c: 2, nv: 5, e: "Cada eslabón sobrerreacciona al pedir, y una variación chica en la tienda se vuelve enorme en la fábrica." },
+    { q: "¿Qué es Six Sigma?", o: ["Una metodología para reducir la variación y los defectos", "Un índice bursátil de seis empresas", "Un método para fijar precios"], c: 0, nv: 5, e: "Usa datos y estadística para que un proceso tenga muy pocos defectos, con la meta de menos de 4 defectos por millón de oportunidades." },
+    { q: "¿Qué es el valor económico agregado (EVA)?", o: ["El aumento de las ventas año contra año", "La utilidad operativa después de impuestos menos el costo del capital", "El valor de mercado menos la deuda"], c: 1, nv: 5, e: "Una empresa crea valor solo si gana más de lo que cuesta el capital que usa, no solo si tiene utilidad contable." },
+  ],
+  sis: [
+    { q: "¿Qué es el phishing?", o: ["Un correo o mensaje falso que busca robar tus datos", "Un lenguaje de programación", "Un tipo de antivirus"], c: 0, nv: 1, e: "Se hace pasar por tu banco o tu jefe para que entregues claves o hagas un pago; revisa siempre el remitente." },
+    { q: "¿Qué es una base de datos?", o: ["Un programa para editar fotos", "Un conjunto organizado de datos que se puede consultar", "La memoria RAM de la computadora"], c: 1, nv: 1, e: "Guarda información estructurada, como clientes o transacciones, para buscarla y actualizarla de forma ordenada." },
+    { q: "¿Qué es la autenticación de dos factores?", o: ["Tener dos contraseñas iguales", "Usar dos computadoras", "Confirmar tu identidad con algo más que la contraseña"], c: 2, nv: 1, e: "Además de la clave, pide un código del celular o una llave física, así una contraseña robada no basta." },
+    { q: "¿Para qué sirve SQL?", o: ["Para diseñar páginas web", "Para consultar y manejar datos en bases relacionales", "Para comprimir archivos"], c: 1, nv: 2, e: "SQL es el lenguaje estándar para pedir, filtrar y cruzar datos guardados en tablas." },
+    { q: "¿Qué significa que un servicio esté en la nube?", o: ["Que corre en servidores de un proveedor y lo usas por internet", "Que funciona sin electricidad", "Que no guarda datos"], c: 0, nv: 2, e: "No compras ni mantienes los servidores: pagas por uso a un proveedor que los opera por ti." },
+    { q: "¿Qué es el ransomware?", o: ["Un sistema de pagos en línea", "Un tipo de firewall", "Un programa que cifra tus archivos y pide un rescate"], c: 2, nv: 2, e: "Bloquea la información de la empresa hasta que paga; los respaldos fuera de línea son la mejor defensa." },
+    { q: "¿Qué es una API?", o: ["Un virus informático", "Una interfaz para que dos programas se comuniquen", "Un tipo de procesador"], c: 1, nv: 3, e: "Por ejemplo, tu app de inversiones usa la API de un proveedor para traer precios de acciones en tiempo real." },
+    { q: "¿Por qué no se guardan las contraseñas en texto plano?", o: ["Porque si roban la base, todas las claves quedan expuestas", "Porque ocupan mucho espacio", "Porque el texto plano es más lento"], c: 0, nv: 3, e: "Se guardan como hash con sal, así un robo de la base no revela directamente las contraseñas." },
+    { q: "¿Qué es un control de versiones como Git?", o: ["Un antivirus para programadores", "Un sistema para actualizar el sistema operativo", "Un registro de cambios del código para volver atrás y colaborar"], c: 2, nv: 3, e: "Cada cambio queda guardado con su autor, y varias personas pueden trabajar en paralelo sin pisarse." },
+    { q: "Con búsqueda binaria, ¿cuántos pasos toma como máximo encontrar un dato en una lista ordenada de 1 millón de elementos?", o: ["Unos 20 pasos", "Unos 1000 pasos", "Unos 500 mil pasos"], c: 0, nv: 4, e: "Cada paso descarta la mitad de la lista; 2 elevado a 20 ya supera 1 millón, así que bastan unos 20 pasos." },
+    { q: "¿Qué es una inyección SQL?", o: ["Una forma rápida de cargar datos", "Un ataque que mete comandos en una consulta desde un campo de texto", "Un error de hardware del disco"], c: 1, nv: 4, e: "Se evita con consultas parametrizadas, que tratan lo que escribe el usuario como dato y nunca como código." },
+    { q: "En machine learning, ¿qué es el sobreajuste (overfitting)?", o: ["Que el modelo es demasiado simple", "Que memoriza los datos de entrenamiento y falla con datos nuevos", "Que el modelo tarda mucho en entrenar"], c: 1, nv: 4, e: "Un modelo que predice perfecto el pasado puede fallar con el mercado de mañana; por eso se prueba con datos aparte." },
+    { q: "En una base de datos, ¿qué garantiza la atomicidad (la A de ACID)?", o: ["Que los datos se guardan cifrados", "Que varias personas leen a la vez", "Que una transacción se hace completa o no se hace"], c: 2, nv: 5, e: "En una transferencia, el débito y el crédito ocurren juntos; si algo falla a mitad, se deshace todo." },
+    { q: "¿Cómo funciona el cifrado de clave pública?", o: ["Lo que se cifra con tu clave pública solo lo abre tu clave privada", "Toda la empresa comparte una misma contraseña", "Cualquiera que tenga la clave pública puede descifrar"], c: 0, nv: 5, e: "Puedes repartir tu clave pública sin riesgo; solo quien tiene la privada lee los mensajes, base de HTTPS y las firmas digitales." },
+    { q: "Si un algoritmo es O(n²), ¿qué significa?", o: ["Que siempre tarda 2 segundos", "Que su tiempo crece con el cuadrado del tamaño de los datos", "Que usa dos procesadores"], c: 1, nv: 5, e: "Con el doble de datos tarda unas 4 veces más; con 10 veces más datos, unas 100 veces más." },
+  ],
+};
 const armarExamen = (nv, cuantas, temasVistos) => {
   /* Una pregunta atada a un tema solo es justa si ese tema ya se dio en
      clase. Las de banco general no cuelgan de ningun tema: esas se rigen
@@ -49236,14 +49344,59 @@ const MIN_JUEGOS_ANO = 2;
    10-nov-2026: «aparecen muchas decisiones, tienen que aparecer más
    juegos para que el jugador no se aburra») */
 const juegosEtapa = () => MIN_JUEGOS_ANO;
+/* Cada carta es algo a lo que le dedicas el inicio de la etapa (un
+   curso, un hábito, un viaje), no una tarea suelta: «entregar antes del
+   plazo» no tenía sentido aquí (Alessandro, 10-nov-2026). */
 const CARTAS_PRE = {
-  ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
-  /* modelaje y criterio son ya una sola habilidad: un solo mazo, para
-     que no salgan dos cartas de lo mismo con distinto nombre */
-  cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto",
-    "Curso de Excel avanzado", "Rehacer un modelo desde cero", "Atajos de teclado hasta dormido", "Copiar el modelo del mejor de la mesa"],
-  red: ["Café con el director", "El asado de la promoción", "Presentarte en el congreso", "Ayudar a alguien de otra área"],
-  rep: ["Entregar antes del plazo", "Firmar un informe que sale bien", "Dar una charla en la facultad", "Admitir un error a tiempo"],
+  ene: [
+    "Vacaciones de verdad, sin correo",
+    "Rutina de sueño: ocho horas, sin pantalla",
+    "Chequeo médico completo",
+    "Inscribirte en el gimnasio y no faltar",
+    "Entrenar para una media maratón",
+    "Natación tres veces por semana",
+    "Una semana en la playa con la familia",
+    "Aprender a cocinar sano",
+    "Meditar diez minutos cada mañana",
+    "Ir en bicicleta al trabajo",
+    "Una semana de montaña sin señal",
+  ],
+  cri: [
+    "Curso de Excel avanzado",
+    "Curso de Python para finanzas",
+    "Certificación en análisis financiero",
+    "Módulo de posgrado en finanzas",
+    "Inglés de negocios con clases privadas",
+    "Curso en línea de valuación de empresas",
+    "Leer un clásico de inversión, despacio",
+    "Diplomado en finanzas corporativas",
+    "Taller de modelos financieros",
+    "Curso de contabilidad para no contadores",
+  ],
+  red: [
+    "Congreso de finanzas en Ciudad de México",
+    "Cenas de exalumnos de tu universidad",
+    "Unirte a la cámara de comercio",
+    "Ser mentor de un practicante",
+    "Viaje de negocios a Miami",
+    "Club de inversionistas los jueves",
+    "Torneo de golf de la industria",
+    "Grupo de corredores de los sábados",
+    "Organizar desayunos con colegas",
+    "Feria de emprendedores en Bogotá",
+  ],
+  rep: [
+    "Publicar un artículo en una revista",
+    "Dar una clase en la universidad",
+    "Asesor pro bono de una ONG",
+    "Conferencista en un evento del sector",
+    "Certificarte y salir en el directorio",
+    "Columna mensual en un periódico",
+    "Un pódcast sobre finanzas personales",
+    "Escribir un libro corto sobre tu oficio",
+    "Jurado en un concurso universitario",
+    "Postularte a un premio de la industria",
+  ],
 };
 const NOMBRE_ATRIB = { ene: "energía", cri: "conocimiento", mod: "conocimiento", red: "contactos", rep: "reputación" };
 /* Las vacaciones de verdad te devuelven la energía al 100% (Alessandro,
@@ -49377,6 +49530,80 @@ const MENTORES = [
   { id: "nakamotto", n: "Satoshi Nakamotto", k: "rep", aconseja: "Te aconseja especular",
     peso: { cash: 0.8, car: 0.2, hab: 0.2, red: 0, rep: -0.1, ene: 0, riesgo: 12 } },
 ];
+/* Los referentes de cada carrera (Alessandro, 10-nov-2026: «que cada
+   carrera tenga sus mentores, que no se limite a los 7»). Parodias con el
+   nombre cambiado, como los de siempre: recomiendan, no hablan. */
+const MENTORES_CARRERA = {
+  eco: [
+    { id: "smitty", carrera: "eco", n: "Adam Smitty", k: "cash", aconseja: "Te aconseja dejar que el mercado decida",
+      icono: "📈", color: "#2F8A54", d: "Cree que cada quien buscando lo suyo termina sirviendo a todos.",
+      peso: { cash: 1.0, car: 0.4, hab: 0.5, red: 0.3, rep: 0.2, ene: 0.1, riesgo: 4 } },
+    { id: "kaynes", carrera: "eco", n: "John Maynard Kaynes", k: "ene", aconseja: "Te aconseja gastar cuando otros frenan",
+      icono: "🏛️", color: "#D9643A", d: "Prefiere actuar en plena crisis antes que esperar a que el largo plazo lo arregle.",
+      peso: { cash: -0.2, cashPierde: 0.3, car: 0.6, hab: 0.6, red: 0.4, rep: 0.3, ene: 1.0, riesgo: 6, grande: 0.5 } },
+    { id: "prebischo", carrera: "eco", n: "Raúl Prebischo", k: "red", aconseja: "Te aconseja mirar la región entera",
+      icono: "🌎", color: "#2F5D8A", d: "Pensó la economía desde el sur y cree que nadie progresa vendiendo solo materia prima.",
+      peso: { cash: 0.3, car: 0.3, hab: 0.9, red: 1.3, rep: 0.6, ene: 0.2, riesgo: -6 } },
+  ],
+  con: [
+    { id: "paciolli", carrera: "con", n: "Luca Paciolli", k: "cri", aconseja: "Te aconseja que todo cuadre",
+      icono: "🧾", color: "#2A2440", d: "Fraile y matemático que ordenó el debe y el haber; nada existe si no está anotado dos veces.",
+      peso: { cash: 0.5, cashPierde: 1.5, car: 0.2, hab: 1.4, red: 0, rep: 0.3, ene: 0.2, riesgo: -12 } },
+    { id: "deloitty", carrera: "con", n: "William Deloitty", k: "rep", aconseja: "Te aconseja firmar solo lo que revisaste",
+      icono: "🔍", color: "#2F5D8A", d: "Fundó una firma de auditoría cuando casi nadie revisaba nada; su nombre es su garantía.",
+      peso: { cash: 0.3, car: 0.6, hab: 0.6, red: 0.4, rep: 1.5, ene: 0.1, riesgo: -8 } },
+    { id: "wedgwud", carrera: "con", n: "Josiah Wedgwud", k: "cash", aconseja: "Te aconseja medir cada costo",
+      icono: "📊", color: "#B24E27", d: "Alfarero que calculó cuánto le costaba cada taza y así encontró dónde se le iba la plata.",
+      peso: { cash: 1.3, cashPierde: 1.0, car: 0.7, hab: 0.4, red: 0.1, rep: 0.1, ene: -0.1, riesgo: 2, grande: 0.2 } },
+  ],
+  ing: [
+    { id: "slimm", carrera: "ing", n: "Carlos Slimm", k: "cash", aconseja: "Te aconseja comprar barato y aguantar",
+      icono: "🏗️", color: "#F2B632", d: "Ingeniero civil que lee balances como planos y compra cuando todos quieren vender.",
+      peso: { cash: 1.5, car: 0.8, hab: 0.4, red: 0.5, rep: 0, ene: 0, riesgo: 6, grande: 0.4 } },
+    { id: "eiffelo", carrera: "ing", n: "Gustavo Eiffelo", k: "rep", aconseja: "Te aconseja construir algo que se vea",
+      icono: "📐", color: "#D9643A", d: "Levantó estructuras de hierro que al principio nadie quería y después nadie quiso quitar.",
+      peso: { cash: 0.2, car: 1.0, hab: 0.6, red: 0.3, rep: 1.4, ene: -0.2, riesgo: 10, grande: 0.8 } },
+    { id: "teslo", carrera: "ing", n: "Nikola Teslo", k: "cri", aconseja: "Te aconseja estudiar hasta entender",
+      icono: "⚡", color: "#8C6BB1", d: "Inventor de noches largas que piensa más en el invento que en la factura.",
+      peso: { cash: -0.2, car: 0.3, hab: 1.7, red: -0.2, rep: 0.4, ene: -0.3, riesgo: 12 } },
+  ],
+  der: [
+    { id: "belloso", carrera: "der", n: "Andrés Belloso", k: "cri", aconseja: "Te aconseja leer bien antes de firmar",
+      icono: "📜", color: "#2A2440", d: "Redactó un código civil que medio continente tomó de modelo; confía en las reglas claras.",
+      peso: { cash: 0.2, cashPierde: 1.2, car: 0.4, hab: 1.3, red: 0.2, rep: 0.6, ene: 0.2, riesgo: -14 } },
+    { id: "ginsbueno", carrera: "der", n: "Ruth Bader Ginsbueno", k: "rep", aconseja: "Te aconseja defender tu postura",
+      icono: "⚖️", color: "#5B4785", d: "Ganó terreno caso por caso, con paciencia, y sabe que un buen voto en contra también deja huella.",
+      peso: { cash: 0, car: 0.5, hab: 0.7, red: 0.2, rep: 1.6, ene: 0.5, riesgo: 0 } },
+    { id: "linkedin", carrera: "der", n: "Abraham Linkedin", k: "red", aconseja: "Te aconseja sumar aliados",
+      icono: "🏛️", color: "#2F5D8A", d: "Abogado de pueblo que llegó lejos sentando a sus rivales en la misma mesa.",
+      peso: { cash: 0.3, car: 0.7, hab: 0.3, red: 1.5, rep: 0.8, ene: 0, riesgo: 2 } },
+  ],
+  adm: [
+    { id: "drucker", carrera: "adm", n: "Peter Druckero", k: "car", aconseja: "Te aconseja ordenar antes de crecer",
+      icono: "📘", color: "#5B4785", d: "Inventó la gerencia moderna, dicen. Cree que lo que no se mide no se maneja.",
+      peso: { cash: 0.3, car: 1.2, hab: 0.8, red: 0.2, rep: 0.4, ene: 0.1, riesgo: -4 } },
+    { id: "kotorro", carrera: "adm", n: "Philip Kotorro", k: "rep", aconseja: "Te aconseja cuidar tu marca",
+      icono: "📣", color: "#E9875A", d: "Convirtió el marketing en materia de estudio y siempre empieza por lo que necesita el cliente.",
+      peso: { cash: 0.4, car: 0.5, hab: 0.3, red: 0.8, rep: 1.5, ene: 0, riesgo: 3 } },
+    { id: "sembler", carrera: "adm", n: "Ricardo Sembler", k: "ene", aconseja: "Te aconseja delegar y descansar",
+      icono: "🧭", color: "#2F8A54", d: "Empresario brasileño que dejó a su gente elegir horario y jefe, convencido de que la confianza rinde más que el control.",
+      peso: { cash: 0.2, car: 0.4, hab: 0.4, red: 0.6, rep: 0.3, ene: 1.6, riesgo: 4 } },
+  ],
+  sis: [
+    { id: "lovelaze", carrera: "sis", n: "Ada Lovelaze", k: "cri", aconseja: "Te aconseja aprender la lógica primero",
+      icono: "💻", color: "#8C6BB1", d: "Escribió un programa antes de que existiera la computadora y vio en las máquinas mucho más que cuentas.",
+      peso: { cash: 0, car: 0.4, hab: 1.6, red: 0.1, rep: 0.7, ene: 0.2, riesgo: -3 } },
+    { id: "galperrin", carrera: "sis", n: "Marcos Galperrín", k: "car", aconseja: "Te aconseja escalar rápido",
+      icono: "🖥️", color: "#F2B632", d: "Arrancó una tienda en internet con poca plata y todavía reinvierte casi todo en crecer.",
+      peso: { cash: 0.6, car: 1.5, hab: 0.5, red: 0.4, rep: 0.1, ene: -0.4, riesgo: 16, grande: 0.7 } },
+    { id: "puertas", carrera: "sis", n: "Bill Puertas", k: "cash", aconseja: "Te aconseja cobrar por cada licencia",
+      icono: "⌨️", color: "#2F5D8A", d: "Dejó la universidad para poner su software en todas las oficinas y hoy reparte su fortuna con método.",
+      peso: { cash: 1.4, cashPierde: 0.8, car: 0.8, hab: 0.5, red: 0.3, rep: 0.5, ene: 0, riesgo: 0 } },
+  ],
+};
+Object.keys(MENTORES_CARRERA).forEach((c) => MENTORES_CARRERA[c].forEach((m) => MENTORES.push({ ...m, carrera: c })));
+/* los mentores que le tocan a una partida: los 7 y los de su carrera */
+const mentoresDe = (st) => MENTORES.filter((m) => !m.carrera || m.carrera === (st && st.estudio));
 const IDS_MENTOR = MENTORES.map((m) => m.id);
 const MENTOR = (id) => MENTORES.find((m) => m.id === id) || null;
 
@@ -49443,18 +49670,18 @@ const jugasteComo = (st) => {
   const total = entero(st && st.nDec, 0, 0, 99999);
   const afin = (st && st.afin) || {};
   if (total < 5) return null;
-  const lista = MENTORES.map((m) => ({ m, pct: Math.round(100 * entero(afin[m.id], 0, 0, 99999) / total) }))
+  const lista = mentoresDe(st).map((m) => ({ m, pct: Math.round(100 * entero(afin[m.id], 0, 0, 99999) / total) }))
     .sort((a, b) => b.pct - a.pct);
   return { primero: lista[0], segundo: lista[1], total };
 };
 
 /* La escena de elegir mentor: la primera del primer año (o del año
    siguiente, en una partida empezada antes de que existieran). */
-const escenaMentor = () => ({
+const escenaMentor = (st) => ({
   id: ID_MENTOR, min: 0, max: 6, mentores: true,
   t: "¿Quién te aconseja?",
-  x: "Siete personas que se hicieron ricas de siete formas distintas. Elige a quién quieres oír en cada decisión.",
-  o: MENTORES.map((m) => ({
+  x: "Gente que se hizo rica de formas muy distintas, y los referentes de tu carrera. Elige a quién quieres oír en cada decisión.",
+  o: mentoresDe(st).map((m) => ({
     t: m.n, mentorId: m.id,
     d: { msg: m.n + " te va a aconsejar a partir de ahora." },
   })),
@@ -49464,6 +49691,17 @@ const escenaMentor = () => ({
 function AvatarMentor({ id, tam }) {
   const n = numero(tam, 56);
   const comun = { width: n, height: n, viewBox: "0 0 120 120", "aria-hidden": "true", focusable: "false", className: "ea-avatar" };
+  const mc = MENTORES.find((x) => x.id === id && x.carrera);
+  if (mc) {
+    const ini = String(mc.n).split(" ").map((p) => p.charAt(0)).join("").slice(0, 2).toUpperCase();
+    return (
+      <svg {...comun}>
+        <circle cx="60" cy="60" r="60" fill={mc.color || "#5B4785"} />
+        <text x="60" y="58" textAnchor="middle" fontSize="40">{mc.icono || "📘"}</text>
+        <text x="60" y="98" textAnchor="middle" fontSize="20" fontWeight="800" fill="#FFF4DC" fontFamily="Bricolage Grotesque, sans-serif">{ini}</text>
+      </svg>
+    );
+  }
   if (id === "tusk") return (
     <svg {...comun}>
       <circle cx="60" cy="60" r="60" fill="#2A2440" />
@@ -49586,7 +49824,7 @@ const escenaDeId = (id, st) => {
   if (id === ID_PRE) {
     try { return escenaPretemporada(st); } catch (e) { return null; }
   }
-  if (id === ID_MENTOR) return escenaMentor();
+  if (id === ID_MENTOR) return escenaMentor(st);
   if (id === ID_CAMINO) {
     try { return escenaCamino(st); } catch (e) { return null; }
   }
@@ -50978,12 +51216,20 @@ const PREGUNTA_RESERVA = {
   nv: 1,
 };
 
-function JuegoQuiz({ ayuda, nivel, onFin, modo, temas }) {
+function JuegoQuiz({ ayuda, nivel, onFin, modo, temas, ctx: ctxCarrera }) {
   const nv = clamp(numero(nivel, 1), 1, 5);
   const total = largoExamen(nv);
   const [preg] = useState(() => {
     let crudas = [];
     try { crudas = armarExamen(nv, total, temas) || []; } catch (e) { crudas = []; }
+    /* una de las tres, a veces, es de tu carrera */
+    try {
+      const propias = ctxCarrera && ctxCarrera.estudio && Array.isArray(CARRERA_PREGUNTAS[ctxCarrera.estudio]) ? CARRERA_PREGUNTAS[ctxCarrera.estudio].filter((x) => numero(x.nv, 1) <= nv + 1) : [];
+      if (propias.length && crudas.length && Math.random() < 0.6) {
+        const p = propias[Math.floor(Math.random() * propias.length)];
+        if (!crudas.some((x) => x.q === p.q)) crudas[Math.floor(Math.random() * crudas.length)] = { ...p, carrera: true };
+      }
+    } catch (e) {}
     crudas = crudas.filter(preguntaValida);
     while (crudas.length === 0) crudas = [PREGUNTA_RESERVA];
     return crudas.map((p) => {
@@ -51412,7 +51658,7 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema, ctx }) {
   if (tipo === "ojo") return <JuegoOjo ayuda={ayuda} onFin={onFin} />;
   if (tipo === "anclaje") return <JuegoAnclaje ayuda={ayuda} onFin={onFin} ctx={ctx} />;
   if (tipo === "tresraya") return <JuegoTresRaya ayuda={ayuda} onFin={onFin} />;
-  if (tipo === "quiz") return <JuegoQuiz ayuda={ayuda} nivel={nivel} onFin={onFin} modo={modo} temas={temas} />;
+  if (tipo === "quiz") return <JuegoQuiz ayuda={ayuda} nivel={nivel} onFin={onFin} modo={modo} temas={temas} ctx={ctx} />;
   if (tipo === "catedra") return <JuegoCatedra ayuda={ayuda} nivel={nivel} onFin={onFin} onTema={onTema} />;
   if (tipo === "comite") return <JuegoComite ayuda={ayuda} onFin={onFin} />;
   if (tipo === "reaccion") return <JuegoReaccion ayuda={ayuda} onFin={onFin} />;
@@ -55677,6 +55923,8 @@ function Motor() {
   /* el aumento que se cerró en la mesa del contrato, hasta aplicarlo */
   const aumentoPactado = useRef(null);
   const ctxJuego = useMemo(() => {
+    /* el examen: para meter preguntas de tu carrera */
+    if (op && (op.juego || op.j) === "quiz") return { estudio: s.estudio };
     /* la negociación del contrato: lo que cobras hoy */
     if (op && (op.juego || op.j) === "anclaje") return op.negocia || null;
     if (!op || (op.juego || op.j) !== "estructura") return null;
@@ -56125,7 +56373,7 @@ function Motor() {
     lista.unshift(escenaPretemporada(st));
     /* sin mentor todavía: elegirlo es lo primero (también en una partida
        empezada antes de que hubiera mentores) */
-    if (!st.mentor && st.vistos.indexOf(ID_MENTOR) < 0) lista.unshift(escenaMentor());
+    if (!st.mentor && st.vistos.indexOf(ID_MENTOR) < 0) lista.unshift(escenaMentor(st));
     return lista;
   };
 
@@ -56553,7 +56801,7 @@ function Motor() {
         if (opsEv.length >= 2 && iElegida >= 0) {
           st.nDec = entero(numero(st.nDec, 0) + 1, 0, 0, 99999);
           const afin = { ...(st.afin || {}) };
-          MENTORES.forEach((m) => {
+          mentoresDe(st).forEach((m) => {
             if (mentorElige(m, opsEv, riesgoDe) === iElegida) afin[m.id] = entero(numero(afin[m.id], 0) + 1, 0, 0, 99999);
           });
           const mio = st.mentor ? MENTORES.find((m) => m.id === st.mentor) : null;
