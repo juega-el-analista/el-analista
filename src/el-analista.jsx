@@ -938,7 +938,7 @@ const CSS6 = `
 .ea-chip.k-car{color:var(--a-car-t);background:var(--a-car-f)}
 .ea-chip.neg.k-ene,.ea-chip.neg.k-cri,.ea-chip.neg.k-mod,.ea-chip.neg.k-red,.ea-chip.neg.k-rep,.ea-chip.neg.k-car{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
 /* el sello va debajo de la cabecera del memo, no encima del año */
-.ea-sello{top:44px;border-color:var(--cobre);color:var(--cobre);border-radius:8px}
+.ea-sello{top:52px;border-color:var(--cobre);color:var(--cobre);border-radius:8px}
 
 /* ---- la barra de independencia y las ventanas ---- */
 .ea-ind{background:rgba(42,36,64,.10);border-radius:99px;overflow:visible}
@@ -1611,10 +1611,10 @@ const CSS4 = `
 .ea-hojaBotones{display:flex;gap:8px;margin-top:32px;flex-wrap:wrap}
 /* el golpe de dinero */
 .ea-golpeCapa{position:fixed;inset:0;z-index:80;background:var(--tinta);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
-.ea-golpe{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-golpeEntra .35s ease-out}
+.ea-golpeCine{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-golpeEntra .35s ease-out}
 @keyframes ea-golpeEntra{from{transform:scale(.96);opacity:0}}
-.ea-golpe svg{position:absolute;inset:0;width:100%;height:100%}
-.ea-golpe.baja{animation:ea-golpeEntra .35s ease-out,ea-golpeSacude .5s .3s}
+.ea-golpeCine svg{position:absolute;inset:0;width:100%;height:100%}
+.ea-golpeCine.baja{animation:ea-golpeEntra .35s ease-out,ea-golpeSacude .5s .3s}
 @keyframes ea-golpeSacude{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .ea-golpeSalta{animation:ea-golpeSalta .55s ease-in-out infinite alternate}
 @keyframes ea-golpeSalta{to{transform:translateY(-22px)}}
@@ -1627,14 +1627,34 @@ const CSS4 = `
 .ea-golpeTxt{position:absolute;left:0;right:0;bottom:0;padding:70px 16px 20px;text-align:center;color:var(--crema);background:linear-gradient(transparent,rgba(42,36,64,.92))}
 .ea-golpeK{font:700 12px Nunito,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mostaza)}
 .ea-golpeN{font:800 clamp(32px,8vw,58px) 'Bricolage Grotesque',sans-serif;line-height:1.05;margin:4px 0}
-.ea-golpe.sube .ea-golpeN{color:#9BE3A8}
-.ea-golpe.baja .ea-golpeN{color:#F2A08E}
+.ea-golpeCine.sube .ea-golpeN{color:#9BE3A8}
+.ea-golpeCine.baja .ea-golpeN{color:#F2A08E}
 .ea-animoFila{display:inline-flex;gap:6px;align-items:center;margin-top:8px;background:rgba(255,244,220,.12);padding:6px 10px;border-radius:999px}
 .ea-animoFila span{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;opacity:.35;transition:all .4s}
 .ea-animoFila span.on{opacity:1;background:var(--mostaza);transform:scale(1.2)}
 .ea-animoFila b{font:800 13px 'Bricolage Grotesque',sans-serif;margin-left:6px}
 .ea-animoEf{display:block;font-size:12.5px;margin-top:6px;opacity:.85}
 .ea-quieto .ea-golpeBillete,.ea-quieto .ea-golpeGota{display:none}
+/* los sustos con reloj */
+.ea-susto{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;animation:ea-golpeEntra .35s ease-out}
+.ea-susto svg{position:absolute;inset:0;width:100%;height:100%}
+.ea-sustoTxt{position:absolute;left:0;right:0;bottom:0;padding:56px 16px 16px;text-align:center;color:var(--crema);background:linear-gradient(transparent,rgba(20,16,32,.94))}
+.ea-sustoT{font:800 clamp(20px,5vw,32px) 'Bricolage Grotesque',sans-serif;line-height:1.1;margin:4px 0 8px}
+.ea-sustoN{font:800 13px 'Bricolage Grotesque',sans-serif;color:#F2A08E;margin-bottom:6px}
+.ea-sustoReloj{height:8px;border-radius:4px;background:rgba(255,244,220,.15);overflow:hidden;margin:0 auto 12px;max-width:420px}
+.ea-sustoReloj div{height:100%;background:#E0503A;transition:width .1s linear}
+.ea-sustoOps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.ea-sustoOps .ea-op.ea-sustoOp{width:auto;margin:0;border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);
+  font:800 14px 'Bricolage Grotesque',sans-serif;padding:11px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12;min-height:0}
+.ea-sustoOps .ea-op.ea-sustoOp.v1{background:var(--crema)}
+.ea-sustoOps .ea-op.ea-sustoOp.v2{background:transparent;color:var(--crema);border:2px solid var(--crema);box-shadow:none}
+.ea-sustoTiembla{animation:ea-sustoTiembla .25s infinite}
+@keyframes ea-sustoTiembla{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+.ea-sustoParpadea{animation:ea-sustoParpadea .6s infinite alternate}
+@keyframes ea-sustoParpadea{to{opacity:.35}}
+.ea-sustoVibra{animation:ea-sustoVibra .15s infinite}
+.ea-sustoVibra{transform-box:fill-box;transform-origin:center}
+@keyframes ea-sustoVibra{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
 /* los momentos de la vida */
 .ea-vidaCine{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-golpeEntra .45s ease-out}
 .ea-vidaCine svg{position:absolute;inset:0;width:100%;height:100%}
@@ -23164,7 +23184,7 @@ const LOTES = {
      "d": {
       "cash": 2500,
       "cri": 1,
-      "msg": "Cobras. Un pájaro en mano y todo eso."
+      "msg": "Cobras ya. Más vale lo seguro que lo que quizás venga."
      }
     }
    ]
@@ -49536,6 +49556,8 @@ const escenaDeId = (id, st) => {
   if (id === DECISION_RAMA.id) {
     try { return decisionRama(st); } catch (e) { return null; }
   }
+  const su = SUSTOS.find((x) => x.id === id);
+  if (su) return su;
   const e = ESCENAS_FIJAS.find((x) => x.id === id);
   return e || null;
 };
@@ -51649,7 +51671,7 @@ function GolpeDinero({ golpe, antes, despues, onFin }) {
     : despues < 0 ? "−" + (-despues * 5) + " en los minijuegos y más cansancio la próxima etapa." : "";
   return (
     <div className="ea-golpeCapa">
-      <div className={"ea-golpe " + (golpe.sube ? "sube" : "baja")} onClick={onFin}>
+      <div className={"ea-golpeCine " + (golpe.sube ? "sube" : "baja")} onClick={onFin}>
         <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <SalaGolpe sube={golpe.sube} />
           <TuEnLaSala sube={golpe.sube} />
@@ -51891,6 +51913,154 @@ const momentoDe = (tipo, st, cambios, extra) => {
   return { tipo, genero: st && st.genero, cargo: x.cargo,
     k: mes.charAt(0).toUpperCase() + mes.slice(1) + " de " + (2026 + t) + " · " + lugar, t: titulo, ef: ef.slice(0, 4) };
 };
+
+/* ============================================================
+   LOS SUSTOS: DECIDIR RÁPIDO
+   «Que también aparezcan escenas como que te van a robar, y tienes
+   que decidir rápido si enfrentarlos o entregar lo que piden»
+   (Alessandro, 9-nov-2026). La decisión es dentro de la cinemática,
+   con un reloj: si no eliges a tiempo, la vida elige por ti, y casi
+   siempre peor. Cada susto sale una vez por vida.
+   ============================================================ */
+const SUSTOS = [
+  {
+    id: 9850, min: 0, max: 6, susto: "asalto", seg: 5,
+    k: "Una noche, saliendo de la oficina", t: "«¡Dame el celular, rápido!»",
+    x: "Alguien te corta el paso en la cuadra oscura. Pide el celular y no parece de los que esperan.",
+    o: [
+      { t: "Entregar el celular", d: { cash: -900, animo: -1, msg: "Se lo das y se va corriendo. Pierdes el celular y un buen susto, pero llegas entero a la casa." } },
+      { t: "Enfrentarlo", d: { ene: -15, rep: 2, msg: "Lo empujas y sale corriendo, pero te tuerces la muñeca. Dos semanas con yeso y una historia que vas a contar mil veces." } },
+      { t: "Correr", d: { cash: -300, ene: -5, msg: "Corres hasta la esquina iluminada. No te alcanza, pero se te cae la billetera en la carrera." } },
+    ],
+    porTi: { t: "Te quedaste paralizado", d: { cash: -1200, animo: -2, msg: "No alcanzas a reaccionar. Te quita el celular y la billetera sin que digas nada." } },
+  },
+  {
+    id: 9851, min: 0, max: 6, susto: "crisis", seg: 6, cartera: 5000,
+    k: "Un lunes negro", t: "La bolsa cae 18% en una mañana",
+    x: "Las pantallas están en rojo, el teléfono no para y todo el mundo te pregunta qué haces con tu plata.",
+    o: [
+      { t: "Vender todo", d: { mercado: -0.18, animo: -1, msg: "Vendes en el piso. Te salvas de lo que siguió cayendo, pero te pierdes el rebote de los meses siguientes." } },
+      { t: "Aguantar", d: { mercado: -0.06, msg: "No tocas nada. Duele unas semanas, y el año termina casi donde empezó." } },
+      { t: "Comprar barato", d: { mercado: 0.06, ene: -5, msg: "Pones a trabajar tus ahorros con todo en rojo. Da miedo, y es de las mejores compras que vas a hacer." } },
+    ],
+    porTi: { t: "No decidiste nada", d: { mercado: -0.22, animo: -2, msg: "El pánico decide por ti: tu asesor vende la mitad justo en el peor momento." } },
+  },
+  {
+    id: 9852, min: 0, max: 6, susto: "estafa", seg: 7,
+    k: "Un martes cualquiera, en tu casa", t: "«Le llamamos del banco: deme el código que le llegó»",
+    x: "Número oculto. La voz suena muy profesional y dice que hay un movimiento raro en tu cuenta.",
+    o: [
+      { t: "Darle el código", d: { cash: -6500, animo: -2, msg: "Era una estafa. Esa misma tarde vacían tu cuenta, y el banco te devuelve una parte después de semanas de trámite." } },
+      { t: "Colgar y llamar al banco", d: { cri: 3, animo: 1, msg: "En el banco te confirman que nadie te llamó y bloquean la tarjeta por si acaso. Te salvaste." } },
+      { t: "Hacerle preguntas", d: { cri: 2, msg: "Le preguntas tu número de cliente y cuelga de inmediato. Era un estafador." } },
+    ],
+    porTi: { t: "Dudaste demasiado", d: { cash: -6500, animo: -2, msg: "El «banco» insiste hasta que le lees el código. Era una estafa." } },
+  },
+];
+const IDS_SUSTO = SUSTOS.map((e) => e.id);
+/* el susto que le puede tocar a esta partida, si toca */
+const sustoPosible = (st) => SUSTOS.filter((e) => st.vistos.indexOf(e.id) < 0
+  && (!e.cartera || numero(st.cartera, 0) >= e.cartera));
+
+function PersonaSusto({ x, y, s = 1, piel = "#E7B48A", pelo = "corto", colorPelo = "#2A2440", ropa, cara = "miedo", gorra, mascara }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <path d="M-46 170 Q-46 96 0 92 Q46 96 46 170 Z" fill={ropa} />
+      <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+      {pelo === "largo" && <path d="M-33 74 Q-40 10 0 4 Q40 10 33 74 Q28 32 18 22 Q0 28 -18 22 Q-28 32 -33 74 Z" fill={colorPelo} />}
+      <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+      {pelo === "corto" && !gorra && <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={colorPelo} />}
+      {gorra && <path d="M-32 30 Q-30 0 0 0 Q30 0 32 30 L54 34 L-32 34 Z" fill={gorra} />}
+      {mascara && <path d="M-30 46 Q0 40 30 46 L28 70 Q0 82 -28 70 Z" fill="#2A2440" />}
+      {cara === "miedo"
+        ? <g><g fill="#FFFFFF"><circle cx="-11" cy="42" r="7" /><circle cx="11" cy="42" r="7" /></g><g fill="#2A2440"><circle cx="-11" cy="42" r="3" /><circle cx="11" cy="42" r="3" /></g>
+            <ellipse cx="0" cy="60" rx="6" ry="7" fill="#2A2440" /></g>
+        : <g fill="#2A2440"><rect x="-17" y="34" width="11" height="3" rx="1.5" transform="rotate(14 -11 35)" /><rect x="6" y="34" width="11" height="3" rx="1.5" transform="rotate(-14 11 35)" />
+            <circle cx="-11" cy="43" r="3" /><circle cx="11" cy="43" r="3" /></g>}
+    </g>
+  );
+}
+function EscenaSusto({ tipo, genero, apurado }) {
+  const tu = genero === "f" ? LOOK_LARGO : LOOK_CORTO;
+  if (tipo === "asalto") {
+    return (
+      <g>
+        <rect width="720" height="450" fill="#1E1A30" /><rect width="720" height="300" fill="#2A2440" />
+        <g fill="#15121F"><rect x="20" y="60" width="120" height="240" /><rect x="560" y="40" width="150" height="260" /></g>
+        <g fill="#F2B632" opacity=".7"><rect x="40" y="90" width="16" height="20" /><rect x="90" y="140" width="16" height="20" /><rect x="590" y="80" width="16" height="20" /><rect x="640" y="150" width="16" height="20" /></g>
+        <rect x="360" y="60" width="8" height="240" fill="#3B3358" /><path d="M364 64 L330 74" stroke="#3B3358" strokeWidth="8" />
+        <ellipse cx="330" cy="300" rx="160" ry="40" fill="#F2B632" opacity=".18" /><circle cx="330" cy="78" r="12" fill="#F2B632" />
+        <rect y="300" width="720" height="150" fill="#3B3358" />
+        <g className={apurado ? "ea-sustoTiembla" : ""}><PersonaSusto x={240} y={130} s={1.25} {...tu} ropa="#2F5D8A" /></g>
+        <PersonaSusto x={460} y={125} s={1.3} piel="#8D5A3B" ropa="#15121F" cara="malo" gorra="#3B3358" mascara />
+      </g>
+    );
+  }
+  if (tipo === "crisis") {
+    return (
+      <g>
+        <rect width="720" height="450" fill="#2A2440" />
+        {[0, 1, 2].map((i) => (
+          <g key={i} transform={`translate(${70 + i * 200} 50)`}>
+            <rect width="180" height="120" rx="8" fill="#15121F" />
+            <polyline className="ea-sustoParpadea" points="12,22 40,30 62,26 90,58 118,52 146,96 168,104" fill="none" stroke="#E0503A" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" />
+            <text x="150" y="24" textAnchor="end" fill="#E0503A" fontFamily="Bricolage Grotesque, sans-serif" fontWeight="800" fontSize="16">{["−18%", "−22%", "−31%"][i]}</text>
+          </g>
+        ))}
+        <rect y="300" width="720" height="150" fill="#3B3358" /><rect x="80" y="290" width="560" height="22" rx="6" fill="#8A3A1C" />
+        <PersonaSusto x={360} y={130} s={1.3} {...tu} ropa="#2A2440" />
+        <g transform="translate(520 250)"><g className="ea-sustoVibra"><rect width="34" height="56" rx="6" fill="#15121F" /><rect x="4" y="6" width="26" height="40" rx="3" fill="#E0503A" /></g></g>
+      </g>
+    );
+  }
+  return (
+    <g>
+      <rect width="720" height="450" fill="#F3E2BF" /><rect y="300" width="720" height="150" fill="#E2CFA8" />
+      <rect x="430" y="50" width="220" height="180" rx="12" fill="#8CC4E8" />
+      <PersonaSusto x={240} y={130} s={1.25} {...tu} ropa="#2F8A54" />
+      <g transform="translate(360 150)"><g className="ea-sustoVibra">
+        <rect width="120" height="210" rx="16" fill="#2A2440" /><rect x="8" y="14" width="104" height="182" rx="8" fill="#FFF8EA" />
+        <text x="60" y="56" textAnchor="middle" fill="#2A2440" fontFamily="Nunito, sans-serif" fontWeight="800" fontSize="13">«Tu banco»</text>
+        <text x="60" y="76" textAnchor="middle" fill="#665C7A" fontFamily="Nunito, sans-serif" fontSize="11">número oculto</text>
+        <circle cx="34" cy="160" r="16" fill="#E0503A" /><circle cx="86" cy="160" r="16" fill="#2F8A54" />
+      </g></g>
+    </g>
+  );
+}
+/* la cinemática con reloj: eliges, o se te acaba el tiempo */
+function SustoRapido({ ev, ano, genero, onElegir, onTarde }) {
+  const total = numero(ev.seg, 6);
+  const [t, setT] = useState(total);
+  const [hecho, setHecho] = useState(false);
+  useEffect(() => {
+    if (hecho) return;
+    if (t <= 0) { setHecho(true); onTarde(); return; }
+    if (typeof setTimeout !== "function") return;
+    const id = setTimeout(() => setT((x) => Math.max(0, +(x - 0.1).toFixed(1))), 100);
+    return () => { try { clearTimeout(id); } catch (e) {} };
+  }, [t, hecho]);
+  const elegir = (o) => { if (hecho) return; setHecho(true); onElegir(o); };
+  return (
+    <div className="ea-golpeCapa">
+      <div className="ea-susto">
+        <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <EscenaSusto tipo={ev.susto} genero={genero} apurado={t < total / 2} />
+        </svg>
+        <div className="ea-sustoTxt">
+          <div className="ea-golpeK">{ev.k} · {ano}</div>
+          <div className="ea-sustoT">{ev.t}</div>
+          <div className="ea-sustoN">Decide: {Math.ceil(t)} s</div>
+          <div className="ea-sustoReloj"><div style={{ width: (t / total * 100) + "%" }} /></div>
+          <div className="ea-sustoOps">
+            {ev.o.map((o, i) => (
+              <button key={o.t} className={"ea-op ea-sustoOp v" + i} onClick={() => elegir(o)}>{o.t}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ---- explicación antes de jugar ----
    Nadie aprende de un juego que no entendió. Primero las reglas,
@@ -55024,6 +55194,18 @@ function Motor() {
        contrato, apertura, firma...). */
     {
       const corta = lista.slice(0, ESCENAS_ETAPA);
+      /* La escena de vida tiene lugar asegurado. Entraba cuarta o quinta,
+         detrás de lo forzado y de las consecuencias, y el recorte la
+         dejaba fuera casi siempre: en una vida de prueba, 0 de 23 etapas.
+         Desplaza a la última que no sea forzada ni minijuego; lo
+         desplazado vuelve a pedir lugar la etapa siguiente. */
+      const vidaEtapa = lista.find((e) => VIDA.indexOf(e) >= 0);
+      if (vidaEtapa && corta.indexOf(vidaEtapa) < 0) {
+        let k = corta.length - 1;
+        while (k >= forzadas && conJuego(corta[k])) k--;
+        if (k < forzadas) k = corta.length - 1;
+        if (k >= forzadas) corta[k] = vidaEtapa;
+      }
       const resto = lista.slice(ESCENAS_ETAPA).filter(conJuego);
       for (let i = corta.length - 1; i >= forzadas && corta.filter(conJuego).length < minJ; i--) {
         /* la escena de vida no se cambia nunca: si no, la cadena novio,
@@ -55039,6 +55221,12 @@ function Motor() {
     }
     /* La pretemporada abre el año y va por fuera del presupuesto: se pone
        delante cuando todo lo demás ya está contado. */
+    /* un susto, de vez en cuando (una vez cada uno por vida): suma una
+       escena corta a la etapa, con su reloj */
+    if (st.turno >= 2 && azar() < 0.16) {
+      const su = elegirAzar(sustoPosible(st).filter((e) => usados.indexOf(e.id) < 0));
+      if (su) { lista.push(su); usados.push(su.id); }
+    }
     lista.unshift(escenaPretemporada(st));
     /* sin mentor todavía: elegirlo es lo primero (también en una partida
        empezada antes de que hubiera mentores) */
@@ -55557,6 +55745,7 @@ function Motor() {
     if (d.pareja && PAREJAS.indexOf(d.pareja) >= 0) st.pareja = d.pareja;
     if (d.hijos) st.hijos = entero(st.hijos + d.hijos, 0, 0, 8);
     if (momentoTipo) st.animo = clamp(entero(st.animo, 0, -2, 2) + ANIMO_MOMENTO[momentoTipo], -2, 2);
+    if (d.animo) st.animo = clamp(entero(st.animo, 0, -2, 2) + entero(d.animo, 0, -2, 2), -2, 2);
     if (d.estudia) st.estudia = clamp(st.estudia + numero(d.estudia, 0), 0, 500);
     /* un divorcio no resta una cifra fija: se lleva un porcentaje de todo */
     if (d.patPct) {
@@ -57756,7 +57945,11 @@ function Motor() {
                   completa. Mismo memorando, mismas opciones y mismos
                   candados —un solo camino de pintado—, solo que dentro de
                   un marco que se lleva la pantalla. */}
-              {fase === "evento" && ev && (() => {
+              {fase === "evento" && ev && ev.susto && (
+                <SustoRapido key={ev.id} ev={ev} ano={ano} genero={s.genero} onElegir={elegir}
+                  onTarde={() => { if (enFase("evento") && ev.porTi) resolverEscena(ev.porTi.d, "fallo", ev.porTi); }} />
+              )}
+              {fase === "evento" && ev && !ev.susto && (() => {
                 const cl0 = CLASE_ESCENA(ev);
                 /* La última del año lleva «Cierre de año» (Alessandro, 8-oct):
                    si ya era especial, se dice también qué era. */

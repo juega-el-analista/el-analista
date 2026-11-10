@@ -131,6 +131,9 @@ async function unaVida(semilla) {
       /* las respuestas del examen y de las cuentas también son ea-op:
          dentro de un minijuego no cuentan como decisiones */
       if (!enJuego) { et.dec++; et.seg += 8; }
+      if (!enJuego && process.env.RITMO_TITULOS) {
+        try { const h = r.root.findAll((x) => x.type === "h2" && /ea-memoTit/.test(x.props.className || ""))[0]; if (h) console.log("  [escena] " + norm(txtDe(h.props.children))); } catch (e) {}
+      }
       /* RITMO_PREFIERE: una expresión para elegir esas opciones cuando
          salgan (para comprobar, por ejemplo, que la boda se ve) */
       const pref = process.env.RITMO_PREFIERE ? ops.find((b) => new RegExp(process.env.RITMO_PREFIERE).test(rot(b))) : null;
