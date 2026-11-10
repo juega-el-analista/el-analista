@@ -1687,6 +1687,31 @@ const CSS4 = `
 .ea-caminoNoticia{margin:10px auto 0;max-width:520px;font-size:14px;line-height:1.4;color:var(--crema);background:rgba(255,244,220,.08);padding:10px 14px;border-radius:12px}
 .ea-caminoNoticia span{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mostaza);margin-bottom:3px}
 .ea-caminoNoticia .sube{color:#9BE3A8} .ea-caminoNoticia .baja{color:#F2A08E}
+/* la pestaña Tu empresa */
+.ea-empresaN{font-size:26px;line-height:1.1;margin:2px 0 4px}
+.ea-empresaS{font-size:13px;color:var(--gris);margin-bottom:12px}
+.ea-empresaCifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:8px 0 12px}
+.ea-empresaCifras>div{background:rgba(42,36,64,.05);border-radius:12px;padding:10px 12px}
+.ea-empresaCifras span{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.ea-empresaCifras b{font-size:16px}
+.ea-empresa .sube{color:var(--verde)} .ea-empresa .baja{color:var(--rojo)}
+.ea-empresaMeta{border:2px dashed var(--borde);border-radius:14px;padding:12px 14px;margin-top:8px}
+.ea-empresaMetaT{font-size:15px;margin-bottom:8px}
+.ea-empresaReq{display:grid;grid-template-columns:1fr 120px;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+.ea-empresaBar{height:8px;border-radius:4px;background:rgba(42,36,64,.1);overflow:hidden}
+.ea-empresaBar div{height:100%;background:var(--mostaza)} .ea-empresaBar div.ok{background:var(--verde)}
+/* relaciones y avisos */
+.ea-rel{margin-bottom:16px}
+.ea-relFila{display:grid;grid-template-columns:1.2fr 1fr auto;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+.ea-relBar{height:8px;border-radius:4px;background:rgba(42,36,64,.1);overflow:hidden}
+.ea-relBar div{height:100%;background:var(--mostaza)} .ea-relBar div.alta{background:var(--verde)} .ea-relBar div.baja{background:var(--rojo)}
+.ea-relV{font-size:11px;color:var(--gris)}
+.ea-avisos{display:flex;flex-direction:column;gap:6px;margin:12px 0 4px}
+.ea-aviso{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:var(--tinta);color:var(--crema);font-size:12.5px;
+  padding:7px 12px;border-radius:10px;animation:ea-avisoEntra .4s ease-out backwards}
+.ea-aviso span{font-size:15px}
+@keyframes ea-avisoEntra{from{opacity:0;transform:translateX(-12px)}}
+.ea-pctJug{margin-top:10px;font-size:13px;color:var(--gris)}
 .ea-btnC{flex:1;border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);font:800 15px 'Bricolage Grotesque',sans-serif;
   padding:13px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12;min-width:150px}
 .ea-btnS{flex:1;border:2px solid var(--tinta);border-radius:999px;background:transparent;color:var(--tinta);font:800 14px 'Bricolage Grotesque',sans-serif;padding:11px 14px;cursor:pointer;min-width:150px}
@@ -4115,7 +4140,7 @@ E.push.apply(E, E2);
 const DECISION_RAMA = {
   id: 999, clave: true, rama: true, min: 0, max: 6,
   t: "Hacia dónde va tu carrera",
-  x: "Ya no eres el que ejecuta lo que le mandan. Los socios te preguntan qué quieres construir de aquí en adelante, y la respuesta define en qué te vuelves bueno.",
+  x: "Ya no eres el que ejecuta lo que le mandan. Los socios te preguntan qué quieres construir de aquí en adelante, y la respuesta define en qué te vuelves bueno. Lo que elijas define tu empresa: dónde vas a trabajar y lo que algún día puedes montar tú.",
   o: RAMAS.map((r) => ({ t: r.n, ramaId: r.id, d: { car: 3, cri: 2, msg: r.d } })),
 };
 
@@ -48233,6 +48258,8 @@ const BASE = {
   animo: 0,
   /* tu camino: la empresa alrededor de la que gira tu vida (null hasta elegirlo) */
   empresa: null,
+  /* tus relaciones: jefe, pareja, mentor y padres, de 0 a 100 */
+  rel: { jefe: 50, pareja: 50, mentor: 50, padres: 50 },
   /* movimiento: null sigue al sistema, true encendido, false apagado */
   animar: null,
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
@@ -49756,6 +49783,7 @@ const sanear = (bruto) => {
   st.jugados = unicos(listaDe(r.jugados, (x) => !!JUEGOS[x], 30));
   st.recientes = listaDe(r.recientes, (x) => !!JUEGOS[x], 6);
   st.animo = entero(r.animo, 0, -2, 2);
+  st.rel = relDe(r);
   st.empresa = r.empresa && typeof r.empresa === "object" && CAMINOS[r.empresa.id] ? {
     id: r.empresa.id, n: texto(r.empresa.n, CAMINOS[r.empresa.id].nombres[0], 60),
     valor: clamp(numero(r.empresa.valor, CAMINOS[r.empresa.id].valor[0]), 0, 1e12),
@@ -52739,6 +52767,178 @@ function PildoraCamino({ st }) {
       <b>{c.n}</b>
       <span className="ea-mono">tu parte USD {fmt(valorCaminoDe(st))}</span>
       {ult && <span className={"ea-mono " + (ult.pct >= 0 ? "sube" : "baja")}>{pctTexto(ult.pct)}</span>}
+    </div>
+  );
+}
+
+/* ============================================================
+   TU EMPRESA: DE LA META A FUNDARLA Y FACTURAR
+   Alessandro, 10-nov-2026: que la sección del fondo cambie hacia lo
+   que va dirigida tu empresa; que aparezca al elegir hacia dónde va tu
+   carrera, que sea la meta, y que según tus decisiones crees tu propia
+   empresa y empieces a facturar con ella, estando tú a la cabeza.
+   Como empleado ves dónde trabajas y tu meta: montar tu firma, con lo
+   que te falta. Al cumplirlo te la ofrecen. Ya fundada, ves lo que
+   factura, tu equipo y tu ganancia, que reemplaza a tu sueldo.
+   ============================================================ */
+const META_RANGO = 3;          /* Asociado */
+const META_RED = 50;
+const EMPRESA_FACTURA = 0.6;   /* lo que factura al año, sobre lo que vale */
+const EMPRESA_MARGEN = 0.25;   /* lo que queda de ganancia */
+const facturacionDe = (st) => {
+  const c = caminoDe(st);
+  return c ? Math.round(numero(c.valor, 0) * EMPRESA_FACTURA) : 0;
+};
+const gananciaEmpresaDe = (st) => {
+  const c = caminoDe(st);
+  return c ? Math.round(facturacionDe(st) * EMPRESA_MARGEN * clamp(numero(c.parte, 0), 0, 1)) : 0;
+};
+const equipoDe = (st) => Math.max(2, Math.round(facturacionDe(st) / 80000));
+/* lo que te falta para montar tu firma */
+const requisitosMeta = (st, patrimonio) => {
+  const f = FIRMA_DE(st);
+  return [
+    { n: "Llegar a " + RANGO(META_RANGO).n, ok: st.rango >= META_RANGO, v: Math.min(1, (st.rango + 1) / (META_RANGO + 1)) },
+    { n: "Tener USD " + fmt(f.costo) + " de patrimonio", ok: patrimonio >= f.costo, v: clamp(patrimonio / Math.max(1, f.costo), 0, 1) },
+    { n: META_RED + " de contactos", ok: numero(st.red, 0) >= META_RED, v: clamp(numero(st.red, 0) / META_RED, 0, 1) },
+  ];
+};
+const metaCumplida = (st, patrimonio) => !sinJefe(st) && requisitosMeta(st, patrimonio).every((r) => r.ok);
+
+function PanelEmpresa({ st, patrimonio }) {
+  const c = caminoDe(st);
+  if (!c) return null;
+  const cam = CAMINOS[c.id];
+  const duena = !!st.propia;
+  const hist = (Array.isArray(c.hist) ? c.hist : []).slice(-4).reverse();
+  const f = FIRMA_DE(st);
+  return (
+    <div className="ea-empresa">
+      <div className="ea-rot ea-dis">{duena ? "Tu empresa" : cam.que}</div>
+      <div className="ea-empresaN ea-dis">{c.n}</div>
+      <div className="ea-empresaS">{texto(cam.sector, "", 120)}</div>
+      <div className="ea-empresaCifras">
+        <div><span>Vale</span><b className="ea-mono">USD {fmt(c.valor)}</b></div>
+        <div><span>Tu parte</span><b className="ea-mono">{Math.round(numero(c.parte, 0) * 1000) / 10}% · USD {fmt(valorCaminoDe(st))}</b></div>
+        {duena && <div><span>Factura al año</span><b className="ea-mono">USD {fmt(facturacionDe(st))}</b></div>}
+        {duena && <div><span>Tu equipo</span><b className="ea-mono">{equipoDe(st)} personas</b></div>}
+        {duena && <div><span>Tu ganancia al año</span><b className="ea-mono sube">USD {fmt(gananciaEmpresaDe(st))}</b></div>}
+      </div>
+      {duena && <p className="ea-itemD">Estás a la cabeza: lo que gana la empresa es tu ingreso, en lugar de un sueldo. Las decisiones fuertes que vienen son de dueño.</p>}
+      {!duena && !sinJefe(st) && (
+        <div className="ea-empresaMeta">
+          <div className="ea-empresaMetaT ea-dis">Tu meta: montar {f.n.toLowerCase()}</div>
+          {requisitosMeta(st, patrimonio).map((r) => (
+            <div className="ea-empresaReq" key={r.n}>
+              <span>{r.ok ? "✓" : "○"} {r.n}</span>
+              <div className="ea-empresaBar"><div style={{ width: (r.v * 100).toFixed(0) + "%" }} className={r.ok ? "ok" : ""} /></div>
+            </div>
+          ))}
+          <p className="ea-itemD">{metaCumplida(st, patrimonio) ? "Ya cumples todo: en la próxima etapa te van a ofrecer montarla." : "Cuando cumplas las tres, te van a ofrecer montarla."}</p>
+        </div>
+      )}
+      {hist.length > 0 && (
+        <div className="ea-empresaHist">
+          <div className="ea-rot ea-dis" style={{ marginTop: 14 }}>Lo último</div>
+          {hist.map((h, i) => (
+            <div className="ea-item" key={i}>
+              <span>{h.t}</span> <b className={"ea-mono " + (h.pct >= 0 ? "sube" : "baja")}>{pctTexto(h.pct)}</b>
+              <div className="ea-itemD">{2026 + entero(h.a, 0, 0, 99)}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   TUS RELACIONES, COMO EN DETROIT
+   Alessandro, 9-nov-2026: relaciones con personas (tu jefe, tu pareja,
+   tu mentor, tus padres) y avisos de consecuencia justo después de
+   decidir. Cada relación va de 0 a 100 y empieza en 50. Se mueve con lo
+   que decides, se nota en la etapa siguiente y abre o cierra cosas:
+   - tu jefe: con buena relación asciendes más rápido y negocias mejor;
+     con mala, tu reputación se gasta.
+   - tu pareja: con buena relación descansas más; con mala, te cansas.
+   - tu mentor: si sigues su consejo te ayuda en los minijuegos.
+   - tus padres: si estás cuando te necesitan, tus contactos crecen.
+   ============================================================ */
+const RELACIONES = [
+  { k: "jefe", n: "Tu jefe", e: "👔" },
+  { k: "pareja", n: "Tu pareja", e: "❤️" },
+  { k: "mentor", n: "Tu mentor", e: "🧭" },
+  { k: "padres", n: "Tus padres", e: "🏡" },
+];
+const relDe = (st) => {
+  const r = st && st.rel && typeof st.rel === "object" ? st.rel : {};
+  const o = {};
+  RELACIONES.forEach((x) => { o[x.k] = clamp(numero(r[x.k], 50), 0, 100); });
+  return o;
+};
+const DE_FAMILIA = /\b(papá|mamá|padre|madre|tus padres|tu viejo|tu vieja|abuel[ao])\b/i;
+/* lo que una decisión le hace a cada relación, y los avisos que deja */
+const relacionesTras = (antes, st, d, o, ev, siguioMentor, momentoTipo) => {
+  const rel = relDe(antes);
+  const delta = { jefe: 0, pareja: 0, mentor: 0, padres: 0 };
+  const n = (k) => numero(d && d[k], 0);
+  if (!sinJefe(st) && !(ev && (ev.pretemporada || ev.mentores))) {
+    if (st.patron && antes.patron && st.patron !== antes.patron) rel.jefe = 50;   /* jefe nuevo */
+    else delta.jefe = (n("car") > 0 ? 2 : 0) + (n("rep") > 0 ? 1 : n("rep") < 0 ? -3 : 0) + (n("ene") <= -10 ? 1 : 0);
+  }
+  if (st.pareja === "noviazgo" || st.pareja === "casado") {
+    delta.pareja = momentoTipo === "boda" ? 25 : momentoTipo === "hijo" ? 8 : (n("ene") >= 5 ? 2 : n("ene") <= -10 ? -3 : 0);
+  }
+  if (st.mentor && siguioMentor != null && !(ev && (ev.pretemporada || ev.mentores))) delta.mentor = siguioMentor ? 3 : -1;
+  if (ev && DE_FAMILIA.test(String(ev.t || "") + " " + String(ev.x || ""))) delta.padres = n("cash") < 0 || n("ene") < 0 ? 5 : -3;
+  Object.keys(delta).forEach((k) => { rel[k] = clamp(rel[k] + delta[k], 0, 100); });
+  const avisos = [];
+  const m = st.mentor ? MENTORES.find((x) => x.id === st.mentor) : null;
+  if (delta.jefe >= 2) avisos.push({ e: "👔", t: "Tu jefe valoró esto" });
+  else if (delta.jefe <= -2) avisos.push({ e: "👔", t: "Tu jefe recordará esto" });
+  if (delta.pareja >= 2) avisos.push({ e: "❤️", t: "A tu pareja le importó" });
+  else if (delta.pareja <= -2) avisos.push({ e: "❤️", t: "Tu pareja lo va a recordar" });
+  if (delta.padres >= 2) avisos.push({ e: "🏡", t: "Tus padres lo agradecen" });
+  else if (delta.padres <= -2) avisos.push({ e: "🏡", t: "Tus padres se sintieron solos" });
+  if (m && delta.mentor >= 2) avisos.push({ e: "🧭", t: m.n + " está de acuerdo" });
+  else if (m && delta.mentor < 0 && avisos.length < 2) avisos.push({ e: "🧭", t: m.n + " lo habría hecho distinto" });
+  const antesP = Array.isArray(antes.pendientes) ? antes.pendientes : [];
+  const nuevas = (Array.isArray(st.pendientes) ? st.pendientes : []).filter((p) => !antesP.some((q) => q.id === p.id));
+  if (nuevas.length) avisos.unshift({ e: "⏳", t: "Esta decisión tendrá consecuencias" });
+  return { rel, avisos: avisos.slice(0, 3) };
+};
+/* lo que cada relación hace en el año que juegas */
+const efectoRelaciones = (st, notas) => {
+  const r = relDe(st);
+  if (!sinJefe(st)) {
+    if (r.jefe >= 70) { st.carrera += 1; }
+    else if (r.jefe <= 25) { st.rep = clamp(st.rep - 2, 0, 100); notas.push("Tu jefe ya no te defiende en las reuniones. Se nota en tu reputación."); }
+  }
+  if (st.pareja === "noviazgo" || st.pareja === "casado") {
+    if (r.pareja >= 70) st.ene = clamp(st.ene + 3, 0, 100);
+    else if (r.pareja <= 25) { st.ene = clamp(st.ene - 3, 0, 100); notas.push("En la casa las cosas están tensas, y lo cargas a la oficina."); }
+  }
+  if (r.padres >= 70) st.red = clamp(st.red + 1, 0, 100);
+  /* todo vuelve un poco hacia el medio con el tiempo */
+  const o = {};
+  Object.keys(r).forEach((k) => { o[k] = r[k] > 50 ? r[k] - 1 : r[k] < 50 ? r[k] + 1 : 50; });
+  st.rel = o;
+};
+function BloqueRelaciones({ st }) {
+  const r = relDe(st);
+  const vivas = RELACIONES.filter((x) => x.k !== "pareja" || st.pareja === "noviazgo" || st.pareja === "casado")
+    .filter((x) => x.k !== "mentor" || st.mentor)
+    .filter((x) => x.k !== "jefe" || !sinJefe(st));
+  return (
+    <div className="ea-rel">
+      <div className="ea-rot ea-dis">Tus relaciones</div>
+      {vivas.map((x) => (
+        <div className="ea-relFila" key={x.k}>
+          <span>{x.e} {x.k === "mentor" ? (MENTORES.find((m) => m.id === st.mentor) || {}).n || x.n : x.n}</span>
+          <div className="ea-relBar"><div style={{ width: r[x.k] + "%" }} className={r[x.k] >= 70 ? "alta" : r[x.k] <= 25 ? "baja" : ""} /></div>
+          <span className="ea-relV ea-mono">{r[x.k] >= 70 ? "Confía en ti" : r[x.k] <= 25 ? "Distante" : "Normal"}</span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -55762,6 +55962,10 @@ function Motor() {
       const dc = escenaCamino(st);
       if (dc) { lista.push(dc); usados.push(dc.id); }
     }
+    /* tu meta cumplida: te ofrecen montar tu firma, sí o sí */
+    if (caminoDe(st) && metaCumplida(st, patrimonioDe(st)) && st.vistos.indexOf(IDS_FIRMA[0]) < 0 && usados.indexOf(IDS_FIRMA[0]) < 0) {
+      lista.push(escenaFirma(st, IDS_FIRMA[0])); usados.push(IDS_FIRMA[0]);
+    }
     /* «¿Hacia dónde va tu carrera?» va con lo forzado: entraba detrás de
        las consecuencias y la vida, y el recorte a tres escenas la dejaba
        fuera casi siempre (en 2 de 3 vidas de prueba nunca se eligió). */
@@ -56340,6 +56544,7 @@ function Motor() {
       st.empresa = { ...st.empresa, decs: (st.empresa.decs || []).concat(ev.decCamino).slice(-20) };
     }
     if (o && o.mentorId && IDS_MENTOR.indexOf(o.mentorId) >= 0) st.mentor = o.mentorId;
+    let siguioMentor = null, eleccion = -1;
     /* con qué mentores coincidió esta decisión (para el «Jugaste como…») */
     if (ev && o && !ev.mentores && !ev.pretemporada) {
       try {
@@ -56351,6 +56556,9 @@ function Motor() {
           MENTORES.forEach((m) => {
             if (mentorElige(m, opsEv, riesgoDe) === iElegida) afin[m.id] = entero(numero(afin[m.id], 0) + 1, 0, 0, 99999);
           });
+          const mio = st.mentor ? MENTORES.find((m) => m.id === st.mentor) : null;
+          if (mio) siguioMentor = mentorElige(mio, opsEv, riesgoDe) === iElegida;
+          eleccion = iElegida;
           st.afin = afin;
         }
       } catch (e) { /* sin afinidad esta vez */ }
@@ -56631,8 +56839,26 @@ function Motor() {
        que ganas sale como aviso encima de la escena siguiente y se sigue
        sin parar (23 pantallas menos en una vida desde los 20). */
     const auto = !!(ev && ev.pretemporada);
+    let avisosRel = [];
+    try {
+      const rr = relacionesTras(s, st, d, o, ev, siguioMentor, momentoTipo);
+      st.rel = rr.rel; avisosRel = rr.avisos;
+    } catch (e) { avisosRel = []; }
+    /* el % de jugadores que eligió lo mismo (si SurEconomics lo ofrece) */
+    const idFijo = ev && Number.isInteger(ev.id) && !ev.camino && !ev.pretemporada && !ev.mentores && eleccion >= 0 ? ev.id : null;
+    if (idFijo != null && typeof window !== "undefined" && window.__elecciones) {
+      try { if (typeof window.__elecciones.anotar === "function") window.__elecciones.anotar({ e: idFijo, o: eleccion }); } catch (e) {}
+      try {
+        if (typeof window.__elecciones.porcentajes === "function") {
+          Promise.resolve(window.__elecciones.porcentajes(idFijo)).then((arr) => {
+            const p = Array.isArray(arr) ? numero(arr[eleccion], NaN) : NaN;
+            if (Number.isFinite(p)) setRes((r) => (r && r.ev === idFijo ? { ...r, pct: clamp(Math.round(p), 0, 100) } : r));
+          }).catch(() => {});
+        }
+      } catch (e) {}
+    }
     if (momentoTipo && momentoTipo !== "funeral") setMomento(momentoDe(momentoTipo, st, cambios));
-    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600) + msgCamino, nivel, cambios, azar: azar || null, auto });
+    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600) + msgCamino, nivel, cambios, azar: azar || null, auto, avisos: avisosRel, ev: idFijo });
     irA("resultado");
   };
 
@@ -56704,10 +56930,16 @@ function Motor() {
     const salario = salarioAnual(st);
     const multB = clamp(0.5 + st.rep / 90 + st.carrera / 400, 0.3, 3);
     const bono = RANGO(st.rango).salario * multB * na.sal;
-    ing.push({ n: "Sueldo", v: salario });
-    ing.push({ n: "Bono por desempeño", v: bono });
+    const duenoDeEmpresa = !!(st.propia && caminoDe(st));
+    if (duenoDeEmpresa) {
+      /* a la cabeza de tu empresa: lo que gana es tu ingreso */
+      ing.push({ n: "Ganancia de " + st.empresa.n, v: gananciaEmpresaDe(st) });
+    } else {
+      ing.push({ n: "Sueldo", v: salario });
+      ing.push({ n: "Bono por desempeño", v: bono });
+    }
 
-    if (tipoRama(st) === "boutique") {
+    if (tipoRama(st) === "boutique" && !duenoDeEmpresa) {
       const v = salario * (azar() * 0.8 - 0.2);
       if (v >= 0) ing.push({ n: "Variable de la boutique", v });
       else egr.push({ n: "Año flojo de la boutique", v: -v });
@@ -56972,6 +57204,7 @@ function Motor() {
           : gv.f < 1 ? Math.round((1 - gv.f) * 100) + "% por debajo" : "en su nivel") + " de lo normal.");
     }
 
+    if (conDecisiones) efectoRelaciones(st, notas);
     let desgaste = (tiene(st, "coach") ? 2 : 4) + (tipoRama(st) === "boutique" ? 3 : 0);
     /* con buen ánimo el año cansa menos; con el ánimo por el piso, más */
     if (conDecisiones) desgaste -= entero(st.animo, 0, -2, 2) * 2;
@@ -57201,6 +57434,9 @@ function Motor() {
     if (culturaDe(s)) a += culturaDe(s).ayuda;   /* en una firma escuela te explican */
     a += ayudaBoosts(s, tipo); /* los boosts activos */
     a += entero(s.animo, 0, -2, 2) * 5;   /* el ánimo: ±5 por paso */
+    { const r = relDe(s);
+      if (s.mentor) a += r.mentor >= 70 ? 5 : r.mentor <= 25 ? -5 : 0;      /* tu mentor te ayuda si lo escuchas */
+      if (tipo === "anclaje" && !sinJefe(s)) a += r.jefe >= 70 ? 6 : r.jefe <= 25 ? -6 : 0; }
     return clamp(a, 0, 100);
   };
 
@@ -57454,6 +57690,7 @@ function Motor() {
     || GRUPOS_COMPRA[0];
   const TABS = [
     ["ficha", "Ficha", true],
+    ["empresa", s.propia ? "Tu empresa" : "Empresa", !!caminoDe(s)],
     ["portafolio", "Cartera", abierto(s, "cartera")],
     /* «Compras» y no «Comprar»: la seccion es un sustantivo y el boton
        de dentro es el verbo. Con los dos llamados igual habia dos
@@ -58047,6 +58284,7 @@ function Motor() {
                 </button>
                 {tab === "ficha" && (
                   <div>
+                    <BloqueRelaciones st={s} />
                     <div className="ea-titular" style={{ marginBottom: 4 }}>
                       <div className="ea-titularK ea-dis">Patrimonio</div>
                       <div className="ea-titularV ea-mono" style={{ fontSize: 27 }}>USD {fmt(patrimonio)}</div>
@@ -58279,6 +58517,7 @@ function Motor() {
                 {/* Tu dinero y tu fondo son la misma actividad —invertir—
                     y eran dos pestañas. El fondo llega en rango 4, asi
                     que hasta entonces esto es solo la cartera. */}
+                {tab === "empresa" && caminoDe(s) && <PanelEmpresa st={s} patrimonio={patrimonioDe(s)} />}
                 {tab === "portafolio" && (
                   <PanelCartera st={s} onAplicar={aplicarCartera} onPendiente={setCarteraPend} />
                 )}
@@ -58901,6 +59140,12 @@ function Motor() {
                     </div>
                   )}
                   {res.azar && <BarraAzar azar={res.azar} />}
+                  {Array.isArray(res.avisos) && res.avisos.length > 0 && (
+                    <div className="ea-avisos">
+                      {res.avisos.map((a, i) => <div className="ea-aviso ea-dis" key={i} style={{ animationDelay: (500 + i * 250) + "ms" }}><span>{a.e}</span>{a.t}</div>)}
+                    </div>
+                  )}
+                  {res.pct != null && <div className="ea-pctJug">El {res.pct}% de los jugadores eligió lo mismo que tú.</div>}
                   <button className="ea-btn" disabled={carteraPend} onClick={siguienteEscena}>
                     {(Array.isArray(cola) ? cola : []).filter(escenaValida).length > 0 ? "Lo siguiente que pasó" : "Cerrar el año"}
                   </button>

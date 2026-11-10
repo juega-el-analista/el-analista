@@ -119,6 +119,25 @@ El sitio es una SPA: el juego **se monta y se desmonta** cada vez que el lector 
 - **No pongáis cookies ni medición propias.** SurEconomics ya mide la página del juego con el
   consentimiento del lector: visitas y tiempo jugando.
 
+### 2.7 Propuesta del juego: el % de jugadores (enganche opcional, `window.__elecciones`)
+
+*Lo agrega El Analista (Alessandro, 10-nov-2026) y está pendiente de que Ramón lo implemente.
+Mientras no exista, el juego no muestra nada y funciona igual.*
+
+Después de cada decisión, como en Detroit: Become Human, el juego quiere decir «El 34% de los
+jugadores eligió lo mismo que tú». Para eso lee, si existe, `window.__elecciones` con dos
+funciones:
+
+| Función | Qué hace |
+|---|---|
+| `anotar({ e, o })` | Registra una elección: `e` es el id de la escena (entero) y `o` el índice de la opción elegida (0, 1, 2…). Sin respuesta; el juego no espera. **Nunca debe lanzar.** |
+| `porcentajes(e)` | `Promise<number[]>` con el % de jugadores que eligió cada opción de esa escena, en orden (por ejemplo `[34, 51, 15]`). Si todavía no hay datos suficientes, `[]`. **Nunca debe rechazar.** |
+
+- No hace falta sesión: es un conteo anónimo por escena y opción, sin datos del jugador.
+- El juego solo lo pide en escenas fijas; las que se arman con datos de la partida (el
+  contrato, las decisiones de tu empresa) no se anotan.
+- Si `porcentajes` tarda, el resultado se muestra igual y la línea del % aparece cuando llega.
+
 ---
 
 ## 3. Lo pendiente de vuestro lado, en orden
