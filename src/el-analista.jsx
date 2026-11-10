@@ -23063,7 +23063,7 @@ const LOTES = {
      "d": {
       "cash": 2500,
       "cri": 1,
-      "msg": "Cobras. Un pájaro en mano y todo eso."
+      "msg": "Cobras ya. Más vale lo seguro que lo que quizás venga."
      }
     }
    ]
@@ -54361,6 +54361,18 @@ function Motor() {
        contrato, apertura, firma...). */
     {
       const corta = lista.slice(0, ESCENAS_ETAPA);
+      /* La escena de vida tiene lugar asegurado. Entraba cuarta o quinta,
+         detrás de lo forzado y de las consecuencias, y el recorte la
+         dejaba fuera casi siempre: en una vida de prueba, 0 de 23 etapas.
+         Desplaza a la última que no sea forzada ni minijuego; lo
+         desplazado vuelve a pedir lugar la etapa siguiente. */
+      const vidaEtapa = lista.find((e) => VIDA.indexOf(e) >= 0);
+      if (vidaEtapa && corta.indexOf(vidaEtapa) < 0) {
+        let k = corta.length - 1;
+        while (k >= forzadas && conJuego(corta[k])) k--;
+        if (k < forzadas) k = corta.length - 1;
+        if (k >= forzadas) corta[k] = vidaEtapa;
+      }
       const resto = lista.slice(ESCENAS_ETAPA).filter(conJuego);
       for (let i = corta.length - 1; i >= forzadas && corta.filter(conJuego).length < minJ; i--) {
         /* la escena de vida no se cambia nunca: si no, la cadena novio,
