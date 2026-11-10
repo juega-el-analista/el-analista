@@ -95,7 +95,7 @@ async function unaVida(semilla) {
   const nueva = () => ({ dec: 0, juegos: [], pantallas: 0, seg: 0 });
   let et = nueva(), ultT = "", ultimoAno = null, enJuego = false, fin = "colgada";
   const jugados = new Set();
-  const cines = []; let ultCine = null;
+  const cines = []; let ultCine = null; let camino = null;
   for (let pasos = 0; pasos < 2500; pasos++) {
     await act(async () => { reloj(2500); await micro(); });
     const t = norm(txtDe(r.toJSON()));
@@ -125,6 +125,8 @@ async function unaVida(semilla) {
       if (clave && clave !== ultCine) { cines.push(clave.split(":").slice(0, 2).join(":")); if (process.env.RITMO_TRAZA) console.log("  [cine] " + clave); }
       ultCine = clave;
     } catch (e) {}
+    /* tu empresa del camino, tal como la ve la píldora */
+    try { const pc = r.root.findAll((x) => x.type && x.type.name === "PildoraCamino")[0]; if (pc && pc.props.st && pc.props.st.empresa) camino = pc.props.st.empresa; } catch (e) {}
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
     if (ops.length) {
@@ -159,7 +161,7 @@ async function unaVida(semilla) {
     await act(async () => { reloj(5000); await micro(); });
   }
   if (et.dec || et.juegos.length) etapas.push(et);
-  return { fin, cines, etapas: etapas.filter((e) => e.dec || e.juegos.length) };
+  return { fin, cines, camino, etapas: etapas.filter((e) => e.dec || e.juegos.length) };
 }
 
 (async () => {
@@ -197,6 +199,8 @@ async function unaVida(semilla) {
   const cc = {};
   vidas.forEach((v) => (v.cines || []).forEach((k) => { cc[k] = (cc[k] || 0) + 1; }));
   console.log("  cinemáticas por vida: " + (Object.keys(cc).length ? Object.keys(cc).sort().map((k) => k.replace(/^[gm]:/, "") + " " + f(cc[k] / N)).join(" · ") : "ninguna"));
+  if (process.env.RITMO_DEBUG) vidas.forEach((v) => console.log("  [camino] " + typeof v.camino + " " + String(JSON.stringify(v.camino)).slice(0, 300)));
+  vidas.forEach((v, i) => { const c = v.camino; console.log("  empresa vida " + (i + 1) + ": " + (c ? c.n + " (" + c.id + ") · noticias " + (c.hist || []).length + " · decisiones " + (c.decs || []).length + " · tu parte " + Math.round(c.parte * 1000) / 10 + "% de USD " + Math.round(c.valor / 1e6) + " M" : "sin camino")); });
   const nunca = JUEGOS.filter((j) => !cuenta[j.k]).map((j) => j.k);
   if (nunca.length) console.log("  nunca salieron: " + nunca.join(", "));
   if (vidas.some((v) => v.fin !== "fin")) { console.log("  NO TERMINAN: " + vidas.filter((v) => v.fin !== "fin").length); process.exitCode = 1; }

@@ -1678,6 +1678,15 @@ const CSS4 = `
 .ea-animoPill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--crema);background:rgba(255,244,220,.1);padding:4px 10px 4px 6px;border-radius:999px}
 .ea-animoPill span{font-size:15px;letter-spacing:0}
+/* tu empresa del camino */
+.ea-caminoPill{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:8px;font-size:12px;color:var(--crema);
+  background:rgba(255,244,220,.1);padding:6px 12px;border-radius:12px}
+.ea-caminoPill .ea-caminoQue{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mostaza)}
+.ea-caminoPill b{font:800 13px 'Bricolage Grotesque',sans-serif}
+.ea-caminoPill .sube{color:#9BE3A8} .ea-caminoPill .baja{color:#F2A08E}
+.ea-caminoNoticia{margin:10px auto 0;max-width:520px;font-size:14px;line-height:1.4;color:var(--crema);background:rgba(255,244,220,.08);padding:10px 14px;border-radius:12px}
+.ea-caminoNoticia span{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mostaza);margin-bottom:3px}
+.ea-caminoNoticia .sube{color:#9BE3A8} .ea-caminoNoticia .baja{color:#F2A08E}
 .ea-btnC{flex:1;border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);font:800 15px 'Bricolage Grotesque',sans-serif;
   padding:13px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12;min-width:150px}
 .ea-btnS{flex:1;border:2px solid var(--tinta);border-radius:999px;background:transparent;color:var(--tinta);font:800 14px 'Bricolage Grotesque',sans-serif;padding:11px 14px;cursor:pointer;min-width:150px}
@@ -48222,6 +48231,8 @@ const BASE = {
   recientes: [],
   /* el ánimo de corto plazo: de −2 (hundido) a +2 (eufórico) */
   animo: 0,
+  /* tu camino: la empresa alrededor de la que gira tu vida (null hasta elegirlo) */
+  empresa: null,
   /* movimiento: null sigue al sistema, true encendido, false apagado */
   animar: null,
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
@@ -49194,7 +49205,10 @@ const ID_PRE = 9790;
    sin jugar nada; con dos siempre, la vida pasaba de 45 minutos. */
 const MIN_JUEGOS_ANO = 2;
 /* las etapas alternan: dos minijuegos en una, uno en la siguiente */
-const juegosEtapa = (turno) => (Math.floor(entero(turno, 0, 0, 99) / 2) % 2 === 0 ? MIN_JUEGOS_ANO : 1);
+/* dos de las tres escenas de cada etapa traen minijuego (Alessandro,
+   10-nov-2026: «aparecen muchas decisiones, tienen que aparecer más
+   juegos para que el jugador no se aburra») */
+const juegosEtapa = () => MIN_JUEGOS_ANO;
 const CARTAS_PRE = {
   ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
   /* modelaje y criterio son ya una sola habilidad: un solo mazo, para
@@ -49268,7 +49282,7 @@ const juntarCierres = (cs) => {
   const cat = (k) => cs.reduce((a, c) => a.concat(Array.isArray(c[k]) ? c[k] : []), []);
   const suma = (k) => cs.reduce((a, c) => a + numero(c[k], 0), 0);
   const partes = {};
-  ["decisiones", "sueldo", "mercados", "otros"].forEach((k) => {
+  ["decisiones", "sueldo", "mercados", "camino", "otros"].forEach((k) => {
     partes[k] = cs.reduce((a, c) => a + numero(c.partes && c.partes[k], 0), 0);
   });
   const ascensos = cs.map((c) => c.ascenso).filter(Boolean);
@@ -49302,6 +49316,7 @@ const juntarCierres = (cs) => {
     patAntes: pri.patAntes, patIni: pri.patIni, partes,
     cartera: carteraJunta,
     hitosDec: pri.hitosDec,
+    camino: cs.map((c) => c.camino).filter((c) => c && c.t).pop() || ult.camino || null,
     leccion: cs.map((c) => c.leccion).filter(Boolean).pop() || null,
   };
 };
@@ -49545,6 +49560,9 @@ const escenaDeId = (id, st) => {
     try { return escenaPretemporada(st); } catch (e) { return null; }
   }
   if (id === ID_MENTOR) return escenaMentor();
+  if (id === ID_CAMINO) {
+    try { return escenaCamino(st); } catch (e) { return null; }
+  }
   /* el contrato trae ofertas de otras firmas, armadas con la semilla del año */
   if (id === ESCENA_CONTRATO.id) {
     try { return escenaContrato(st); } catch (e) { return ESCENA_CONTRATO; }
@@ -49738,6 +49756,14 @@ const sanear = (bruto) => {
   st.jugados = unicos(listaDe(r.jugados, (x) => !!JUEGOS[x], 30));
   st.recientes = listaDe(r.recientes, (x) => !!JUEGOS[x], 6);
   st.animo = entero(r.animo, 0, -2, 2);
+  st.empresa = r.empresa && typeof r.empresa === "object" && CAMINOS[r.empresa.id] ? {
+    id: r.empresa.id, n: texto(r.empresa.n, CAMINOS[r.empresa.id].nombres[0], 60),
+    valor: clamp(numero(r.empresa.valor, CAMINOS[r.empresa.id].valor[0]), 0, 1e12),
+    parte: clamp(numero(r.empresa.parte, 0), 0, 1), desde: entero(r.empresa.desde, 0, 0, 99),
+    decs: listaDe(r.empresa.decs, (x) => Number.isInteger(x) && x >= 0 && x < 50, 20),
+    hist: (Array.isArray(r.empresa.hist) ? r.empresa.hist : []).filter((h) => h && typeof h.t === "string")
+      .slice(-12).map((h) => ({ t: texto(h.t, "", 140), pct: clamp(numero(h.pct, 0), -1, 1), a: entero(h.a, 0, 0, 99) })),
+  } : null;
   st.animar = r.animar === true ? true : r.animar === false ? false : null;
   /* El patrón puede ser una firma de la tabla o una firma tuya, así que
      se acota por longitud en vez de por lista cerrada. */
@@ -49748,6 +49774,14 @@ const sanear = (bruto) => {
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
   /* la semilla de la pretemporada; un guardado viejo cae en 0 y sigue jugable */
   st.semilla = entero(r.semilla, 0, 0, 2e9);
+  /* Una partida que eligió su camino antes de que existieran las
+     empresas: la suya nace al cargarla (o su firma, si ya la montó). */
+  if (!st.empresa && st.propia && CAMINOS[st.estudio + "-propia"]) {
+    try { st.empresa = nuevoCamino(st.estudio + "-propia", st, st.patron); } catch (e) { st.empresa = null; }
+  }
+  if (!st.empresa && st.rama && CAMINOS[st.rama]) {
+    try { st.empresa = nuevoCamino(st.rama, st); } catch (e) { st.empresa = null; }
+  }
   /* la carrera del día: su fecha, sus tres objetivos y los minijuegos ganados */
   st.dia = esFecha(r.dia) ? r.dia : null;
   st.objDia = st.dia ? unicos(listaDe(r.objDia, (x) => IDS_OBJ_DIA.indexOf(x) >= 0, 3)) : [];
@@ -51574,14 +51608,15 @@ const animoDe = (v) => ANIMOS[clamp(entero(v, 0, -2, 2), -2, 2) + 2];
 /* cuánto dinero tiene que mover la etapa para que sea un golpe */
 const golpeDe = (cierre, ano) => {
   if (!cierre || !cierre.partes) return null;
-  const mov = numero(cierre.partes.mercados, 0) + numero(cierre.partes.decisiones, 0);
+  const mov = numero(cierre.partes.mercados, 0) + numero(cierre.partes.decisiones, 0) + numero(cierre.partes.camino, 0);
+  const cam = cierre.camino && cierre.camino.t && Math.abs(numero(cierre.partes.camino, 0)) >= Math.abs(numero(cierre.partes.mercados, 0)) ? cierre.camino : null;
   const base = Math.max(20000, Math.abs(numero(cierre.patIni != null ? cierre.patIni : cierre.patAntes, 0)));
   const inv = Math.abs(numero(cierre.partes.mercados, 0)) >= Math.abs(numero(cierre.partes.decisiones, 0));
   if (mov >= Math.max(15000, base * 0.2)) {
-    return { sube: true, monto: Math.round(mov), de: (inv ? "Tus inversiones se dispararon" : "Tus decisiones dieron fruto") + " en " + ano };
+    return { sube: true, monto: Math.round(mov), de: cam ? cam.t : (inv ? "Tus inversiones se dispararon" : "Tus decisiones dieron fruto") + " en " + ano };
   }
   if (mov <= -Math.max(6000, base * 0.1)) {
-    return { sube: false, monto: Math.round(-mov), de: (inv ? "Tus inversiones se desplomaron" : "Tus decisiones te costaron caro") + " en " + ano };
+    return { sube: false, monto: Math.round(-mov), de: cam ? cam.t : (inv ? "Tus inversiones se desplomaron" : "Tus decisiones te costaron caro") + " en " + ano };
   }
   return null;
 };
@@ -52058,6 +52093,652 @@ function SustoRapido({ ev, ano, genero, onElegir, onTarde }) {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ---- el contenido de los caminos: empresas, noticias y decisiones ---- */
+// Contenido de «tu empresa del camino»: la entidad central de cada camino de carrera,
+// las noticias que mueven su valor y las decisiones fuertes que se resuelven con minijuegos.
+// Convención: camParte: -1 significa «vender toda tu parte» (el motor debe dejar la parte en 0).
+
+const CAMINOS = {
+  // ── Economía ──
+  "eco-mercados": { familia: "mesa", que: "Tu mesa", nombres: ["Meridiano Macro Fund", "Fondo Brickell Global", "Altamar Estrategias"],
+    sector: "bonos, monedas y tasas de interés", valor: [15e6, 45e6], parte: 0.01,
+    inicio: "Entras a {e}, un fondo que apuesta a monedas, bonos y tasas según cómo lees el ciclo económico." },
+  "eco-mya": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Grupo Lumbre Retail", "Andina de Alimentos", "Corporación Vía Sur"],
+    sector: "consumo masivo", valor: [30e6, 80e6], parte: 0.005,
+    inicio: "Llevaste a {e} a la bolsa y parte de tu bono llegó en acciones: ahora sigues su precio todos los días." },
+  "eco-pe": { familia: "fondo", que: "Tu fondo", nombres: ["Fondo Cordillera I", "Andes Capital Partners", "Pacífico Crecimiento"],
+    sector: "empresas medianas de la región", valor: [18e6, 40e6], parte: 0.02,
+    inicio: "Entras al equipo de {e}, que compra empresas medianas para hacerlas crecer y venderlas." },
+  "eco-propia": { familia: "firma", que: "Tu consultora", nombres: ["Ciclo Consultores", "Brújula Económica", "Prisma Consultores"],
+    sector: "estudios económicos para empresas", valor: [0.3e6, 1.2e6], parte: 0.8,
+    inicio: "Abres {e} con tu nombre en la puerta: vendes a empresas tu lectura de la economía." },
+
+  // ── Contaduría ──
+  "con-socio": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Farmacias Altavista", "Cementos Arenal", "Naviera Coralina"],
+    sector: "empresas que cotizan en bolsa", valor: [25e6, 70e6], parte: 0.005,
+    inicio: "La firma te asigna {e}, que cotiza en bolsa: firmas sus cuentas y parte de tu bono viene en sus acciones." },
+  "con-dd": { familia: "fondo", que: "Tu fondo", nombres: ["Fondo Ceiba Capital", "Puente Andino Partners", "Altiplano Inversiones"],
+    sector: "empresas familiares que buscan comprador", valor: [12e6, 35e6], parte: 0.01,
+    inicio: "Te sumas a {e} para revisar a fondo cada empresa antes de que el fondo la compre." },
+  "con-tesoreria": { familia: "mesa", que: "Tu tesorería", nombres: ["Tesorería Halcón", "Tesorería Palmira", "Tesorería Cumbre"],
+    sector: "la caja de una multinacional", valor: [20e6, 60e6], parte: 0.005,
+    inicio: "Llegas a {e}, la tesorería de una multinacional: cada día mueves su caja entre bancos, monedas y coberturas." },
+  "con-propia": { familia: "firma", que: "Tu firma de auditoría", nombres: ["Auditores Ceiba", "Cuentas Claras", "Balance Norte"],
+    sector: "auditoría para empresas medianas", valor: [0.4e6, 1.5e6], parte: 0.75,
+    inicio: "Fundas {e}: clientes que vuelven en cada cierre de año, y ahora te pagan a ti." },
+
+  // ── Ingeniería ──
+  "ing-pf": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Puertos del Istmo", "Autopistas Cóndor", "Helios Andino Energía"],
+    sector: "puertos, autopistas y energía", valor: [35e6, 80e6], parte: 0.008,
+    inicio: "Financiaste el gran proyecto de {e}, que ahora cotiza en bolsa; parte de tu bono quedó en sus acciones." },
+  "ing-infra": { familia: "fondo", que: "Tu fondo", nombres: ["Fondo Cimientos", "Arco Infraestructura", "Fondo Puente Largo I"],
+    sector: "carreteras, puertos y plantas de energía", valor: [40e6, 80e6], parte: 0.01,
+    inicio: "Entras a {e}, que compra carreteras, puertos y plantas de energía para cobrar por ellos durante décadas." },
+  "ing-energia": { familia: "mesa", que: "Tu mesa", nombres: ["Mesa de Energía Petrel", "Volta Commodities", "Cuenca Trading"],
+    sector: "petróleo, gas y metales", valor: [20e6, 55e6], parte: 0.01,
+    inicio: "Te sientas en {e}, que compra y vende petróleo, gas y metales que entiendes por dentro." },
+  "ing-propia": { familia: "firma", que: "Tu constructora", nombres: ["Constructora Basalto", "Obras Pilar Andino", "Viga Maestra"],
+    sector: "obras civiles y edificios", valor: [0.6e6, 2e6], parte: 0.7,
+    inicio: "Fundas {e}: tus obras, tu balance y tu firma en cada contrato." },
+
+  // ── Derecho ──
+  "der-socio": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Grupo Telcaribe", "Seguros Horizonte", "Inmobiliaria Coral"],
+    sector: "telecomunicaciones, seguros y bienes raíces", valor: [30e6, 80e6], parte: 0.005,
+    inicio: "El bufete te pone al frente de {e}, que llevaste a la bolsa; cobraste parte de los honorarios en acciones." },
+  "der-fondos": { familia: "fondo", que: "El fondo que estructuras", nombres: ["Fondo Laurel Crédito", "Bahía Capital II", "Mangle Oportunidades"],
+    sector: "préstamos a empresas medianas", valor: [20e6, 60e6], parte: 0.008,
+    inicio: "Armas desde cero los contratos de {e} y, como parte del pago, te dan una pequeña participación." },
+  "der-sucesiones": { familia: "familia", que: "La familia que asesoras", nombres: ["Grupo Familiar Ibarra", "Patrimonio Valdivieso", "Familia Echeverri"],
+    sector: "empresas, campos y edificios de tres generaciones", valor: [40e6, 120e6], parte: 0.005,
+    inicio: "Te vuelves la persona de confianza de {e}: tres generaciones, muchas propiedades y pocas reglas claras." },
+  "der-propia": { familia: "firma", que: "Tu bufete", nombres: ["Roble & Asociados", "Lex Andina Abogados", "Mangrove Legal Group"],
+    sector: "asesoría legal a empresas", valor: [0.3e6, 1.2e6], parte: 0.8,
+    inicio: "Abres {e}: tu nombre en la puerta, el sueño de casi todo abogado." },
+
+  // ── Administración ──
+  "adm-mya": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Aerolíneas Colibrí", "Hoteles Bahía Azul", "Grupo Textil Marañón"],
+    sector: "aerolíneas, hoteles y textiles", valor: [25e6, 75e6], parte: 0.006,
+    inicio: "Cerraste la compra que llevó a {e} a la bolsa; parte de tu bono quedó en sus acciones." },
+  "adm-banca": { familia: "familia", que: "La familia que asesoras", nombres: ["Santamarina Holdings", "Grupo Familiar Quiroga", "Patrimonio Arteaga"],
+    sector: "inversiones, campos y edificios", valor: [30e6, 110e6], parte: 0.006,
+    inicio: "El banco te da la cuenta de {e}: cuidas su dinero y cobras una parte de lo que crece." },
+  "adm-pe": { familia: "fondo", que: "Tu fondo", nombres: ["Fondo Vértice Capital", "Altura Partners III", "Sendero Capital"],
+    sector: "empresas que necesitan mejor gestión", valor: [18e6, 50e6], parte: 0.015,
+    inicio: "Entras a {e}, que compra empresas mal administradas para ordenarlas y venderlas más caras." },
+  "adm-propia": { familia: "firma", que: "Tu firma", nombres: ["Rumbo Consultores", "Timón Asesores", "Norte Claro"],
+    sector: "consultoría de gestión", valor: [0.4e6, 1.5e6], parte: 0.85,
+    inicio: "Fundas {e}: veinte años de contactos, ahora trabajando para ti." },
+
+  // ── Sistemas ──
+  "sis-quant": { familia: "mesa", que: "Tu fondo de algoritmos", nombres: ["Fractal Quant Fund", "Kepler Sistemático", "Señal Cero Capital"],
+    sector: "algoritmos que compran y venden en milisegundos", valor: [15e6, 50e6], parte: 0.02,
+    inicio: "Entras a {e}, donde tus modelos compran y venden más rápido que cualquier persona." },
+  "sis-vc": { familia: "fondo", que: "Tu fondo de startups", nombres: ["Semilla Ventures", "Faro Capital", "Ola Digital Ventures I"],
+    sector: "startups de tecnología", valor: [10e6, 30e6], parte: 0.02,
+    inicio: "Te unes a {e}, que pone dinero en startups antes de que nadie sepa si van a funcionar." },
+  "sis-banco": { familia: "cotizada", que: "Tu banco", nombres: ["Banco Arrecife", "Banco Plata Sur", "Banco Cumbre"],
+    sector: "banca", valor: [50e6, 80e6], parte: 0.004,
+    inicio: "Entras a liderar datos e IA en {e}, que cotiza en bolsa; parte de tu sueldo llega en acciones." },
+  "sis-propia": { familia: "firma", que: "Tu empresa de software", nombres: ["Nodo Labs", "Cauce IA", "Brisa Software"],
+    sector: "software con inteligencia artificial", valor: [0.5e6, 2e6], parte: 0.7,
+    inicio: "Fundas {e}: un producto que puede crecer sin pedirte más horas." },
+};
+
+const NOTICIAS_CAMINO = {
+  cotizada: [
+    { t: "{e} entra al S&P 500 y la acción sube en una mañana", pct: 0.18 },
+    { t: "Un director de {e}, en un escándalo de infidelidad; la acción cae", pct: -0.14 },
+    { t: "{e} reporta ganancias récord y supera lo que esperaba el mercado", pct: 0.15 },
+    { t: "Demanda colectiva contra {e}: la acusan de ocultar pérdidas", pct: -0.2 },
+    { t: "Rumor de compra hostil: un gigante quiere quedarse con {e}", pct: 0.22 },
+    { t: "{e} recorta su pronóstico de ventas y la acción se desploma", pct: -0.28 },
+    { t: "{e} recompra sus propias acciones por USD 5 millones", pct: 0.07 },
+    { t: "Una calificadora baja la nota de la deuda de {e}", pct: -0.1 },
+    { t: "{e} gana un contrato de 10 años con el gobierno", pct: 0.2 },
+    { t: "Renuncia por sorpresa el director financiero de {e}", pct: -0.12 },
+    { t: "{e} llega a Estados Unidos y Wall Street lo celebra", pct: 0.12 },
+    { t: "Un fondo apuesta contra {e} y publica un informe demoledor", pct: -0.3 },
+    { t: "{e} sube su dividendo y los fondos de pensión compran", pct: 0.08 },
+    { t: "Un analista estrella elige a {e} como su acción favorita del año", pct: 0.1 },
+    { t: "La comisión de valores investiga las cuentas de {e}", pct: -0.25 },
+    { t: "{e} se fusiona con su rival y nace el líder de la región", pct: 0.3 },
+  ],
+  fondo: [
+    { t: "Una multinacional compra una empresa de {e}: tres veces lo invertido", pct: 0.3 },
+    { t: "Una startup de {e} se vuelve unicornio: ya vale USD 1.000 millones", pct: 0.35 },
+    { t: "Hackeo en la mayor empresa de {e}: datos de 2 millones de clientes", pct: -0.18 },
+    { t: "El regulador investiga cómo {e} calcula el valor de sus empresas", pct: -0.15 },
+    { t: "{e} levanta un segundo fondo y duplica el dinero que maneja", pct: 0.2 },
+    { t: "Quiebra una de las empresas de {e}: la inversión se pierde completa", pct: -0.22 },
+    { t: "{e} vende parte de su cartera a un fondo canadiense con ganancia", pct: 0.12 },
+    { t: "Suben las tasas y las deudas de las empresas de {e} salen más caras", pct: -0.1 },
+    { t: "Una empresa de {e} debuta en la bolsa de Nueva York con alza de 40%", pct: 0.25 },
+    { t: "Se retira el socio fundador de {e} y dos inversionistas piden su dinero", pct: -0.2 },
+    { t: "{e} compra a su mayor competidor a buen precio", pct: 0.1 },
+    { t: "Accidente en una obra de {e}: la planta queda parada tres meses", pct: -0.16 },
+    { t: "{e} gana la concesión de una autopista por 25 años", pct: 0.18 },
+    { t: "Un fondo soberano del Golfo pone USD 50 millones en {e}", pct: 0.15 },
+    { t: "Fraude en una empresa de {e}: el gerente inflaba las ventas", pct: -0.28 },
+    { t: "Una startup de {e} se queda sin caja y cierra de un día para otro", pct: -0.12 },
+    { t: "{e} cobra USD 8 millones en dividendos de sus empresas", pct: 0.08 },
+  ],
+  mesa: [
+    { t: "{e} anticipa el desplome del mercado y gana 22% en un mes", pct: 0.22 },
+    { t: "Caída relámpago: el mercado se hunde 9% en minutos y {e} queda atrapada", pct: -0.2 },
+    { t: "Un error en el algoritmo de {e} manda miles de órdenes por equivocación", pct: -0.3 },
+    { t: "{e} cierra el mejor trimestre de su historia", pct: 0.15 },
+    { t: "Un operador de {e} escondía pérdidas en apuestas no autorizadas", pct: -0.25 },
+    { t: "El petróleo se dispara y la apuesta de {e} paga en grande", pct: 0.28 },
+    { t: "El regulador multa a {e} por reportar tarde sus operaciones", pct: -0.08 },
+    { t: "Un banco grande le abre a {e} una línea de crédito de USD 100 millones", pct: 0.06 },
+    { t: "{e} se protege a tiempo antes de la devaluación y salva la caja", pct: 0.1 },
+    { t: "La Fed sube las tasas por sorpresa y {e} pierde con sus bonos", pct: -0.15 },
+    { t: "Tres fondos de pensión le confían su dinero a {e}", pct: 0.18 },
+    { t: "Se cae el sistema de {e} justo el día de más movimiento del año", pct: -0.12 },
+    { t: "El nuevo modelo de {e} acierta en 7 de cada 10 operaciones", pct: 0.14 },
+    { t: "Un cliente grande saca su dinero de {e} sin aviso", pct: -0.18 },
+    { t: "{e} gana con la volatilidad mientras el resto del mercado sufre", pct: 0.2 },
+    { t: "La mejor operadora de {e} se va a la competencia con su estrategia", pct: -0.1 },
+    { t: "{e} aprovecha una diferencia de precios entre Chicago y Nueva York", pct: 0.09 },
+  ],
+  familia: [
+    { t: "{e} vende sus tierras en Florida a un desarrollador por el doble", pct: 0.25 },
+    { t: "Los herederos de {e} se pelean en tribunales por el control", pct: -0.22 },
+    { t: "La empresa principal de {e} gana la distribución de todo el país", pct: 0.15 },
+    { t: "El patriarca de {e} enferma y nadie sabe quién decide", pct: -0.12 },
+    { t: "Las autoridades fiscales investigan las cuentas de {e} en el extranjero", pct: -0.2 },
+    { t: "Una cadena internacional compra el 30% del negocio de {e}", pct: 0.2 },
+    { t: "Los edificios de {e} en Brickell suben de valor con el auge de Miami", pct: 0.12 },
+    { t: "Un primo de {e} firmó deudas a nombre de toda la familia", pct: -0.18 },
+    { t: "La nieta mayor moderniza {e} y las ventas crecen 25%", pct: 0.14 },
+    { t: "Un huracán daña los hoteles de {e} en el Caribe", pct: -0.15 },
+    { t: "{e} cobra un dividendo extraordinario de sus empresas", pct: 0.06 },
+    { t: "Un divorcio en {e} pone en juego la mitad de las acciones", pct: -0.25 },
+    { t: "{e} apostó por una startup que ahora se vende por USD 300 millones", pct: 0.3 },
+    { t: "Un banco suizo congela cuentas de {e} por una revisión de cumplimiento", pct: -0.1 },
+    { t: "{e} firma un protocolo familiar y termina años de pelea", pct: 0.1 },
+    { t: "{e} vende su vieja fábrica y recibe USD 15 millones", pct: 0.08 },
+  ],
+  firma: [
+    { t: "{e} gana una licitación del gobierno por USD 3 millones", pct: 0.3 },
+    { t: "Una multinacional elige a {e} como su asesor en toda la región", pct: 0.25 },
+    { t: "El socio clave de {e} renuncia y se lleva a dos clientes", pct: -0.25 },
+    { t: "Hackeo en {e}: se filtran archivos de clientes", pct: -0.2 },
+    { t: "Una revista de negocios nombra a {e} la firma revelación del año", pct: 0.1 },
+    { t: "Un cliente demanda a {e} por un error en un informe", pct: -0.18 },
+    { t: "{e} abre oficina en Miami", pct: 0.12 },
+    { t: "El cliente más grande de {e} quiebra y deja facturas sin pagar", pct: -0.22 },
+    { t: "Tres empleados estrella de la competencia se pasan a {e}", pct: 0.1 },
+    { t: "{e} cierra el año con 40% más clientes", pct: 0.15 },
+    { t: "Un fondo ofrece comprar el 20% de {e} a buen precio", pct: 0.2 },
+    { t: "Un exempleado de {e} copia su método y abre una firma rival", pct: -0.1 },
+    { t: "{e} lanza un servicio nuevo que los clientes piden sin que nadie lo venda", pct: 0.18 },
+    { t: "La autoridad revisa la licencia de {e} tras una queja", pct: -0.12 },
+    { t: "Un cliente feliz recomienda a {e} en una entrevista en televisión", pct: 0.08 },
+    { t: "{e} pierde la renovación de su contrato más grande", pct: -0.16 },
+  ],
+  todas: [
+    { t: "La economía crece más de lo esperado y {e} lo aprovecha", pct: 0.08 },
+    { t: "Recesión en EE. UU.: los clientes de {e} recortan gastos", pct: -0.15 },
+    { t: "Bajan las tasas de interés y {e} sube de valor", pct: 0.1 },
+    { t: "Una devaluación fuerte golpea las cuentas de {e}", pct: -0.18 },
+    { t: "{e} sale en la portada de una revista de negocios", pct: 0.06 },
+    { t: "Un paro nacional de transporte frena la actividad de {e}", pct: -0.1 },
+    { t: "Una alianza con un banco grande le trae a {e} nuevos clientes", pct: 0.12 },
+    { t: "Un rumor falso sobre {e} se vuelve viral y asusta al mercado", pct: -0.08 },
+    { t: "{e} suma a un exministro como asesor y gana peso político", pct: 0.07 },
+    { t: "Cambian las reglas de impuestos y {e} paga más", pct: -0.1 },
+    { t: "La IA le ahorra a {e} un tercio de sus gastos", pct: 0.14 },
+    { t: "Elecciones tranquilas: los mercados respiran y {e} sube", pct: 0.09 },
+    { t: "Crisis bancaria en EE. UU.: se congela el crédito para {e}", pct: -0.2 },
+  ],
+};
+
+const DECISIONES_CAMINO = {
+  cotizada: [
+    {
+      t: "Oferta hostil por {e}: pagan 40% más por cada acción",
+      x: "Un grupo industrial de Monterrey ofrece comprar todas las acciones de {e} con una prima de 40%. La junta directiva dice que la empresa vale más y pide a los accionistas no vender. Tu parte vale hoy tus USD {parte}.",
+      o: [
+        { t: "Vender todas tus acciones a la oferta", d: { cashParte: 1.4, camParte: -1, rep: -2, animo: 1,
+          msg: "Cobras 40% por encima del precio de la bolsa. Si la empresa despega después, ya no vas a estar adentro." } },
+        { t: "Unir accionistas y negociar una prima mayor", j: "anclaje", stat: "red", d: { camVal: 0.25, red: 4, rep: 3,
+          msg: "Lideras a un grupo de accionistas y el comprador sube la oferta. Tu parte vale 25% más y nadie vendió barato." } },
+        { t: "Apoyar a la junta directiva y rechazar", d: { camVal: -0.12, rep: 4, animo: -1,
+          msg: "El comprador se retira y la acción vuelve a su precio de antes. La junta directiva te lo agradece; tu cuenta, no tanto." } },
+      ],
+    },
+    {
+      t: "El CEO de {e}, en medio de un escándalo: ¿lo despiden?",
+      x: "Salen mensajes del CEO de {e} prometiendo contratos a cambio de favores personales. La acción cae 15% en dos días y la junta directiva te pide opinión antes de votar.",
+      o: [
+        { t: "Despedirlo hoy y nombrar un interino", j: "comite", stat: "rep", d: { camVal: 0.12, rep: 5, car: 3,
+          msg: "El mercado premia la rapidez. El interino no es brillante, pero la acción recupera lo perdido." } },
+        { t: "Esperar la investigación interna", d: { camVal: -0.15, rep: -3, ene: -3,
+          msg: "La investigación tarda tres meses y la prensa no suelta el tema. Al final lo despiden igual, con la acción más abajo." } },
+        { t: "Defenderlo en público", d: { camVal: -0.25, red: 6, rep: -6,
+          msg: "La acción se hunde, pero el CEO te debe un favor enorme. Si sale limpio, vas a ser su persona de confianza." } },
+      ],
+    },
+    {
+      t: "{e} se queda sin caja y pide dinero a sus accionistas",
+      x: "Un préstamo de USD 20 millones vence en 60 días y los bancos no quieren renovarlo. {e} ofrece acciones nuevas con descuento a quien ponga dinero ahora. Para no quedarte atrás tendrías que poner la mitad de tus USD {parte}.",
+      o: [
+        { t: "Poner tu dinero para salvar la empresa", j: "calculo", stat: "cri", d: { cashParte: -0.5, camVal: 0.3, camParte: 0.002, rep: 4,
+          msg: "Con el dinero de los accionistas la empresa paga el préstamo y la acción rebota. Compraste barato, pero tus ahorros quedaron flacos." } },
+        { t: "No poner nada y aceptar que tu parte se achique", d: { camParte: -0.002, camVal: 0.1,
+          msg: "Otros ponen el dinero y la empresa se salva. Tu porcentaje ahora es más chico." } },
+        { t: "Proponer vender una división", j: "estructura", stat: "mod", d: { camVal: 0.15, cri: 4, car: 3,
+          msg: "La venta de la división paga la deuda sin emitir acciones nuevas. La empresa queda más chica, pero más sana." } },
+      ],
+    },
+    {
+      t: "Un cliente gigante pide a {e} exclusividad por cinco años",
+      x: "Una cadena de supermercados de Estados Unidos quiere comprar el 35% de lo que produce {e}, a cambio de que no le venda a su competencia. Las ventas se disparan, pero quedarían en manos de un solo comprador.",
+      o: [
+        { t: "Aceptar la exclusividad", d: { camVal: 0.2, ene: -2,
+          msg: "La acción sube con el anuncio. Desde ahora, cada renegociación con ese cliente va a doler." } },
+        { t: "Negociar exclusividad parcial y precio mínimo", j: "anclaje", stat: "red", d: { camVal: 0.28, red: 4, rep: 3,
+          msg: "Consigues el contrato con un precio mínimo garantizado y libertad para vender en otros países." } },
+        { t: "Rechazar y seguir con muchos clientes", d: { camVal: -0.05, rep: 2,
+          msg: "Los analistas critican la oportunidad perdida. La empresa sigue sin depender de nadie." } },
+      ],
+    },
+    {
+      t: "{e} quiere comprar a su rival con deuda",
+      x: "La gerencia de {e} propone comprar al segundo jugador del mercado por USD 60 millones, casi todo con préstamos. Si sale bien, domina la región; si sale mal, la deuda la ahoga.",
+      o: [
+        { t: "Revisar el contrato de compra antes de votar", j: "banderas", stat: "cri", d: { camVal: 0.18, cri: 5, rep: 3,
+          msg: "Encuentras juicios laborales que el rival escondía y el precio baja USD 8 millones. La compra se hace en mejores condiciones." } },
+        { t: "Votar a favor tal como está", d: { camVal: -0.2, car: 4,
+          msg: "La compra sale y tu jefe lo celebra, pero los intereses se comen las ganancias de dos años. La acción cae mientras el mercado espera." } },
+        { t: "Votar en contra", d: { camVal: 0.03, red: -3,
+          msg: "La compra se cae. La gerencia no te lo perdona, pero la empresa sigue sin deudas." } },
+      ],
+    },
+    {
+      t: "Te ofrecen un puesto en la junta directiva de {e}",
+      x: "Un fondo activista compra acciones de {e} y te propone entrar a la junta directiva con su apoyo. Ganarías voz y un sueldo extra, pero tu empleador lo ve como un conflicto de interés.",
+      o: [
+        { t: "Aceptar y prepararte en serio", j: "quiz", stat: "cri", d: { camVal: 0.1, car: 6, rep: 4, ene: -4,
+          msg: "Cada reunión exige horas de estudio. Tu nombre empieza a sonar como director de empresas." } },
+        { t: "Rechazar y quedarte en tu puesto", d: { rep: 2, red: -2,
+          msg: "Tu jefe agradece la lealtad. El fondo busca a otra persona y deja de llamarte." } },
+      ],
+    },
+  ],
+
+  fondo: [
+    {
+      t: "{e} puede sacar a la bolsa a su mejor empresa",
+      x: "La empresa estrella de {e} triplicó sus ventas en cuatro años. Los bancos dicen que hoy la bolsa pagaría muy bien, pero el mercado está nervioso y la oportunidad podría cerrarse en semanas.",
+      o: [
+        { t: "Salir a la bolsa ya", j: "orden", stat: "mod", d: { camVal: 0.35, car: 5, rep: 4, ene: -4,
+          msg: "Tres meses de auditorías, presentaciones y viajes. La empresa debuta con alza y el fondo marca una ganancia enorme." } },
+        { t: "Venderla a un fondo más grande", d: { camVal: 0.18, cashParte: 0.3,
+          msg: "El precio es menor que en la bolsa, pero el dinero es seguro y rápido. Cobras tu parte del éxito." } },
+        { t: "Esperar un año más", d: { camVal: -0.1, animo: -1,
+          msg: "El mercado se cierra y la oportunidad se pierde. La empresa sigue bien, pero nadie sabe cuándo vuelve el momento." } },
+      ],
+    },
+    {
+      t: "Fraude en una empresa de {e}: el fundador inflaba ventas",
+      x: "La auditoría descubre que el fundador de una empresa del fondo reportaba ventas que no existían. Si se sabe, los inversionistas de {e} van a pedir explicaciones.",
+      o: [
+        { t: "Despedirlo y contarlo todo a los inversionistas", j: "comite", stat: "rep", d: { camVal: -0.05, rep: 8, red: 2,
+          msg: "Pierdes dinero en esa empresa, pero ganas la confianza de los inversionistas para el próximo fondo." } },
+        { t: "Cambiar al fundador en silencio", d: { camVal: 0.05, rep: -5, cri: 2,
+          msg: "Nadie se entera por ahora. Si la noticia sale algún día, va a salir con tu nombre al lado." } },
+        { t: "Reunir pruebas y demandarlo", j: "banderas", stat: "cri", d: { camVal: 0.12, cri: 4, ene: -3,
+          msg: "Las pruebas son sólidas y el fundador acepta devolver parte de lo que cobró. El proceso te quita meses." } },
+      ],
+    },
+    {
+      t: "Un inversionista grande de {e} no puede poner su parte",
+      x: "Un fondo de pensión que prometió USD 10 millones a {e} dice que no puede cumplir. Sin ese dinero hay que cancelar una compra ya firmada. Los socios proponen que cada uno ponga de su bolsillo; a ti te tocaría más de la mitad de tus USD {parte}.",
+      o: [
+        { t: "Poner tu dinero para cerrar la compra", j: "calculo", stat: "cri", d: { cashParte: -0.6, camVal: 0.25, camParte: 0.005, rep: 4,
+          msg: "Pones dinero propio y la compra se cierra. Ahora tienes más en juego, y más que perder." } },
+        { t: "Buscar a otro inversionista", j: "anclaje", stat: "red", d: { camVal: 0.15, red: 5,
+          msg: "Una family office de Miami toma el lugar del fondo de pensión. Pide mejores condiciones, pero la compra sale." } },
+        { t: "Cancelar la compra y pagar la multa", d: { camVal: -0.12, rep: -3,
+          msg: "El vendedor cobra la multa por romper el contrato. El fondo sigue sano, pero pierde fama de cumplir." } },
+      ],
+    },
+    {
+      t: "{e} puede apostar casi un tercio del fondo a una empresa",
+      x: "Aparece la oportunidad de comprar el control de una empresa de pagos digitales que crece 80% al año. Para hacerlo, {e} tendría que poner casi 30% de su dinero en una sola apuesta.",
+      o: [
+        { t: "Defender la apuesta en el comité", j: "comite", stat: "mod", d: { camVal: 0.4, car: 6, ene: -3,
+          msg: "El comité aprueba y la empresa sigue creciendo. Tu nombre queda pegado al mejor negocio del fondo." } },
+        { t: "Proponer una entrada más chica", j: "estructura", stat: "cri", d: { camVal: 0.15, cri: 3,
+          msg: "Entras con 10% del fondo y el derecho a comprar más después. Menos ganancia posible, menos riesgo." } },
+        { t: "Dejarla pasar", d: { rep: 1, animo: -1,
+          msg: "Otro fondo la compra. Si triunfa, vas a ver esa noticia en todos lados." } },
+      ],
+    },
+    {
+      t: "Un fondo de Nueva York quiere comprar tu parte en {e}",
+      x: "Un fondo grande ofrece comprar las participaciones de los socios jóvenes de {e} con 15% de descuento. Recibirías dinero hoy, en lugar de esperar cinco años a que el fondo venda sus empresas.",
+      o: [
+        { t: "Vender toda tu parte", d: { cashParte: 0.85, camParte: -1, animo: 1,
+          msg: "Cobras hoy y duermes tranquilo. Si el fondo multiplica su valor, esa ganancia será de otro." } },
+        { t: "Negociar sin descuento y vender solo una parte", j: "anclaje", stat: "red", d: { cashParte: 0.5, camParte: -0.005, red: 3,
+          msg: "Vendes una parte a precio completo y te quedas con el resto. Dinero en mano y un pie adentro." } },
+        { t: "Quedarte con todo", d: { camVal: 0.05, rep: 2,
+          msg: "Los socios mayores notan tu confianza en el fondo. Tu dinero sigue atado varios años más." } },
+      ],
+    },
+    {
+      t: "El regulador revisa cómo {e} valora sus empresas",
+      x: "La comisión de valores sospecha que {e} infla el valor de sus empresas para cobrar más comisiones. Tienes dos semanas para entregar los cálculos.",
+      o: [
+        { t: "Rehacer las valoraciones antes de entregarlas", j: "calculo", stat: "mod", d: { camVal: -0.05, rep: 6, cri: 4, ene: -4,
+          msg: "Bajas el valor de dos empresas y el regulador cierra la revisión. Los inversionistas lo ven como una señal de seriedad." } },
+        { t: "Contratar abogados y discutir cada punto", d: { camVal: -0.12, cashParte: -0.1, rep: -2,
+          msg: "La pelea dura un año y sale cara. Termina en una multa chica, pero el ruido espanta inversionistas." } },
+      ],
+    },
+  ],
+
+  mesa: [
+    {
+      t: "El algoritmo de {e} pierde 8% en una hora: ¿lo apagas?",
+      x: "Un modelo de {e} empieza a comprar sin parar en un mercado que cae. Puede ser un error, o puede estar viendo un rebote que nadie más ve. Cada minuto cuenta.",
+      o: [
+        { t: "Leer las señales y decidir posición por posición", j: "semaforo", stat: "mod", d: { camVal: 0.12, cri: 4, ene: -3,
+          msg: "Cierras lo que estaba mal y dejas lo que tenía sentido. El mercado rebota y recuperas casi todo." } },
+        { t: "Apagar todo de inmediato", d: { camVal: -0.08, rep: 2,
+          msg: "Pierdes 8%, pero la herida se detiene. El equipo pasa la semana buscando el error." } },
+        { t: "Dejarlo correr", d: { camVal: -0.22, cri: 5,
+          msg: "El mercado sigue cayendo y el modelo con él. Aprendes exactamente cómo falla, pero la lección sale cara." } },
+      ],
+    },
+    {
+      t: "{e} puede apostar fuerte a que la Fed baja las tasas",
+      x: "Tus números dicen que la Reserva Federal va a bajar las tasas de interés antes de lo que cree el mercado. Para ganar en serio, {e} tendría que arriesgar 25% de su dinero en esa sola idea.",
+      o: [
+        { t: "Operar la apuesta con disciplina", j: "trading", stat: "mod", d: { camVal: 0.35, car: 5, rep: 4,
+          msg: "La Fed baja las tasas y la apuesta paga. Te dan más dinero para manejar." } },
+        { t: "Apostar solo 5%", d: { camVal: 0.06,
+          msg: "Ganas algo si aciertas y casi nada si fallas. En un mes nadie se acuerda de la operación." } },
+        { t: "No apostar", d: { animo: -1,
+          msg: "El mercado se mueve tal como pensabas. Lo ves desde afuera." } },
+      ],
+    },
+    {
+      t: "Un operador estrella de {e} escondió pérdidas",
+      x: "Descubres que el operador que más ganaba en {e} tapaba pérdidas de USD 3 millones con operaciones falsas. Te pide unos días para recuperarlas antes de que alguien se entere.",
+      o: [
+        { t: "Reportarlo y cerrar sus posiciones en orden", j: "orden", stat: "rep", d: { camVal: -0.05, rep: 7, car: 3,
+          msg: "Cierras el hoyo antes de que crezca. El regulador valora que el aviso salió de ustedes." } },
+        { t: "Darle una semana", d: { camVal: -0.25, rep: -6, red: 3,
+          msg: "Las pérdidas se duplican y el caso sale igual. Él te defiende ante todos, pero tu firma también aparece en los papeles." } },
+      ],
+    },
+    {
+      t: "Un cliente quiere que {e} trabaje solo para él",
+      x: "Una familia de Miami ofrece poner USD 80 millones en {e}, el doble de lo que maneja hoy, si deja de aceptar dinero de otros. Las comisiones se disparan, pero todo dependería de un solo cliente.",
+      o: [
+        { t: "Negociar las condiciones", j: "anclaje", stat: "red", d: { camVal: 0.3, red: 5,
+          msg: "Consigues el dinero con un plazo mínimo de tres años y permiso para tener otros dos clientes." } },
+        { t: "Aceptar tal cual", d: { camVal: 0.4, ene: -3, animo: -1,
+          msg: "El fondo crece de golpe. El cliente llama todos los días y cada pérdida termina en una reunión tensa." } },
+        { t: "Rechazar", d: { rep: 3,
+          msg: "Sigues con tus clientes de siempre. Creces más lento, pero nadie te maneja." } },
+      ],
+    },
+    {
+      t: "El banco exige a {e} USD 5 millones en garantía hoy",
+      x: "Una caída brusca hace que el banco pida más garantías antes del cierre de la bolsa. Si {e} no paga, el banco vende sus posiciones al peor precio del año.",
+      o: [
+        { t: "Calcular qué vender y qué mantener", j: "calculo", stat: "cri", d: { camVal: -0.03, cri: 4,
+          msg: "Vendes lo justo y lo menos dañado. Pasas el día y conservas las posiciones buenas." } },
+        { t: "Poner tu propio dinero", d: { cashParte: -0.4, camVal: 0.15, camParte: 0.005, rep: 3,
+          msg: "Tu dinero cubre parte de la garantía y el mercado rebota a la semana. Tu parte crece; tus ahorros se achican." } },
+        { t: "Dejar que el banco venda", d: { camVal: -0.3, animo: -2,
+          msg: "El banco vende todo al peor precio. La mesa sobrevive, pero con un tercio menos." } },
+      ],
+    },
+    {
+      t: "{e} puede pagar por llegar antes que nadie a la bolsa",
+      x: "Un proveedor ofrece a {e} conexión directa a la bolsa de Chicago por USD 2 millones al año. Las órdenes llegarían antes que las de la competencia, pero el gasto se come parte de las ganancias.",
+      o: [
+        { t: "Revisar el contrato del proveedor", j: "banderas", stat: "mod", d: { camVal: 0.15, cri: 3,
+          msg: "Encuentras una cláusula que te ataba por cinco años. La corriges y el sistema se paga solo en seis meses." } },
+        { t: "Firmar sin leer tanto", d: { camVal: 0.05, ene: 2,
+          msg: "El sistema funciona, pero el contrato te amarra cinco años aunque deje de servir." } },
+        { t: "No comprarlo", d: { camVal: -0.05,
+          msg: "Te ahorras el gasto, pero la competencia es más rápida y algunas operaciones dejan de salir." } },
+      ],
+    },
+  ],
+
+  familia: [
+    {
+      t: "Un heredero de {e} quiere vender su parte a un extraño",
+      x: "El hijo menor quiere vender su 20% de {e} a un fondo que ofrece buen precio. Sus hermanos temen que un extraño entre a las reuniones de la familia.",
+      o: [
+        { t: "Armar una compra entre los hermanos", j: "estructura", stat: "cri", d: { camVal: 0.08, rep: 5, red: 3,
+          msg: "Los hermanos le compran su parte en cuotas. El heredero recibe su dinero y la familia mantiene el control." } },
+        { t: "Dejar que venda al fondo", d: { camVal: 0.12, rep: -3,
+          msg: "El fondo paga bien y ordena la empresa. Las cenas familiares se vuelven incómodas." } },
+        { t: "Convencerlo de quedarse", d: { red: 2, animo: -1,
+          msg: "Se queda, de mala gana. El tema va a volver en cada cumpleaños." } },
+      ],
+    },
+    {
+      t: "Muere el patriarca de {e} sin un testamento claro",
+      x: "El fundador deja tres testamentos distintos y cinco herederos que no se hablan. Mientras pelean, los bancos congelan los créditos de {e}.",
+      o: [
+        { t: "Poner en orden los pasos de la sucesión", j: "orden", stat: "cri", d: { camVal: 0.15, rep: 6, car: 3, ene: -4,
+          msg: "Ordenas papeles, plazos y firmas. En seis meses la sucesión se cierra sin juicio." } },
+        { t: "Dejar que lo resuelva un juez", d: { camVal: -0.25, ene: 2,
+          msg: "El juicio dura años. Los abogados cobran y la empresa se queda sin rumbo." } },
+      ],
+    },
+    {
+      t: "El nieto quiere poner la mitad de {e} en criptomonedas",
+      x: "El nieto mayor convenció al consejo familiar de mover la mitad del patrimonio de {e} a monedas digitales. Te piden opinión en la reunión del viernes.",
+      o: [
+        { t: "Presentar un análisis al consejo familiar", j: "comite", stat: "rep", d: { camVal: 0.1, rep: 5,
+          msg: "Convences a la familia de poner solo 5%. Cuando las monedas caen, te llaman para agradecerte." } },
+        { t: "Apoyar la idea del nieto", d: { camVal: -0.3, red: 4,
+          msg: "El nieto te ve como su aliado. Seis meses después las monedas caen 60% y la abuela deja de saludarte." } },
+        { t: "Negarte de plano", d: { red: -3, rep: 2,
+          msg: "La familia lo hace igual con otro asesor. Te salvas de la culpa, pero pierdes influencia." } },
+      ],
+    },
+    {
+      t: "{e} necesita USD 3 millones para no perder su hotel",
+      x: "El hotel más querido de {e} tiene un préstamo que vence y la familia no tiene efectivo. Te proponen entrar como socio con tu propio dinero: la mitad de tus USD {parte}.",
+      o: [
+        { t: "Poner tu dinero a cambio de una parte mayor", j: "anclaje", stat: "red", d: { cashParte: -0.5, camVal: 0.2, camParte: 0.01, red: 4,
+          msg: "Pones tu dinero y quedas como socio. Si la familia se recupera, tu parte vale bastante más." } },
+        { t: "Conseguir un banco que refinancie", j: "quiz", stat: "cri", d: { camVal: 0.1, rep: 3,
+          msg: "Un banco de Miami estira el préstamo a 7 años. La familia respira y tú cobras tu comisión." } },
+        { t: "Recomendar vender el hotel", d: { camVal: -0.08, cashParte: 0.1,
+          msg: "Venden rápido y por debajo de su valor. La deuda se paga y la familia pierde su joya." } },
+      ],
+    },
+    {
+      t: "Un fondo ofrece comprar todo el negocio de {e}",
+      x: "Un fondo internacional ofrece 30% más de lo que vale el negocio de {e}. La abuela no quiere vender; los nietos, sí.",
+      o: [
+        { t: "Negociar la venta de una parte, no de todo", j: "estructura", stat: "mod", d: { camVal: 0.2, cashParte: 0.3, rep: 4,
+          msg: "El fondo compra 40% y la familia sigue al mando. Todos cobran algo y nadie se siente traicionado." } },
+        { t: "Recomendar vender todo", d: { camVal: 0.3, cashParte: 1, camParte: -1, rep: -2,
+          msg: "La familia cobra y tú recibes tu comisión de éxito. Se acaba tu cliente más grande." } },
+        { t: "Apoyar a la abuela y rechazar", d: { rep: 3, animo: 1,
+          msg: "La abuela queda feliz. Los nietos van a recordar ese precio por años." } },
+      ],
+    },
+    {
+      t: "Las autoridades fiscales revisan las cuentas de {e} afuera",
+      x: "Una revisión de impuestos encuentra empresas de {e} en otros países que nunca se declararon bien. La familia te pregunta qué hacer antes de responder.",
+      o: [
+        { t: "Revisar los documentos y declarar todo", j: "banderas", stat: "cri", d: { camVal: -0.08, rep: 6, cri: 4,
+          msg: "Encuentras las fallas y la familia paga lo que debe con un acuerdo. Sale caro, pero el tema queda cerrado." } },
+        { t: "Defender que todo está en regla", d: { camVal: -0.2, red: 2, rep: -5,
+          msg: "La revisión se convierte en juicio. La familia agradece tu lealtad; la prensa, no." } },
+      ],
+    },
+  ],
+
+  firma: [
+    {
+      t: "Tu socio quiere irse de {e} y cobrar su parte",
+      x: "Tu socio recibió una oferta de una firma grande y quiere que le compres su parte de {e}. Si se va, se lleva a dos clientes; para comprarle necesitas pagar un tercio de tus USD {parte}.",
+      o: [
+        { t: "Negociar el precio y comprarle su parte", j: "anclaje", stat: "red", d: { cashParte: -0.3, camParte: 0.15, camVal: -0.1, red: 2,
+          msg: "Te quedas con más de la firma, pero sin dos de sus clientes. Ahora todo depende de ti." } },
+        { t: "Ofrecerle más participación para que se quede", d: { camVal: 0.05, camParte: -0.08, animo: -1,
+          msg: "Se queda, a cambio de una parte mayor. La firma sigue entera; tu porcentaje, no." } },
+        { t: "Dejarlo ir con sus clientes", d: { camVal: -0.25, ene: 3,
+          msg: "La firma se achica y tú respiras. Menos gente, menos reuniones, menos ingresos." } },
+      ],
+    },
+    {
+      t: "Un cliente gigante quiere a {e} solo para él",
+      x: "Una multinacional ofrece un contrato de tres años con {e} a cambio de que no trabaje con su competencia. Ese contrato sería la mitad de los ingresos de la firma.",
+      o: [
+        { t: "Negociar exclusividad solo en su país", j: "anclaje", stat: "red", d: { camVal: 0.25, red: 4, rep: 2,
+          msg: "Firmas el contrato y conservas a tus otros clientes fuera de ese país. Creces sin quedar amarrado." } },
+        { t: "Aceptar la exclusividad completa", d: { camVal: 0.35, ene: -4, animo: -1,
+          msg: "Los ingresos se disparan. Si un día ese cliente se va, la mitad de la firma se va con él." } },
+        { t: "Rechazar", d: { rep: 3, camVal: -0.03,
+          msg: "Pierdes el contrato grande, pero sigues siendo una firma con muchos clientes y ningún dueño." } },
+      ],
+    },
+    {
+      t: "Un fondo de Miami quiere comprar 30% de {e}",
+      x: "Un fondo ofrece dinero para que {e} abra oficinas en tres países, a cambio de 30% de la firma. Valoran la firma 40% por encima de lo que crees, pero van a pedir resultados cada trimestre.",
+      o: [
+        { t: "Armar el trato con condiciones claras", j: "estructura", stat: "cri", d: { camVal: 0.35, camParte: -0.2, cashParte: 0.2, car: 4,
+          msg: "Cobras algo hoy, la firma crece con dinero ajeno y conservas el control. Ahora tienes un socio que mira cada número." } },
+        { t: "Rechazar y crecer con lo propio", d: { camVal: 0.05, animo: 1,
+          msg: "Sigues siendo tu propio jefe. Creces despacio, a tu ritmo." } },
+      ],
+    },
+    {
+      t: "{e} no tiene para pagar los sueldos este mes",
+      x: "Dos clientes pagan tarde y a {e} le faltan USD 80 mil para la nómina. Los empleados todavía no saben nada.",
+      o: [
+        { t: "Poner tu propio dinero", d: { cashParte: -0.15, camVal: 0.1, rep: 4, animo: -1,
+          msg: "Los sueldos salen a tiempo y nadie se entera. Tus ahorros, en cambio, sí lo notan." } },
+        { t: "Armar un plan de caja con el banco", j: "calculo", stat: "cri", d: { camVal: 0.05, cri: 3,
+          msg: "Consigues un crédito corto y cobras con descuento a un cliente. La nómina sale y aprendes a mirar la caja cada semana." } },
+        { t: "Pagar la mitad y explicar", d: { camVal: -0.1, rep: -4,
+          msg: "Dos empleados buenos renuncian. Los que quedan te creen, por ahora." } },
+      ],
+    },
+    {
+      t: "{e} puede competir por un contrato que la duplica",
+      x: "Sale una licitación del gobierno que vale el doble de lo que factura {e} en un año. Para ganarla tendrías que contratar diez personas antes de saber el resultado.",
+      o: [
+        { t: "Presentar la propuesta ante el comité evaluador", j: "comite", stat: "rep", d: { camVal: 0.45, car: 6, ene: -5,
+          msg: "Ganas la licitación. Los meses que vienen son los más duros y los mejores de tu carrera." } },
+        { t: "Presentarte junto a una firma más grande", d: { camVal: 0.15, red: 3,
+          msg: "Ganan juntos y te toca una parte chica del trabajo. Sumas experiencia y un aliado poderoso." } },
+        { t: "No presentarte", d: { animo: -1,
+          msg: "Una firma rival gana el contrato. La vas a ver crecer desde tu oficina." } },
+      ],
+    },
+    {
+      t: "Un error en un informe de {e} le costó dinero a un cliente",
+      x: "Un número mal copiado en un informe de {e} hizo que un cliente perdiera USD 200 mil. El cliente amenaza con demandar y con contarlo a todo el gremio.",
+      o: [
+        { t: "Encontrar qué falló y presentar la corrección", j: "banderas", stat: "mod", d: { camVal: 0.02, rep: 5, cri: 3,
+          msg: "Muestras el error, la corrección y el nuevo control. El cliente se queda y lo cuenta como ejemplo de seriedad." } },
+        { t: "Pagar el daño sin discutir", d: { cashParte: -0.2, rep: 3,
+          msg: "El cliente cobra y se calma. Tu bolsillo paga una lección que el equipo no vio." } },
+        { t: "Negar la responsabilidad", d: { camVal: -0.15, rep: -6,
+          msg: "El cliente se va y lo cuenta en cada reunión del gremio. Dos clientes más empiezan a dudar." } },
+      ],
+    },
+  ],
+};
+
+/* ============================================================
+   TU CAMINO: LA EMPRESA ALREDEDOR DE LA QUE GIRA TU VIDA
+   Alessandro, 10-nov-2026: que la decisión de «hacia dónde va tu
+   carrera» no abra un extra, sino que tu vida se dirija a eso, con un
+   trasfondo que se sienta («un miembro de la junta le fue infiel a su
+   mujer y las acciones se vieron afectadas», «si a la empresa le va
+   bien, que te avise si entra en el S&P 500») sin volverlo más
+   complicado de jugar.
+   Al elegir el camino nace tu empresa (CAMINOS): un nombre, un valor y
+   tu parte. El año que juegas de cada etapa trae una noticia que mueve
+   su valor (NOTICIAS_CAMINO); cada dos etapas, una decisión fuerte que
+   se resuelve con un minijuego (DECISIONES_CAMINO). Lo que vale tu parte
+   suma a tu patrimonio.
+   ============================================================ */
+const ID_CAMINO = 9860;
+const CAMINO_DERIVA = 0.03;   /* lo que crece una empresa en un año sin noticias */
+const nuevoCamino = (id, st, nombre) => {
+  const c = CAMINOS[id];
+  if (!c) return null;
+  const rnd = generadorDe("camino:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + id);
+  const n = texto(nombre, "", 60) || c.nombres[Math.floor(rnd() * c.nombres.length)] || c.nombres[0];
+  const valor = Math.round(c.valor[0] + rnd() * (c.valor[1] - c.valor[0]));
+  return { id, n, valor, parte: clamp(numero(c.parte, 0.01), 0, 1), desde: entero(st && st.turno, 0, 0, 99), decs: [], hist: [] };
+};
+const caminoDe = (st) => (st && st.empresa && CAMINOS[st.empresa.id] ? st.empresa : null);
+const valorCaminoDe = (st) => {
+  const c = caminoDe(st);
+  return c ? Math.round(numero(c.valor, 0) * clamp(numero(c.parte, 0), 0, 1)) : 0;
+};
+const conEmpresa = (s, c) => String(s || "").split("{e}").join(c ? c.n : "tu empresa");
+/* la decisión fuerte de la etapa, armada con la semilla y el año: una
+   recarga la reconstruye igual */
+const escenaCamino = (st) => {
+  const c = caminoDe(st);
+  if (!c) return null;
+  const fam = CAMINOS[c.id].familia;
+  const pozo = DECISIONES_CAMINO[fam] || [];
+  if (!pozo.length) return null;
+  const usadas = Array.isArray(c.decs) ? c.decs : [];
+  const libres = pozo.map((x, i) => i).filter((i) => usadas.indexOf(i) < 0);
+  const rnd = generadorDe("decCamino:" + entero(st.semilla, 0, 0, 2e9) + ":" + entero(st.turno, 0, 0, 99));
+  const lista = libres.length ? libres : pozo.map((x, i) => i);
+  const k = lista[Math.floor(rnd() * lista.length)];
+  const dec = pozo[k];
+  const parte = fmt(valorCaminoDe(st));
+  const pon = (s) => conEmpresa(s, c).split("{parte}").join(parte);
+  return {
+    id: ID_CAMINO, min: 0, max: 6, clave: true, camino: true, decCamino: k,
+    t: pon(dec.t), x: pon(dec.x),
+    o: dec.o.map((o) => ({ ...o, t: pon(o.t), d: { ...o.d, msg: pon(o.d && o.d.msg) } })),
+  };
+};
+/* la noticia del año de tu empresa (solo el año que juegas de la etapa) */
+const noticiaCamino = (st) => {
+  const c = caminoDe(st);
+  if (!c) return null;
+  const fam = CAMINOS[c.id].familia;
+  const pozo = (NOTICIAS_CAMINO[fam] || []).concat(NOTICIAS_CAMINO.todas || []);
+  const vistas = Array.isArray(c.hist) ? c.hist.map((h) => h.t) : [];
+  const libres = pozo.filter((x) => vistas.indexOf(conEmpresa(x.t, c)) < 0);
+  const nt = elegirAzar(libres.length ? libres : pozo);
+  return nt ? { t: conEmpresa(nt.t, c), pct: clamp(numero(nt.pct, 0), -0.6, 0.6) } : null;
+};
+const pctTexto = (p) => (p >= 0 ? "+" : "−") + Math.round(Math.abs(p) * 100) + "%";
+
+/* tu empresa, junto a tus atributos */
+function PildoraCamino({ st }) {
+  const c = caminoDe(st);
+  if (!c) return null;
+  const ult = Array.isArray(c.hist) && c.hist.length ? c.hist[c.hist.length - 1] : null;
+  return (
+    <div className="ea-caminoPill" title={CAMINOS[c.id].que + ": " + c.n + ". Tu parte: " + Math.round(numero(c.parte, 0) * 1000) / 10 + "%."}>
+      <span className="ea-caminoQue ea-dis">{CAMINOS[c.id].que}</span>
+      <b>{c.n}</b>
+      <span className="ea-mono">tu parte USD {fmt(valorCaminoDe(st))}</span>
+      {ult && <span className={"ea-mono " + (ult.pct >= 0 ? "sube" : "baja")}>{pctTexto(ult.pct)}</span>}
     </div>
   );
 }
@@ -53270,6 +53951,7 @@ function Desglose({ partes, oscuro }) {
     ["Tus decisiones", partes.decisiones],
     ["Sueldo menos gastos", partes.sueldo],
     ["Tus inversiones", partes.mercados],
+    ["Tu empresa", partes.camino],
     ["Compras y lo demás", partes.otros],
   ].filter(([, v]) => Number.isFinite(v) && Math.abs(v) >= 1);
   if (!filas.length) return null;
@@ -54930,7 +55612,7 @@ function Motor() {
      y la cabecera, al volver, otra más grande. */
   const valorFondoDe = (st) => (st && st.fondo && Array.isArray(st.fondo.posiciones)
     ? st.fondo.posiciones.reduce((a, q) => a + numero(q.ticket, 0) * numero(st.fondo.pct, 0), 0) : 0);
-  const patrimonioDe = (st) => st.cash + st.cartera + valorBienes(st) + valorFondoDe(st) - numero(st.deuda, 0);
+  const patrimonioDe = (st) => st.cash + st.cartera + valorBienes(st) + valorFondoDe(st) + valorCaminoDe(st) - numero(st.deuda, 0);
   const vidaTotal = (st) => st.bienes.reduce((a, id) => a + ((bienDe(id) || {}).vida || 0), 0);
   const paisDe = (st) => NACIONES.find((x) => x.id === st.pais) || NACIONES[0];
   const salarioAnual = (st) =>
@@ -55075,6 +55757,15 @@ function Motor() {
        decisión clave: esas tres siempre entraron dentro del presupuesto
        normal del año, así que contarlas también duplicaba la duración del
        año. Solo lo empujado a mano tiene que sumar. */
+    /* cada dos etapas, una decisión fuerte sobre tu empresa */
+    if (caminoDe(st) && st.turno > st.empresa.desde && (st.turno - st.empresa.desde) % 4 === 2) {
+      const dc = escenaCamino(st);
+      if (dc) { lista.push(dc); usados.push(dc.id); }
+    }
+    /* «¿Hacia dónde va tu carrera?» va con lo forzado: entraba detrás de
+       las consecuencias y la vida, y el recorte a tres escenas la dejaba
+       fuera casi siempre (en 2 de 3 vidas de prueba nunca se eligió). */
+    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) { lista.push(decisionRama(st)); usados.push(DECISION_RAMA.id); }
     const forzadas = lista.length;
     vuelven.forEach((e) => { lista.push(e); });
 
@@ -55101,7 +55792,7 @@ function Motor() {
        solo una de cada cuatro llegaba: el árbol de tu carrera ni se
        plantaba. Ahora llega en Analista Senior, o al quinto año si no
        has subido, con tiempo para que sus consecuencias se vean. */
-    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) { lista.push(decisionRama(st)); usados.push(DECISION_RAMA.id); }
+    /* (la bifurcación ahora va con lo forzado, más arriba) */
     /* Las raíces de los árboles no pueden depender del sorteo: entre 75
        escenas, el rumor o el headhunter salían en una partida de cada
        tres, y con ellos todo lo que cuelga detrás. Cada una sale una vez
@@ -55610,7 +56301,13 @@ function Motor() {
 
   /* ---------- resolución de una escena ---------- */
   const resolverEscena = (dBruto, nivelBruto, o, azar) => {
-    const d = dBruto && typeof dBruto === "object" ? dBruto : {};
+    let d = dBruto && typeof dBruto === "object" ? dBruto : {};
+    /* tu empresa: lo que pagas o cobras va como dinero, en proporción a
+       lo que vale tu parte; la decisión fuerte se marca como vista */
+    if (s.empresa && (d.cashParte || d.camVal || d.camParte)) {
+      const vp = valorCaminoDe(s);
+      if (d.cashParte) d = { ...d, cash: Math.round(numero(d.cash, 0) + vp * clamp(numero(d.cashParte, 0), -3, 3)) };
+    }
     const nivel = nivelBruto === "exito" || nivelBruto === "parcial" || nivelBruto === "fallo" ? nivelBruto : "parcial";
     let st = { ...s, valores: { ...s.valores } };
     /* el minijuego que se acaba de jugar, para variar los que vienen */
@@ -55621,6 +56318,27 @@ function Motor() {
     /* los minijuegos ganados: uno de los objetivos del día los cuenta */
     if (nivel === "exito" && o && (o.j || o.juego)) st.ganados = entero(numero(st.ganados, 0) + 1, 0, 0, 999);
     if (o && o.ramaId) st.rama = o.ramaId;
+    /* elegir el camino es el día que nace tu empresa */
+    let msgCamino = "";
+    if (o && o.ramaId && CAMINOS[o.ramaId] && !st.empresa) {
+      st.empresa = nuevoCamino(o.ramaId, st);
+      if (st.empresa) {
+        msgCamino = " " + conEmpresa(CAMINOS[o.ramaId].inicio, st.empresa);
+        st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Empiezas con " + st.empresa.n });
+      }
+    }
+    if (st.empresa && (d.camVal || d.camParte)) {
+      const c = { ...st.empresa };
+      /* con minijuego, el éxito da todo, a medias la mitad y el fallo
+         lo contrario de lo que buscabas */
+      const f = !(o && (o.j || o.juego)) ? 1 : nivel === "exito" ? 1 : nivel === "parcial" ? 0.5 : -0.5;
+      if (d.camVal) c.valor = Math.max(0, Math.round(numero(c.valor, 0) * (1 + clamp(numero(d.camVal, 0), -0.9, 0.9) * (numero(d.camVal, 0) > 0 ? f : 1))));
+      if (d.camParte) c.parte = clamp(numero(c.parte, 0) + clamp(numero(d.camParte, 0), -1, 1) * (f > 0 ? 1 : 0), 0, 1);
+      st.empresa = c;
+    }
+    if (st.empresa && ev && ev.camino && Number.isInteger(ev.decCamino)) {
+      st.empresa = { ...st.empresa, decs: (st.empresa.decs || []).concat(ev.decCamino).slice(-20) };
+    }
     if (o && o.mentorId && IDS_MENTOR.indexOf(o.mentorId) >= 0) st.mentor = o.mentorId;
     /* con qué mentores coincidió esta decisión (para el «Jugaste como…») */
     if (ev && o && !ev.mentores && !ev.pretemporada) {
@@ -55648,6 +56366,12 @@ function Motor() {
       st.propia = true;
       st.patron = f.n;
       st.rama = st.rama || "boutique";
+      /* montar tu firma la vuelve tu empresa: el camino pasa a ser ella */
+      const idPropia = texto(st.estudio, "", 8) + "-propia";
+      if (CAMINOS[idPropia] && !(st.empresa && st.empresa.id === idPropia)) {
+        st.empresa = nuevoCamino(idPropia, st, f.n);
+        if (st.empresa) msgCamino = " " + conEmpresa(CAMINOS[idPropia].inicio, st.empresa);
+      }
       st.contrato = null;                 /* ya no hay quien te renueve nada */
       st.sueldoMult = clamp(numero(st.sueldoMult, 1) * (1 + (f.mult - 1) * bien), 0.6, TOPE_MULT);
       Object.keys(f.mods).forEach((k) => {
@@ -55908,7 +56632,7 @@ function Motor() {
        sin parar (23 pantallas menos en una vida desde los 20). */
     const auto = !!(ev && ev.pretemporada);
     if (momentoTipo && momentoTipo !== "funeral") setMomento(momentoDe(momentoTipo, st, cambios));
-    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600), nivel, cambios, azar: azar || null, auto });
+    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600) + msgCamino, nivel, cambios, azar: azar || null, auto });
     irA("resultado");
   };
 
@@ -56367,12 +57091,28 @@ function Motor() {
        lo que hicieron los mercados y lo demás (compras, comisiones, lo que
        cambió el valor de tus bienes o de tu fondo). */
     const decisionesAno = hDec.reduce((a, x) => a + numero(x && x.cash, 0), 0);
-    const patVisible = patrimonio + valorFondoDe(st);
+    /* tu empresa: crece un poco cada año, y el año que juegas trae su noticia */
+    let camAno = null;
+    if (caminoDe(st)) {
+      const antesCam = valorCaminoDe(st);
+      const nt = conDecisiones ? noticiaCamino(st) : null;
+      const pct = (nt ? nt.pct : 0) + CAMINO_DERIVA;
+      st.empresa = { ...st.empresa, valor: Math.max(0, Math.round(numero(st.empresa.valor, 0) * (1 + pct))),
+        hist: nt ? (st.empresa.hist || []).concat({ t: nt.t, pct: nt.pct, a: st.turno }).slice(-12) : st.empresa.hist };
+      const delta = valorCaminoDe(st) - antesCam;
+      if (nt) {
+        camAno = { n: st.empresa.n, que: CAMINOS[st.empresa.id].que, t: nt.t, pct: nt.pct, delta };
+        notas.push(nt.t + " (" + pctTexto(nt.pct) + "). Tu parte en " + st.empresa.n + " vale ahora USD " + fmt(valorCaminoDe(st)) + ".");
+        if (Math.abs(nt.pct) >= 0.2) st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: nt.t });
+      } else camAno = { n: st.empresa.n, que: CAMINOS[st.empresa.id].que, t: null, pct: CAMINO_DERIVA, delta };
+    }
+    const camDelta = camAno ? camAno.delta : 0;
+    const patVisible = patrimonio + valorFondoDe(st) + valorCaminoDe(st);
     const patIni = conDecisiones && patAno.current != null && Number.isFinite(patAno.current) ? patAno.current : patAntes - decisionesAno;
     const mercadosAno = cartera.despues - cartera.antes;
     const sueldoAno = neto - pagoDeuda;
-    const partes = { decisiones: decisionesAno, sueldo: sueldoAno, mercados: mercadosAno,
-      otros: (patVisible - patIni) - decisionesAno - sueldoAno - mercadosAno };
+    const partes = { decisiones: decisionesAno, sueldo: sueldoAno, mercados: mercadosAno, camino: camDelta,
+      otros: (patVisible - patIni) - decisionesAno - sueldoAno - mercadosAno - camDelta };
 
     /* La del día: lo que se cumplió este año queda logrado y se premia ya,
        no al final de la carrera. Un mes de sueldo y algo de nombre. */
@@ -56403,7 +57143,7 @@ function Motor() {
       logros, galas,
       ano, notis, ascenso, cartera, notas, ing, egr, ingreso, egreso: egreso + pagoDeuda, neto: neto - pagoDeuda, ahorro,
       patAntes, patrimonio, bienesV, histo: st.histo, leccion, hitos, deuda,
-      patVisible, patIni, partes,
+      patVisible, patIni, partes, camino: camAno,
       /* "hitos" ya lo usan los hitos de patrimonio; las decisiones del
          año van por su propia clave para que no se pisen */
       hitosDec: cartera.hitos,
@@ -57248,6 +57988,7 @@ function Motor() {
               <div className="ea-anillos">
                 {["ene", "cri", "red", "rep"].map((k) => <Anillo key={k} k={k} v={s[k]} />)}
               </div>
+              <PildoraCamino st={s} />
               <div className="ea-animoPill ea-dis" title="Tu ánimo da o quita ayuda en los minijuegos y cansancio. Vuelve solo hacia Normal.">
                 <span>{animoDe(s.animo).e}</span>Ánimo: {animoDe(s.animo).n}
               </div>
@@ -58448,6 +59189,12 @@ function Motor() {
             </div>
             <Desglose partes={cierre.partes} oscuro />
             <EnQueInvertiste cartera={cierre.cartera} />
+            {cierre.camino && cierre.camino.t && (
+              <div className="ea-caminoNoticia">
+                <span className="ea-dis">{cierre.camino.que} · {cierre.camino.n}</span>
+                {cierre.camino.t} <b className={"ea-mono " + (cierre.camino.pct >= 0 ? "sube" : "baja")}>{pctTexto(cierre.camino.pct)}</b>
+              </div>
+            )}
             {cierre.ascenso && (
               <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.8s", color: "var(--cobre)", fontSize: 16 }}>
                 Ascenso a {cierre.ascenso}
