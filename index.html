@@ -58459,6 +58459,13 @@ function Motor() {
        decisión clave: esas tres siempre entraron dentro del presupuesto
        normal del año, así que contarlas también duplicaba la duración del
        año. Solo lo empujado a mano tiene que sumar. */
+    /* «¿Hacia dónde va tu carrera?» va con lo forzado: entraba detrás de
+       las consecuencias y la vida, y el recorte a tres escenas la dejaba
+       fuera casi siempre (en 2 de 3 vidas de prueba nunca se eligió). */
+    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) {
+      lista.push(decisionRama(st));
+      usados.push(DECISION_RAMA.id);
+    }
     const forzadas = lista.length;
     vuelven.forEach(e => {
       lista.push(e);
@@ -58490,10 +58497,7 @@ function Motor() {
        solo una de cada cuatro llegaba: el árbol de tu carrera ni se
        plantaba. Ahora llega en Analista Senior, o al quinto año si no
        has subido, con tiempo para que sus consecuencias se vean. */
-    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) {
-      lista.push(decisionRama(st));
-      usados.push(DECISION_RAMA.id);
-    }
+    /* (la bifurcación ahora va con lo forzado, más arriba) */
     /* Las raíces de los árboles no pueden depender del sorteo: entre 75
        escenas, el rumor o el headhunter salían en una partida de cada
        tres, y con ellos todo lo que cuelga detrás. Cada una sale una vez
