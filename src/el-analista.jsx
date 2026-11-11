@@ -58091,17 +58091,15 @@ function Motor() {
             <circle className="ea-paPunto" cx="300" cy="8" r="5.5" />
           </svg>
           <p className="ea-lede">
-            Dos años por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
+            Empiezas desde abajo y decides todo: tu carrera, tu plata, tu familia y la empresa que vas a construir. Al final ves en qué quedó tu vida.
           </p>
           </div>
-          <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
-            onClick={() => { if (enFase("portada")) irA("aviso"); }}>Leer el aviso</button>
           <div className="ea-regla" />
           <div className="ea-cifras ea-cifrasPortada" style={{ marginBottom: 26 }}>
             <div><div className="ea-cifraK">La carrera</div><div className="ea-cifraV ea-dis">De pasante a socio</div>
               <div className="ea-cifraD">Ascensos, contratos y la opción de montar tu propia firma.</div></div>
             <div><div className="ea-cifraK">El punto de partida</div><div className="ea-cifraV ea-dis">Nunca es tarde para invertir</div>
-              <div className="ea-cifraD">Empieza a los 20, 30, 40 o 50: más joven, más tiempo; más tarde, más capital y experiencia.</div></div>
+              <div className="ea-cifraD">Empieza a la edad que quieras. Mientras más joven, más tiempo; más tarde, más capital y experiencia.</div></div>
             <div><div className="ea-cifraK">El objetivo</div><div className="ea-cifraV ea-dis">Independencia financiera</div>
               <div className="ea-cifraD">Que tu patrimonio cubra tu vida sin depender del sueldo.</div></div>
             <div><div className="ea-cifraK">Los imprevistos</div><div className="ea-cifraV ea-dis">Crisis, familia y fraudes</div>
