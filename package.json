@@ -11,6 +11,7 @@
     "robustez": "node pruebas/comparar.js",
     "cobertura": "node pruebas/cobertura.js 20",
     "finales": "node pruebas/finales.js 20",
+    "ritmo": "node pruebas/ritmo.js 8",
     "alcance": "node pruebas/alcance.js 12",
     "deuda": "node pruebas/deuda.js",
     "fondo": "node pruebas/fondo3.js",

@@ -107,7 +107,7 @@ async function unaVida(semilla) {
        cuando cambia. */
     /* partida corta: el resumen de etapa dice «De 2026 a 2030»; se cuentan
        los años que cubre, no las pantallas */
-    const mA = t.match(/(?:Así terminó|Cierre de|De \d{4} a) (\d{4})/);
+    const mA = t.match(/(?:Así terminó|Cierre de|De \d{4} a|\d{4} y) (\d{4})/);
     if (mA && mA[1] !== ultimoAno) { ano += ultimoAno ? Number(mA[1]) - Number(ultimoAno) : Number(mA[1]) - 2025; ultimoAno = mA[1]; }
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
