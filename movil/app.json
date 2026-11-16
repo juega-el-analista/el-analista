@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "El Analista",
+    "slug": "el-analista",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F7F7F5",
+    "primaryColor": "#0B3A1F",
+    "ios": {
+      "bundleIdentifier": "com.elanalista.app",
+      "supportsTablet": false,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.elanalista.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B3A1F",
+        "foregroundImage": "./assets/android-icon-foreground.png"
+      }
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B3A1F"
+        }
+      ]
+    ]
+  }
+}
