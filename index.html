@@ -2439,6 +2439,25 @@ const CSS_TT = `
 .ea-tt .ea-cierreGraf1.tt-sube .ea-lineaPuntoUlt{fill:#0E9654;stroke:#FFFFFF;stroke-width:2}
 .ea-tt .ea-cierreGraf1.tt-baja .ea-lineaPuntoUlt{fill:#D0342A;stroke:#FFFFFF;stroke-width:2}
 .ea-quieto.ea-tt .ea-cierreGraf1,.ea-quieto.ea-tt .ea-lineaTrazo{animation:none;stroke-dashoffset:0}
+
+/* el cierre, más vivo: la cabeza que avanza, el pulso al llegar y la mira */
+.ea-tt .ea-cierreGraf1{padding:10px 8px 6px}
+.ea-tt .ea-cierreGraf1 svg{touch-action:pan-y;cursor:crosshair}
+.ea-tt .ea-cierreGraf1 .ea-lineaTrazo{stroke-dasharray:none;stroke-dashoffset:0;animation:none}
+.ea-tt .ea-lineaCabeza{fill:#F08C00;stroke:#FFFFFF;stroke-width:2}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaCabeza{fill:#0E9654} .ea-tt .ea-cierreGraf1.tt-baja .ea-lineaCabeza{fill:#D0342A}
+.ea-tt .ea-lineaPulso{fill:none;stroke:#0E9654;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:ea-ttPulso 1.6s ease-out infinite}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaPulso{stroke:#D0342A}
+@keyframes ea-ttPulso{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(3.2)}}
+.ea-tt .ea-lineaTag rect{fill:#0E9654} .ea-tt .ea-cierreGraf1.tt-baja .ea-lineaTag rect{fill:#D0342A}
+.ea-tt .ea-lineaTag text{fill:#FFFFFE;font:700 10.5px var(--f-num)}
+.ea-tt .ea-lineaDelta{font:700 12px var(--f-num);fill:#0E9654} .ea-tt .ea-cierreGraf1.tt-baja .ea-lineaDelta{fill:#D0342A}
+.ea-tt .ea-lineaOjo line{stroke:#6A7686;stroke-width:1;stroke-dasharray:3 3}
+.ea-tt .ea-lineaOjo circle{fill:#FFFFFE;stroke:#F08C00;stroke-width:2.2}
+.ea-tt .ea-lineaOjo rect{fill:#0B1220}
+.ea-tt .ea-lineaOjoV{fill:#FFFFFE;font:700 11px var(--f-num)}
+.ea-tt .ea-lineaOjoE{fill:#C2CCD8;font:500 9.5px var(--f-num)}
+.ea-quieto.ea-tt .ea-lineaPulso{animation:none;opacity:0}
 `;
 
 /* la misma terminal, en fondo negro (se genera de la blanca) */
@@ -2869,6 +2888,25 @@ const CSS_TT_NOCHE = `
 .ea-tt .ea-cierreGraf1.tt-sube .ea-lineaPuntoUlt{fill:#20D67F;stroke:#0B0F15;stroke-width:2}
 .ea-tt .ea-cierreGraf1.tt-baja .ea-lineaPuntoUlt{fill:#FF5449;stroke:#0B0F15;stroke-width:2}
 .ea-quieto.ea-tt .ea-cierreGraf1,.ea-quieto.ea-tt .ea-lineaTrazo{animation:none;stroke-dashoffset:0}
+
+/* el cierre, más vivo: la cabeza que avanza, el pulso al llegar y la mira */
+.ea-tt .ea-cierreGraf1{padding:10px 8px 6px}
+.ea-tt .ea-cierreGraf1 svg{touch-action:pan-y;cursor:crosshair}
+.ea-tt .ea-cierreGraf1 .ea-lineaTrazo{stroke-dasharray:none;stroke-dashoffset:0;animation:none}
+.ea-tt .ea-lineaCabeza{fill:#FF9F1C;stroke:#0B0F15;stroke-width:2}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaCabeza{fill:#20D67F} .ea-tt .ea-cierreGraf1.tt-baja .ea-lineaCabeza{fill:#FF5449}
+.ea-tt .ea-lineaPulso{fill:none;stroke:#20D67F;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:ea-ttPulso 1.6s ease-out infinite}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaPulso{stroke:#FF5449}
+@keyframes ea-ttPulso{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(3.2)}}
+.ea-tt .ea-lineaTag rect{fill:#20D67F} .ea-tt .ea-cierreGraf1.tt-baja .ea-lineaTag rect{fill:#FF5449}
+.ea-tt .ea-lineaTag text{fill:#FFFFFE;font:700 10.5px var(--f-num)}
+.ea-tt .ea-lineaDelta{font:700 12px var(--f-num);fill:#20D67F} .ea-tt .ea-cierreGraf1.tt-baja .ea-lineaDelta{fill:#FF5449}
+.ea-tt .ea-lineaOjo line{stroke:#7F8D9C;stroke-width:1;stroke-dasharray:3 3}
+.ea-tt .ea-lineaOjo circle{fill:#FFFFFE;stroke:#FF9F1C;stroke-width:2.2}
+.ea-tt .ea-lineaOjo rect{fill:#E8EDF3}
+.ea-tt .ea-lineaOjoV{fill:#0B0F15;font:700 11px var(--f-num)}
+.ea-tt .ea-lineaOjoE{fill:#33445A;font:500 9.5px var(--f-num)}
+.ea-quieto.ea-tt .ea-lineaPulso{animation:none;opacity:0}
 
 .ea-root.ea-tt .ea-plata{text-shadow:0 0 18px rgba(32,214,127,.35)}
 .ea-root.ea-tt .ea-plata.neg{text-shadow:0 0 18px rgba(255,84,73,.35)}
@@ -64394,42 +64432,90 @@ function InformeVida({
 }
 
 /* ---- el gráfico del cierre de cada año ----
-   Una sola línea: tu patrimonio etapa por etapa, de cuando empezaste a
-   hoy, con el tramo de esta etapa marcado. */
+   Una sola línea: tu patrimonio etapa por etapa. Se dibuja sola, con un
+   punto que avanza hasta hoy, y al pasar el dedo o el ratón dice la cifra
+   exacta y la edad de cada punto. */
 function GraficoCierre({
   histo,
   fin,
-  ini
+  ini,
+  edadIni,
+  edadFin
 }) {
   const serie = (Array.isArray(histo) ? histo : []).map(x => numero(x, 0)).slice(-30);
   if (!serie.length || Math.abs(serie[serie.length - 1] - fin) > 0.5) serie.push(fin);
-  if (serie.length < 2) return null;
+  const n = serie.length - 1;
+  const [prog, setProg] = useState(() => sinMovimiento() ? 1 : 0);
+  const [ojo, setOjo] = useState(null);
+  useEffect(() => {
+    if (sinMovimiento() || typeof window === "undefined" || !window.requestAnimationFrame) {
+      setProg(1);
+      return;
+    }
+    let id = 0,
+      t0 = null;
+    const espera = setTimeout(() => {
+      const paso = t => {
+        if (t0 == null) t0 = t;
+        const p = Math.min(1, (t - t0) / 1600);
+        setProg(1 - Math.pow(1 - p, 3));
+        if (p < 1) id = window.requestAnimationFrame(paso);
+      };
+      id = window.requestAnimationFrame(paso);
+    }, 900);
+    return () => {
+      try {
+        clearTimeout(espera);
+        window.cancelAnimationFrame(id);
+      } catch (e) {}
+    };
+  }, []);
+  if (n < 1) return null;
   const AN = 640,
-    AL = 190,
-    IZQ = 6,
-    DER = 64,
-    ARR = 16,
-    ABA = 22;
+    AL = 200,
+    IZQ = 4,
+    DER = 78,
+    ARR = 18,
+    ABA = 10;
   const mn = Math.min(0, Math.min.apply(null, serie)),
     mx = Math.max(1, Math.max.apply(null, serie));
   const y = v => ARR + (1 - (v - mn) / (mx - mn || 1)) * (AL - ARR - ABA);
-  const n = serie.length - 1;
   const x = i => IZQ + i / n * (AN - IZQ - DER);
   const pts = serie.map((v, i) => [x(i), y(v)]);
-  const linea = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
-  const area = linea + ' L' + x(n).toFixed(1) + ' ' + y(mn).toFixed(1) + ' L' + x(0).toFixed(1) + ' ' + y(mn).toFixed(1) + ' Z';
+  const edadDe = i => Math.max(numero(edadIni, 0), numero(edadFin, 0) - (n - i) * ETAPA);
+  /* hasta dónde va el dibujo: tramos enteros más una fracción del siguiente */
+  const hasta = prog * n,
+    k = Math.min(n, Math.floor(hasta)),
+    fr = hasta - k;
+  const vis = pts.slice(0, k + 1);
+  if (k < n) vis.push([pts[k][0] + (pts[k + 1][0] - pts[k][0]) * fr, pts[k][1] + (pts[k + 1][1] - pts[k][1]) * fr]);
+  const linea = vis.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+  const cab = vis[vis.length - 1];
+  const area = linea + " L" + cab[0].toFixed(1) + " " + y(mn).toFixed(1) + " L" + x(0).toFixed(1) + " " + y(mn).toFixed(1) + " Z";
   const sube = fin >= ini;
-  const ult = pts[n],
-    pen = pts[n - 1];
-  const rejilla = [mn, mn + (mx - mn) / 2, mx];
+  const pct = ini > 0 ? (fin - ini) / ini * 100 : null;
+  const rejilla = [0, 1, 2, 3].map(q => mn + (mx - mn) * q / 3);
+  const mirar = e => {
+    try {
+      const r = e.currentTarget.getBoundingClientRect();
+      const px = e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX;
+      const cx = (px - r.left) / r.width * AN;
+      setOjo(clamp(Math.round((cx - IZQ) / (AN - IZQ - DER) * n), 0, n));
+    } catch (er) {}
+  };
+  const o = ojo == null ? null : pts[ojo];
+  const cajaX = o ? Math.min(AN - DER - 132, Math.max(IZQ, o[0] - 66)) : 0;
+  const cajaY = o ? o[1] - 44 < 0 ? o[1] + 12 : o[1] - 44 : 0;
   return /*#__PURE__*/React.createElement("figure", {
-    className: 'ea-cierreGraf1 ' + (sube ? 'tt-sube' : 'tt-baja')
-  }, /*#__PURE__*/React.createElement("figcaption", null, /*#__PURE__*/React.createElement("span", null, "Tu patrimonio"), /*#__PURE__*/React.createElement("span", {
-    className: sube ? 'tt-sube' : 'tt-baja'
-  }, (sube ? '+' : '−') + fmtCorto(Math.abs(fin - ini)), " esta etapa")), /*#__PURE__*/React.createElement("svg", {
-    viewBox: '0 0 ' + AN + ' ' + AL,
+    className: "ea-cierreGraf1 " + (sube ? "tt-sube" : "tt-baja")
+  }, /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 " + AN + " " + AL,
     role: "img",
-    "aria-label": "Tu patrimonio etapa por etapa"
+    "aria-label": "Tu patrimonio: de USD " + fmt(serie[0]) + " a USD " + fmt(fin),
+    onMouseMove: mirar,
+    onTouchStart: mirar,
+    onTouchMove: mirar,
+    onMouseLeave: () => setOjo(null)
   }, rejilla.map((v, i) => /*#__PURE__*/React.createElement("g", {
     key: i
   }, /*#__PURE__*/React.createElement("line", {
@@ -64442,34 +64528,72 @@ function GraficoCierre({
     x: AN - DER + 6,
     y: y(v) + 3.5,
     className: "ea-velasEje"
-  }, fmtCorto(v)))), /*#__PURE__*/React.createElement("path", {
+  }, fmt(v)))), /*#__PURE__*/React.createElement("path", {
     d: area,
     className: "ea-lineaArea"
   }), /*#__PURE__*/React.createElement("path", {
     d: linea,
     className: "ea-lineaTrazo"
-  }), /*#__PURE__*/React.createElement("line", {
-    x1: pen[0],
-    y1: pen[1],
-    x2: ult[0],
-    y2: ult[1],
-    className: "ea-lineaUlt"
-  }), pts.map((p, i) => /*#__PURE__*/React.createElement("circle", {
+  }), pts.map((p, i) => i <= hasta + 0.001 ? /*#__PURE__*/React.createElement("circle", {
     key: i,
     cx: p[0],
     cy: p[1],
-    r: i === n ? 4.5 : 2.4,
-    className: i === n ? 'ea-lineaPuntoUlt' : 'ea-lineaPunto'
-  })), /*#__PURE__*/React.createElement("text", {
-    x: IZQ,
-    y: AL - 5,
-    className: "ea-velasEje"
-  }, "Empezaste"), /*#__PURE__*/React.createElement("text", {
-    x: AN - DER,
-    y: AL - 5,
+    r: "2.4",
+    className: "ea-lineaPunto"
+  }) : null), /*#__PURE__*/React.createElement("circle", {
+    cx: cab[0],
+    cy: cab[1],
+    r: "5",
+    className: "ea-lineaCabeza"
+  }), prog >= 1 && /*#__PURE__*/React.createElement("circle", {
+    cx: cab[0],
+    cy: cab[1],
+    r: "5",
+    className: "ea-lineaPulso"
+  }), prog >= 1 && /*#__PURE__*/React.createElement("g", {
+    className: "ea-lineaTag"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: AN - DER + 2,
+    y: pts[n][1] - 9,
+    width: DER - 2,
+    height: "18",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("text", {
+    x: AN - DER + 6,
+    y: pts[n][1] + 4
+  }, fmt(fin))), prog >= 1 && !o && /*#__PURE__*/React.createElement("text", {
+    x: pts[n][0] - 12,
+    y: pts[n][1] < 40 ? pts[n][1] + 22 : pts[n][1] - 12,
     textAnchor: "end",
-    className: "ea-velasEje"
-  }, "Hoy")));
+    className: "ea-lineaDelta"
+  }, (sube ? "+" : "−") + fmt(Math.abs(fin - ini)) + (pct != null && Math.abs(pct) < 9999 ? " (" + (pct >= 0 ? "+" : "") + pct.toFixed(1) + "%)" : "")), o && /*#__PURE__*/React.createElement("g", {
+    className: "ea-lineaOjo"
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: o[0],
+    x2: o[0],
+    y1: ARR - 6,
+    y2: AL - ABA
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: o[0],
+    cy: o[1],
+    r: "4.5"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: cajaX,
+    y: cajaY,
+    width: "132",
+    height: "32",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("text", {
+    x: cajaX + 66,
+    y: cajaY + 14,
+    textAnchor: "middle",
+    className: "ea-lineaOjoV"
+  }, "USD " + fmt(serie[ojo])), /*#__PURE__*/React.createElement("text", {
+    x: cajaX + 66,
+    y: cajaY + 26,
+    textAnchor: "middle",
+    className: "ea-lineaOjoE"
+  }, (ojo === n ? "hoy · " : "") + edadDe(ojo) + " años"))));
 }
 function Anillo({
   k,
@@ -71162,12 +71286,9 @@ function Motor() {
     }, dif < 1 ? "Te quedaste igual" : (sube ? "Ganaste USD " : "Perdiste USD ") + fmt(dif)), /*#__PURE__*/React.createElement(GraficoCierre, {
       histo: cierre.histo,
       ini: ini,
-      fin: fin
-    }), /*#__PURE__*/React.createElement(Desglose, {
-      partes: cierre.partes,
-      oscuro: true
-    }), /*#__PURE__*/React.createElement(EnQueInvertiste, {
-      cartera: cierre.cartera
+      fin: fin,
+      edadIni: s.edadIni,
+      edadFin: edad(s.turno, s.edadIni)
     }), cierre.camino && cierre.camino.t && /*#__PURE__*/React.createElement("div", {
       className: "ea-caminoNoticia"
     }, /*#__PURE__*/React.createElement("span", {
