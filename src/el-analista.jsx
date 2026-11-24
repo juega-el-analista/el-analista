@@ -1657,11 +1657,11 @@ const CSS_TT = `
 
 /* ---- los iconos de compras, como pequeñas fichas ---- */
 .ea-tt .ea-itemEmoji{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;
-  border:1px solid #E1E6EC;border-radius:3px;background:#F8F9FB;margin-right:10px;font-size:0}
+  border:1px solid #E1E6EC;border-radius:3px;background:#F8F9FB;margin-right:10px;font-size:18px}
 .ea-tt .ea-itemEmoji .ea-icoL{margin:0;color:#B35F00}
 .ea-tt .ea-grupoE{display:inline-flex;align-items:center;margin-right:6px}
-.ea-tt .ea-genteE{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;font-size:0;
-  border:1px solid #E1E6EC;border-radius:3px;background:#F8F9FB}
+.ea-tt .ea-genteE{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;font-size:18px;
+  border:1px solid #E1E6EC;border-radius:3px;background:#F8F9FB;font-size:18px}
 .ea-tt .ea-genteE .ea-icoL{margin:0}
 .ea-tt .ea-puenteN{fill:#6A7686;font:500 8.5px var(--f-num)}
 
@@ -1670,6 +1670,36 @@ const CSS_TT = `
 .ea-root.ea-tt .ea-boostIco .ea-icoL{margin-right:2px}
 .ea-root.ea-tt .ea-boostIco:hover:not(:disabled){border-color:#F08C00;background:rgba(240,140,0,0.1)}
 .ea-root.ea-tt .ea-boostIco.vence{border-color:#F08C00;color:#B35F00;background:rgba(240,140,0,0.1)}
+
+/* ---- la respuesta en los minijuegos: verde la correcta, rojo la tuya si fallaste ---- */
+.ea-root.ea-tt .ea-op.ok{background:rgba(14,150,84,.12);border-color:#0E9654;color:#0B1220;box-shadow:inset 4px 0 0 #0E9654;opacity:1}
+.ea-root.ea-tt .ea-op.no{background:rgba(208,52,42,.10);border-color:#D0342A;color:#0B1220;box-shadow:inset 4px 0 0 #D0342A;opacity:1}
+.ea-root.ea-tt .ea-op.ok .ea-opN{background:#0E9654;color:#FFFFFE}
+.ea-root.ea-tt .ea-op.no .ea-opN{background:#D0342A;color:#FFFFFE}
+.ea-root.ea-tt .ea-op.ok::after,.ea-root.ea-tt .ea-op.no::after{float:right;font:600 11px var(--f-num);letter-spacing:.06em;margin-left:10px;padding:2px 7px;border-radius:2px}
+.ea-root.ea-tt .ea-op.ok::after{content:"✓ CORRECTA";color:#FFFFFE;background:#0E9654}
+.ea-root.ea-tt .ea-op.no::after{content:"✗ TU RESPUESTA";color:#FFFFFE;background:#D0342A}
+.ea-root.ea-tt .ea-op:disabled:not(.ok):not(.no){opacity:.5}
+.ea-root.ea-tt .ea-check.bien{background:rgba(14,150,84,.12);border-color:#0E9654;box-shadow:inset 4px 0 0 #0E9654}
+.ea-root.ea-tt .ea-check.mal{background:rgba(208,52,42,.10);border-color:#D0342A;box-shadow:inset 4px 0 0 #D0342A}
+.ea-root.ea-tt .ea-sen.bien{color:#0E9654} .ea-root.ea-tt .ea-sen.mal{color:#D0342A}
+
+/* ---- el cierre: una sola línea con tu patrimonio ---- */
+.ea-tt .ea-cierreGraf1{margin:14px auto 6px;width:100%;max-width:640px;border:1px solid #D9DFE7;border-radius:3px;background:#FFFFFF;
+  padding:10px 12px 6px;text-align:left;animation:ea-ttAparece .5s 1.3s both}
+.ea-tt .ea-cierreGraf1 figcaption{display:flex;justify-content:space-between;gap:10px;font:600 10.5px var(--f-num);letter-spacing:.12em;
+  text-transform:uppercase;color:#B35F00;margin-bottom:4px}
+.ea-tt .ea-cierreGraf1 figcaption .tt-sube{color:#0E9654} .ea-tt .ea-cierreGraf1 figcaption .tt-baja{color:#D0342A}
+.ea-tt .ea-cierreGraf1 svg{display:block;width:100%;height:auto;overflow:visible}
+.ea-tt .ea-lineaTrazo{fill:none;stroke:#F08C00;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;
+  stroke-dasharray:2400;stroke-dashoffset:2400;animation:ea-ttTrazo 1.8s 1.4s ease-out forwards}
+.ea-tt .ea-lineaArea{fill:#F08C00;opacity:.08}
+.ea-tt .ea-lineaPunto{fill:#FFFFFF;stroke:#F08C00;stroke-width:1.5}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaUlt{stroke:#0E9654;stroke-width:3.2;stroke-linecap:round}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaUlt{stroke:#D0342A;stroke-width:3.2;stroke-linecap:round}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaPuntoUlt{fill:#0E9654;stroke:#FFFFFF;stroke-width:2}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaPuntoUlt{fill:#D0342A;stroke:#FFFFFF;stroke-width:2}
+.ea-quieto.ea-tt .ea-cierreGraf1,.ea-quieto.ea-tt .ea-lineaTrazo{animation:none;stroke-dashoffset:0}
 `;
 
 /* la misma terminal, en fondo negro (se genera de la blanca) */
@@ -2057,11 +2087,11 @@ const CSS_TT_NOCHE = `
 
 /* ---- los iconos de compras, como pequeñas fichas ---- */
 .ea-tt .ea-itemEmoji{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;
-  border:1px solid #1A232E;border-radius:3px;background:#0E141C;margin-right:10px;font-size:0}
+  border:1px solid #1A232E;border-radius:3px;background:#0E141C;margin-right:10px;font-size:18px}
 .ea-tt .ea-itemEmoji .ea-icoL{margin:0;color:#FFB84D}
 .ea-tt .ea-grupoE{display:inline-flex;align-items:center;margin-right:6px}
-.ea-tt .ea-genteE{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;font-size:0;
-  border:1px solid #1A232E;border-radius:3px;background:#0E141C}
+.ea-tt .ea-genteE{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;font-size:18px;
+  border:1px solid #1A232E;border-radius:3px;background:#0E141C;font-size:18px}
 .ea-tt .ea-genteE .ea-icoL{margin:0}
 .ea-tt .ea-puenteN{fill:#7F8D9C;font:500 8.5px var(--f-num)}
 
@@ -2070,6 +2100,36 @@ const CSS_TT_NOCHE = `
 .ea-root.ea-tt .ea-boostIco .ea-icoL{margin-right:2px}
 .ea-root.ea-tt .ea-boostIco:hover:not(:disabled){border-color:#FF9F1C;background:rgba(255,159,28,0.1)}
 .ea-root.ea-tt .ea-boostIco.vence{border-color:#FF9F1C;color:#FFB84D;background:rgba(255,159,28,0.1)}
+
+/* ---- la respuesta en los minijuegos: verde la correcta, rojo la tuya si fallaste ---- */
+.ea-root.ea-tt .ea-op.ok{background:rgba(32,214,127,.12);border-color:#20D67F;color:#E8EDF3;box-shadow:inset 4px 0 0 #20D67F;opacity:1}
+.ea-root.ea-tt .ea-op.no{background:rgba(255,84,73,.10);border-color:#FF5449;color:#E8EDF3;box-shadow:inset 4px 0 0 #FF5449;opacity:1}
+.ea-root.ea-tt .ea-op.ok .ea-opN{background:#20D67F;color:#FFFFFE}
+.ea-root.ea-tt .ea-op.no .ea-opN{background:#FF5449;color:#FFFFFE}
+.ea-root.ea-tt .ea-op.ok::after,.ea-root.ea-tt .ea-op.no::after{float:right;font:600 11px var(--f-num);letter-spacing:.06em;margin-left:10px;padding:2px 7px;border-radius:2px}
+.ea-root.ea-tt .ea-op.ok::after{content:"✓ CORRECTA";color:#FFFFFE;background:#20D67F}
+.ea-root.ea-tt .ea-op.no::after{content:"✗ TU RESPUESTA";color:#FFFFFE;background:#FF5449}
+.ea-root.ea-tt .ea-op:disabled:not(.ok):not(.no){opacity:.5}
+.ea-root.ea-tt .ea-check.bien{background:rgba(32,214,127,.12);border-color:#20D67F;box-shadow:inset 4px 0 0 #20D67F}
+.ea-root.ea-tt .ea-check.mal{background:rgba(255,84,73,.10);border-color:#FF5449;box-shadow:inset 4px 0 0 #FF5449}
+.ea-root.ea-tt .ea-sen.bien{color:#20D67F} .ea-root.ea-tt .ea-sen.mal{color:#FF5449}
+
+/* ---- el cierre: una sola línea con tu patrimonio ---- */
+.ea-tt .ea-cierreGraf1{margin:14px auto 6px;width:100%;max-width:640px;border:1px solid #243142;border-radius:3px;background:#0B0F15;
+  padding:10px 12px 6px;text-align:left;animation:ea-ttAparece .5s 1.3s both}
+.ea-tt .ea-cierreGraf1 figcaption{display:flex;justify-content:space-between;gap:10px;font:600 10.5px var(--f-num);letter-spacing:.12em;
+  text-transform:uppercase;color:#FFB84D;margin-bottom:4px}
+.ea-tt .ea-cierreGraf1 figcaption .tt-sube{color:#20D67F} .ea-tt .ea-cierreGraf1 figcaption .tt-baja{color:#FF5449}
+.ea-tt .ea-cierreGraf1 svg{display:block;width:100%;height:auto;overflow:visible}
+.ea-tt .ea-lineaTrazo{fill:none;stroke:#FF9F1C;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;
+  stroke-dasharray:2400;stroke-dashoffset:2400;animation:ea-ttTrazo 1.8s 1.4s ease-out forwards}
+.ea-tt .ea-lineaArea{fill:#FF9F1C;opacity:.08}
+.ea-tt .ea-lineaPunto{fill:#0B0F15;stroke:#FF9F1C;stroke-width:1.5}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaUlt{stroke:#20D67F;stroke-width:3.2;stroke-linecap:round}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaUlt{stroke:#FF5449;stroke-width:3.2;stroke-linecap:round}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaPuntoUlt{fill:#20D67F;stroke:#0B0F15;stroke-width:2}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaPuntoUlt{fill:#FF5449;stroke:#0B0F15;stroke-width:2}
+.ea-quieto.ea-tt .ea-cierreGraf1,.ea-quieto.ea-tt .ea-lineaTrazo{animation:none;stroke-dashoffset:0}
 
 .ea-root.ea-tt .ea-plata{text-shadow:0 0 18px rgba(32,214,127,.35)}
 .ea-root.ea-tt .ea-plata.neg{text-shadow:0 0 18px rgba(255,84,73,.35)}
@@ -51095,9 +51155,10 @@ const escenaMentor = (st) => ({
 
 /* Los avatares: retratos editoriales de busto, sin cara ni logos. Cada
    uno se reconoce por el fondo, el peinado y el objeto que lleva. */
+/* dibujos a color */
 const AVATAR_TONO = {
-  "#2F8A54": "#1F8F5F", "#D9643A": "#D2643F", "#2F5D8A": "#2E5E9E", "#2A2440": "#1B2433",
-  "#B24E27": "#B5532E", "#F2B632": "#D99A16", "#8C6BB1": "#5B6B82", "#5B4785": "#3D4A63", "#E9875A": "#D97A4A",
+  "#2F8A54": "#22B573", "#D9643A": "#F2664B", "#2F5D8A": "#2F7BE5", "#2A2440": "#1B2433",
+  "#B24E27": "#D9542F", "#F2B632": "#F2A516", "#8C6BB1": "#9A8CF2", "#5B4785": "#5B4BD6", "#E9875A": "#FF8A4C",
 };
 function AvatarMentor({ id, tam }) {
   const n = numero(tam, 56);
@@ -51129,7 +51190,7 @@ function AvatarMentor({ id, tam }) {
   const mc = MENTORES.find((x) => x.id === id && x.carrera);
   if (mc) {
     const ini = String(mc.n).split(" ").filter((p) => /^[A-ZÁÉÍÓÚ]/.test(p)).map((p) => p.charAt(0)).join("").slice(0, 2).toUpperCase();
-    const fondo = AVATAR_TONO[mc.color] || "#3D4A63";
+    const fondo = AVATAR_TONO[mc.color] || "#5B4BD6";
     return marco(fondo, (
       <g>
         <circle cx="60" cy="60" r="44" fill="none" stroke="#FFFFFF" strokeOpacity=".22" strokeWidth="1.5" />
@@ -51151,40 +51212,40 @@ function AvatarMentor({ id, tam }) {
       <path d="M40 52 Q38 30 60 30 Q80 30 80 48 Q74 40 62 41 Q50 41 40 52 Z" fill="#3A2A20" />
     </g>
   ));
-  if (id === "bufalo") return marco("#E9DCC6", (
+  if (id === "bufalo") return marco("#FCE7C8", (
     <g>
       <g transform="translate(78 84) rotate(-8)">
         <rect width="34" height="24" rx="2" fill="#FFFFFF" /><rect width="34" height="5" fill="#1B2433" />
-        <path d="M5 11 H29 M5 15.5 H29 M5 20 H20" stroke="#A9B3C2" strokeWidth="2" />
+        <path d="M5 11 H29 M5 15.5 H29 M5 20 H20" stroke="#B4AED8" strokeWidth="2" />
       </g>
-      {busto("#EDC3A0", "#1F2A3C", <g><path d="M52 89 L60 104 L68 89 Z" fill="#F8FAFC" /><path d="M58 92 L62 92 L63 108 L60 112 L57 108 Z" fill="#C8372B" /></g>)}
+      {busto("#EDC3A0", "#3B2F7A", <g><path d="M52 89 L60 104 L68 89 Z" fill="#F8FAFC" /><path d="M58 92 L62 92 L63 108 L60 112 L57 108 Z" fill="#E8443A" /></g>)}
       <path d="M41 58 Q40 40 46 36 L46 56 Z M79 58 Q80 40 74 36 L74 56 Z" fill="#C9CED6" />
       <g fill="none" stroke="#1B2433" strokeWidth="2"><circle cx="53" cy="56" r="6" /><circle cx="68" cy="56" r="6" /><path d="M59 56 H62" /></g>
     </g>
   ));
-  if (id === "kardashow") return marco("#F4DAD4", (
+  if (id === "kardashow") return marco("#FFD9D0", (
     <g>
       <circle cx="60" cy="56" r="40" fill="none" stroke="#FFFFFF" strokeWidth="6" />
       <path d="M36 112 L36 62 C36 34 48 28 60 28 C72 28 84 34 84 62 L84 112 Z" fill="#1E1A1A" />
       {busto("#D9A27E", "#D2564A")}
       <path d="M42 56 C44 38 54 33 61 33 C70 33 78 40 79 54 C72 44 64 42 56 44 C50 46 45 50 42 56 Z" fill="#1E1A1A" />
-      <g transform="rotate(10 92 96)"><rect x="84" y="80" width="17" height="30" rx="3.5" fill="#1B2433" /><rect x="86.5" y="84" width="12" height="21" rx="1.5" fill="#9CC3E6" /></g>
+      <g transform="rotate(10 92 96)"><rect x="84" y="80" width="17" height="30" rx="3.5" fill="#1B2433" /><rect x="86.5" y="84" width="12" height="21" rx="1.5" fill="#8FD0F5" /></g>
     </g>
   ));
-  if (id === "pesos") return marco("#FBE3B6", (
+  if (id === "pesos") return marco("#FFE6A8", (
     <g>
       <g transform="translate(80 82)">
         <rect width="32" height="26" rx="2" fill="#C99A62" /><path d="M0 8 H32" stroke="#A97B45" strokeWidth="2" />
         <rect x="13" width="6" height="26" fill="#E6C38F" opacity=".8" />
       </g>
-      {busto("#E2AE88", "#1F2A3C", <path d="M52 89 L60 101 L68 89 Z" fill="#F8FAFC" />)}
+      {busto("#E2AE88", "#3B2F7A", <path d="M52 89 L60 101 L68 89 Z" fill="#F8FAFC" />)}
       <ellipse cx="54" cy="40" rx="8" ry="4" fill="#FFFFFF" opacity=".35" />
     </g>
   ));
-  if (id === "thrift") return marco("#DCEFE6", (
+  if (id === "thrift") return marco("#C9F2DE", (
     <g>
       <path d="M38 104 L38 60 C38 34 48 28 60 28 C72 28 82 34 82 60 L82 104 Z" fill="#D9B46A" />
-      {busto("#F1CFB2", "#5E4FA0")}
+      {busto("#F1CFB2", "#7B5CF0")}
       <path d="M41 54 C42 37 52 32 60 32 C69 32 78 37 79 52 L73 49 L67 53 L61 48 L55 53 L49 49 Z" fill="#D9B46A" />
       <g transform="translate(78 86)">
         <ellipse cx="16" cy="14" rx="16" ry="12" fill="#E9A3B0" /><circle cx="29" cy="12" r="4" fill="#E9A3B0" />
@@ -51194,9 +51255,9 @@ function AvatarMentor({ id, tam }) {
       <circle cx="94" cy="76" r="6" fill="#F0A020" stroke="#B87500" strokeWidth="1.5" />
     </g>
   ));
-  if (id === "rinaldo") return marco("#DCE6F5", (
+  if (id === "rinaldo") return marco("#D3E4FF", (
     <g>
-      {busto("#C48A64", "#C8372B", <path d="M52 89 L60 100 L68 89" fill="none" stroke="#F8FAFC" strokeWidth="3" />)}
+      {busto("#C48A64", "#E8443A", <path d="M52 89 L60 100 L68 89" fill="none" stroke="#F8FAFC" strokeWidth="3" />)}
       <path d="M41 50 Q40 32 60 31 Q79 31 79 48 Q74 39 64 39 Q52 39 41 50 Z" fill="#14100E" />
       <g transform="translate(22 96)">
         <circle r="14" fill="#FFFFFF" stroke="#1B2433" strokeWidth="1.6" />
@@ -51204,7 +51265,7 @@ function AvatarMentor({ id, tam }) {
       </g>
     </g>
   ));
-  if (id === "nakamotto") return marco("#1F2A3C", (
+  if (id === "nakamotto") return marco("#3B2F7A", (
     <g>
       <path d="M20 124 C20 98 30 86 36 72 C36 40 46 24 60 24 C74 24 84 40 84 72 C90 86 100 98 100 124 Z" fill="#0F141C" />
       <path d="M44 70 C44 50 51 40 60 40 C69 40 76 50 76 70 C76 81 69 88 60 88 C51 88 44 81 44 70 Z" fill="#05070A" />
@@ -53114,10 +53175,10 @@ const NEG_BOCA = { neutro: "M-7 14 Q0 16 7 14", feliz: "M-9 12 Q0 22 9 12", seri
 const NEG_CEJA = { neutro: [-2, 0], feliz: [-3, 0], serio: [1, 6], enojado: [3, 14] };
 /* el aspecto de tu jefe sale del nombre de la firma: siempre el mismo */
 const LOOKS_JEFE = [
-  { piel: "#C48A64", pelo: "largo", colorPelo: "#2B201A", ropa: "#2C3A4F", lentes: true, n: "Tu jefa" },
-  { piel: "#EDC3A0", pelo: "corto", colorPelo: "#1B2433", ropa: "#2E5E9E", lentes: false, n: "Tu jefe" },
-  { piel: "#8A5A3C", pelo: "calvo", colorPelo: "#1B2433", ropa: "#B5532E", lentes: true, n: "Tu jefe" },
-  { piel: "#F0CBA8", pelo: "largo", colorPelo: "#B5532E", ropa: "#1F9D63", lentes: false, n: "Tu jefa" },
+  { piel: "#C48A64", pelo: "largo", colorPelo: "#2B201A", ropa: "#5B4BD6", lentes: true, n: "Tu jefa" },
+  { piel: "#EDC3A0", pelo: "corto", colorPelo: "#1B2433", ropa: "#2F7BE5", lentes: false, n: "Tu jefe" },
+  { piel: "#8A5A3C", pelo: "calvo", colorPelo: "#1B2433", ropa: "#D9542F", lentes: true, n: "Tu jefe" },
+  { piel: "#F0CBA8", pelo: "largo", colorPelo: "#D9542F", ropa: "#22B573", lentes: false, n: "Tu jefa" },
 ];
 const lookJefe = (firma) => {
   const t = texto(firma, "", 60);
@@ -53153,14 +53214,14 @@ function DestelloOficina({ look, sub, titulo, onFin }) {
   return (
     <div className="ea-flash" onClick={onFin}>
       <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <defs><linearGradient id="ea-cieloTarde" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2C3A4F" /><stop offset=".55" stopColor="#E0634A" /><stop offset="1" stopColor="#F0A020" /></linearGradient></defs>
-        <rect width="720" height="450" fill="#EEF2F6" />
+        <defs><linearGradient id="ea-cieloTarde" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5B4BD6" /><stop offset=".55" stopColor="#F2664B" /><stop offset="1" stopColor="#F0A020" /></linearGradient></defs>
+        <rect width="720" height="450" fill="#E8F1FB" />
         <rect x="110" y="30" width="500" height="250" rx="14" fill="url(#ea-cieloTarde)" />
         <circle cx="470" cy="210" r="48" fill="#F0A020" />
-        <path d="M110 236 Q240 196 360 222 T610 206 L610 280 L110 280 Z" fill="#5B6B82" />
-        <g fill="#1F2A3C"><rect x="140" y="180" width="30" height="100" /><rect x="178" y="150" width="40" height="130" /><rect x="400" y="170" width="36" height="110" /><rect x="444" y="140" width="46" height="140" /><rect x="520" y="190" width="40" height="90" /></g>
+        <path d="M110 236 Q240 196 360 222 T610 206 L610 280 L110 280 Z" fill="#9A8CF2" />
+        <g fill="#3B2F7A"><rect x="140" y="180" width="30" height="100" /><rect x="178" y="150" width="40" height="130" /><rect x="400" y="170" width="36" height="110" /><rect x="444" y="140" width="46" height="140" /><rect x="520" y="190" width="40" height="90" /></g>
         <rect x="356" y="30" width="8" height="250" fill="#FFFFFF" />
-        <rect y="290" width="720" height="160" fill="#DCE3EC" />
+        <rect y="290" width="720" height="160" fill="#F3E3CF" />
         <g className="ea-flashJefe" transform="translate(470 120) scale(1.4)">
           <path d="M-46 160 Q-46 92 0 88 Q46 92 46 160 Z" fill={look.ropa} /><path d="M0 88 Q46 92 46 160 L0 160 Z" fill="#0B1220" opacity=".08" />
           <rect x="-9" y="66" width="18" height="26" rx="8" fill={look.piel} />
@@ -53170,7 +53231,7 @@ function DestelloOficina({ look, sub, titulo, onFin }) {
           {look.lentes && <g fill="none" stroke="#1B2433" strokeWidth="2.4"><circle cx="-11" cy="40" r="8" /><circle cx="11" cy="40" r="8" /></g>}
           <ellipse cx="28" cy="44" rx="4" ry="7" fill={look.piel} />
         </g>
-        <rect x="40" y="320" width="640" height="28" rx="8" fill="#B5532E" />
+        <rect x="40" y="320" width="640" height="28" rx="8" fill="#D9542F" />
         <rect x="60" y="348" width="600" height="102" fill="#6E4630" />
         <rect x="290" y="300" width="140" height="22" rx="3" fill="#F8FAFC" transform="rotate(-5 360 311)" />
       </svg>
@@ -53316,7 +53377,7 @@ const golpeDe = (cierre, ano) => {
 };
 /* tú, en tu sala, con los brazos arriba o el ánimo por el piso */
 function TuEnLaSala({ sube }) {
-  const piel = "#EDC3A0", ropa = "#2E5E9E", pelo = "#1B2433";
+  const piel = "#EDC3A0", ropa = "#2F7BE5", pelo = "#1B2433";
   return (
     <g transform={`translate(${sube ? 230 : 190} ${sube ? 120 : 150}) scale(1.25)`}>
       <g className={sube ? "ea-golpeSalta" : "ea-golpeAgacha"}>
@@ -53343,31 +53404,31 @@ function SalaGolpe({ sube }) {
   return (
     <g>
       <defs>
-        <linearGradient id="ea-cieloSube" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5B6B82" /><stop offset=".6" stopColor="#EE8A55" /><stop offset="1" stopColor="#F0A020" /></linearGradient>
-        <linearGradient id="ea-cieloBaja" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#121A26" /><stop offset="1" stopColor="#1F2A3C" /></linearGradient>
+        <linearGradient id="ea-cieloSube" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#9A8CF2" /><stop offset=".6" stopColor="#FF9A5C" /><stop offset="1" stopColor="#F0A020" /></linearGradient>
+        <linearGradient id="ea-cieloBaja" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1E1846" /><stop offset="1" stopColor="#3B2F7A" /></linearGradient>
       </defs>
-      <rect width="720" height="450" fill={sube ? "#EEF2F6" : "#3D4A60"} />
-      <rect y="310" width="720" height="140" fill={sube ? "#DCE3EC" : "#1F2A3C"} />
+      <rect width="720" height="450" fill={sube ? "#E8F1FB" : "#4B4A7A"} />
+      <rect y="310" width="720" height="140" fill={sube ? "#F3E3CF" : "#3B2F7A"} />
       <rect x="430" y="50" width="230" height="200" rx="12" fill={sube ? "url(#ea-cieloSube)" : "url(#ea-cieloBaja)"} />
-      {sube ? <circle cx="560" cy="200" r="34" fill="#F0A020" /> : <circle cx="600" cy="100" r="16" fill="#CDD5E0" opacity=".5" />}
-      <g fill={sube ? "#2C3A4F" : "#0D131C"}><rect x="440" y="180" width="30" height="70" /><rect x="476" y="160" width="36" height="90" /><rect x="590" y="176" width="28" height="74" /><rect x="624" y="196" width="30" height="54" /></g>
+      {sube ? <circle cx="560" cy="200" r="34" fill="#F0A020" /> : <circle cx="600" cy="100" r="16" fill="#D6D2F0" opacity=".5" />}
+      <g fill={sube ? "#5B4BD6" : "#141032"}><rect x="440" y="180" width="30" height="70" /><rect x="476" y="160" width="36" height="90" /><rect x="590" y="176" width="28" height="74" /><rect x="624" y="196" width="30" height="54" /></g>
       {!sube && (
-        <g stroke="#9CC3E6" strokeWidth="2" opacity=".6" strokeLinecap="round">
+        <g stroke="#8FD0F5" strokeWidth="2" opacity=".6" strokeLinecap="round">
           {[450, 480, 510, 540, 570, 600, 630].map((x, i) => (
             <line key={x} className="ea-golpeGota" x1={x} y1="40" x2={x - 6} y2="58" style={{ animationDelay: (i * 0.13) + "s" }} />
           ))}
         </g>
       )}
       <rect x="541" y="50" width="8" height="200" fill={sube ? "#FFFFFF" : "#1B2433"} />
-      <rect x="40" y="250" width="300" height="70" rx="22" fill={sube ? "#E0634A" : "#2C3A4F"} />
-      <rect x="30" y="290" width="320" height="56" rx="18" fill={sube ? "#B5532E" : "#1F2A3C"} />
+      <rect x="40" y="250" width="300" height="70" rx="22" fill={sube ? "#F2664B" : "#5B4BD6"} />
+      <rect x="30" y="290" width="320" height="56" rx="18" fill={sube ? "#D9542F" : "#3B2F7A"} />
       <rect x="400" y="330" width="210" height="16" rx="6" fill={sube ? "#6E4630" : "#1B2433"} />
       <rect x="420" y="346" width="12" height="60" fill={sube ? "#6E4630" : "#1B2433"} /><rect x="578" y="346" width="12" height="60" fill={sube ? "#6E4630" : "#1B2433"} />
       <rect x="450" y="270" width="110" height="64" rx="6" fill="#1B2433" />
-      <rect x="456" y="276" width="98" height="52" rx="3" fill={sube ? "#F8FAFC" : "#121A26"} />
+      <rect x="456" y="276" width="98" height="52" rx="3" fill={sube ? "#F8FAFC" : "#1E1846"} />
       <polyline points={sube ? "462,318 480,310 494,314 512,298 528,300 548,282" : "462,284 480,290 494,286 512,304 528,300 548,322"}
-        fill="none" stroke={sube ? "#1F9D63" : "#D94436"} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="440" y="330" width="130" height="6" rx="3" fill="#1F2A3C" />
+        fill="none" stroke={sube ? "#22B573" : "#D94436"} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="440" y="330" width="130" height="6" rx="3" fill="#3B2F7A" />
     </g>
   );
 }
@@ -53398,7 +53459,7 @@ function GolpeDinero({ golpe, antes, despues, onFin }) {
             <g>
               {[60, 150, 250, 330, 420, 520, 610, 680].map((x, i) => (
                 <g key={x} className="ea-golpeBillete" style={{ animationDelay: (i * 0.32) + "s" }}>
-                  <rect x={x} y="0" width="38" height="20" rx="3" fill="#1F9D63" /><circle cx={x + 19} cy="10" r="5" fill="#9BDDB9" />
+                  <rect x={x} y="0" width="38" height="20" rx="3" fill="#22B573" /><circle cx={x + 19} cy="10" r="5" fill="#9BDDB9" />
                 </g>
               ))}
             </g>
@@ -53465,55 +53526,55 @@ function EscenaVida({ tipo, genero }) {
     return (
       <g>
         <defs><linearGradient id="ea-amanecer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#F7D2A8" /><stop offset="1" stopColor="#F0A020" /></linearGradient></defs>
-        <rect width="720" height="450" fill="#EEF4F1" /><rect y="300" width="720" height="150" fill="#DCE8E2" />
+        <rect width="720" height="450" fill="#E6F7EF" /><rect y="300" width="720" height="150" fill="#CDEEDD" />
         <rect x="460" y="50" width="200" height="170" rx="12" fill="url(#ea-amanecer)" /><circle cx="560" cy="200" r="40" fill="#FFFFFF" opacity=".9" />
         <rect x="556" y="50" width="8" height="170" fill="#F8FAFC" />
-        <rect x="96" y="70" width="6" height="230" fill="#B9C8C2" /><rect x="80" y="70" width="38" height="50" rx="10" fill="#FFFFFF" opacity=".9" />
-        <path d="M640 250 L640 300" stroke="#5B6B82" strokeWidth="2" /><ellipse cx="640" cy="232" rx="22" ry="26" fill="#E0634A" />
-        <rect x="150" y="240" width="300" height="60" rx="16" fill="#FFFFFF" /><rect x="150" y="280" width="300" height="70" rx="10" fill="#9CC3E6" />
-        <rect x="140" y="200" width="22" height="160" rx="8" fill="#B9C8C2" />
+        <rect x="96" y="70" width="6" height="230" fill="#9ED9BB" /><rect x="80" y="70" width="38" height="50" rx="10" fill="#FFFFFF" opacity=".9" />
+        <path d="M640 250 L640 300" stroke="#9A8CF2" strokeWidth="2" /><ellipse cx="640" cy="232" rx="22" ry="26" fill="#F2664B" />
+        <rect x="150" y="240" width="300" height="60" rx="16" fill="#FFFFFF" /><rect x="150" y="280" width="300" height="70" rx="10" fill="#8FD0F5" />
+        <rect x="140" y="200" width="22" height="160" rx="8" fill="#9ED9BB" />
         <PersonaVida x={250} y={130} s={1.1} {...ella} ropa="#FFFFFF" />
         <g transform="translate(252 250)" className="ea-vidaMece">
           <ellipse cx="0" cy="12" rx="34" ry="22" fill="#F0A020" /><circle cx="0" cy="-4" r="17" fill="#F0CBA8" />
           
           <path d="M-17 -8 Q0 -30 17 -8 Q0 -16 -17 -8" fill="#F0A020" />
         </g>
-        <PersonaVida x={410} y={110} s={1.25} {...el} ropa="#2E5E9E" />
-        <g className="ea-vidaFlota"><path d="M330 150 c-10-14 -30-4 -18 12 l18 16 l18-16 c12-16 -8-26 -18-12z" fill="#E0634A" /></g>
-        <g className="ea-vidaFlota" style={{ animationDelay: "1.4s" }}><path d="M370 170 c-7-10 -21-3 -13 8 l13 11 l13-11 c8-11 -6-18 -13-8z" fill="#EE8A55" /></g>
+        <PersonaVida x={410} y={110} s={1.25} {...el} ropa="#2F7BE5" />
+        <g className="ea-vidaFlota"><path d="M330 150 c-10-14 -30-4 -18 12 l18 16 l18-16 c12-16 -8-26 -18-12z" fill="#F2664B" /></g>
+        <g className="ea-vidaFlota" style={{ animationDelay: "1.4s" }}><path d="M370 170 c-7-10 -21-3 -13 8 l13 11 l13-11 c8-11 -6-18 -13-8z" fill="#FF9A5C" /></g>
       </g>
     );
   }
   if (tipo === "boda") {
     return (
       <g>
-        <rect width="720" height="450" fill="#EEF2F6" />
-        <path d="M260 260 L260 90 Q360 0 460 90 L460 260 Z" fill="#2C3A4F" />
-        <path d="M280 250 L280 100 Q360 26 440 100 L440 250 Z" fill="#5B6B82" />
-        <path d="M360 40 L360 250" stroke="#EEF2F6" strokeWidth="6" /><path d="M280 150 L440 150" stroke="#EEF2F6" strokeWidth="6" />
-        <circle cx="360" cy="110" r="26" fill="#F0A020" /><rect x="290" y="160" width="62" height="84" fill="#E0634A" /><rect x="368" y="160" width="62" height="84" fill="#EE8A55" />
-        <rect y="300" width="720" height="150" fill="#DCE3EC" />
-        <path d="M300 450 L340 300 L380 300 L420 450 Z" fill="#B5532E" opacity=".85" />
+        <rect width="720" height="450" fill="#E8F1FB" />
+        <path d="M260 260 L260 90 Q360 0 460 90 L460 260 Z" fill="#5B4BD6" />
+        <path d="M280 250 L280 100 Q360 26 440 100 L440 250 Z" fill="#9A8CF2" />
+        <path d="M360 40 L360 250" stroke="#E8F1FB" strokeWidth="6" /><path d="M280 150 L440 150" stroke="#E8F1FB" strokeWidth="6" />
+        <circle cx="360" cy="110" r="26" fill="#F0A020" /><rect x="290" y="160" width="62" height="84" fill="#F2664B" /><rect x="368" y="160" width="62" height="84" fill="#FF9A5C" />
+        <rect y="300" width="720" height="150" fill="#F3E3CF" />
+        <path d="M300 450 L340 300 L380 300 L420 450 Z" fill="#D9542F" opacity=".85" />
         <rect x="40" y="320" width="200" height="26" rx="6" fill="#6E4630" /><rect x="480" y="320" width="200" height="26" rx="6" fill="#6E4630" />
         <circle cx="200" cy="260" r="26" fill="#FFFFFF" /><circle cx="226" cy="250" r="18" fill="#F0A020" /><circle cx="520" cy="260" r="26" fill="#FFFFFF" /><circle cx="494" cy="250" r="18" fill="#F0A020" />
         <PersonaVida x={300} y={150} s={1.15} {...el} ropa="#1B2433" corbata="#F0A020" />
         <PersonaVida x={420} y={150} s={1.15} {...ella} ropa="#FFFFFF" falda={300} velo />
         {[40, 120, 200, 300, 380, 470, 560, 640, 700].map((x, i) => (
-          <ellipse key={x} className="ea-vidaPetalo" cx={x} cy="0" rx="7" ry="4" fill={i % 2 ? "#F0A020" : "#E0634A"} style={{ animationDelay: (i * 0.35) + "s" }} />
+          <ellipse key={x} className="ea-vidaPetalo" cx={x} cy="0" rx="7" ry="4" fill={i % 2 ? "#F0A020" : "#F2664B"} style={{ animationDelay: (i * 0.35) + "s" }} />
         ))}
       </g>
     );
   }
   return (
     <g>
-      <defs><linearGradient id="ea-cieloGris" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3D4A60" /><stop offset="1" stopColor="#8794A8" /></linearGradient></defs>
+      <defs><linearGradient id="ea-cieloGris" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4B4A7A" /><stop offset="1" stopColor="#9A95C2" /></linearGradient></defs>
       <rect width="720" height="450" fill="url(#ea-cieloGris)" />
-      <path d="M0 260 Q180 220 360 250 T720 236 L720 450 L0 450 Z" fill="#556178" />
-      <path d="M0 300 Q200 280 400 300 T720 290 L720 450 L0 450 Z" fill="#1F2A3C" />
+      <path d="M0 260 Q180 220 360 250 T720 236 L720 450 L0 450 Z" fill="#5E5A8F" />
+      <path d="M0 300 Q200 280 400 300 T720 290 L720 450 L0 450 Z" fill="#3B2F7A" />
       <g fill="#1B2433" opacity=".7"><rect x="80" y="230" width="30" height="44" rx="12" /><rect x="600" y="222" width="34" height="50" rx="14" /><rect x="660" y="236" width="24" height="36" rx="10" /></g>
-      <path d="M470 330 L470 230 Q510 196 550 230 L550 330 Z" fill="#CDD5E0" />
-      <rect x="490" y="252" width="40" height="4" rx="2" fill="#8794A8" /><rect x="482" y="264" width="56" height="4" rx="2" fill="#8794A8" />
-      <circle cx="486" cy="330" r="9" fill="#E0634A" /><circle cx="500" cy="334" r="9" fill="#F0A020" /><circle cx="514" cy="330" r="9" fill="#FFFFFF" />
+      <path d="M470 330 L470 230 Q510 196 550 230 L550 330 Z" fill="#D6D2F0" />
+      <rect x="490" y="252" width="40" height="4" rx="2" fill="#9A95C2" /><rect x="482" y="264" width="56" height="4" rx="2" fill="#9A95C2" />
+      <circle cx="486" cy="330" r="9" fill="#F2664B" /><circle cx="500" cy="334" r="9" fill="#F0A020" /><circle cx="514" cy="330" r="9" fill="#FFFFFF" />
       <g stroke="#CFE4F2" strokeWidth="2" opacity=".5" strokeLinecap="round">
         {Array.from({ length: 22 }, (_, i) => (
           <line key={i} className="ea-vidaLluvia" x1={i * 34 + 10} y1="0" x2={i * 34 + 4} y2="18" style={{ animationDelay: (i % 7) * 0.11 + "s" }} />
@@ -53521,7 +53582,7 @@ function EscenaVida({ tipo, genero }) {
       </g>
       <g transform="translate(290 150)"><path d="M-90 0 Q0 -70 90 0 Z" fill="#1B2433" /><path d="M0 0 L0 90" stroke="#1B2433" strokeWidth="5" /></g>
       <PersonaVida x={250} y={150} s={1.1} {...L.tu} ropa="#1B2433" cara="triste" lagrima />
-      <PersonaVida x={340} y={156} s={1.05} {...L.pareja} ropa="#1F2A3C" cara="triste" />
+      <PersonaVida x={340} y={156} s={1.05} {...L.pareja} ropa="#3B2F7A" cara="triste" />
     </g>
   );
 }
@@ -53529,12 +53590,12 @@ function EscenaVida({ tipo, genero }) {
 function OficinaVida({ gris }) {
   return (
     <g>
-      <defs><linearGradient id={gris ? "ea-tardeGris" : "ea-tardeOro"} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={gris ? "#6C788C" : "#2C3A4F"} /><stop offset="1" stopColor={gris ? "#A9B3C2" : "#F0A020"} /></linearGradient></defs>
-      <rect width="720" height="450" fill={gris ? "#D5DBE3" : "#EEF2F6"} />
+      <defs><linearGradient id={gris ? "ea-tardeGris" : "ea-tardeOro"} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={gris ? "#7A76A8" : "#5B4BD6"} /><stop offset="1" stopColor={gris ? "#B4AED8" : "#F0A020"} /></linearGradient></defs>
+      <rect width="720" height="450" fill={gris ? "#E2DEF3" : "#E8F1FB"} />
       <rect x="140" y="40" width="440" height="200" rx="14" fill={gris ? "url(#ea-tardeGris)" : "url(#ea-tardeOro)"} />
-      <g fill={gris ? "#4F5B70" : "#1F2A3C"}><rect x="160" y="150" width="34" height="90" /><rect x="202" y="120" width="40" height="120" /><rect x="420" y="140" width="40" height="100" /><rect x="470" y="110" width="44" height="130" /></g>
+      <g fill={gris ? "#55528A" : "#3B2F7A"}><rect x="160" y="150" width="34" height="90" /><rect x="202" y="120" width="40" height="120" /><rect x="420" y="140" width="40" height="100" /><rect x="470" y="110" width="44" height="130" /></g>
       <rect x="356" y="40" width="8" height="200" fill="#FFFFFF" />
-      <rect y="290" width="720" height="160" fill={gris ? "#C1C9D4" : "#DCE3EC"} />
+      <rect y="290" width="720" height="160" fill={gris ? "#CBC5E6" : "#F3E3CF"} />
     </g>
   );
 }
@@ -53546,13 +53607,13 @@ function EscenaCarrera({ tipo, genero, cargo }) {
         <OficinaVida />
         <rect x="270" y="88" width="180" height="34" rx="6" fill="#1B2433" />
         <text x="360" y="111" textAnchor="middle" fill="#F0A020" fontFamily="Geist, system-ui, sans-serif" fontWeight="800" fontSize="15">{texto(cargo, "", 22).toUpperCase()}</text>
-        <g className="ea-vidaAplaude"><PersonaVida x={150} y={170} {...LOOK_LARGO} ropa="#2C3A4F" /></g>
-        <g className="ea-vidaAplaude"><PersonaVida x={570} y={170} piel="#8A5A3C" pelo="corto" colorPelo="#1B2433" ropa="#1F9D63" /></g>
+        <g className="ea-vidaAplaude"><PersonaVida x={150} y={170} {...LOOK_LARGO} ropa="#5B4BD6" /></g>
+        <g className="ea-vidaAplaude"><PersonaVida x={570} y={170} piel="#8A5A3C" pelo="corto" colorPelo="#1B2433" ropa="#22B573" /></g>
         <g stroke="#1B2433" strokeWidth="23" strokeLinecap="round"><path d="M313 285 L277 210" /><path d="M407 285 L443 210" /></g>
         <g fill={L.tu.piel}><circle cx="276" cy="208" r="13" /><circle cx="444" cy="208" r="13" /></g>
         <PersonaVida x={360} y={150} s={1.3} {...L.tu} ropa="#1B2433" corbata="#F0A020" />
         {[50, 130, 210, 290, 430, 510, 590, 670].map((x, i) => (
-          <rect key={x} className="ea-vidaPetalo" x={x} y="0" width="10" height="16" rx="2" fill={["#F0A020", "#E0634A", "#5B6B82", "#1F9D63"][i % 4]} style={{ animationDelay: (i * 0.3) + "s" }} />
+          <rect key={x} className="ea-vidaPetalo" x={x} y="0" width="10" height="16" rx="2" fill={["#F0A020", "#F2664B", "#9A8CF2", "#22B573"][i % 4]} style={{ animationDelay: (i * 0.3) + "s" }} />
         ))}
       </g>
     );
@@ -53561,28 +53622,28 @@ function EscenaCarrera({ tipo, genero, cargo }) {
     return (
       <g>
         <OficinaVida gris />
-        <PersonaVida x={540} y={168} {...LOOK_LARGO} ropa="#2C3A4F" cara="triste" />
-        <PersonaVida x={290} y={150} s={1.3} {...L.tu} ropa="#1F2A3C" cara="triste" lagrima />
+        <PersonaVida x={540} y={168} {...LOOK_LARGO} ropa="#5B4BD6" cara="triste" />
+        <PersonaVida x={290} y={150} s={1.3} {...L.tu} ropa="#3B2F7A" cara="triste" lagrima />
         <rect x="216" y="280" width="150" height="90" rx="6" fill="#B08460" /><rect x="216" y="280" width="150" height="18" fill="#8C6545" />
-        <path d="M250 280 Q236 236 256 214 Q262 250 250 280 M262 280 Q262 230 290 222 Q280 256 262 280" fill="#1F9D63" />
-        <g transform="rotate(8 320 264)"><rect x="300" y="244" width="40" height="40" rx="3" fill="#FFFFFF" /><rect x="306" y="250" width="28" height="26" fill="#5B6B82" /></g>
+        <path d="M250 280 Q236 236 256 214 Q262 250 250 280 M262 280 Q262 230 290 222 Q280 256 262 280" fill="#22B573" />
+        <g transform="rotate(8 320 264)"><rect x="300" y="244" width="40" height="40" rx="3" fill="#FFFFFF" /><rect x="306" y="250" width="28" height="26" fill="#9A8CF2" /></g>
       </g>
     );
   }
   return (
     <g>
-      <defs><linearGradient id="ea-cieloCasa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5B6B82" /><stop offset=".6" stopColor="#EE8A55" /><stop offset="1" stopColor="#F0A020" /></linearGradient></defs>
+      <defs><linearGradient id="ea-cieloCasa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#9A8CF2" /><stop offset=".6" stopColor="#FF9A5C" /><stop offset="1" stopColor="#F0A020" /></linearGradient></defs>
       <rect width="720" height="450" fill="url(#ea-cieloCasa)" />
       <circle cx="600" cy="150" r="46" fill="#F0A020" />
-      <path d="M0 300 Q200 270 400 296 T720 284 L720 450 L0 450 Z" fill="#2C3A4F" />
-      <rect y="330" width="720" height="120" fill="#1F9D63" />
-      <rect x="380" y="170" width="250" height="170" fill="#FFFFFF" /><path d="M360 176 L505 70 L650 176 Z" fill="#E0634A" />
+      <path d="M0 300 Q200 270 400 296 T720 284 L720 450 L0 450 Z" fill="#5B4BD6" />
+      <rect y="330" width="720" height="120" fill="#22B573" />
+      <rect x="380" y="170" width="250" height="170" fill="#FFFFFF" /><path d="M360 176 L505 70 L650 176 Z" fill="#F2664B" />
       <rect x="480" y="250" width="54" height="90" rx="4" fill="#6E4630" /><circle cx="524" cy="298" r="4" fill="#F0A020" />
-      <rect x="406" y="210" width="50" height="44" rx="4" fill="#9CC3E6" /><rect x="556" y="210" width="50" height="44" rx="4" fill="#9CC3E6" />
+      <rect x="406" y="210" width="50" height="44" rx="4" fill="#8FD0F5" /><rect x="556" y="210" width="50" height="44" rx="4" fill="#8FD0F5" />
       <rect x="300" y="250" width="6" height="90" fill="#6E4630" /><rect x="250" y="236" width="110" height="40" rx="6" fill="#F8FAFC" />
-      <text x="305" y="263" textAnchor="middle" fill="#C8372B" fontFamily="Geist, system-ui, sans-serif" fontWeight="800" fontSize="17" transform="rotate(-6 305 258)">¡VENDIDA!</text>
-      <path d="M213 285 L259 244" stroke="#2E5E9E" strokeWidth="22" strokeLinecap="round" />
-      <PersonaVida x={170} y={160} s={1.2} {...L.tu} ropa="#2E5E9E" />
+      <text x="305" y="263" textAnchor="middle" fill="#E8443A" fontFamily="Geist, system-ui, sans-serif" fontWeight="800" fontSize="17" transform="rotate(-6 305 258)">¡VENDIDA!</text>
+      <path d="M213 285 L259 244" stroke="#2F7BE5" strokeWidth="22" strokeLinecap="round" />
+      <PersonaVida x={170} y={160} s={1.2} {...L.tu} ropa="#2F7BE5" />
       <g className="ea-vidaLlave">
         <circle cx="262" cy="232" r="12" fill="none" stroke="#F0A020" strokeWidth="6" /><path d="M272 240 L296 262 M286 252 L280 258 M292 258 L286 264" stroke="#F0A020" strokeWidth="6" strokeLinecap="round" />
       </g>
@@ -53711,14 +53772,14 @@ function EscenaSusto({ tipo, genero, apurado }) {
   if (tipo === "asalto") {
     return (
       <g>
-        <rect width="720" height="450" fill="#121A26" /><rect width="720" height="300" fill="#1B2433" />
-        <g fill="#0D131C"><rect x="20" y="60" width="120" height="240" /><rect x="560" y="40" width="150" height="260" /></g>
+        <rect width="720" height="450" fill="#1E1846" /><rect width="720" height="300" fill="#1B2433" />
+        <g fill="#141032"><rect x="20" y="60" width="120" height="240" /><rect x="560" y="40" width="150" height="260" /></g>
         <g fill="#F0A020" opacity=".7"><rect x="40" y="90" width="16" height="20" /><rect x="90" y="140" width="16" height="20" /><rect x="590" y="80" width="16" height="20" /><rect x="640" y="150" width="16" height="20" /></g>
-        <rect x="360" y="60" width="8" height="240" fill="#1F2A3C" /><path d="M364 64 L330 74" stroke="#1F2A3C" strokeWidth="8" />
+        <rect x="360" y="60" width="8" height="240" fill="#3B2F7A" /><path d="M364 64 L330 74" stroke="#3B2F7A" strokeWidth="8" />
         <ellipse cx="330" cy="300" rx="160" ry="40" fill="#F0A020" opacity=".18" /><circle cx="330" cy="78" r="12" fill="#F0A020" />
-        <rect y="300" width="720" height="150" fill="#1F2A3C" />
-        <g className={apurado ? "ea-sustoTiembla" : ""}><PersonaSusto x={240} y={130} s={1.25} {...tu} ropa="#2E5E9E" /></g>
-        <PersonaSusto x={460} y={125} s={1.3} piel="#8A5A3C" ropa="#0D131C" cara="malo" gorra="#1F2A3C" mascara />
+        <rect y="300" width="720" height="150" fill="#3B2F7A" />
+        <g className={apurado ? "ea-sustoTiembla" : ""}><PersonaSusto x={240} y={130} s={1.25} {...tu} ropa="#2F7BE5" /></g>
+        <PersonaSusto x={460} y={125} s={1.3} piel="#8A5A3C" ropa="#141032" cara="malo" gorra="#3B2F7A" mascara />
       </g>
     );
   }
@@ -53728,27 +53789,27 @@ function EscenaSusto({ tipo, genero, apurado }) {
         <rect width="720" height="450" fill="#1B2433" />
         {[0, 1, 2].map((i) => (
           <g key={i} transform={`translate(${70 + i * 200} 50)`}>
-            <rect width="180" height="120" rx="8" fill="#0D131C" />
+            <rect width="180" height="120" rx="8" fill="#141032" />
             <polyline className="ea-sustoParpadea" points="12,22 40,30 62,26 90,58 118,52 146,96 168,104" fill="none" stroke="#D94436" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" />
             <text x="150" y="24" textAnchor="end" fill="#D94436" fontFamily="Geist, system-ui, sans-serif" fontWeight="800" fontSize="16">{["−18%", "−22%", "−31%"][i]}</text>
           </g>
         ))}
-        <rect y="300" width="720" height="150" fill="#1F2A3C" /><rect x="80" y="290" width="560" height="22" rx="6" fill="#6E4630" />
+        <rect y="300" width="720" height="150" fill="#3B2F7A" /><rect x="80" y="290" width="560" height="22" rx="6" fill="#6E4630" />
         <PersonaSusto x={360} y={130} s={1.3} {...tu} ropa="#1B2433" />
-        <g transform="translate(520 250)"><g className="ea-sustoVibra"><rect width="34" height="56" rx="6" fill="#0D131C" /><rect x="4" y="6" width="26" height="40" rx="3" fill="#D94436" /></g></g>
+        <g transform="translate(520 250)"><g className="ea-sustoVibra"><rect width="34" height="56" rx="6" fill="#141032" /><rect x="4" y="6" width="26" height="40" rx="3" fill="#D94436" /></g></g>
       </g>
     );
   }
   return (
     <g>
-      <rect width="720" height="450" fill="#EEF2F6" /><rect y="300" width="720" height="150" fill="#DCE3EC" />
-      <rect x="430" y="50" width="220" height="180" rx="12" fill="#9CC3E6" />
-      <PersonaSusto x={240} y={130} s={1.25} {...tu} ropa="#1F9D63" />
+      <rect width="720" height="450" fill="#E8F1FB" /><rect y="300" width="720" height="150" fill="#F3E3CF" />
+      <rect x="430" y="50" width="220" height="180" rx="12" fill="#8FD0F5" />
+      <PersonaSusto x={240} y={130} s={1.25} {...tu} ropa="#22B573" />
       <g transform="translate(360 150)"><g className="ea-sustoVibra">
         <rect width="120" height="210" rx="16" fill="#1B2433" /><rect x="8" y="14" width="104" height="182" rx="8" fill="#F8FAFC" />
         <text x="60" y="56" textAnchor="middle" fill="#1B2433" fontFamily="Geist, system-ui, sans-serif" fontWeight="800" fontSize="13">«Tu banco»</text>
-        <text x="60" y="76" textAnchor="middle" fill="#5B6B82" fontFamily="Geist, system-ui, sans-serif" fontSize="11">número oculto</text>
-        <circle cx="34" cy="160" r="16" fill="#D94436" /><circle cx="86" cy="160" r="16" fill="#1F9D63" />
+        <text x="60" y="76" textAnchor="middle" fill="#9A8CF2" fontFamily="Geist, system-ui, sans-serif" fontSize="11">número oculto</text>
+        <circle cx="34" cy="160" r="16" fill="#D94436" /><circle cx="86" cy="160" r="16" fill="#22B573" />
       </g></g>
     </g>
   );
@@ -56787,77 +56848,40 @@ function InformeVida({ s, patrimonio, gasto, cobertura }) {
   );
 }
 
-/* ---- los gráficos del cierre de cada año ----
-   A la izquierda, tu patrimonio etapa por etapa con la de ahora marcada.
-   A la derecha, el puente: de dónde vino y a dónde se fue la plata de
-   esta etapa, barra por barra, como lo presenta un analista. */
-function GraficoCierre({ histo, partes, ini, fin }) {
-  const serie = (Array.isArray(histo) ? histo : []).map((x) => numero(x, 0)).slice(-16);
-  if (serie.length && Math.abs(serie[serie.length - 1] - fin) > 0.5) serie.push(fin);
-  const AN = 300, AL = 150, PIE = 18, TOP = 14;
-  /* las velas */
-  let velas = null;
-  if (serie.length >= 2) {
-    const mn = Math.min(0, Math.min.apply(null, serie)), mx = Math.max(1, Math.max.apply(null, serie));
-    const y = (v) => TOP + (1 - (v - mn) / (mx - mn || 1)) * (AL - TOP - PIE);
-    const n = serie.length - 1, paso = (AN - 46) / n, ancho = Math.max(3, Math.min(16, paso * 0.62));
-    velas = (
-      <svg className="ea-cierreGraf" viewBox={"0 0 " + AN + " " + AL} role="img" aria-label="Tu patrimonio etapa por etapa">
-        {[mn, (mn + mx) / 2, mx].map((v, i) => (
-          <g key={i}><line x1="2" x2={AN - 44} y1={y(v)} y2={y(v)} className="ea-velasRej" />
-            <text x={AN - 40} y={y(v) + 3.5} className="ea-velasEje">{fmtCorto(v)}</text></g>
-        ))}
-        {serie.slice(1).map((v, k) => {
-          const a = serie[k], cx = 2 + paso * k + paso / 2;
-          const top = y(Math.max(a, v)), bot = y(Math.min(a, v));
-          const ult = k === n - 1;
-          return (
-            <g key={k} className={"ea-vela " + (v >= a ? "v" : "r") + (ult ? " ult" : "")} style={{ animationDelay: (1.4 + k * 0.04).toFixed(2) + "s" }}>
-              <rect x={cx - ancho / 2} width={ancho} y={top} height={Math.max(1.4, bot - top)} rx="1" />
-            </g>
-          );
-        })}
-        <text x="2" y={AL - 4} className="ea-velasEje">Etapas anteriores → esta</text>
-      </svg>
-    );
-  }
-  /* el puente */
-  let puente = null;
-  if (partes) {
-    const pasos = [["Sueldo", partes.sueldo], ["Decisión", partes.decisiones], ["Mercado", partes.mercados],
-      ["Empresa", partes.camino], ["Otros", partes.otros]].filter(([, v]) => Number.isFinite(v) && Math.abs(v) >= 1);
-    const barras = [{ n: "Inicio", de: 0, a: ini, tot: true }];
-    let acc = ini;
-    pasos.forEach(([n, v]) => { barras.push({ n, de: acc, a: acc + v, v }); acc += v; });
-    barras.push({ n: "Cierre", de: 0, a: fin, tot: true });
-    const vals = barras.reduce((l, b) => l.concat([b.de, b.a]), [0]);
-    const mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
-    const y = (v) => TOP + 10 + (1 - (v - mn) / (mx - mn || 1)) * (AL - TOP - PIE - 12);
-    const paso = AN / barras.length, ancho = Math.min(34, paso * 0.6);
-    puente = (
-      <svg className="ea-cierreGraf" viewBox={"0 0 " + AN + " " + AL} role="img" aria-label="De dónde salió la plata de esta etapa">
-        <line x1="0" x2={AN} y1={y(0)} y2={y(0)} className="ea-informeCero" />
-        {barras.map((b, i) => {
-          const cx = paso * i + paso / 2, top = y(Math.max(b.de, b.a)), bot = y(Math.min(b.de, b.a));
-          const cls = b.tot ? "tot" : b.v >= 0 ? "v" : "r";
-          return (
-            <g key={i} className={"ea-puente " + cls} style={{ animationDelay: (1.5 + i * 0.12).toFixed(2) + "s" }}>
-              <rect x={cx - ancho / 2} width={ancho} y={top} height={Math.max(1.4, bot - top)} rx="1" />
-              {i < barras.length - 1 && <line x1={cx + ancho / 2} x2={cx + paso - ancho / 2} y1={y(b.a)} y2={y(b.a)} className="ea-puenteLazo" />}
-              <text x={cx} y={top - 4} textAnchor="middle" className="ea-puenteV">{b.tot ? fmtCorto(b.a) : (b.v >= 0 ? "+" : "−") + fmtCorto(Math.abs(b.v))}</text>
-              <text x={cx} y={AL - 4} textAnchor="middle" className="ea-puenteN">{b.n}</text>
-            </g>
-          );
-        })}
-      </svg>
-    );
-  }
-  if (!velas && !puente) return null;
+/* ---- el gráfico del cierre de cada año ----
+   Una sola línea: tu patrimonio etapa por etapa, de cuando empezaste a
+   hoy, con el tramo de esta etapa marcado. */
+function GraficoCierre({ histo, fin, ini }) {
+  const serie = (Array.isArray(histo) ? histo : []).map((x) => numero(x, 0)).slice(-30);
+  if (!serie.length || Math.abs(serie[serie.length - 1] - fin) > 0.5) serie.push(fin);
+  if (serie.length < 2) return null;
+  const AN = 640, AL = 190, IZQ = 6, DER = 64, ARR = 16, ABA = 22;
+  const mn = Math.min(0, Math.min.apply(null, serie)), mx = Math.max(1, Math.max.apply(null, serie));
+  const y = (v) => ARR + (1 - (v - mn) / (mx - mn || 1)) * (AL - ARR - ABA);
+  const n = serie.length - 1;
+  const x = (i) => IZQ + (i / n) * (AN - IZQ - DER);
+  const pts = serie.map((v, i) => [x(i), y(v)]);
+  const linea = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const area = linea + ' L' + x(n).toFixed(1) + ' ' + y(mn).toFixed(1) + ' L' + x(0).toFixed(1) + ' ' + y(mn).toFixed(1) + ' Z';
+  const sube = fin >= ini;
+  const ult = pts[n], pen = pts[n - 1];
+  const rejilla = [mn, mn + (mx - mn) / 2, mx];
   return (
-    <div className="ea-cierreGrafs">
-      {velas && <figure><figcaption>Tu patrimonio</figcaption>{velas}</figure>}
-      {puente && <figure><figcaption>De dónde salió</figcaption>{puente}</figure>}
-    </div>
+    <figure className={'ea-cierreGraf1 ' + (sube ? 'tt-sube' : 'tt-baja')}>
+      <figcaption><span>Tu patrimonio</span><span className={sube ? 'tt-sube' : 'tt-baja'}>{(sube ? '+' : '−') + fmtCorto(Math.abs(fin - ini))} esta etapa</span></figcaption>
+      <svg viewBox={'0 0 ' + AN + ' ' + AL} role='img' aria-label='Tu patrimonio etapa por etapa'>
+        {rejilla.map((v, i) => (
+          <g key={i}><line x1={IZQ} x2={AN - DER} y1={y(v)} y2={y(v)} className='ea-velasRej' />
+            <text x={AN - DER + 6} y={y(v) + 3.5} className='ea-velasEje'>{fmtCorto(v)}</text></g>
+        ))}
+        <path d={area} className='ea-lineaArea' />
+        <path d={linea} className='ea-lineaTrazo' />
+        <line x1={pen[0]} y1={pen[1]} x2={ult[0]} y2={ult[1]} className='ea-lineaUlt' />
+        {pts.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={i === n ? 4.5 : 2.4} className={i === n ? 'ea-lineaPuntoUlt' : 'ea-lineaPunto'} />)}
+        <text x={IZQ} y={AL - 5} className='ea-velasEje'>Empezaste</text>
+        <text x={AN - DER} y={AL - 5} textAnchor='end' className='ea-velasEje'>Hoy</text>
+      </svg>
+    </figure>
   );
 }
 function Anillo({ k, v }) {
@@ -60782,7 +60806,7 @@ function Motor() {
                         <div className={"ea-item" + (activo ? " tuyo" : "")} key={b.id}>
                           <div className="ea-itemTop">
                             <span className="ea-itemN ea-itemConIco">
-                              <span className="ea-itemEmoji" aria-hidden="true">{b.e}</span>{b.n}
+                              <span className="ea-itemEmoji" aria-hidden="true"><IcoLinea e={b.e} tam={20} /></span>{b.n}
                             </span>
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(precio)}</span>
                           </div>
@@ -61669,7 +61693,7 @@ function Motor() {
               style={{ animationDelay: "1.5s" }}>
               {dif < 1 ? "Te quedaste igual" : (sube ? "Ganaste USD " : "Perdiste USD ") + fmt(dif)}
             </div>
-            <GraficoCierre histo={cierre.histo} partes={cierre.partes} ini={ini} fin={fin} />
+            <GraficoCierre histo={cierre.histo} ini={ini} fin={fin} />
             <Desglose partes={cierre.partes} oscuro />
             <EnQueInvertiste cartera={cierre.cartera} />
             {cierre.camino && cierre.camino.t && (

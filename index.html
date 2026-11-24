@@ -2396,11 +2396,11 @@ const CSS_TT = `
 
 /* ---- los iconos de compras, como pequeñas fichas ---- */
 .ea-tt .ea-itemEmoji{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;
-  border:1px solid #E1E6EC;border-radius:3px;background:#F8F9FB;margin-right:10px;font-size:0}
+  border:1px solid #E1E6EC;border-radius:3px;background:#F8F9FB;margin-right:10px;font-size:18px}
 .ea-tt .ea-itemEmoji .ea-icoL{margin:0;color:#B35F00}
 .ea-tt .ea-grupoE{display:inline-flex;align-items:center;margin-right:6px}
-.ea-tt .ea-genteE{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;font-size:0;
-  border:1px solid #E1E6EC;border-radius:3px;background:#F8F9FB}
+.ea-tt .ea-genteE{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;font-size:18px;
+  border:1px solid #E1E6EC;border-radius:3px;background:#F8F9FB;font-size:18px}
 .ea-tt .ea-genteE .ea-icoL{margin:0}
 .ea-tt .ea-puenteN{fill:#6A7686;font:500 8.5px var(--f-num)}
 
@@ -2409,6 +2409,36 @@ const CSS_TT = `
 .ea-root.ea-tt .ea-boostIco .ea-icoL{margin-right:2px}
 .ea-root.ea-tt .ea-boostIco:hover:not(:disabled){border-color:#F08C00;background:rgba(240,140,0,0.1)}
 .ea-root.ea-tt .ea-boostIco.vence{border-color:#F08C00;color:#B35F00;background:rgba(240,140,0,0.1)}
+
+/* ---- la respuesta en los minijuegos: verde la correcta, rojo la tuya si fallaste ---- */
+.ea-root.ea-tt .ea-op.ok{background:rgba(14,150,84,.12);border-color:#0E9654;color:#0B1220;box-shadow:inset 4px 0 0 #0E9654;opacity:1}
+.ea-root.ea-tt .ea-op.no{background:rgba(208,52,42,.10);border-color:#D0342A;color:#0B1220;box-shadow:inset 4px 0 0 #D0342A;opacity:1}
+.ea-root.ea-tt .ea-op.ok .ea-opN{background:#0E9654;color:#FFFFFE}
+.ea-root.ea-tt .ea-op.no .ea-opN{background:#D0342A;color:#FFFFFE}
+.ea-root.ea-tt .ea-op.ok::after,.ea-root.ea-tt .ea-op.no::after{float:right;font:600 11px var(--f-num);letter-spacing:.06em;margin-left:10px;padding:2px 7px;border-radius:2px}
+.ea-root.ea-tt .ea-op.ok::after{content:"✓ CORRECTA";color:#FFFFFE;background:#0E9654}
+.ea-root.ea-tt .ea-op.no::after{content:"✗ TU RESPUESTA";color:#FFFFFE;background:#D0342A}
+.ea-root.ea-tt .ea-op:disabled:not(.ok):not(.no){opacity:.5}
+.ea-root.ea-tt .ea-check.bien{background:rgba(14,150,84,.12);border-color:#0E9654;box-shadow:inset 4px 0 0 #0E9654}
+.ea-root.ea-tt .ea-check.mal{background:rgba(208,52,42,.10);border-color:#D0342A;box-shadow:inset 4px 0 0 #D0342A}
+.ea-root.ea-tt .ea-sen.bien{color:#0E9654} .ea-root.ea-tt .ea-sen.mal{color:#D0342A}
+
+/* ---- el cierre: una sola línea con tu patrimonio ---- */
+.ea-tt .ea-cierreGraf1{margin:14px auto 6px;width:100%;max-width:640px;border:1px solid #D9DFE7;border-radius:3px;background:#FFFFFF;
+  padding:10px 12px 6px;text-align:left;animation:ea-ttAparece .5s 1.3s both}
+.ea-tt .ea-cierreGraf1 figcaption{display:flex;justify-content:space-between;gap:10px;font:600 10.5px var(--f-num);letter-spacing:.12em;
+  text-transform:uppercase;color:#B35F00;margin-bottom:4px}
+.ea-tt .ea-cierreGraf1 figcaption .tt-sube{color:#0E9654} .ea-tt .ea-cierreGraf1 figcaption .tt-baja{color:#D0342A}
+.ea-tt .ea-cierreGraf1 svg{display:block;width:100%;height:auto;overflow:visible}
+.ea-tt .ea-lineaTrazo{fill:none;stroke:#F08C00;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;
+  stroke-dasharray:2400;stroke-dashoffset:2400;animation:ea-ttTrazo 1.8s 1.4s ease-out forwards}
+.ea-tt .ea-lineaArea{fill:#F08C00;opacity:.08}
+.ea-tt .ea-lineaPunto{fill:#FFFFFF;stroke:#F08C00;stroke-width:1.5}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaUlt{stroke:#0E9654;stroke-width:3.2;stroke-linecap:round}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaUlt{stroke:#D0342A;stroke-width:3.2;stroke-linecap:round}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaPuntoUlt{fill:#0E9654;stroke:#FFFFFF;stroke-width:2}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaPuntoUlt{fill:#D0342A;stroke:#FFFFFF;stroke-width:2}
+.ea-quieto.ea-tt .ea-cierreGraf1,.ea-quieto.ea-tt .ea-lineaTrazo{animation:none;stroke-dashoffset:0}
 `;
 
 /* la misma terminal, en fondo negro (se genera de la blanca) */
@@ -2796,11 +2826,11 @@ const CSS_TT_NOCHE = `
 
 /* ---- los iconos de compras, como pequeñas fichas ---- */
 .ea-tt .ea-itemEmoji{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;
-  border:1px solid #1A232E;border-radius:3px;background:#0E141C;margin-right:10px;font-size:0}
+  border:1px solid #1A232E;border-radius:3px;background:#0E141C;margin-right:10px;font-size:18px}
 .ea-tt .ea-itemEmoji .ea-icoL{margin:0;color:#FFB84D}
 .ea-tt .ea-grupoE{display:inline-flex;align-items:center;margin-right:6px}
-.ea-tt .ea-genteE{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;font-size:0;
-  border:1px solid #1A232E;border-radius:3px;background:#0E141C}
+.ea-tt .ea-genteE{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;font-size:18px;
+  border:1px solid #1A232E;border-radius:3px;background:#0E141C;font-size:18px}
 .ea-tt .ea-genteE .ea-icoL{margin:0}
 .ea-tt .ea-puenteN{fill:#7F8D9C;font:500 8.5px var(--f-num)}
 
@@ -2809,6 +2839,36 @@ const CSS_TT_NOCHE = `
 .ea-root.ea-tt .ea-boostIco .ea-icoL{margin-right:2px}
 .ea-root.ea-tt .ea-boostIco:hover:not(:disabled){border-color:#FF9F1C;background:rgba(255,159,28,0.1)}
 .ea-root.ea-tt .ea-boostIco.vence{border-color:#FF9F1C;color:#FFB84D;background:rgba(255,159,28,0.1)}
+
+/* ---- la respuesta en los minijuegos: verde la correcta, rojo la tuya si fallaste ---- */
+.ea-root.ea-tt .ea-op.ok{background:rgba(32,214,127,.12);border-color:#20D67F;color:#E8EDF3;box-shadow:inset 4px 0 0 #20D67F;opacity:1}
+.ea-root.ea-tt .ea-op.no{background:rgba(255,84,73,.10);border-color:#FF5449;color:#E8EDF3;box-shadow:inset 4px 0 0 #FF5449;opacity:1}
+.ea-root.ea-tt .ea-op.ok .ea-opN{background:#20D67F;color:#FFFFFE}
+.ea-root.ea-tt .ea-op.no .ea-opN{background:#FF5449;color:#FFFFFE}
+.ea-root.ea-tt .ea-op.ok::after,.ea-root.ea-tt .ea-op.no::after{float:right;font:600 11px var(--f-num);letter-spacing:.06em;margin-left:10px;padding:2px 7px;border-radius:2px}
+.ea-root.ea-tt .ea-op.ok::after{content:"✓ CORRECTA";color:#FFFFFE;background:#20D67F}
+.ea-root.ea-tt .ea-op.no::after{content:"✗ TU RESPUESTA";color:#FFFFFE;background:#FF5449}
+.ea-root.ea-tt .ea-op:disabled:not(.ok):not(.no){opacity:.5}
+.ea-root.ea-tt .ea-check.bien{background:rgba(32,214,127,.12);border-color:#20D67F;box-shadow:inset 4px 0 0 #20D67F}
+.ea-root.ea-tt .ea-check.mal{background:rgba(255,84,73,.10);border-color:#FF5449;box-shadow:inset 4px 0 0 #FF5449}
+.ea-root.ea-tt .ea-sen.bien{color:#20D67F} .ea-root.ea-tt .ea-sen.mal{color:#FF5449}
+
+/* ---- el cierre: una sola línea con tu patrimonio ---- */
+.ea-tt .ea-cierreGraf1{margin:14px auto 6px;width:100%;max-width:640px;border:1px solid #243142;border-radius:3px;background:#0B0F15;
+  padding:10px 12px 6px;text-align:left;animation:ea-ttAparece .5s 1.3s both}
+.ea-tt .ea-cierreGraf1 figcaption{display:flex;justify-content:space-between;gap:10px;font:600 10.5px var(--f-num);letter-spacing:.12em;
+  text-transform:uppercase;color:#FFB84D;margin-bottom:4px}
+.ea-tt .ea-cierreGraf1 figcaption .tt-sube{color:#20D67F} .ea-tt .ea-cierreGraf1 figcaption .tt-baja{color:#FF5449}
+.ea-tt .ea-cierreGraf1 svg{display:block;width:100%;height:auto;overflow:visible}
+.ea-tt .ea-lineaTrazo{fill:none;stroke:#FF9F1C;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;
+  stroke-dasharray:2400;stroke-dashoffset:2400;animation:ea-ttTrazo 1.8s 1.4s ease-out forwards}
+.ea-tt .ea-lineaArea{fill:#FF9F1C;opacity:.08}
+.ea-tt .ea-lineaPunto{fill:#0B0F15;stroke:#FF9F1C;stroke-width:1.5}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaUlt{stroke:#20D67F;stroke-width:3.2;stroke-linecap:round}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaUlt{stroke:#FF5449;stroke-width:3.2;stroke-linecap:round}
+.ea-tt .ea-cierreGraf1.tt-sube .ea-lineaPuntoUlt{fill:#20D67F;stroke:#0B0F15;stroke-width:2}
+.ea-tt .ea-cierreGraf1.tt-baja .ea-lineaPuntoUlt{fill:#FF5449;stroke:#0B0F15;stroke-width:2}
+.ea-quieto.ea-tt .ea-cierreGraf1,.ea-quieto.ea-tt .ea-lineaTrazo{animation:none;stroke-dashoffset:0}
 
 .ea-root.ea-tt .ea-plata{text-shadow:0 0 18px rgba(32,214,127,.35)}
 .ea-root.ea-tt .ea-plata.neg{text-shadow:0 0 18px rgba(255,84,73,.35)}
@@ -54462,16 +54522,17 @@ const escenaMentor = st => ({
 
 /* Los avatares: retratos editoriales de busto, sin cara ni logos. Cada
    uno se reconoce por el fondo, el peinado y el objeto que lleva. */
+/* dibujos a color */
 const AVATAR_TONO = {
-  "#2F8A54": "#1F8F5F",
-  "#D9643A": "#D2643F",
-  "#2F5D8A": "#2E5E9E",
+  "#2F8A54": "#22B573",
+  "#D9643A": "#F2664B",
+  "#2F5D8A": "#2F7BE5",
   "#2A2440": "#1B2433",
-  "#B24E27": "#B5532E",
-  "#F2B632": "#D99A16",
-  "#8C6BB1": "#5B6B82",
-  "#5B4785": "#3D4A63",
-  "#E9875A": "#D97A4A"
+  "#B24E27": "#D9542F",
+  "#F2B632": "#F2A516",
+  "#8C6BB1": "#9A8CF2",
+  "#5B4785": "#5B4BD6",
+  "#E9875A": "#FF8A4C"
 };
 function AvatarMentor({
   id,
@@ -54550,7 +54611,7 @@ function AvatarMentor({
   const mc = MENTORES.find(x => x.id === id && x.carrera);
   if (mc) {
     const ini = String(mc.n).split(" ").filter(p => /^[A-ZÁÉÍÓÚ]/.test(p)).map(p => p.charAt(0)).join("").slice(0, 2).toUpperCase();
-    const fondo = AVATAR_TONO[mc.color] || "#3D4A63";
+    const fondo = AVATAR_TONO[mc.color] || "#5B4BD6";
     return marco(fondo, /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("circle", {
       cx: "60",
       cy: "60",
@@ -54618,7 +54679,7 @@ function AvatarMentor({
     d: "M40 52 Q38 30 60 30 Q80 30 80 48 Q74 40 62 41 Q50 41 40 52 Z",
     fill: "#3A2A20"
   })));
-  if (id === "bufalo") return marco("#E9DCC6", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("g", {
+  if (id === "bufalo") return marco("#FCE7C8", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("g", {
     transform: "translate(78 84) rotate(-8)"
   }, /*#__PURE__*/React.createElement("rect", {
     width: "34",
@@ -54631,14 +54692,14 @@ function AvatarMentor({
     fill: "#1B2433"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M5 11 H29 M5 15.5 H29 M5 20 H20",
-    stroke: "#A9B3C2",
+    stroke: "#B4AED8",
     strokeWidth: "2"
-  })), busto("#EDC3A0", "#1F2A3C", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("path", {
+  })), busto("#EDC3A0", "#3B2F7A", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("path", {
     d: "M52 89 L60 104 L68 89 Z",
     fill: "#F8FAFC"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M58 92 L62 92 L63 108 L60 112 L57 108 Z",
-    fill: "#C8372B"
+    fill: "#E8443A"
   }))), /*#__PURE__*/React.createElement("path", {
     d: "M41 58 Q40 40 46 36 L46 56 Z M79 58 Q80 40 74 36 L74 56 Z",
     fill: "#C9CED6"
@@ -54657,7 +54718,7 @@ function AvatarMentor({
   }), /*#__PURE__*/React.createElement("path", {
     d: "M59 56 H62"
   }))));
-  if (id === "kardashow") return marco("#F4DAD4", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("circle", {
+  if (id === "kardashow") return marco("#FFD9D0", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("circle", {
     cx: "60",
     cy: "56",
     r: "40",
@@ -54685,9 +54746,9 @@ function AvatarMentor({
     width: "12",
     height: "21",
     rx: "1.5",
-    fill: "#9CC3E6"
+    fill: "#8FD0F5"
   }))));
-  if (id === "pesos") return marco("#FBE3B6", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("g", {
+  if (id === "pesos") return marco("#FFE6A8", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("g", {
     transform: "translate(80 82)"
   }, /*#__PURE__*/React.createElement("rect", {
     width: "32",
@@ -54704,7 +54765,7 @@ function AvatarMentor({
     height: "26",
     fill: "#E6C38F",
     opacity: ".8"
-  })), busto("#E2AE88", "#1F2A3C", /*#__PURE__*/React.createElement("path", {
+  })), busto("#E2AE88", "#3B2F7A", /*#__PURE__*/React.createElement("path", {
     d: "M52 89 L60 101 L68 89 Z",
     fill: "#F8FAFC"
   })), /*#__PURE__*/React.createElement("ellipse", {
@@ -54715,10 +54776,10 @@ function AvatarMentor({
     fill: "#FFFFFF",
     opacity: ".35"
   })));
-  if (id === "thrift") return marco("#DCEFE6", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("path", {
+  if (id === "thrift") return marco("#C9F2DE", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("path", {
     d: "M38 104 L38 60 C38 34 48 28 60 28 C72 28 82 34 82 60 L82 104 Z",
     fill: "#D9B46A"
-  }), busto("#F1CFB2", "#5E4FA0"), /*#__PURE__*/React.createElement("path", {
+  }), busto("#F1CFB2", "#7B5CF0"), /*#__PURE__*/React.createElement("path", {
     d: "M41 54 C42 37 52 32 60 32 C69 32 78 37 79 52 L73 49 L67 53 L61 48 L55 53 L49 49 Z",
     fill: "#D9B46A"
   }), /*#__PURE__*/React.createElement("g", {
@@ -54764,7 +54825,7 @@ function AvatarMentor({
     stroke: "#B87500",
     strokeWidth: "1.5"
   })));
-  if (id === "rinaldo") return marco("#DCE6F5", /*#__PURE__*/React.createElement("g", null, busto("#C48A64", "#C8372B", /*#__PURE__*/React.createElement("path", {
+  if (id === "rinaldo") return marco("#D3E4FF", /*#__PURE__*/React.createElement("g", null, busto("#C48A64", "#E8443A", /*#__PURE__*/React.createElement("path", {
     d: "M52 89 L60 100 L68 89",
     fill: "none",
     stroke: "#F8FAFC",
@@ -54783,7 +54844,7 @@ function AvatarMentor({
     d: "M0 -6 L5.7 -1.9 L3.5 4.9 L-3.5 4.9 L-5.7 -1.9 Z",
     fill: "#1B2433"
   }))));
-  if (id === "nakamotto") return marco("#1F2A3C", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("path", {
+  if (id === "nakamotto") return marco("#3B2F7A", /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("path", {
     d: "M20 124 C20 98 30 86 36 72 C36 40 46 24 60 24 C74 24 84 40 84 72 C90 86 100 98 100 124 Z",
     fill: "#0F141C"
   }), /*#__PURE__*/React.createElement("path", {
@@ -57249,28 +57310,28 @@ const LOOKS_JEFE = [{
   piel: "#C48A64",
   pelo: "largo",
   colorPelo: "#2B201A",
-  ropa: "#2C3A4F",
+  ropa: "#5B4BD6",
   lentes: true,
   n: "Tu jefa"
 }, {
   piel: "#EDC3A0",
   pelo: "corto",
   colorPelo: "#1B2433",
-  ropa: "#2E5E9E",
+  ropa: "#2F7BE5",
   lentes: false,
   n: "Tu jefe"
 }, {
   piel: "#8A5A3C",
   pelo: "calvo",
   colorPelo: "#1B2433",
-  ropa: "#B5532E",
+  ropa: "#D9542F",
   lentes: true,
   n: "Tu jefe"
 }, {
   piel: "#F0CBA8",
   pelo: "largo",
-  colorPelo: "#B5532E",
-  ropa: "#1F9D63",
+  colorPelo: "#D9542F",
+  ropa: "#22B573",
   lentes: false,
   n: "Tu jefa"
 }];
@@ -57389,17 +57450,17 @@ function DestelloOficina({
     y2: "1"
   }, /*#__PURE__*/React.createElement("stop", {
     offset: "0",
-    stopColor: "#2C3A4F"
+    stopColor: "#5B4BD6"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: ".55",
-    stopColor: "#E0634A"
+    stopColor: "#F2664B"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: "1",
     stopColor: "#F0A020"
   }))), /*#__PURE__*/React.createElement("rect", {
     width: "720",
     height: "450",
-    fill: "#EEF2F6"
+    fill: "#E8F1FB"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "110",
     y: "30",
@@ -57414,9 +57475,9 @@ function DestelloOficina({
     fill: "#F0A020"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M110 236 Q240 196 360 222 T610 206 L610 280 L110 280 Z",
-    fill: "#5B6B82"
+    fill: "#9A8CF2"
   }), /*#__PURE__*/React.createElement("g", {
-    fill: "#1F2A3C"
+    fill: "#3B2F7A"
   }, /*#__PURE__*/React.createElement("rect", {
     x: "140",
     y: "180",
@@ -57452,7 +57513,7 @@ function DestelloOficina({
     y: "290",
     width: "720",
     height: "160",
-    fill: "#DCE3EC"
+    fill: "#F3E3CF"
   }), /*#__PURE__*/React.createElement("g", {
     className: "ea-flashJefe",
     transform: "translate(470 120) scale(1.4)"
@@ -57506,7 +57567,7 @@ function DestelloOficina({
     width: "640",
     height: "28",
     rx: "8",
-    fill: "#B5532E"
+    fill: "#D9542F"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "60",
     y: "348",
@@ -57742,7 +57803,7 @@ function TuEnLaSala({
   sube
 }) {
   const piel = "#EDC3A0",
-    ropa = "#2E5E9E",
+    ropa = "#2F7BE5",
     pelo = "#1B2433";
   return /*#__PURE__*/React.createElement("g", {
     transform: `translate(${sube ? 230 : 190} ${sube ? 120 : 150}) scale(1.25)`
@@ -57831,10 +57892,10 @@ function SalaGolpe({
     y2: "1"
   }, /*#__PURE__*/React.createElement("stop", {
     offset: "0",
-    stopColor: "#5B6B82"
+    stopColor: "#9A8CF2"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: ".6",
-    stopColor: "#EE8A55"
+    stopColor: "#FF9A5C"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: "1",
     stopColor: "#F0A020"
@@ -57846,19 +57907,19 @@ function SalaGolpe({
     y2: "1"
   }, /*#__PURE__*/React.createElement("stop", {
     offset: "0",
-    stopColor: "#121A26"
+    stopColor: "#1E1846"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: "1",
-    stopColor: "#1F2A3C"
+    stopColor: "#3B2F7A"
   }))), /*#__PURE__*/React.createElement("rect", {
     width: "720",
     height: "450",
-    fill: sube ? "#EEF2F6" : "#3D4A60"
+    fill: sube ? "#E8F1FB" : "#4B4A7A"
   }), /*#__PURE__*/React.createElement("rect", {
     y: "310",
     width: "720",
     height: "140",
-    fill: sube ? "#DCE3EC" : "#1F2A3C"
+    fill: sube ? "#F3E3CF" : "#3B2F7A"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "430",
     y: "50",
@@ -57875,10 +57936,10 @@ function SalaGolpe({
     cx: "600",
     cy: "100",
     r: "16",
-    fill: "#CDD5E0",
+    fill: "#D6D2F0",
     opacity: ".5"
   }), /*#__PURE__*/React.createElement("g", {
-    fill: sube ? "#2C3A4F" : "#0D131C"
+    fill: sube ? "#5B4BD6" : "#141032"
   }, /*#__PURE__*/React.createElement("rect", {
     x: "440",
     y: "180",
@@ -57900,7 +57961,7 @@ function SalaGolpe({
     width: "30",
     height: "54"
   })), !sube && /*#__PURE__*/React.createElement("g", {
-    stroke: "#9CC3E6",
+    stroke: "#8FD0F5",
     strokeWidth: "2",
     opacity: ".6",
     strokeLinecap: "round"
@@ -57926,14 +57987,14 @@ function SalaGolpe({
     width: "300",
     height: "70",
     rx: "22",
-    fill: sube ? "#E0634A" : "#2C3A4F"
+    fill: sube ? "#F2664B" : "#5B4BD6"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "30",
     y: "290",
     width: "320",
     height: "56",
     rx: "18",
-    fill: sube ? "#B5532E" : "#1F2A3C"
+    fill: sube ? "#D9542F" : "#3B2F7A"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "400",
     y: "330",
@@ -57966,11 +58027,11 @@ function SalaGolpe({
     width: "98",
     height: "52",
     rx: "3",
-    fill: sube ? "#F8FAFC" : "#121A26"
+    fill: sube ? "#F8FAFC" : "#1E1846"
   }), /*#__PURE__*/React.createElement("polyline", {
     points: sube ? "462,318 480,310 494,314 512,298 528,300 548,282" : "462,284 480,290 494,286 512,304 528,300 548,322",
     fill: "none",
-    stroke: sube ? "#1F9D63" : "#D94436",
+    stroke: sube ? "#22B573" : "#D94436",
     strokeWidth: "4",
     strokeLinecap: "round",
     strokeLinejoin: "round"
@@ -57980,7 +58041,7 @@ function SalaGolpe({
     width: "130",
     height: "6",
     rx: "3",
-    fill: "#1F2A3C"
+    fill: "#3B2F7A"
   }));
 }
 function GolpeDinero({
@@ -58043,7 +58104,7 @@ function GolpeDinero({
     width: "38",
     height: "20",
     rx: "3",
-    fill: "#1F9D63"
+    fill: "#22B573"
   }), /*#__PURE__*/React.createElement("circle", {
     cx: x + 19,
     cy: "10",
@@ -58209,12 +58270,12 @@ function EscenaVida({
     }))), /*#__PURE__*/React.createElement("rect", {
       width: "720",
       height: "450",
-      fill: "#EEF4F1"
+      fill: "#E6F7EF"
     }), /*#__PURE__*/React.createElement("rect", {
       y: "300",
       width: "720",
       height: "150",
-      fill: "#DCE8E2"
+      fill: "#CDEEDD"
     }), /*#__PURE__*/React.createElement("rect", {
       x: "460",
       y: "50",
@@ -58239,7 +58300,7 @@ function EscenaVida({
       y: "70",
       width: "6",
       height: "230",
-      fill: "#B9C8C2"
+      fill: "#9ED9BB"
     }), /*#__PURE__*/React.createElement("rect", {
       x: "80",
       y: "70",
@@ -58250,14 +58311,14 @@ function EscenaVida({
       opacity: ".9"
     }), /*#__PURE__*/React.createElement("path", {
       d: "M640 250 L640 300",
-      stroke: "#5B6B82",
+      stroke: "#9A8CF2",
       strokeWidth: "2"
     }), /*#__PURE__*/React.createElement("ellipse", {
       cx: "640",
       cy: "232",
       rx: "22",
       ry: "26",
-      fill: "#E0634A"
+      fill: "#F2664B"
     }), /*#__PURE__*/React.createElement("rect", {
       x: "150",
       y: "240",
@@ -58271,14 +58332,14 @@ function EscenaVida({
       width: "300",
       height: "70",
       rx: "10",
-      fill: "#9CC3E6"
+      fill: "#8FD0F5"
     }), /*#__PURE__*/React.createElement("rect", {
       x: "140",
       y: "200",
       width: "22",
       height: "160",
       rx: "8",
-      fill: "#B9C8C2"
+      fill: "#9ED9BB"
     }), /*#__PURE__*/React.createElement(PersonaVida, _extends({
       x: 250,
       y: 130,
@@ -58307,12 +58368,12 @@ function EscenaVida({
       y: 110,
       s: 1.25
     }, el, {
-      ropa: "#2E5E9E"
+      ropa: "#2F7BE5"
     })), /*#__PURE__*/React.createElement("g", {
       className: "ea-vidaFlota"
     }, /*#__PURE__*/React.createElement("path", {
       d: "M330 150 c-10-14 -30-4 -18 12 l18 16 l18-16 c12-16 -8-26 -18-12z",
-      fill: "#E0634A"
+      fill: "#F2664B"
     })), /*#__PURE__*/React.createElement("g", {
       className: "ea-vidaFlota",
       style: {
@@ -58320,27 +58381,27 @@ function EscenaVida({
       }
     }, /*#__PURE__*/React.createElement("path", {
       d: "M370 170 c-7-10 -21-3 -13 8 l13 11 l13-11 c8-11 -6-18 -13-8z",
-      fill: "#EE8A55"
+      fill: "#FF9A5C"
     })));
   }
   if (tipo === "boda") {
     return /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("rect", {
       width: "720",
       height: "450",
-      fill: "#EEF2F6"
+      fill: "#E8F1FB"
     }), /*#__PURE__*/React.createElement("path", {
       d: "M260 260 L260 90 Q360 0 460 90 L460 260 Z",
-      fill: "#2C3A4F"
+      fill: "#5B4BD6"
     }), /*#__PURE__*/React.createElement("path", {
       d: "M280 250 L280 100 Q360 26 440 100 L440 250 Z",
-      fill: "#5B6B82"
+      fill: "#9A8CF2"
     }), /*#__PURE__*/React.createElement("path", {
       d: "M360 40 L360 250",
-      stroke: "#EEF2F6",
+      stroke: "#E8F1FB",
       strokeWidth: "6"
     }), /*#__PURE__*/React.createElement("path", {
       d: "M280 150 L440 150",
-      stroke: "#EEF2F6",
+      stroke: "#E8F1FB",
       strokeWidth: "6"
     }), /*#__PURE__*/React.createElement("circle", {
       cx: "360",
@@ -58352,21 +58413,21 @@ function EscenaVida({
       y: "160",
       width: "62",
       height: "84",
-      fill: "#E0634A"
+      fill: "#F2664B"
     }), /*#__PURE__*/React.createElement("rect", {
       x: "368",
       y: "160",
       width: "62",
       height: "84",
-      fill: "#EE8A55"
+      fill: "#FF9A5C"
     }), /*#__PURE__*/React.createElement("rect", {
       y: "300",
       width: "720",
       height: "150",
-      fill: "#DCE3EC"
+      fill: "#F3E3CF"
     }), /*#__PURE__*/React.createElement("path", {
       d: "M300 450 L340 300 L380 300 L420 450 Z",
-      fill: "#B5532E",
+      fill: "#D9542F",
       opacity: ".85"
     }), /*#__PURE__*/React.createElement("rect", {
       x: "40",
@@ -58424,7 +58485,7 @@ function EscenaVida({
       cy: "0",
       rx: "7",
       ry: "4",
-      fill: i % 2 ? "#F0A020" : "#E0634A",
+      fill: i % 2 ? "#F0A020" : "#F2664B",
       style: {
         animationDelay: i * 0.35 + "s"
       }
@@ -58438,20 +58499,20 @@ function EscenaVida({
     y2: "1"
   }, /*#__PURE__*/React.createElement("stop", {
     offset: "0",
-    stopColor: "#3D4A60"
+    stopColor: "#4B4A7A"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: "1",
-    stopColor: "#8794A8"
+    stopColor: "#9A95C2"
   }))), /*#__PURE__*/React.createElement("rect", {
     width: "720",
     height: "450",
     fill: "url(#ea-cieloGris)"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M0 260 Q180 220 360 250 T720 236 L720 450 L0 450 Z",
-    fill: "#556178"
+    fill: "#5E5A8F"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M0 300 Q200 280 400 300 T720 290 L720 450 L0 450 Z",
-    fill: "#1F2A3C"
+    fill: "#3B2F7A"
   }), /*#__PURE__*/React.createElement("g", {
     fill: "#1B2433",
     opacity: ".7"
@@ -58475,26 +58536,26 @@ function EscenaVida({
     rx: "10"
   })), /*#__PURE__*/React.createElement("path", {
     d: "M470 330 L470 230 Q510 196 550 230 L550 330 Z",
-    fill: "#CDD5E0"
+    fill: "#D6D2F0"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "490",
     y: "252",
     width: "40",
     height: "4",
     rx: "2",
-    fill: "#8794A8"
+    fill: "#9A95C2"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "482",
     y: "264",
     width: "56",
     height: "4",
     rx: "2",
-    fill: "#8794A8"
+    fill: "#9A95C2"
   }), /*#__PURE__*/React.createElement("circle", {
     cx: "486",
     cy: "330",
     r: "9",
-    fill: "#E0634A"
+    fill: "#F2664B"
   }), /*#__PURE__*/React.createElement("circle", {
     cx: "500",
     cy: "334",
@@ -58544,7 +58605,7 @@ function EscenaVida({
     y: 156,
     s: 1.05
   }, L.pareja, {
-    ropa: "#1F2A3C",
+    ropa: "#3B2F7A",
     cara: "triste"
   })));
 }
@@ -58560,14 +58621,14 @@ function OficinaVida({
     y2: "1"
   }, /*#__PURE__*/React.createElement("stop", {
     offset: "0",
-    stopColor: gris ? "#6C788C" : "#2C3A4F"
+    stopColor: gris ? "#7A76A8" : "#5B4BD6"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: "1",
-    stopColor: gris ? "#A9B3C2" : "#F0A020"
+    stopColor: gris ? "#B4AED8" : "#F0A020"
   }))), /*#__PURE__*/React.createElement("rect", {
     width: "720",
     height: "450",
-    fill: gris ? "#D5DBE3" : "#EEF2F6"
+    fill: gris ? "#E2DEF3" : "#E8F1FB"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "140",
     y: "40",
@@ -58576,7 +58637,7 @@ function OficinaVida({
     rx: "14",
     fill: gris ? "url(#ea-tardeGris)" : "url(#ea-tardeOro)"
   }), /*#__PURE__*/React.createElement("g", {
-    fill: gris ? "#4F5B70" : "#1F2A3C"
+    fill: gris ? "#55528A" : "#3B2F7A"
   }, /*#__PURE__*/React.createElement("rect", {
     x: "160",
     y: "150",
@@ -58607,7 +58668,7 @@ function OficinaVida({
     y: "290",
     width: "720",
     height: "160",
-    fill: gris ? "#C1C9D4" : "#DCE3EC"
+    fill: gris ? "#CBC5E6" : "#F3E3CF"
   }));
 }
 function EscenaCarrera({
@@ -58638,7 +58699,7 @@ function EscenaCarrera({
       x: 150,
       y: 170
     }, LOOK_LARGO, {
-      ropa: "#2C3A4F"
+      ropa: "#5B4BD6"
     }))), /*#__PURE__*/React.createElement("g", {
       className: "ea-vidaAplaude"
     }, /*#__PURE__*/React.createElement(PersonaVida, {
@@ -58647,7 +58708,7 @@ function EscenaCarrera({
       piel: "#8A5A3C",
       pelo: "corto",
       colorPelo: "#1B2433",
-      ropa: "#1F9D63"
+      ropa: "#22B573"
     })), /*#__PURE__*/React.createElement("g", {
       stroke: "#1B2433",
       strokeWidth: "23",
@@ -58681,7 +58742,7 @@ function EscenaCarrera({
       width: "10",
       height: "16",
       rx: "2",
-      fill: ["#F0A020", "#E0634A", "#5B6B82", "#1F9D63"][i % 4],
+      fill: ["#F0A020", "#F2664B", "#9A8CF2", "#22B573"][i % 4],
       style: {
         animationDelay: i * 0.3 + "s"
       }
@@ -58694,14 +58755,14 @@ function EscenaCarrera({
       x: 540,
       y: 168
     }, LOOK_LARGO, {
-      ropa: "#2C3A4F",
+      ropa: "#5B4BD6",
       cara: "triste"
     })), /*#__PURE__*/React.createElement(PersonaVida, _extends({
       x: 290,
       y: 150,
       s: 1.3
     }, L.tu, {
-      ropa: "#1F2A3C",
+      ropa: "#3B2F7A",
       cara: "triste",
       lagrima: true
     })), /*#__PURE__*/React.createElement("rect", {
@@ -58719,7 +58780,7 @@ function EscenaCarrera({
       fill: "#8C6545"
     }), /*#__PURE__*/React.createElement("path", {
       d: "M250 280 Q236 236 256 214 Q262 250 250 280 M262 280 Q262 230 290 222 Q280 256 262 280",
-      fill: "#1F9D63"
+      fill: "#22B573"
     }), /*#__PURE__*/React.createElement("g", {
       transform: "rotate(8 320 264)"
     }, /*#__PURE__*/React.createElement("rect", {
@@ -58734,7 +58795,7 @@ function EscenaCarrera({
       y: "250",
       width: "28",
       height: "26",
-      fill: "#5B6B82"
+      fill: "#9A8CF2"
     })));
   }
   return /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
@@ -58745,10 +58806,10 @@ function EscenaCarrera({
     y2: "1"
   }, /*#__PURE__*/React.createElement("stop", {
     offset: "0",
-    stopColor: "#5B6B82"
+    stopColor: "#9A8CF2"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: ".6",
-    stopColor: "#EE8A55"
+    stopColor: "#FF9A5C"
   }), /*#__PURE__*/React.createElement("stop", {
     offset: "1",
     stopColor: "#F0A020"
@@ -58763,12 +58824,12 @@ function EscenaCarrera({
     fill: "#F0A020"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M0 300 Q200 270 400 296 T720 284 L720 450 L0 450 Z",
-    fill: "#2C3A4F"
+    fill: "#5B4BD6"
   }), /*#__PURE__*/React.createElement("rect", {
     y: "330",
     width: "720",
     height: "120",
-    fill: "#1F9D63"
+    fill: "#22B573"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "380",
     y: "170",
@@ -58777,7 +58838,7 @@ function EscenaCarrera({
     fill: "#FFFFFF"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M360 176 L505 70 L650 176 Z",
-    fill: "#E0634A"
+    fill: "#F2664B"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "480",
     y: "250",
@@ -58796,14 +58857,14 @@ function EscenaCarrera({
     width: "50",
     height: "44",
     rx: "4",
-    fill: "#9CC3E6"
+    fill: "#8FD0F5"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "556",
     y: "210",
     width: "50",
     height: "44",
     rx: "4",
-    fill: "#9CC3E6"
+    fill: "#8FD0F5"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "300",
     y: "250",
@@ -58821,14 +58882,14 @@ function EscenaCarrera({
     x: "305",
     y: "263",
     textAnchor: "middle",
-    fill: "#C8372B",
+    fill: "#E8443A",
     fontFamily: "Geist, system-ui, sans-serif",
     fontWeight: "800",
     fontSize: "17",
     transform: "rotate(-6 305 258)"
   }, "\xA1VENDIDA!"), /*#__PURE__*/React.createElement("path", {
     d: "M213 285 L259 244",
-    stroke: "#2E5E9E",
+    stroke: "#2F7BE5",
     strokeWidth: "22",
     strokeLinecap: "round"
   }), /*#__PURE__*/React.createElement(PersonaVida, _extends({
@@ -58836,7 +58897,7 @@ function EscenaCarrera({
     y: 160,
     s: 1.2
   }, L.tu, {
-    ropa: "#2E5E9E"
+    ropa: "#2F7BE5"
   })), /*#__PURE__*/React.createElement("g", {
     className: "ea-vidaLlave"
   }, /*#__PURE__*/React.createElement("circle", {
@@ -59152,13 +59213,13 @@ function EscenaSusto({
     return /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("rect", {
       width: "720",
       height: "450",
-      fill: "#121A26"
+      fill: "#1E1846"
     }), /*#__PURE__*/React.createElement("rect", {
       width: "720",
       height: "300",
       fill: "#1B2433"
     }), /*#__PURE__*/React.createElement("g", {
-      fill: "#0D131C"
+      fill: "#141032"
     }, /*#__PURE__*/React.createElement("rect", {
       x: "20",
       y: "60",
@@ -59197,10 +59258,10 @@ function EscenaSusto({
       y: "60",
       width: "8",
       height: "240",
-      fill: "#1F2A3C"
+      fill: "#3B2F7A"
     }), /*#__PURE__*/React.createElement("path", {
       d: "M364 64 L330 74",
-      stroke: "#1F2A3C",
+      stroke: "#3B2F7A",
       strokeWidth: "8"
     }), /*#__PURE__*/React.createElement("ellipse", {
       cx: "330",
@@ -59218,7 +59279,7 @@ function EscenaSusto({
       y: "300",
       width: "720",
       height: "150",
-      fill: "#1F2A3C"
+      fill: "#3B2F7A"
     }), /*#__PURE__*/React.createElement("g", {
       className: apurado ? "ea-sustoTiembla" : ""
     }, /*#__PURE__*/React.createElement(PersonaSusto, _extends({
@@ -59226,15 +59287,15 @@ function EscenaSusto({
       y: 130,
       s: 1.25
     }, tu, {
-      ropa: "#2E5E9E"
+      ropa: "#2F7BE5"
     }))), /*#__PURE__*/React.createElement(PersonaSusto, {
       x: 460,
       y: 125,
       s: 1.3,
       piel: "#8A5A3C",
-      ropa: "#0D131C",
+      ropa: "#141032",
       cara: "malo",
-      gorra: "#1F2A3C",
+      gorra: "#3B2F7A",
       mascara: true
     }));
   }
@@ -59250,7 +59311,7 @@ function EscenaSusto({
       width: "180",
       height: "120",
       rx: "8",
-      fill: "#0D131C"
+      fill: "#141032"
     }), /*#__PURE__*/React.createElement("polyline", {
       className: "ea-sustoParpadea",
       points: "12,22 40,30 62,26 90,58 118,52 146,96 168,104",
@@ -59271,7 +59332,7 @@ function EscenaSusto({
       y: "300",
       width: "720",
       height: "150",
-      fill: "#1F2A3C"
+      fill: "#3B2F7A"
     }), /*#__PURE__*/React.createElement("rect", {
       x: "80",
       y: "290",
@@ -59293,7 +59354,7 @@ function EscenaSusto({
       width: "34",
       height: "56",
       rx: "6",
-      fill: "#0D131C"
+      fill: "#141032"
     }), /*#__PURE__*/React.createElement("rect", {
       x: "4",
       y: "6",
@@ -59306,25 +59367,25 @@ function EscenaSusto({
   return /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("rect", {
     width: "720",
     height: "450",
-    fill: "#EEF2F6"
+    fill: "#E8F1FB"
   }), /*#__PURE__*/React.createElement("rect", {
     y: "300",
     width: "720",
     height: "150",
-    fill: "#DCE3EC"
+    fill: "#F3E3CF"
   }), /*#__PURE__*/React.createElement("rect", {
     x: "430",
     y: "50",
     width: "220",
     height: "180",
     rx: "12",
-    fill: "#9CC3E6"
+    fill: "#8FD0F5"
   }), /*#__PURE__*/React.createElement(PersonaSusto, _extends({
     x: 240,
     y: 130,
     s: 1.25
   }, tu, {
-    ropa: "#1F9D63"
+    ropa: "#22B573"
   })), /*#__PURE__*/React.createElement("g", {
     transform: "translate(360 150)"
   }, /*#__PURE__*/React.createElement("g", {
@@ -59353,7 +59414,7 @@ function EscenaSusto({
     x: "60",
     y: "76",
     textAnchor: "middle",
-    fill: "#5B6B82",
+    fill: "#9A8CF2",
     fontFamily: "Geist, system-ui, sans-serif",
     fontSize: "11"
   }, "n\xFAmero oculto"), /*#__PURE__*/React.createElement("circle", {
@@ -59365,7 +59426,7 @@ function EscenaSusto({
     cx: "86",
     cy: "160",
     r: "16",
-    fill: "#1F9D63"
+    fill: "#22B573"
   }))));
 }
 /* la cinemática con reloj: eliges, o se te acaba el tiempo */
@@ -64332,156 +64393,83 @@ function InformeVida({
   }, "Tu peor ca\xEDda termin\xF3 a los ", edadIni + Math.round(tDe(caidaI)), " a\xF1os. Medida de un m\xE1ximo a un m\xEDnimo, cierre a cierre de etapa.")));
 }
 
-/* ---- los gráficos del cierre de cada año ----
-   A la izquierda, tu patrimonio etapa por etapa con la de ahora marcada.
-   A la derecha, el puente: de dónde vino y a dónde se fue la plata de
-   esta etapa, barra por barra, como lo presenta un analista. */
+/* ---- el gráfico del cierre de cada año ----
+   Una sola línea: tu patrimonio etapa por etapa, de cuando empezaste a
+   hoy, con el tramo de esta etapa marcado. */
 function GraficoCierre({
   histo,
-  partes,
-  ini,
-  fin
+  fin,
+  ini
 }) {
-  const serie = (Array.isArray(histo) ? histo : []).map(x => numero(x, 0)).slice(-16);
-  if (serie.length && Math.abs(serie[serie.length - 1] - fin) > 0.5) serie.push(fin);
-  const AN = 300,
-    AL = 150,
-    PIE = 18,
-    TOP = 14;
-  /* las velas */
-  let velas = null;
-  if (serie.length >= 2) {
-    const mn = Math.min(0, Math.min.apply(null, serie)),
-      mx = Math.max(1, Math.max.apply(null, serie));
-    const y = v => TOP + (1 - (v - mn) / (mx - mn || 1)) * (AL - TOP - PIE);
-    const n = serie.length - 1,
-      paso = (AN - 46) / n,
-      ancho = Math.max(3, Math.min(16, paso * 0.62));
-    velas = /*#__PURE__*/React.createElement("svg", {
-      className: "ea-cierreGraf",
-      viewBox: "0 0 " + AN + " " + AL,
-      role: "img",
-      "aria-label": "Tu patrimonio etapa por etapa"
-    }, [mn, (mn + mx) / 2, mx].map((v, i) => /*#__PURE__*/React.createElement("g", {
-      key: i
-    }, /*#__PURE__*/React.createElement("line", {
-      x1: "2",
-      x2: AN - 44,
-      y1: y(v),
-      y2: y(v),
-      className: "ea-velasRej"
-    }), /*#__PURE__*/React.createElement("text", {
-      x: AN - 40,
-      y: y(v) + 3.5,
-      className: "ea-velasEje"
-    }, fmtCorto(v)))), serie.slice(1).map((v, k) => {
-      const a = serie[k],
-        cx = 2 + paso * k + paso / 2;
-      const top = y(Math.max(a, v)),
-        bot = y(Math.min(a, v));
-      const ult = k === n - 1;
-      return /*#__PURE__*/React.createElement("g", {
-        key: k,
-        className: "ea-vela " + (v >= a ? "v" : "r") + (ult ? " ult" : ""),
-        style: {
-          animationDelay: (1.4 + k * 0.04).toFixed(2) + "s"
-        }
-      }, /*#__PURE__*/React.createElement("rect", {
-        x: cx - ancho / 2,
-        width: ancho,
-        y: top,
-        height: Math.max(1.4, bot - top),
-        rx: "1"
-      }));
-    }), /*#__PURE__*/React.createElement("text", {
-      x: "2",
-      y: AL - 4,
-      className: "ea-velasEje"
-    }, "Etapas anteriores \u2192 esta"));
-  }
-  /* el puente */
-  let puente = null;
-  if (partes) {
-    const pasos = [["Sueldo", partes.sueldo], ["Decisión", partes.decisiones], ["Mercado", partes.mercados], ["Empresa", partes.camino], ["Otros", partes.otros]].filter(([, v]) => Number.isFinite(v) && Math.abs(v) >= 1);
-    const barras = [{
-      n: "Inicio",
-      de: 0,
-      a: ini,
-      tot: true
-    }];
-    let acc = ini;
-    pasos.forEach(([n, v]) => {
-      barras.push({
-        n,
-        de: acc,
-        a: acc + v,
-        v
-      });
-      acc += v;
-    });
-    barras.push({
-      n: "Cierre",
-      de: 0,
-      a: fin,
-      tot: true
-    });
-    const vals = barras.reduce((l, b) => l.concat([b.de, b.a]), [0]);
-    const mn = Math.min.apply(null, vals),
-      mx = Math.max.apply(null, vals);
-    const y = v => TOP + 10 + (1 - (v - mn) / (mx - mn || 1)) * (AL - TOP - PIE - 12);
-    const paso = AN / barras.length,
-      ancho = Math.min(34, paso * 0.6);
-    puente = /*#__PURE__*/React.createElement("svg", {
-      className: "ea-cierreGraf",
-      viewBox: "0 0 " + AN + " " + AL,
-      role: "img",
-      "aria-label": "De d\xF3nde sali\xF3 la plata de esta etapa"
-    }, /*#__PURE__*/React.createElement("line", {
-      x1: "0",
-      x2: AN,
-      y1: y(0),
-      y2: y(0),
-      className: "ea-informeCero"
-    }), barras.map((b, i) => {
-      const cx = paso * i + paso / 2,
-        top = y(Math.max(b.de, b.a)),
-        bot = y(Math.min(b.de, b.a));
-      const cls = b.tot ? "tot" : b.v >= 0 ? "v" : "r";
-      return /*#__PURE__*/React.createElement("g", {
-        key: i,
-        className: "ea-puente " + cls,
-        style: {
-          animationDelay: (1.5 + i * 0.12).toFixed(2) + "s"
-        }
-      }, /*#__PURE__*/React.createElement("rect", {
-        x: cx - ancho / 2,
-        width: ancho,
-        y: top,
-        height: Math.max(1.4, bot - top),
-        rx: "1"
-      }), i < barras.length - 1 && /*#__PURE__*/React.createElement("line", {
-        x1: cx + ancho / 2,
-        x2: cx + paso - ancho / 2,
-        y1: y(b.a),
-        y2: y(b.a),
-        className: "ea-puenteLazo"
-      }), /*#__PURE__*/React.createElement("text", {
-        x: cx,
-        y: top - 4,
-        textAnchor: "middle",
-        className: "ea-puenteV"
-      }, b.tot ? fmtCorto(b.a) : (b.v >= 0 ? "+" : "−") + fmtCorto(Math.abs(b.v))), /*#__PURE__*/React.createElement("text", {
-        x: cx,
-        y: AL - 4,
-        textAnchor: "middle",
-        className: "ea-puenteN"
-      }, b.n));
-    }));
-  }
-  if (!velas && !puente) return null;
-  return /*#__PURE__*/React.createElement("div", {
-    className: "ea-cierreGrafs"
-  }, velas && /*#__PURE__*/React.createElement("figure", null, /*#__PURE__*/React.createElement("figcaption", null, "Tu patrimonio"), velas), puente && /*#__PURE__*/React.createElement("figure", null, /*#__PURE__*/React.createElement("figcaption", null, "De d\xF3nde sali\xF3"), puente));
+  const serie = (Array.isArray(histo) ? histo : []).map(x => numero(x, 0)).slice(-30);
+  if (!serie.length || Math.abs(serie[serie.length - 1] - fin) > 0.5) serie.push(fin);
+  if (serie.length < 2) return null;
+  const AN = 640,
+    AL = 190,
+    IZQ = 6,
+    DER = 64,
+    ARR = 16,
+    ABA = 22;
+  const mn = Math.min(0, Math.min.apply(null, serie)),
+    mx = Math.max(1, Math.max.apply(null, serie));
+  const y = v => ARR + (1 - (v - mn) / (mx - mn || 1)) * (AL - ARR - ABA);
+  const n = serie.length - 1;
+  const x = i => IZQ + i / n * (AN - IZQ - DER);
+  const pts = serie.map((v, i) => [x(i), y(v)]);
+  const linea = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const area = linea + ' L' + x(n).toFixed(1) + ' ' + y(mn).toFixed(1) + ' L' + x(0).toFixed(1) + ' ' + y(mn).toFixed(1) + ' Z';
+  const sube = fin >= ini;
+  const ult = pts[n],
+    pen = pts[n - 1];
+  const rejilla = [mn, mn + (mx - mn) / 2, mx];
+  return /*#__PURE__*/React.createElement("figure", {
+    className: 'ea-cierreGraf1 ' + (sube ? 'tt-sube' : 'tt-baja')
+  }, /*#__PURE__*/React.createElement("figcaption", null, /*#__PURE__*/React.createElement("span", null, "Tu patrimonio"), /*#__PURE__*/React.createElement("span", {
+    className: sube ? 'tt-sube' : 'tt-baja'
+  }, (sube ? '+' : '−') + fmtCorto(Math.abs(fin - ini)), " esta etapa")), /*#__PURE__*/React.createElement("svg", {
+    viewBox: '0 0 ' + AN + ' ' + AL,
+    role: "img",
+    "aria-label": "Tu patrimonio etapa por etapa"
+  }, rejilla.map((v, i) => /*#__PURE__*/React.createElement("g", {
+    key: i
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: IZQ,
+    x2: AN - DER,
+    y1: y(v),
+    y2: y(v),
+    className: "ea-velasRej"
+  }), /*#__PURE__*/React.createElement("text", {
+    x: AN - DER + 6,
+    y: y(v) + 3.5,
+    className: "ea-velasEje"
+  }, fmtCorto(v)))), /*#__PURE__*/React.createElement("path", {
+    d: area,
+    className: "ea-lineaArea"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: linea,
+    className: "ea-lineaTrazo"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: pen[0],
+    y1: pen[1],
+    x2: ult[0],
+    y2: ult[1],
+    className: "ea-lineaUlt"
+  }), pts.map((p, i) => /*#__PURE__*/React.createElement("circle", {
+    key: i,
+    cx: p[0],
+    cy: p[1],
+    r: i === n ? 4.5 : 2.4,
+    className: i === n ? 'ea-lineaPuntoUlt' : 'ea-lineaPunto'
+  })), /*#__PURE__*/React.createElement("text", {
+    x: IZQ,
+    y: AL - 5,
+    className: "ea-velasEje"
+  }, "Empezaste"), /*#__PURE__*/React.createElement("text", {
+    x: AN - DER,
+    y: AL - 5,
+    textAnchor: "end",
+    className: "ea-velasEje"
+  }, "Hoy")));
 }
 function Anillo({
   k,
@@ -70003,7 +69991,10 @@ function Motor() {
     }, /*#__PURE__*/React.createElement("span", {
       className: "ea-itemEmoji",
       "aria-hidden": "true"
-    }, b.e), b.n), /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement(IcoLinea, {
+      e: b.e,
+      tam: 20
+    })), b.n), /*#__PURE__*/React.createElement("span", {
       className: "ea-mono",
       style: {
         fontSize: 12.5,
@@ -71170,7 +71161,6 @@ function Motor() {
       }
     }, dif < 1 ? "Te quedaste igual" : (sube ? "Ganaste USD " : "Perdiste USD ") + fmt(dif)), /*#__PURE__*/React.createElement(GraficoCierre, {
       histo: cierre.histo,
-      partes: cierre.partes,
       ini: ini,
       fin: fin
     }), /*#__PURE__*/React.createElement(Desglose, {
