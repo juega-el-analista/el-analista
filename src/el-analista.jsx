@@ -1692,6 +1692,17 @@ const CSS4 = `
 .ea-animoPill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--crema);background:rgba(255,244,220,.1);padding:4px 10px 4px 6px;border-radius:999px}
 .ea-animoPill span{font-size:15px;letter-spacing:0}
+/* tus boosts activos, a la vista: cuánto les queda y cuándo renovarlos */
+.ea-boostsFila{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+.ea-boostIco{display:inline-flex;align-items:center;gap:4px;padding:3px 9px 3px 6px;border-radius:999px;cursor:pointer;
+  border:1.5px solid transparent;background:rgba(255,244,220,.1);color:var(--crema);font:700 11px 'Nunito',sans-serif;line-height:1}
+.ea-boostIco span{font-size:15px}
+.ea-boostIco:hover:not(:disabled){background:rgba(255,244,220,.18)}
+.ea-boostIco:disabled{cursor:default;opacity:1}
+.ea-boostIco:focus-visible{outline:2px solid var(--mostaza);outline-offset:2px}
+.ea-boostIco.vence{border-color:var(--mostaza);color:var(--mostaza);animation:ea-boostVence 1.6s ease-in-out infinite alternate}
+@keyframes ea-boostVence{from{box-shadow:0 0 0 0 rgba(242,182,50,0)}to{box-shadow:0 0 0 4px rgba(242,182,50,.3)}}
+.ea-quieto .ea-boostIco.vence{animation:none}
 /* tu empresa del camino */
 .ea-caminoPill{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:8px;font-size:12px;color:var(--crema);
   background:rgba(255,244,220,.1);padding:6px 12px;border-radius:12px}
@@ -58841,6 +58852,34 @@ function Motor() {
               <div className="ea-animoPill ea-dis" title="Tu ánimo da o quita ayuda en los minijuegos y cansancio. Vuelve solo hacia Normal.">
                 <span>{animoDe(s.animo).e}</span>Ánimo: {animoDe(s.animo).n}
               </div>
+              {/* Tus boosts activos, con lo que les queda (Alessandro,
+                  24-nov-2026). Antes solo se veían dentro de Compras y el
+                  aviso llegaba cuando ya habían vencido. El que se termina
+                  en este cierre se marca, para que sepas que el año que
+                  viene toca volver a comprarlo (mientras sigue activo la
+                  tienda no lo deja renovar); al tocarlo se abre Compras
+                  en Boosts. */}
+              {(() => {
+                const activos = BOOSTS.filter((b) => boostActivo(s, b.id));
+                if (!activos.length) return null;
+                return (
+                  <div className="ea-boostsFila" aria-label="Tus boosts activos">
+                    {activos.map((b) => {
+                      const q = quedaBoost(s, b.id);
+                      const vence = q <= 1;
+                      return (
+                        <button key={b.id} type="button" className={"ea-boostIco ea-dis" + (vence ? " vence" : "")}
+                          title={b.n + (vence ? ": se termina al cerrar este año. Después lo puedes volver a activar en Compras." : ": te quedan " + q + " años.")}
+                          aria-label={b.n + (vence ? ", se termina este año" : ", te quedan " + q + " años")}
+                          disabled={!hayCompras}
+                          onClick={() => { if (carteraPend || !hayCompras) return; setGrupo("boosts"); setTab("comprar"); }}>
+                          <span aria-hidden="true">{b.e}</span>{vence ? "último año" : q + " años"}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
             </div>
           </div>
           {fase !== "cierre" && (fase === "evento" || fase === "minijuego" || fase === "resultado") && (
