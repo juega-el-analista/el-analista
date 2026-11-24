@@ -246,6 +246,19 @@ const CSS = `
   border:1px solid var(--cobre);padding:1px 7px;border-radius:2px}
 .ea-opRareza.rara{background:#8A5CC7}
 .ea-opRareza.dorada{background:#B8901C}
+/* icónica: la de El Ídolo, la que sale una vez cada muchas etapas */
+.ea-op.iconica{border-color:#C2410C;background:linear-gradient(120deg,rgba(234,88,12,.14),rgba(214,170,40,.16),rgba(138,92,199,.14))}
+.ea-op.iconica:hover:not(:disabled){border-color:#C2410C;background:linear-gradient(120deg,rgba(234,88,12,.24),rgba(214,170,40,.26),rgba(138,92,199,.24))}
+.ea-opRareza.iconica{background:linear-gradient(90deg,#C2410C,#B8901C)}
+/* tu legado, en la placa: el nivel, el número y el que sigue */
+.ea-legado{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:12px}
+.ea-legadoN{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cobre)}
+.ea-legadoBar{position:relative;flex:1;min-width:90px;max-width:220px;height:6px;border-radius:3px;background:rgba(42,36,64,.12);overflow:hidden}
+.ea-legadoBar i{position:absolute;left:0;top:0;bottom:0;background:var(--cobre);border-radius:3px;transition:width .6s ease}
+.ea-legadoSig{color:var(--gris)}
+.ea-gloria{border:1px solid var(--cobre);padding:14px 16px;margin:16px 0;border-radius:2px}
+.ea-gloriaN{font-size:34px;line-height:1.1;color:var(--tintaPapel)}
+.ea-gloriaP{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--gris);margin-top:4px}
 
 /* Una opcion que no te alcanza se ve, y se ve POR QUE no te alcanza. No
    se esconde: enterarte de lo que te estas perdiendo es justo lo que
@@ -782,6 +795,7 @@ const CSS6 = `
 .ea-opAzar{background:rgba(255,244,220,.12);color:var(--crema)}
 .ea-op.rara{background:#4B3A78;box-shadow:0 3px 0 #2E2350, inset 0 0 0 2px #A88BE0}
 .ea-op.dorada{background:#4A3A20;box-shadow:0 3px 0 #2C2210, inset 0 0 0 2px var(--mostaza)}
+.ea-op.iconica{background:linear-gradient(120deg,#5A2A14,#4A3A20 55%,#3E2F66);box-shadow:0 3px 0 #2C2210, inset 0 0 0 2px #F97316}
 .ea-op.sinfuerza{background:rgba(42,36,64,.07);color:rgba(42,36,64,.55);box-shadow:inset 0 0 0 2px rgba(176,50,31,.35);border:none}
 .ea-op.sinfuerza:hover{background:rgba(42,36,64,.07)}
 .ea-op.sinfuerza .ea-opN{color:rgba(176,50,31,.7)}
@@ -48537,7 +48551,10 @@ const metaDe = (st) => entero(st && st.meta, 30, META_MIN, META_MAX);
 const topeDe = (st) => Math.min(TOPE_ABSOLUTO, metaDe(st) + entero(st && st.seguir, 0, 0, 20) * 5);
 const semestre = (t) => String(2026 + t);
 const edad = (t, ini) => entero(ini, 20, 20, 50) + entero(t, 0, 0, 60);
-const esClave = (t) => t % 2 === 1;
+/* clave, una etapa sí y otra no. `turno` cuenta años y avanza de dos
+   en dos, así que el viejo `t % 2 === 1` nunca daba verdadero y las
+   decisiones clave (D) no salían jamás */
+const esClave = (t) => Math.floor(entero(t, 0, 0, 99) / ETAPA) % 2 === 1;
 const tiene = (st, id) => st.perks.includes(id);
 
 /* Un fallo devolvía el 30% de lo bueno, y con el texto del éxito: fallar
@@ -49412,23 +49429,60 @@ const VACACIONES_OPCIONES = [
 ];
 const VACACIONES_COMPRA = ["viaje"];
 const esVacacion = (o) => !!(o && (o.vacaciones || VACACIONES_OPCIONES.indexOf(o.t) >= 0));
+/* Las rarezas de la carta, con las probabilidades de El Ídolo. Se tira
+   un número entre 0 y 1: la carta estrella lo usa entero; las otras dos
+   solo pueden ser raras (20%). */
+const RAREZA_PROB = { iconica: 0.015, dorada: 0.06, rara: 0.25, raraResto: 0.2 };
+const VALOR_RAREZA = { comun: 4, rara: 16, dorada: 30, iconica: 30 };
+/* la icónica empuja además un segundo atributo */
+const VALOR_ICONICA_2 = 14;
+const rarezaCarta = (r, esEstrella, turno) => {
+  const x = numero(r, 1);
+  if (!esEstrella) return x < RAREZA_PROB.raraResto ? "rara" : null;
+  const ic = entero(turno, 0, 0, 99) >= ETAPA ? RAREZA_PROB.iconica : 0;
+  if (x < ic) return "iconica";
+  if (x < ic + RAREZA_PROB.dorada) return "dorada";
+  if (x < ic + RAREZA_PROB.dorada + RAREZA_PROB.rara) return "rara";
+  return null;
+};
+const CARTAS_ICONICAS = {
+  ene: { t: "Un año sabático que te cambia la vida", k2: "cri",
+    msg: "Vuelves de otra manera: descansado de verdad y con la cabeza llena de ideas." },
+  cri: { t: "Un máster en el extranjero, con beca completa", k2: "red",
+    msg: "Sabes más que nunca y vuelves con compañeros de clase repartidos por medio mundo." },
+  red: { t: "Te invitan a Davos", k2: "rep",
+    msg: "Una semana entre la gente que mueve el mundo. Tu agenda de contactos ya no es la misma." },
+  rep: { t: "Tu caso sale en la tapa de una revista de negocios", k2: "red",
+    msg: "Todo el sector sabe quién eres, y tu teléfono no para de sonar." },
+};
 const escenaPretemporada = (st) => {
   const rnd = generadorDe("pre:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + entero(st && st.turno, 0, 0, 99));
   const claves = Object.keys(CARTAS_PRE);
   /* tres atributos distintos: elegir dos veces lo mismo no es elegir */
   const pozo = claves.slice();
   const cartas = [];
+  /* Como en El Ídolo (11-nov-2026): de las tres cartas, solo una —la
+     «estrella»— tira rareza de verdad: icónica 1,5%, dorada 6%, rara 25%.
+     Las otras dos son comunes o, de vez en cuando, raras. Antes cada
+     carta tiraba sola (rara 10%, dorada 3%) y no había icónica. La
+     icónica no sale en la primera etapa: ahí todavía no eres nadie. */
+  const estrella = Math.floor(rnd() * 3);
   for (let i = 0; i < 3; i++) {
     const k = pozo.splice(Math.floor(rnd() * pozo.length), 1)[0];
-    const r = rnd();
-    /* Raras y doradas salen poco pero se notan muchísimo (Alessandro,
-       8-oct-2026): dorada 3% (+15), rara 10% (+8), común +2. */
-    /* partida corta: el empujón dura toda la etapa, así que pesa el doble */
-    const v = r < 0.03 ? 30 : r < 0.13 ? 16 : 4;
+    const rareza = rarezaCarta(rnd(), i === estrella, entero(st && st.turno, 0, 0, 99));
+    const v = VALOR_RAREZA[rareza || "comun"];
+    if (rareza === "iconica") {
+      const ic = CARTAS_ICONICAS[k];
+      cartas.push({
+        t: ic.t, rareza,
+        d: { [k]: v, [ic.k2]: VALOR_ICONICA_2,
+          msg: "Inicio de etapa: carta icónica. " + ic.msg },
+      });
+      continue;
+    }
     const lista = CARTAS_PRE[k];
     const titulo = lista[Math.floor(rnd() * lista.length)];
     /* la rareza va aparte, para pintarla: rara en morado, dorada en dorado */
-    const rareza = v === 30 ? "dorada" : v === 16 ? "rara" : null;
     cartas.push({
       t: titulo, rareza,
       d: { [k]: v, msg: VACACIONES_OPCIONES.indexOf(titulo) >= 0
@@ -49444,6 +49498,219 @@ const escenaPretemporada = (st) => {
     x: "Empiezan dos años nuevos. Antes de que lleguen el trabajo y las obligaciones, puedes dedicarte a una sola cosa. Elige cuál.",
     o: cartas,
   };
+};
+
+/* ============================================================
+   TU ARRANQUE: LA CLASE Y EL ARQUETIPO (como El Ídolo, 11-nov-2026)
+   El Ídolo abre la carrera con dos preguntas que te definen para
+   siempre: qué clase de jugador eres (las finales se juegan a suerte,
+   a habilidad o un poco y un poco) y un arquetipo entre tres que trae
+   el dado. Aquí son las dos primeras escenas de la partida, por fuera
+   del presupuesto de la etapa, y la primera etapa no trae carta de
+   inicio: el arquetipo ocupa su lugar.
+   ============================================================ */
+const ID_CLASE = 9791;
+const ID_ARQ = 9792;
+const CLASES = [
+  { id: "intuitivo", ico: "🎲", n: "Intuitivo",
+    d: "Decides por olfato: los minijuegos se resuelven a pura suerte, y tus atributos inclinan la moneda." },
+  { id: "mixto", ico: "🔀", n: "Mixto",
+    d: "Un poco y un poco: la mitad de las veces juegas el minijuego y la otra mitad decide tu olfato." },
+  { id: "tecnico", ico: "🧠", n: "Técnico",
+    d: "Todo en tus manos: juegas todos los minijuegos. Memoria, puntería, cálculo y sangre fría." },
+];
+const IDS_CLASE = CLASES.map((c) => c.id);
+/* Los que nunca se dejan al olfato: la clase y el examen son el temario
+   (lo que no se da en clase no se pregunta después) y la negociación
+   tiene su propia mesa. */
+const JUEGOS_SIN_AZAR = ["catedra", "quiz", "anclaje"];
+/* ¿este minijuego se resuelve a suerte? El intuitivo siempre; el mixto,
+   la mitad de las veces (r es un número entre 0 y 1). */
+const juegoAlOlfato = (st, o, r) => {
+  const k = o && (o.juego || o.j);
+  if (!k || JUEGOS_SIN_AZAR.indexOf(k) >= 0 || (o && (o.negocia || o.contrato))) return false;
+  const c = st && st.clase;
+  if (c === "intuitivo") return true;
+  if (c === "mixto") return numero(r, 1) < 0.5;
+  return false;
+};
+/* Las chances del olfato: lo mismo que ayuda en el minijuego (tu
+   atributo, tu carrera, tus boosts) inclina la moneda. Con ayuda 60 es
+   35% redondo, 30% a medias y 35% mal. El amuleto de la suerte suma. */
+const probsOlfato = (ayuda, suerte) => {
+  const q = clamp((numero(ayuda, 50) - 10) / 100 + clamp(numero(suerte, 0), 0, 0.3), 0.15, 0.8);
+  const exito = q * 0.7;
+  const parcial = 0.3;
+  return [exito, parcial, Math.max(0, 1 - exito - parcial)];
+};
+const escenaClase = () => ({
+  id: ID_CLASE, min: 0, max: 6, pretemporada: true, cuna: true,
+  t: "¿Qué clase de analista eres?",
+  x: "Define cómo se resuelven todos los momentos de habilidad de tu carrera. No se puede cambiar después.",
+  o: CLASES.map((c) => ({
+    t: c.ico + " " + c.n, claseId: c.id, tag: c.d,
+    d: { msg: "Eres " + c.n.toLowerCase() + ". " + c.d },
+  })),
+});
+/* Nueve arquetipos y uno icónico (1%), como las cunas de El Ídolo. El
+   dado trae tres distintos; la semilla es la de la partida, así que en
+   la del día todo el mundo ve los mismos. */
+const ARQUETIPOS = [
+  { id: "cerebrito", n: "El Cerebrito", x: "Te sabías el libro antes del examen.", d: { cri: 14 } },
+  { id: "relacionista", n: "El Relacionista", x: "Conoces a alguien en cada oficina de la ciudad.", d: { red: 14 } },
+  { id: "maquina", n: "La Máquina", x: "Doce horas y sales entero. Nadie entiende cómo.", d: { ene: 14 } },
+  { id: "carta", n: "La Carta de Presentación", x: "Tu nombre llega antes que tú a cada reunión.", d: { rep: 14 } },
+  { id: "estratega", n: "El Estratega", x: "Lees el tablero entero antes de mover una pieza.", d: { cri: 9, rep: 7 } },
+  { id: "vendedor", n: "El Vendedor", x: "Le vendes hielo a un esquimal, y encima te recomienda.", d: { red: 9, rep: 7 } },
+  { id: "incansable", n: "El Incansable", x: "Estudias de noche y rindes de día.", d: { ene: 9, cri: 7 } },
+  { id: "capitan", n: "El Capitán", x: "En el equipo de la universidad ya eras el que ordenaba.", d: { rep: 9, red: 7 } },
+  { id: "todoterreno", n: "El Todoterreno", x: "No eres el mejor en nada y eres bueno en todo.", d: { cri: 5, red: 5, rep: 5, ene: 5 } },
+];
+const ARQ_ICONICO = { id: "prodigio", n: "El Prodigio", iconico: true,
+  x: "Uno de cada cien. Te van a recordar.", d: { cri: 10, red: 10, rep: 10, ene: 10 } };
+const IDS_ARQ = ARQUETIPOS.map((a) => a.id).concat(ARQ_ICONICO.id);
+const ARQ_DE = (id) => ARQUETIPOS.concat(ARQ_ICONICO).find((a) => a.id === id) || null;
+const PROB_ARQ_ICONICO = 0.01;
+const escenaArquetipo = (st) => {
+  const rnd = generadorDe("cuna:" + entero(st && st.semilla, 0, 0, 2e9));
+  const pozo = ARQUETIPOS.slice();
+  const tres = [];
+  for (let i = 0; i < 3; i++) tres.push(pozo.splice(Math.floor(rnd() * pozo.length), 1)[0]);
+  if (rnd() < PROB_ARQ_ICONICO) tres[Math.floor(rnd() * 3)] = ARQ_ICONICO;
+  return {
+    id: ID_ARQ, min: 0, max: 6, pretemporada: true, cuna: true,
+    t: "¿Qué clase de profesional eres?",
+    x: "El dado trajo tres destinos. Elige uno: te define para siempre.",
+    o: tres.map((a) => ({
+      t: a.n, arqId: a.id, tag: a.x, rareza: a.iconico ? "iconica" : null,
+      d: { ...a.d, msg: "Tu arranque: " + a.n + ". " + a.x },
+    })),
+  };
+};
+
+/* ============================================================
+   EL LEGADO (la idolatría de El Ídolo, 11-nov-2026)
+   Un número de 0 a 100 que dice qué dejaste en tu oficio. Sube con los
+   años en la misma firma, los ascensos, los reconocimientos y montar lo
+   tuyo; baja si te vas, si te despiden o si te quiebras. Cinco niveles
+   con nombre y siempre a la vista el que sigue: «Conocido 31 → Referente
+   50». Las mismas reglas que hacen adictiva la idolatría:
+   - quedarse paga, irse cuesta (y más si te vas pronto);
+   - sin un reconocimiento (o tu propia firma) no pasas de 80;
+   - por encima de 85 cuesta muchísimo: Leyenda es para pocos.
+   ============================================================ */
+const NIVELES_LEGADO = [
+  { min: 0, id: "uno", n: "Uno más" },
+  { min: 25, id: "conocido", n: "Conocido" },
+  { min: 50, id: "referente", n: "Referente" },
+  { min: 75, id: "eminencia", n: "Eminencia" },
+  { min: 95, id: "leyenda", n: "Leyenda" },
+];
+const LEGADO = {
+  porAno: 0.9,            /* cada año en la misma firma */
+  repAlta: 60,            /* por encima, la reputación suma algo cada año */
+  porRep: 1 / 20,
+  ascenso: 6, premio: 8, premioMundial: 14, firmaPropia: 8,
+  irse: -8, irsePronto: -12, anosPronto: 4,
+  despido: -8, burnout: -5,
+  techoSinPremio: 80, cuestaDesde: 85, cuestaFactor: 0.15,
+  porRangoInicial: 5,     /* empezar tarde ya trae algo hecho */
+};
+const nivelLegado = (v) => {
+  const x = clamp(numero(v, 0), 0, 100);
+  let n = NIVELES_LEGADO[0];
+  NIVELES_LEGADO.forEach((l) => { if (x >= l.min) n = l; });
+  return n;
+};
+const siguienteNivelLegado = (v) => NIVELES_LEGADO.find((l) => l.min > clamp(numero(v, 0), 0, 100)) || null;
+/* el techo: sin un reconocimiento, tu firma o llegar a lo más alto, 80 */
+const techoLegado = (st) => (Array.isArray(st.premios) && st.premios.length) || st.propia
+  || entero(st.rango, 0, 0, RANGOS.length - 1) >= RANGOS.length - 1 ? 100 : LEGADO.techoSinPremio;
+/* Lo que cambia el legado en un cierre de año. Puro: recibe el estado y
+   lo que pasó, devuelve el estado nuevo y el detalle para el resumen. */
+const legadoDelAno = (st, pasa) => {
+  const p = pasa || {};
+  const antes = clamp(numero(st.legado, 0), 0, 100);
+  const piezas = [];
+  let sube = 0, baja = 0;
+  const suma = (n, v) => { if (!v) return; piezas.push({ n, v }); if (v > 0) sube += v; else baja += v; };
+  let anos = entero(st.legAnos, 0, 0, 60);
+  const mismaFirma = !st.legPatron || st.legPatron === st.patron;
+  if (st.propia && !st.legPropia) {
+    suma("Montaste tu firma", LEGADO.firmaPropia);
+    anos = 0;
+  } else if (!mismaFirma && !st.propia) {
+    const pronto = anos < LEGADO.anosPronto && !st.legCambio;
+    suma(pronto ? "Te fuiste pronto de tu primera firma" : "Cambiaste de firma", pronto ? LEGADO.irsePronto : LEGADO.irse);
+    anos = 0;
+  } else {
+    suma("Un año más en " + (st.patron || "tu firma"), LEGADO.porAno);
+  }
+  const rep = numero(st.rep, 0);
+  if (rep > LEGADO.repAlta) suma("Tu reputación", Math.round((rep - LEGADO.repAlta) * LEGADO.porRep * 10) / 10);
+  if (p.ascenso) suma("Ascenso", LEGADO.ascenso);
+  (Array.isArray(p.premios) ? p.premios : []).forEach((id) => {
+    const pr = PREMIO_DE(id);
+    if (pr) suma(pr.n, pr.mundial ? LEGADO.premioMundial : LEGADO.premio);
+  });
+  if (p.despido) suma("Te bajaron o te dejaron ir", LEGADO.despido);
+  if (p.burnout) suma("Te quebraste", LEGADO.burnout);
+  /* por encima de 85 cada punto cuesta casi siete */
+  let gana = sube;
+  if (gana > 0 && antes + gana > LEGADO.cuestaDesde) {
+    const bajo = Math.max(0, LEGADO.cuestaDesde - antes);
+    gana = bajo + (gana - bajo) * LEGADO.cuestaFactor;
+  }
+  const techo = techoLegado(st);
+  let despues = antes + gana + baja;
+  /* el techo frena lo que sube, nunca te baja de donde estabas */
+  if (despues > techo) despues = Math.max(techo, Math.min(antes, despues));
+  despues = Math.round(clamp(despues, 0, 100) * 10) / 10;
+  const out = {
+    ...st,
+    legado: despues,
+    legadoMax: Math.max(clamp(numero(st.legadoMax, 0), 0, 100), despues),
+    legPatron: st.patron || "",
+    legAnos: entero(anos + 1, 0, 0, 60),
+    legPropia: st.propia === true,
+    legCambio: st.legCambio === true || (!mismaFirma && !st.propia),
+  };
+  const nAntes = nivelLegado(antes), nDesp = nivelLegado(despues);
+  return { st: out, legado: { antes, despues, piezas,
+    nivel: nDesp.n, subeNivel: nDesp.min > nAntes.min ? nDesp.n : null,
+    techo: despues >= techo && techo < 100 } };
+};
+
+/* ============================================================
+   LA GLORIA (el puntaje final de El Ídolo, 11-nov-2026)
+   Una sola cifra para comparar carreras. Como allá, la plata en sí no
+   suma: suma lo que dejaste (el legado), lo que te reconocieron, hasta
+   dónde llegaste y si quedaste libre. Empezar tarde tiene un multiplicador,
+   como el del arquero allá, para que una vida de 15 años pueda competir.
+   ============================================================ */
+const GLORIA = {
+  legado: 2000, leyenda: 50000,
+  premio: 25000, premioMundial: 60000,
+  porRango: 8000, firmaPropia: 30000,
+  libertad: 30000, libertadTope: 2,
+  minijuego: 300,
+  porEdad: { 20: 1, 30: 1.15, 40: 1.35, 50: 1.6 },
+};
+const gloriaDe = (st, cobertura) => {
+  const leg = clamp(numero(st.legadoMax, numero(st.legado, 0)), 0, 100);
+  const prem = Array.isArray(st.premios) ? st.premios.map(PREMIO_DE).filter(Boolean) : [];
+  const piezas = [
+    { n: "Legado (" + nivelLegado(leg).n + ")", v: leg * GLORIA.legado },
+    { n: "Llegaste a Leyenda", v: leg >= 95 ? GLORIA.leyenda : 0 },
+    { n: "Reconocimientos", v: prem.reduce((a, p) => a + (p.mundial ? GLORIA.premioMundial : GLORIA.premio), 0) },
+    { n: "Hasta dónde llegaste", v: entero(st.rango, 0, 0, RANGOS.length - 1) * GLORIA.porRango },
+    { n: "Tu propia firma", v: st.propia ? GLORIA.firmaPropia : 0 },
+    { n: "Libertad financiera", v: Math.round(clamp(numero(cobertura, 0), 0, GLORIA.libertadTope) * GLORIA.libertad) },
+    { n: "Minijuegos ganados", v: entero(st.ganados, 0, 0, 999) * GLORIA.minijuego },
+  ].filter((x) => x.v > 0);
+  const base = piezas.reduce((a, x) => a + x.v, 0);
+  const mult = GLORIA.porEdad[entero(st.edadIni, 20, 20, 50)] || 1;
+  return { total: Math.round(base * mult), piezas, mult };
 };
 
 /* Partida corta: varios cierres de año en uno solo, para el resumen de
@@ -49498,6 +49765,19 @@ const juntarCierres = (cs) => {
     hitosDec: pri.hitosDec,
     camino: cs.map((c) => c.camino).filter((c) => c && c.t).pop() || ult.camino || null,
     leccion: cs.map((c) => c.leccion).filter(Boolean).pop() || null,
+    /* el legado de la etapa: de dónde partiste y dónde quedaste */
+    legado: (() => {
+      const ls = cs.map((c) => c.legado).filter(Boolean);
+      if (!ls.length) return null;
+      const a = ls[0], z = ls[ls.length - 1];
+      const piezas = [];
+      ls.forEach((l) => (l.piezas || []).forEach((p) => {
+        const ya = piezas.find((x) => x.n === p.n);
+        if (ya) ya.v = Math.round((ya.v + p.v) * 10) / 10; else piezas.push({ ...p });
+      }));
+      return { antes: a.antes, despues: z.despues, piezas, nivel: z.nivel,
+        subeNivel: ls.map((l) => l.subeNivel).filter(Boolean).pop() || null, techo: z.techo };
+    })(),
   };
 };
 
@@ -49825,6 +50105,10 @@ const escenaDeId = (id, st) => {
     try { return escenaPretemporada(st); } catch (e) { return null; }
   }
   if (id === ID_MENTOR) return escenaMentor(st);
+  if (id === ID_CLASE) return escenaClase();
+  if (id === ID_ARQ) {
+    try { return escenaArquetipo(st); } catch (e) { return null; }
+  }
   if (id === ID_CAMINO) {
     try { return escenaCamino(st); } catch (e) { return null; }
   }
@@ -49854,7 +50138,7 @@ const colaDeIds = (ids, st) =>
     /* una cola guardada justo al montar tu firma no trae escenas de empleado */
     .filter((e) => !(sinJefe(st) && esDeEmpleado(e)));
 
-const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA, [ID_PRE, ID_MENTOR]);
+const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA, [ID_PRE, ID_MENTOR, ID_CLASE, ID_ARQ]);
 
 
 
@@ -50036,7 +50320,11 @@ const sanear = (bruto) => {
   st.patron = texto(r.patron, "", 48);
   st.propia = r.propia === true;
   st.premios = unicos(listaDe(r.premios, (x) => PREMIOS.some((p) => p.id === x), 20));
-  st.cola = listaDe(r.cola, (x) => IDS_ESCENA_VALIDOS.indexOf(x) >= 0, 14).map((x) => entero(x, 0, 0, 99999));
+  /* los sustos y la decisión de tu empresa se arman fuera de
+     ESCENAS_FIJAS: sin esto, una cola guardada justo antes de ellos
+     los perdía al recargar */
+  st.cola = listaDe(r.cola, (x) => IDS_ESCENA_VALIDOS.indexOf(x) >= 0
+    || IDS_SUSTO.indexOf(x) >= 0 || x === ID_CAMINO, 14).map((x) => entero(x, 0, 0, 99999));
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
   /* la semilla de la pretemporada; un guardado viejo cae en 0 y sigue jugable */
   st.semilla = entero(r.semilla, 0, 0, 2e9);
@@ -50074,6 +50362,16 @@ const sanear = (bruto) => {
   st.startup = r.startup === true;
   /* el mentor y cuántas decisiones coincidiste con cada uno */
   st.mentor = IDS_MENTOR.indexOf(r.mentor) >= 0 ? r.mentor : null;
+  /* tu arranque y tu legado (como El Ídolo). Un guardado de antes no
+     trae clase: juega como técnico, que es como se jugaba */
+  st.clase = IDS_CLASE.indexOf(r.clase) >= 0 ? r.clase : null;
+  st.arq = IDS_ARQ.indexOf(r.arq) >= 0 ? r.arq : null;
+  st.legado = Math.round(clamp(numero(r.legado, 0), 0, 100) * 10) / 10;
+  st.legadoMax = Math.max(st.legado, Math.round(clamp(numero(r.legadoMax, 0), 0, 100) * 10) / 10);
+  st.legPatron = texto(r.legPatron, "", 48);
+  st.legAnos = entero(r.legAnos, 0, 0, 60);
+  st.legPropia = r.legPropia === true;
+  st.legCambio = r.legCambio === true;
   st.nDec = entero(r.nDec, 0, 0, 99999);
   st.afin = {};
   IDS_MENTOR.forEach((id) => { const v = entero(r.afin && r.afin[id], 0, 0, 99999); if (v) st.afin[id] = Math.min(v, st.nDec); });
@@ -52230,10 +52528,13 @@ const momentoDe = (tipo, st, cambios, extra) => {
    (Alessandro, 9-nov-2026). La decisión es dentro de la cinemática,
    con un reloj: si no eliges a tiempo, la vida elige por ti, y casi
    siempre peor. Cada susto sale una vez por vida.
+   Los ids van de 9856 a 9858: nacieron en 9850-9852, encima de tres
+   OPORTUNIDADES, y ver un susto marcaba esa oportunidad como vista
+   para siempre (y al recargar, la oportunidad volvía como susto).
    ============================================================ */
 const SUSTOS = [
   {
-    id: 9850, min: 0, max: 6, susto: "asalto", seg: 5,
+    id: 9856, min: 0, max: 6, susto: "asalto", seg: 5,
     k: "Una noche, saliendo de la oficina", t: "«¡Dame el celular, rápido!»",
     x: "Alguien te corta el paso en la cuadra oscura. Pide el celular y no parece de los que esperan.",
     o: [
@@ -52244,7 +52545,7 @@ const SUSTOS = [
     porTi: { t: "Te quedaste paralizado", d: { cash: -1200, animo: -2, msg: "No alcanzas a reaccionar. Te quita el celular y la billetera sin que digas nada." } },
   },
   {
-    id: 9851, min: 0, max: 6, susto: "crisis", seg: 6, cartera: 5000,
+    id: 9857, min: 0, max: 6, susto: "crisis", seg: 6, cartera: 5000,
     k: "Un lunes negro", t: "La bolsa cae 18% en una mañana",
     x: "Las pantallas están en rojo, el teléfono no para y todo el mundo te pregunta qué haces con tu plata.",
     o: [
@@ -52255,7 +52556,7 @@ const SUSTOS = [
     porTi: { t: "No decidiste nada", d: { mercado: -0.22, animo: -2, msg: "El pánico decide por ti: tu asesor vende la mitad justo en el peor momento." } },
   },
   {
-    id: 9852, min: 0, max: 6, susto: "estafa", seg: 7,
+    id: 9858, min: 0, max: 6, susto: "estafa", seg: 7,
     k: "Un martes cualquiera, en tu casa", t: "«Le llamamos del banco: deme el código que le llegó»",
     x: "Número oculto. La voz suena muy profesional y dice que hay un movimiento raro en tu cuenta.",
     o: [
@@ -54776,6 +55077,7 @@ const ICONO_VIDA = {
 /* El simbolo, el rotulo y el color de cada clase de escena. */
 const CLASE_ESCENA = (ev) => {
   if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
+  if (ev.cuna) return { k: "persona", n: "Tu arranque", c: "var(--cobre)" };
   if (ev.pretemporada) return { k: "documento", n: "Inicio de etapa", c: "var(--cobre)" };
   if (ev.mentores) return { k: "persona", n: "Tu mentor", c: "var(--cobre)" };
   if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "#B8901C" };   /* dorado, como las cartas doradas */
@@ -55480,6 +55782,9 @@ const textoCompartir = (st, pat, hechos) => {
     "El Analista · " + cargoDe(st) + " a los " + edad(st.turno, st.edadIni),
     "USD " + fmt(pat) + " · «" + apodoDe(st) + "»",
   ];
+  /* el legado, como la idolatría que se comparte en El Ídolo */
+  const lv = clamp(numero(st && st.legadoMax, 0), 0, 100);
+  if (lv > 0) lineas.push("Legado: " + nivelLegado(lv).n + " " + Math.floor(lv) + "/100");
   if (st && st.dia && Array.isArray(hechos)) {
     lineas.push("Carrera del día " + st.dia + ": " + hechos.map((h) => (h ? "✅" : "❌")).join(""));
   }
@@ -56370,10 +56675,18 @@ function Motor() {
       const su = elegirAzar(sustoPosible(st).filter((e) => usados.indexOf(e.id) < 0));
       if (su) { lista.push(su); usados.push(su.id); }
     }
-    lista.unshift(escenaPretemporada(st));
+    /* Tu arranque, como en El Ídolo: en la primera etapa el arquetipo
+       ocupa el lugar de la carta de inicio, y la clase va antes que todo.
+       Solo en una partida nueva: una empezada antes sigue como estaba. */
+    const arranque = entero(st.turno, 0, 0, 99) === 0;
+    const pideArq = arranque && !st.arq && st.vistos.indexOf(ID_ARQ) < 0;
+    const pideClase = arranque && !st.clase && st.vistos.indexOf(ID_CLASE) < 0;
+    if (!pideArq) lista.unshift(escenaPretemporada(st));
     /* sin mentor todavía: elegirlo es lo primero (también en una partida
        empezada antes de que hubiera mentores) */
     if (!st.mentor && st.vistos.indexOf(ID_MENTOR) < 0) lista.unshift(escenaMentor(st));
+    if (pideArq) lista.unshift(escenaArquetipo(st));
+    if (pideClase) lista.unshift(escenaClase());
     return lista;
   };
 
@@ -56512,6 +56825,10 @@ function Motor() {
         : "Entras al sector a los " + ed.e + ", con tu título de " + ca.n + " en " + na.ban,
     }];
     st.histo = [st.cash];   /* punto de partida, para que el primer cierre ya tenga curva */
+    /* el legado arranca con lo que ya hiciste: nada a los 20, algo a los 50 */
+    st.legado = st.rango * LEGADO.porRangoInicial;
+    st.legadoMax = st.legado;
+    st.legPatron = st.patron;
 
     st = sanear(st);
     setS(st);
@@ -56792,6 +57109,10 @@ function Motor() {
       st.empresa = { ...st.empresa, decs: (st.empresa.decs || []).concat(ev.decCamino).slice(-20) };
     }
     if (o && o.mentorId && IDS_MENTOR.indexOf(o.mentorId) >= 0) st.mentor = o.mentorId;
+    /* tu arranque: la clase y el arquetipo (los atributos del arquetipo
+       vienen en o.d y se aplican como cualquier otra escena) */
+    if (o && o.claseId && IDS_CLASE.indexOf(o.claseId) >= 0) st.clase = o.claseId;
+    if (o && o.arqId && IDS_ARQ.indexOf(o.arqId) >= 0) st.arq = o.arqId;
     let siguioMentor = null, eleccion = -1;
     /* con qué mentores coincidió esta decisión (para el «Jugaste como…») */
     if (ev && o && !ev.mentores && !ev.pretemporada) {
@@ -57483,6 +57804,8 @@ function Motor() {
     if (st.cri > 60) { st.cri = clamp(st.cri - 1, 0, 100); st.mod = st.cri; }
     if (st.red > 60) st.red = clamp(st.red - 1, 0, 100);
     let terminar = null;
+    /* para el legado: si este año hubo despido o agotamiento */
+    const burn0 = entero(st.burnouts, 0, 0, 99), desp0 = entero(st.despidos, 0, 0, 99);
     if (st.ene <= 0) {
       st.burnouts += 1;
       st.ene = 55; st.rep = clamp(st.rep - 8, 0, 100); st.cash -= 3000;
@@ -57618,10 +57941,22 @@ function Motor() {
       if (x) notas.push("Se terminó tu boost «" + x.n + "». Lo puedes volver a activar en Compras.");
     });
     st.boosts = (Array.isArray(st.boosts) ? st.boosts : []).filter((b) => b.hasta > st.turno + 1);
+    /* el legado del año (como la idolatría de El Ídolo) */
+    let legadoAno = null;
+    try {
+      const lg = legadoDelAno(st, { ascenso, premios: galas,
+        despido: entero(st.despidos, 0, 0, 99) > desp0, burnout: entero(st.burnouts, 0, 0, 99) > burn0 });
+      st = lg.st;
+      legadoAno = lg.legado;
+      if (legadoAno.subeNivel) {
+        notas.push("Tu legado sube de nivel: ahora eres " + legadoAno.subeNivel + ".");
+        st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Tu legado: " + legadoAno.subeNivel });
+      }
+    } catch (e) { /* el legado no puede tumbar el cierre */ }
     st.turno += 1;
     st = sanear(st);
     return { st, terminar, cierre: {
-      logros, galas,
+      logros, galas, legado: legadoAno,
       ano, notis, ascenso, cartera, notas, ing, egr, ingreso, egreso: egreso + pagoDeuda, neto: neto - pagoDeuda, ahorro,
       patAntes, patrimonio, bienesV, histo: st.histo, leccion, hitos, deuda,
       patVisible, patIni, partes, camino: camAno,
@@ -57724,6 +58059,21 @@ function Motor() {
       if (!todasFuera && faltaDe(o, s)) return;
     } catch (e) { /* ante la duda, se deja decidir */ }
     setOp(o);
+    if ((o.juego || o.j) && juegoAlOlfato(s, o, azar())) {
+      /* tu clase: el olfato decide en vez del minijuego. Lo que ayuda
+         a jugarlo (atributo, carrera, boosts) inclina la moneda, y el
+         resultado se cobra igual que si lo hubieras jugado. */
+      let ayuda = 50;
+      try { ayuda = ayudaDe(o); } catch (e) { /* con la ayuda media */ }
+      const ps = probsOlfato(ayuda, suerteBoosts(s));
+      const i = tirarAzar(ps);
+      const nivel = ["exito", "parcial", "fallo"][i] || "parcial";
+      const base = o.res ? o.res[nivel] : escalar(o.d || {}, nivel);
+      const b = { ...(base || {}) };
+      if (nivel === "fallo" && !o.res) b.msg = msgFallo(o);
+      resolverEscena(b, nivel, o, { i, ps, rots: ["Te salió redondo", "A medias", "No salió"], tonos: ["exito", "parcial", "fallo"] });
+      return;
+    }
     if (o.juego || o.j) { irA("minijuego"); return; }
     if (o.azar && Array.isArray(o.azar.esc) && o.azar.esc.length) {
       const ps = probsAzar(o, s);
@@ -57779,7 +58129,7 @@ function Motor() {
   const [flash, setFlash] = useState(null);
   const siguienteEscena = () => {
     if (!enFase("resultado")) return;
-    setFlash(res && res.auto ? { msg: res.msg, cambios: res.cambios } : null);
+    setFlash(res && res.auto ? { msg: res.msg, cambios: res.cambios, et: ev && ev.cuna ? "Tu arranque" : "Inicio de etapa" } : null);
     const resto = (Array.isArray(cola) ? cola : []).filter(escenaValida);
     if (resto.length > 0) {
       setCola(resto.slice(1)); ponerEscena(resto[0]);
@@ -57823,7 +58173,9 @@ function Motor() {
 
   const bienesVal = valorBienes(s);
   const valorFondo = s.fondo ? s.fondo.posiciones.reduce((a, p) => a + p.ticket * s.fondo.pct, 0) : 0;
-  const patrimonio = s.cash + s.cartera + bienesVal + valorFondo - numero(s.deuda, 0);
+  /* con tu parte de la empresa: es lo que dice el encabezado de cada
+     etapa (patVisible) y lo que se manda al ranking */
+  const patrimonio = s.cash + s.cartera + bienesVal + valorFondo + valorCaminoDe(s) - numero(s.deuda, 0);
   const gastosAnuales = gastoAnual(s);
   const retiroAnual = patrimonio * 0.04;
   const rentaProps = s.bienes.reduce((a, id) => a + ((bienDe(id) || {}).renta || 0), 0) * 2;
@@ -58388,6 +58740,20 @@ function Motor() {
                 {/* El camino que elegiste no se anuncia en la placa: se
                     descubre entero al final, en «Tu camino». */}
               </div>
+              {/* Tu legado, como la idolatría de El Ídolo: el nivel, el
+                  número y cuánto falta para el que sigue. */}
+              {(() => {
+                const lv = clamp(numero(s.legado, 0), 0, 100);
+                const nv = nivelLegado(lv), sg = siguienteNivelLegado(lv);
+                return (
+                  <div className="ea-legado" title="Tu legado: lo que dejas en tu oficio. Sube quedándote, ascendiendo y ganando reconocimientos; baja si te vas o te despiden.">
+                    <span className="ea-legadoN ea-dis">{nv.n}</span>
+                    <span className="ea-mono">{Math.floor(lv)}/100</span>
+                    <span className="ea-legadoBar" aria-hidden="true"><i style={{ width: lv + "%" }} /></span>
+                    {sg && <span className="ea-legadoSig ea-dis">→ {sg.n} {sg.min}</span>}
+                  </div>
+                );
+              })()}
             </div>
             <div className="ea-reloj">
               {/* Sin «año X de Y»: saber cuándo se acaba la partida le quita
@@ -59200,7 +59566,7 @@ function Motor() {
                   {/* lo que dio la carta del inicio de etapa, sin pantalla propia */}
                   {flash && !ev.pretemporada && Array.isArray(flash.cambios) && flash.cambios.some((c) => (c.nota || c.v) && c.k !== "cash") && (
                     <div className="ea-cambios" style={{ marginTop: 0, marginBottom: 10 }}>
-                      <span className="ea-chip ea-dis">Inicio de etapa</span>
+                      <span className="ea-chip ea-dis">{flash.et || "Inicio de etapa"}</span>
                       {flash.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").map((c, i) => (
                         <span className={"ea-chip ea-mono k-" + c.k + " " + (c.k === "deuda" || c.neg ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}>
                           {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v)}
@@ -59247,7 +59613,10 @@ function Motor() {
                         const efs = efectosDe(o);
                         const falta = faltas[i];
                         const bits = [];
-                        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Conocimiento") + " " + Math.round(ayudaDe(o)));
+                        if (tipo) bits.push((s.clase === "intuitivo" && juegoAlOlfato(s, o, 0) ? "🎲 A olfato: " : "")
+                          + JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Conocimiento") + " " + Math.round(ayudaDe(o)));
+                        /* la línea que explica la clase o el arquetipo */
+                        if (o.tag) bits.push(o.tag);
                         /* la elección de mentor: su avatar, su nombre y lo que aconseja */
                         if (o.mentorId) {
                           const m = MENTOR(o.mentorId);
@@ -59266,7 +59635,7 @@ function Motor() {
                             title={falta ? "Te falta " + (ETIQ[falta.k] || falta.k).toLowerCase() : undefined}
                             onClick={() => elegir(o)}>
                             <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>
-                            {o.rareza && <span className={"ea-opRareza ea-dis " + o.rareza}>{o.rareza === "dorada" ? "Dorada" : "Rara"}</span>}
+                            {o.rareza && <span className={"ea-opRareza ea-dis " + o.rareza}>{o.rareza === "iconica" ? "Icónica" : o.rareza === "dorada" ? "Dorada" : "Rara"}</span>}
                             {o.t}
                             {/* en el contrato: qué clase de oferta es y cuánto vas a cobrar */}
                             {o.sueldo > 0 && (
@@ -59691,6 +60060,15 @@ function Motor() {
                 Ascenso a {cierre.ascenso}
               </div>
             )}
+            {/* el legado de la etapa, como la idolatría tras cada temporada */}
+            {cierre.legado && (
+              <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.9s", fontSize: cierre.legado.subeNivel ? 16 : 13,
+                color: cierre.legado.subeNivel ? "var(--cobre)" : undefined }}>
+                {cierre.legado.subeNivel ? "¡Tu legado sube: ahora eres " + cierre.legado.subeNivel + "!"
+                  : "Legado · " + cierre.legado.nivel} {Math.floor(cierre.legado.antes)} → {Math.floor(cierre.legado.despues)}
+                {cierre.legado.techo ? " · sin un reconocimiento no pasas de 80" : ""}
+              </div>
+            )}
             {cierre.hitos.length > 0 && (
               <div className="ea-anuncioL" style={{ animationDelay: "2s" }}>{cierre.hitos.join(" · ")}</div>
             )}
@@ -59786,6 +60164,24 @@ function Motor() {
               <div className="ea-cifraV ea-mono">USD {fmt(gastosAnuales)} al año</div>
             </div>
           </div>
+
+          {/* La gloria, como en El Ídolo: una sola cifra para comparar
+              carreras. La plata no suma; suma lo que dejaste. */}
+          {(() => {
+            const g = gloriaDe(s, cobertura);
+            const lv = clamp(numero(s.legadoMax, numero(s.legado, 0)), 0, 100);
+            return (
+              <div className="ea-gloria">
+                <div className="ea-cifraK">Tu gloria</div>
+                <div className="ea-gloriaN ea-dis">{fmt(g.total)}</div>
+                <div className="ea-gloriaP"><span>Tu legado más alto</span><span className="ea-mono">{nivelLegado(lv).n} · {Math.floor(lv)}/100</span></div>
+                {g.piezas.map((p) => (
+                  <div className="ea-gloriaP" key={p.n}><span>{p.n}</span><span className="ea-mono">{fmt(p.v)}</span></div>
+                ))}
+                {g.mult > 1 && <div className="ea-gloriaP"><span>Por empezar a los {s.edadIni}</span><span className="ea-mono">×{String(g.mult).replace(".", ",")}</span></div>}
+              </div>
+            );
+          })()}
 
           {s.dia && (() => {
             const h = hechosDelDia(s, { pat: patrimonio, gasto: gastosAnuales });

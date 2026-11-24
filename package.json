@@ -36,7 +36,8 @@
     "cierre": "node pruebas/cierre.js",
     "contrato": "node pruebas/contrato.js",
     "boosts": "node pruebas/boosts.js",
-    "gala": "node pruebas/gala.js"
+    "gala": "node pruebas/gala.js",
+    "legado": "node pruebas/legado.js"
   },
   "devDependencies": {
     "@babel/core": "^7",
