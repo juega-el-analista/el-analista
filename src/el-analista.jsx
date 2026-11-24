@@ -1693,8 +1693,11 @@ const CSS4 = `
   color:var(--crema);background:rgba(255,244,220,.1);padding:4px 10px 4px 6px;border-radius:999px}
 .ea-animoPill span{font-size:15px;letter-spacing:0}
 /* tus boosts, al costado de la pregunta: círculos que se van gastando */
-.ea-conBoosts{position:relative;padding-left:56px}
-.ea-boostsCol{position:absolute;left:0;top:0;display:flex;flex-direction:column;gap:10px}
+/* Fuera del flujo: la tarjeta no se mueve ni se angosta. Con margen de
+   sobra flotan al costado; en pantallas más angostas se montan sobre el
+   borde izquierdo de la tarjeta, dentro de su relleno de 26px. */
+.ea-conBoosts{position:relative}
+.ea-boostsCol{position:absolute;top:0;right:calc(100% + 12px);z-index:3;display:flex;flex-direction:column;gap:10px}
 .ea-boostCirc{position:relative;width:44px;height:44px;padding:0;border:0;border-radius:50%;cursor:pointer;
   background:var(--tinta);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(30,20,50,.18)}
 .ea-boostCirc svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
@@ -1703,11 +1706,10 @@ const CSS4 = `
 .ea-boostCirc span{position:relative;font-size:19px;line-height:1;transition:opacity .8s ease}
 .ea-boostCirc:disabled{cursor:default}
 .ea-boostCirc:focus-visible{outline:2px solid var(--mostaza);outline-offset:2px}
-@media (max-width:520px){
-  .ea-conBoosts{padding-left:44px}
-  .ea-boostsCol{gap:8px}
-  .ea-boostCirc{width:36px;height:36px}
-  .ea-boostCirc span{font-size:16px}
+@media (max-width:1219px){
+  .ea-boostsCol{right:auto;left:-12px;top:64px;gap:8px}
+  .ea-boostCirc{width:30px;height:30px}
+  .ea-boostCirc span{font-size:14px}
 }
 .ea-quieto .ea-boostArco,.ea-quieto .ea-boostCirc span{transition:none}
 /* tu empresa del camino */
@@ -58291,7 +58293,12 @@ function Motor() {
      gastar) y Vida (como vives, tu gente y tu expediente).
      ============================================================ */
   const hayCompras = abierto(s, "inmuebles") || abierto(s, "mejoras") || abierto(s, "vida");
-  const boostsVivos = BOOSTS.filter((b) => boostActivo(s, b.id));
+  /* Los círculos de boosts se desbloquean con el anuncio de Mejoras
+     (la escena «Tu primera inversión en ti» y su «Sección nueva»): antes
+     de que se abra Mejoras, o mientras el anuncio sigue en pantalla, no
+     se ven aunque haya boosts guardados. */
+  const boostsVivos = abierto(s, "mejoras") && nuevoSistema !== "mejoras"
+    ? BOOSTS.filter((b) => boostActivo(s, b.id)) : [];
   /* los tres grupos de Comprar, con lo que cada uno hace en una linea */
   const GRUPOS_COMPRA = [
     { id: "caprichos", n: "Para ti", e: "🎁", lista: CAPRICHOS, abierto: abierto(s, "vida"),
@@ -59551,7 +59558,9 @@ function Motor() {
                   24-nov-2026): un círculo por boost con un anillo que se va
                   gastando con los años y con cada escena del año. Sin
                   textos ni avisos de que se acaba: se ve, no se anuncia.
-                  Al tocarlo se abre Compras en Boosts. */}
+                  Flotan fuera del flujo, así que la pantalla del juego no
+                  se mueve ni se angosta. Al tocarlo se abre Compras en
+                  Boosts. */}
               {boostsVivos.length > 0 && (
                 <div className="ea-boostsCol" aria-label="Tus boosts">
                   {boostsVivos.map((b) => {
