@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El Analista · momentos de vida</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Nunito:wght@400..800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<style>
+  html,body{margin:0;background:#2A2440;font-family:Nunito,system-ui,sans-serif}
+  .ea-root{--tinta:#2A2440;--crema:#FFF4DC;--mostaza:#F2B632;--lila:#8C6BB1;--lila2:#5B4785;--terracota:#D9643A}
+  .demo{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;box-sizing:border-box}
+  .demoBot{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .demoBot button{border:2px solid var(--crema);border-radius:999px;background:transparent;color:var(--crema);font:800 14px 'Bricolage Grotesque';padding:9px 15px;cursor:pointer}
+  .demoBot button.on{background:var(--mostaza);border-color:var(--mostaza);color:var(--tinta)}
+
+  .ea-vida{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-vidaEntra .5s ease-out}
+  @keyframes ea-vidaEntra{from{opacity:0;transform:scale(1.04)}}
+  .ea-vida svg{position:absolute;inset:0;width:100%;height:100%}
+  .ea-vidaTxt{position:absolute;left:0;right:0;bottom:0;padding:70px 16px 20px;text-align:center;color:var(--crema);background:linear-gradient(transparent,rgba(42,36,64,.9))}
+  .ea-vidaK{font:700 12px Nunito,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mostaza)}
+  .ea-vidaT{font:800 clamp(28px,7vw,50px) 'Bricolage Grotesque',sans-serif;line-height:1.05;margin:4px 0 8px}
+  .ea-vidaEf{display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .ea-vidaEf span{font:700 12.5px Nunito,sans-serif;background:rgba(255,244,220,.14);padding:5px 10px;border-radius:999px}
+  .ea-flota{animation:ea-flota 3s ease-in-out infinite}
+  @keyframes ea-flota{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-90px);opacity:0}}
+  .ea-petalo{animation:ea-cae 3.2s linear infinite}
+  @keyframes ea-cae{from{transform:translateY(-60px) rotate(0)}to{transform:translateY(520px) rotate(300deg)}}
+  .ea-lluvia{animation:ea-llueve .8s linear infinite}
+  @keyframes ea-llueve{from{transform:translateY(-40px)}to{transform:translateY(480px)}}
+  .ea-mece{animation:ea-mece 1.6s ease-in-out infinite alternate;transform-origin:center}
+  @keyframes ea-mece{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+  @media (prefers-reduced-motion:reduce){.ea-root *{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="raiz"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+
+/* ---- una persona de frente, plana, con la cara del momento ---- */
+const BOCAS = { feliz: "M-9 12 Q0 22 9 12", triste: "M-8 17 Q0 10 8 17", serio: "M-7 15 L7 15" };
+function Persona({ x, y, s = 1, piel, pelo, colorPelo, ropa, falda, velo, cara = "feliz", lagrima, corbata, brazo }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      {falda ? <path d={`M-40 96 Q0 86 40 96 L66 ${falda} L-66 ${falda} Z`} fill={ropa} /> : <path d="M-46 170 Q-46 96 0 92 Q46 96 46 170 Z" fill={ropa} />}
+      {falda && <path d="M-34 100 Q0 92 34 100 L30 140 L-30 140 Z" fill={ropa} />}
+      {corbata && <path d="M-4 96 L4 96 L7 132 L0 142 L-7 132 Z" fill={corbata} />}
+      {brazo}
+      <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+      {pelo === "largo" && <path d="M-33 74 Q-40 10 0 4 Q40 10 33 74 Q28 32 18 22 Q0 28 -18 22 Q-28 32 -33 74 Z" fill={colorPelo} />}
+      <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+      {pelo === "corto" && <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={colorPelo} />}
+      {velo && <path d="M-36 30 Q0 -6 36 30 L48 150 Q0 160 -48 150 Z" fill="#FFFFFF" opacity=".55" />}
+      <g fill="#2A2440">
+        {cara === "feliz"
+          ? <g fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round"><path d="M-16 44 Q-11 38 -6 44" /><path d="M6 44 Q11 38 16 44" /></g>
+          : <g><circle cx="-11" cy="44" r="3" /><circle cx="11" cy="44" r="3" />
+              <rect x="-16" y="33" width="10" height="3" rx="1.5" transform="rotate(-12 -11 34)" /><rect x="6" y="33" width="10" height="3" rx="1.5" transform="rotate(12 11 34)" /></g>}
+      </g>
+      <g transform="translate(0 42)"><path d={BOCAS[cara]} fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" /></g>
+      {lagrima && <path d="M-14 50 q-2 6 0 9" stroke="#8CC4E8" strokeWidth="3" fill="none" strokeLinecap="round" />}
+      <circle cx="-20" cy="54" r="5" fill="#E9875A" opacity=".35" /><circle cx="20" cy="54" r="5" fill="#E9875A" opacity=".35" />
+    </g>
+  );
+}
+const TU = { piel: "#E7B48A", pelo: "corto", colorPelo: "#2A2440" };
+const PAREJA = { piel: "#C68B62", pelo: "largo", colorPelo: "#3B2A22" };
+
+/* ---- nace tu hijo: la clínica al amanecer ---- */
+function Clinica() {
+  return (
+    <g>
+      <defs><linearGradient id="amanecer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#F6C59A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+      <rect width="720" height="450" fill="#EAF2E8" />
+      <rect y="300" width="720" height="150" fill="#D5E6D3" />
+      <rect x="460" y="50" width="200" height="170" rx="12" fill="url(#amanecer)" />
+      <circle cx="560" cy="200" r="40" fill="#FFF4DC" opacity=".9" />
+      <rect x="556" y="50" width="8" height="170" fill="#FFF8EA" />
+      {/* suero */}
+      <rect x="96" y="70" width="6" height="230" fill="#B7C9B5" /><rect x="80" y="70" width="38" height="50" rx="10" fill="#FFFFFF" opacity=".9" />
+      {/* globo y flores */}
+      <path d="M640 250 L640 300" stroke="#665C7A" strokeWidth="2" /><ellipse cx="640" cy="232" rx="22" ry="26" fill="#D9643A" />
+      {/* cama */}
+      <rect x="150" y="240" width="300" height="60" rx="16" fill="#FFFFFF" />
+      <rect x="150" y="280" width="300" height="70" rx="10" fill="#8CC4E8" />
+      <rect x="140" y="200" width="22" height="160" rx="8" fill="#B7C9B5" />
+    </g>
+  );
+}
+function Bebe({ x, y }) {
+  return (
+    <g transform={`translate(${x} ${y})`} className="ea-mece">
+      <ellipse cx="0" cy="12" rx="34" ry="22" fill="#F2B632" />
+      <circle cx="0" cy="-4" r="17" fill="#F0C7A0" />
+      <g fill="none" stroke="#2A2440" strokeWidth="2" strokeLinecap="round"><path d="M-8 -4 Q-5 -7 -2 -4" /><path d="M2 -4 Q5 -7 8 -4" /><path d="M-3 4 Q0 7 3 4" /></g>
+      <path d="M-17 -8 Q0 -30 17 -8 Q0 -16 -17 -8" fill="#F2B632" />
+    </g>
+  );
+}
+/* ---- tu boda: la iglesia con su vitral ---- */
+function Iglesia() {
+  return (
+    <g>
+      <rect width="720" height="450" fill="#F3E2BF" />
+      <path d="M260 260 L260 90 Q360 0 460 90 L460 260 Z" fill="#5B4785" />
+      <g opacity=".95">
+        <path d="M280 250 L280 100 Q360 26 440 100 L440 250 Z" fill="#8C6BB1" />
+        <path d="M360 40 L360 250" stroke="#F3E2BF" strokeWidth="6" /><path d="M280 150 L440 150" stroke="#F3E2BF" strokeWidth="6" />
+        <circle cx="360" cy="110" r="26" fill="#F2B632" /><rect x="290" y="160" width="62" height="84" fill="#D9643A" /><rect x="368" y="160" width="62" height="84" fill="#E9875A" />
+      </g>
+      <rect y="300" width="720" height="150" fill="#E2CFA8" />
+      <path d="M300 450 L340 300 L380 300 L420 450 Z" fill="#B24E27" opacity=".85" />
+      {/* bancas y flores */}
+      <rect x="40" y="320" width="200" height="26" rx="6" fill="#8A3A1C" /><rect x="480" y="320" width="200" height="26" rx="6" fill="#8A3A1C" />
+      <circle cx="200" cy="260" r="26" fill="#FFFFFF" /><circle cx="226" cy="250" r="18" fill="#F2B632" /><circle cx="520" cy="260" r="26" fill="#FFFFFF" /><circle cx="494" cy="250" r="18" fill="#F2B632" />
+    </g>
+  );
+}
+/* ---- el funeral: el cementerio con lluvia ---- */
+function Cementerio() {
+  return (
+    <g>
+      <defs><linearGradient id="gris" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4A4166" /><stop offset="1" stopColor="#8C82A3" /></linearGradient></defs>
+      <rect width="720" height="450" fill="url(#gris)" />
+      <path d="M0 260 Q180 220 360 250 T720 236 L720 450 L0 450 Z" fill="#5B5577" />
+      <path d="M0 300 Q200 280 400 300 T720 290 L720 450 L0 450 Z" fill="#3B3358" />
+      <g fill="#2A2440" opacity=".7"><rect x="80" y="230" width="30" height="44" rx="12" /><rect x="600" y="222" width="34" height="50" rx="14" /><rect x="660" y="236" width="24" height="36" rx="10" /></g>
+      {/* la lápida y las flores */}
+      <path d="M470 330 L470 230 Q510 196 550 230 L550 330 Z" fill="#CFC4EA" />
+      <rect x="490" y="252" width="40" height="4" rx="2" fill="#8C82A3" /><rect x="482" y="264" width="56" height="4" rx="2" fill="#8C82A3" />
+      <circle cx="486" cy="330" r="9" fill="#D9643A" /><circle cx="500" cy="334" r="9" fill="#F2B632" /><circle cx="514" cy="330" r="9" fill="#FFF4DC" />
+      <g stroke="#CFE4F2" strokeWidth="2" opacity=".5" strokeLinecap="round">
+        {Array.from({ length: 22 }, (_, i) => (
+          <line key={i} className="ea-lluvia" x1={i * 34 + 10} y1="0" x2={i * 34 + 4} y2="18" style={{ animationDelay: (i % 7) * 0.11 + "s" }} />
+        ))}
+      </g>
+    </g>
+  );
+}
+function Paraguas({ x, y }) {
+  return <g transform={`translate(${x} ${y})`}><path d="M-90 0 Q0 -70 90 0 Z" fill="#2A2440" /><path d="M0 0 L0 90" stroke="#2A2440" strokeWidth="5" /></g>;
+}
+
+const MOMENTOS = {
+  hijo: {
+    k: "Abril de 2035 · Clínica Santa María", t: "Nace Sofía",
+    ef: ["Ánimo +1", "Gastos +USD 6.000 al año", "Tu pareja: más cerca"],
+    dibujo: () => (
+      <g>
+        <Clinica />
+        <Persona x={250} y={130} s={1.1} {...PAREJA} ropa="#FFFFFF" cara="feliz" />
+        <Bebe x={252} y={250} />
+        <Persona x={410} y={110} s={1.25} {...TU} ropa="#2F5D8A" cara="feliz" />
+        <g className="ea-flota" style={{ animationDelay: ".2s" }}><path d="M330 150 c-10-14 -30-4 -18 12 l18 16 l18-16 c12-16 -8-26 -18-12z" fill="#D9643A" /></g>
+        <g className="ea-flota" style={{ animationDelay: "1.4s" }}><path d="M370 170 c-7-10 -21-3 -13 8 l13 11 l13-11 c8-11 -6-18 -13-8z" fill="#E9875A" /></g>
+      </g>
+    ),
+  },
+  boda: {
+    k: "Junio de 2033 · Parroquia San José", t: "Te casas con Andrea",
+    ef: ["Ánimo +2", "Boda: −USD 18.000", "Tu pareja: al máximo"],
+    dibujo: () => (
+      <g>
+        <Iglesia />
+        <Persona x={300} y={150} s={1.15} {...TU} ropa="#2A2440" corbata="#F2B632" cara="feliz" />
+        <Persona x={420} y={150} s={1.15} {...PAREJA} ropa="#FFFFFF" falda={300} velo cara="feliz" />
+        {[40, 120, 200, 300, 380, 470, 560, 640, 700].map((x, i) => (
+          <ellipse key={x} className="ea-petalo" cx={x} cy="0" rx="7" ry="4" fill={i % 2 ? "#F2B632" : "#D9643A"} style={{ animationDelay: (i * 0.35) + "s" }} />
+        ))}
+      </g>
+    ),
+  },
+  funeral: {
+    k: "Noviembre de 2041 · Cementerio General", t: "Despides a tu papá",
+    ef: ["Ánimo −2", "Energía −10", "Herencia: USD 35.000"],
+    dibujo: () => (
+      <g>
+        <Cementerio />
+        <Paraguas x={290} y={150} />
+        <Persona x={250} y={150} s={1.1} {...TU} ropa="#2A2440" cara="triste" lagrima />
+        <Persona x={340} y={156} s={1.05} {...PAREJA} ropa="#3B3358" cara="triste" />
+      </g>
+    ),
+  },
+};
+
+function Momento({ m, onFin }) {
+  useEffect(() => { const t = setTimeout(onFin, 4000); return () => clearTimeout(t); }, []);
+  return (
+    <div className="ea-vida" onClick={onFin}>
+      <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice">{m.dibujo()}</svg>
+      <div className="ea-vidaTxt">
+        <div className="ea-vidaK">{m.k}</div>
+        <div className="ea-vidaT">{m.t}</div>
+        <div className="ea-vidaEf">{m.ef.map((x) => <span key={x}>{x}</span>)}</div>
+      </div>
+    </div>
+  );
+}
+
+function Demo() {
+  const [cual, setCual] = useState({ k: "hijo", vez: 0 });
+  const [fin, setFin] = useState(false);
+  const ver = (k) => { setFin(false); setCual({ k, vez: cual.vez + 1 }); };
+  return (
+    <div className="ea-root demo">
+      {!fin
+        ? <Momento key={cual.k + cual.vez} m={MOMENTOS[cual.k]} onFin={() => setFin(true)} />
+        : <h2 style={{ color: "#FFF4DC", fontFamily: "'Bricolage Grotesque'" }}>Aquí sigue la carta de la escena.</h2>}
+      <div className="demoBot">
+        <button className={cual.k === "hijo" ? "on" : ""} onClick={() => ver("hijo")}>Nace tu hijo</button>
+        <button className={cual.k === "boda" ? "on" : ""} onClick={() => ver("boda")}>Tu boda</button>
+        <button className={cual.k === "funeral" ? "on" : ""} onClick={() => ver("funeral")}>El funeral</button>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("raiz")).render(<Demo />);
+</script>
+</body>
+</html>

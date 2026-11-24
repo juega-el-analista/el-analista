@@ -93,7 +93,11 @@ async function unaVida(semilla) {
     if (/Vivir otra vida/.test(t)) {
       const ver = (t.match(/años · .+? · .+? (.+?) (Cargo final|Tu reputación|Llegaste|Terminaste|Con |Trabajaste|El cargo|Tu patrimonio)/) || [])[1] || "";
       const cf = (t.match(/Cargo final (.+?) Rama/) || [])[1] || cargo;
-      return { ano, fin: norm(ver).slice(0, 46) || "fin", cargo: cf, burnouts, ene: ultimaEne };
+      /* el legado y la gloria de la pantalla final (como El Ídolo) */
+      const gl = (t.match(/Tu gloria ([\d.,\s]+?) Tu legado/) || [])[1];
+      const lg = t.match(/Tu legado más alto (.+?) · (\d+) ?\/100/);
+      return { ano, fin: norm(ver).slice(0, 46) || "fin", cargo: cf, burnouts, ene: ultimaEne,
+        gloria: gl ? Number(gl.replace(/[.,\s]/g, "")) : null, legado: lg ? Number(lg[2]) : null, nivel: lg ? lg[1] : null };
     }
     const mEne = t.match(/ENERGÍA (\d+)|Energía (\d+)/);
     if (mEne) ultimaEne = Number(mEne[1] || mEne[2]);
@@ -107,7 +111,7 @@ async function unaVida(semilla) {
        cuando cambia. */
     /* partida corta: el resumen de etapa dice «De 2026 a 2030»; se cuentan
        los años que cubre, no las pantallas */
-    const mA = t.match(/(?:Así terminó|Cierre de|De \d{4} a) (\d{4})/);
+    const mA = t.match(/(?:Así terminó|Cierre de|De \d{4} a|\d{4} y) (\d{4})/);
     if (mA && mA[1] !== ultimoAno) { ano += ultimoAno ? Number(mA[1]) - Number(ultimoAno) : Number(mA[1]) - 2025; ultimoAno = mA[1]; }
     if (await pulsa(porRot(/^Retirarme ahora$/))) continue;
     const ops = bs().filter((b) => cls(b).startsWith("ea-op"));
@@ -177,6 +181,16 @@ async function unaVida(semilla) {
   Object.keys(cargos).sort((a, b) => cargos[b] - cargos[a]).forEach((k) => console.log("    " + String(cargos[k]).padStart(2) + "x  " + k));
   console.log("");
   console.log("  duración por vida: " + res.map((x) => x.ano).join(", "));
+  const conLeg = res.filter((x) => x.legado != null);
+  if (conLeg.length) {
+    console.log("");
+    const niveles = {};
+    conLeg.forEach((x) => { niveles[x.nivel] = (niveles[x.nivel] || 0) + 1; });
+    console.log("  legado más alto: " + conLeg.map((x) => x.legado).join(", "));
+    console.log("  nivel de legado: " + Object.keys(niveles).map((k) => niveles[k] + "x " + k).join(" · "));
+    const gs = conLeg.map((x) => x.gloria).filter((g) => g != null).sort((a, b) => a - b);
+    if (gs.length) console.log("  gloria: mínima " + gs[0] + " · mediana " + gs[Math.floor(gs.length / 2)] + " · máxima " + gs[gs.length - 1]);
+  }
   console.log("");
   console.log("  dónde se quedaron colgadas:");
   res.filter((x) => x.pantalla).slice(0, 4).forEach((x) => {

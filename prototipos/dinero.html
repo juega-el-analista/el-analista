@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El Analista · golpe de dinero</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Nunito:wght@400..800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<style>
+  html,body{margin:0;background:#2A2440;font-family:Nunito,system-ui,sans-serif}
+  .ea-root{--tinta:#2A2440;--tinta2:#3B3358;--papel:#FFF8EA;--crema:#FFF4DC;--arena:#F3E2BF;--borde:#E2CFA8;--mostaza:#F2B632;
+    --naranja:#E9875A;--terracota:#D9643A;--cobre:#B24E27;--lila:#8C6BB1;--lila2:#5B4785;--verde:#2F8A54;--rojo:#B0321F;--gris:#665C7A}
+  .demo{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;box-sizing:border-box}
+  .demoBot{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .demoBot button{border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);font:800 14px 'Bricolage Grotesque';padding:10px 16px;cursor:pointer}
+  .demoBot button.no{background:transparent;color:var(--crema);border:2px solid var(--crema)}
+
+  .ea-golpe{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-golpeEntra .35s ease-out}
+  @keyframes ea-golpeEntra{from{transform:scale(.96);opacity:0}}
+  .ea-golpe svg{position:absolute;inset:0;width:100%;height:100%}
+  .ea-golpe.baja{animation:ea-golpeEntra .35s ease-out,ea-sacude .5s .3s}
+  @keyframes ea-sacude{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  .ea-salta{animation:ea-salta .55s ease-in-out infinite alternate}
+  @keyframes ea-salta{from{transform:translateY(0)}to{transform:translateY(-22px)}}
+  .ea-agacha{animation:ea-agacha 2.4s ease-in-out infinite alternate}
+  @keyframes ea-agacha{to{transform:translateY(6px)}}
+  .ea-billete{animation:ea-cae 2.6s linear infinite}
+  @keyframes ea-cae{from{transform:translateY(-120px) rotate(0)}to{transform:translateY(560px) rotate(260deg)}}
+  .ea-gota{animation:ea-llueve .9s linear infinite}
+  @keyframes ea-llueve{from{transform:translateY(-30px)}to{transform:translateY(260px)}}
+  .ea-golpeTxt{position:absolute;left:0;right:0;bottom:0;padding:70px 16px 22px;text-align:center;color:var(--crema);
+    background:linear-gradient(transparent,rgba(42,36,64,.9))}
+  .ea-golpeK{font:700 12px Nunito,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--mostaza)}
+  .ea-golpeN{font:800 clamp(34px,8vw,60px) 'Bricolage Grotesque',sans-serif;line-height:1.05;margin:4px 0}
+  .ea-golpe.sube .ea-golpeN{color:#9BE3A8}
+  .ea-golpe.baja .ea-golpeN{color:#F2A08E}
+  .ea-golpeS{font-size:14px;opacity:.9}
+  /* el ánimo: cinco caras, y la tuya se mueve */
+  .ea-animo{display:inline-flex;gap:6px;align-items:center;margin-top:10px;background:rgba(255,244,220,.12);padding:6px 10px;border-radius:999px}
+  .ea-animo span{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;opacity:.35;transition:all .4s}
+  .ea-animo span.on{opacity:1;background:var(--mostaza);transform:scale(1.25)}
+  .ea-animoT{font:800 13px 'Bricolage Grotesque',sans-serif;margin-left:6px}
+  .ea-animoE{display:block;font-size:12.5px;margin-top:6px;color:var(--crema);opacity:.85}
+  @media (prefers-reduced-motion:reduce){.ea-root *{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="raiz"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+const fmt = (n) => Math.round(n).toLocaleString("es-ES");
+
+/* ---- tu personaje, con brazos: arriba si ganas, caído si pierdes ---- */
+function Tu({ x, y, escala, feliz }) {
+  const piel = "#E7B48A", ropa = "#2F5D8A", pelo = "#2A2440";
+  return (
+    <g transform={`translate(${x} ${y}) scale(${escala})`}>
+      <g className={feliz ? "ea-salta" : "ea-agacha"}>
+        {/* brazos */}
+        {feliz ? (
+          <g stroke={ropa} strokeWidth="18" strokeLinecap="round" fill="none">
+            <path d="M-36 104 L-64 46" /><path d="M36 104 L64 46" />
+          </g>
+        ) : (
+          <g stroke={ropa} strokeWidth="18" strokeLinecap="round" fill="none">
+            <path d="M-38 106 L-30 150" /><path d="M38 106 L30 150" />
+          </g>
+        )}
+        {feliz
+          ? <g fill={piel}><circle cx="-66" cy="40" r="10" /><circle cx="66" cy="40" r="10" /></g>
+          : <g fill={piel}><circle cx="-29" cy="156" r="9" /><circle cx="29" cy="156" r="9" /></g>}
+        <path d="M-44 170 Q-46 96 0 92 Q46 96 44 170 Z" fill={ropa} />
+        <path d="M-12 92 L0 106 L12 92 Z" fill="#FFF4DC" />
+        <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+        <g transform={feliz ? "" : "rotate(14 0 70) translate(0 8)"}>
+          <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+          <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={pelo} />
+          {feliz ? (
+            <g fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round">
+              <path d="M-16 42 Q-11 36 -6 42" /><path d="M6 42 Q11 36 16 42" />
+              <path d="M-12 54 Q0 68 12 54" fill="#2A2440" />
+            </g>
+          ) : (
+            <g>
+              <g fill="#2A2440"><rect x="-16" y="32" width="10" height="3" rx="1.5" transform="rotate(-14 -11 33)" /><rect x="6" y="32" width="10" height="3" rx="1.5" transform="rotate(14 11 33)" />
+                <circle cx="-11" cy="44" r="3" /><circle cx="11" cy="44" r="3" /></g>
+              <path d="M-9 60 Q0 52 9 60" fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" />
+              <path d="M-14 50 q-2 6 0 9" stroke="#8CC4E8" strokeWidth="3" fill="none" strokeLinecap="round" />
+            </g>
+          )}
+          <circle cx="-20" cy="54" r="5" fill="#E9875A" opacity=".35" /><circle cx="20" cy="54" r="5" fill="#E9875A" opacity=".35" />
+        </g>
+      </g>
+    </g>
+  );
+}
+
+/* ---- la sala de tu casa: de día dorado si ganas, de noche con lluvia si pierdes ---- */
+function Sala({ sube }) {
+  return (
+    <g>
+      <defs>
+        <linearGradient id="cieloSube" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8C6BB1" /><stop offset=".6" stopColor="#E9875A" /><stop offset="1" stopColor="#F2B632" /></linearGradient>
+        <linearGradient id="cieloBaja" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1E1A30" /><stop offset="1" stopColor="#3B3358" /></linearGradient>
+      </defs>
+      <rect width="720" height="450" fill={sube ? "#F3E2BF" : "#4A4166"} />
+      <rect y="310" width="720" height="140" fill={sube ? "#E2CFA8" : "#3B3358"} />
+      {/* ventana */}
+      <rect x="430" y="50" width="230" height="200" rx="12" fill={sube ? "url(#cieloSube)" : "url(#cieloBaja)"} />
+      {sube ? <circle cx="560" cy="200" r="34" fill="#F2B632" /> : <circle cx="600" cy="100" r="16" fill="#CFC4EA" opacity=".5" />}
+      <g fill={sube ? "#5B4785" : "#15121F"}><rect x="440" y="180" width="30" height="70" /><rect x="476" y="160" width="36" height="90" /><rect x="590" y="176" width="28" height="74" /><rect x="624" y="196" width="30" height="54" /></g>
+      {!sube && (
+        <g stroke="#8CC4E8" strokeWidth="2" opacity=".6" strokeLinecap="round">
+          {[450, 480, 510, 540, 570, 600, 630].map((x, i) => (
+            <line key={x} className="ea-gota" x1={x} y1="40" x2={x - 6} y2="58" style={{ animationDelay: (i * 0.13) + "s" }} />
+          ))}
+        </g>
+      )}
+      <rect x="541" y="50" width="8" height="200" fill={sube ? "#FFF4DC" : "#2A2440"} />
+      {/* sofá */}
+      <rect x="40" y="250" width="300" height="70" rx="22" fill={sube ? "#D9643A" : "#5B4785"} />
+      <rect x="30" y="290" width="320" height="56" rx="18" fill={sube ? "#B24E27" : "#3B3358"} />
+      {/* mesita con la laptop */}
+      <rect x="400" y="330" width="210" height="16" rx="6" fill={sube ? "#8A3A1C" : "#2A2440"} />
+      <rect x="420" y="346" width="12" height="60" fill={sube ? "#8A3A1C" : "#2A2440"} /><rect x="578" y="346" width="12" height="60" fill={sube ? "#8A3A1C" : "#2A2440"} />
+      <rect x="450" y="270" width="110" height="64" rx="6" fill="#2A2440" />
+      <rect x="456" y="276" width="98" height="52" rx="3" fill={sube ? "#FFF8EA" : "#1E1A30"} />
+      <polyline points={sube ? "462,318 480,310 494,314 512,298 528,300 548,282" : "462,284 480,290 494,286 512,304 528,300 548,322"}
+        fill="none" stroke={sube ? "#2F8A54" : "#E0503A"} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="440" y="330" width="130" height="6" rx="3" fill="#3B3358" />
+    </g>
+  );
+}
+
+/* ---- el golpe: tres segundos y sigue, o al toque ---- */
+const CARAS = [["hundido", "😣"], ["bajon", "😕"], ["normal", "🙂"], ["contento", "😊"], ["euforico", "🤩"]];
+const NOMBRE = { hundido: "Hundido", bajon: "Bajón", normal: "Normal", contento: "Contento", euforico: "Eufórico" };
+function Golpe({ sube, monto, de, onFin }) {
+  const [n, setN] = useState(0);
+  const [animo, setAnimo] = useState(2);
+  useEffect(() => {
+    let v = 0; const paso = Math.max(1, Math.round(monto / 30));
+    const t = setInterval(() => { v = Math.min(monto, v + paso); setN(v); if (v >= monto) clearInterval(t); }, 30);
+    const a = setTimeout(() => setAnimo(sube ? 4 : 1), 900);
+    const f = setTimeout(onFin, 4200);
+    return () => { clearInterval(t); clearTimeout(a); clearTimeout(f); };
+  }, []);
+  const efecto = sube ? "+10 en los minijuegos y menos cansancio la próxima etapa." : "−10 en los minijuegos y más cansancio la próxima etapa.";
+  return (
+    <div className={"ea-golpe " + (sube ? "sube" : "baja")} onClick={onFin}>
+      <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice">
+        <Sala sube={sube} />
+        <Tu x={sube ? 230 : 190} y={sube ? 120 : 150} escala={1.25} feliz={sube} />
+        {sube && (
+          <g>
+            {[60, 150, 250, 330, 420, 520, 610, 680].map((x, i) => (
+              <g key={x} className="ea-billete" style={{ animationDelay: (i * 0.32) + "s" }}>
+                <rect x={x} y="0" width="38" height="20" rx="3" fill="#2F8A54" /><circle cx={x + 19} cy="10" r="5" fill="#9BE3A8" />
+              </g>
+            ))}
+          </g>
+        )}
+      </svg>
+      <div className="ea-golpeTxt">
+        <div className="ea-golpeK">{de}</div>
+        <div className="ea-golpeN">{sube ? "+" : "−"}USD {fmt(n)}</div>
+        <div className="ea-animo">
+          {CARAS.map(([k, e], i) => <span key={k} className={i === animo ? "on" : ""}>{e}</span>)}
+          <span className="ea-animoT" style={{ opacity: 1, width: "auto", background: "none", transform: "none" }}>Ánimo: {NOMBRE[CARAS[animo][0]]}</span>
+        </div>
+        <span className="ea-animoE">{animo === 2 ? " " : efecto}</span>
+      </div>
+    </div>
+  );
+}
+
+function Demo() {
+  const [ver, setVer] = useState({ sube: true, vez: 0 });
+  const [fin, setFin] = useState(false);
+  const mostrar = (sube) => { setFin(false); setVer({ sube, vez: ver.vez + 1 }); };
+  return (
+    <div className="ea-root demo">
+      {!fin
+        ? <Golpe key={ver.vez + (ver.sube ? "s" : "b")} sube={ver.sube} monto={ver.sube ? 85000 : 42000}
+            de={ver.sube ? "Tus inversiones se dispararon en 2034" : "Tus inversiones se desplomaron en 2034"} onFin={() => setFin(true)} />
+        : <h2 style={{ color: "#FFF4DC", fontFamily: "'Bricolage Grotesque'" }}>Aquí sigue la partida.</h2>}
+      <div className="demoBot">
+        <button onClick={() => mostrar(true)}>Ver: ganaste mucho</button>
+        <button className="no" onClick={() => mostrar(false)}>Ver: perdiste mucho</button>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("raiz")).render(<Demo />);
+</script>
+</body>
+</html>

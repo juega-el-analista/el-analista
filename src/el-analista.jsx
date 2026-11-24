@@ -246,6 +246,19 @@ const CSS = `
   border:1px solid var(--cobre);padding:1px 7px;border-radius:2px}
 .ea-opRareza.rara{background:#8A5CC7}
 .ea-opRareza.dorada{background:#B8901C}
+/* icónica: la de El Ídolo, la que sale una vez cada muchas etapas */
+.ea-op.iconica{border-color:#C2410C;background:linear-gradient(120deg,rgba(234,88,12,.14),rgba(214,170,40,.16),rgba(138,92,199,.14))}
+.ea-op.iconica:hover:not(:disabled){border-color:#C2410C;background:linear-gradient(120deg,rgba(234,88,12,.24),rgba(214,170,40,.26),rgba(138,92,199,.24))}
+.ea-opRareza.iconica{background:linear-gradient(90deg,#C2410C,#B8901C)}
+/* tu legado, en la placa: el nivel, el número y el que sigue */
+.ea-legado{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:12px}
+.ea-legadoN{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cobre)}
+.ea-legadoBar{position:relative;flex:1;min-width:90px;max-width:220px;height:6px;border-radius:3px;background:rgba(42,36,64,.12);overflow:hidden}
+.ea-legadoBar i{position:absolute;left:0;top:0;bottom:0;background:var(--cobre);border-radius:3px;transition:width .6s ease}
+.ea-legadoSig{color:var(--gris)}
+.ea-gloria{border:1px solid var(--cobre);padding:14px 16px;margin:16px 0;border-radius:2px}
+.ea-gloriaN{font-size:34px;line-height:1.1;color:var(--tintaPapel)}
+.ea-gloriaP{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--gris);margin-top:4px}
 
 /* Una opcion que no te alcanza se ve, y se ve POR QUE no te alcanza. No
    se esconde: enterarte de lo que te estas perdiendo es justo lo que
@@ -782,6 +795,7 @@ const CSS6 = `
 .ea-opAzar{background:rgba(255,244,220,.12);color:var(--crema)}
 .ea-op.rara{background:#4B3A78;box-shadow:0 3px 0 #2E2350, inset 0 0 0 2px #A88BE0}
 .ea-op.dorada{background:#4A3A20;box-shadow:0 3px 0 #2C2210, inset 0 0 0 2px var(--mostaza)}
+.ea-op.iconica{background:linear-gradient(120deg,#5A2A14,#4A3A20 55%,#3E2F66);box-shadow:0 3px 0 #2C2210, inset 0 0 0 2px #F97316}
 .ea-op.sinfuerza{background:rgba(42,36,64,.07);color:rgba(42,36,64,.55);box-shadow:inset 0 0 0 2px rgba(176,50,31,.35);border:none}
 .ea-op.sinfuerza:hover{background:rgba(42,36,64,.07)}
 .ea-op.sinfuerza .ea-opN{color:rgba(176,50,31,.7)}
@@ -938,7 +952,7 @@ const CSS6 = `
 .ea-chip.k-car{color:var(--a-car-t);background:var(--a-car-f)}
 .ea-chip.neg.k-ene,.ea-chip.neg.k-cri,.ea-chip.neg.k-mod,.ea-chip.neg.k-red,.ea-chip.neg.k-rep,.ea-chip.neg.k-car{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
 /* el sello va debajo de la cabecera del memo, no encima del año */
-.ea-sello{top:44px;border-color:var(--cobre);color:var(--cobre);border-radius:8px}
+.ea-sello{top:52px;border-color:var(--cobre);color:var(--cobre);border-radius:8px}
 
 /* ---- la barra de independencia y las ventanas ---- */
 .ea-ind{background:rgba(42,36,64,.10);border-radius:99px;overflow:visible}
@@ -1066,7 +1080,7 @@ const JUEGOS = {
     ensena: "Ejecutar dentro de un rango de precio. Entrar a 100 o a 103 en la misma idea es la diferencia entre ganar y empatar.",
   },
   memoria: {
-    n: "Peinar el legajo", tema: "Memoria de trabajo", dur: "30 s",
+    n: "Repasar el expediente", tema: "Memoria de trabajo", dur: "30 s",
     i: "Tres rondas. Las casillas se encienden en un orden y tienes que repetirlo. Cada ronda es un recorrido nuevo.",
     pasos: [
       "Ronda uno: se encienden 3 casillas. Tócalas en el mismo orden.",
@@ -1080,7 +1094,7 @@ const JUEGOS = {
     n: "Ojo clínico", tema: "Detalle contable", dur: "20 s",
     i: "Una cifra no cuadra con las demás. Encuéntrala antes de que se acabe el tiempo.",
     pasos: [
-      "Aparece una grilla de cifras casi idénticas.",
+      "Aparece una cuadrícula de cifras casi idénticas.",
       "Una sola rompe el patrón del resto.",
       "Tócala antes de que corra el reloj.",
     ],
@@ -1088,14 +1102,14 @@ const JUEGOS = {
     ensena: "En una revisión nadie te señala el error. El número raro está ahí y hay que verlo.",
   },
   anclaje: {
-    n: "La negociación", tema: "Negociación", dur: "3 rondas",
-    i: "Enfrente hay alguien con un carácter que no ves. Léelo por lo que dice y juega tus cartas.",
+    n: "La negociación", tema: "Negociación", dur: "3 propuestas",
+    i: "Una mesa como la de un fichaje: lo que te ofrecen, lo que pides y, en un contrato, tu sueldo de hoy y los años.",
     pasos: [
-      "Puede estar apurado, ser duro u orgulloso. Cada ronda dice algo que lo delata, o no.",
-      "Juegas una carta: pedir más, ceder un poco, mostrar la competencia (una vez) o plantarte.",
-      "Cada carta le mueve el precio y la paciencia según quién sea. Sin paciencia, se levanta.",
+      "Pones cuánto pides y le das a Proponer. Acepta, te contraoferta o te dice que no.",
+      "Tienes tres propuestas. En cualquier momento puedes aceptar lo que te ofrecen.",
+      "Pedir de más le gasta la paciencia; si se acaba, se levanta. Tu lectura te dice hasta dónde llegaría.",
     ],
-    gana: "Cerrar en 68 o más es éxito; desde 52, a medias. Si se levanta, no hay trato.",
+    gana: "Cerrar en +18% o más es éxito; desde +7%, a medias. Si se levanta, no hay trato.",
     ensena: "La misma jugada que funciona con uno espanta a otro: negociar es leer a la persona antes que el número.",
   },
   suerte: {
@@ -1111,9 +1125,9 @@ const JUEGOS = {
   },
   tresraya: {
     n: "El pulso", tema: "Negociación", dur: "40 s",
-    i: "Tres en raya contra la contraparte, con lo que eso significa en una mesa.",
+    i: "Tres en línea contra la contraparte, con lo que eso significa en una mesa.",
     pasos: [
-      "Juegas tres en raya contra el otro lado de la mesa.",
+      "Juegas tres en línea contra el otro lado de la mesa.",
       "Ganar es cerrar en tus términos.",
       "Empatar es partir la diferencia, que muchas veces es el resultado realista.",
     ],
@@ -1547,6 +1561,177 @@ const CSS4 = `
 .ea-pct.on{border-color:var(--cobre);background:rgba(185,83,42,.1);color:var(--cobre)}
 /* la negociación: lo que dice la otra parte y tus cuatro cartas */
 .ea-negFrase{font-style:italic;margin:6px 0 10px}
+/* la mesa de la negociación: términos en filas, como un fichaje */
+.ea-negMesa{border:1px solid var(--borde);border-radius:12px;overflow:hidden;margin:6px 0 12px;background:rgba(255,255,255,.35)}
+.ea-negFila{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;align-items:center;padding:10px 12px;border-top:1px solid var(--borde);font-size:15px}
+.ea-negFila.c4{grid-template-columns:1.2fr 1fr 1fr 1fr}
+.ea-negFila:first-child{border-top:0}
+.ea-negFila small{display:block;font-size:11px;color:var(--gris);margin-top:2px}
+.ea-negCab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);padding-top:8px;padding-bottom:8px}
+.ea-negPide{font-weight:700;color:var(--cobre)}
+.ea-negCtl{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:8px 0}
+.ea-negPaso{width:40px;height:40px;border-radius:50%;border:1px solid var(--borde);background:transparent;font:inherit;font-size:20px;cursor:pointer;color:var(--tintaPapel)}
+.ea-negPaso:disabled{opacity:.35;cursor:default}
+.ea-negAno{border:1px solid var(--borde);background:transparent;border-radius:999px;padding:7px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--tintaPapel)}
+.ea-negAno.on{border-color:var(--cobre);color:var(--cobre);background:rgba(185,83,42,.08)}
+.ea-negLee{font-size:13px;color:var(--gris);text-align:center;margin:6px 0}
+/* el contrato como fichaje: destello de oficina y hoja para negociar */
+.ea-fichaje{display:flex;justify-content:center;padding:8px 0}
+.ea-flash{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;background:var(--tinta);cursor:pointer}
+.ea-flash svg{position:absolute;inset:0;width:100%;height:100%;animation:ea-flashZoom 2.2s ease-in forwards}
+@keyframes ea-flashZoom{0%{transform:scale(1.15)}70%{transform:scale(1)}100%{transform:scale(1.04)}}
+.ea-flashT{position:absolute;left:0;right:0;bottom:0;padding:60px 16px 9%;text-align:center;color:var(--crema);
+  background:linear-gradient(transparent,rgba(42,36,64,.85));font:800 clamp(26px,6vw,46px) 'Bricolage Grotesque',sans-serif;
+  animation:ea-flashTitulo 2.2s ease-out forwards}
+.ea-flashT small{display:block;font:700 12px Nunito,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--mostaza);margin-bottom:6px}
+@keyframes ea-flashTitulo{0%{opacity:0;transform:translateY(20px)}25%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0}}
+.ea-flashBlanco{position:absolute;inset:0;background:var(--papel);opacity:0;animation:ea-flashBlanco 2.2s ease-in forwards;pointer-events:none}
+@keyframes ea-flashBlanco{0%,80%{opacity:0}100%{opacity:1}}
+.ea-flashJefe{animation:ea-flashEntra .7s ease-out}
+@keyframes ea-flashEntra{from{opacity:0}}
+.ea-quieto .ea-flashBlanco{display:none}
+.ea-quieto .ea-flashT{animation:none !important;opacity:1}
+.ea-hoja{position:relative;width:100%;max-width:560px;background:var(--papel);color:var(--tinta);border-radius:16px;
+  padding:22px 22px 20px;box-sizing:border-box;box-shadow:0 18px 50px rgba(0,0,0,.25);animation:ea-hojaSube .45s cubic-bezier(.2,1.2,.4,1)}
+.ea-hoja.firmada{cursor:pointer}
+@keyframes ea-hojaSube{from{transform:translateY(30px) rotate(-1.5deg);opacity:0}}
+.ea-hojaCab{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:2px solid var(--tinta);padding-bottom:12px}
+.ea-hojaT{font:800 22px 'Bricolage Grotesque',sans-serif;margin:0}
+.ea-hojaS{font-size:12px;color:var(--gris);margin:2px 0 0}
+.ea-hojaPac{font:700 11px Nunito,sans-serif;color:var(--gris);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+.ea-hojaCara{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ea-hojaCara svg{width:58px;height:58px;border-radius:50%;background:var(--arena)}
+.ea-globo{background:var(--tinta);color:var(--crema);font-size:13px;line-height:1.3;padding:8px 10px;border-radius:12px;max-width:170px;animation:ea-globo .3s ease-out}
+@keyframes ea-globo{from{transform:scale(.8);opacity:0}}
+.ea-term{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:14px 0;border-bottom:1px dashed var(--borde)}
+.ea-termK{font:700 12px Nunito,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--gris)}
+.ea-termOf{grid-column:1/-1;font-size:13px;color:var(--gris)}
+.ea-termOf s{color:var(--rojo);opacity:.7;margin-right:4px}
+.ea-escrito{font:italic 700 18px Nunito,sans-serif;color:#1F3A8A;margin-left:4px}
+.ea-termCtl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ea-monto{font:800 24px 'Bricolage Grotesque',sans-serif;min-width:150px;text-align:center}
+.ea-monto small{display:block;font:700 12px Nunito,sans-serif;color:var(--cobre)}
+.ea-negAno small{display:block;font-size:10px;opacity:.75}
+.ea-firmaLinea{position:relative;margin-top:18px;height:58px;border-bottom:2px solid var(--tinta)}
+.ea-firmaLinea>span{position:absolute;bottom:-20px;left:0;font-size:11px;color:var(--gris)}
+.ea-firmaTrazo{position:absolute;left:6px;bottom:4px;width:200px;height:50px}
+.ea-firmaTrazo path{fill:none;stroke:#1F3A8A;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:600;stroke-dashoffset:600;animation:ea-traza 1.2s ease-out forwards}
+@keyframes ea-traza{to{stroke-dashoffset:0}}
+.ea-selloHoja{position:absolute;right:6px;top:50%;font:800 18px 'Bricolage Grotesque',sans-serif;border:3px solid;border-radius:10px;padding:6px 12px;
+  transform:translateY(-50%) rotate(-10deg);animation:ea-sellaHoja .35s forwards;opacity:0}
+.ea-selloHoja.ok{color:var(--verde)} .ea-selloHoja.no{color:var(--rojo)}
+.ea-selloHoja.tarde{animation-delay:1.2s}
+@keyframes ea-sellaHoja{from{opacity:0;transform:translateY(-50%) rotate(-10deg) scale(1.8)}to{opacity:1;transform:translateY(-50%) rotate(-10deg) scale(1)}}
+.ea-hojaBotones{display:flex;gap:8px;margin-top:32px;flex-wrap:wrap}
+/* el golpe de dinero */
+.ea-golpeCapa{position:fixed;inset:0;z-index:80;background:var(--tinta);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+.ea-golpeCine{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-golpeEntra .35s ease-out}
+@keyframes ea-golpeEntra{from{transform:scale(.96);opacity:0}}
+.ea-golpeCine svg{position:absolute;inset:0;width:100%;height:100%}
+.ea-golpeCine.baja{animation:ea-golpeEntra .35s ease-out,ea-golpeSacude .5s .3s}
+@keyframes ea-golpeSacude{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.ea-golpeSalta{animation:ea-golpeSalta .55s ease-in-out infinite alternate}
+@keyframes ea-golpeSalta{to{transform:translateY(-22px)}}
+.ea-golpeAgacha{animation:ea-golpeAgacha 2.4s ease-in-out infinite alternate}
+@keyframes ea-golpeAgacha{to{transform:translateY(6px)}}
+.ea-golpeBillete{animation:ea-golpeCae 2.6s linear infinite}
+@keyframes ea-golpeCae{from{transform:translateY(-120px) rotate(0)}to{transform:translateY(560px) rotate(260deg)}}
+.ea-golpeGota{animation:ea-golpeLlueve .9s linear infinite}
+@keyframes ea-golpeLlueve{from{transform:translateY(-30px)}to{transform:translateY(260px)}}
+.ea-golpeTxt{position:absolute;left:0;right:0;bottom:0;padding:70px 16px 20px;text-align:center;color:var(--crema);background:linear-gradient(transparent,rgba(42,36,64,.92))}
+.ea-golpeK{font:700 12px Nunito,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mostaza)}
+.ea-golpeN{font:800 clamp(32px,8vw,58px) 'Bricolage Grotesque',sans-serif;line-height:1.05;margin:4px 0}
+.ea-golpeCine.sube .ea-golpeN{color:#9BE3A8}
+.ea-golpeCine.baja .ea-golpeN{color:#F2A08E}
+.ea-animoFila{display:inline-flex;gap:6px;align-items:center;margin-top:8px;background:rgba(255,244,220,.12);padding:6px 10px;border-radius:999px}
+.ea-animoFila span{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;opacity:.35;transition:all .4s}
+.ea-animoFila span.on{opacity:1;background:var(--mostaza);transform:scale(1.2)}
+.ea-animoFila b{font:800 13px 'Bricolage Grotesque',sans-serif;margin-left:6px}
+.ea-animoEf{display:block;font-size:12.5px;margin-top:6px;opacity:.85}
+.ea-quieto .ea-golpeBillete,.ea-quieto .ea-golpeGota{display:none}
+/* los sustos con reloj */
+.ea-susto{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;animation:ea-golpeEntra .35s ease-out}
+.ea-susto svg{position:absolute;inset:0;width:100%;height:100%}
+.ea-sustoTxt{position:absolute;left:0;right:0;bottom:0;padding:56px 16px 16px;text-align:center;color:var(--crema);background:linear-gradient(transparent,rgba(20,16,32,.94))}
+.ea-sustoT{font:800 clamp(20px,5vw,32px) 'Bricolage Grotesque',sans-serif;line-height:1.1;margin:4px 0 8px}
+.ea-sustoN{font:800 13px 'Bricolage Grotesque',sans-serif;color:#F2A08E;margin-bottom:6px}
+.ea-sustoReloj{height:8px;border-radius:4px;background:rgba(255,244,220,.15);overflow:hidden;margin:0 auto 12px;max-width:420px}
+.ea-sustoReloj div{height:100%;background:#E0503A;transition:width .1s linear}
+.ea-sustoOps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.ea-sustoOps .ea-op.ea-sustoOp{width:auto;margin:0;border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);
+  font:800 14px 'Bricolage Grotesque',sans-serif;padding:11px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12;min-height:0}
+.ea-sustoOps .ea-op.ea-sustoOp.v1{background:var(--crema)}
+.ea-sustoOps .ea-op.ea-sustoOp.v2{background:transparent;color:var(--crema);border:2px solid var(--crema);box-shadow:none}
+.ea-sustoTiembla{animation:ea-sustoTiembla .25s infinite}
+@keyframes ea-sustoTiembla{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+.ea-sustoParpadea{animation:ea-sustoParpadea .6s infinite alternate}
+@keyframes ea-sustoParpadea{to{opacity:.35}}
+.ea-sustoVibra{animation:ea-sustoVibra .15s infinite}
+.ea-sustoVibra{transform-box:fill-box;transform-origin:center}
+@keyframes ea-sustoVibra{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+/* los momentos de la vida */
+.ea-vidaCine{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;cursor:pointer;animation:ea-golpeEntra .45s ease-out}
+.ea-vidaCine svg{position:absolute;inset:0;width:100%;height:100%}
+.ea-vidaT{font:800 clamp(28px,7vw,50px) 'Bricolage Grotesque',sans-serif;line-height:1.05;margin:4px 0 8px}
+.ea-vidaEf{display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.ea-vidaEf span{font:700 12.5px Nunito,sans-serif;background:rgba(255,244,220,.14);padding:5px 10px;border-radius:999px}
+.ea-vidaFlota{animation:ea-vidaFlota 3s ease-in-out infinite}
+@keyframes ea-vidaFlota{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-90px);opacity:0}}
+.ea-vidaPetalo{animation:ea-vidaCae 3.2s linear infinite}
+@keyframes ea-vidaCae{from{transform:translateY(-60px) rotate(0)}to{transform:translateY(520px) rotate(300deg)}}
+.ea-vidaLluvia{animation:ea-vidaLlueve .8s linear infinite}
+@keyframes ea-vidaLlueve{from{transform:translateY(-40px)}to{transform:translateY(480px)}}
+.ea-vidaMece{animation:ea-vidaMece 1.6s ease-in-out infinite alternate}
+@keyframes ea-vidaMece{from{transform:translate(252px,250px) rotate(-3deg)}to{transform:translate(252px,250px) rotate(3deg)}}
+.ea-vidaAplaude{animation:ea-vidaAplaude .35s ease-in-out infinite alternate}
+@keyframes ea-vidaAplaude{to{transform:translateY(-6px)}}
+.ea-vidaLlave{animation:ea-vidaLlave 1.2s ease-in-out infinite alternate}
+@keyframes ea-vidaLlave{to{transform:translateY(-8px)}}
+.ea-quieto .ea-vidaFlota,.ea-quieto .ea-vidaPetalo,.ea-quieto .ea-vidaLluvia{display:none}
+/* tu ánimo, junto a los atributos */
+.ea-animoPill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--crema);background:rgba(255,244,220,.1);padding:4px 10px 4px 6px;border-radius:999px}
+.ea-animoPill span{font-size:15px;letter-spacing:0}
+/* tu empresa del camino */
+.ea-caminoPill{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:8px;font-size:12px;color:var(--crema);
+  background:rgba(255,244,220,.1);padding:6px 12px;border-radius:12px}
+.ea-caminoPill .ea-caminoQue{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mostaza)}
+.ea-caminoPill b{font:800 13px 'Bricolage Grotesque',sans-serif}
+.ea-caminoPill .sube{color:#9BE3A8} .ea-caminoPill .baja{color:#F2A08E}
+.ea-caminoNoticia{margin:10px auto 0;max-width:520px;font-size:14px;line-height:1.4;color:var(--crema);background:rgba(255,244,220,.08);padding:10px 14px;border-radius:12px}
+.ea-caminoNoticia span{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mostaza);margin-bottom:3px}
+.ea-caminoNoticia .sube{color:#9BE3A8} .ea-caminoNoticia .baja{color:#F2A08E}
+/* la pestaña Tu empresa */
+.ea-empresaN{font-size:26px;line-height:1.1;margin:2px 0 4px}
+.ea-empresaS{font-size:13px;color:var(--gris);margin-bottom:12px}
+.ea-empresaCifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:8px 0 12px}
+.ea-empresaCifras>div{background:rgba(42,36,64,.05);border-radius:12px;padding:10px 12px}
+.ea-empresaCifras span{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.ea-empresaCifras b{font-size:16px}
+.ea-empresa .sube{color:var(--verde)} .ea-empresa .baja{color:var(--rojo)}
+.ea-empresaMeta{border:2px dashed var(--borde);border-radius:14px;padding:12px 14px;margin-top:8px}
+.ea-empresaMetaT{font-size:15px;margin-bottom:8px}
+.ea-empresaReq{display:grid;grid-template-columns:1fr 120px;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+.ea-empresaBar{height:8px;border-radius:4px;background:rgba(42,36,64,.1);overflow:hidden}
+.ea-empresaBar div{height:100%;background:var(--mostaza)} .ea-empresaBar div.ok{background:var(--verde)}
+/* relaciones y avisos */
+.ea-rel{margin-bottom:16px}
+.ea-relFila{display:grid;grid-template-columns:1.2fr 1fr auto;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+.ea-relBar{height:8px;border-radius:4px;background:rgba(42,36,64,.1);overflow:hidden}
+.ea-relBar div{height:100%;background:var(--mostaza)} .ea-relBar div.alta{background:var(--verde)} .ea-relBar div.baja{background:var(--rojo)}
+.ea-relV{font-size:11px;color:var(--gris)}
+.ea-avisos{display:flex;flex-direction:column;gap:6px;margin:12px 0 4px}
+.ea-aviso{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:var(--tinta);color:var(--crema);font-size:12.5px;
+  padding:7px 12px;border-radius:10px;animation:ea-avisoEntra .4s ease-out backwards}
+.ea-aviso span{font-size:15px}
+@keyframes ea-avisoEntra{from{opacity:0;transform:translateX(-12px)}}
+.ea-pctJug{margin-top:10px;font-size:13px;color:var(--gris)}
+.ea-btnC{flex:1;border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);font:800 15px 'Bricolage Grotesque',sans-serif;
+  padding:13px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12;min-width:150px}
+.ea-btnS{flex:1;border:2px solid var(--tinta);border-radius:999px;background:transparent;color:var(--tinta);font:800 14px 'Bricolage Grotesque',sans-serif;padding:11px 14px;cursor:pointer;min-width:150px}
+@media (max-width:520px){.ea-hoja{padding:18px 16px}.ea-monto{font-size:20px;min-width:118px}.ea-globo{max-width:120px;font-size:12px}}
+.ea-negResp{font-size:15px;margin:8px 0 10px}
+@media (max-width:520px){.ea-negFila,.ea-negFila.c4{font-size:13px;gap:6px;padding:9px 10px}}
 .ea-negCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
 /* la carrera del día, en la portada */
 /* tu gente, en la pestaña Vida */
@@ -2190,7 +2375,7 @@ const BANCO = [
   { q: "En un earn out, parte del precio se paga", o: ["contra resultados futuros del negocio", "por adelantado en efectivo", "siempre en acciones del comprador"], c: 0, e: "Sirve para cerrar la brecha entre lo que el vendedor cree que vale y lo que el comprador paga hoy." },
   { q: "El costo del capital propio comparado con el costo de la deuda de la misma empresa", o: ["es mayor", "es menor", "es igual"], c: 0, e: "El accionista cobra último, así que exige más." },
   { q: "Una empresa con flujo de caja libre negativo y utilidad contable positiva probablemente", o: ["está financiando capital de trabajo o inversión", "está inflando ingresos siempre", "no tiene deuda"], c: 0, e: "No es fraude por definición, pero es la primera pregunta que hay que hacer." },
-  { q: "Regla del 4%: para retirar cuarenta mil al año necesitas un patrimonio de", o: ["un millón", "cuatrocientos mil", "cuatro millones"], c: 0, e: "Es una regla gruesa, pero sirve para saber cuánto te falta.", pista: "Al revés de como suena: si puedes retirar el 4% al año, el patrimonio que necesitas es 25 veces lo que quieres retirar." },
+  { q: "Regla del 4%: para retirar cuarenta mil dólares al año necesitas un patrimonio de", o: ["un millón", "cuatrocientos mil", "cuatro millones"], c: 0, e: "Es una regla gruesa, pero sirve para saber cuánto te falta.", pista: "Al revés de como suena: si puedes retirar el 4% al año, el patrimonio que necesitas es 25 veces lo que quieres retirar." },
   { q: "Si tu portafolio cae 50%, para volver al punto de partida necesitas", o: ["subir 100%", "subir 50%", "subir 75%"], c: 0, e: "La asimetría de las pérdidas es la razón por la que se cuida la caída máxima." },
 ];
 
@@ -2222,7 +2407,7 @@ const BANCO0 = [
   { q: "Un seguro tiene sentido cuando", o: ["el evento es improbable pero te arruinaría", "el evento es frecuente y barato", "quieres invertir con ventaja"], c: 0, e: "Se asegura lo catastrófico, no lo molesto. Mezclar seguro con inversión suele salir caro." },
   { q: "Aportar la misma cantidad todos los meses sin importar el precio", o: ["te evita tener que adivinar el momento de entrar", "garantiza mejor retorno que entrar de golpe", "solo funciona en mercados alcistas"], c: 0, e: "No maximiza el retorno esperado, pero elimina la peor decisión: no entrar nunca por miedo." },
   { q: "Regla del setenta y dos: al 9% anual, tu capital se duplica en cerca de", o: ["ocho años", "doce años", "cinco años"], c: 0, e: "Setenta y dos entre la tasa da los años. Sirve para hacer la cuenta sin calculadora.", pista: "Divide 72 entre la tasa anual y obtienes los años que tarda el capital en duplicarse. Es una aproximación de cabeza, no una fórmula exacta." },
-  { q: "El costo de oportunidad de dejar veinte mil parados en la cuenta corriente durante diez años es", o: ["todo lo que habrían rendido invertidos", "cero, porque no perdiste nada", "solo la inflación de un año"], c: 0, e: "Lo que no hiciste con el dinero también cuenta, aunque nunca aparezca en un estado de cuenta." },
+  { q: "El costo de oportunidad de dejar veinte mil dólares parados en la cuenta durante diez años es", o: ["todo lo que habrían rendido invertidos", "cero, porque no perdiste nada", "solo la inflación de un año"], c: 0, e: "Lo que no hiciste con el dinero también cuenta, aunque nunca aparezca en un estado de cuenta." },
   { q: "En un país con devaluación recurrente, ahorrar en moneda local a largo plazo", o: ["te expone a perder valor frente a la moneda dura", "es más seguro porque es tu moneda", "solo importa si viajas"], c: 0, e: "Tus gastos futuros grandes suelen estar indexados al dólar aunque los pagues en local." },
   { q: "Dos fondos con la misma estrategia, uno cobra 0,2% al año y el otro dos. En treinta años", o: ["la diferencia de comisión se come una parte enorme del capital final", "la diferencia es marginal", "gana el más caro por mejor gestión"], c: 0, e: "La comisión se compone igual que el retorno, solo que en tu contra y con total certeza." },
   { q: "Antes de invertir en algo, la primera pregunta debería ser", o: ["cómo pierdo dinero en esto", "cuánto puedo ganar", "quién más está entrando"], c: 0, e: "Si no puedes explicar el escenario en que pierdes, todavía no entiendes la inversión." },
@@ -2378,7 +2563,7 @@ const BANCO2 = [
   { q: "El carried interest estándar de un fondo es", o: ["20% sobre un retorno preferente", "20% sobre todo el capital", "2% anual"], c: 0, e: "El 2% es la comisión de administración, el veinte es la participación en las ganancias." },
   { q: "El retorno preferente típico que se paga a los LP antes del carry ronda", o: ["8% anual", "20% anual", "2% anual"], c: 0, e: "Debajo de ese umbral el gestor no participa de las ganancias." },
   { q: "Un fondo con TVPI de dos y DPI de cero coma cinco significa que", o: ["la mayor parte del valor todavía no se ha realizado", "ya se devolvió todo el capital", "el fondo perdió dinero"], c: 0, e: "El valor está en el papel hasta que haya salidas de verdad." },
-  { q: "La curva J de un fondo describe", o: ["retornos negativos al principio por comisiones y costos", "el crecimiento exponencial del capital", "la caída del mercado al final del ciclo"], c: 0, e: "Se cobran comisiones desde el día uno y las salidas llegan años después." },
+  { q: "La curva J de un fondo describe", o: ["retornos negativos al principio por comisiones y costos", "el crecimiento exponencial del capital", "la caída del mercado al final del ciclo"], c: 0, e: "Se cobran comisiones desde el primer día y las salidas llegan años después." },
   { q: "El dry powder de un fondo es", o: ["capital comprometido y todavía no invertido", "las utilidades no distribuidas", "la reserva legal"], c: 0, e: "Es la munición disponible para nuevas operaciones." },
   { q: "Una empresa con alto apalancamiento operativo tiene", o: ["utilidades que se mueven más que sus ventas", "utilidades muy estables", "poca deuda por definición"], c: 0, e: "Los costos fijos amplifican tanto las subidas como las caídas." },
   { q: "Si suben los costos fijos, el punto de equilibrio", o: ["sube", "baja", "no cambia"], c: 0, e: "Hay que vender más unidades para cubrir la misma estructura." },
@@ -2429,7 +2614,7 @@ const GLOSARIO = {
   interesCompuesto: { n: "Interés compuesto", x: "Cuando lo que ganas empieza a generar ganancias por su cuenta. Ganas sobre tu dinero, y al año siguiente ganas sobre tu dinero más lo que ganaste. Al principio es imperceptible; a los veinte años es la mayor parte de tu patrimonio." },
   inflacion: { n: "Inflación", x: "Que las cosas cuesten más cada año. Si tu dinero está quieto y la inflación es 5%, dentro de un año compras 5% menos con lo mismo. Guardar efectivo no es neutral: es perder despacio." },
   volatilidad: { n: "Volatilidad", x: "Cuánto se mueve el precio de algo. Alta volatilidad significa años de subir mucho y años de caer mucho. No es lo mismo que riesgo de perderlo todo, pero se siente parecido cuando estás mirando." },
-  diversificar: { n: "Diversificar", x: "No poner todo en el mismo sitio. La gracia es que si las cosas que tienes no suben y bajan al mismo tiempo, el conjunto se mueve menos que cada parte por separado." },
+  diversificar: { n: "Diversificar", x: "No poner todo en el mismo lugar. La gracia es que si las cosas que tienes no suben y bajan al mismo tiempo, el conjunto se mueve menos que cada parte por separado." },
   liquidez: { n: "Liquidez", x: "Qué tan rápido puedes convertir algo en dinero sin malbaratar. El efectivo es líquido, un apartamento no. Un activo excelente pero ilíquido no te sirve si mañana necesitas pagar algo." },
   riesgo: { n: "Riesgo", x: "La posibilidad de que el resultado no sea el que esperabas. En finanzas casi nunca se elimina, se cambia de forma: menos riesgo de perder suele venir con menos posibilidad de ganar." },
   rendimiento: { n: "Rendimiento o retorno", x: "Lo que ganaste, en porcentaje de lo que pusiste. Si pusiste 100 y ahora tienes 107, tu rendimiento fue 7%." },
@@ -2446,7 +2631,7 @@ const GLOSARIO = {
   opcion: { n: "Opción", x: "El derecho, no la obligación, de comprar o vender algo a un precio fijado. Se paga una prima por ese derecho. Gana valor cuando el precio se mueve a favor y también cuando hay más incertidumbre." },
   cobertura: { n: "Cobertura", x: "Montar una posición que gane justo cuando tu negocio pierde, para que el conjunto se mueva menos. No busca ganar dinero: busca que un movimiento de precios o de moneda no te descoloque." },
   activo: { n: "Activo", x: "Cualquier cosa que tengas y que valga algo: dinero, una acción, un local, una máquina. La prueba de fuego es si alguien te lo compraría. Un gasto ya hecho no es un activo por mucho que costara." },
-  costoOportunidad: { n: "Costo de oportunidad", x: "Lo que dejas de ganar por elegir una cosa en vez de otra. Tener dinero parado en la cuenta no es gratis: cuesta exactamente lo que habría rendido en otro sitio." },
+  costoOportunidad: { n: "Costo de oportunidad", x: "Lo que dejas de ganar por elegir una cosa en vez de otra. Tener dinero parado en la cuenta no es gratis: cuesta exactamente lo que habría rendido en otro lado." },
   seguro: { n: "Seguro", x: "Pagar una cantidad pequeña y segura para no tener que pagar una enorme e improbable. Tiene sentido cuando el golpe que cubre te arruinaría; no lo tiene para cosas que podrías pagar de tu bolsillo." },
   multiplo: { n: "Múltiplo de valoración", x: "Cuántas veces sus ganancias vale una empresa. Un múltiplo alto significa que el mercado espera crecimiento; también significa que estás pagando por un futuro que aún no ocurrió." },
   distressed: { n: "Deuda distressed", x: "Deuda de empresas en problemas, que se compra muy por debajo de su valor nominal. Se apuesta a que la empresa se recupere o a que al liquidarla quede más de lo que pagaste." },
@@ -2476,7 +2661,7 @@ const TEMAS = [
   {
     id: "invertir", nv: 1, n: "Qué significa invertir",
     x: "Invertir es entregarle tu dinero a algo que trabaja mientras tú no estás: una empresa, un gobierno, un inmueble. A cambio de ese uso, esperas recibir más de lo que pusiste. No es apostar, porque apostar es un juego de suma cero donde alguien gana lo que otro pierde; invertir es participar de algo que produce valor nuevo.",
-    ej: "Le prestas 1.000 a una panadería que abre un local nuevo. El local vende, la panadería te devuelve 1.080. Los 80 no se los quitaste a nadie: los produjo el pan que se vendió.",
+    ej: "Le prestas USD 1.000 a una panadería que abre un local nuevo. El local vende, la panadería te devuelve 1.080. Los 80 no se los quitaste a nadie: los produjo el pan que se vendió.",
     q: [
       { q: "¿Cuál es la diferencia de fondo entre invertir y apostar?", ops: ["Invertir participa de algo que produce valor; apostar solo reparte el dinero que ya existe", "Invertir siempre gana y apostar siempre pierde", "Invertir es legal y apostar no", "No hay diferencia real, solo el nombre"], correcta: "Invertir participa de algo que produce valor; apostar solo reparte el dinero que ya existe", e: "En la apuesta, lo que tú ganas alguien lo perdió. En la inversión productiva puede crecer el total, y por eso a largo plazo hay un retorno esperado positivo." },
       { q: "Si una inversión te promete rendimiento alto y garantizado, ¿qué es lo más sensato pensar?", ops: ["Que algo no cuadra: rendimiento alto y garantía no van juntos", "Que hay que entrar rápido antes de que se acabe", "Que el que la ofrece encontró una fórmula mejor", "Que es una buena forma de empezar por ser segura"], correcta: "Que algo no cuadra: rendimiento alto y garantía no van juntos", e: "Es la señal más confiable de una estafa. Si de verdad existiera rendimiento alto sin riesgo, el dinero institucional lo habría absorbido antes de que llegara a ti." },
@@ -2486,19 +2671,19 @@ const TEMAS = [
   {
     id: "compuesto", nv: 1, n: "El interés compuesto",
     x: "Si ganas 8% sobre 100, tienes 108. Al año siguiente ganas 8% sobre 108, no sobre 100. Esa diferencia mínima, repetida treinta veces, es lo que separa a alguien que terminó con dinero de alguien que no. Lo importante no es la tasa: es el número de años que dejas que corra.",
-    ej: "1.000 al 8% anual: a los 10 años son 2.159, a los 20 son 4.661, a los 30 son 10.063. Los primeros diez años aportaron 1.159; los últimos diez aportaron 5.400.",
+    ej: "USD 1.000 al 8% anual: a los 10 años son 2.159, a los 20 son 4.661, a los 30 son 10.063. Los primeros diez años aportaron 1.159; los últimos diez aportaron 5.400.",
     q: [
       { q: "¿Cuál de estos dos factores pesa más en el resultado final a treinta años?", ops: ["Los años que el dinero lleva invertido", "Acertar el mejor momento para entrar", "La cantidad de operaciones que hagas", "El nombre del fondo que elijas"], correcta: "Los años que el dinero lleva invertido", e: "El tiempo entra al cálculo como exponente y la tasa como base. Por eso empezar diez años antes suele ganarle a rendir dos puntos más." },
-      { q: "Alguien invierte 200 al mes desde los 25 y para a los 35. Otro invierte lo mismo desde los 35 hasta los 65. ¿Quién suele terminar con más a los 65?", ops: ["Depende de la tasa, pero el primero muchas veces gana aunque puso mucho menos", "Siempre el segundo, porque puso tres veces más dinero", "Siempre empatan", "El primero, con seguridad, en cualquier escenario"], correcta: "Depende de la tasa, pero el primero muchas veces gana aunque puso mucho menos", e: "Es el ejemplo clásico del coste de esperar. Con tasas altas el que empezó antes gana; con tasas bajas no siempre. Lo que nunca cambia es que sus aportes valieron mucho más por unidad." },
+      { q: "Alguien invierte USD 200 al mes desde los 25 y para a los 35. Otro invierte lo mismo desde los 35 hasta los 65. ¿Quién suele terminar con más a los 65?", ops: ["Depende de la tasa, pero el primero muchas veces gana aunque puso mucho menos", "Siempre el segundo, porque puso tres veces más dinero", "Siempre empatan", "El primero, con seguridad, en cualquier escenario"], correcta: "Depende de la tasa, pero el primero muchas veces gana aunque puso mucho menos", e: "Es el ejemplo clásico del costo de esperar. Con tasas altas el que empezó antes gana; con tasas bajas no siempre. Lo que nunca cambia es que sus aportes valieron mucho más por unidad." },
       { q: "Una pérdida del 50%, ¿con qué ganancia se recupera?", ops: ["100%", "50%", "75%", "Depende del activo"], correcta: "100%", e: "De 100 caes a 50; para volver a 100 necesitas duplicar. Esta asimetría es la razón de fondo por la que evitar caídas grandes importa más que capturar subidas grandes." },
     ],
   },
   {
     id: "inflacion", nv: 1, n: "La inflación",
     x: "La inflación es la subida general de los precios. Si es 5%, lo que hoy cuesta 100 el año que viene cuesta 105. Tu sueldo y tus ahorros valen en función de lo que compran, no de la cifra que dicen. Por eso el rendimiento que importa es el real: lo que ganaste menos la inflación.",
-    ej: "Ganaste 3% en el año y la inflación fue seis. Tu número subió, tu poder de compra bajó 3%. Ganaste nominalmente y perdiste realmente.",
+    ej: "Ganaste 3% en el año y la inflación fue de 6%. Tu número subió, tu poder de compra bajó 3%. Ganaste nominalmente y perdiste realmente.",
     q: [
-      { q: "Tu inversión rindió 4% y la inflación fue siete. ¿Qué pasó de verdad?", ops: ["Perdiste alrededor de 3% de poder de compra", "Ganaste 4%", "Quedaste igual", "Ganaste 11%"], correcta: "Perdiste alrededor de 3% de poder de compra", e: "El rendimiento real es lo nominal menos la inflación. Es el único que se puede comer." },
+      { q: "Tu inversión rindió 4% y la inflación fue de 7%. ¿Qué pasó de verdad?", ops: ["Perdiste alrededor de 3% de poder de compra", "Ganaste 4%", "Quedaste igual", "Ganaste 11%"], correcta: "Perdiste alrededor de 3% de poder de compra", e: "El rendimiento real es lo nominal menos la inflación. Es el único que se puede comer." },
       { q: "¿A quién beneficia la inflación alta e inesperada?", ops: ["Al que debe dinero a tasa fija", "Al que tiene todo en efectivo", "Al que prestó dinero a tasa fija", "A nadie, perjudica igual a todos"], correcta: "Al que debe dinero a tasa fija", e: "La deuda se devuelve en dinero que vale menos. Por eso la inflación transfiere riqueza de acreedores a deudores, y por eso los países muy endeudados rara vez la odian tanto como dicen." },
       { q: "En un país con inflación alta y persistente, ¿qué error es más caro?", ops: ["Mantener el grueso del patrimonio en moneda local sin remunerar", "Tener una parte en efectivo para emergencias", "Invertir en activos reales", "Diversificar por monedas"], correcta: "Mantener el grueso del patrimonio en moneda local sin remunerar", e: "En inflación alta el efectivo quieto es el activo que más rápido se destruye. Tener un colchón está bien; tener el patrimonio ahí, no." },
     ],
@@ -2506,10 +2691,10 @@ const TEMAS = [
   {
     id: "emergencia", nv: 1, n: "El fondo de emergencia",
     x: "Antes de invertir un solo peso hay que tener dinero aburrido y disponible: entre 3 y 6 meses de tus gastos, en efectivo o en algo que se convierta en efectivo mañana. No está ahí para rendir. Está ahí para que cuando se dañe el carro, se caiga un cliente o te enfermes, no tengas que vender tus inversiones justo cuando están abajo.",
-    ej: "Gastas 1.200 al mes. Tu fondo de emergencia son entre 3.600 y 7.200. Rinde poco y eso está bien: su trabajo es estar, no crecer.",
+    ej: "Gastas USD 1.200 al mes. Tu fondo de emergencia son entre 3.600 y 7.200. Rinde poco y eso está bien: su trabajo es estar, no crecer.",
     q: [
       { q: "¿Cuál es la función real del fondo de emergencia?", ops: ["Evitar que vendas tus inversiones en el peor momento", "Maximizar el rendimiento de tu efectivo", "Sustituir a un seguro", "Aprovechar caídas del mercado"], correcta: "Evitar que vendas tus inversiones en el peor momento", e: "Es un instrumento de comportamiento, no de rentabilidad. Su valor aparece exactamente el año en que todo lo demás está en rojo." },
-      { q: "Tienes deudas de tarjeta al 60% anual y estás armando el fondo de emergencia. ¿Qué conviene?", ops: ["Un fondo mínimo y atacar la tarjeta: ninguna inversión rinde 60% seguro", "Ignorar la tarjeta hasta tener seis meses de gastos", "Invertir en acciones para ganarle a la tarjeta", "Pagar solo el mínimo y ahorrar el resto"], correcta: "Un fondo mínimo y atacar la tarjeta: ninguna inversión rinde 60% seguro", e: "Pagar una deuda al sesenta es un rendimiento garantizado del sesenta. No existe inversión legal que compita con eso." },
+      { q: "Tienes deudas de tarjeta al 60% anual y estás armando el fondo de emergencia. ¿Qué conviene?", ops: ["Un fondo mínimo y atacar la tarjeta: ninguna inversión rinde 60% seguro", "Ignorar la tarjeta hasta tener seis meses de gastos", "Invertir en acciones para ganarle a la tarjeta", "Pagar solo el mínimo y ahorrar el resto"], correcta: "Un fondo mínimo y atacar la tarjeta: ninguna inversión rinde 60% seguro", e: "Pagar una deuda al 60% es un rendimiento garantizado del 60%. No existe inversión legal que compita con eso." },
     ],
   },
   {
@@ -2534,7 +2719,7 @@ const TEMAS = [
   {
     id: "presupuesto", nv: 1, n: "Ingreso, gasto y la resta",
     x: "El patrimonio no lo construye lo que ganas: lo construye la diferencia entre lo que ganas y lo que gastas. Alguien con un sueldo enorme y un tren de vida a la altura no acumula nada. La tasa de ahorro, el porcentaje de lo que entra que no se gasta, predice tu futuro financiero mucho mejor que tu sueldo.",
-    ej: "Ganas 5.000 y gastas 4.800: ahorras 4% y necesitas décadas. Ganas 3.000 y gastas 2.100: ahorras 30% y llegas antes que el primero.",
+    ej: "Ganas USD 5.000 y gastas USD 4.800: ahorras 4% y necesitas décadas. Ganas 3.000 y gastas 2.100: ahorras 30% y llegas antes que el primero.",
     q: [
       { q: "¿Qué predice mejor tu patrimonio a veinte años?", ops: ["Tu tasa de ahorro", "Tu sueldo bruto", "El sector en el que trabajas", "El país donde vives"], correcta: "Tu tasa de ahorro", e: "El sueldo abre la posibilidad; la tasa de ahorro la ejecuta. Es la razón por la que hay médicos quebrados y maestros con patrimonio." },
       { q: "Te suben el sueldo 30% y subes tu tren de vida 30%. ¿Qué pasó con tu independencia financiera?", ops: ["Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", "Se acercó, porque ganas más", "No cambió", "Se acercó solo si invertiste el aumento"], correcta: "Se alejó: ahora necesitas un patrimonio mayor para cubrir tu vida", e: "Se llama inflación del estilo de vida. Como la meta es 25 veces tu gasto anual, subir el gasto mueve la meta hacia adelante más rápido de lo que ahorras." },
@@ -2543,7 +2728,7 @@ const TEMAS = [
   {
     id: "deuda", nv: 1, n: "Deuda que suma y deuda que resta",
     x: "La deuda no es buena ni mala por sí sola: depende de qué compra y a qué tasa. Deuda barata que compra algo que produce ingreso o se aprecia puede tener sentido. Deuda cara que compra consumo que pierde valor es la forma más rápida y silenciosa de destruir patrimonio.",
-    ej: "Hipoteca al 7% sobre un inmueble que renta seis y se aprecia tres: el conjunto suma. Tarjeta al 60% sobre un viaje: el viaje ya pasó y la deuda sigue creciendo.",
+    ej: "Hipoteca al 7% sobre un inmueble que renta 6% y se aprecia 3%: el conjunto suma. Tarjeta al 60% sobre un viaje: el viaje ya pasó y la deuda sigue creciendo.",
     q: [
       { q: "¿Qué hace que una deuda sea 'buena'?", ops: ["Que su tasa sea menor que el retorno de lo que compra", "Que sea de un banco grande", "Que el plazo sea largo", "Que la cuota quepa en tu sueldo"], correcta: "Que su tasa sea menor que el retorno de lo que compra", e: "Que la cuota quepa es una condición para no quebrar, no una razón para endeudarse. La comparación relevante es tasa contra retorno del activo." },
       { q: "Pagar una tarjeta que cobra 40% anual equivale a...", ops: ["Una inversión con rendimiento garantizado del 40%", "Un gasto sin retorno", "Una inversión de riesgo medio", "Nada, es solo saldar una cuenta"], correcta: "Una inversión con rendimiento garantizado del 40%", e: "Es el mejor rendimiento ajustado por riesgo al que la mayoría de la gente tiene acceso en su vida, y casi nadie lo ve así." },
@@ -2554,7 +2739,7 @@ const TEMAS = [
   {
     id: "comobanco", nv: 1, n: "De dónde sale el dinero de un banco",
     x: "Un banco no guarda tu dinero en una caja fuerte esperando a que vuelvas. Lo presta. Toma los depósitos de mucha gente, presta la mayor parte y se queda con la diferencia entre lo que paga por tus ahorros y lo que cobra por los préstamos. Por eso puede pagarte poco y cobrar mucho: ese diferencial es su negocio entero.",
-    ej: "Te paga 2% por tu depósito y presta ese mismo dinero al 14. Los 12 puntos de diferencia son su margen, antes de gastos y de los préstamos que no le devuelvan.",
+    ej: "Te paga 2% por tu depósito y presta ese mismo dinero al 14%. Los 12 puntos de diferencia son su margen, antes de gastos y de los préstamos que no le devuelvan.",
     q: [
       { q: "¿Qué hace un banco con el dinero que depositas?", ops: ["Prestarlo a otros y quedarse con la diferencia de tasa", "Guardarlo íntegro hasta que lo pidas", "Invertirlo todo en bolsa", "Enviarlo al banco central"], correcta: "Prestarlo a otros y quedarse con la diferencia de tasa", e: "Se llama intermediación financiera. Si todos los depositantes pidieran su dinero el mismo día, ningún banco del mundo podría pagarlo: por eso existe la regulación." },
       { q: "El diferencial entre lo que el banco te paga y lo que cobra se llama", ops: ["Margen de intermediación", "Comisión de apertura", "Encaje", "Prima de riesgo"], correcta: "Margen de intermediación", e: "Es la principal fuente de ingresos de la banca tradicional, y la razón por la que la cuenta de ahorro rinde tan poco." },
@@ -2562,8 +2747,8 @@ const TEMAS = [
   },
   {
     id: "encaje", nv: 2, n: "El encaje legal",
-    x: "El encaje es la parte de los depósitos que un banco está obligado a NO prestar: se queda inmovilizada en el banco central. Sirve para dos cosas: que quede algo si mucha gente retira a la vez, y para que el banco central pueda abrir o cerrar el grifo del crédito de todo un país cambiando un solo número.",
-    ej: "Con encaje del 20%, de cada 100 que depositas el banco solo puede prestar 80. Si el banco central lo sube al 30, ese banco tiene que recortar crédito de golpe, aunque no haya cambiado nada más.",
+    x: "El encaje es la parte de los depósitos que un banco está obligado a NO prestar: se queda inmovilizada en el banco central. Sirve para dos cosas: que quede algo si mucha gente retira a la vez, y para que el banco central pueda abrir o cerrar la llave del crédito de todo un país cambiando un solo número.",
+    ej: "Con encaje del 20%, de cada 100 que depositas el banco solo puede prestar 80. Si el banco central lo sube al 30%, ese banco tiene que recortar crédito de golpe, aunque no haya cambiado nada más.",
     q: [
       { q: "Si el banco central sube el encaje legal, ¿qué pasa con el crédito?", ops: ["Se encarece y se reduce: hay menos dinero disponible para prestar", "Se abarata, porque los bancos tienen más reservas", "No cambia nada", "Solo afecta a los depósitos, no a los préstamos"], correcta: "Se encarece y se reduce: hay menos dinero disponible para prestar", e: "Es una de las herramientas más directas que existen para enfriar una economía, y una de las más bruscas." },
       { q: "¿Para qué sirve principalmente el encaje?", ops: ["Para que el banco pueda responder a los retiros y para controlar cuánto crédito hay en la economía", "Para pagar los sueldos del banco", "Para garantizar la rentabilidad del depositante", "Para financiar al gobierno"], correcta: "Para que el banco pueda responder a los retiros y para controlar cuánto crédito hay en la economía", e: "Es a la vez un colchón de liquidez y una palanca de política monetaria." },
@@ -2576,26 +2761,26 @@ const TEMAS = [
     ej: "Sube la tasa de referencia del 6 al 11%: tu hipoteca variable sube, tu banco te paga algo más por ahorrar, las empresas posponen inversiones y la bolsa suele caer. Un solo número mueve todo eso.",
     q: [
       { q: "El banco central sube la tasa de referencia. ¿Qué es lo más probable?", ops: ["Que el crédito se encarezca y la economía se enfríe", "Que suban los salarios", "Que la bolsa suba de inmediato", "Que baje el desempleo"], correcta: "Que el crédito se encarezca y la economía se enfríe", e: "Es exactamente lo que se busca cuando hay inflación alta: bajar la demanda a costa de frenar el crecimiento." },
-      { q: "¿Por qué las bolsas suelen caer cuando suben las tasas?", ops: ["Porque los beneficios futuros valen menos hoy y la deuda cuesta más", "Porque las empresas dejan de vender", "Porque los inversores se asustan sin motivo", "Porque el gobierno lo prohíbe"], correcta: "Porque los beneficios futuros valen menos hoy y la deuda cuesta más", e: "Es la misma mecánica del valor presente: sube la tasa de descuento, baja lo que vale hoy cualquier flujo futuro." },
+      { q: "¿Por qué las bolsas suelen caer cuando suben las tasas?", ops: ["Porque las ganancias futuras valen menos hoy y la deuda cuesta más", "Porque las empresas dejan de vender", "Porque los inversionistas se asustan sin motivo", "Porque el gobierno lo prohíbe"], correcta: "Porque las ganancias futuras valen menos hoy y la deuda cuesta más", e: "Es la misma mecánica del valor presente: sube la tasa de descuento, baja lo que vale hoy cualquier flujo futuro." },
     ],
   },
   {
     id: "interescomo", nv: 1, n: "Qué es de verdad una tasa de interés",
-    x: "Una tasa de interés es el precio de usar dinero ajeno durante un tiempo. Nada más. Cuando pides prestado la pagas; cuando ahorras o inviertes la cobras. Lo importante es mirar tres cosas: si es anual o mensual, si es fija o variable, y si incluye todos los costes o solo el interés puro.",
-    ej: "Un 3% mensual suena poco al lado de un 30 anual, y no lo es: 3% mensual compuesto son más del 42% al año.",
+    x: "Una tasa de interés es el precio de usar dinero ajeno durante un tiempo. Nada más. Cuando pides prestado la pagas; cuando ahorras o inviertes la cobras. Lo importante es mirar tres cosas: si es anual o mensual, si es fija o variable, y si incluye todos los costos o solo el interés puro.",
+    ej: "Un 3% mensual suena poco al lado de un 30% anual, y no lo es: 3% mensual compuesto son más del 42% al año.",
     q: [
       { q: "Una tarjeta cobra 3% mensual. ¿Cuánto es al año, aproximadamente?", ops: ["Más del 42%", "36% exactos", "3%", "18%"], correcta: "Más del 42%", e: "El interés se compone también en tu contra. Multiplicar por doce se queda corto: hay que elevar a doce." },
-      { q: "Te ofrecen un préstamo al 12% anual más comisión de apertura del 4 y seguro obligatorio. ¿Qué te cuesta de verdad?", ops: ["Bastante más del 12: hay que mirar el coste total, no la tasa suelta", "Exactamente 12%", "16%, sumando la comisión", "Depende solo del plazo"], correcta: "Bastante más del 12: hay que mirar el coste total, no la tasa suelta", e: "Por eso existe la tasa efectiva o coste total: la tasa nominal a solas casi nunca dice lo que vas a pagar." },
+      { q: "Te ofrecen un préstamo al 12% anual más comisión de apertura del 4% y seguro obligatorio. ¿Qué te cuesta de verdad?", ops: ["Bastante más del 12%: hay que mirar el costo total, no la tasa suelta", "Exactamente 12%", "16%, sumando la comisión", "Depende solo del plazo"], correcta: "Bastante más del 12%: hay que mirar el costo total, no la tasa suelta", e: "Por eso existe la tasa efectiva o costo total: la tasa nominal a solas casi nunca dice lo que vas a pagar." },
       { q: "Tasa fija o variable, ¿cuál es la diferencia que importa?", ops: ["Con la fija sabes la cuota siempre; con la variable asumes tú el riesgo de que suban las tasas", "La fija siempre es más barata", "La variable es ilegal en préstamos largos", "No hay diferencia real"], correcta: "Con la fija sabes la cuota siempre; con la variable asumes tú el riesgo de que suban las tasas", e: "La fija suele empezar más cara: esa diferencia es lo que cuesta el seguro contra subidas." },
     ],
   },
   {
     id: "ahorrar", nv: 1, n: "Ahorrar no es lo mismo que invertir",
     x: "Ahorrar es apartar dinero y que siga estando ahí mañana: seguro, disponible y con rendimiento bajo o nulo. Invertir es poner ese dinero a producir aceptando que puede bajar. Las dos cosas hacen falta y sirven para cosas distintas: el ahorro es para lo que necesitas pronto o de repente, la inversión para lo que no vas a tocar en años.",
-    ej: "La cuota del colegio de enero se ahorra. La jubilación de dentro de treinta años se invierte. Cambiarlas de sitio es el error más caro que se comete con los dos.",
+    ej: "La cuota del colegio de enero se ahorra. La jubilación de dentro de treinta años se invierte. Cambiarlas de lugar es el error más caro que se comete con los dos.",
     q: [
-      { q: "El dinero que vas a necesitar dentro de seis meses, ¿dónde debería estar?", ops: ["En algo seguro y disponible, aunque rinda poco", "En acciones, para que crezca mientras tanto", "En cripto, por el rendimiento", "En un inmueble"], correcta: "En algo seguro y disponible, aunque rinda poco", e: "En seis meses una cartera de riesgo puede estar en cualquier sitio. Para plazos cortos, lo que importa es que el dinero esté, no que crezca." },
-      { q: "¿Cuál es el riesgo real de solo ahorrar y nunca invertir?", ops: ["Que la inflación te vaya quitando poder de compra año tras año", "Ninguno, el ahorro es seguro", "Que el banco quiebre", "Que pagues más impuestos"], correcta: "Que la inflación te vaya quitando poder de compra año tras año", e: "El ahorro protege del susto y no protege del tiempo. A treinta años, no invertir es una decisión con coste, aunque no lo parezca." },
+      { q: "El dinero que vas a necesitar dentro de seis meses, ¿dónde debería estar?", ops: ["En algo seguro y disponible, aunque rinda poco", "En acciones, para que crezca mientras tanto", "En cripto, por el rendimiento", "En un inmueble"], correcta: "En algo seguro y disponible, aunque rinda poco", e: "En seis meses una cartera de riesgo puede estar en cualquier nivel. Para plazos cortos, lo que importa es que el dinero esté, no que crezca." },
+      { q: "¿Cuál es el riesgo real de solo ahorrar y nunca invertir?", ops: ["Que la inflación te vaya quitando poder de compra año tras año", "Ninguno, el ahorro es seguro", "Que el banco quiebre", "Que pagues más impuestos"], correcta: "Que la inflación te vaya quitando poder de compra año tras año", e: "El ahorro protege del susto y no protege del tiempo. A treinta años, no invertir es una decisión con costo, aunque no lo parezca." },
     ],
   },
   {
@@ -2614,7 +2799,7 @@ const TEMAS = [
     ej: "Ganas 2.000.000 al mes y el dólar pasa de 4.000 a 6.000. Tu sueldo sigue diciendo lo mismo y pasó de valer 500 dólares a 333. No te bajaron el sueldo: te lo devaluaron.",
     q: [
       { q: "Tu moneda se devalúa un 30% y tú cobras y ahorras en ella. ¿Qué te pasó?", ops: ["Perdiste poder de compra sobre todo lo importado, sin que cambiara el número de tu cuenta", "Nada, mientras no cambies a dólares", "Ganaste, porque exportar es más barato", "Solo te afecta si viajas"], correcta: "Perdiste poder de compra sobre todo lo importado, sin que cambiara el número de tu cuenta", e: "Es la pérdida más silenciosa que existe: el saldo no baja, baja lo que compra." },
-      { q: "¿Quién suele beneficiarse de una devaluación?", ops: ["El que exporta o cobra en moneda fuerte", "El que importa insumos", "El que tiene deuda en dólares", "El asalariado local"], correcta: "El que exporta o cobra en moneda fuerte", e: "Cobra en una moneda que subió y paga costes en la que bajó. El que debe en dólares y gana en local está en el lado exactamente opuesto." },
+      { q: "¿Quién suele beneficiarse de una devaluación?", ops: ["El que exporta o cobra en moneda fuerte", "El que importa insumos", "El que tiene deuda en dólares", "El asalariado local"], correcta: "El que exporta o cobra en moneda fuerte", e: "Cobra en una moneda que subió y paga costos en la que bajó. El que debe en dólares y gana en local está en el lado exactamente opuesto." },
     ],
   },
   {
@@ -2629,7 +2814,7 @@ const TEMAS = [
   {
     id: "burbuja", nv: 4, n: "Ciclos, burbujas y recesiones",
     x: "Las economías se mueven en ciclos: expansión, euforia, contracción, recuperación. En la euforia el crédito es fácil, todo el mundo tiene una historia de por qué esta vez es distinto, y los precios se despegan de lo que las cosas producen. La recesión no es un accidente del sistema: es la parte del ciclo en la que se corrige lo que se estiró.",
-    ej: "Precios de vivienda subiendo el 20% anual mientras los alquileres suben el 3. Esa brecha no la cierra el alquiler subiendo: la cierra el precio bajando.",
+    ej: "Precios de vivienda subiendo el 20% anual mientras las rentas suben el 3%. Esa brecha no la cierra el alquiler subiendo: la cierra el precio bajando.",
     q: [
       { q: "¿Cuál es la señal más común de una burbuja?", ops: ["Que el precio se separe de lo que el activo produce, y que el crédito sea fácil", "Que suba mucho en un mes", "Que salga en las noticias", "Que suba el volumen negociado"], correcta: "Que el precio se separe de lo que el activo produce, y que el crédito sea fácil", e: "La subida sola no dice nada. Lo que la delata es el divorcio entre precio y flujo, financiado con deuda barata." },
       { q: "En la parte alta del ciclo, ¿qué error se comete más?", ops: ["Confundir un mercado alcista con criterio propio y subir el apalancamiento", "Vender demasiado pronto", "Diversificar en exceso", "Guardar demasiado efectivo"], correcta: "Confundir un mercado alcista con criterio propio y subir el apalancamiento", e: "Cuando todo sube, cualquiera acierta. La factura llega cuando el ciclo gira y encuentra a la gente apalancada." },
@@ -2639,27 +2824,27 @@ const TEMAS = [
   /* ---------------- nivel 2 · intermedio ---------------- */
   {
     id: "indexado", nv: 2, n: "Fondos indexados",
-    x: "Un fondo indexado compra todas las empresas de un mercado en proporción a su tamaño, sin intentar escoger. Como no paga analistas ni opera mucho, cobra comisiones mínimas. A treinta años, la mayoría de los fondos que sí intentan escoger terminan por debajo del índice, y la causa principal no es que sean tontos: son las comisiones y el coste de operar.",
+    x: "Un fondo indexado compra todas las empresas de un mercado en proporción a su tamaño, sin intentar escoger. Como no paga analistas ni opera mucho, cobra comisiones mínimas. A treinta años, la mayoría de los fondos que sí intentan escoger terminan por debajo del índice, y la causa principal no es que sean tontos: son las comisiones y el costo de operar.",
     ej: "Un índice rinde 8%. Un fondo activo que cobra 1,8% tiene que acertar lo suficiente para superar al índice por 1,8 puntos solo para empatar. Muy pocos lo logran de forma sostenida.",
     q: [
-      { q: "¿Por qué la mayoría de los fondos activos pierde contra su índice a largo plazo?", ops: ["Por las comisiones y los costes de operar acumulados", "Porque sus gestores no saben de finanzas", "Porque los índices hacen trampa", "Porque el mercado siempre sube"], correcta: "Por las comisiones y los costes de operar acumulados", e: "En agregado, los activos son el mercado. Antes de costes empatan con el índice por definición; después de costes quedan por debajo. Es aritmética, no talento." },
-      { q: "Un fondo cobra 2% anual en vez de 0,2. Sobre treinta años, esa diferencia se lleva aproximadamente...", ops: ["Alrededor de un tercio o más del capital final", "Un 2% del total", "Un 10% del total", "Nada relevante"], correcta: "Alrededor de un tercio o más del capital final", e: "La comisión se cobra cada año sobre el saldo completo, así que también se compone. Es el gasto que más gente subestima por venir expresado en números pequeños." },
-      { q: "Trampa: 'el fondo que más rindió el año pasado' es una buena forma de elegir. ¿Verdadero o falso?", ops: ["Falso: el rendimiento pasado reciente no predice el futuro y suele revertir", "Verdadero, indica un buen gestor", "Verdadero si rindió mucho más que el resto", "Depende del sector"], correcta: "Falso: el rendimiento pasado reciente no predice el futuro y suele revertir", e: "Perseguir al ganador del año pasado es la conducta más común y más cara del inversor particular. Suele comprar caro justo antes de la reversión." },
+      { q: "¿Por qué la mayoría de los fondos activos pierde contra su índice a largo plazo?", ops: ["Por las comisiones y los costos de operar acumulados", "Porque sus gestores no saben de finanzas", "Porque los índices hacen trampa", "Porque el mercado siempre sube"], correcta: "Por las comisiones y los costos de operar acumulados", e: "En agregado, los activos son el mercado. Antes de costos empatan con el índice por definición; después de costos quedan por debajo. Es aritmética, no talento." },
+      { q: "Un fondo cobra 2% anual en vez de 0,2%. Sobre treinta años, esa diferencia se lleva aproximadamente...", ops: ["Alrededor de un tercio o más del capital final", "Un 2% del total", "Un 10% del total", "Nada relevante"], correcta: "Alrededor de un tercio o más del capital final", e: "La comisión se cobra cada año sobre el saldo completo, así que también se compone. Es el gasto que más gente subestima por venir expresado en números pequeños." },
+      { q: "Trampa: 'el fondo que más rindió el año pasado' es una buena forma de elegir. ¿Verdadero o falso?", ops: ["Falso: el rendimiento pasado reciente no predice el futuro y suele revertir", "Verdadero, indica un buen gestor", "Verdadero si rindió mucho más que el resto", "Depende del sector"], correcta: "Falso: el rendimiento pasado reciente no predice el futuro y suele revertir", e: "Perseguir al ganador del año pasado es la conducta más común y más cara del inversionista particular. Suele comprar caro justo antes de la reversión." },
     ],
   },
   {
-    id: "comisiones", nv: 2, n: "Comisiones y costes ocultos",
-    x: "Toda operación tiene fricción: comisión de compraventa, diferencia entre precio de compra y de venta, impuestos al realizar ganancias, y la comisión anual del producto. Ninguna se siente en el momento porque se descuenta del saldo, pero son de lo poco en la inversión que es seguro: el rendimiento es incierto, el coste no.",
-    ej: "Rotar el 20% de tu cartera cada año con 0,5% de coste te quita 0,1% anual. Suena a nada; sobre treinta años y con interés compuesto, es dinero real.",
+    id: "comisiones", nv: 2, n: "Comisiones y costos ocultos",
+    x: "Toda operación tiene fricción: comisión de compraventa, diferencia entre precio de compra y de venta, impuestos al realizar ganancias, y la comisión anual del producto. Ninguna se siente en el momento porque se descuenta del saldo, pero son de lo poco en la inversión que es seguro: el rendimiento es incierto, el costo no.",
+    ej: "Rotar el 20% de tu cartera cada año con 0,5% de costo te quita 0,1% anual. Suena a nada; sobre treinta años y con interés compuesto, es dinero real.",
     q: [
-      { q: "De todo lo que compone tu resultado final, ¿qué es lo único que controlas con certeza?", ops: ["Los costes", "El rendimiento del mercado", "El momento de las crisis", "La inflación"], correcta: "Los costes", e: "Es la razón por la que la gestión de costes es la primera decisión seria de cualquier inversor: es la única variable con resultado garantizado." },
-      { q: "¿Qué es el diferencial entre precio de compra y venta?", ops: ["Un coste implícito que pagas cada vez que operas, aunque no aparezca como comisión", "Un impuesto del gobierno", "La ganancia del vendedor anterior", "Una comisión que solo pagan los profesionales"], correcta: "Un coste implícito que pagas cada vez que operas, aunque no aparezca como comisión", e: "No sale en ningún recibo, pero se lo llevas puesto en cada operación. Por eso operar mucho es caro incluso donde la comisión declarada es cero." },
+      { q: "De todo lo que compone tu resultado final, ¿qué es lo único que controlas con certeza?", ops: ["Los costos", "El rendimiento del mercado", "El momento de las crisis", "La inflación"], correcta: "Los costos", e: "Es la razón por la que la gestión de costos es la primera decisión seria de cualquier inversionista: es la única variable con resultado garantizado." },
+      { q: "¿Qué es el diferencial entre precio de compra y venta?", ops: ["Un costo implícito que pagas cada vez que operas, aunque no aparezca como comisión", "Un impuesto del gobierno", "La ganancia del vendedor anterior", "Una comisión que solo pagan los profesionales"], correcta: "Un costo implícito que pagas cada vez que operas, aunque no aparezca como comisión", e: "No sale en ningún recibo, pero lo pagas en cada operación. Por eso operar mucho es caro incluso donde la comisión declarada es cero." },
     ],
   },
   {
     id: "aportes", nv: 2, n: "Aportar de forma periódica",
     x: "Aportar la misma cantidad cada mes, pase lo que pase, hace dos cosas. Compra más unidades cuando los precios están bajos y menos cuando están altos, sin que tengas que adivinar nada. Y sobre todo, convierte la inversión en un hábito automático en vez de una decisión que tomas cuando tienes ánimo, que suele ser cuando todo va bien y está caro.",
-    ej: "Aportas 100 al mes. Un mes la unidad cuesta 10 y compras 10; al mes siguiente cuesta 5 y compras 20. Tu precio medio queda por debajo del precio medio del periodo.",
+    ej: "Aportas USD 100 al mes. Un mes la unidad cuesta 10 y compras 10; al mes siguiente cuesta 5 y compras 20. Tu precio medio queda por debajo del precio medio del periodo.",
     q: [
       { q: "El principal beneficio de aportar periódicamente es...", ops: ["Que elimina la necesidad de acertar el momento y te vuelve constante", "Que garantiza mayor rendimiento que invertir todo de golpe", "Que evita las pérdidas", "Que reduce las comisiones"], correcta: "Que elimina la necesidad de acertar el momento y te vuelve constante", e: "Matemáticamente, invertir todo de golpe suele rendir algo más porque el dinero está más tiempo dentro. El aporte periódico gana en lo que de verdad falla: la conducta." },
       { q: "El mercado cae 30% y tú aportas mensualmente. ¿Qué haces?", ops: ["Sigues aportando: estás comprando lo mismo más barato", "Paras hasta que se recupere", "Vendes para no perder más", "Cambias todo a efectivo y esperas la señal"], correcta: "Sigues aportando: estás comprando lo mismo más barato", e: "Si tu horizonte es largo, una caída es un descuento sobre compras futuras. Parar de aportar en la caída es cancelar la parte buena del plan." },
@@ -2668,19 +2853,19 @@ const TEMAS = [
   {
     id: "rebalanceo", nv: 2, n: "Rebalancear",
     x: "Con el tiempo, lo que más sube ocupa un porcentaje cada vez mayor de tu cartera, y tu riesgo aumenta sin que tú decidas nada. Rebalancear es volver a los porcentajes que elegiste: vender un poco de lo que subió y comprar de lo que bajó. Es incómodo precisamente porque funciona: te obliga a hacer lo contrario del impulso.",
-    ej: "Elegiste 60 acciones y 40 bonos. Tras dos años buenos quedaste en 75 y 25. Sin haber decidido nada, ahora tienes una cartera mucho más agresiva que la que querías.",
+    ej: "Elegiste 60% acciones y 40% bonos. Tras dos años buenos quedaste en 75% y 25%. Sin haber decidido nada, ahora tienes una cartera mucho más agresiva que la que querías.",
     q: [
       { q: "¿Qué problema resuelve el rebalanceo?", ops: ["Que el riesgo de tu cartera crezca solo, sin que lo hayas decidido", "Que ganes más que el mercado", "Que pagues menos impuestos", "Que evites las caídas"], correcta: "Que el riesgo de tu cartera crezca solo, sin que lo hayas decidido", e: "Es control de riesgo, no una estrategia de rentabilidad. A veces rinde algo más, a veces algo menos; lo que siempre hace es mantenerte donde decidiste estar." },
-      { q: "¿Con qué frecuencia tiene sentido rebalancear para un inversor particular?", ops: ["Una vez al año, o cuando algo se desvíe bastante de su objetivo", "Cada semana", "Cada vez que el mercado se mueve", "Nunca"], correcta: "Una vez al año, o cuando algo se desvíe bastante de su objetivo", e: "Rebalancear muy seguido añade costes e impuestos sin añadir control. Una vez al año captura casi todo el beneficio." },
+      { q: "¿Con qué frecuencia tiene sentido rebalancear para un inversionista particular?", ops: ["Una vez al año, o cuando algo se desvíe bastante de su objetivo", "Cada semana", "Cada vez que el mercado se mueve", "Nunca"], correcta: "Una vez al año, o cuando algo se desvíe bastante de su objetivo", e: "Rebalancear muy seguido agrega costos e impuestos sin agregar control. Una vez al año captura casi todo el beneficio." },
     ],
   },
   {
     id: "regla4", nv: 2, n: "Cuánto necesitas para no depender del sueldo",
     x: "La referencia más usada es la regla del 4%: si cada año retiras el 4% de tu patrimonio inicial ajustado por inflación, históricamente el dinero aguantó unos treinta años. Dicho al revés, necesitas alrededor de 25 veces tu gasto anual. Fíjate que la meta la fija tu gasto, no tu sueldo.",
-    ej: "Gastas 30.000 al año. Tu número es 750.000. Si reduces tu gasto a 24.000, tu número baja a 600.000: recortar gasto acerca la meta por los dos lados a la vez.",
+    ej: "Gastas USD 30.000 al año. Tu número es USD 750.000. Si reduces tu gasto a 24.000, tu número baja a 600.000: recortar gasto acerca la meta por los dos lados a la vez.",
     q: [
       { q: "Tu meta de independencia financiera la determina...", ops: ["Tu gasto anual", "Tu sueldo", "Tu edad", "El país donde vives"], correcta: "Tu gasto anual", e: "Por eso dos personas con el mismo sueldo pueden tener metas que difieren en cientos de miles: lo que cuenta es el tren de vida que hay que sostener." },
-      { q: "Reducir tu gasto anual en 500 baja tu meta en aproximadamente...", ops: ["12.500", "500", "5.000", "50.000"], correcta: "12.500", e: "Veinticinco veces 500. Cada recorte permanente de gasto trabaja dos veces: te deja ahorrar más y baja la meta." },
+      { q: "Reducir tu gasto anual en USD 500 baja tu meta en aproximadamente...", ops: ["12.500", "500", "5.000", "50.000"], correcta: "12.500", e: "Veinticinco veces 500. Cada recorte permanente de gasto trabaja dos veces: te deja ahorrar más y baja la meta." },
       { q: "Trampa: la regla del 4% garantiza que el dinero nunca se acabe. ¿Verdadero o falso?", ops: ["Falso: es una regla histórica y aproximada, no una garantía", "Verdadero, está demostrado matemáticamente", "Verdadero si inviertes en bonos", "Falso, en realidad es la del 10%"], correcta: "Falso: es una regla histórica y aproximada, no una garantía", e: "Sale de datos históricos de un mercado concreto y un horizonte de treinta años. Es una brújula útil, no una ley física." },
     ],
   },
@@ -2697,11 +2882,11 @@ const TEMAS = [
   /* ---------------- nivel 3 · avanzado ---------------- */
   {
     id: "valorpresente", nv: 3, n: "Valor presente",
-    x: "Mil dentro de cinco años no valen mil hoy, porque hoy podrías invertirlos. Descontar es traer un flujo futuro al presente dividiéndolo por uno más la tasa, elevado a los años. Toda valoración seria, de una empresa o de un bono, es en el fondo esta operación repetida sobre los flujos que se esperan.",
+    x: "Mil dólares dentro de cinco años no valen mil dólares hoy, porque hoy podrías invertirlos. Descontar es traer un flujo futuro al presente dividiéndolo por uno más la tasa, elevado a los años. Toda valoración seria, de una empresa o de un bono, es en el fondo esta operación repetida sobre los flujos que se esperan.",
     ej: "Mil dentro de 5 años, descontados al 10%, valen 1.000 dividido entre 1,1 elevado a 5, es decir 621 hoy.",
     q: [
-      { q: "Si sube la tasa de descuento, el valor presente de un flujo futuro...", ops: ["Baja", "Sube", "No cambia", "Depende del flujo"], correcta: "Baja", e: "Es la mecánica detrás de que las bolsas caigan cuando suben los tipos: el mismo beneficio futuro vale menos hoy." },
-      { q: "¿Qué activos sufren más cuando suben las tasas?", ops: ["Los que prometen sus flujos más lejos en el futuro", "Los que pagan mucho ahora", "Los de corto plazo", "Todos exactamente igual"], correcta: "Los que prometen sus flujos más lejos en el futuro", e: "Cuanto más lejos está el flujo, más veces se le aplica el descuento. Por eso las empresas de crecimiento sin beneficios presentes son las más sensibles a los tipos." },
+      { q: "Si sube la tasa de descuento, el valor presente de un flujo futuro...", ops: ["Baja", "Sube", "No cambia", "Depende del flujo"], correcta: "Baja", e: "Es la mecánica detrás de que las bolsas caigan cuando suben las tasas: la misma ganancia futura vale menos hoy." },
+      { q: "¿Qué activos sufren más cuando suben las tasas?", ops: ["Los que prometen sus flujos más lejos en el futuro", "Los que pagan mucho ahora", "Los de corto plazo", "Todos exactamente igual"], correcta: "Los que prometen sus flujos más lejos en el futuro", e: "Cuanto más lejos está el flujo, más veces se le aplica el descuento. Por eso las empresas de crecimiento que todavía no ganan dinero son las más sensibles a las tasas." },
     ],
   },
   {
@@ -2716,7 +2901,7 @@ const TEMAS = [
   {
     id: "sharpe", nv: 3, n: "Retorno por unidad de riesgo",
     x: "Comparar inversiones solo por rendimiento es engañoso, porque siempre se puede subir el rendimiento esperado asumiendo más riesgo. El ratio de Sharpe divide el rendimiento que excede a la tasa segura entre la volatilidad. Responde a la pregunta correcta: cuánto te pagaron por cada unidad de sobresalto.",
-    ej: "Cartera A rinde 12 con volatilidad 20; cartera B rinde 8 con volatilidad 8. Con tasa segura 2: A da 0,50 y B da 0,75. B es mejor negocio aunque rinda menos.",
+    ej: "Cartera A rinde 12% con volatilidad de 20%; cartera B rinde 8% con volatilidad de 8%. Con una tasa segura de 2%: A da 0,50 y B da 0,75. B es mejor negocio aunque rinda menos.",
     q: [
       { q: "¿Qué pregunta responde el ratio de Sharpe?", ops: ["Cuánto rendimiento extra obtuviste por cada unidad de riesgo asumido", "Cuánto vas a ganar el año que viene", "Cuál es la probabilidad de perder dinero", "Qué comisión estás pagando"], correcta: "Cuánto rendimiento extra obtuviste por cada unidad de riesgo asumido", e: "Permite comparar estrategias con perfiles de riesgo distintos, que es justo lo que el rendimiento a secas no deja hacer." },
       { q: "Trampa: un Sharpe muy alto y muy estable durante años es señal inequívoca de excelencia. ¿Verdadero o falso?", ops: ["Falso: también es el perfil típico de un fraude o de una estrategia que esconde riesgo de cola", "Verdadero, es la mejor señal posible", "Verdadero si el fondo está regulado", "Falso, el Sharpe no significa nada"], correcta: "Falso: también es el perfil típico de un fraude o de una estrategia que esconde riesgo de cola", e: "Rendimientos suavemente positivos mes tras mes, sin volatilidad, describen tanto a un genio como a un esquema Ponzi o a alguien vendiendo seguros contra catástrofes que aún no ocurrieron." },
@@ -2736,7 +2921,7 @@ const TEMAS = [
     x: "El EBITDA es lo que gana la operación antes de intereses, impuestos, depreciación y amortización. Sirve para comparar empresas con estructuras financieras distintas. Valorar por múltiplos es decir: negocios como este se pagan a ocho veces EBITDA, luego este vale ocho veces el suyo. Es rápido y por eso mismo peligroso.",
     ej: "EBITDA de 20 millones y múltiplo del sector de 8: valor de empresa 160 millones. Si tiene 60 de deuda, a los accionistas les corresponden 100.",
     q: [
-      { q: "¿Cuál es la crítica más seria al EBITDA como medida de beneficio?", ops: ["Ignora que las máquinas se gastan y hay que reponerlas, y que los intereses se pagan de verdad", "Que es muy difícil de calcular", "Que solo sirve para bancos", "Que no lo aceptan los auditores"], correcta: "Ignora que las máquinas se gastan y hay que reponerlas, y que los intereses se pagan de verdad", e: "La depreciación es un gasto real diferido: llega el día que hay que reponer el activo. Por eso se dice que el EBITDA es el beneficio antes de los gastos que no te gustan." },
+      { q: "¿Cuál es la crítica más seria al EBITDA como medida de ganancia?", ops: ["Ignora que las máquinas se gastan y hay que reponerlas, y que los intereses se pagan de verdad", "Que es muy difícil de calcular", "Que solo sirve para bancos", "Que no lo aceptan los auditores"], correcta: "Ignora que las máquinas se gastan y hay que reponerlas, y que los intereses se pagan de verdad", e: "La depreciación es un gasto real diferido: llega el día que hay que reponer el activo. Por eso se dice que el EBITDA es la ganancia antes de los gastos que no te gustan." },
       { q: "Una empresa se compra a 8 veces EBITDA y se vende cinco años después a 8 veces un EBITDA mayor. ¿De dónde salió la ganancia?", ops: ["Del crecimiento operativo y de haber amortizado deuda, no de la expansión del múltiplo", "De la expansión del múltiplo", "De la inflación", "De las comisiones"], correcta: "Del crecimiento operativo y de haber amortizado deuda, no de la expansión del múltiplo", e: "Son las tres palancas del private equity: crecer, pagar deuda y vender más caro en múltiplo. Solo las dos primeras dependen de ti." },
     ],
   },
@@ -2744,7 +2929,7 @@ const TEMAS = [
   /* ---------------- nivel 4 · profesional ---------------- */
   {
     id: "duration", nv: 4, n: "Duración de un bono",
-    x: "La duración mide cuánto cae el precio de un bono cuando suben las tasas. Aproximadamente, un bono con duración 7 pierde 7% si las tasas suben un punto. Cuanto más largo el plazo y menor el cupón, mayor la duración y más te duele un movimiento de tipos.",
+    x: "La duración mide cuánto cae el precio de un bono cuando suben las tasas. Aproximadamente, un bono con duración 7 pierde 7% si las tasas suben un punto. Cuanto más largo el plazo y menor el cupón, mayor la duración y más te duele un movimiento de tasas.",
     ej: "Bono a 10 años con duración 8: las tasas suben de 3 a 4% y su precio cae alrededor de 8%, aunque el emisor siga siendo igual de solvente.",
     q: [
       { q: "Las tasas suben un punto y tienes un bono de duración 6. Tu precio cae aproximadamente...", ops: ["6%", "1%", "Seis puntos básicos", "Nada si lo mantienes"], correcta: "6%", e: "La caída de precio es real aunque no vendas: si lo mantienes hasta vencimiento cobras lo pactado, pero durante el camino tu patrimonio marcado a mercado bajó." },
@@ -2754,7 +2939,7 @@ const TEMAS = [
   {
     id: "curva", nv: 4, n: "La curva de rendimientos",
     x: "La curva compara lo que paga la deuda de un mismo emisor a distintos plazos. Normalmente el plazo largo paga más que el corto, porque comprometerse más tiempo merece premio. Cuando se invierte, el corto pagando más que el largo, el mercado está diciendo que espera tasas más bajas en el futuro, y eso suele asociarse a recesión.",
-    ej: "El bono a 2 años paga 5% y el de 10 paga 4. La curva está invertida: el mercado apuesta a que habrá que bajar tasas, y eso normalmente pasa cuando la economía se enfría.",
+    ej: "El bono a 2 años paga 5% y el de 10 paga 4%. La curva está invertida: el mercado apuesta a que habrá que bajar tasas, y eso normalmente pasa cuando la economía se enfría.",
     q: [
       { q: "Una curva invertida se interpreta habitualmente como...", ops: ["Una señal de expectativas de recesión", "Una señal de crecimiento fuerte", "Un error del mercado", "Un buen momento para endeudarse largo"], correcta: "Una señal de expectativas de recesión", e: "Ha precedido a la mayoría de las recesiones recientes, aunque con retrasos muy variables. Es una señal, no un cronómetro." },
     ],
@@ -2765,7 +2950,7 @@ const TEMAS = [
     ej: "Fondo de 100 millones, 2% anual son 2 millones al año. Si devuelve 200, hay 100 de ganancia; por encima del hurdle el gestor se lleva alrededor de 20.",
     q: [
       { q: "¿Qué mide el múltiplo sobre capital invertido y qué mide la tasa interna de retorno?", ops: ["Cuánto multiplicaste el dinero, y a qué velocidad lo lograste", "Lo mismo, expresado distinto", "Comisiones y gastos", "Riesgo y volatilidad"], correcta: "Cuánto multiplicaste el dinero, y a qué velocidad lo lograste", e: "Duplicar en dos años y duplicar en diez dan el mismo múltiplo y tasas internas radicalmente distintas. Por eso quien quiere lucir bien acelera salidas." },
-      { q: "¿Para qué sirve el hurdle o rendimiento mínimo?", ops: ["Para que el gestor no cobre comisión de éxito por rendimientos que el mercado habría dado igual", "Para limitar las pérdidas del inversor", "Para pagar los impuestos del fondo", "Para fijar el tamaño del fondo"], correcta: "Para que el gestor no cobre comisión de éxito por rendimientos que el mercado habría dado igual", e: "Alinea incentivos: el carry debería pagarse por valor añadido, no por haber estado invertido durante un buen ciclo." },
+      { q: "¿Para qué sirve el hurdle o rendimiento mínimo?", ops: ["Para que el gestor no cobre comisión de éxito por rendimientos que el mercado habría dado igual", "Para limitar las pérdidas del inversionista", "Para pagar los impuestos del fondo", "Para fijar el tamaño del fondo"], correcta: "Para que el gestor no cobre comisión de éxito por rendimientos que el mercado habría dado igual", e: "Alinea incentivos: el carry debería pagarse por valor agregado, no por haber estado invertido durante un buen ciclo." },
     ],
   },
 
@@ -2782,7 +2967,7 @@ const TEMAS = [
   {
     id: "supervivencia", nv: 5, n: "Sesgo de supervivencia",
     x: "Las estadísticas de rendimiento suelen calcularse sobre los fondos y empresas que siguen existiendo. Los que quebraron desaparecen de la muestra, así que el promedio que ves está inflado por definición. Lo mismo ocurre con las historias de éxito: nadie escribe el libro del que hizo lo mismo y fracasó.",
-    ej: "Un índice de fondos que muestra 9% anual puede estar excluyendo a los que cerraron por malos resultados. El rendimiento real del inversor medio fue bastante menor.",
+    ej: "Un índice de fondos que muestra 9% anual puede estar excluyendo a los que cerraron por malos resultados. El rendimiento real del inversionista medio fue bastante menor.",
     q: [
       { q: "¿Por qué el rendimiento medio histórico de una categoría de fondos suele estar sobrestimado?", ops: ["Porque los que quebraron o cerraron salen de la muestra", "Porque los gestores mienten", "Porque no se descuenta la inflación", "Porque se calculan en distintas monedas"], correcta: "Porque los que quebraron o cerraron salen de la muestra", e: "Es un sesgo estructural, no un fraude. Para corregirlo hay que construir el índice incluyendo a los muertos, y muy pocos lo hacen." },
       { q: "Alguien tomó una apuesta muy concentrada y se hizo rico. ¿Qué se puede concluir?", ops: ["Poco: no vemos a los que hicieron lo mismo y perdieron", "Que la estrategia es buena", "Que tenía información privilegiada", "Que hay que copiarlo"], correcta: "Poco: no vemos a los que hicieron lo mismo y perdieron", e: "Con suficientes participantes, alguien acierta diez veces seguidas por pura estadística. El resultado no separa la habilidad de la suerte cuando la muestra visible ya está filtrada." },
@@ -2829,10 +3014,120 @@ const nivelDe = (turno, estudia) => clamp(
   1 + Math.floor(entero(turno, 0, 0, 60) / 7) + Math.floor(clamp(numero(estudia, 0), 0, 500) / 55),
   1, 5
 );
-/* cuántas preguntas trae el examen según el nivel */
-const largoExamen = (nv) => (nv <= 1 ? 3 : nv <= 3 ? 4 : 5);
+/* cuántas preguntas trae el examen: tres siempre. Subían a cinco con el
+   nivel y un examen largo pesaba más que la escena que lo traía; la
+   dificultad ya la da el nivel de las preguntas. */
+const largoExamen = () => 3;
 
 /* mayoría del nivel que te toca, una de repaso y una del nivel siguiente */
+/* Preguntas de la carrera de cada uno: el examen de inversiones mete a
+   veces una (Alessandro, 10-nov-2026). */
+const CARRERA_PREGUNTAS = {
+  eco: [
+    { q: "¿Qué mide la inflación?", o: ["El alza general y sostenida de los precios", "El crecimiento de la producción", "La cantidad de empleo"], c: 0, nv: 1, e: "Es el aumento sostenido del nivel general de precios, que reduce lo que puedes comprar con el mismo dinero." },
+    { q: "Si la oferta de un producto baja y la demanda sigue igual, ¿qué pasa con el precio?", o: ["Se queda igual", "Tiende a subir", "Tiende a bajar"], c: 1, nv: 1, e: "Con menos unidades para la misma demanda, los compradores compiten y el precio sube." },
+    { q: "¿Qué es el PIB?", o: ["La deuda total de un país", "El dinero que imprime el banco central", "El valor de lo que produce un país en un período"], c: 2, nv: 1, e: "El producto interno bruto suma el valor de los bienes y servicios finales producidos en un país durante un período." },
+    { q: "¿Qué suele hacer un banco central para frenar la inflación?", o: ["Bajar la tasa de interés", "Subir la tasa de interés", "Eliminar impuestos"], c: 1, nv: 2, e: "Subir la tasa encarece el crédito, enfría el gasto y baja la presión sobre los precios." },
+    { q: "¿Qué es el costo de oportunidad?", o: ["Lo que dejas de ganar por elegir otra opción", "El precio de lista de un producto", "Un gasto que ya no se puede recuperar"], c: 0, nv: 2, e: "Es el valor de la mejor alternativa a la que renuncias cuando tomas una decisión." },
+    { q: "Si la moneda local se deprecia frente al dólar, ¿a quién suele favorecer?", o: ["A quien importa insumos", "A quien tiene deudas en dólares", "A quien exporta y cobra en dólares"], c: 2, nv: 2, e: "El exportador recibe dólares que ahora valen más moneda local; importar y deber en dólares se vuelve más caro." },
+    { q: "¿Qué es la elasticidad precio de la demanda?", o: ["Cuánto cambia la cantidad comprada cuando cambia el precio", "La capacidad de una empresa de subir precios cada año", "La variación del ingreso de los consumidores"], c: 0, nv: 3, e: "Mide la sensibilidad: si la demanda es elástica, una pequeña alza de precio hace caer mucho la cantidad comprada." },
+    { q: "Si tu sueldo sube 5 % y la inflación del año es 8 %, ¿qué le pasó a tu salario real?", o: ["Subió 3 %", "Bajó cerca de 3 %", "Subió 13 %"], c: 1, nv: 3, e: "El salario real descuenta la inflación: con 5 % de aumento y 8 % de inflación pierdes cerca de 3 % de poder de compra." },
+    { q: "En un mercado con un solo vendedor, ¿qué suele pasar comparado con un mercado con competencia?", o: ["Precio más bajo y más cantidad", "Mismo precio y misma cantidad", "Precio más alto y menos cantidad"], c: 2, nv: 3, e: "Sin rivales, el monopolista vende menos unidades para poder cobrar un precio mayor que en competencia." },
+    { q: "¿Qué es una curva de rendimientos invertida?", o: ["Cuando la bolsa cae dos años seguidos", "Cuando las tasas de largo plazo son menores que las de corto", "Cuando la inflación es negativa"], c: 1, nv: 4, e: "Los bonos cortos rinden más que los largos; históricamente esa señal ha anticipado varias recesiones." },
+    { q: "¿Qué es el multiplicador del gasto público?", o: ["El número de veces que el gobierno se endeuda", "El impuesto extra que se cobra en una crisis", "El efecto total en el PIB por cada dólar que gasta el gobierno"], c: 2, nv: 4, e: "Un dólar de gasto se vuelve ingreso de alguien que a su vez gasta una parte, así que el efecto en el PIB puede ser mayor." },
+    { q: "¿Qué es la estanflación?", o: ["Inflación alta con economía estancada y desempleo", "Crecimiento rápido sin inflación", "Una caída de precios por exceso de oferta"], c: 0, nv: 4, e: "Combina precios que suben con una economía que no crece, lo que complica la respuesta del banco central." },
+    { q: "Según la regla de Taylor, si la inflación supera la meta, el banco central debería…", o: ["Bajar la tasa para cuidar el empleo", "Subir la tasa más que el exceso de inflación", "Dejar la tasa fija hasta que la inflación baje sola"], c: 1, nv: 5, e: "La regla pide subir la tasa nominal más que punto por punto, para que la tasa real también suba y frene los precios." },
+    { q: "¿Qué plantea la equivalencia ricardiana?", o: ["Que cada país debe hacer lo que produce relativamente mejor", "Que el dinero en exceso solo genera inflación", "Que la gente ahorra un recorte de impuestos pagado con deuda"], c: 2, nv: 5, e: "Si la gente ve que la deuda de hoy son impuestos de mañana, ahorra el recorte y el consumo no sube." },
+    { q: "¿Qué es una trampa de liquidez?", o: ["Cuando con tasas cerca de 0 % bajarlas más ya no estimula", "Cuando un banco no puede pagar a sus depositantes", "Cuando una empresa tiene mucho efectivo sin usar"], c: 0, nv: 5, e: "Con tasas casi en 0 %, la gente prefiere guardar efectivo y la política monetaria pierde fuerza." },
+  ],
+  con: [
+    { q: "¿Qué muestra el balance general?", o: ["Las ventas y los gastos del año", "Activos, pasivos y patrimonio en una fecha", "El flujo de efectivo del mes"], c: 1, nv: 1, e: "Es una foto de lo que la empresa tiene, lo que debe y lo que les corresponde a los dueños en una fecha dada." },
+    { q: "¿Cuál es la ecuación contable básica?", o: ["Activo = Pasivo + Patrimonio", "Ingresos = Activo − Gastos", "Pasivo = Activo + Patrimonio"], c: 0, nv: 1, e: "Todo lo que la empresa tiene se financió con deuda (pasivo) o con dinero de los dueños (patrimonio)." },
+    { q: "¿Qué es una cuenta por cobrar?", o: ["Una deuda de la empresa con un banco", "Un gasto pagado por adelantado", "Dinero que un cliente le debe a la empresa"], c: 2, nv: 1, e: "Nace cuando vendes a crédito: el ingreso ya se registró, pero el efectivo todavía no llega." },
+    { q: "¿En qué estado financiero ves si la empresa ganó o perdió en el año?", o: ["Balance general", "Estado de resultados", "Estado de cambios en el patrimonio"], c: 1, nv: 2, e: "El estado de resultados resta costos y gastos a los ingresos del período y llega a la utilidad o pérdida neta." },
+    { q: "¿Qué es la depreciación?", o: ["Repartir el costo de un activo durante su vida útil", "La caída del precio de la acción", "Un impuesto sobre los activos"], c: 0, nv: 2, e: "Reconoce como gasto, año a año, el desgaste del activo en lugar de cargar todo su costo de una sola vez." },
+    { q: "Según el principio de lo devengado, una venta se registra cuando…", o: ["El cliente paga en efectivo", "Se cierra el año fiscal", "Se gana, aunque el cliente pague después"], c: 2, nv: 2, e: "Ingresos y gastos se reconocen cuando ocurren, no cuando entra o sale el dinero." },
+    { q: "¿Por qué una empresa con utilidad puede quedarse sin efectivo?", o: ["Porque la utilidad siempre está inflada", "Porque cobra tarde o mete mucho dinero en inventario", "Porque los impuestos se pagan antes de vender"], c: 1, nv: 3, e: "La utilidad se registra al vender, pero el efectivo llega al cobrar; si clientes e inventario absorben caja, falta liquidez." },
+    { q: "¿Cómo se calcula la prueba ácida?", o: ["(Activo corriente − Inventarios) / Pasivo corriente", "Utilidad neta / Patrimonio", "Pasivo total / Activo total"], c: 0, nv: 3, e: "Mide si la empresa puede pagar sus deudas de corto plazo sin depender de vender su inventario." },
+    { q: "¿Qué es el capital de trabajo?", o: ["El dinero que aportaron los socios", "Las máquinas y los edificios", "Activo corriente menos pasivo corriente"], c: 2, nv: 3, e: "Es el colchón con el que la empresa opera el día a día: lo que cobrará pronto menos lo que pagará pronto." },
+    { q: "Bajo IFRS, ¿qué método para valuar inventarios NO está permitido?", o: ["Promedio ponderado", "UEPS (últimas entradas, primeras salidas)", "PEPS (primeras entradas, primeras salidas)"], c: 1, nv: 4, e: "La NIC 2 no admite UEPS; se aceptan PEPS, promedio ponderado e identificación específica." },
+    { q: "¿Qué es el deterioro de un activo?", o: ["Registrar su depreciación anual normal", "Venderlo por debajo del precio de mercado", "Bajar su valor en libros porque ya no se recuperará ese monto"], c: 2, nv: 4, e: "Si el valor recuperable queda por debajo del valor en libros, se reconoce una pérdida por deterioro." },
+    { q: "Con IFRS 16, el arrendamiento de una oficina por 5 años normalmente…", o: ["Genera un activo por derecho de uso y un pasivo", "Se registra solo como gasto mensual", "No aparece en los estados financieros"], c: 0, nv: 4, e: "IFRS 16 lleva casi todos los arrendamientos al balance: un activo por derecho de uso y un pasivo por los pagos futuros." },
+    { q: "¿Qué es un impuesto diferido?", o: ["Un impuesto que el gobierno perdona", "El efecto fiscal de diferencias temporales entre libros y fisco", "Un recargo por pagar tarde"], c: 1, nv: 5, e: "Surge cuando un ingreso o gasto se reconoce en distinto momento en la contabilidad y en la declaración de impuestos." },
+    { q: "En estados consolidados, ¿qué es la participación no controladora?", o: ["Las acciones que la matriz recompró", "Los préstamos entre empresas del grupo", "La parte de una subsidiaria que no es de la matriz"], c: 2, nv: 5, e: "Si la matriz tiene 80 % de una filial, el 20 % restante de otros socios se muestra aparte dentro del patrimonio." },
+    { q: "En la compra de una empresa, ¿qué es el goodwill o plusvalía?", o: ["Lo pagado por encima del valor razonable de los activos netos", "El valor de las marcas que ya tenía registradas", "La utilidad acumulada de la empresa comprada"], c: 0, nv: 5, e: "Es el sobreprecio sobre los activos netos identificables; bajo IFRS no se amortiza, se revisa cada año por deterioro." },
+  ],
+  ing: [
+    { q: "¿Para qué sirve un diagrama de Gantt?", o: ["Para calcular la resistencia de una viga", "Para ver las tareas de un proyecto en el tiempo", "Para medir el consumo eléctrico"], c: 1, nv: 1, e: "Muestra cada tarea como una barra en un calendario, con su inicio, su duración y su avance." },
+    { q: "En una obra, ¿qué significa EPP?", o: ["Equipo de protección personal", "Estudio previo del proyecto", "Estimación de precio provisional"], c: 0, nv: 1, e: "Casco, guantes, lentes y botas: el equipo de protección personal es la última barrera entre el riesgo y la persona." },
+    { q: "¿Qué material resiste muy bien la compresión pero poco la tensión?", o: ["El acero", "El cobre", "El concreto sin refuerzo"], c: 2, nv: 1, e: "Por eso el concreto lleva varillas de acero: el acero toma la tensión que el concreto solo no aguanta." },
+    { q: "¿Qué es el mantenimiento preventivo?", o: ["Reparar una máquina cuando ya falló", "Revisar y ajustar equipos antes de que fallen", "Cambiar todos los equipos cada año"], c: 1, nv: 2, e: "Se hace según un calendario para evitar paradas imprevistas, que casi siempre salen más caras." },
+    { q: "¿Qué es la ruta crítica de un proyecto?", o: ["El camino más barato para terminar", "Las tareas con más riesgo de accidente", "La cadena de tareas que, si se atrasa, atrasa todo"], c: 2, nv: 2, e: "Son las tareas sin holgura: un día de atraso en cualquiera de ellas mueve la fecha final del proyecto." },
+    { q: "¿Qué significa CAPEX?", o: ["Inversión en activos de largo plazo, como plantas o equipos", "Gastos de operación del día a día", "El costo de las materias primas"], c: 0, nv: 2, e: "El CAPEX es inversión que dura años; el gasto operativo del día a día se llama OPEX." },
+    { q: "Un proyecto cuesta USD 1 millón y genera USD 250.000 al año. ¿Cuál es su período de recuperación simple?", o: ["2 años", "4 años", "25 años"], c: 1, nv: 3, e: "Divides la inversión entre el flujo anual: USD 1 millón entre USD 250.000 da 4 años, sin descontar el valor del tiempo." },
+    { q: "¿Qué es el factor de seguridad en un diseño?", o: ["El porcentaje de trabajadores con seguro", "La relación entre la carga que resiste y la carga esperada", "El número de inspecciones al año"], c: 1, nv: 3, e: "Si una viga resiste el doble de la carga prevista, su factor de seguridad es 2: un margen para lo inesperado." },
+    { q: "¿Por qué el acero se protege con pintura o galvanizado?", o: ["Para evitar la corrosión", "Para que pese menos", "Para que conduzca mejor la electricidad"], c: 0, nv: 3, e: "La humedad y el oxígeno oxidan el acero; la capa protectora alarga su vida útil y baja el mantenimiento." },
+    { q: "Si el VPN de un proyecto es negativo a la tasa de descuento exigida, ¿qué indica?", o: ["Que tendrá pérdidas contables cada año", "Que conviene pedir más deuda", "Que rinde menos que esa tasa exigida"], c: 2, nv: 4, e: "Un VPN negativo dice que los flujos, traídos a hoy, no alcanzan a pagar la inversión con el rendimiento exigido." },
+    { q: "¿Qué es el valor ganado (EVM) en la gestión de proyectos?", o: ["El precio de venta del proyecto terminado", "Comparar avance real, costo real y lo planificado", "La utilidad del contratista"], c: 1, nv: 4, e: "Cruza lo que se hizo, lo que costó y lo que se planeó para saber si vas atrasado o pasado de presupuesto." },
+    { q: "¿Qué es un contrato EPC llave en mano?", o: ["El contratista diseña, compra, construye y entrega listo para operar", "El cliente compra los materiales y el contratista solo construye", "Un contrato que cubre solo el diseño"], c: 0, nv: 4, e: "En un EPC el contratista asume ingeniería, compras y construcción, y con eso buena parte del riesgo de costo y plazo." },
+    { q: "¿Qué es la fatiga de materiales?", o: ["El desgaste por falta de mantenimiento", "La pérdida de color por el sol", "Falla por cargas repetidas, aun por debajo de su resistencia máxima"], c: 2, nv: 5, e: "Ciclos de carga repetidos abren grietas microscópicas que crecen hasta romper la pieza, aunque cada carga sea moderada." },
+    { q: "En la jerarquía de controles de seguridad, ¿cuál es el más eficaz?", o: ["Usar equipo de protección personal", "Eliminar el peligro", "Capacitar al personal"], c: 1, nv: 5, e: "El orden es eliminar, sustituir, controles de ingeniería, controles administrativos y, al final, el EPP." },
+    { q: "En confiabilidad, ¿qué describe la curva de la bañera?", o: ["Fallas altas al inicio, bajas en la vida útil y altas al final", "Un costo de proyecto que baja y luego sube", "La forma de una presa de concreto"], c: 0, nv: 5, e: "Muestra fallas tempranas, un período estable de fallas aleatorias y luego fallas por desgaste." },
+  ],
+  der: [
+    { q: "¿Qué es un contrato?", o: ["Un acuerdo de voluntades que crea obligaciones", "Un documento que solo sirve si lo firma un notario", "Una orden de un juez"], c: 0, nv: 1, e: "Basta el acuerdo entre las partes; muchos contratos valen aunque sean verbales, salvo que la ley pida una forma especial." },
+    { q: "¿Qué es una persona jurídica?", o: ["Un abogado con matrícula", "Una entidad, como una empresa, con derechos y obligaciones propios", "Un ciudadano mayor de edad"], c: 1, nv: 1, e: "La empresa puede firmar contratos, tener bienes y deber dinero a su nombre, separada de sus socios." },
+    { q: "¿Qué protege una marca registrada?", o: ["Un invento técnico", "Una obra literaria", "El nombre o logo que distingue productos o servicios"], c: 2, nv: 1, e: "La marca protege signos distintivos; los inventos se protegen con patentes y las obras con derechos de autor." },
+    { q: "En un contrato, ¿qué es una cláusula penal?", o: ["Una multa pactada si alguien incumple", "Un delito tipificado", "Una forma de rescindir sin causa"], c: 0, nv: 2, e: "Es la multa que las partes acuerdan por adelantado para el caso de incumplimiento." },
+    { q: "¿Qué es un poder notarial?", o: ["Un permiso para abrir una notaría", "Una autorización para que otro actúe en tu nombre", "Una sentencia que ya no se puede apelar"], c: 1, nv: 2, e: "Con un poder, otra persona puede firmar o hacer trámites por ti, dentro de los límites que le diste." },
+    { q: "¿Qué es un acuerdo de confidencialidad (NDA)?", o: ["Un pacto para no competir en el mercado", "Una renuncia a demandar", "Un contrato para no revelar información de la otra parte"], c: 2, nv: 2, e: "Se firma antes de compartir datos sensibles, por ejemplo al negociar la compra de una empresa." },
+    { q: "Si una empresa quiebra y se liquida, ¿quiénes cobran al final, después de todos los acreedores?", o: ["Los bancos con hipoteca", "Los accionistas", "Los proveedores"], c: 1, nv: 2, e: "Los accionistas son dueños, no acreedores: solo reciben lo que sobre después de pagar todas las deudas." },
+    { q: "En una sociedad anónima, ¿hasta dónde responden los accionistas por las deudas de la empresa?", o: ["Con todo su patrimonio personal", "Hasta el monto que aportaron", "No arriesgan ni siquiera su aporte"], c: 1, nv: 3, e: "La responsabilidad limitada protege el patrimonio personal: lo máximo que puedes perder es tu aporte." },
+    { q: "¿Qué es la prescripción?", o: ["La pérdida del derecho a reclamar por el paso del tiempo", "Una receta médica con valor legal", "El primer escrito de una demanda"], c: 0, nv: 3, e: "Si dejas pasar el plazo que fija la ley sin reclamar, ya no puedes exigir el pago ante un juez." },
+    { q: "En un contrato, ¿qué es la fuerza mayor?", o: ["Cuando una parte tiene más poder de negociación", "Una cláusula que obliga a pagar por adelantado", "Un hecho imprevisible e inevitable que impide cumplir"], c: 2, nv: 3, e: "Un terremoto o una prohibición del gobierno pueden liberar o suspender obligaciones si el contrato y la ley lo admiten." },
+    { q: "¿Qué es el levantamiento del velo corporativo?", o: ["La publicación de los estados financieros", "La salida a bolsa de la empresa", "Cuando un juez hace responder a los socios por abuso o fraude"], c: 2, nv: 4, e: "Si usan la sociedad como pantalla para defraudar, el juez puede ignorar la separación y alcanzar a los socios." },
+    { q: "¿Qué es una cláusula de cambio de control?", o: ["Permite terminar o renegociar si cambia el dueño de la otra parte", "Obliga a cambiar el directorio cada año", "Fija el precio del dólar para el contrato"], c: 0, nv: 4, e: "Es clave en una compra: si clientes o bancos pueden salir al cambiar el dueño, la empresa pierde valor." },
+    { q: "Como forma de resolver disputas, ¿qué es el arbitraje?", o: ["Comprar barato en un mercado y vender caro en otro", "Un juicio privado ante árbitros con decisión obligatoria", "Una negociación sin efecto legal"], c: 1, nv: 4, e: "Las partes pactan que un tribunal privado decida; suele ser más rápido y confidencial que un juicio ordinario." },
+    { q: "En un bono, ¿qué es una cláusula pari passu?", o: ["Obliga a pagar intereses cada mes", "Da el mismo rango de pago que las otras deudas sin garantía", "Permite al emisor recomprar el bono antes"], c: 1, nv: 5, e: "Pari passu significa en igualdad de condiciones: ninguna deuda del mismo rango cobra antes que la otra." },
+    { q: "En la compra de una empresa, ¿qué es una cláusula MAC (cambio material adverso)?", o: ["Fija un precio mínimo de venta", "Obliga al vendedor a no competir", "Deja retirarse al comprador si el negocio se hunde antes del cierre"], c: 2, nv: 5, e: "Protege al comprador ante un deterioro grave entre la firma y el cierre; los jueces la aplican con criterio estricto." },
+    { q: "¿Qué protege la regla del juicio empresarial a los directores?", o: ["Decisiones informadas y de buena fe, aunque salgan mal", "Su derecho a ganancias garantizadas", "Su permanencia en el cargo sin importar los resultados"], c: 0, nv: 5, e: "Un juez no castiga una mala decisión de negocios si se tomó con información, sin conflicto de interés y de buena fe." },
+  ],
+  adm: [
+    { q: "¿Cuáles son las 4P del marketing?", o: ["Producto, precio, plaza y promoción", "Plan, presupuesto, personal y procesos", "Precio, publicidad, prensa y público"], c: 0, nv: 1, e: "Son las cuatro palancas clásicas: qué vendes, a cuánto, dónde lo vendes y cómo lo das a conocer." },
+    { q: "¿Qué es un análisis FODA?", o: ["Un estado financiero", "Fortalezas, oportunidades, debilidades y amenazas", "Un método para calcular la nómina"], c: 1, nv: 1, e: "Cruza lo interno (fortalezas y debilidades) con lo externo (oportunidades y amenazas) para definir una estrategia." },
+    { q: "¿Qué es un organigrama?", o: ["Un calendario de pagos", "Un plan de ventas", "El dibujo de la estructura y jerarquía de una organización"], c: 2, nv: 1, e: "Muestra quién reporta a quién y cómo se reparten las áreas de la empresa." },
+    { q: "¿Qué es un KPI?", o: ["Un indicador clave para medir si se cumple un objetivo", "Un tipo de impuesto corporativo", "Un programa contable"], c: 0, nv: 2, e: "Un buen KPI es medible y está ligado a una meta, como la tasa de retención de clientes." },
+    { q: "¿Qué busca el método justo a tiempo (JIT)?", o: ["Pagar a los proveedores antes del plazo", "Producir y recibir insumos solo cuando se necesitan", "Contratar personal temporal en temporada alta"], c: 1, nv: 2, e: "Reduce inventarios y desperdicio, pero exige proveedores confiables porque casi no hay colchón." },
+    { q: "¿Qué es el punto de equilibrio?", o: ["El momento en que la empresa sale a bolsa", "Cuando la oferta y la demanda del sector coinciden", "El nivel de ventas donde los ingresos igualan los costos totales"], c: 2, nv: 2, e: "Por debajo de ese nivel pierdes dinero; por encima, cada venta empieza a dejar utilidad." },
+    { q: "Costos fijos de USD 50.000, precio de USD 100 y costo variable de USD 60 por unidad. ¿Punto de equilibrio?", o: ["500 unidades", "1250 unidades", "833 unidades"], c: 1, nv: 3, e: "Cada unidad deja USD 40 de margen; USD 50.000 entre USD 40 da 1250 unidades para cubrir los costos fijos." },
+    { q: "¿Qué mide el Net Promoter Score (NPS)?", o: ["Qué tan dispuestos están tus clientes a recomendarte", "La rentabilidad de cada cliente", "El número de quejas al mes"], c: 0, nv: 3, e: "Resta el porcentaje de detractores al de promotores según la pregunta de si recomendarían la empresa." },
+    { q: "En gestión, ¿qué dice la regla 80/20 de Pareto?", o: ["Que el 80 % del sueldo se va en impuestos", "Que pocas causas explican la mayoría de los efectos", "Que hay que reinvertir el 20 % de la utilidad"], c: 1, nv: 3, e: "Por ejemplo, cerca del 20 % de los clientes puede generar alrededor del 80 % de las ventas; sirve para priorizar." },
+    { q: "¿Qué es el costo de adquisición de cliente (CAC)?", o: ["El precio que paga el cliente", "El costo de atender reclamos", "Lo que gastas en ventas y marketing para ganar un cliente nuevo"], c: 2, nv: 4, e: "Se calcula dividiendo el gasto comercial de un período entre los clientes nuevos que conseguiste en ese período." },
+    { q: "Si el valor de vida de un cliente (LTV) es USD 300 y el CAC es USD 400, ¿qué pasa?", o: ["El negocio crece sano", "Pierdes dinero con cada cliente nuevo", "Conviene duplicar la publicidad"], c: 1, nv: 4, e: "Gastas USD 400 para ganar a alguien que te deja USD 300: crecer así solo agranda la pérdida." },
+    { q: "¿Qué propone la teoría de restricciones?", o: ["Gestionar todo el sistema a partir de su cuello de botella", "Reducir el personal al mínimo legal", "Limitar la oferta a tres productos"], c: 0, nv: 4, e: "La capacidad del sistema la fija su eslabón más lento; mejorar otra parte no aumenta la producción total." },
+    { q: "En la matriz BCG, ¿qué es una vaca lechera?", o: ["Un producto nuevo con mucho crecimiento", "Un producto líder en un mercado maduro que genera caja", "Un producto sin participación ni crecimiento"], c: 1, nv: 4, e: "Crece poco pero domina su mercado; su caja suele financiar a las estrellas y a los productos en duda." },
+    { q: "¿Qué es el efecto látigo en la cadena de suministro?", o: ["La caída de ventas tras una mala campaña", "El aumento de costos por despidos", "Pequeños cambios en la demanda final que crecen hacia los proveedores"], c: 2, nv: 5, e: "Cada eslabón sobrerreacciona al pedir, y una variación chica en la tienda se vuelve enorme en la fábrica." },
+    { q: "¿Qué es Six Sigma?", o: ["Una metodología para reducir la variación y los defectos", "Un índice bursátil de seis empresas", "Un método para fijar precios"], c: 0, nv: 5, e: "Usa datos y estadística para que un proceso tenga muy pocos defectos, con la meta de menos de 4 defectos por millón de oportunidades." },
+    { q: "¿Qué es el valor económico agregado (EVA)?", o: ["El aumento de las ventas año contra año", "La utilidad operativa después de impuestos menos el costo del capital", "El valor de mercado menos la deuda"], c: 1, nv: 5, e: "Una empresa crea valor solo si gana más de lo que cuesta el capital que usa, no solo si tiene utilidad contable." },
+  ],
+  sis: [
+    { q: "¿Qué es el phishing?", o: ["Un correo o mensaje falso que busca robar tus datos", "Un lenguaje de programación", "Un tipo de antivirus"], c: 0, nv: 1, e: "Se hace pasar por tu banco o tu jefe para que entregues claves o hagas un pago; revisa siempre el remitente." },
+    { q: "¿Qué es una base de datos?", o: ["Un programa para editar fotos", "Un conjunto organizado de datos que se puede consultar", "La memoria RAM de la computadora"], c: 1, nv: 1, e: "Guarda información estructurada, como clientes o transacciones, para buscarla y actualizarla de forma ordenada." },
+    { q: "¿Qué es la autenticación de dos factores?", o: ["Tener dos contraseñas iguales", "Usar dos computadoras", "Confirmar tu identidad con algo más que la contraseña"], c: 2, nv: 1, e: "Además de la clave, pide un código del celular o una llave física, así una contraseña robada no basta." },
+    { q: "¿Para qué sirve SQL?", o: ["Para diseñar páginas web", "Para consultar y manejar datos en bases relacionales", "Para comprimir archivos"], c: 1, nv: 2, e: "SQL es el lenguaje estándar para pedir, filtrar y cruzar datos guardados en tablas." },
+    { q: "¿Qué significa que un servicio esté en la nube?", o: ["Que corre en servidores de un proveedor y lo usas por internet", "Que funciona sin electricidad", "Que no guarda datos"], c: 0, nv: 2, e: "No compras ni mantienes los servidores: pagas por uso a un proveedor que los opera por ti." },
+    { q: "¿Qué es el ransomware?", o: ["Un sistema de pagos en línea", "Un tipo de firewall", "Un programa que cifra tus archivos y pide un rescate"], c: 2, nv: 2, e: "Bloquea la información de la empresa hasta que paga; los respaldos fuera de línea son la mejor defensa." },
+    { q: "¿Qué es una API?", o: ["Un virus informático", "Una interfaz para que dos programas se comuniquen", "Un tipo de procesador"], c: 1, nv: 3, e: "Por ejemplo, tu app de inversiones usa la API de un proveedor para traer precios de acciones en tiempo real." },
+    { q: "¿Por qué no se guardan las contraseñas en texto plano?", o: ["Porque si roban la base, todas las claves quedan expuestas", "Porque ocupan mucho espacio", "Porque el texto plano es más lento"], c: 0, nv: 3, e: "Se guardan como hash con sal, así un robo de la base no revela directamente las contraseñas." },
+    { q: "¿Qué es un control de versiones como Git?", o: ["Un antivirus para programadores", "Un sistema para actualizar el sistema operativo", "Un registro de cambios del código para volver atrás y colaborar"], c: 2, nv: 3, e: "Cada cambio queda guardado con su autor, y varias personas pueden trabajar en paralelo sin pisarse." },
+    { q: "Con búsqueda binaria, ¿cuántos pasos toma como máximo encontrar un dato en una lista ordenada de 1 millón de elementos?", o: ["Unos 20 pasos", "Unos 1000 pasos", "Unos 500 mil pasos"], c: 0, nv: 4, e: "Cada paso descarta la mitad de la lista; 2 elevado a 20 ya supera 1 millón, así que bastan unos 20 pasos." },
+    { q: "¿Qué es una inyección SQL?", o: ["Una forma rápida de cargar datos", "Un ataque que mete comandos en una consulta desde un campo de texto", "Un error de hardware del disco"], c: 1, nv: 4, e: "Se evita con consultas parametrizadas, que tratan lo que escribe el usuario como dato y nunca como código." },
+    { q: "En machine learning, ¿qué es el sobreajuste (overfitting)?", o: ["Que el modelo es demasiado simple", "Que memoriza los datos de entrenamiento y falla con datos nuevos", "Que el modelo tarda mucho en entrenar"], c: 1, nv: 4, e: "Un modelo que predice perfecto el pasado puede fallar con el mercado de mañana; por eso se prueba con datos aparte." },
+    { q: "En una base de datos, ¿qué garantiza la atomicidad (la A de ACID)?", o: ["Que los datos se guardan cifrados", "Que varias personas leen a la vez", "Que una transacción se hace completa o no se hace"], c: 2, nv: 5, e: "En una transferencia, el débito y el crédito ocurren juntos; si algo falla a mitad, se deshace todo." },
+    { q: "¿Cómo funciona el cifrado de clave pública?", o: ["Lo que se cifra con tu clave pública solo lo abre tu clave privada", "Toda la empresa comparte una misma contraseña", "Cualquiera que tenga la clave pública puede descifrar"], c: 0, nv: 5, e: "Puedes repartir tu clave pública sin riesgo; solo quien tiene la privada lee los mensajes, base de HTTPS y las firmas digitales." },
+    { q: "Si un algoritmo es O(n²), ¿qué significa?", o: ["Que siempre tarda 2 segundos", "Que su tiempo crece con el cuadrado del tamaño de los datos", "Que usa dos procesadores"], c: 1, nv: 5, e: "Con el doble de datos tarda unas 4 veces más; con 10 veces más datos, unas 100 veces más." },
+  ],
+};
 const armarExamen = (nv, cuantas, temasVistos) => {
   /* Una pregunta atada a un tema solo es justa si ese tema ya se dio en
      clase. Las de banco general no cuelgan de ningun tema: esas se rigen
@@ -3124,8 +3419,8 @@ const BANDERAS = [
       { t: "Facturan poco pero el crecimiento mensual es consistente hace un año", x: "Poca facturación es normal en etapa temprana; lo que importa es la pendiente, y esa es buena." },
       { t: "El equipo técnico es propio y no subcontratado", x: "Tener el conocimiento dentro de casa es una fortaleza, sobre todo si el producto es el negocio." },
       { t: "Tienen la propiedad intelectual registrada a nombre de la sociedad", x: "Es exactamente como debe ser. La bandera sería que estuviera a nombre personal de un fundador." },
-      { t: "Levantaron una ronda anterior con inversores conocidos", x: "Alguien con reputación ya hizo su propia revisión y puso dinero. No es garantía, pero suma." },
-      { t: "Publican métricas mensuales a sus inversores", x: "Transparencia periódica desde el principio es una señal de cómo van a tratarte cuando algo salga mal." },
+      { t: "Levantaron una ronda anterior con inversionistas conocidos", x: "Alguien con reputación ya hizo su propia revisión y puso dinero. No es garantía, pero suma." },
+      { t: "Publican métricas mensuales a sus inversionistas", x: "Transparencia periódica desde el principio es una señal de cómo van a tratarte cuando algo salga mal." },
     ],
   },
   {
@@ -3139,7 +3434,7 @@ const BANDERAS = [
     ],
     ok: [
       { t: "Te pide tu horizonte de inversión antes de proponer nada", x: "Es la primera pregunta que debe hacer cualquiera que vaya a recomendarte algo en serio." },
-      { t: "Explica el coste total anual en euros, no solo en porcentaje", x: "Traducir la comisión a dinero contante es lo que casi nadie hace, precisamente porque asusta. Que lo haga es buena señal." },
+      { t: "Explica el costo total anual en dólares, no solo en porcentaje", x: "Traducir la comisión a dinero contante es lo que casi nadie hace, precisamente porque asusta. Que lo haga es buena señal." },
       { t: "Sugiere mantener un fondo de emergencia aparte", x: "Está protegiendo tu liquidez antes que su comisión. Es lo correcto." },
       { t: "Te entrega el folleto informativo antes de la reunión", x: "Darte tiempo para leer con calma es lo contrario de la presión comercial." },
       { t: "Acepta que lo consultes con un tercero", x: "Quien no teme una segunda opinión suele ser porque no tiene nada que esconder." },
@@ -3174,7 +3469,7 @@ const BANDERAS = [
     ok: [
       { t: "Quiere revisar la cartera solo una vez al año", x: "Es una conducta excelente: mirar menos suele producir mejores resultados que mirar todos los días." },
       { t: "Tiene tolerancia al riesgo baja y lo dice claramente", x: "Un cliente que conoce y comunica su límite es el más fácil de servir bien." },
-      { t: "Pregunta por los costes antes que por la rentabilidad", x: "Está preguntando por lo único seguro antes que por lo incierto. Sabe lo que hace." },
+      { t: "Pregunta por los costos antes que por la rentabilidad", x: "Está preguntando por lo único seguro antes que por lo incierto. Sabe lo que hace." },
       { t: "Tiene el patrimonio repartido en tres entidades", x: "Es diversificación de riesgo de contraparte, una precaución sensata." },
       { t: "Quiere dejar una parte a sus nietos", x: "Es una preferencia de horizonte y de sucesión, perfectamente normal." },
     ],
@@ -3184,7 +3479,7 @@ const BANDERAS = [
     doc: "Carpeta de venta de una compañía familiar de segunda generación",
     pista: "En una empresa familiar la línea entre la caja de la empresa y el bolsillo de la familia es lo primero que hay que mirar.",
     mal: [
-      { t: "Los gastos personales de la familia pasan por la empresa", x: "El beneficio real no es el que ves, y una vez comprada esos gastos desaparecen o se convierten en un conflicto. Tampoco sabes qué más se coló ahí." },
+      { t: "Los gastos personales de la familia pasan por la empresa", x: "La utilidad real no es la que ves, y una vez comprada esos gastos desaparecen o se convierten en un conflicto. Tampoco sabes qué más se coló ahí." },
       { t: "El proveedor clave trabaja sin contrato, todo de palabra", x: "Ese acuerdo era con el fundador, no con la empresa. El día que tú entras, puede evaporarse." },
       { t: "Dos hermanos están en litigio por la propiedad de las acciones", x: "Puedes acabar comprándole a alguien que un juez decida que no era el dueño. Se compra la demanda junto con la empresa." },
     ],
@@ -3544,7 +3839,7 @@ const E = [
         luego: [{ en: 2, s: "cri", azar: [{ p: 45, id: 7371, bueno: false }, { p: 30, id: 7341 }, { p: 20, id: 7342, bueno: true }, { p: 5, id: 7372, bueno: true }] }],
         msg: "Entras por un monto que no te cambia la vida si se pierde. Papeles en orden." } },
       { t: "Revisarle el modelo antes de decidir", min: { mod: 30 }, j: "ojo", stat: "mod", d: { red: 6, cri: 4, deja: "revisaste", luego: [{ id: 7343, en: 1 }], msg: "Le pides el modelo y te sientas a buscar el número que no cuadra." } },
-      { t: "No invertir y seguir siendo su amigo", d: { ene: 2, red: 2, msg: "Le dices que no con cariño. El dinero y la amistad se quedan cada uno en su sitio." } },
+      { t: "No invertir y seguir siendo su amigo", d: { ene: 2, red: 2, msg: "Le dices que no con cariño. El dinero y la amistad se quedan cada uno en su lugar." } },
     ] },
   { id: 26, min: 2, max: 6, t: "Defiendes un préstamo ante un comité exigente", x: "Defiendes un préstamo respaldado por facturas de un sector inestable. Dos miembros vienen decididos a tumbarlo.",
     o: [
@@ -3617,7 +3912,7 @@ const E = [
     x: "Necesitas dónde vivir cerca del trabajo. Compartir sale a la mitad; un lugar propio te da silencio.",
     o: [
       { t: "Compartir con dos amigos", d: { cash: 1500, red: 3, ene: -3, deja: "nov_piso", luego: [{ en: 1, azar: [{ p: 65, id: 24120 }, { p: 35, id: 24121 }] }], msg: "Casa con ruido, nevera compartida y un alquiler que te deja respirar." } },
-      { t: "Alquilar un lugar para ti", d: { ene: 5, cash: -1500, deja: "nov_solo", luego: [{ en: 1, azar: [{ p: 60, id: 24122 }, { p: 40, id: 24123 }] }], msg: "Silencio, tus cosas en su sitio y un alquiler que se lleva buena parte del sueldo." } },
+      { t: "Alquilar un lugar para ti", d: { ene: 5, cash: -1500, deja: "nov_solo", luego: [{ en: 1, azar: [{ p: 60, id: 24122 }, { p: 40, id: 24123 }] }], msg: "Silencio, tus cosas en su lugar y una renta que se lleva buena parte del sueldo." } },
     ] },
   { id: 24030, novato: true, min: 0, max: 1, t: "Tu jefa te escribe un domingo",
     x: "Domingo a las cuatro. Un mensaje: «¿Puedes revisar esto antes del lunes?». No dice que sea urgente.",
@@ -3665,7 +3960,7 @@ const E = [
   { id: 24211, cultura: "exigente", min: 0, max: 5, t: "Cada año ordenan al equipo de mejor a peor",
     x: "Aquí cada año se ordena al equipo de mejor a peor. Los primeros cobran el doble; los últimos, se van.",
     o: [
-      { t: "Ir a por el primer puesto", d: { car: 4, cash: 2000, ene: -8, red: -3, msg: "Llegas primero. Dos compañeros dejan de hablarte." } },
+      { t: "Ir por el primer puesto", d: { car: 4, cash: 2000, ene: -8, red: -3, msg: "Llegas primero. Dos compañeros dejan de hablarte." } },
       { t: "Quedarte en la mitad, sin pelear", d: { ene: 3, msg: "Cobras lo normal y duermes bien. En esta firma, eso es casi una rareza." } },
     ] },
   { id: 24212, cultura: "prestigio", min: 0, max: 6, t: "Tu análisis va en la portada",
@@ -3725,7 +4020,7 @@ const D = [
     ] },
   { id: 102, clave: true, min: 2, max: 3, t: "Tres días para revisar todos los papeles de una empresa", x: "La sala con los documentos de la empresa abre el lunes y cierra el miércoles. Todo lo que no viste se vuelve tu problema después.",
     o: [
-      { t: "Peinar el legajo completo en orden", juego: "memoria", stat: "cri", sigue: 601,
+      { t: "Repasar el expediente completo en orden", juego: "memoria", stat: "cri", sigue: 601,
         res: { exito: { cri: 9, rep: 8, car: 6, ene: -9, msg: "Reconstruyes la cadena de contratos y aparece un pasivo laboral no declarado. Ajustan el precio." },
                parcial: { cri: 4, car: 3, ene: -9, msg: "Cubres lo esencial. Queda una carpeta sin abrir que probablemente no importaba." },
                fallo: { rep: -10, ene: -11, msg: "Te pierdes en el volumen. La contingencia aparece cuando ya firmaron." } } },
@@ -3778,12 +4073,12 @@ const D = [
                parcial: { car: 3, cash: 2000, msg: "Llegas a la final y pierdes por poco." },
                fallo: { rep: -8, cash: -4500, ene: -6, msg: "Los eliminan antes de la segunda ronda por no mostrar seriedad temprano." } } },
     ] },
-  { id: 107, clave: true, min: 2, max: 6, t: "Veinte minutos para convencer al comité de inversión", x: "Veinte minutos, siete personas y una idea de inversión que tienes que defender sin leer la lámina.",
+  { id: 107, clave: true, min: 2, max: 6, t: "Veinte minutos para convencer al comité de inversión", x: "Veinte minutos, siete personas y una idea de inversión que tienes que defender sin leer la diapositiva.",
     o: [
       { t: "Ensayar hasta tenerlo memorizado", juego: "memoria", stat: "red",
         res: { exito: { car: 8, rep: 9, red: 6, msg: "Hablas sin mirar la pantalla veinte minutos. Aprueban el mandato ese mismo día." },
                parcial: { car: 4, rep: 3, msg: "Sólido con dos tropiezos. Aprueban con dudas." },
-               fallo: { rep: -9, ene: -5, msg: "Pierdes el hilo en la lámina de riesgos y ya no lo recuperas." } } },
+               fallo: { rep: -9, ene: -5, msg: "Pierdes el hilo en la diapositiva de riesgos y ya no lo recuperas." } } },
       { t: "Improvisar sobre los números y cerrar en el punto justo", juego: "precision", stat: "mod",
         res: { exito: { car: 7, rep: 8, mod: 5, msg: "Cierras exactamente en el minuto veinte con la conclusión más fuerte." },
                parcial: { car: 3, rep: 2, msg: "Te pasas del tiempo y cortan la parte de valoración." },
@@ -3967,7 +4262,7 @@ E.push.apply(E, E2);
 const DECISION_RAMA = {
   id: 999, clave: true, rama: true, min: 0, max: 6,
   t: "Hacia dónde va tu carrera",
-  x: "Ya no eres el que ejecuta lo que le mandan. Los socios te preguntan qué quieres construir de aquí en adelante, y la respuesta define en qué te vuelves bueno.",
+  x: "Ya no eres el que ejecuta lo que le mandan. Los socios te preguntan qué quieres construir de aquí en adelante, y la respuesta define en qué te vuelves bueno. Lo que elijas define tu empresa: dónde vas a trabajar y lo que algún día puedes montar tú.",
   o: RAMAS.map((r) => ({ t: r.n, ramaId: r.id, d: { car: 3, cri: 2, msg: r.d } })),
 };
 
@@ -4264,7 +4559,7 @@ const CONSECUENCIAS = [
   { id: 7221, min: 0, max: 6, por: POR_RAMA, t: "Una familia te confía su patrimonio",
     x: "Tres generaciones, una empresa familiar y la mitad de su dinero en una sola cuenta.",
     o: [
-      { t: "Protegerlo: repartirlo y que duerman tranquilos", d: { red: 5, rep: 4, deja: "conservaste", luego: [{ id: 7222, en: 2 }], msg: "Lo repartes en diez sitios. El abuelo te da la mano y no la suelta." } },
+      { t: "Protegerlo: repartirlo y que duerman tranquilos", d: { red: 5, rep: 4, deja: "conservaste", luego: [{ id: 7222, en: 2 }], msg: "Lo repartes en diez lugares. El abuelo te da la mano y no la suelta." } },
       { t: "Ponerlo a crecer: más acciones, menos bonos", d: { cash: 3000, cri: 3, deja: "agresivo", luego: [{ id: 7223, en: 2 }], msg: "El nieto está encantado. El abuelo pregunta dos veces si es seguro." } },
     ] },
   { id: 7222, min: 0, max: 6, por: HUELLAS.conservaste, t: "El abuelo murió y los hijos no se hablan",
@@ -4399,7 +4694,7 @@ const CONSECUENCIAS = [
       { t: "Abrirlo", chk: { s: "cri", dif: 65,
         ok: { cash: 26000, rep: 4, msg: "Vendieron la empresa. Tus ahorros se multiplicaron por seis." },
         no: { cri: 6, msg: "Cierran. Lo pierdes todo, y aprendes para siempre a no meter lo que no puedes perder." } } },
-      { t: "Vender tu parte a otro inversor sin leerlo", d: { cash: 5000, cri: 2, msg: "Vendes a ciegas y recuperas un poco más de lo que pusiste. Nunca sabrás." } },
+      { t: "Vender tu parte a otro inversionista sin leerlo", d: { cash: 5000, cri: 2, msg: "Vendes a ciegas y recuperas un poco más de lo que pusiste. Nunca sabrás." } },
     ] },
   { id: 7315, min: 0, max: 6, por: HUELLAS.fuera, t: "Tu amiga sale en la prensa",
     x: "La startup vale cien millones. El 5% que rechazaste habría pagado tu casa.",
@@ -4468,7 +4763,7 @@ const CONSECUENCIAS = [
     x: "No contesta el teléfono. El local está cerrado y nadie en la familia sabe dónde está.",
     o: [
       { t: "Buscarlo hasta encontrarlo", d: { ene: -6, luego: [{ en: 1, azar: [{ p: 40, id: 7367 }, { p: 60, id: 7331 }] }], msg: "Preguntas a sus amigos, a su exnovia, a su madre." } },
-      { t: "Darlo por perdido", d: { cri: 5, ene: 3, deja: "estafado", msg: "Cinco mil que no vuelven. Los anotas como lo que costó aprender." } },
+      { t: "Darlo por perdido", d: { cri: 5, ene: 3, deja: "estafado", msg: "Cinco mil dólares que no vuelven. Los anotas como lo que costó aprender." } },
     ] },
   { id: 7352, min: 0, max: 6, por: HUELLAS.prestaste_primo, t: "Tu primo te paga a tiempo",
     x: "Todas las cuotas, sin falta: ya te devolvió los 5.000. Ahora te pide otro préstamo para abrir un segundo local.",
@@ -4531,7 +4826,7 @@ const CONSECUENCIAS = [
     x: "Pasaron dos años. Ni una cuota, y en la familia nadie lo menciona.",
     o: [
       { t: "Sacarlo en la cena de Navidad", d: { red: -2, luego: [{ id: 7331, en: 1 }], msg: "Lo anotas para diciembre. No va a ser una cena tranquila." } },
-      { t: "Darlo por perdido", d: { cri: 5, deja: "estafado", msg: "Lo das por perdido. Familia es familia, y esta vez te costó cinco mil." } },
+      { t: "Darlo por perdido", d: { cri: 5, deja: "estafado", msg: "Lo das por perdido. Familia es familia, y esta vez te costó cinco mil dólares." } },
     ] },
   { id: 7364, min: 0, max: 6, por: "Lo dejaste pasar", t: "Te paga todo de golpe",
     x: "Dos años tarde, sin explicaciones y con una transferencia por el total.",
@@ -4549,7 +4844,7 @@ const CONSECUENCIAS = [
     x: "Vive en casa de un amigo y no tiene ni para el transporte.",
     o: [
       { t: "Ayudarle a volver a empezar", d: { cash: -1500, red: 8, ene: -4, msg: "Le pagas un mes de alquiler. El dinero no vuelve; tu primo, sí." } },
-      { t: "Pedirle lo que pueda y despedirte", d: { cash: 500, red: -4, deja: "estafado", msg: "Te da quinientos. No lo vuelves a ver en mucho tiempo." } },
+      { t: "Pedirle lo que pueda y despedirte", d: { cash: 500, red: -4, deja: "estafado", msg: "Te da quinientos dólares. No lo vuelves a ver en mucho tiempo." } },
     ] },
   { id: 7368, min: 0, max: 6, por: HUELLAS.primo_exito, t: "El negocio de tu primo crece sin parar",
     x: "El negocio de tu primo crece sin parar. Tu 20% vale una fortuna.",
@@ -4621,7 +4916,7 @@ const CONSECUENCIAS = [
       { t: "Dejar que te diluyan", d: { cri: 3, msg: "Te quedas con menos de la mitad de lo que tenías. Sin poner más, que era lo importante." } },
     ] },
   { id: 7342, min: 0, max: 6, por: HUELLAS.ticket, t: "Te ofrecen comprar tu parte",
-    x: "Un fondo quiere las participaciones de los primeros inversores. Te ofrece cinco veces lo que pusiste.",
+    x: "Un fondo quiere las participaciones de los primeros inversionistas. Te ofrece cinco veces lo que pusiste.",
     o: [
       { t: "Vender ya", d: { cash: 15000, cri: 3, msg: "Cinco veces lo que pusiste, en tu cuenta, hoy. Nadie se arruinó vendiendo con ganancia." } },
       { t: "Aguantar hasta la salida", azar: { s: "cri", esc: [
@@ -4848,7 +5143,7 @@ const CONSECUENCIAS = [
   { id: 24202, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma que enseña",
     x: "Te asignan una mentora y un plan de formación. Aquí los nuevos aprenden unos meses antes de que les confíen un cliente.",
     o: [
-      { t: "Aprovechar a la mentora al máximo", d: { mod: 4, cri: 3, ene: -3, msg: "Le preguntas todo. En tres meses sabes lo que en otro sitio te habría llevado un año." } },
+      { t: "Aprovechar a la mentora al máximo", d: { mod: 4, cri: 3, ene: -3, msg: "Le preguntas todo. En tres meses sabes lo que en otro lado te habría llevado un año." } },
       { t: "Pedir un cliente ya: aprendes haciendo", d: { car: 2, rep: -1, msg: "Te dan uno pequeño. Aprendes rápido y con algún tropiezo a la vista de todos." } },
     ] },
   { id: 24203, min: 0, max: 6, por: "Te cambiaste de firma", t: "Tu primer día en una firma sin prisa",
@@ -4894,8 +5189,8 @@ const LOTES = {
   "l1_trazabilidad_memoria": "Reconstruiste de memoria una auditoría del regulador",
   "l1_ordenaste_expedientes": "Ordenaste los expedientes antes de dárselos al regulador",
   "l1_leiste_libro": "Fijaste el precio de una emisión leyendo el libro",
-  "l1_sondeaste_anclas": "Sondeaste a los inversores ancla uno por uno",
-  "l1_peso_ancla": "Le diste mucho peso al inversor ancla de tu fondo",
+  "l1_sondeaste_anclas": "Sondeaste a los inversionistas ancla uno por uno",
+  "l1_peso_ancla": "Le diste mucho peso al inversionista ancla de tu fondo",
   "l1_aguantaste_ronda": "Aguantaste la ronda de tu fondo hasta tener el tamaño",
   "l1_dos_cierres": "Coordinaste dos cierres al minuto el mismo viernes",
   "l1_delegaste": "Delegaste un cierre en tu asociado",
@@ -5690,7 +5985,7 @@ const LOTES = {
    "id": 11041,
    "por": "Decidiste qué hacer con una posición ganadora",
    "t": "La empresa admite cifras infladas",
-   "x": "La empresa de aquella inversión admite que infló sus ingresos. La acción abre a la mitad y los foros de inversores arden desde temprano.",
+   "x": "La empresa de aquella inversión admite que infló sus ingresos. La acción abre a la mitad y los foros de inversionistas arden desde temprano.",
    "o": [
     {
      "t": "Vender lo que quede en la apertura",
@@ -6054,7 +6349,7 @@ const LOTES = {
    "id": 11061,
    "por": "Asesoraste a un comprador en una subasta",
    "t": "El banco cambia las reglas de sus subastas",
-   "x": "El banco que organizó aquella subasta añadió una ronda sorpresa a sus procesos. En los pasillos dicen que fue por estrategias como la tuya.",
+   "x": "El banco que organizó aquella subasta agregó una ronda sorpresa a sus procesos. En los pasillos dicen que fue por estrategias como la tuya.",
    "o": [
     {
      "t": "Estudiar el nuevo formato",
@@ -6192,7 +6487,7 @@ const LOTES = {
    "id": 11070,
    "por": "Defendiste una tesis ante un comité de inversión",
    "t": "Te invitan a un foro con público",
-   "x": "Alguien contó cómo defendiste aquella idea de inversión y te invitan a presentarla en un foro de inversores con trescientas personas.",
+   "x": "Alguien contó cómo defendiste aquella idea de inversión y te invitan a presentarla en un foro de inversionistas con trescientas personas.",
    "o": [
     {
      "t": "Aceptar y ensayarlo de nuevo",
@@ -6207,7 +6502,7 @@ const LOTES = {
      "t": "Aceptar e improvisar",
      "d": {
       "ene": -1,
-      "msg": "Llegas con tres números en la cabeza y ninguna lámina. El público no sabe lo que viene; tú tampoco.",
+      "msg": "Llegas con tres números en la cabeza y ninguna diapositiva. El público no sabe lo que viene; tú tampoco.",
       "luego": [
        {
         "en": 1,
@@ -6230,7 +6525,7 @@ const LOTES = {
      "d": {
       "ene": 2,
       "red": -1,
-      "msg": "Otro presenta en tu lugar. Usa una lámina tuya sin citarte."
+      "msg": "Otro presenta en tu lugar. Usa una diapositiva tuya sin citarte."
      }
     }
    ]
@@ -6297,7 +6592,7 @@ const LOTES = {
    "id": 11073,
    "por": "Defendiste una tesis ante un comité de inversión",
    "t": "El comité te hace una pregunta que no preparaste",
-   "x": "En la siguiente reunión, el comité te hace una pregunta que no estaba en ninguna lámina. Siete personas esperan en silencio.",
+   "x": "En la siguiente reunión, el comité te hace una pregunta que no estaba en ninguna diapositiva. Siete personas esperan en silencio.",
    "o": [
     {
      "t": "Responder con lo que sabes, sin adornos",
@@ -6329,8 +6624,8 @@ const LOTES = {
   {
    "id": 11074,
    "por": "Improvisaste en un foro con trescientas personas",
-   "t": "Un inversor del público te busca",
-   "x": "Un inversor que estaba en el foro se acordó de tu cierre. Te busca para invertir en la próxima idea que tengas, sin lámina de por medio.",
+   "t": "Un inversionista del público te busca",
+   "x": "Un inversionista que estaba en el foro se acordó de tu cierre. Te busca para invertir en la próxima idea que tengas, sin diapositiva de por medio.",
    "o": [
     {
      "t": "Presentarle una idea en serio",
@@ -6371,7 +6666,7 @@ const LOTES = {
      "d": {
       "rep": -2,
       "ene": -2,
-      "msg": "Lo borran en un sitio y aparece en dos. Internet tiene memoria y poco humor."
+      "msg": "Lo borran en un lado y aparece en dos. Internet tiene memoria y poco humor."
      }
     }
    ]
@@ -6763,7 +7058,7 @@ const LOTES = {
    "id": 11100,
    "por": "Fijaste el precio de una colocación",
    "t": "Las acciones caen bajo el precio al que se vendieron",
-   "x": "Un año después, las acciones que ayudaste a vender valen menos que el precio al que se vendieron. Los inversores que compraron quieren una explicación, y la quieren de ti.",
+   "x": "Un año después, las acciones que ayudaste a vender valen menos que el precio al que se vendieron. Los inversionistas que compraron quieren una explicación, y la quieren de ti.",
    "o": [
     {
      "t": "Organizar una reunión con la empresa",
@@ -6771,7 +7066,7 @@ const LOTES = {
       "red": 3,
       "rep": 2,
       "ene": -3,
-      "msg": "Pones a la empresa frente a sus inversores. Nadie sale feliz, pero todos salen informados."
+      "msg": "Pones a la empresa frente a sus inversionistas. Nadie sale feliz, pero todos salen informados."
      }
     },
     {
@@ -6779,23 +7074,23 @@ const LOTES = {
      "d": {
       "rep": -2,
       "cri": 1,
-      "msg": "Tienes razón técnica. Los inversores tienen memoria, que no es técnica pero pesa más."
+      "msg": "Tienes razón técnica. Los inversionistas tienen memoria, que no es técnica pero pesa más."
      }
     }
    ]
   },
   {
    "id": 11101,
-   "por": "Sondeaste a los inversores ancla uno por uno",
+   "por": "Sondeaste a los inversionistas ancla uno por uno",
    "t": "Los inversionistas principales piden trato especial",
-   "x": "Los grandes inversores que se comprometieron primero en aquella venta de acciones quieren que les aseguren una parte en la próxima. Lo dicen como si ya estuviera pactado.",
+   "x": "Los grandes inversionistas que se comprometieron primero en aquella venta de acciones quieren que les aseguren una parte en la próxima. Lo dicen como si ya estuviera pactado.",
    "o": [
     {
      "t": "Concedérselo",
      "d": {
       "red": 4,
       "rep": -2,
-      "msg": "Quedan contentos. Los demás inversores lo notan en la próxima asignación."
+      "msg": "Quedan contentos. Los demás inversionistas lo notan en la próxima asignación."
      }
     },
     {
@@ -6857,7 +7152,7 @@ const LOTES = {
    "id": 11103,
    "por": "Fijaste el precio de una colocación",
    "t": "El regulador revisa cómo se repartieron las acciones",
-   "x": "El regulador revisa cómo se repartieron aquellas acciones entre los inversores. Quiere ver quién pidió qué y quién recibió cuánto.",
+   "x": "El regulador revisa cómo se repartieron aquellas acciones entre los inversionistas. Quiere ver quién pidió qué y quién recibió cuánto.",
    "o": [
     {
      "t": "Entregar los registros completos",
@@ -6883,7 +7178,7 @@ const LOTES = {
    "id": 11104,
    "por": "Repetiste una colocación con la misma empresa",
    "t": "La segunda venta de acciones es un éxito",
-   "x": "En la segunda venta, los inversores piden cuatro veces más acciones de las que hay. La empresa te manda una caja de vino y otra empresa que quiere vender acciones te pide una reunión.",
+   "x": "En la segunda venta, los inversionistas piden cuatro veces más acciones de las que hay. La empresa te manda una caja de vino y otra empresa que quiere vender acciones te pide una reunión.",
    "o": [
     {
      "t": "Tomar la reunión",
@@ -6931,9 +7226,9 @@ const LOTES = {
   },
   {
    "id": 11110,
-   "por": "Negociaste con el inversor ancla de tu fondo",
+   "por": "Negociaste con el inversionista ancla de tu fondo",
    "t": "Tu mayor inversionista pide un lugar en el comité",
-   "x": "El inversor más grande de tu fondo pide un asiento en el comité de inversión. Dice que el tamaño de su aporte lo justifica, y lo dice sonriendo.",
+   "x": "El inversionista más grande de tu fondo pide un asiento en el comité de inversión. Dice que el tamaño de su aporte lo justifica, y lo dice sonriendo.",
    "o": [
     {
      "t": "Darle el asiento",
@@ -6966,7 +7261,7 @@ const LOTES = {
    "id": 11111,
    "por": "Levantaste el primer cierre de tu fondo",
    "t": "La primera inversión del fondo",
-   "x": "Toca poner el primer dinero del fondo. Todos los inversores van a mirar esa primera operación con lupa, y la van a recordar.",
+   "x": "Toca poner el primer dinero del fondo. Todos los inversionistas van a mirar esa primera operación con lupa, y la van a recordar.",
    "o": [
     {
      "t": "Ir por una apuesta segura",
@@ -7007,15 +7302,15 @@ const LOTES = {
   {
    "id": 11112,
    "por": "Levantaste el primer cierre de tu fondo",
-   "t": "Un inversor quiere salir antes",
-   "x": "A un inversor de tu fondo le falta efectivo y quiere vender su parte antes de tiempo. Te llama a ti antes que a su abogado.",
+   "t": "Un inversionista quiere salir antes",
+   "x": "A un inversionista de tu fondo le falta efectivo y quiere vender su parte antes de tiempo. Te llama a ti antes que a su abogado.",
    "o": [
     {
      "t": "Buscarle comprador entre los demás",
      "d": {
       "red": 3,
       "ene": -3,
-      "msg": "Otro inversor compra su parte con descuento. Todos contentos, menos el que vendió."
+      "msg": "Otro inversionista compra su parte con descuento. Todos contentos, menos el que vendió."
      }
     },
     {
@@ -7033,7 +7328,7 @@ const LOTES = {
    "id": 11113,
    "por": "Levantaste el primer cierre de tu fondo",
    "t": "Muchos inversionistas quieren entrar ahora a tu fondo",
-   "x": "Los buenos primeros meses del fondo se supieron. Inversores que antes no te contestaban ahora piden entrar en la segunda ronda de aportes.",
+   "x": "Los buenos primeros meses del fondo se supieron. Inversionistas que antes no te contestaban ahora piden entrar en la segunda ronda de aportes.",
    "o": [
     {
      "t": "Ampliar el fondo",
@@ -7059,14 +7354,14 @@ const LOTES = {
    "id": 11114,
    "por": "Pusiste el primer dinero de tu fondo en tu convicción",
    "t": "Tu primera inversión del fondo sale bien",
-   "x": "La empresa en la que invertiste primero supera su plan. En la reunión anual, los inversores aplauden con la discreción de quien cobra.",
+   "x": "La empresa en la que invertiste primero supera su plan. En la reunión anual, los inversionistas aplauden con la discreción de quien cobra.",
    "o": [
     {
      "t": "Contarlo con humildad",
      "d": {
       "rep": 3,
       "red": 2,
-      "msg": "Explicas qué salió bien y qué fue suerte. Los inversores aprecian sobre todo la parte de la suerte."
+      "msg": "Explicas qué salió bien y qué fue suerte. Los inversionistas aprecian sobre todo la parte de la suerte."
      }
     },
     {
@@ -7075,7 +7370,7 @@ const LOTES = {
       "cash": 6000,
       "car": 3,
       "ene": -3,
-      "msg": "Un caso de éxito vale más que diez láminas. El próximo fondo arranca con fila."
+      "msg": "Un caso de éxito vale más que diez diapositivas. El próximo fondo arranca con fila."
      }
     }
    ]
@@ -7084,7 +7379,7 @@ const LOTES = {
    "id": 11115,
    "por": "Pusiste el primer dinero de tu fondo en tu convicción",
    "t": "Tu primera inversión pierde a su mayor cliente",
-   "x": "La empresa en la que invertiste primero pierde a su mayor cliente. Los inversores piden una llamada, todos a la vez.",
+   "x": "La empresa en la que invertiste primero pierde a su mayor cliente. Los inversionistas piden una llamada, todos a la vez.",
    "o": [
     {
      "t": "Llamarlos uno por uno",
@@ -8586,7 +8881,7 @@ const LOTES = {
       "mod": 3,
       "cri": 2,
       "ene": -3,
-      "msg": "Presentas un plan mes por mes. Te dan el año, con una condición en letra pequeña.",
+      "msg": "Presentas un plan mes por mes. Te dan el año, con una condición en letra chica.",
       "luego": [
        {
         "en": 1,
@@ -9054,7 +9349,7 @@ const LOTES = {
      "d": {
       "red": 4,
       "deja": "l2_fiador",
-      "msg": "Firmas. Te abraza en la puerta del banco y tú lees la letra pequeña en el carro.",
+      "msg": "Firmas. Te abraza en la puerta del banco y tú lees la letra chica en el carro.",
       "luego": [
        {
         "en": 2,
@@ -9153,7 +9448,7 @@ const LOTES = {
       "red": 3,
       "ene": 2,
       "cash": -500,
-      "msg": "Te invita a cenar en la casa que ayudaste a comprar. Te sientas en el mejor sitio."
+      "msg": "Te invita a cenar en la casa que ayudaste a comprar. Te sientas en el mejor lugar."
      }
     },
     {
@@ -9226,7 +9521,7 @@ const LOTES = {
      "d": {
       "cri": 2,
       "cash": -500,
-      "msg": "El comprador es un inversor que solo quiere el alquiler. Te suben un poco y te quedas."
+      "msg": "El comprador es un inversionista que solo quiere el alquiler. Te suben un poco y te quedas."
      }
     }
    ]
@@ -9588,7 +9883,7 @@ const LOTES = {
    "id": 12161,
    "por": "Metiste el triple en la importadora",
    "t": "La importadora vuelve a pagarte",
-   "x": "Contra toda lógica, la importadora vuelve a pagar. Tu amigo te llama inversor estrella y ya se prepara para pedir dinero por tercera vez.",
+   "x": "Contra toda lógica, la importadora vuelve a pagar. Tu amigo te llama inversionista estrella y ya se prepara para pedir dinero por tercera vez.",
    "o": [
     {
      "t": "Cobrar todo y no volver jamás",
@@ -9840,7 +10135,7 @@ const LOTES = {
    "id": 12250,
    "por": "Aceptaste que tu relación se terminó",
    "t": "Quedó una caja con sus cosas",
-   "x": "Unos libros, una chaqueta, un cargador. Tu ex escribe para pasar a buscarla y pregunta si estarás en casa.",
+   "x": "Unos libros, una sudadera, un cargador. Tu ex escribe para pasar a buscarla y pregunta si estarás en casa.",
    "o": [
     {
      "t": "Entregarla en persona",
@@ -10214,7 +10509,7 @@ const LOTES = {
   {
    "id": 12310,
    "por": "Firmaste el seguro con ahorro incluido",
-   "t": "Lees la letra pequeña",
+   "t": "Lees la letra chica",
    "x": "Tres años después pides retirar lo ahorrado en el seguro. Las comisiones se llevaron casi todo lo que aportaste.",
    "o": [
     {
@@ -11193,7 +11488,7 @@ const LOTES = {
    "id": 12553,
    "por": "Pagaste una buena residencia para tu padre",
    "t": "Tu padre se siente solo en la residencia",
-   "x": "En la visita del domingo, tu padre te dice que el sitio está bien, pero que allí nadie le pregunta nada.",
+   "x": "En la visita del domingo, tu padre te dice que el lugar está bien, pero que allí nadie le pregunta nada.",
    "o": [
     {
      "t": "Ir también un día entre semana",
@@ -11529,7 +11824,7 @@ const LOTES = {
    "id": 12611,
    "por": "Seguiste sin parar después del duelo",
    "t": "Las crisis por el duelo dejan de venir",
-   "x": "Las crisis se espacian y un día dejan de venir. No sabes si se fue o solo cambió de sitio.",
+   "x": "Las crisis se espacian y un día dejan de venir. No sabes si se fue o solo cambió de lugar.",
    "o": [
     {
      "t": "Visitar su tumba por primera vez",
@@ -12486,7 +12781,7 @@ const LOTES = {
       "car": -4,
       "cash": -1500,
       "deja": "l3_cambiaste_vida",
-      "msg": "Ahora sí. Llegas por el camino largo al mismo sitio al que te mandaron hace años."
+      "msg": "Ahora sí. Llegas por el camino largo al mismo lugar al que te mandaron hace años."
      }
     },
     {
@@ -12737,7 +13032,7 @@ const LOTES = {
   },
   {
    "id": 13254,
-   "por": "Leíste a tiempo la letra pequeña del producto",
+   "por": "Leíste a tiempo la letra chica del producto",
    "t": "Ahora lees todo hasta el final",
    "x": "Desde aquel producto lees los contratos enteros. En uno de un cliente encuentras una cláusula que nadie había visto.",
    "o": [
@@ -13026,7 +13321,7 @@ const LOTES = {
   },
   {
    "id": 13351,
-   "por": "Denunciaste el robo de identidad desde el día uno",
+   "por": "Denunciaste el robo de identidad desde el primer día",
    "t": "Te aprueban un crédito rápido sin problemas",
    "x": "Necesitas un préstamo del banco para una oportunidad que no espera. Te lo aprueban en días, sin preguntas raras.",
    "o": [
@@ -13644,7 +13939,7 @@ const LOTES = {
       "cash": 1500,
       "cri": 3,
       "rep": -1,
-      "msg": "Lo vendes con pérdida y compras uno modesto. Llegas a los mismos sitios, a la misma hora."
+      "msg": "Lo vendes con pérdida y compras uno modesto. Llegas a los mismos lugares, a la misma hora."
      }
     }
    ]
@@ -14005,8 +14300,8 @@ const LOTES = {
   {
    "id": 13604,
    "por": "Apoyaste el mandato desde atrás, sin firmar",
-   "t": "Otro da charlas con las láminas que hiciste tú",
-   "x": "El negocio se cerró y quien lo firmó da charlas sobre él. Las láminas que proyecta las hiciste tú.",
+   "t": "Otro da charlas con las diapositivas que hiciste tú",
+   "x": "El negocio se cerró y quien lo firmó da charlas sobre él. Las diapositivas que proyecta las hiciste tú.",
    "o": [
     {
      "t": "Decirlo en voz alta",
@@ -14106,7 +14401,7 @@ const LOTES = {
      "d": {
       "rep": 1,
       "ene": -4,
-      "msg": "Pides la corrección. Sale en letra pequeña tres días después. El titular sigue arriba."
+      "msg": "Pides la corrección. Sale en letra chica tres días después. El titular sigue arriba."
      }
     },
     {
@@ -14446,7 +14741,7 @@ const LOTES = {
       "cash": -8000,
       "cri": 3,
       "rep": 2,
-      "msg": "Pones el capital. Es apostar dos veces en el mismo sitio, sabiendo ahora lo que antes no sabías."
+      "msg": "Pones el capital. Es apostar dos veces en el mismo lugar, sabiendo ahora lo que antes no sabías."
      }
     },
     {
@@ -19635,7 +19930,7 @@ const LOTES = {
       "rep": 2,
       "red": -2,
       "ene": -2,
-      "msg": "Sale en letra pequeña, tres días después. El periodista te habla menos."
+      "msg": "Sale en letra chica, tres días después. El periodista te habla menos."
      }
     },
     {
@@ -22131,7 +22426,7 @@ const LOTES = {
       "red": 3,
       "cri": 2,
       "deja": "l6_maestro",
-      "msg": "Preparas una lámina con el orden del reparto. Se hacen preguntas entre ellos y aprenden más."
+      "msg": "Preparas una diapositiva con el orden del reparto. Se hacen preguntas entre ellos y aprenden más."
      }
     }
    ]
@@ -23045,7 +23340,7 @@ const LOTES = {
      "d": {
       "cash": 2500,
       "cri": 1,
-      "msg": "Cobras. Un pájaro en mano y todo eso."
+      "msg": "Cobras ya. Más vale lo seguro que lo que quizás venga."
      }
     }
    ]
@@ -26210,7 +26505,7 @@ const LOTES = {
    "id": 17403,
    "por": "Estudiaste los sábados para una certificación",
    "t": "Uno del grupo de estudio arma un fondo",
-   "x": "Del grupo de los sábados salieron amistades. Uno de ellos arma un fondo pequeño y busca inversores que confíen en él.",
+   "x": "Del grupo de los sábados salieron amistades. Uno de ellos arma un fondo pequeño y busca inversionistas que confíen en él.",
    "o": [
     {
      "t": "Poner algo de dinero",
@@ -26347,7 +26642,7 @@ const LOTES = {
    "id": 17407,
    "por": "Pusiste dinero en el fondo de un compañero",
    "t": "El fondo de tu compañero cierra y pierdes dinero",
-   "x": "Tu compañero no consiguió suficientes inversores. El fondo cierra y devuelve lo que queda, que es menos de lo que pusiste.",
+   "x": "Tu compañero no consiguió suficientes inversionistas. El fondo cierra y devuelve lo que queda, que es menos de lo que pusiste.",
    "o": [
     {
      "t": "Recibir lo que queda y agradecer",
@@ -26555,7 +26850,7 @@ const LOTES = {
       "rep": 1,
       "cri": 2,
       "ene": -2,
-      "msg": "Te la dan meses después. Esta vez llevas la respuesta a esa pregunta en la primera lámina."
+      "msg": "Te la dan meses después. Esta vez llevas la respuesta a esa pregunta en la primera diapositiva."
      }
     },
     {
@@ -27011,7 +27306,7 @@ const LOTES = {
      "d": {
       "cri": 2,
       "red": -2,
-      "msg": "Le corriges cada lámina. Presenta tu recomendación con su voz."
+      "msg": "Le corriges cada diapositiva. Presenta tu recomendación con su voz."
      }
     },
     {
@@ -27445,7 +27740,7 @@ const LOTES = {
       "car": 2,
       "rep": 2,
       "red": -2,
-      "msg": "Te lo concede a medias: tu nombre va, pero en letra pequeña y al final."
+      "msg": "Te lo concede a medias: tu nombre va, pero en letra chica y al final."
      }
     }
    ],
@@ -28284,7 +28579,7 @@ const LOTES = {
       "cri": 4,
       "rep": 1,
       "car": -3,
-      "msg": "Llevas el error ordenado en tres láminas. Te quitan el cupo y te dejan el respeto."
+      "msg": "Llevas el error ordenado en tres diapositivas. Te quitan el cupo y te dejan el respeto."
      }
     },
     {
@@ -28535,7 +28830,7 @@ const LOTES = {
      "d": {
       "rep": 4,
       "ene": -2,
-      "msg": "Pones en tu sitio con quién trabajas y en qué. Te creen más, aunque sabe raro escribirlo."
+      "msg": "Publicas en tu página web con quién trabajas y en qué. Te creen más, aunque sabe raro escribirlo."
      }
     },
     {
@@ -28778,7 +29073,7 @@ const LOTES = {
      "d": {
       "rep": 4,
       "red": -4,
-      "msg": "Lo pones en tu sitio. Todo el mercado entiende lo que pasó, incluido el banco."
+      "msg": "Lo subes a tu página web. Todo el mercado entiende lo que pasó, incluido el banco."
      }
     },
     {
@@ -28840,7 +29135,7 @@ const LOTES = {
    "id": 18614,
    "por": "Ajustaste tu informe al gusto de tu mayor cliente",
    "t": "El banco vuelve con otro pedido",
-   "x": "Quedaron contentos. Ahora quieren que presentes el escenario a sus inversores, con su logo al lado del tuyo.",
+   "x": "Quedaron contentos. Ahora quieren que presentes el escenario a sus inversionistas, con su logo al lado del tuyo.",
    "o": [
     {
      "t": "Aceptar y presentar",
@@ -28848,7 +29143,7 @@ const LOTES = {
       "cash": 4000,
       "rep": -2,
       "ene": -2,
-      "msg": "Presentas con su logo detrás. Los inversores te miran como se mira a un vendedor.",
+      "msg": "Presentas con su logo detrás. Los inversionistas te miran como se mira a un vendedor.",
       "luego": [
        {
         "en": 1,
@@ -28873,7 +29168,7 @@ const LOTES = {
       "rep": 3,
       "cri": 2,
       "red": -3,
-      "msg": "Llegas con la recesión de vuelta en la lámina. Al banco no le gusta. A los inversores, sí."
+      "msg": "Llegas con la recesión de vuelta en la diapositiva. Al banco no le gusta. A los inversionistas, sí."
      }
     },
     {
@@ -28917,8 +29212,8 @@ const LOTES = {
   {
    "id": 18616,
    "por": "Presentaste tu pronóstico con el logo de un banco",
-   "t": "Los inversores te reclaman",
-   "x": "La economía se frenó más de lo que dijiste en esa presentación. Dos inversores del banco te escriben pidiendo explicaciones.",
+   "t": "Los inversionistas te reclaman",
+   "x": "La economía se frenó más de lo que dijiste en esa presentación. Dos inversionistas del banco te escriben pidiendo explicaciones.",
    "o": [
     {
      "t": "Mostrarles tu número original",
@@ -29359,7 +29654,7 @@ const LOTES = {
       "rep": 2,
       "cri": 2,
       "ene": -3,
-      "msg": "Respondes por todo, incluso por lo que no hiciste. El revisor anota cada cosa con letra pequeña.",
+      "msg": "Respondes por todo, incluso por lo que no hiciste. El revisor anota cada cosa con letra chica.",
       "luego": [
        {
         "en": 1,
@@ -30662,7 +30957,7 @@ const LOTES = {
    "x": "Sin el dinero del préstamo, el constructor dice que no puede pagar la nómina y que el lunes para la obra. Ya llamó a tu jefe y al ministerio.",
    "o": [
     {
-     "t": "Desembolsar solo lo que se midió en sitio",
+     "t": "Desembolsar solo lo que se midió en obra",
      "d": {
       "cri": 4,
       "car": 2,
@@ -30953,7 +31248,7 @@ const LOTES = {
   {
    "id": 20313,
    "por": "Armaste una tesis sobre una refinería",
-   "t": "Una inversora en materias primas quiere contratarte",
+   "t": "Una inversionista en materias primas quiere contratarte",
    "x": "Una operadora que compra y vende materias primas vio tu análisis y te invita a almorzar. Busca a alguien que entienda las plantas por dentro.",
    "o": [
     {
@@ -47396,7 +47691,7 @@ const E6 = [
       { t: "Sentarte con él y decidir juntos", juego: "comite", stat: "cri", res: {
         exito: { cri: 6, red: 5, rep: 4, estudia: 12, msg: "Le explicas por qué el que más crece no era el mejor. Se le queda para siempre, y a ti también." },
         parcial: { cri: 3, red: 3, estudia: 7, msg: "Lo resuelven a medias. Aprende algo, aunque no lo más importante." },
-        fallo: { cri: 2, rep: -2, estudia: 6, msg: "Escoges mal delante de él. Al menos aprendéis los dos, por el camino caro." } } },
+        fallo: { cri: 2, rep: -2, estudia: 6, msg: "Escoges mal delante de él. Al menos aprenden los dos, por el camino caro." } } },
       { t: "Mandarle un libro y volver a lo tuyo", d: { car: 3, red: -3, msg: "Le pasas un libro. Es mejor que nada y bastante peor que media hora tuya." } },
     ] },
 ];
@@ -47410,7 +47705,7 @@ E.push.apply(E, E6);
    enferma, quién se muere y quién te estafa.
 
    Cada escena tiene rango de edad, condiciones de estado y, casi
-   siempre, un coste que no aparece en ninguna hoja de cálculo.
+   siempre, un costo que no aparece en ninguna hoja de cálculo.
    Campos: eMin y eMax son edades, no rangos de carrera. "una" marca
    las que solo pueden ocurrir una vez en la partida.
    ============================================================ */
@@ -47615,7 +47910,7 @@ const VIDA = [
     o: [
       { t: "Preguntar directamente cuánto se lleva él y cómo", d: { cri: 7, msg: "Preguntas por la comisión. Se pone incómodo, y en ese silencio está toda la información que necesitabas." } },
       { t: "Entrar, suena bien y el capital está garantizado", chk: { s: "cri", dif: 48 },
-        ok: { cri: 5, cash: -300, msg: "Lees la letra pequeña a tiempo: la garantía solo aplica a vencimiento y a diez años. Sales con una comisión de salida y una lección." },
+        ok: { cri: 5, cash: -300, msg: "Lees la letra chica a tiempo: la garantía solo aplica a vencimiento y a diez años. Sales con una comisión de salida y una lección." },
         no: { cash: -5500, cri: 8, msg: "El producto rinde la mitad que un índice y te cobra tres veces más. La garantía era real y valía mucho menos de lo que costó." } },
     ],
   },
@@ -47639,7 +47934,7 @@ const VIDA = [
     t: "Te clonaron la identidad", clave: false,
     x: "Aparecen dos créditos a tu nombre que nunca pediste. El banco dice que investigará. Investigar, aquí, significa entre tres y nueve meses.",
     o: [
-      { t: "Abogado y denuncia formal desde el día uno", d: { cash: -2200, rep: 3, cri: 4, msg: "Actúas rápido y formal. Recuperas casi todo y tu historial queda limpio antes de que te haga falta." } },
+      { t: "Abogado y denuncia formal desde el primer día", d: { cash: -2200, rep: 3, cri: 4, msg: "Actúas rápido y formal. Recuperas casi todo y tu historial queda limpio antes de que te haga falta." } },
       { t: "Gestionarlo tú por teléfono para ahorrarte el abogado", d: { cash: -3800, ene: -8, msg: "Pierdes ocho meses en llamadas. Al final se resuelve y el ahorro en abogado se lo comió el tiempo." } },
     ],
   },
@@ -47696,13 +47991,16 @@ const VIDA = [
    pasó en tus números. Con treinta cierres, el juego termina
    habiéndote explicado un curso entero sin haberte cobrado uno.
    ============================================================ */
+/* Un porcentaje como se lee: «2,6%», con la coma y con el signo de
+   porcentaje. «Este dio 2.6» no se entendía (Alessandro, 9-nov-2026). */
+const pctL = (x, d = 1) => (numero(x, 0) * 100).toFixed(d).replace(".", ",") + "%";
 const LECCIONES = [
   { id: "ahorro", pri: 9, cuando: (c) => c.turno <= 3,
     t: "La tasa de ahorro manda",
     x: (c) => `De cada dólar que entró este año te quedaste con ${Math.round(c.ahorro * 100)} centavos. A los veinte, esa proporción decide más tu patrimonio final que cualquier acción que elijas: el que ahorra 20% y rinde seis termina mejor que el que ahorra cinco y rinde doce.` },
   { id: "compuesto", pri: 8, cuando: (c) => c.cartera > 3000 && c.turno <= 12,
     t: "Interés compuesto, en tus números",
-    x: (c) => `Tus ${fmt(c.cartera)} al ${(c.muC * 100).toFixed(1)}% esperado serían cerca de ${fmt(c.cartera * Math.pow(1 + c.muC, 10))} en diez años sin poner un dólar más, y ${fmt(c.cartera * Math.pow(1 + c.muC, 20))} en veinte. No hace falta acertar nada: hace falta no interrumpirlo.` },
+    x: (c) => `Tus ${fmt(c.cartera)} rindiendo ${pctL(c.muC)} al año serían cerca de ${fmt(c.cartera * Math.pow(1 + c.muC, 10))} en diez años sin poner un dólar más, y ${fmt(c.cartera * Math.pow(1 + c.muC, 20))} en veinte. No hace falta acertar nada: hace falta no interrumpirlo.` },
   { id: "colchon", pri: 8, cuando: (c) => c.cash < c.gastos * 0.2 && c.turno >= 1,
     t: "Te quedaste sin colchón",
     x: (c) => `Tienes ${fmt(c.cash)} líquidos contra gastos de ${fmt(c.gastos)} al año, o sea menos de tres meses. Sin colchón, cualquier imprevisto te obliga a vender cartera justo cuando el mercado está mal. Esa venta forzada es la que de verdad hace daño.` },
@@ -47717,13 +48015,13 @@ const LECCIONES = [
     x: (c) => `Llevas ${Math.round((c.pesos.cripto || 0) * 100)}% en cripto. Un activo que puede caer 70% no se mide por su retorno esperado sino por cuánto de tu patrimonio aguanta ese escenario sin que cambies de estrategia a mitad del camino.` },
   { id: "vol", pri: 10, cuando: (c) => c.ret <= -0.09,
     t: "Volatilidad no es pérdida",
-    x: (c) => `Perdiste ${Math.abs(c.ret * 100).toFixed(1)}% este año, unos ${fmt(Math.abs(c.deltaC))}. Con una cartera de tu perfil, un año así entra dentro de lo esperado: la desviación es ${(c.sdC * 100).toFixed(1)} puntos. La pérdida se hace definitiva solo si vendes ahora.` },
+    x: (c) => `Tu cartera perdió ${pctL(Math.abs(c.ret))} el último año, unos ${fmt(Math.abs(c.deltaC))}. Con una cartera como la tuya es normal: en un año cualquiera puede subir o bajar cerca de ${pctL(c.sdC, 0)}. La pérdida se hace definitiva solo si vendes ahora.` },
   { id: "recup", pri: 8, cuando: (c) => c.ret <= -0.15,
     t: "La aritmética de las caídas",
-    x: (c) => `Caer ${Math.abs(c.ret * 100).toFixed(0)}% exige subir ${((1 / (1 + c.ret) - 1) * 100).toFixed(0)} para volver al punto de partida. Por eso se cuida la caída máxima antes que el retorno: las pérdidas y las ganancias no son simétricas.` },
+    x: (c) => `Caer ${pctL(Math.abs(c.ret), 0)} exige subir ${pctL(1 / (1 + c.ret) - 1, 0)} para volver al punto de partida. Por eso se cuida la caída máxima antes que el retorno: las pérdidas y las ganancias no son simétricas.` },
   { id: "buen", pri: 5, cuando: (c) => c.ret >= 0.16,
     t: "Cuidado con el año bueno",
-    x: (c) => `Ganaste ${(c.ret * 100).toFixed(1)}%. El riesgo ahora es concluir que tu criterio es excelente y subir la apuesta. Un año no distingue habilidad de suerte: para eso hacen falta muchos, y aún así cuesta.` },
+    x: (c) => `Tu cartera ganó ${pctL(c.ret)} el último año. El riesgo ahora es concluir que tu criterio es excelente y subir la apuesta. Un año no distingue habilidad de suerte: para eso hacen falta muchos, y aún así cuesta.` },
   { id: "gasto", pri: 9, cuando: (c) => c.gastoAnt > 0 && c.gastos > c.gastoAnt * 1.16,
     t: "El gasto persigue al sueldo",
     x: (c) => `La frase significa que cuando sube lo que ganas sube casi igual lo que gastas, sin que llegues a decidirlo. Tus gastos pasaron de ${fmt(c.gastoAnt)} a ${fmt(c.gastos)}, un ${Math.round((c.gastos / c.gastoAnt - 1) * 100)}% más, y por eso el aumento se nota bastante menos de lo que esperabas. Es la razón por la que hay gente que gana mucho y no acumula nada: el sueldo sube, el nivel de vida lo persigue, y la distancia entre los dos nunca crece. Y cada dólar de gasto fijo nuevo son 25 dólares que necesitas tener guardados para poder dejar de trabajar.` },
@@ -47747,10 +48045,10 @@ const LECCIONES = [
     x: (c) => `Llevas ${fmt(c.comisiones)} pagados en comisiones por rebalancear. Cada movimiento tiene un costo cierto contra un beneficio incierto. Rebalancear una vez al año es sano; rebalancear cada vez que hay una noticia es pagar por sentirte activo.` },
   { id: "divers", pri: 7, cuando: (c) => c.sdC > 0 && c.sdCsuma > 0 && c.sdC < c.sdCsuma * 0.86,
     t: "Diversificación medida",
-    x: (c) => `Tus activos por separado suman ${(c.sdCsuma * 100).toFixed(1)} puntos de volatilidad, pero tu cartera tiene ${(c.sdC * 100).toFixed(1)}. Esa diferencia es el único almuerzo gratis que existe en finanzas, y aparece porque no todo se cae el mismo día.` },
+    x: (c) => `Cada cosa que tienes, por separado, sube o baja cerca de ${pctL(c.sdCsuma, 0)} en un año; tu cartera junta, solo ${pctL(c.sdC, 0)}. Esa diferencia es lo único que en finanzas te sale gratis, y aparece porque no todo se cae el mismo día.` },
   { id: "beta", pri: 6, cuando: (c) => c.betaC >= 0.8,
     t: "Todo tu riesgo es el mismo riesgo",
-    x: (c) => `La beta de tu cartera es ${c.betaC.toFixed(2)}: casi todo lo que tienes se mueve con el mercado global. Tener siete líneas distintas no es diversificar si las siete responden al mismo factor.` },
+    x: (c) => `Tu cartera se mueve casi igual que la bolsa mundial: cuando ella cae un 10%, la tuya cae cerca de ${pctL(c.betaC * 0.1, 0)}. Tener siete líneas distintas no es diversificar si las siete responden al mismo factor.` },
   { id: "secuencia", pri: 9, cuando: (c) => c.edad >= 45 && c.cobertura >= 0.6,
     t: "El orden de los retornos",
     x: (c) => `Ya estás cerca de vivir de tu capital. A partir de aquí importa el orden: dos años malos al principio del retiro hacen más daño que los mismos dos años al final, porque vendes cuando está barato. Por eso se baja el riesgo antes de retirarse, no después.` },
@@ -47759,7 +48057,7 @@ const LECCIONES = [
     x: (c) => `Vives y cobras en un país donde la moneda y las reglas cambian. Buena parte de tu patrimonio debería estar en activos que no dependan de esa decisión, no por pesimismo sino por la misma razón por la que no se pone todo en una sola empresa.` },
   { id: "millon", pri: 10, cuando: (c) => c.patrimonio >= 1000000 && c.patAntes < 1000000,
     t: "El primer millón",
-    x: (c) => `Cruzaste el millón. Lo interesante es lo que viene: al ${(c.muC * 100).toFixed(1)}% esperado, tu cartera sola genera cerca de ${fmt(c.cartera * c.muC)} al año, comparado con tu sueldo de ${fmt(c.salario)}. A partir de cierto punto el capital trabaja más que tú.` },
+    x: (c) => `Cruzaste el millón. Lo interesante es lo que viene: rindiendo ${pctL(c.muC)} al año, tu cartera sola genera cerca de ${fmt(c.cartera * c.muC)} al año, comparado con tu sueldo de ${fmt(c.salario)}. A partir de cierto punto el capital trabaja más que tú.` },
   { id: "fondo", pri: 8, cuando: (c) => c.fondo && c.turno >= 12,
     t: "Comisiones del otro lado",
     x: (c) => `Tu fondo te paga 2% sobre ${fmt(c.fondo.tam)} todos los años sin importar cómo rinda, más 20% de las ganancias. Ahora lo ves desde el lado del gestor: por eso el negocio es levantar capital, y por eso al invertir hay que mirar la comisión antes que el track record.` },
@@ -47768,7 +48066,7 @@ const LECCIONES = [
     x: (c) => `Tu cartera son ${fmt(c.cartera)} y tu sueldo ${fmt(c.salario)} al año. A esta edad el retorno más alto disponible no está en el mercado: está en volverte más caro de reemplazar. Ese es el activo que compone más rápido en la primera década.` },
   { id: "burnout", pri: 10, cuando: (c) => c.ene <= 25,
     t: "El activo que no aparece en el balance",
-    x: (c) => `Tu energía está en ${Math.round(c.ene)} de cien. Nada de esto sirve si te rompes a los cuarenta: el capital humano se deprecia sin mantenimiento igual que un galpón, solo que nadie te lo factura hasta que ya pasó.` },
+    x: (c) => `Tu energía está en ${Math.round(c.ene)} de cien. Nada de esto sirve si te rompes a los cuarenta: el capital humano se gasta sin mantenimiento igual que una máquina, solo que nadie te lo factura hasta que ya pasó.` },
   { id: "ladrillo", pri: 8, cuando: (c) => c.bienesV > c.patrimonio * 0.55 && c.patrimonio > 100000,
     t: "Patrimonio en ladrillo",
     x: (c) => `${Math.round(c.bienesV / c.patrimonio * 100)}% de lo que tienes está en inmuebles y bienes. Rinden y aprecian, pero no se venden en una semana ni por partes. La iliquidez no se siente hasta el día que necesitas efectivo.` },
@@ -47777,7 +48075,7 @@ const LECCIONES = [
     x: (c) => `Mantener tus bienes te cuesta ${fmt(c.mantenimiento)} al año, ${Math.round(c.mantenimiento / c.gastos * 100)}% de tu costo de vida. Cada compra grande trae un gasto fijo detrás, y el gasto fijo es lo que decide cuánto capital necesitas para dejar de trabajar.` },
   { id: "rotar", pri: 7, cuando: (c) => c.rotado >= 1.6,
     t: "Moverse no es lo mismo que avanzar",
-    x: (c) => `Llevas el equivalente a ${c.rotado.toFixed(1)} veces tu cartera rotada entre activos. Cada rotación tiene un costo cierto y un beneficio incierto. La cartera que menos se toca casi siempre le gana a la que se ajusta con cada titular.` },
+    x: (c) => `Ya moviste de un activo a otro ${c.rotado.toFixed(1).replace(".", ",")} veces el valor de tu cartera. Cada rotación tiene un costo cierto y un beneficio incierto. La cartera que menos se toca casi siempre le gana a la que se ajusta con cada titular.` },
   { id: "seguro", pri: 6, cuando: (c) => c.patrimonio > 250000 && c.turno >= 10,
     t: "Lo que puede borrar treinta años",
     x: (c) => `Tienes ${fmt(c.patrimonio)} construidos con trabajo de años. Un juicio, una enfermedad larga o un accidente pueden borrar una parte enorme de eso en un mes. A partir de cierto patrimonio, protegerlo rinde más que hacerlo crecer un punto extra.` },
@@ -47786,7 +48084,7 @@ const LECCIONES = [
     x: (c) => `Cuando empieces a vivir de tus ${fmt(c.cartera)} de cartera, importa de dónde retiras primero y qué impuesto paga cada retiro. Dos personas con el mismo patrimonio pueden terminar con años de diferencia de duración solo por ese orden.` },
   { id: "menosriesgo", pri: 9, cuando: (c) => c.edad >= 44 && c.sdC >= 0.16,
     t: "Ya no necesitas tanto riesgo",
-    x: (c) => `Tu cartera tiene ${(c.sdC * 100).toFixed(0)} puntos de volatilidad y ya cubres ${Math.round(c.cobertura * 100)}% de tus gastos. Cuando el objetivo está a la vista, el riesgo deja de ser una herramienta y pasa a ser una amenaza: puedes perder lo que ya ganaste sin necesitarlo.` },
+    x: (c) => `Tu cartera puede subir o bajar ${pctL(c.sdC, 0)} en un año normal y ya cubres ${Math.round(c.cobertura * 100)}% de tus gastos. Cuando el objetivo está a la vista, el riesgo deja de ser una herramienta y pasa a ser una amenaza: puedes perder lo que ya ganaste sin necesitarlo.` },
   { id: "gastoreal", pri: 7, cuando: (c) => c.turno >= 8 && c.gastos > 0,
     t: "El número que de verdad manda",
     x: (c) => `Todo tu plan se reduce a una resta: entran ${fmt(c.ingreso)} y se van ${fmt(c.gastos + c.impuesto)} entre gastos e impuestos. Puedes trabajar años en subir el primer número, pero bajar el segundo tiene efecto inmediato y además reduce el capital que necesitas para siempre.` },
@@ -47798,7 +48096,7 @@ const LECCIONES = [
     x: (c) => `Llevas ${c.turno + 1} años y ${fmt(c.patrimonio)}. Casi todo el patrimonio de una vida se forma en los últimos diez años, no porque ahorres más, sino porque el interés compuesto trabaja sobre una base que ya es grande. La parte difícil es la de ahora, cuando todavía no se ve.` },
   { id: "media", pri: 4, cuando: () => true,
     t: "El promedio no existe en un solo año",
-    x: (c) => `Tu cartera espera ${(c.muC * 100).toFixed(1)}% al año, pero casi ningún año va a dar eso. Este dio ${(c.ret * 100).toFixed(1)}. El promedio aparece al final del camino, no en el camino, y esa es la razón por la que la mayoría abandona antes de cobrarlo.` },
+    x: (c) => `En promedio, tu cartera debería rendir ${pctL(c.muC)} al año, pero casi ningún año da justo eso: el último rindió ${c.ret >= 0 ? "+" : "−"}${pctL(Math.abs(c.ret))}. El promedio aparece al final del camino, no en el camino, y esa es la razón por la que la mayoría abandona antes de cobrarlo.` },
   { id: "decision", pri: 4, cuando: (c) => c.turno >= 4,
     t: "Casi todo se decide con poca información",
     x: (c) => `Cada año de esto son tres o cuatro decisiones tomadas con datos incompletos y sin saber cómo terminan. El oficio no es acertar siempre: es que ninguna decisión suelta pueda sacarte del juego. Ese criterio se nota en tu patrimonio de ${fmt(c.patrimonio)} más que cualquier acierto puntual.` },
@@ -47820,16 +48118,21 @@ const escogerLeccion = (c, usadas) => {
 };
 
 /* hitos: solo se celebran la primera vez que se cruzan */
+/* Dicen qué pasó, con la cifra: «Cincuenta mil» suelto no se entendía
+   (Alessandro, 9-nov-2026: «¿cincuenta mil qué?»). */
 const HITOS = [
-  { v: 10000, t: "Primeros diez mil" },
-  { v: 50000, t: "Cincuenta mil" },
-  { v: 100000, t: "Seis cifras" },
-  { v: 250000, t: "Un cuarto de millón" },
-  { v: 500000, t: "Medio millón" },
-  { v: 1000000, t: "El primer millón" },
-  { v: 3000000, t: "Tres millones" },
-  { v: 10000000, t: "Ocho cifras" },
+  { v: 10000, t: "Pasaste los USD 10.000" },
+  { v: 50000, t: "Pasaste los USD 50.000" },
+  { v: 100000, t: "Pasaste los USD 100.000" },
+  { v: 250000, t: "Pasaste los USD 250.000" },
+  { v: 500000, t: "Llegaste a medio millón de dólares" },
+  { v: 1000000, t: "Tu primer millón de dólares" },
+  { v: 3000000, t: "Pasaste los USD 3 millones" },
+  { v: 10000000, t: "Pasaste los USD 10 millones" },
 ];
+/* el nombre corto de cada activo, para decir en qué ganaste o perdiste */
+const NOMBRE_CORTO = { bonos: "Bonos", corp: "Deuda de empresas", acciones: "Acciones", reits: "Inmuebles en bolsa",
+  oro: "Oro", distressed: "Deuda en problemas", cripto: "Cripto", efectivo: "Efectivo", otros: "Otros" };
 
 /* ============================================================
    GUARDAR LA PARTIDA
@@ -48071,6 +48374,14 @@ const BASE = {
   /* minijuegos cuyas reglas ya se leyeron: la segunda vez no se vuelven
      a explicar enteras */
   jugados: [],
+  /* los últimos minijuegos jugados, para no repetir el mismo seguido */
+  recientes: [],
+  /* el ánimo de corto plazo: de −2 (hundido) a +2 (eufórico) */
+  animo: 0,
+  /* tu camino: la empresa alrededor de la que gira tu vida (null hasta elegirlo) */
+  empresa: null,
+  /* tus relaciones: jefe, pareja, mentor y padres, de 0 a 100 */
+  rel: { jefe: 50, pareja: 50, mentor: 50, padres: 50 },
   /* movimiento: null sigue al sistema, true encendido, false apagado */
   animar: null,
   /* dónde trabajas, con qué contrato y qué hace ese contrato con tu sueldo */
@@ -48211,17 +48522,19 @@ const EDAD_DE = (e) => EDADES.find((x) => x.e === e) || EDADES[0];
 const META_MIN = 8;
 const META_MAX = 45;
 /* ============================================================
-   PARTIDA CORTA (César, 6-nov-2026)
-   La partida entera, de tu edad a los 65, tenía que caber en 15-20
-   minutos. Antes eran unas 75 decisiones por década. Ahora cada turno
-   es una ETAPA de cinco años: juegas dos escenas y los otros cuatro
-   años se cierran solos (sueldo, gastos, mercados, ascensos), con un
-   poco de carrera por cada año trabajado. Al final de la etapa, un
-   resumen y a la siguiente.
+   PARTIDA CORTA (César, 6-nov-2026; turnos de dos años, Alessandro,
+   9-nov-2026)
+   La partida entera, de tu edad a los 65, en un rato. César la llevó a
+   etapas de cinco años con dos escenas, y la vida pasaba demasiado
+   rápido: «se pierde el alma del juego y es mucho más aburrido». Ahora
+   cada turno es una ETAPA de dos años: juegas tres escenas y el otro
+   año se cierra solo (sueldo, gastos, mercados, ascensos), con un poco
+   de carrera por el año trabajado. Al final de la etapa, un resumen y a
+   la siguiente.
    ============================================================ */
-const ETAPA = 5;
+const ETAPA = 2;
 const EDAD_RETIRO = 65;
-const ESCENAS_ETAPA = 2;
+const ESCENAS_ETAPA = 3;
 const PASIVO_ANO = { carrera: 1, rep: 1, red: 1 };
 const TOPE_ABSOLUTO = 55;   /* empezando a los 20, eso son los 75 */
 const DURACIONES = [
@@ -48238,7 +48551,10 @@ const metaDe = (st) => entero(st && st.meta, 30, META_MIN, META_MAX);
 const topeDe = (st) => Math.min(TOPE_ABSOLUTO, metaDe(st) + entero(st && st.seguir, 0, 0, 20) * 5);
 const semestre = (t) => String(2026 + t);
 const edad = (t, ini) => entero(ini, 20, 20, 50) + entero(t, 0, 0, 60);
-const esClave = (t) => t % 2 === 1;
+/* clave, una etapa sí y otra no. `turno` cuenta años y avanza de dos
+   en dos, así que el viejo `t % 2 === 1` nunca daba verdadero y las
+   decisiones clave (D) no salían jamás */
+const esClave = (t) => Math.floor(entero(t, 0, 0, 99) / ETAPA) % 2 === 1;
 const tiene = (st, id) => st.perks.includes(id);
 
 /* Un fallo devolvía el 30% de lo bueno, y con el texto del éxito: fallar
@@ -48386,7 +48702,7 @@ const LEGENDARIAS = [
    Independizarse no puede significar lo mismo para todo el mundo: a un
    ingeniero de sistemas no le interesa montar una boutique de banca de
    inversion, le interesa montar algo que escale sin pedirle mas horas.
-   Cada titulo tiene su salida, con su coste de montarla y su forma de
+   Cada titulo tiene su salida, con su costo de montarla y su forma de
    pagar. El multiplicador se acumula sobre el sueldo que ya tenias.
    ============================================================ */
 const FIRMAS = {
@@ -48403,7 +48719,7 @@ const FIRMAS = {
   ing: {
     n: "Tu propia constructora", corto: "Constructora",
     costo: 62000, mult: 1.46, mods: { car: 9, mod: 4, ene: -9 },
-    d: "Obras, márgenes finos y un balance lleno de maquinaria. Cuando una obra sale bien, sale muy bien; cuando sale mal, te la llevas puesta.",
+    d: "Obras, márgenes finos y un balance lleno de maquinaria. Cuando una obra sale bien, sale muy bien; cuando sale mal, te pega de lleno.",
   },
   der: {
     n: "Tu propio bufete", corto: "Bufete",
@@ -48543,16 +48859,6 @@ const sueldoCon = (st, mult) => {
   return RANGO(st && st.rango).salario * 12 * na.sal * clamp(numero(st && st.sueldoMult, 1) * numero(mult, 1), 0.6, TOPE_MULT);
 };
 
-/* Negociar el aumento con tu firma. El precio de la mesa (0 a 100) se
-   lee como el aumento sobre lo que cobras hoy: se empieza en 50, que es
-   lo mismo que renovar sin discutir (+6%), y cada punto más son 0,7
-   puntos de aumento, hasta un 40%. Lo que cierras es lo que cobras.
-   (Alessandro, 9-nov-2026: «que se refleje tu salario actual y con base
-   a eso se pueda negociar un aumento».) */
-const aumentoNeg = (precio) => clamp(Math.round((numero(precio, 50) - 42) * 0.7), 0, 40) / 100;
-/* el sueldo nuevo con ese aumento, sin pasar del techo de la carrera */
-const sueldoNeg = (ctx, precio) =>
-  Math.round(Math.min(numero(ctx && ctx.techo, Infinity), numero(ctx && ctx.actual, 0) * (1 + aumentoNeg(precio))));
 
 /* ============================================================
    EL CONTRATO, COMO UN MERCADO DE PASES
@@ -48607,7 +48913,8 @@ const escenaContrato = (st) => {
     contrato: { anos: 3, mult: 1.22 }, j: "anclaje", stat: "red", etq: "Hoy cobras",
     sueldo: Math.round(sueldoCon(st, 1.22)),
     /* lo que cobras hoy y el techo de tu carrera: la mesa parte de ahí */
-    negocia: { actual: Math.round(sueldoCon(st, 1)), techo: Math.round(sueldoCon(st, TOPE_MULT * 10)) },
+    negocia: { actual: Math.round(sueldoCon(st, 1)), techo: Math.round(sueldoCon(st, TOPE_MULT * 10)),
+      firma: actual, ano: 2026 + entero(st && st.turno, 0, 0, 99) },
     d: { car: 3, red: 2, msg: "Te sientas con tu jefe y pones tu número sobre la mesa." },
   };
   return { ...ESCENA_CONTRATO, o: [renovar].concat(ofertas, [negociar]) };
@@ -48680,7 +48987,7 @@ const APERTURAS = [
         { t: "Repartirlo entre varios tipos de activo", abre: "cartera",
           d: { cri: 4, msg: "Abres tu primera cartera. Arriba aparece la sección Cartera: ahí decides cuánto inviertes y cómo, con un toque." } },
         { t: "Empezar prudente, casi todo en efectivo", abre: "cartera",
-          d: { cri: 2, ene: 3, msg: "Prefieres mojarte los pies antes de nadar. La cartera queda en Prudente y puedes cambiarla cuando quieras." } },
+          d: { cri: 2, ene: 3, msg: "Prefieres probar el agua antes de tirarte. La cartera queda en Prudente y puedes cambiarla cuando quieras." } },
       ] } },
   { id: "vida", rango: 1, ano: 4,
     guia: { t: "Vida", x: "Lo que te cuesta vivir como vives, y cuánto necesitas para no depender del sueldo.",
@@ -48710,7 +49017,7 @@ const APERTURAS = [
       x: "Te llega la carta que le llega a todo el que ya gana lo suficiente: una línea de crédito preaprobada, redactada en tono de felicitación. No te están premiando, te están vendiendo.",
       o: [
         { t: "Entender qué te ofrecen antes de necesitarlo", abre: "banco",
-          d: { cri: 6, msg: "Lees la letra pequeña sin firmar nada. En Ficha se abre El banco: cuánto te prestarían, a qué tasa, y cómo pagar lo que debas." } },
+          d: { cri: 6, msg: "Lees la letra chica sin firmar nada. En Ficha se abre El banco: cuánto te prestarían, a qué tasa, y cómo pagar lo que debas." } },
         { t: "Guardar la carta y no pensarlo hoy", abre: "banco",
           d: { ene: 2, msg: "La carta va al cajón. La sección del banco queda disponible en Ficha el día que la necesites." } },
       ] } },
@@ -49043,15 +49350,70 @@ const IDS_FIRMA = [9720, 9721];
    ============================================================ */
 const ID_PRE = 9790;
 /* cuántas escenas con minijuego trae cada año, como mínimo */
-const MIN_JUEGOS_ANO = 1;   /* partida corta: un minijuego por etapa */
+/* De las tres escenas de cada etapa, dos traen minijuego en una etapa y
+   una en la siguiente (Alessandro, 9-nov-2026: «que el juego se sienta
+   dinámico pero que no se sienta pesado»). No alarga la etapa: cambia
+   lectura por juego. Con una sola siempre, el 63% de las etapas acababa
+   sin jugar nada; con dos siempre, la vida pasaba de 45 minutos. */
+const MIN_JUEGOS_ANO = 2;
+/* las etapas alternan: dos minijuegos en una, uno en la siguiente */
+/* dos de las tres escenas de cada etapa traen minijuego (Alessandro,
+   10-nov-2026: «aparecen muchas decisiones, tienen que aparecer más
+   juegos para que el jugador no se aburra») */
+const juegosEtapa = () => MIN_JUEGOS_ANO;
+/* Cada carta es algo a lo que le dedicas el inicio de la etapa (un
+   curso, un hábito, un viaje), no una tarea suelta: «entregar antes del
+   plazo» no tenía sentido aquí (Alessandro, 10-nov-2026). */
 const CARTAS_PRE = {
-  ene: ["Dormir ocho horas toda una semana", "Correr antes de la oficina", "Un fin de semana sin el celular", "Vacaciones de verdad, sin correo"],
-  /* modelaje y criterio son ya una sola habilidad: un solo mazo, para
-     que no salgan dos cartas de lo mismo con distinto nombre */
-  cri: ["Leer el informe que nadie lee", "Una tarde con el economista jefe", "Repasar tus errores del año", "Escuchar al que piensa distinto",
-    "Curso de Excel avanzado", "Rehacer un modelo desde cero", "Atajos de teclado hasta dormido", "Copiar el modelo del mejor de la mesa"],
-  red: ["Café con el director", "El asado de la promoción", "Presentarte en el congreso", "Ayudar a alguien de otra área"],
-  rep: ["Entregar antes del plazo", "Firmar un informe que sale bien", "Dar una charla en la facultad", "Admitir un error a tiempo"],
+  ene: [
+    "Vacaciones de verdad, sin correo",
+    "Rutina de sueño: ocho horas, sin pantalla",
+    "Chequeo médico completo",
+    "Inscribirte en el gimnasio y no faltar",
+    "Entrenar para una media maratón",
+    "Natación tres veces por semana",
+    "Una semana en la playa con la familia",
+    "Aprender a cocinar sano",
+    "Meditar diez minutos cada mañana",
+    "Ir en bicicleta al trabajo",
+    "Una semana de montaña sin señal",
+  ],
+  cri: [
+    "Curso de Excel avanzado",
+    "Curso de Python para finanzas",
+    "Certificación en análisis financiero",
+    "Módulo de posgrado en finanzas",
+    "Inglés de negocios con clases privadas",
+    "Curso en línea de valuación de empresas",
+    "Leer un clásico de inversión, despacio",
+    "Diplomado en finanzas corporativas",
+    "Taller de modelos financieros",
+    "Curso de contabilidad para no contadores",
+  ],
+  red: [
+    "Congreso de finanzas en Ciudad de México",
+    "Cenas de exalumnos de tu universidad",
+    "Unirte a la cámara de comercio",
+    "Ser mentor de un practicante",
+    "Viaje de negocios a Miami",
+    "Club de inversionistas los jueves",
+    "Torneo de golf de la industria",
+    "Grupo de corredores de los sábados",
+    "Organizar desayunos con colegas",
+    "Feria de emprendedores en Bogotá",
+  ],
+  rep: [
+    "Publicar un artículo en una revista",
+    "Dar una clase en la universidad",
+    "Asesor pro bono de una ONG",
+    "Conferencista en un evento del sector",
+    "Certificarte y salir en el directorio",
+    "Columna mensual en un periódico",
+    "Un pódcast sobre finanzas personales",
+    "Escribir un libro corto sobre tu oficio",
+    "Jurado en un concurso universitario",
+    "Postularte a un premio de la industria",
+  ],
 };
 const NOMBRE_ATRIB = { ene: "energía", cri: "conocimiento", mod: "conocimiento", red: "contactos", rep: "reputación" };
 /* Las vacaciones de verdad te devuelven la energía al 100% (Alessandro,
@@ -49067,23 +49429,60 @@ const VACACIONES_OPCIONES = [
 ];
 const VACACIONES_COMPRA = ["viaje"];
 const esVacacion = (o) => !!(o && (o.vacaciones || VACACIONES_OPCIONES.indexOf(o.t) >= 0));
+/* Las rarezas de la carta, con las probabilidades de El Ídolo. Se tira
+   un número entre 0 y 1: la carta estrella lo usa entero; las otras dos
+   solo pueden ser raras (20%). */
+const RAREZA_PROB = { iconica: 0.015, dorada: 0.06, rara: 0.25, raraResto: 0.2 };
+const VALOR_RAREZA = { comun: 4, rara: 16, dorada: 30, iconica: 30 };
+/* la icónica empuja además un segundo atributo */
+const VALOR_ICONICA_2 = 14;
+const rarezaCarta = (r, esEstrella, turno) => {
+  const x = numero(r, 1);
+  if (!esEstrella) return x < RAREZA_PROB.raraResto ? "rara" : null;
+  const ic = entero(turno, 0, 0, 99) >= ETAPA ? RAREZA_PROB.iconica : 0;
+  if (x < ic) return "iconica";
+  if (x < ic + RAREZA_PROB.dorada) return "dorada";
+  if (x < ic + RAREZA_PROB.dorada + RAREZA_PROB.rara) return "rara";
+  return null;
+};
+const CARTAS_ICONICAS = {
+  ene: { t: "Un año sabático que te cambia la vida", k2: "cri",
+    msg: "Vuelves de otra manera: descansado de verdad y con la cabeza llena de ideas." },
+  cri: { t: "Un máster en el extranjero, con beca completa", k2: "red",
+    msg: "Sabes más que nunca y vuelves con compañeros de clase repartidos por medio mundo." },
+  red: { t: "Te invitan a Davos", k2: "rep",
+    msg: "Una semana entre la gente que mueve el mundo. Tu agenda de contactos ya no es la misma." },
+  rep: { t: "Tu caso sale en la tapa de una revista de negocios", k2: "red",
+    msg: "Todo el sector sabe quién eres, y tu teléfono no para de sonar." },
+};
 const escenaPretemporada = (st) => {
   const rnd = generadorDe("pre:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + entero(st && st.turno, 0, 0, 99));
   const claves = Object.keys(CARTAS_PRE);
   /* tres atributos distintos: elegir dos veces lo mismo no es elegir */
   const pozo = claves.slice();
   const cartas = [];
+  /* Como en El Ídolo (11-nov-2026): de las tres cartas, solo una —la
+     «estrella»— tira rareza de verdad: icónica 1,5%, dorada 6%, rara 25%.
+     Las otras dos son comunes o, de vez en cuando, raras. Antes cada
+     carta tiraba sola (rara 10%, dorada 3%) y no había icónica. La
+     icónica no sale en la primera etapa: ahí todavía no eres nadie. */
+  const estrella = Math.floor(rnd() * 3);
   for (let i = 0; i < 3; i++) {
     const k = pozo.splice(Math.floor(rnd() * pozo.length), 1)[0];
-    const r = rnd();
-    /* Raras y doradas salen poco pero se notan muchísimo (Alessandro,
-       8-oct-2026): dorada 3% (+15), rara 10% (+8), común +2. */
-    /* partida corta: el empujón dura toda la etapa, así que pesa el doble */
-    const v = r < 0.03 ? 30 : r < 0.13 ? 16 : 4;
+    const rareza = rarezaCarta(rnd(), i === estrella, entero(st && st.turno, 0, 0, 99));
+    const v = VALOR_RAREZA[rareza || "comun"];
+    if (rareza === "iconica") {
+      const ic = CARTAS_ICONICAS[k];
+      cartas.push({
+        t: ic.t, rareza,
+        d: { [k]: v, [ic.k2]: VALOR_ICONICA_2,
+          msg: "Inicio de etapa: carta icónica. " + ic.msg },
+      });
+      continue;
+    }
     const lista = CARTAS_PRE[k];
     const titulo = lista[Math.floor(rnd() * lista.length)];
     /* la rareza va aparte, para pintarla: rara en morado, dorada en dorado */
-    const rareza = v === 30 ? "dorada" : v === 16 ? "rara" : null;
     cartas.push({
       t: titulo, rareza,
       d: { [k]: v, msg: VACACIONES_OPCIONES.indexOf(titulo) >= 0
@@ -49096,9 +49495,222 @@ const escenaPretemporada = (st) => {
   return {
     id: ID_PRE, min: 0, max: 6, pretemporada: true,
     t: "Inicio de etapa",   /* se llamaba «Pretemporada»; Alessandro, 8-oct. Etapa: partida corta */
-    x: "Empiezan cinco años nuevos. Antes de que lleguen el trabajo y las obligaciones, puedes dedicarte a una sola cosa. Elige cuál.",
+    x: "Empiezan dos años nuevos. Antes de que lleguen el trabajo y las obligaciones, puedes dedicarte a una sola cosa. Elige cuál.",
     o: cartas,
   };
+};
+
+/* ============================================================
+   TU ARRANQUE: LA CLASE Y EL ARQUETIPO (como El Ídolo, 11-nov-2026)
+   El Ídolo abre la carrera con dos preguntas que te definen para
+   siempre: qué clase de jugador eres (las finales se juegan a suerte,
+   a habilidad o un poco y un poco) y un arquetipo entre tres que trae
+   el dado. Aquí son las dos primeras escenas de la partida, por fuera
+   del presupuesto de la etapa, y la primera etapa no trae carta de
+   inicio: el arquetipo ocupa su lugar.
+   ============================================================ */
+const ID_CLASE = 9791;
+const ID_ARQ = 9792;
+const CLASES = [
+  { id: "intuitivo", ico: "🎲", n: "Intuitivo",
+    d: "Decides por olfato: los minijuegos se resuelven a pura suerte, y tus atributos inclinan la moneda." },
+  { id: "mixto", ico: "🔀", n: "Mixto",
+    d: "Un poco y un poco: la mitad de las veces juegas el minijuego y la otra mitad decide tu olfato." },
+  { id: "tecnico", ico: "🧠", n: "Técnico",
+    d: "Todo en tus manos: juegas todos los minijuegos. Memoria, puntería, cálculo y sangre fría." },
+];
+const IDS_CLASE = CLASES.map((c) => c.id);
+/* Los que nunca se dejan al olfato: la clase y el examen son el temario
+   (lo que no se da en clase no se pregunta después) y la negociación
+   tiene su propia mesa. */
+const JUEGOS_SIN_AZAR = ["catedra", "quiz", "anclaje"];
+/* ¿este minijuego se resuelve a suerte? El intuitivo siempre; el mixto,
+   la mitad de las veces (r es un número entre 0 y 1). */
+const juegoAlOlfato = (st, o, r) => {
+  const k = o && (o.juego || o.j);
+  if (!k || JUEGOS_SIN_AZAR.indexOf(k) >= 0 || (o && (o.negocia || o.contrato))) return false;
+  const c = st && st.clase;
+  if (c === "intuitivo") return true;
+  if (c === "mixto") return numero(r, 1) < 0.5;
+  return false;
+};
+/* Las chances del olfato: lo mismo que ayuda en el minijuego (tu
+   atributo, tu carrera, tus boosts) inclina la moneda. Con ayuda 60 es
+   35% redondo, 30% a medias y 35% mal. El amuleto de la suerte suma. */
+const probsOlfato = (ayuda, suerte) => {
+  const q = clamp((numero(ayuda, 50) - 10) / 100 + clamp(numero(suerte, 0), 0, 0.3), 0.15, 0.8);
+  const exito = q * 0.7;
+  const parcial = 0.3;
+  return [exito, parcial, Math.max(0, 1 - exito - parcial)];
+};
+const escenaClase = () => ({
+  id: ID_CLASE, min: 0, max: 6, pretemporada: true, cuna: true,
+  t: "¿Qué clase de analista eres?",
+  x: "Define cómo se resuelven todos los momentos de habilidad de tu carrera. No se puede cambiar después.",
+  o: CLASES.map((c) => ({
+    t: c.ico + " " + c.n, claseId: c.id, tag: c.d,
+    d: { msg: "Eres " + c.n.toLowerCase() + ". " + c.d },
+  })),
+});
+/* Nueve arquetipos y uno icónico (1%), como las cunas de El Ídolo. El
+   dado trae tres distintos; la semilla es la de la partida, así que en
+   la del día todo el mundo ve los mismos. */
+const ARQUETIPOS = [
+  { id: "cerebrito", n: "El Cerebrito", x: "Te sabías el libro antes del examen.", d: { cri: 14 } },
+  { id: "relacionista", n: "El Relacionista", x: "Conoces a alguien en cada oficina de la ciudad.", d: { red: 14 } },
+  { id: "maquina", n: "La Máquina", x: "Doce horas y sales entero. Nadie entiende cómo.", d: { ene: 14 } },
+  { id: "carta", n: "La Carta de Presentación", x: "Tu nombre llega antes que tú a cada reunión.", d: { rep: 14 } },
+  { id: "estratega", n: "El Estratega", x: "Lees el tablero entero antes de mover una pieza.", d: { cri: 9, rep: 7 } },
+  { id: "vendedor", n: "El Vendedor", x: "Le vendes hielo a un esquimal, y encima te recomienda.", d: { red: 9, rep: 7 } },
+  { id: "incansable", n: "El Incansable", x: "Estudias de noche y rindes de día.", d: { ene: 9, cri: 7 } },
+  { id: "capitan", n: "El Capitán", x: "En el equipo de la universidad ya eras el que ordenaba.", d: { rep: 9, red: 7 } },
+  { id: "todoterreno", n: "El Todoterreno", x: "No eres el mejor en nada y eres bueno en todo.", d: { cri: 5, red: 5, rep: 5, ene: 5 } },
+];
+const ARQ_ICONICO = { id: "prodigio", n: "El Prodigio", iconico: true,
+  x: "Uno de cada cien. Te van a recordar.", d: { cri: 10, red: 10, rep: 10, ene: 10 } };
+const IDS_ARQ = ARQUETIPOS.map((a) => a.id).concat(ARQ_ICONICO.id);
+const ARQ_DE = (id) => ARQUETIPOS.concat(ARQ_ICONICO).find((a) => a.id === id) || null;
+const PROB_ARQ_ICONICO = 0.01;
+const escenaArquetipo = (st) => {
+  const rnd = generadorDe("cuna:" + entero(st && st.semilla, 0, 0, 2e9));
+  const pozo = ARQUETIPOS.slice();
+  const tres = [];
+  for (let i = 0; i < 3; i++) tres.push(pozo.splice(Math.floor(rnd() * pozo.length), 1)[0]);
+  if (rnd() < PROB_ARQ_ICONICO) tres[Math.floor(rnd() * 3)] = ARQ_ICONICO;
+  return {
+    id: ID_ARQ, min: 0, max: 6, pretemporada: true, cuna: true,
+    t: "¿Qué clase de profesional eres?",
+    x: "El dado trajo tres destinos. Elige uno: te define para siempre.",
+    o: tres.map((a) => ({
+      t: a.n, arqId: a.id, tag: a.x, rareza: a.iconico ? "iconica" : null,
+      d: { ...a.d, msg: "Tu arranque: " + a.n + ". " + a.x },
+    })),
+  };
+};
+
+/* ============================================================
+   EL LEGADO (la idolatría de El Ídolo, 11-nov-2026)
+   Un número de 0 a 100 que dice qué dejaste en tu oficio. Sube con los
+   años en la misma firma, los ascensos, los reconocimientos y montar lo
+   tuyo; baja si te vas, si te despiden o si te quiebras. Cinco niveles
+   con nombre y siempre a la vista el que sigue: «Conocido 31 → Referente
+   50». Las mismas reglas que hacen adictiva la idolatría:
+   - quedarse paga, irse cuesta (y más si te vas pronto);
+   - sin un reconocimiento (o tu propia firma) no pasas de 80;
+   - por encima de 85 cuesta muchísimo: Leyenda es para pocos.
+   ============================================================ */
+const NIVELES_LEGADO = [
+  { min: 0, id: "uno", n: "Uno más" },
+  { min: 25, id: "conocido", n: "Conocido" },
+  { min: 50, id: "referente", n: "Referente" },
+  { min: 75, id: "eminencia", n: "Eminencia" },
+  { min: 95, id: "leyenda", n: "Leyenda" },
+];
+const LEGADO = {
+  porAno: 0.9,            /* cada año en la misma firma */
+  repAlta: 60,            /* por encima, la reputación suma algo cada año */
+  porRep: 1 / 20,
+  ascenso: 6, premio: 8, premioMundial: 14, firmaPropia: 8,
+  irse: -8, irsePronto: -12, anosPronto: 4,
+  despido: -8, burnout: -5,
+  techoSinPremio: 80, cuestaDesde: 85, cuestaFactor: 0.15,
+  porRangoInicial: 5,     /* empezar tarde ya trae algo hecho */
+};
+const nivelLegado = (v) => {
+  const x = clamp(numero(v, 0), 0, 100);
+  let n = NIVELES_LEGADO[0];
+  NIVELES_LEGADO.forEach((l) => { if (x >= l.min) n = l; });
+  return n;
+};
+const siguienteNivelLegado = (v) => NIVELES_LEGADO.find((l) => l.min > clamp(numero(v, 0), 0, 100)) || null;
+/* el techo: sin un reconocimiento, tu firma o llegar a lo más alto, 80 */
+const techoLegado = (st) => (Array.isArray(st.premios) && st.premios.length) || st.propia
+  || entero(st.rango, 0, 0, RANGOS.length - 1) >= RANGOS.length - 1 ? 100 : LEGADO.techoSinPremio;
+/* Lo que cambia el legado en un cierre de año. Puro: recibe el estado y
+   lo que pasó, devuelve el estado nuevo y el detalle para el resumen. */
+const legadoDelAno = (st, pasa) => {
+  const p = pasa || {};
+  const antes = clamp(numero(st.legado, 0), 0, 100);
+  const piezas = [];
+  let sube = 0, baja = 0;
+  const suma = (n, v) => { if (!v) return; piezas.push({ n, v }); if (v > 0) sube += v; else baja += v; };
+  let anos = entero(st.legAnos, 0, 0, 60);
+  const mismaFirma = !st.legPatron || st.legPatron === st.patron;
+  if (st.propia && !st.legPropia) {
+    suma("Montaste tu firma", LEGADO.firmaPropia);
+    anos = 0;
+  } else if (!mismaFirma && !st.propia) {
+    const pronto = anos < LEGADO.anosPronto && !st.legCambio;
+    suma(pronto ? "Te fuiste pronto de tu primera firma" : "Cambiaste de firma", pronto ? LEGADO.irsePronto : LEGADO.irse);
+    anos = 0;
+  } else {
+    suma("Un año más en " + (st.patron || "tu firma"), LEGADO.porAno);
+  }
+  const rep = numero(st.rep, 0);
+  if (rep > LEGADO.repAlta) suma("Tu reputación", Math.round((rep - LEGADO.repAlta) * LEGADO.porRep * 10) / 10);
+  if (p.ascenso) suma("Ascenso", LEGADO.ascenso);
+  (Array.isArray(p.premios) ? p.premios : []).forEach((id) => {
+    const pr = PREMIO_DE(id);
+    if (pr) suma(pr.n, pr.mundial ? LEGADO.premioMundial : LEGADO.premio);
+  });
+  if (p.despido) suma("Te bajaron o te dejaron ir", LEGADO.despido);
+  if (p.burnout) suma("Te quebraste", LEGADO.burnout);
+  /* por encima de 85 cada punto cuesta casi siete */
+  let gana = sube;
+  if (gana > 0 && antes + gana > LEGADO.cuestaDesde) {
+    const bajo = Math.max(0, LEGADO.cuestaDesde - antes);
+    gana = bajo + (gana - bajo) * LEGADO.cuestaFactor;
+  }
+  const techo = techoLegado(st);
+  let despues = antes + gana + baja;
+  /* el techo frena lo que sube, nunca te baja de donde estabas */
+  if (despues > techo) despues = Math.max(techo, Math.min(antes, despues));
+  despues = Math.round(clamp(despues, 0, 100) * 10) / 10;
+  const out = {
+    ...st,
+    legado: despues,
+    legadoMax: Math.max(clamp(numero(st.legadoMax, 0), 0, 100), despues),
+    legPatron: st.patron || "",
+    legAnos: entero(anos + 1, 0, 0, 60),
+    legPropia: st.propia === true,
+    legCambio: st.legCambio === true || (!mismaFirma && !st.propia),
+  };
+  const nAntes = nivelLegado(antes), nDesp = nivelLegado(despues);
+  return { st: out, legado: { antes, despues, piezas,
+    nivel: nDesp.n, subeNivel: nDesp.min > nAntes.min ? nDesp.n : null,
+    techo: despues >= techo && techo < 100 } };
+};
+
+/* ============================================================
+   LA GLORIA (el puntaje final de El Ídolo, 11-nov-2026)
+   Una sola cifra para comparar carreras. Como allá, la plata en sí no
+   suma: suma lo que dejaste (el legado), lo que te reconocieron, hasta
+   dónde llegaste y si quedaste libre. Empezar tarde tiene un multiplicador,
+   como el del arquero allá, para que una vida de 15 años pueda competir.
+   ============================================================ */
+const GLORIA = {
+  legado: 2000, leyenda: 50000,
+  premio: 25000, premioMundial: 60000,
+  porRango: 8000, firmaPropia: 30000,
+  libertad: 30000, libertadTope: 2,
+  minijuego: 300,
+  porEdad: { 20: 1, 30: 1.15, 40: 1.35, 50: 1.6 },
+};
+const gloriaDe = (st, cobertura) => {
+  const leg = clamp(numero(st.legadoMax, numero(st.legado, 0)), 0, 100);
+  const prem = Array.isArray(st.premios) ? st.premios.map(PREMIO_DE).filter(Boolean) : [];
+  const piezas = [
+    { n: "Legado (" + nivelLegado(leg).n + ")", v: leg * GLORIA.legado },
+    { n: "Llegaste a Leyenda", v: leg >= 95 ? GLORIA.leyenda : 0 },
+    { n: "Reconocimientos", v: prem.reduce((a, p) => a + (p.mundial ? GLORIA.premioMundial : GLORIA.premio), 0) },
+    { n: "Hasta dónde llegaste", v: entero(st.rango, 0, 0, RANGOS.length - 1) * GLORIA.porRango },
+    { n: "Tu propia firma", v: st.propia ? GLORIA.firmaPropia : 0 },
+    { n: "Libertad financiera", v: Math.round(clamp(numero(cobertura, 0), 0, GLORIA.libertadTope) * GLORIA.libertad) },
+    { n: "Minijuegos ganados", v: entero(st.ganados, 0, 0, 999) * GLORIA.minijuego },
+  ].filter((x) => x.v > 0);
+  const base = piezas.reduce((a, x) => a + x.v, 0);
+  const mult = GLORIA.porEdad[entero(st.edadIni, 20, 20, 50)] || 1;
+  return { total: Math.round(base * mult), piezas, mult };
 };
 
 /* Partida corta: varios cierres de año en uno solo, para el resumen de
@@ -49117,7 +49729,7 @@ const juntarCierres = (cs) => {
   const cat = (k) => cs.reduce((a, c) => a.concat(Array.isArray(c[k]) ? c[k] : []), []);
   const suma = (k) => cs.reduce((a, c) => a + numero(c[k], 0), 0);
   const partes = {};
-  ["decisiones", "sueldo", "mercados", "otros"].forEach((k) => {
+  ["decisiones", "sueldo", "mercados", "camino", "otros"].forEach((k) => {
     partes[k] = cs.reduce((a, c) => a + numero(c.partes && c.partes[k], 0), 0);
   });
   const ascensos = cs.map((c) => c.ascenso).filter(Boolean);
@@ -49127,6 +49739,12 @@ const juntarCierres = (cs) => {
     antes: pri.cartera ? pri.cartera.antes : ult.cartera.antes,
     ret: cs.reduce((a, c) => a * (1 + numero(c.cartera && c.cartera.ret, 0)), 1) - 1,
     aporte: cs.reduce((a, c) => a + numero(c.cartera && c.cartera.aporte, 0), 0),
+    ganancias: (() => {
+      const m = new Map();
+      cs.forEach((c) => (c.cartera && Array.isArray(c.cartera.ganancias) ? c.cartera.ganancias : [])
+        .forEach((g) => m.set(g.k, (m.get(g.k) || 0) + numero(g.v, 0))));
+      return Array.from(m, ([k, v]) => ({ k, v }));
+    })(),
     camino: cs.reduce((a, c, i) => a.concat(c.cartera && Array.isArray(c.cartera.camino)
       ? (i ? c.cartera.camino.slice(1) : c.cartera.camino) : []), []),
     hitos: [],
@@ -49145,7 +49763,21 @@ const juntarCierres = (cs) => {
     patAntes: pri.patAntes, patIni: pri.patIni, partes,
     cartera: carteraJunta,
     hitosDec: pri.hitosDec,
+    camino: cs.map((c) => c.camino).filter((c) => c && c.t).pop() || ult.camino || null,
     leccion: cs.map((c) => c.leccion).filter(Boolean).pop() || null,
+    /* el legado de la etapa: de dónde partiste y dónde quedaste */
+    legado: (() => {
+      const ls = cs.map((c) => c.legado).filter(Boolean);
+      if (!ls.length) return null;
+      const a = ls[0], z = ls[ls.length - 1];
+      const piezas = [];
+      ls.forEach((l) => (l.piezas || []).forEach((p) => {
+        const ya = piezas.find((x) => x.n === p.n);
+        if (ya) ya.v = Math.round((ya.v + p.v) * 10) / 10; else piezas.push({ ...p });
+      }));
+      return { antes: a.antes, despues: z.despues, piezas, nivel: z.nivel,
+        subeNivel: ls.map((l) => l.subeNivel).filter(Boolean).pop() || null, techo: z.techo };
+    })(),
   };
 };
 
@@ -49178,6 +49810,80 @@ const MENTORES = [
   { id: "nakamotto", n: "Satoshi Nakamotto", k: "rep", aconseja: "Te aconseja especular",
     peso: { cash: 0.8, car: 0.2, hab: 0.2, red: 0, rep: -0.1, ene: 0, riesgo: 12 } },
 ];
+/* Los referentes de cada carrera (Alessandro, 10-nov-2026: «que cada
+   carrera tenga sus mentores, que no se limite a los 7»). Parodias con el
+   nombre cambiado, como los de siempre: recomiendan, no hablan. */
+const MENTORES_CARRERA = {
+  eco: [
+    { id: "smitty", carrera: "eco", n: "Adam Smitty", k: "cash", aconseja: "Te aconseja dejar que el mercado decida",
+      icono: "📈", color: "#2F8A54", d: "Cree que cada quien buscando lo suyo termina sirviendo a todos.",
+      peso: { cash: 1.0, car: 0.4, hab: 0.5, red: 0.3, rep: 0.2, ene: 0.1, riesgo: 4 } },
+    { id: "kaynes", carrera: "eco", n: "John Maynard Kaynes", k: "ene", aconseja: "Te aconseja gastar cuando otros frenan",
+      icono: "🏛️", color: "#D9643A", d: "Prefiere actuar en plena crisis antes que esperar a que el largo plazo lo arregle.",
+      peso: { cash: -0.2, cashPierde: 0.3, car: 0.6, hab: 0.6, red: 0.4, rep: 0.3, ene: 1.0, riesgo: 6, grande: 0.5 } },
+    { id: "prebischo", carrera: "eco", n: "Raúl Prebischo", k: "red", aconseja: "Te aconseja mirar la región entera",
+      icono: "🌎", color: "#2F5D8A", d: "Pensó la economía desde el sur y cree que nadie progresa vendiendo solo materia prima.",
+      peso: { cash: 0.3, car: 0.3, hab: 0.9, red: 1.3, rep: 0.6, ene: 0.2, riesgo: -6 } },
+  ],
+  con: [
+    { id: "paciolli", carrera: "con", n: "Luca Paciolli", k: "cri", aconseja: "Te aconseja que todo cuadre",
+      icono: "🧾", color: "#2A2440", d: "Fraile y matemático que ordenó el debe y el haber; nada existe si no está anotado dos veces.",
+      peso: { cash: 0.5, cashPierde: 1.5, car: 0.2, hab: 1.4, red: 0, rep: 0.3, ene: 0.2, riesgo: -12 } },
+    { id: "deloitty", carrera: "con", n: "William Deloitty", k: "rep", aconseja: "Te aconseja firmar solo lo que revisaste",
+      icono: "🔍", color: "#2F5D8A", d: "Fundó una firma de auditoría cuando casi nadie revisaba nada; su nombre es su garantía.",
+      peso: { cash: 0.3, car: 0.6, hab: 0.6, red: 0.4, rep: 1.5, ene: 0.1, riesgo: -8 } },
+    { id: "wedgwud", carrera: "con", n: "Josiah Wedgwud", k: "cash", aconseja: "Te aconseja medir cada costo",
+      icono: "📊", color: "#B24E27", d: "Alfarero que calculó cuánto le costaba cada taza y así encontró dónde se le iba la plata.",
+      peso: { cash: 1.3, cashPierde: 1.0, car: 0.7, hab: 0.4, red: 0.1, rep: 0.1, ene: -0.1, riesgo: 2, grande: 0.2 } },
+  ],
+  ing: [
+    { id: "slimm", carrera: "ing", n: "Carlos Slimm", k: "cash", aconseja: "Te aconseja comprar barato y aguantar",
+      icono: "🏗️", color: "#F2B632", d: "Ingeniero civil que lee balances como planos y compra cuando todos quieren vender.",
+      peso: { cash: 1.5, car: 0.8, hab: 0.4, red: 0.5, rep: 0, ene: 0, riesgo: 6, grande: 0.4 } },
+    { id: "eiffelo", carrera: "ing", n: "Gustavo Eiffelo", k: "rep", aconseja: "Te aconseja construir algo que se vea",
+      icono: "📐", color: "#D9643A", d: "Levantó estructuras de hierro que al principio nadie quería y después nadie quiso quitar.",
+      peso: { cash: 0.2, car: 1.0, hab: 0.6, red: 0.3, rep: 1.4, ene: -0.2, riesgo: 10, grande: 0.8 } },
+    { id: "teslo", carrera: "ing", n: "Nikola Teslo", k: "cri", aconseja: "Te aconseja estudiar hasta entender",
+      icono: "⚡", color: "#8C6BB1", d: "Inventor de noches largas que piensa más en el invento que en la factura.",
+      peso: { cash: -0.2, car: 0.3, hab: 1.7, red: -0.2, rep: 0.4, ene: -0.3, riesgo: 12 } },
+  ],
+  der: [
+    { id: "belloso", carrera: "der", n: "Andrés Belloso", k: "cri", aconseja: "Te aconseja leer bien antes de firmar",
+      icono: "📜", color: "#2A2440", d: "Redactó un código civil que medio continente tomó de modelo; confía en las reglas claras.",
+      peso: { cash: 0.2, cashPierde: 1.2, car: 0.4, hab: 1.3, red: 0.2, rep: 0.6, ene: 0.2, riesgo: -14 } },
+    { id: "ginsbueno", carrera: "der", n: "Ruth Bader Ginsbueno", k: "rep", aconseja: "Te aconseja defender tu postura",
+      icono: "⚖️", color: "#5B4785", d: "Ganó terreno caso por caso, con paciencia, y sabe que un buen voto en contra también deja huella.",
+      peso: { cash: 0, car: 0.5, hab: 0.7, red: 0.2, rep: 1.6, ene: 0.5, riesgo: 0 } },
+    { id: "linkedin", carrera: "der", n: "Abraham Linkedin", k: "red", aconseja: "Te aconseja sumar aliados",
+      icono: "🏛️", color: "#2F5D8A", d: "Abogado de pueblo que llegó lejos sentando a sus rivales en la misma mesa.",
+      peso: { cash: 0.3, car: 0.7, hab: 0.3, red: 1.5, rep: 0.8, ene: 0, riesgo: 2 } },
+  ],
+  adm: [
+    { id: "drucker", carrera: "adm", n: "Peter Druckero", k: "car", aconseja: "Te aconseja ordenar antes de crecer",
+      icono: "📘", color: "#5B4785", d: "Inventó la gerencia moderna, dicen. Cree que lo que no se mide no se maneja.",
+      peso: { cash: 0.3, car: 1.2, hab: 0.8, red: 0.2, rep: 0.4, ene: 0.1, riesgo: -4 } },
+    { id: "kotorro", carrera: "adm", n: "Philip Kotorro", k: "rep", aconseja: "Te aconseja cuidar tu marca",
+      icono: "📣", color: "#E9875A", d: "Convirtió el marketing en materia de estudio y siempre empieza por lo que necesita el cliente.",
+      peso: { cash: 0.4, car: 0.5, hab: 0.3, red: 0.8, rep: 1.5, ene: 0, riesgo: 3 } },
+    { id: "sembler", carrera: "adm", n: "Ricardo Sembler", k: "ene", aconseja: "Te aconseja delegar y descansar",
+      icono: "🧭", color: "#2F8A54", d: "Empresario brasileño que dejó a su gente elegir horario y jefe, convencido de que la confianza rinde más que el control.",
+      peso: { cash: 0.2, car: 0.4, hab: 0.4, red: 0.6, rep: 0.3, ene: 1.6, riesgo: 4 } },
+  ],
+  sis: [
+    { id: "lovelaze", carrera: "sis", n: "Ada Lovelaze", k: "cri", aconseja: "Te aconseja aprender la lógica primero",
+      icono: "💻", color: "#8C6BB1", d: "Escribió un programa antes de que existiera la computadora y vio en las máquinas mucho más que cuentas.",
+      peso: { cash: 0, car: 0.4, hab: 1.6, red: 0.1, rep: 0.7, ene: 0.2, riesgo: -3 } },
+    { id: "galperrin", carrera: "sis", n: "Marcos Galperrín", k: "car", aconseja: "Te aconseja escalar rápido",
+      icono: "🖥️", color: "#F2B632", d: "Arrancó una tienda en internet con poca plata y todavía reinvierte casi todo en crecer.",
+      peso: { cash: 0.6, car: 1.5, hab: 0.5, red: 0.4, rep: 0.1, ene: -0.4, riesgo: 16, grande: 0.7 } },
+    { id: "puertas", carrera: "sis", n: "Bill Puertas", k: "cash", aconseja: "Te aconseja cobrar por cada licencia",
+      icono: "⌨️", color: "#2F5D8A", d: "Dejó la universidad para poner su software en todas las oficinas y hoy reparte su fortuna con método.",
+      peso: { cash: 1.4, cashPierde: 0.8, car: 0.8, hab: 0.5, red: 0.3, rep: 0.5, ene: 0, riesgo: 0 } },
+  ],
+};
+Object.keys(MENTORES_CARRERA).forEach((c) => MENTORES_CARRERA[c].forEach((m) => MENTORES.push({ ...m, carrera: c })));
+/* los mentores que le tocan a una partida: los 7 y los de su carrera */
+const mentoresDe = (st) => MENTORES.filter((m) => !m.carrera || m.carrera === (st && st.estudio));
 const IDS_MENTOR = MENTORES.map((m) => m.id);
 const MENTOR = (id) => MENTORES.find((m) => m.id === id) || null;
 
@@ -49244,18 +49950,18 @@ const jugasteComo = (st) => {
   const total = entero(st && st.nDec, 0, 0, 99999);
   const afin = (st && st.afin) || {};
   if (total < 5) return null;
-  const lista = MENTORES.map((m) => ({ m, pct: Math.round(100 * entero(afin[m.id], 0, 0, 99999) / total) }))
+  const lista = mentoresDe(st).map((m) => ({ m, pct: Math.round(100 * entero(afin[m.id], 0, 0, 99999) / total) }))
     .sort((a, b) => b.pct - a.pct);
   return { primero: lista[0], segundo: lista[1], total };
 };
 
 /* La escena de elegir mentor: la primera del primer año (o del año
    siguiente, en una partida empezada antes de que existieran). */
-const escenaMentor = () => ({
+const escenaMentor = (st) => ({
   id: ID_MENTOR, min: 0, max: 6, mentores: true,
   t: "¿Quién te aconseja?",
-  x: "Siete personas que se hicieron ricas de siete formas distintas. Elige a quién quieres oír en cada decisión.",
-  o: MENTORES.map((m) => ({
+  x: "Gente que se hizo rica de formas muy distintas, y los referentes de tu carrera. Elige a quién quieres oír en cada decisión.",
+  o: mentoresDe(st).map((m) => ({
     t: m.n, mentorId: m.id,
     d: { msg: m.n + " te va a aconsejar a partir de ahora." },
   })),
@@ -49265,6 +49971,17 @@ const escenaMentor = () => ({
 function AvatarMentor({ id, tam }) {
   const n = numero(tam, 56);
   const comun = { width: n, height: n, viewBox: "0 0 120 120", "aria-hidden": "true", focusable: "false", className: "ea-avatar" };
+  const mc = MENTORES.find((x) => x.id === id && x.carrera);
+  if (mc) {
+    const ini = String(mc.n).split(" ").map((p) => p.charAt(0)).join("").slice(0, 2).toUpperCase();
+    return (
+      <svg {...comun}>
+        <circle cx="60" cy="60" r="60" fill={mc.color || "#5B4785"} />
+        <text x="60" y="58" textAnchor="middle" fontSize="40">{mc.icono || "📘"}</text>
+        <text x="60" y="98" textAnchor="middle" fontSize="20" fontWeight="800" fill="#FFF4DC" fontFamily="Bricolage Grotesque, sans-serif">{ini}</text>
+      </svg>
+    );
+  }
   if (id === "tusk") return (
     <svg {...comun}>
       <circle cx="60" cy="60" r="60" fill="#2A2440" />
@@ -49387,7 +50104,14 @@ const escenaDeId = (id, st) => {
   if (id === ID_PRE) {
     try { return escenaPretemporada(st); } catch (e) { return null; }
   }
-  if (id === ID_MENTOR) return escenaMentor();
+  if (id === ID_MENTOR) return escenaMentor(st);
+  if (id === ID_CLASE) return escenaClase();
+  if (id === ID_ARQ) {
+    try { return escenaArquetipo(st); } catch (e) { return null; }
+  }
+  if (id === ID_CAMINO) {
+    try { return escenaCamino(st); } catch (e) { return null; }
+  }
   /* el contrato trae ofertas de otras firmas, armadas con la semilla del año */
   if (id === ESCENA_CONTRATO.id) {
     try { return escenaContrato(st); } catch (e) { return ESCENA_CONTRATO; }
@@ -49399,6 +50123,8 @@ const escenaDeId = (id, st) => {
   if (id === DECISION_RAMA.id) {
     try { return decisionRama(st); } catch (e) { return null; }
   }
+  const su = SUSTOS.find((x) => x.id === id);
+  if (su) return su;
   const e = ESCENAS_FIJAS.find((x) => x.id === id);
   return e || null;
 };
@@ -49412,7 +50138,7 @@ const colaDeIds = (ids, st) =>
     /* una cola guardada justo al montar tu firma no trae escenas de empleado */
     .filter((e) => !(sinJefe(st) && esDeEmpleado(e)));
 
-const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA, [ID_PRE, ID_MENTOR]);
+const IDS_ESCENA_VALIDOS = ESCENAS_FIJAS.map((e) => e.id).concat(IDS_FIRMA, [ID_PRE, ID_MENTOR, ID_CLASE, ID_ARQ]);
 
 
 
@@ -49577,16 +50303,39 @@ const sanear = (bruto) => {
      de lo que ya tenía en pantalla. */
   st.temas = unicos(listaDe(r.temas, (x) => TEMAS.some((t) => t.id === x), 60));
   st.jugados = unicos(listaDe(r.jugados, (x) => !!JUEGOS[x], 30));
+  st.recientes = listaDe(r.recientes, (x) => !!JUEGOS[x], 6);
+  st.animo = entero(r.animo, 0, -2, 2);
+  st.rel = relDe(r);
+  st.empresa = r.empresa && typeof r.empresa === "object" && CAMINOS[r.empresa.id] ? {
+    id: r.empresa.id, n: texto(r.empresa.n, CAMINOS[r.empresa.id].nombres[0], 60),
+    valor: clamp(numero(r.empresa.valor, CAMINOS[r.empresa.id].valor[0]), 0, 1e12),
+    parte: clamp(numero(r.empresa.parte, 0), 0, 1), desde: entero(r.empresa.desde, 0, 0, 99),
+    decs: listaDe(r.empresa.decs, (x) => Number.isInteger(x) && x >= 0 && x < 50, 20),
+    hist: (Array.isArray(r.empresa.hist) ? r.empresa.hist : []).filter((h) => h && typeof h.t === "string")
+      .slice(-12).map((h) => ({ t: texto(h.t, "", 140), pct: clamp(numero(h.pct, 0), -1, 1), a: entero(h.a, 0, 0, 99) })),
+  } : null;
   st.animar = r.animar === true ? true : r.animar === false ? false : null;
   /* El patrón puede ser una firma de la tabla o una firma tuya, así que
      se acota por longitud en vez de por lista cerrada. */
   st.patron = texto(r.patron, "", 48);
   st.propia = r.propia === true;
   st.premios = unicos(listaDe(r.premios, (x) => PREMIOS.some((p) => p.id === x), 20));
-  st.cola = listaDe(r.cola, (x) => IDS_ESCENA_VALIDOS.indexOf(x) >= 0, 14).map((x) => entero(x, 0, 0, 99999));
+  /* los sustos y la decisión de tu empresa se arman fuera de
+     ESCENAS_FIJAS: sin esto, una cola guardada justo antes de ellos
+     los perdía al recargar */
+  st.cola = listaDe(r.cola, (x) => IDS_ESCENA_VALIDOS.indexOf(x) >= 0
+    || IDS_SUSTO.indexOf(x) >= 0 || x === ID_CAMINO, 14).map((x) => entero(x, 0, 0, 99999));
   st.sueldoMult = clamp(numero(r.sueldoMult, 1), 0.6, TOPE_MULT);
   /* la semilla de la pretemporada; un guardado viejo cae en 0 y sigue jugable */
   st.semilla = entero(r.semilla, 0, 0, 2e9);
+  /* Una partida que eligió su camino antes de que existieran las
+     empresas: la suya nace al cargarla (o su firma, si ya la montó). */
+  if (!st.empresa && st.propia && CAMINOS[st.estudio + "-propia"]) {
+    try { st.empresa = nuevoCamino(st.estudio + "-propia", st, st.patron); } catch (e) { st.empresa = null; }
+  }
+  if (!st.empresa && st.rama && CAMINOS[st.rama]) {
+    try { st.empresa = nuevoCamino(st.rama, st); } catch (e) { st.empresa = null; }
+  }
   /* la carrera del día: su fecha, sus tres objetivos y los minijuegos ganados */
   st.dia = esFecha(r.dia) ? r.dia : null;
   st.objDia = st.dia ? unicos(listaDe(r.objDia, (x) => IDS_OBJ_DIA.indexOf(x) >= 0, 3)) : [];
@@ -49613,6 +50362,16 @@ const sanear = (bruto) => {
   st.startup = r.startup === true;
   /* el mentor y cuántas decisiones coincidiste con cada uno */
   st.mentor = IDS_MENTOR.indexOf(r.mentor) >= 0 ? r.mentor : null;
+  /* tu arranque y tu legado (como El Ídolo). Un guardado de antes no
+     trae clase: juega como técnico, que es como se jugaba */
+  st.clase = IDS_CLASE.indexOf(r.clase) >= 0 ? r.clase : null;
+  st.arq = IDS_ARQ.indexOf(r.arq) >= 0 ? r.arq : null;
+  st.legado = Math.round(clamp(numero(r.legado, 0), 0, 100) * 10) / 10;
+  st.legadoMax = Math.max(st.legado, Math.round(clamp(numero(r.legadoMax, 0), 0, 100) * 10) / 10);
+  st.legPatron = texto(r.legPatron, "", 48);
+  st.legAnos = entero(r.legAnos, 0, 0, 60);
+  st.legPropia = r.legPropia === true;
+  st.legCambio = r.legCambio === true;
   st.nDec = entero(r.nDec, 0, 0, 99999);
   st.afin = {};
   IDS_MENTOR.forEach((id) => { const v = entero(r.afin && r.afin[id], 0, 0, 99999); if (v) st.afin[id] = Math.min(v, st.nDec); });
@@ -49942,7 +50701,7 @@ const JERGA_ESCENA = [
   [/\bvp\b/, { n: "VP", x: "Vicepresidente: en banca es un cargo intermedio, el jefe directo de los analistas. No dirige la firma: dirige el trabajo del día." }],
   [/\bcompliance\b/i, { n: "Compliance", x: "El área que vigila que la firma y su gente cumplan las reglas: nada de usar información secreta, nada de conflictos de interés." }],
   [/\bposici[óo]n(es)?\b/i, { n: "Posición", x: "Lo que tienes comprado de algo. «Una posición que sube 70%» es una inversión tuya que ya vale 70% más de lo que pagaste." }],
-  [/headhunter|cazatalentos/i, { n: "Headhunter", x: "Alguien a quien las empresas pagan para encontrar y convencer a gente que ya trabaja en otro sitio." }],
+  [/headhunter|cazatalentos/i, { n: "Headhunter", x: "Alguien a quien las empresas pagan para encontrar y convencer a gente que ya trabaja en otro lado." }],
   [/roadshow/i, { n: "Roadshow", x: "Una gira de reuniones con inversionistas, ciudad por ciudad, para venderles una emisión o una empresa." }],
   [/colocaci[óo]n/i, { n: "Colocación", x: "Vender acciones o bonos nuevos de una empresa a inversionistas para que la empresa consiga dinero." }],
   [/retainer/i, { n: "Retainer", x: "Un pago fijo cada mes por estar disponible para un cliente, aparte de lo que se cobra si la operación sale." }],
@@ -50094,7 +50853,7 @@ function JuegoPrecision({ ayuda, onFin }) {
   );
 }
 
-/* ---- Peinar el legajo · memoria de trabajo ----
+/* ---- Repasar el expediente · memoria de trabajo ----
    Reescrito: cada casilla tiene su propio color y su propio nombre, así
    que la secuencia se recuerda como "cobre, verde, vino" y no como tres
    cuadrados grises indistinguibles. Y ahora hay tres vidas: fallar una
@@ -50358,135 +51117,192 @@ function JuegoOjo({ ayuda, onFin }) {
   );
 }
 
-/* ---- La negociación ----
-   Esto era una barra de 0 a 100 con un número escondido: adivinar, sin
-   nadie enfrente y sin nada que perder. Ahora enfrente hay alguien con
-   un carácter que no ves, y cada carta que juegas le mueve el precio y
-   la paciencia de forma distinta según quién sea. Leerlo bien gana;
-   leerlo mal hace que se levante y te quedes sin trato.
-   Se sigue llamando «anclaje» para que ninguna escena tenga que cambiar. */
+/* ---- La negociación, como una mesa de fichajes ----
+   La barra de 0 a 100 y las cuatro cartas no se entendían: «¿50 de
+   qué?» (Alessandro, 9-nov-2026: «que sean como en modo carrera de
+   FIFA»). Ahora hay una mesa con cifras: lo que te ofrecen, lo que
+   pides y, en el contrato, tu sueldo de hoy y los años. Pones tu cifra
+   y propones; la otra parte acepta, te contraoferta o te dice que no.
+   Tres propuestas como mucho, y una paciencia que se acaba si pides de
+   más. Tu atributo te da una lectura de hasta dónde llegaría.
+   Se sigue llamando «anclaje» para que ninguna escena tenga que cambiar.
+   Todo se mide en % sobre lo de hoy: en el contrato, de aumento de
+   sueldo; en otra escena, por encima de su primera oferta. */
 const TIPOS_NEG = ["apurado", "duro", "orgulloso"];
-/* [cuánto mueve el precio, cuánto mueve la paciencia] */
-const NEG_EFECTO = {
-  pedir: { apurado: [12, -1], duro: [6, -1], orgulloso: [10, -2] },
-  ceder: { apurado: [-6, 0], duro: [-4, 1], orgulloso: [-2, 2] },
-  competencia: { apurado: [15, 0], duro: [4, -2], orgulloso: [14, -1] },
-  plantarse: { apurado: [8, -1], duro: [10, 0], orgulloso: [0, -2] },
+/* hasta dónde llega cada carácter (en %), cuánto se acerca al
+   contraofertar y cuánta paciencia pierde con un pedido fuera de lugar */
+const NEG_CARACTER = {
+  apurado: { tope: [19, 26], acerca: 0.75, enfado: 1 },
+  duro: { tope: [12, 18], acerca: 0.45, enfado: 1 },
+  orgulloso: { tope: [15, 22], acerca: 0.6, enfado: 2 },
 };
-const CARTAS_NEG = [
-  { k: "pedir", n: "Pedir más" },
-  { k: "ceder", n: "Ceder un poco" },
-  { k: "competencia", n: "Mostrar la oferta de la competencia" },
-  { k: "plantarse", n: "Plantarte" },
-];
+const NEG_ABRE = 4;          /* su primera oferta: +4% */
+const NEG_MAX = 40;          /* nadie pide más de +40% */
+const NEG_RONDAS = 3;
+const NEG_EXITO = 18;        /* cerrar en +18% o más: muy buen trato */
+const NEG_PARCIAL = 7;       /* desde +7%: trato justo */
+/* los años del contrato: más años, más te pagan por quedarte */
+const NEG_ANOS = [{ anos: 2, extra: -3 }, { anos: 3, extra: 0 }, { anos: 4, extra: 3 }];
 const FRASES_NEG = {
   apurado: ["Necesito cerrarlo hoy: mañana tengo comité.", "Si lo firmamos ahora nos ahorramos una semana de correos.", "Miro el reloj y te escucho. Dime tu número."],
-  duro: ["Esto lo hago todas las semanas. No me impresionas.", "Si me vienes con otra oferta, sé que es un farol.", "Respeto a quien sabe lo que vale y no se mueve."],
-  orgulloso: ["Nadie me había hablado así en esta mesa.", "Quiero salir de aquí sintiendo que también gané algo.", "Si me arrinconas, me levanto. Dame algo y hablamos."],
+  duro: ["Esto lo hago todas las semanas. No me impresionas.", "Mi presupuesto es el que es. No lo estiro por nadie.", "Respeto a quien sabe lo que vale, pero no pago de más."],
+  orgulloso: ["Nadie me había hablado así en esta mesa.", "Quiero salir de aquí sintiendo que también gané algo.", "Si me arrinconas, me levanto. Pide con respeto y hablamos."],
   neutras: ["Bueno... veamos qué propones.", "Mmm. Sigue.", "Te escucho."],
 };
 const REVELA_NEG = {
-  apurado: "La otra parte estaba APURADA: quería cerrar ya, y presionar le sumaba.",
-  duro: "La otra parte era DURA: respetaba a quien se planta, y los faroles no le movían.",
-  orgulloso: "La otra parte era ORGULLOSA: necesitaba ganar algo antes de ceder.",
+  apurado: "La otra parte estaba APURADA: quería cerrar ya y estiraba bastante.",
+  duro: "La otra parte era DURA: tenía un techo bajo y no lo movía.",
+  orgulloso: "La otra parte era ORGULLOSA: pedir de más le ofendía el doble.",
 };
-/* Con más ayuda, la frase es más a menudo una pista del carácter real. */
+/* con más ayuda, la frase es más a menudo una pista del carácter real */
 const fraseRival = (c, rnd) => {
   const pozo = rnd() < c.claridad ? FRASES_NEG[c.tipo] : FRASES_NEG.neutras;
   return pozo[Math.min(pozo.length - 1, Math.floor(rnd() * pozo.length))];
 };
-const casoNegociacion = (ayuda, rnd = Math.random) => {
+/* hasta dónde llega con esos años de contrato (sin años, tal cual) */
+const topeNeg = (c, anos) => {
+  const a = NEG_ANOS.find((x) => x.anos === anos);
+  return clamp(c.tope + (a ? a.extra : 0), NEG_ABRE, NEG_MAX);
+};
+const casoNegociacion = (ayuda, rnd = Math.random, conAnos = false) => {
   const tipo = TIPOS_NEG[Math.min(2, Math.floor(numero(rnd(), 0) * 3))];
-  const c = { tipo, precio: 50, paciencia: 3, ronda: 1, usada: false, jugadas: [], fin: null,
-    claridad: clamp(0.4 + numero(ayuda, 30) / 180, 0.4, 0.95) };
+  const car = NEG_CARACTER[tipo];
+  const ay = clamp(numero(ayuda, 30), 0, 100);
+  /* tu atributo estira un poco lo que están dispuestos a dar */
+  const tope = Math.round(car.tope[0] + numero(rnd(), 0) * (car.tope[1] - car.tope[0]) + ay / 30);
+  const claridad = clamp(0.4 + ay / 180, 0.4, 0.95);
+  /* tu lectura: un rango que contiene su techo, más estrecho cuanto más sabes */
+  const ancho = Math.round(clamp(14 - ay / 9, 3, 14));
+  const bajo = Math.max(NEG_ABRE, tope - Math.round(numero(rnd(), 0) * ancho));
+  const c = { tipo, tope, paciencia: 3, ronda: 1, oferta: NEG_ABRE, anos: conAnos ? 3 : null,
+    claridad, lectura: [bajo, bajo + ancho], jugadas: [], fin: null, cierre: null };
   c.frases = [0, 1, 2].map(() => fraseRival(c, rnd));
   return c;
 };
-const jugadaNegociacion = (c, carta, ruido = 0) => {
-  if (!c || c.fin || !NEG_EFECTO[carta]) return c;
-  if (carta === "competencia" && c.usada) return c;
-  const [dp, dq] = NEG_EFECTO[carta][c.tipo];
-  const n = {
-    ...c,
-    precio: clamp(c.precio + dp + (dp ? ruido : 0), 0, 100),
-    paciencia: clamp(c.paciencia + dq, 0, 5),
-    usada: c.usada || carta === "competencia",
-    jugadas: c.jugadas.concat(carta),
-  };
+/* Propones «pide» % (y, en el contrato, unos años). Acepta si cabe; si
+   te pasas poco, contraoferta acercándose a su techo; si te pasas mucho,
+   te dice que no y pierde más paciencia. */
+const proponerNeg = (c, pideBruto, anosBruto) => {
+  if (!c || c.fin) return c;
+  const pide = clamp(Math.round(numero(pideBruto, 0)), 0, NEG_MAX);
+  const anos = c.anos == null ? null : (NEG_ANOS.find((x) => x.anos === anosBruto) || NEG_ANOS[1]).anos;
+  const tope = topeNeg(c, anos);
+  const car = NEG_CARACTER[c.tipo];
+  let n = { ...c, anos };
+  if (pide <= tope) {
+    return { ...n, fin: "acuerdo", cierre: Math.max(pide, c.oferta), jugadas: c.jugadas.concat({ pide, anos, r: "acepta" }) };
+  }
+  const lejos = pide - tope > 6;
+  const oferta = Math.max(c.oferta, Math.min(tope, Math.round(c.oferta + (tope - c.oferta) * car.acerca)));
+  /* pedir un poco de más gasta paciencia pero no te echa de la mesa;
+     solo un pedido fuera de lugar puede hacer que se levante */
+  n = { ...n, oferta, paciencia: lejos ? clamp(c.paciencia - car.enfado - 1, 0, 5) : Math.max(1, c.paciencia - 1),
+    jugadas: c.jugadas.concat({ pide, anos, r: lejos ? "no" : "contra", oferta }) };
   if (n.paciencia <= 0) return { ...n, fin: "levanta" };
-  if (c.ronda >= 3) return { ...n, fin: "acuerdo" };
+  if (c.ronda >= NEG_RONDAS) return { ...n, fin: "ultima" };
   return { ...n, ronda: c.ronda + 1 };
 };
+/* aceptar lo que hay sobre la mesa (también su última oferta) */
+const aceptarNeg = (c) => (!c || (c.fin && c.fin !== "ultima") ? c
+  : { ...c, fin: "acuerdo", cierre: c.oferta, jugadas: c.jugadas.concat({ acepto: c.oferta }) });
+const irseNeg = (c) => (!c || (c.fin && c.fin !== "ultima") ? c : { ...c, fin: "levanta" });
 const nivelNegociacion = (c) =>
-  !c || c.fin !== "acuerdo" ? "fallo" : c.precio >= 68 ? "exito" : c.precio >= 52 ? "parcial" : "fallo";
+  !c || c.fin !== "acuerdo" ? "fallo" : c.cierre >= NEG_EXITO ? "exito" : c.cierre >= NEG_PARCIAL ? "parcial" : "fallo";
+/* el sueldo con un aumento de pct %, sin pasar del techo de la carrera */
+const sueldoNeg = (ctx, pct) =>
+  Math.round(Math.min(numero(ctx && ctx.techo, Infinity), numero(ctx && ctx.actual, 0) * (1 + numero(pct, 0) / 100)));
 
 function JuegoAnclaje({ ayuda, onFin, ctx }) {
-  const [c, setC] = useState(() => casoNegociacion(ayuda));
-  const jugar = (k) => {
-    if (c.fin) return;
-    setC(jugadaNegociacion(c, k, Math.round(Math.random() * 2) - 1));
-  };
-  const nombre = (k) => (CARTAS_NEG.find((x) => x.k === k) || {}).n || k;
-  const nivel = c.fin ? nivelNegociacion(c) : null;
-  /* En el contrato la mesa habla en dinero: tu sueldo de hoy y el que
-     estás pidiendo. En el resto de escenas, el precio de 0 a 100. */
-  const sueldo = ctx && numero(ctx.actual, 0) > 0;
-  const pct = Math.round(aumentoNeg(c.precio) * 100);
-  const terminar = () => onFin(nivel, { precio: c.precio, acuerdo: c.fin === "acuerdo" });
+  const contrato = !!(ctx && numero(ctx.actual, 0) > 0);
+  const [c, setC] = useState(() => casoNegociacion(ayuda, Math.random, contrato));
+  const [pide, setPide] = useState(NEG_ABRE + 12);
+  const [anos, setAnos] = useState(3);
+  const nivel = c.fin === "acuerdo" || c.fin === "levanta" ? nivelNegociacion(c) : null;
+  const abierta = !c.fin || c.fin === "ultima";
+  const pctTxt = (pct) => (pct > 0 ? "+" + pct + "%" : contrato ? "sin aumento" : "+0%");
+  const plata = (pct) => (contrato ? "USD " + fmt(sueldoNeg(ctx, pct)) : pctTxt(pct));
+  const conPct = (pct) => plata(pct) + (contrato ? " (" + pctTxt(pct) + ")" : "");
+  const ult = c.jugadas[c.jugadas.length - 1];
+  const respuesta = !ult || ult.acepto != null ? null
+    : ult.r === "acepta" ? "«Acepto. Trato hecho.»"
+    : ult.r === "contra" ? "«No llego a tanto. Te ofrezco " + conPct(ult.oferta) + ".»"
+    : "«Eso está fuera de lugar. Lo mío sigue en " + conPct(ult.oferta) + ".»";
+  const terminar = () => onFin(nivel, { pct: c.fin === "acuerdo" ? c.cierre : 0, acuerdo: c.fin === "acuerdo", anos: c.anos });
+  const paso = (d) => setPide((p) => clamp(p + d, 0, NEG_MAX));
+  const tuyo = abierta ? pide : (c.cierre != null ? c.cierre : pide);
 
   return (
     <div className="ea-jw">
       <div className="ea-jinfo ea-dis">
-        <span>{c.fin ? "Negociación cerrada" : "Ronda " + c.ronda + " de 3"}</span>
-        <span>Paciencia {"●".repeat(c.paciencia)}{"○".repeat(Math.max(0, 5 - c.paciencia))}</span>
+        <span>{c.fin === "ultima" ? "Su última oferta" : c.fin ? "Negociación cerrada" : "Propuesta " + c.ronda + " de " + NEG_RONDAS}</span>
+        <span>Paciencia {"●".repeat(c.paciencia)}{"○".repeat(Math.max(0, 3 - c.paciencia))}</span>
       </div>
-      {sueldo ? (
-        <div>
-          <div className="ea-anclaE ea-dis"><span>Hoy cobras</span><span>USD {fmt(ctx.actual)} al año</span></div>
-          <div className="ea-anclaN">USD {fmt(c.fin === "levanta" ? ctx.actual : sueldoNeg(ctx, c.precio))}</div>
-          <div className="ea-anclaE ea-dis">
-            <span>{c.fin === "levanta" ? "sin trato: sin aumento"
-              : (c.fin ? "lo que cerraste: " : "lo que pides: ") + (pct > 0 ? "+" + pct + "%" : "sin aumento")}</span>
-            <span>muy buen trato desde +{Math.round(aumentoNeg(68) * 100)}%</span>
+      {/* la mesa: cada término, lo que hay y lo que pides */}
+      <div className="ea-negMesa">
+        <div className={"ea-negFila ea-negCab ea-dis" + (contrato ? " c4" : "")}>
+          <span></span>{contrato && <span>Hoy</span>}<span>Su oferta</span><span>Tú pides</span>
+        </div>
+        <div className={"ea-negFila" + (contrato ? " c4" : "")}>
+          <span className="ea-dis">{contrato ? "Sueldo al año" : "Sobre su oferta"}</span>
+          {contrato && <span className="ea-mono">USD {fmt(ctx.actual)}</span>}
+          <span className="ea-mono">{plata(c.oferta)}{contrato && <small>{pctTxt(c.oferta)}</small>}</span>
+          <span className="ea-mono ea-negPide">{plata(tuyo)}{contrato && <small>{pctTxt(tuyo)}</small>}</span>
+        </div>
+        {contrato && (
+          <div className="ea-negFila c4">
+            <span className="ea-dis">Años de contrato</span>
+            <span className="ea-mono">—</span>
+            <span className="ea-mono">3</span>
+            <span className="ea-mono ea-negPide">{c.fin ? (c.anos || 3) : anos}</span>
           </div>
-        </div>
-      ) : (
-        <div>
-          <div className="ea-anclaN">{c.precio}</div>
-          <div className="ea-anclaE ea-dis"><span>tu precio, de 0 a 100</span><span>éxito desde 68</span></div>
-        </div>
-      )}
+        )}
+      </div>
       {!c.fin && (
-        <p className="ea-memoTxt ea-negFrase">«{c.frases[c.ronda - 1]}»</p>
+        <div>
+          <div className="ea-negCtl">
+            <button className="ea-negPaso" aria-label="Pedir menos" onClick={() => paso(-2)} disabled={pide <= 0}>−</button>
+            <span className="ea-dis">{contrato ? "Aumento que pides: " + pctTxt(pide) : "Pides " + pctTxt(pide) + " sobre su oferta"}</span>
+            <button className="ea-negPaso" aria-label="Pedir más" onClick={() => paso(2)} disabled={pide >= NEG_MAX}>+</button>
+          </div>
+          {contrato && (
+            <div className="ea-negCtl">
+              {NEG_ANOS.map((x) => (
+                <button key={x.anos} className={"ea-negAno" + (anos === x.anos ? " on" : "")} onClick={() => setAnos(x.anos)}>
+                  {x.anos} años{x.extra > 0 ? " · pagan más" : x.extra < 0 ? " · pagan menos" : ""}
+                </button>
+              ))}
+            </div>
+          )}
+          <p className="ea-negLee">
+            Tu lectura: aceptaría hasta entre {pctTxt(c.lectura[0])} y {pctTxt(c.lectura[1])}{contrato ? ", con 3 años" : ""}.
+          </p>
+          <p className="ea-memoTxt ea-negFrase">«{c.frases[c.ronda - 1]}»</p>
+        </div>
       )}
+      {respuesta && <p className="ea-negResp ea-dis">{respuesta}</p>}
       {!c.fin && (
         <div className="ea-negCartas">
-          {CARTAS_NEG.map((x) => (
-            <button key={x.k} className="ea-mini" style={{ marginTop: 0 }}
-              disabled={x.k === "competencia" && c.usada}
-              onClick={() => jugar(x.k)}>{x.n}</button>
-          ))}
+          <button className="ea-btn" style={{ marginTop: 0 }} onClick={() => setC(proponerNeg(c, pide, contrato ? anos : null))}>Proponer</button>
+          {c.ronda > 1 && (
+            <button className="ea-mini" style={{ marginTop: 0 }} onClick={() => setC(aceptarNeg(c))}>Aceptar su oferta: {conPct(c.oferta)}</button>
+          )}
         </div>
       )}
-      {c.jugadas.length > 0 && (
-        <div style={{ marginTop: 10, fontSize: 13, color: "var(--gris)" }}>
-          {c.jugadas.map((k, i) => <div key={i}>{i + 1}. {nombre(k)}</div>)}
+      {c.fin === "ultima" && (
+        <div className="ea-negCartas">
+          <button className="ea-btn" style={{ marginTop: 0 }} onClick={() => setC(aceptarNeg(c))}>Aceptar {conPct(c.oferta)}</button>
+          <button className="ea-mini" style={{ marginTop: 0 }} onClick={() => setC(irseNeg(c))}>Levantarte sin trato</button>
         </div>
       )}
-      {c.fin && (
+      {(c.fin === "acuerdo" || c.fin === "levanta") && (
         <div style={{ marginTop: 12 }}>
           <div className="ea-dis" style={{ fontSize: 15, color: nivel === "exito" ? "var(--verde)" : nivel === "parcial" ? "var(--cobre)" : "var(--rojo)" }}>
-            {sueldo
-              ? (c.fin === "levanta" ? "Se levantó de la mesa. Te quedas con lo que cobras: USD " + fmt(ctx.actual) + " al año."
-                : "Cerraste en USD " + fmt(sueldoNeg(ctx, c.precio)) + " al año: "
-                  + (pct > 0 ? "+" + pct + "% sobre lo que cobrabas. " : "sin aumento. ")
-                  + (nivel === "exito" ? "Muy buen trato." : nivel === "parcial" ? "Trato justo, sin más." : "Dejaste demasiado sobre la mesa."))
-              : c.fin === "levanta" ? "Se levantó de la mesa. No hay trato."
-              : nivel === "exito" ? "Cerraste en " + c.precio + ". Muy buen trato."
-              : nivel === "parcial" ? "Cerraste en " + c.precio + ". Trato justo, sin más."
-              : "Cerraste en " + c.precio + ". Dejaste demasiado sobre la mesa."}
+            {c.fin === "levanta"
+              ? (contrato ? "No hay trato. Te quedas con lo que cobras: USD " + fmt(ctx.actual) + " al año." : "Se levantó de la mesa. No hay trato.")
+              : (contrato ? "Firmas por " + conPct(c.cierre) + " al año, " + (c.anos || 3) + " años. " : "Cerraste en " + pctTxt(c.cierre) + " sobre su primera oferta. ")
+                + (nivel === "exito" ? "Muy buen trato." : nivel === "parcial" ? "Trato justo, sin más." : "Dejaste demasiado sobre la mesa.")}
           </div>
-          <p className="ea-memoTxt">{REVELA_NEG[c.tipo]}</p>
+          <p className="ea-memoTxt">{REVELA_NEG[c.tipo]} Llegaba hasta {pctTxt(topeNeg(c, c.anos))}.</p>
           <button className="ea-btn" onClick={terminar}>Continuar</button>
         </div>
       )}
@@ -50698,12 +51514,20 @@ const PREGUNTA_RESERVA = {
   nv: 1,
 };
 
-function JuegoQuiz({ ayuda, nivel, onFin, modo, temas }) {
+function JuegoQuiz({ ayuda, nivel, onFin, modo, temas, ctx: ctxCarrera }) {
   const nv = clamp(numero(nivel, 1), 1, 5);
   const total = largoExamen(nv);
   const [preg] = useState(() => {
     let crudas = [];
     try { crudas = armarExamen(nv, total, temas) || []; } catch (e) { crudas = []; }
+    /* una de las tres, a veces, es de tu carrera */
+    try {
+      const propias = ctxCarrera && ctxCarrera.estudio && Array.isArray(CARRERA_PREGUNTAS[ctxCarrera.estudio]) ? CARRERA_PREGUNTAS[ctxCarrera.estudio].filter((x) => numero(x.nv, 1) <= nv + 1) : [];
+      if (propias.length && crudas.length && Math.random() < 0.6) {
+        const p = propias[Math.floor(Math.random() * propias.length)];
+        if (!crudas.some((x) => x.q === p.q)) crudas[Math.floor(Math.random() * crudas.length)] = { ...p, carrera: true };
+      }
+    } catch (e) {}
     crudas = crudas.filter(preguntaValida);
     while (crudas.length === 0) crudas = [PREGUNTA_RESERVA];
     return crudas.map((p) => {
@@ -50848,13 +51672,13 @@ const CUENTAS = [
     const v = [80, 100, 120, 150, 200][Math.floor(Math.random() * 5)];
     const mrg = [10, 15, 20, 25][Math.floor(Math.random() * 4)];
     const u = v * mrg / 100;
-    return { q: `Ventas de ${v} y utilidad de ${u}. El margen es`, ops: [mrg, mrg + 5, Math.round(u / (v + u) * 100)], c: mrg, u: "%" };
+    return { q: `Ventas de ${v} millones y utilidad de ${u} millones. El margen es`, ops: [mrg, mrg + 5, Math.round(u / (v + u) * 100)], c: mrg, u: "%" };
   } },
   { min: 1, f: () => {
     const compra = [40, 50, 80, 120][Math.floor(Math.random() * 4)];
     const f = [1.25, 1.5, 1.75, 2][Math.floor(Math.random() * 4)];
     const c = Math.round((f - 1) * 100);
-    return { q: `Compraste a ${compra} y vendiste a ${compra * f}. Tu retorno es`, ops: [c, Math.round((1 - 1 / f) * 100), c + 10], c, u: "%" };
+    return { q: `Compraste a USD ${compra} y vendiste a USD ${String(compra * f).replace(".", ",")}. Tu retorno es`, ops: [c, Math.round((1 - 1 / f) * 100), c + 10], c, u: "%" };
   } },
   { min: 1, f: () => {
     const r = [4, 6, 8, 9, 12][Math.floor(Math.random() * 5)];
@@ -50884,7 +51708,7 @@ const CUENTAS = [
     const tasa = [8, 10, 12][Math.floor(Math.random() * 3)];
     const int = d * tasa / 100;
     const c = +(eb / int).toFixed(1);
-    return { q: `EBITDA de ${eb} y deuda de ${d} al ${tasa}%. La cobertura de intereses es`, ops: [c, +(eb / d * 10).toFixed(1), +(int / eb).toFixed(1)], c, u: " veces" };
+    return { q: `EBITDA de ${eb} millones y deuda de ${d} millones al ${tasa}%. La cobertura de intereses es`, ops: [c, +(eb / d * 10).toFixed(1), +(int / eb).toFixed(1)], c, u: " veces" };
   } },
   { min: 3, f: () => {
     const acc = [80, 100, 120][Math.floor(Math.random() * 3)];
@@ -50898,7 +51722,7 @@ const CUENTAS = [
     const dep = [10, 15, 20][Math.floor(Math.random() * 3)];
     const capex = [15, 25, 30][Math.floor(Math.random() * 3)];
     const c = Math.round(ebit * (1 - tax / 100) + dep - capex);
-    return { q: `EBIT de ${ebit}, impuesto ${tax}%, depreciación ${dep} y capex ${capex}, sin cambio en capital de trabajo. El flujo libre a la firma es`, ops: [c, Math.round(ebit + dep - capex), Math.round(ebit * (1 - tax / 100) - dep + capex)], c, u: "" };
+    return { q: `EBIT de ${ebit} millones, impuesto ${tax}%, depreciación ${dep} millones y capex ${capex} millones, sin cambio en capital de trabajo. El flujo libre a la firma es`, ops: [c, Math.round(ebit + dep - capex), Math.round(ebit * (1 - tax / 100) - dep + capex)], c, u: "" };
   } },
   { min: 4, f: () => {
     const we = [40, 50, 60][Math.floor(Math.random() * 3)];
@@ -50906,27 +51730,27 @@ const CUENTAS = [
     const kd = [8, 9, 10][Math.floor(Math.random() * 3)];
     const tax = 30;
     const c = +((we / 100) * ke + (1 - we / 100) * kd * (1 - tax / 100)).toFixed(1);
-    return { q: `Capital propio ${we}% al ${ke}, deuda al ${kd} con impuesto de 30. El WACC es`, ops: [c, +((we / 100) * ke + (1 - we / 100) * kd).toFixed(1), +(((ke + kd) / 2)).toFixed(1)], c, u: "%" };
+    return { q: `Capital propio ${we}% al ${ke}%, deuda al ${kd}% con impuesto de 30%. El WACC es`, ops: [c, +((we / 100) * ke + (1 - we / 100) * kd).toFixed(1), +(((ke + kd) / 2)).toFixed(1)], c, u: "%" };
   } },
   { min: 4, f: () => {
     const eq = [30, 40, 50][Math.floor(Math.random() * 3)];
     const m = [2, 2.5, 3][Math.floor(Math.random() * 3)];
     const anos = [4, 5][Math.floor(Math.random() * 2)];
     const c = Math.round((Math.pow(m, 1 / anos) - 1) * 100);
-    return { q: `Pusiste ${eq} de capital y sales en ${Math.round(eq * m)} a los ${anos} años. Tu TIR anual es cerca de`, ops: [c, Math.round((m - 1) * 100), Math.round((m - 1) * 100 / anos)], c, u: "%" };
+    return { q: `Pusiste ${eq} millones de capital y sales con ${Math.round(eq * m)} millones a los ${anos} años. Tu TIR anual es cerca de`, ops: [c, Math.round((m - 1) * 100), Math.round((m - 1) * 100 / anos)], c, u: "%" };
   } },
   { min: 4, f: () => {
     const cf = [1000, 1500, 2000][Math.floor(Math.random() * 3)];
     const g = [2, 3][Math.floor(Math.random() * 2)];
     const wacc = [9, 10, 12][Math.floor(Math.random() * 3)];
     const c = Math.round(cf * (1 + g / 100) / ((wacc - g) / 100));
-    return { q: `Flujo de ${cf} que crece al ${g}% a perpetuidad y se descuenta al ${wacc}. El valor terminal es`, ops: [c, Math.round(cf / (wacc / 100)), Math.round(cf * (1 + g / 100) / (wacc / 100))], c, u: "" };
+    return { q: `Flujo de ${cf} millones que crece al ${g}% a perpetuidad y se descuenta al ${wacc}%. El valor terminal es`, ops: [c, Math.round(cf / (wacc / 100)), Math.round(cf * (1 + g / 100) / (wacc / 100))], c, u: "" };
   } },
   { min: 5, f: () => {
     const local = [24, 30, 36][Math.floor(Math.random() * 3)];
     const usd = [4, 5, 6][Math.floor(Math.random() * 3)];
     const c = local - usd;
-    return { q: `Tasa local ${local}% y tasa en dólares ${usd}. Cubrir el riesgo cambiario a un año te cuesta cerca de`, ops: [c, local + usd, Math.round(local / usd)], c, u: "%" };
+    return { q: `Tasa local ${local}% y tasa en dólares ${usd}%. Cubrir el riesgo cambiario a un año te cuesta cerca de`, ops: [c, local + usd, Math.round(local / usd)], c, u: "%" };
   } },
   { min: 5, f: () => {
     const pat = [1, 2, 3][Math.floor(Math.random() * 3)];
@@ -51132,7 +51956,7 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema, ctx }) {
   if (tipo === "ojo") return <JuegoOjo ayuda={ayuda} onFin={onFin} />;
   if (tipo === "anclaje") return <JuegoAnclaje ayuda={ayuda} onFin={onFin} ctx={ctx} />;
   if (tipo === "tresraya") return <JuegoTresRaya ayuda={ayuda} onFin={onFin} />;
-  if (tipo === "quiz") return <JuegoQuiz ayuda={ayuda} nivel={nivel} onFin={onFin} modo={modo} temas={temas} />;
+  if (tipo === "quiz") return <JuegoQuiz ayuda={ayuda} nivel={nivel} onFin={onFin} modo={modo} temas={temas} ctx={ctx} />;
   if (tipo === "catedra") return <JuegoCatedra ayuda={ayuda} nivel={nivel} onFin={onFin} onTema={onTema} />;
   if (tipo === "comite") return <JuegoComite ayuda={ayuda} onFin={onFin} />;
   if (tipo === "reaccion") return <JuegoReaccion ayuda={ayuda} onFin={onFin} />;
@@ -51147,6 +51971,1523 @@ function MiniJuego({ tipo, ayuda, nivel, onFin, modo, temas, onTema, ctx }) {
   if (tipo === "cuatro") return <JuegoCuatro ayuda={ayuda} onFin={onFin} />;
   if (tipo === "subasta") return <JuegoSubasta ayuda={ayuda} onFin={onFin} />;
   return <JuegoSuerte ayuda={ayuda} onFin={onFin} />;
+}
+
+/* ============================================================
+   EL CONTRATO, COMO UN FICHAJE
+   Negociar el contrato con tu firma no pasa por la tarjeta de reglas
+   ni por la mesa genérica: un destello de dos segundos en la oficina,
+   sin diálogo, y la hoja del contrato. En la hoja subes o bajas el
+   sueldo, eliges los años y propones; tu jefe reacciona con la cara y
+   una frase corta, y su oferta queda escrita a mano, tachando la
+   anterior. Con acuerdo, firmas y el juego sigue solo (Alessandro,
+   9-nov-2026: «que sea como una cinemática flash que te mande a la
+   hoja del contrato y ahí subes o bajas el salario»; «cuando le dé a
+   firmar que avance de una»).
+   Las reglas son las de la mesa: casoNegociacion, proponerNeg…
+   ============================================================ */
+/* la cara de quien negocia: el mismo dibujo plano de SurEconomics */
+const NEG_BOCA = { neutro: "M-7 14 Q0 16 7 14", feliz: "M-9 12 Q0 22 9 12", serio: "M-7 15 L7 15", enojado: "M-8 17 Q0 11 8 17" };
+const NEG_CEJA = { neutro: [-2, 0], feliz: [-3, 0], serio: [1, 6], enojado: [3, 14] };
+/* el aspecto de tu jefe sale del nombre de la firma: siempre el mismo */
+const LOOKS_JEFE = [
+  { piel: "#C68B62", pelo: "largo", colorPelo: "#3B2A22", ropa: "#5B4785", lentes: true, n: "Tu jefa" },
+  { piel: "#E7B48A", pelo: "corto", colorPelo: "#2A2440", ropa: "#2F5D8A", lentes: false, n: "Tu jefe" },
+  { piel: "#8D5A3B", pelo: "calvo", colorPelo: "#2A2440", ropa: "#B24E27", lentes: true, n: "Tu jefe" },
+  { piel: "#F0C7A0", pelo: "largo", colorPelo: "#B24E27", ropa: "#2F8A54", lentes: false, n: "Tu jefa" },
+];
+const lookJefe = (firma) => {
+  const t = texto(firma, "", 60);
+  let h = 0;
+  for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0;
+  return LOOKS_JEFE[h % LOOKS_JEFE.length];
+};
+function CaraNeg({ look, gesto = "neutro" }) {
+  const [alto, giro] = NEG_CEJA[gesto] || NEG_CEJA.neutro;
+  return (
+    <svg viewBox="-40 -6 80 80" aria-hidden="true">
+      {look.pelo === "largo" && <path d="M-33 70 Q-40 8 0 2 Q40 8 33 70 Q28 30 18 20 Q0 26 -18 20 Q-28 30 -33 70 Z" fill={look.colorPelo} />}
+      <ellipse cx="0" cy="40" rx="27" ry="31" fill={look.piel} />
+      {look.pelo === "corto" && <path d="M-28 34 Q-29 6 0 4 Q29 6 28 34 Q20 18 0 18 Q-18 18 -28 34 Z" fill={look.colorPelo} />}
+      {look.pelo === "calvo" && <path d="M-27 40 Q-27 26 -20 22 L-20 40 Z M27 40 Q27 26 20 22 L20 40 Z" fill={look.colorPelo} />}
+      {look.lentes && <g fill="none" stroke="#2A2440" strokeWidth="2.2"><circle cx="-10" cy="40" r="7" /><circle cx="10" cy="40" r="7" /><path d="M-3 40 L3 40" /></g>}
+      <g fill="#2A2440">
+        <rect x="-16" y={27 + alto} width="10" height="3" rx="1.5" transform={`rotate(${giro} -11 ${28 + alto})`} />
+        <rect x="6" y={27 + alto} width="10" height="3" rx="1.5" transform={`rotate(${-giro} 11 ${28 + alto})`} />
+        <circle cx="-10" cy="41" r="3" /><circle cx="10" cy="41" r="3" />
+      </g>
+      <g transform="translate(0 41)"><path d={NEG_BOCA[gesto] || NEG_BOCA.neutro} fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" /></g>
+    </svg>
+  );
+}
+/* el destello: la oficina al atardecer, tu jefe entra, y a la hoja */
+function DestelloOficina({ look, sub, titulo, onFin }) {
+  useEffect(() => {
+    if (typeof setTimeout !== "function") { onFin(); return; }
+    const t = setTimeout(onFin, sinMovimiento() ? 900 : 2200);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, []);
+  return (
+    <div className="ea-flash" onClick={onFin}>
+      <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs><linearGradient id="ea-cieloTarde" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5B4785" /><stop offset=".55" stopColor="#D9643A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+        <rect width="720" height="450" fill="#F3E2BF" />
+        <rect x="110" y="30" width="500" height="250" rx="14" fill="url(#ea-cieloTarde)" />
+        <circle cx="470" cy="210" r="48" fill="#F2B632" />
+        <path d="M110 236 Q240 196 360 222 T610 206 L610 280 L110 280 Z" fill="#8C6BB1" />
+        <g fill="#3B3358"><rect x="140" y="180" width="30" height="100" /><rect x="178" y="150" width="40" height="130" /><rect x="400" y="170" width="36" height="110" /><rect x="444" y="140" width="46" height="140" /><rect x="520" y="190" width="40" height="90" /></g>
+        <rect x="356" y="30" width="8" height="250" fill="#FFF4DC" />
+        <rect y="290" width="720" height="160" fill="#E2CFA8" />
+        <g className="ea-flashJefe" transform="translate(470 120) scale(1.4)">
+          <path d="M-46 160 Q-46 92 0 88 Q46 92 46 160 Z" fill={look.ropa} />
+          <rect x="-9" y="66" width="18" height="26" rx="8" fill={look.piel} />
+          {look.pelo === "largo" && <path d="M-33 70 Q-40 8 0 2 Q40 8 33 70 Q28 30 18 20 Q0 26 -18 20 Q-28 30 -33 70 Z" fill={look.colorPelo} />}
+          <ellipse cx="0" cy="40" rx="30" ry="34" fill={look.piel} />
+          {look.pelo === "corto" && <path d="M-31 34 Q-32 4 0 2 Q32 4 31 34 Q22 16 0 16 Q-20 16 -31 34 Z" fill={look.colorPelo} />}
+          {look.lentes && <g fill="none" stroke="#2A2440" strokeWidth="2.4"><circle cx="-11" cy="40" r="8" /><circle cx="11" cy="40" r="8" /></g>}
+          <g fill="#2A2440"><circle cx="-11" cy="41" r="3.4" /><circle cx="11" cy="41" r="3.4" /></g>
+          <path d="M-9 52 Q0 60 9 52" fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" />
+        </g>
+        <rect x="40" y="320" width="640" height="28" rx="8" fill="#B24E27" />
+        <rect x="60" y="348" width="600" height="102" fill="#8A3A1C" />
+        <rect x="290" y="300" width="140" height="22" rx="3" fill="#FFF8EA" transform="rotate(-5 360 311)" />
+      </svg>
+      <div className="ea-flashT"><small>{sub}</small>{titulo}</div>
+      <div className="ea-flashBlanco" />
+    </div>
+  );
+}
+/* la hoja del contrato: aquí se negocia y se firma */
+function HojaContrato({ ayuda, ctx, look, onFin }) {
+  const [c, setC] = useState(() => casoNegociacion(ayuda, Math.random, true));
+  const [pide, setPide] = useState(NEG_ABRE + 12);
+  const [anos, setAnos] = useState(3);
+  const [firmado, setFirmado] = useState(false);
+  const usd = (pct) => "USD " + fmt(sueldoNeg(ctx, pct));
+  const pctTxt = (pct) => (pct > 0 ? "+" + pct + "%" : "sin aumento");
+  const nivel = c.fin === "acuerdo" || c.fin === "levanta" ? nivelNegociacion(c) : null;
+  const terminar = () => onFin(nivel, { pct: c.fin === "acuerdo" ? c.cierre : 0, acuerdo: c.fin === "acuerdo", anos: c.anos });
+  /* firmar y seguir: se ve el trazo y el sello, y avanza solo */
+  useEffect(() => {
+    if (!firmado) return;
+    if (typeof setTimeout !== "function") { terminar(); return; }
+    const t = setTimeout(terminar, sinMovimiento() ? 500 : 1900);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, [firmado]);
+  /* lo que dice y la cara que pone, según su última respuesta */
+  const ult = c.jugadas[c.jugadas.length - 1];
+  const [dice, gesto] = c.fin === "levanta" ? ["Así no podemos seguir hablando.", "enojado"]
+    : c.fin === "acuerdo" ? [ult && ult.acepto != null ? "Bien. Trato hecho." : "Trato hecho. Te lo ganaste.", "feliz"]
+    : c.fin === "ultima" ? ["Mi última oferta: " + pctTxt(c.oferta) + ". La tomas o la dejas.", "serio"]
+    : !ult ? ["Te ofrezco lo de siempre: " + pctTxt(NEG_ABRE) + " y tres años.", "neutro"]
+    : ult.r === "no" ? ["¿" + pctTxt(ult.pide) + "? Eso está fuera de lugar.", "enojado"]
+    : ["No llego a tanto. Te doy " + pctTxt(ult.oferta) + ".", "serio"];
+  const previas = [NEG_ABRE].concat(c.jugadas.filter((x) => x.oferta != null).map((x) => x.oferta));
+  const enMesa = previas[previas.length - 1];
+  const tachadas = previas.slice(0, -1).filter((x, i, a) => a.indexOf(x) === i && x !== enMesa);
+  const anosVer = c.fin ? (c.anos || 3) : anos;
+  return (
+    <div className={"ea-hoja" + (firmado ? " firmada" : "")} onClick={firmado ? terminar : undefined}>
+      <div className="ea-hojaCab">
+        <div>
+          <p className="ea-hojaT">Contrato de trabajo</p>
+          <p className="ea-hojaS">{texto(ctx.firma, "Tu firma", 60)} · Renovación {ctx.ano}</p>
+          <div className="ea-hojaPac">Paciencia {"●".repeat(c.paciencia)}{"○".repeat(Math.max(0, 3 - c.paciencia))}{!c.fin ? " · propuesta " + c.ronda + " de " + NEG_RONDAS : ""}</div>
+        </div>
+        <div className="ea-hojaCara">
+          <div className="ea-globo" key={dice}>{dice}</div>
+          <CaraNeg look={look} gesto={gesto} />
+        </div>
+      </div>
+      <div className="ea-term">
+        <div className="ea-termK">Sueldo al año</div>
+        {!c.fin ? (
+          <div className="ea-termCtl">
+            <button className="ea-negPaso" aria-label="Pedir menos" onClick={() => setPide((p) => clamp(p - 2, 0, NEG_MAX))} disabled={pide <= 0}>−</button>
+            <div className="ea-monto">{usd(pide)}<small>{pctTxt(pide)}</small></div>
+            <button className="ea-negPaso" aria-label="Pedir más" onClick={() => setPide((p) => clamp(p + 2, 0, NEG_MAX))} disabled={pide >= NEG_MAX}>+</button>
+          </div>
+        ) : (
+          <div className="ea-monto">{c.fin === "levanta" ? "USD " + fmt(ctx.actual) : usd(c.fin === "acuerdo" ? c.cierre : c.oferta)}
+            <small>{c.fin === "levanta" ? "sin aumento" : c.fin === "acuerdo" ? pctTxt(c.cierre) : pctTxt(c.oferta) + " · su última"}</small></div>
+        )}
+        <div className="ea-termOf">
+          Hoy cobras USD {fmt(ctx.actual)} · Su oferta:{" "}
+          {tachadas.map((o) => <s key={o}>{pctTxt(o)} </s>)}
+          <span className="ea-escrito">{pctTxt(enMesa)} = {usd(enMesa)}</span>
+        </div>
+      </div>
+      <div className="ea-term">
+        <div className="ea-termK">Años de contrato</div>
+        <div className="ea-termCtl">
+          {NEG_ANOS.map((x) => (
+            <button key={x.anos} className={"ea-negAno" + (anosVer === x.anos ? " on" : "")} disabled={!!c.fin} onClick={() => setAnos(x.anos)}>
+              {x.anos} años<small>{x.extra > 0 ? "pagan más" : x.extra < 0 ? "pagan menos" : "lo normal"}</small>
+            </button>
+          ))}
+        </div>
+      </div>
+      {!c.fin && <p className="ea-negLee">Tu lectura: aceptaría hasta entre {pctTxt(c.lectura[0])} y {pctTxt(c.lectura[1])} con 3 años.</p>}
+      <div className="ea-firmaLinea">
+        {firmado && (
+          <svg className="ea-firmaTrazo" viewBox="0 0 200 50" aria-hidden="true">
+            <path d="M6 34 C 18 6, 30 6, 26 30 S 40 44, 52 22 S 70 8, 74 30 Q 80 40, 92 26 T 120 28 C 130 20, 142 40, 156 22 S 182 30, 194 18" />
+          </svg>
+        )}
+        {firmado && <div className="ea-selloHoja ok tarde">FIRMADO</div>}
+        {c.fin === "levanta" && <div className="ea-selloHoja no">SIN ACUERDO</div>}
+        <span>Tu firma</span>
+      </div>
+      <div className="ea-hojaBotones">
+        {!c.fin && <button className="ea-btnC" onClick={() => setC(proponerNeg(c, pide, anos))}>Proponer {usd(pide)}</button>}
+        {!c.fin && c.ronda > 1 && <button className="ea-btnS" onClick={() => setC(aceptarNeg(c))}>Aceptar {pctTxt(c.oferta)}</button>}
+        {c.fin === "ultima" && <button className="ea-btnC" onClick={() => setC(aceptarNeg(c))}>Aceptar {pctTxt(c.oferta)}</button>}
+        {c.fin === "ultima" && <button className="ea-btnS" onClick={() => setC(irseNeg(c))}>Irte sin firmar</button>}
+        {c.fin === "acuerdo" && !firmado && <button className="ea-btnC" onClick={() => setFirmado(true)}>Firmar</button>}
+        {c.fin === "levanta" && <button className="ea-btnC" onClick={terminar}>Continuar</button>}
+      </div>
+    </div>
+  );
+}
+function ContratoFichaje({ ayuda, ctx, onFin }) {
+  const [paso, setPaso] = useState("destello");
+  const look = lookJefe(ctx && ctx.firma);
+  return (
+    <div className="ea-fichaje">
+      {paso === "destello"
+        ? <DestelloOficina look={look} sub="Se te vence el contrato" titulo="Renovación de contrato" onFin={() => setPaso("hoja")} />
+        : <HojaContrato ayuda={ayuda} ctx={ctx} look={look} onFin={onFin} />}
+    </div>
+  );
+}
+
+/* ============================================================
+   EL GOLPE DE DINERO Y EL ÁNIMO
+   Ganar o perder mucho tiene que sentirse (Alessandro, 9-nov-2026:
+   «que el personaje se ponga feliz… que sea un golpe que sientas en el
+   juego»). Al cerrar una etapa en la que tus inversiones o tus
+   decisiones movieron mucho dinero, un destello en tu sala: saltas con
+   los billetes cayendo, o te hundes con la lluvia en la ventana. Y tu
+   Ánimo se mueve: de −2 (Hundido) a +2 (Eufórico). El Ánimo da o quita
+   ayuda en los minijuegos y cansancio la etapa siguiente, y vuelve un
+   paso hacia Normal en cada etapa. El sueldo no cuenta: es lo esperado.
+   ============================================================ */
+const ANIMOS = [
+  { v: -2, n: "Hundido", e: "😣" }, { v: -1, n: "Bajón", e: "😕" }, { v: 0, n: "Normal", e: "🙂" },
+  { v: 1, n: "Contento", e: "😊" }, { v: 2, n: "Eufórico", e: "🤩" },
+];
+const animoDe = (v) => ANIMOS[clamp(entero(v, 0, -2, 2), -2, 2) + 2];
+/* cuánto dinero tiene que mover la etapa para que sea un golpe */
+const golpeDe = (cierre, ano) => {
+  if (!cierre || !cierre.partes) return null;
+  const mov = numero(cierre.partes.mercados, 0) + numero(cierre.partes.decisiones, 0) + numero(cierre.partes.camino, 0);
+  const cam = cierre.camino && cierre.camino.t && Math.abs(numero(cierre.partes.camino, 0)) >= Math.abs(numero(cierre.partes.mercados, 0)) ? cierre.camino : null;
+  const base = Math.max(20000, Math.abs(numero(cierre.patIni != null ? cierre.patIni : cierre.patAntes, 0)));
+  const inv = Math.abs(numero(cierre.partes.mercados, 0)) >= Math.abs(numero(cierre.partes.decisiones, 0));
+  if (mov >= Math.max(15000, base * 0.2)) {
+    return { sube: true, monto: Math.round(mov), de: cam ? cam.t : (inv ? "Tus inversiones se dispararon" : "Tus decisiones dieron fruto") + " en " + ano };
+  }
+  if (mov <= -Math.max(6000, base * 0.1)) {
+    return { sube: false, monto: Math.round(-mov), de: cam ? cam.t : (inv ? "Tus inversiones se desplomaron" : "Tus decisiones te costaron caro") + " en " + ano };
+  }
+  return null;
+};
+/* tú, en tu sala, con los brazos arriba o el ánimo por el piso */
+function TuEnLaSala({ sube }) {
+  const piel = "#E7B48A", ropa = "#2F5D8A", pelo = "#2A2440";
+  return (
+    <g transform={`translate(${sube ? 230 : 190} ${sube ? 120 : 150}) scale(1.25)`}>
+      <g className={sube ? "ea-golpeSalta" : "ea-golpeAgacha"}>
+        <g stroke={ropa} strokeWidth="18" strokeLinecap="round" fill="none">
+          {sube ? <g><path d="M-36 104 L-64 46" /><path d="M36 104 L64 46" /></g> : <g><path d="M-38 106 L-30 150" /><path d="M38 106 L30 150" /></g>}
+        </g>
+        {sube
+          ? <g fill={piel}><circle cx="-66" cy="40" r="10" /><circle cx="66" cy="40" r="10" /></g>
+          : <g fill={piel}><circle cx="-29" cy="156" r="9" /><circle cx="29" cy="156" r="9" /></g>}
+        <path d="M-44 170 Q-46 96 0 92 Q46 96 44 170 Z" fill={ropa} />
+        <path d="M-12 92 L0 106 L12 92 Z" fill="#FFF4DC" />
+        <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+        <g transform={sube ? "" : "rotate(14 0 70) translate(0 8)"}>
+          <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+          <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={pelo} />
+          {sube ? (
+            <g fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round">
+              <path d="M-16 42 Q-11 36 -6 42" /><path d="M6 42 Q11 36 16 42" /><path d="M-12 54 Q0 68 12 54" fill="#2A2440" />
+            </g>
+          ) : (
+            <g>
+              <g fill="#2A2440"><rect x="-16" y="32" width="10" height="3" rx="1.5" transform="rotate(-14 -11 33)" /><rect x="6" y="32" width="10" height="3" rx="1.5" transform="rotate(14 11 33)" />
+                <circle cx="-11" cy="44" r="3" /><circle cx="11" cy="44" r="3" /></g>
+              <path d="M-9 60 Q0 52 9 60" fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" />
+              <path d="M-14 50 q-2 6 0 9" stroke="#8CC4E8" strokeWidth="3" fill="none" strokeLinecap="round" />
+            </g>
+          )}
+          <circle cx="-20" cy="54" r="5" fill="#E9875A" opacity=".35" /><circle cx="20" cy="54" r="5" fill="#E9875A" opacity=".35" />
+        </g>
+      </g>
+    </g>
+  );
+}
+function SalaGolpe({ sube }) {
+  return (
+    <g>
+      <defs>
+        <linearGradient id="ea-cieloSube" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8C6BB1" /><stop offset=".6" stopColor="#E9875A" /><stop offset="1" stopColor="#F2B632" /></linearGradient>
+        <linearGradient id="ea-cieloBaja" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1E1A30" /><stop offset="1" stopColor="#3B3358" /></linearGradient>
+      </defs>
+      <rect width="720" height="450" fill={sube ? "#F3E2BF" : "#4A4166"} />
+      <rect y="310" width="720" height="140" fill={sube ? "#E2CFA8" : "#3B3358"} />
+      <rect x="430" y="50" width="230" height="200" rx="12" fill={sube ? "url(#ea-cieloSube)" : "url(#ea-cieloBaja)"} />
+      {sube ? <circle cx="560" cy="200" r="34" fill="#F2B632" /> : <circle cx="600" cy="100" r="16" fill="#CFC4EA" opacity=".5" />}
+      <g fill={sube ? "#5B4785" : "#15121F"}><rect x="440" y="180" width="30" height="70" /><rect x="476" y="160" width="36" height="90" /><rect x="590" y="176" width="28" height="74" /><rect x="624" y="196" width="30" height="54" /></g>
+      {!sube && (
+        <g stroke="#8CC4E8" strokeWidth="2" opacity=".6" strokeLinecap="round">
+          {[450, 480, 510, 540, 570, 600, 630].map((x, i) => (
+            <line key={x} className="ea-golpeGota" x1={x} y1="40" x2={x - 6} y2="58" style={{ animationDelay: (i * 0.13) + "s" }} />
+          ))}
+        </g>
+      )}
+      <rect x="541" y="50" width="8" height="200" fill={sube ? "#FFF4DC" : "#2A2440"} />
+      <rect x="40" y="250" width="300" height="70" rx="22" fill={sube ? "#D9643A" : "#5B4785"} />
+      <rect x="30" y="290" width="320" height="56" rx="18" fill={sube ? "#B24E27" : "#3B3358"} />
+      <rect x="400" y="330" width="210" height="16" rx="6" fill={sube ? "#8A3A1C" : "#2A2440"} />
+      <rect x="420" y="346" width="12" height="60" fill={sube ? "#8A3A1C" : "#2A2440"} /><rect x="578" y="346" width="12" height="60" fill={sube ? "#8A3A1C" : "#2A2440"} />
+      <rect x="450" y="270" width="110" height="64" rx="6" fill="#2A2440" />
+      <rect x="456" y="276" width="98" height="52" rx="3" fill={sube ? "#FFF8EA" : "#1E1A30"} />
+      <polyline points={sube ? "462,318 480,310 494,314 512,298 528,300 548,282" : "462,284 480,290 494,286 512,304 528,300 548,322"}
+        fill="none" stroke={sube ? "#2F8A54" : "#E0503A"} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="440" y="330" width="130" height="6" rx="3" fill="#3B3358" />
+    </g>
+  );
+}
+function GolpeDinero({ golpe, antes, despues, onFin }) {
+  const [n, setN] = useState(0);
+  const [ya, setYa] = useState(false);
+  useEffect(() => {
+    if (typeof setTimeout !== "function") { setN(golpe.monto); setYa(true); return; }
+    const quieto = sinMovimiento();
+    let v = 0;
+    const paso = Math.max(1, Math.round(golpe.monto / 30));
+    const t = setInterval(() => { v = Math.min(golpe.monto, v + paso); setN(v); if (v >= golpe.monto) clearInterval(t); }, 30);
+    const a = setTimeout(() => setYa(true), quieto ? 100 : 900);
+    const f = setTimeout(onFin, quieto ? 2200 : 4200);
+    return () => { try { clearInterval(t); clearTimeout(a); clearTimeout(f); } catch (e) {} };
+  }, []);
+  const ahora = animoDe(ya ? despues : antes);
+  const efecto = despues > 0 ? "+" + despues * 5 + " en los minijuegos y menos cansancio la próxima etapa."
+    : despues < 0 ? "−" + (-despues * 5) + " en los minijuegos y más cansancio la próxima etapa." : "";
+  return (
+    <div className="ea-golpeCapa">
+      <div className={"ea-golpeCine " + (golpe.sube ? "sube" : "baja")} onClick={onFin}>
+        <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <SalaGolpe sube={golpe.sube} />
+          <TuEnLaSala sube={golpe.sube} />
+          {golpe.sube && (
+            <g>
+              {[60, 150, 250, 330, 420, 520, 610, 680].map((x, i) => (
+                <g key={x} className="ea-golpeBillete" style={{ animationDelay: (i * 0.32) + "s" }}>
+                  <rect x={x} y="0" width="38" height="20" rx="3" fill="#2F8A54" /><circle cx={x + 19} cy="10" r="5" fill="#9BE3A8" />
+                </g>
+              ))}
+            </g>
+          )}
+        </svg>
+        <div className="ea-golpeTxt">
+          <div className="ea-golpeK">{golpe.de}</div>
+          <div className="ea-golpeN ea-mono">{golpe.sube ? "+" : "−"}USD {fmt(n)}</div>
+          <div className="ea-animoFila">
+            {ANIMOS.map((x) => <span key={x.v} className={x.v === ahora.v ? "on" : ""}>{x.e}</span>)}
+            <b>Ánimo: {ahora.n}</b>
+          </div>
+          <span className="ea-animoEf">{ya && efecto ? efecto : " "}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   LOS MOMENTOS DE LA VIDA
+   Cuando te casas, cuando nace un hijo y cuando muere alguien cercano,
+   un destello de cuatro segundos sin diálogo: la iglesia, la clínica,
+   el cementerio con lluvia (Alessandro, 9-nov-2026: «cuando tienes un
+   hijo (una clínica y un bebé), cuando te casas (una iglesia y boda),
+   cuando muere un familiar (que aparezca un funeral)»). Debajo, lo que
+   de verdad cambió en tu partida y el golpe en el ánimo.
+   ============================================================ */
+const MESES_VIDA = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const VIDA_BOCA = { feliz: "M-9 12 Q0 22 9 12", triste: "M-8 17 Q0 10 8 17" };
+function PersonaVida({ x, y, s = 1, piel, pelo, colorPelo, ropa, falda, velo, cara = "feliz", lagrima, corbata }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      {falda ? <path d={`M-40 96 Q0 86 40 96 L66 ${falda} L-66 ${falda} Z`} fill={ropa} /> : <path d="M-46 170 Q-46 96 0 92 Q46 96 46 170 Z" fill={ropa} />}
+      {corbata && <path d="M-4 96 L4 96 L7 132 L0 142 L-7 132 Z" fill={corbata} />}
+      <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+      {pelo === "largo" && <path d="M-33 74 Q-40 10 0 4 Q40 10 33 74 Q28 32 18 22 Q0 28 -18 22 Q-28 32 -33 74 Z" fill={colorPelo} />}
+      <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+      {pelo === "corto" && <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={colorPelo} />}
+      {velo && <path d="M-36 30 Q0 -6 36 30 L48 150 Q0 160 -48 150 Z" fill="#FFFFFF" opacity=".55" />}
+      {cara === "feliz"
+        ? <g fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round"><path d="M-16 44 Q-11 38 -6 44" /><path d="M6 44 Q11 38 16 44" /></g>
+        : <g fill="#2A2440"><circle cx="-11" cy="44" r="3" /><circle cx="11" cy="44" r="3" />
+            <rect x="-16" y="33" width="10" height="3" rx="1.5" transform="rotate(-12 -11 34)" /><rect x="6" y="33" width="10" height="3" rx="1.5" transform="rotate(12 11 34)" /></g>}
+      <g transform="translate(0 42)"><path d={VIDA_BOCA[cara]} fill="none" stroke="#2A2440" strokeWidth="3" strokeLinecap="round" /></g>
+      {lagrima && <path d="M-14 50 q-2 6 0 9" stroke="#8CC4E8" strokeWidth="3" fill="none" strokeLinecap="round" />}
+      <circle cx="-20" cy="54" r="5" fill="#E9875A" opacity=".35" /><circle cx="20" cy="54" r="5" fill="#E9875A" opacity=".35" />
+    </g>
+  );
+}
+/* tú y tu pareja: el aspecto sigue el género que elegiste al empezar */
+const LOOK_CORTO = { piel: "#E7B48A", pelo: "corto", colorPelo: "#2A2440" };
+const LOOK_LARGO = { piel: "#C68B62", pelo: "largo", colorPelo: "#3B2A22" };
+const looksVida = (genero) => (genero === "f" ? { tu: LOOK_LARGO, pareja: LOOK_CORTO } : { tu: LOOK_CORTO, pareja: LOOK_LARGO });
+function EscenaVida({ tipo, genero }) {
+  const L = looksVida(genero);
+  const ella = genero === "f" ? L.tu : L.pareja;      /* quien lleva el vestido y carga al bebé */
+  const el = genero === "f" ? L.pareja : L.tu;
+  if (tipo === "hijo") {
+    return (
+      <g>
+        <defs><linearGradient id="ea-amanecer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#F6C59A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+        <rect width="720" height="450" fill="#EAF2E8" /><rect y="300" width="720" height="150" fill="#D5E6D3" />
+        <rect x="460" y="50" width="200" height="170" rx="12" fill="url(#ea-amanecer)" /><circle cx="560" cy="200" r="40" fill="#FFF4DC" opacity=".9" />
+        <rect x="556" y="50" width="8" height="170" fill="#FFF8EA" />
+        <rect x="96" y="70" width="6" height="230" fill="#B7C9B5" /><rect x="80" y="70" width="38" height="50" rx="10" fill="#FFFFFF" opacity=".9" />
+        <path d="M640 250 L640 300" stroke="#665C7A" strokeWidth="2" /><ellipse cx="640" cy="232" rx="22" ry="26" fill="#D9643A" />
+        <rect x="150" y="240" width="300" height="60" rx="16" fill="#FFFFFF" /><rect x="150" y="280" width="300" height="70" rx="10" fill="#8CC4E8" />
+        <rect x="140" y="200" width="22" height="160" rx="8" fill="#B7C9B5" />
+        <PersonaVida x={250} y={130} s={1.1} {...ella} ropa="#FFFFFF" />
+        <g transform="translate(252 250)" className="ea-vidaMece">
+          <ellipse cx="0" cy="12" rx="34" ry="22" fill="#F2B632" /><circle cx="0" cy="-4" r="17" fill="#F0C7A0" />
+          <g fill="none" stroke="#2A2440" strokeWidth="2" strokeLinecap="round"><path d="M-8 -4 Q-5 -7 -2 -4" /><path d="M2 -4 Q5 -7 8 -4" /><path d="M-3 4 Q0 7 3 4" /></g>
+          <path d="M-17 -8 Q0 -30 17 -8 Q0 -16 -17 -8" fill="#F2B632" />
+        </g>
+        <PersonaVida x={410} y={110} s={1.25} {...el} ropa="#2F5D8A" />
+        <g className="ea-vidaFlota"><path d="M330 150 c-10-14 -30-4 -18 12 l18 16 l18-16 c12-16 -8-26 -18-12z" fill="#D9643A" /></g>
+        <g className="ea-vidaFlota" style={{ animationDelay: "1.4s" }}><path d="M370 170 c-7-10 -21-3 -13 8 l13 11 l13-11 c8-11 -6-18 -13-8z" fill="#E9875A" /></g>
+      </g>
+    );
+  }
+  if (tipo === "boda") {
+    return (
+      <g>
+        <rect width="720" height="450" fill="#F3E2BF" />
+        <path d="M260 260 L260 90 Q360 0 460 90 L460 260 Z" fill="#5B4785" />
+        <path d="M280 250 L280 100 Q360 26 440 100 L440 250 Z" fill="#8C6BB1" />
+        <path d="M360 40 L360 250" stroke="#F3E2BF" strokeWidth="6" /><path d="M280 150 L440 150" stroke="#F3E2BF" strokeWidth="6" />
+        <circle cx="360" cy="110" r="26" fill="#F2B632" /><rect x="290" y="160" width="62" height="84" fill="#D9643A" /><rect x="368" y="160" width="62" height="84" fill="#E9875A" />
+        <rect y="300" width="720" height="150" fill="#E2CFA8" />
+        <path d="M300 450 L340 300 L380 300 L420 450 Z" fill="#B24E27" opacity=".85" />
+        <rect x="40" y="320" width="200" height="26" rx="6" fill="#8A3A1C" /><rect x="480" y="320" width="200" height="26" rx="6" fill="#8A3A1C" />
+        <circle cx="200" cy="260" r="26" fill="#FFFFFF" /><circle cx="226" cy="250" r="18" fill="#F2B632" /><circle cx="520" cy="260" r="26" fill="#FFFFFF" /><circle cx="494" cy="250" r="18" fill="#F2B632" />
+        <PersonaVida x={300} y={150} s={1.15} {...el} ropa="#2A2440" corbata="#F2B632" />
+        <PersonaVida x={420} y={150} s={1.15} {...ella} ropa="#FFFFFF" falda={300} velo />
+        {[40, 120, 200, 300, 380, 470, 560, 640, 700].map((x, i) => (
+          <ellipse key={x} className="ea-vidaPetalo" cx={x} cy="0" rx="7" ry="4" fill={i % 2 ? "#F2B632" : "#D9643A"} style={{ animationDelay: (i * 0.35) + "s" }} />
+        ))}
+      </g>
+    );
+  }
+  return (
+    <g>
+      <defs><linearGradient id="ea-cieloGris" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4A4166" /><stop offset="1" stopColor="#8C82A3" /></linearGradient></defs>
+      <rect width="720" height="450" fill="url(#ea-cieloGris)" />
+      <path d="M0 260 Q180 220 360 250 T720 236 L720 450 L0 450 Z" fill="#5B5577" />
+      <path d="M0 300 Q200 280 400 300 T720 290 L720 450 L0 450 Z" fill="#3B3358" />
+      <g fill="#2A2440" opacity=".7"><rect x="80" y="230" width="30" height="44" rx="12" /><rect x="600" y="222" width="34" height="50" rx="14" /><rect x="660" y="236" width="24" height="36" rx="10" /></g>
+      <path d="M470 330 L470 230 Q510 196 550 230 L550 330 Z" fill="#CFC4EA" />
+      <rect x="490" y="252" width="40" height="4" rx="2" fill="#8C82A3" /><rect x="482" y="264" width="56" height="4" rx="2" fill="#8C82A3" />
+      <circle cx="486" cy="330" r="9" fill="#D9643A" /><circle cx="500" cy="334" r="9" fill="#F2B632" /><circle cx="514" cy="330" r="9" fill="#FFF4DC" />
+      <g stroke="#CFE4F2" strokeWidth="2" opacity=".5" strokeLinecap="round">
+        {Array.from({ length: 22 }, (_, i) => (
+          <line key={i} className="ea-vidaLluvia" x1={i * 34 + 10} y1="0" x2={i * 34 + 4} y2="18" style={{ animationDelay: (i % 7) * 0.11 + "s" }} />
+        ))}
+      </g>
+      <g transform="translate(290 150)"><path d="M-90 0 Q0 -70 90 0 Z" fill="#2A2440" /><path d="M0 0 L0 90" stroke="#2A2440" strokeWidth="5" /></g>
+      <PersonaVida x={250} y={150} s={1.1} {...L.tu} ropa="#2A2440" cara="triste" lagrima />
+      <PersonaVida x={340} y={156} s={1.05} {...L.pareja} ropa="#3B3358" cara="triste" />
+    </g>
+  );
+}
+/* el ascenso, el despido y la primera casa */
+function OficinaVida({ gris }) {
+  return (
+    <g>
+      <defs><linearGradient id={gris ? "ea-tardeGris" : "ea-tardeOro"} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={gris ? "#6E6788" : "#5B4785"} /><stop offset="1" stopColor={gris ? "#A9A1BD" : "#F2B632"} /></linearGradient></defs>
+      <rect width="720" height="450" fill={gris ? "#D9D2C4" : "#F3E2BF"} />
+      <rect x="140" y="40" width="440" height="200" rx="14" fill={gris ? "url(#ea-tardeGris)" : "url(#ea-tardeOro)"} />
+      <g fill={gris ? "#565072" : "#3B3358"}><rect x="160" y="150" width="34" height="90" /><rect x="202" y="120" width="40" height="120" /><rect x="420" y="140" width="40" height="100" /><rect x="470" y="110" width="44" height="130" /></g>
+      <rect x="356" y="40" width="8" height="200" fill="#FFF4DC" />
+      <rect y="290" width="720" height="160" fill={gris ? "#C4BBA9" : "#E2CFA8"} />
+    </g>
+  );
+}
+function EscenaCarrera({ tipo, genero, cargo }) {
+  const L = looksVida(genero);
+  if (tipo === "ascenso") {
+    return (
+      <g>
+        <OficinaVida />
+        <rect x="270" y="88" width="180" height="34" rx="6" fill="#2A2440" />
+        <text x="360" y="111" textAnchor="middle" fill="#F2B632" fontFamily="Bricolage Grotesque, sans-serif" fontWeight="800" fontSize="15">{texto(cargo, "", 22).toUpperCase()}</text>
+        <g className="ea-vidaAplaude"><PersonaVida x={150} y={170} {...LOOK_LARGO} ropa="#5B4785" /></g>
+        <g className="ea-vidaAplaude"><PersonaVida x={570} y={170} piel="#8D5A3B" pelo="corto" colorPelo="#2A2440" ropa="#2F8A54" /></g>
+        <g stroke="#2A2440" strokeWidth="23" strokeLinecap="round"><path d="M313 285 L277 210" /><path d="M407 285 L443 210" /></g>
+        <g fill={L.tu.piel}><circle cx="276" cy="208" r="13" /><circle cx="444" cy="208" r="13" /></g>
+        <PersonaVida x={360} y={150} s={1.3} {...L.tu} ropa="#2A2440" corbata="#F2B632" />
+        {[50, 130, 210, 290, 430, 510, 590, 670].map((x, i) => (
+          <rect key={x} className="ea-vidaPetalo" x={x} y="0" width="10" height="16" rx="2" fill={["#F2B632", "#D9643A", "#8C6BB1", "#2F8A54"][i % 4]} style={{ animationDelay: (i * 0.3) + "s" }} />
+        ))}
+      </g>
+    );
+  }
+  if (tipo === "despido") {
+    return (
+      <g>
+        <OficinaVida gris />
+        <PersonaVida x={540} y={168} {...LOOK_LARGO} ropa="#5B4785" cara="triste" />
+        <PersonaVida x={290} y={150} s={1.3} {...L.tu} ropa="#3B3358" cara="triste" lagrima />
+        <rect x="216" y="280" width="150" height="90" rx="6" fill="#B07A4A" /><rect x="216" y="280" width="150" height="18" fill="#8E5F36" />
+        <path d="M250 280 Q236 236 256 214 Q262 250 250 280 M262 280 Q262 230 290 222 Q280 256 262 280" fill="#2F8A54" />
+        <g transform="rotate(8 320 264)"><rect x="300" y="244" width="40" height="40" rx="3" fill="#FFF4DC" /><rect x="306" y="250" width="28" height="26" fill="#8C6BB1" /></g>
+      </g>
+    );
+  }
+  return (
+    <g>
+      <defs><linearGradient id="ea-cieloCasa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8C6BB1" /><stop offset=".6" stopColor="#E9875A" /><stop offset="1" stopColor="#F2B632" /></linearGradient></defs>
+      <rect width="720" height="450" fill="url(#ea-cieloCasa)" />
+      <circle cx="600" cy="150" r="46" fill="#F2B632" />
+      <path d="M0 300 Q200 270 400 296 T720 284 L720 450 L0 450 Z" fill="#5B4785" />
+      <rect y="330" width="720" height="120" fill="#2F8A54" />
+      <rect x="380" y="170" width="250" height="170" fill="#FFF4DC" /><path d="M360 176 L505 70 L650 176 Z" fill="#D9643A" />
+      <rect x="480" y="250" width="54" height="90" rx="4" fill="#8A3A1C" /><circle cx="524" cy="298" r="4" fill="#F2B632" />
+      <rect x="406" y="210" width="50" height="44" rx="4" fill="#8CC4E8" /><rect x="556" y="210" width="50" height="44" rx="4" fill="#8CC4E8" />
+      <rect x="300" y="250" width="6" height="90" fill="#8A3A1C" /><rect x="250" y="236" width="110" height="40" rx="6" fill="#FFF8EA" />
+      <text x="305" y="263" textAnchor="middle" fill="#B0321F" fontFamily="Bricolage Grotesque, sans-serif" fontWeight="800" fontSize="17" transform="rotate(-6 305 258)">¡VENDIDA!</text>
+      <path d="M213 285 L259 244" stroke="#2F5D8A" strokeWidth="22" strokeLinecap="round" />
+      <PersonaVida x={170} y={160} s={1.2} {...L.tu} ropa="#2F5D8A" />
+      <g className="ea-vidaLlave">
+        <circle cx="262" cy="232" r="12" fill="none" stroke="#F2B632" strokeWidth="6" /><path d="M272 240 L296 262 M286 252 L280 258 M292 258 L286 264" stroke="#F2B632" strokeWidth="6" strokeLinecap="round" />
+      </g>
+    </g>
+  );
+}
+function MomentoVida({ m, onFin }) {
+  useEffect(() => {
+    if (typeof setTimeout !== "function") { onFin(); return; }
+    const t = setTimeout(onFin, sinMovimiento() ? 2500 : 4000);
+    return () => { try { clearTimeout(t); } catch (e) {} };
+  }, []);
+  return (
+    <div className="ea-golpeCapa">
+      <div className="ea-vidaCine" onClick={onFin}>
+        <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          {["ascenso", "despido", "casa"].indexOf(m.tipo) >= 0
+            ? <EscenaCarrera tipo={m.tipo} genero={m.genero} cargo={m.cargo} />
+            : <EscenaVida tipo={m.tipo} genero={m.genero} />}
+        </svg>
+        <div className="ea-golpeTxt">
+          <div className="ea-golpeK">{m.k}</div>
+          <div className="ea-vidaT">{m.t}</div>
+          <div className="ea-vidaEf">{(m.ef || []).map((x, i) => <span key={i}>{x}</span>)}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+/* el momento que toca: qué fue, cuándo, dónde y qué cambió */
+const ANIMO_MOMENTO = { boda: 2, hijo: 1, funeral: -2, ascenso: 1, despido: -2, casa: 1 };
+const LUGAR_MOMENTO = { boda: "La iglesia del barrio", hijo: "La clínica", funeral: "El cementerio", casa: "Tu barrio" };
+const momentoDe = (tipo, st, cambios, extra) => {
+  const x = extra || {};
+  const t = entero(st && st.turno, 0, 0, 99);
+  const mes = MESES_VIDA[(entero(st && st.semilla, 0, 0, 2e9) + t * 5 + Object.keys(ANIMO_MOMENTO).indexOf(tipo) * 3) % 12];
+  const lugar = LUGAR_MOMENTO[tipo] || texto(st && st.patron, "Tu firma", 48);
+  const n = entero(st && st.hijos, 1, 1, 8);
+  const titulo = x.titulo || (tipo === "boda" ? "Te casas"
+    : tipo === "hijo" ? (n === 1 ? "Nace tu primer hijo" : n === 2 ? "Nace tu segundo hijo" : "Nace otro hijo")
+    : tipo === "funeral" ? (x.quien ? "Despides a " + x.quien : "Despides a alguien cercano")
+    : tipo === "ascenso" ? "Ascenso a " + texto(x.cargo, "un cargo nuevo", 40)
+    : tipo === "despido" ? "Te dejan ir" : "Tu primera casa");
+  const animo = ANIMO_MOMENTO[tipo] || 0;
+  const ef = (x.antes || []).concat(["Ánimo " + (animo > 0 ? "+" : "−") + Math.abs(animo)]);
+  (Array.isArray(cambios) ? cambios : []).forEach((c) => {
+    if (!c || !c.v || c.nota) return;
+    if (c.k === "cash") ef.push((c.v > 0 ? "+" : "−") + "USD " + fmt(Math.abs(c.v)));
+    else if (ETIQ[c.k]) ef.push(ETIQ[c.k] + " " + (c.v > 0 ? "+" : "−") + Math.abs(c.v));
+  });
+  return { tipo, genero: st && st.genero, cargo: x.cargo,
+    k: mes.charAt(0).toUpperCase() + mes.slice(1) + " de " + (2026 + t) + " · " + lugar, t: titulo, ef: ef.slice(0, 4) };
+};
+
+/* ============================================================
+   LOS SUSTOS: DECIDIR RÁPIDO
+   «Que también aparezcan escenas como que te van a robar, y tienes
+   que decidir rápido si enfrentarlos o entregar lo que piden»
+   (Alessandro, 9-nov-2026). La decisión es dentro de la cinemática,
+   con un reloj: si no eliges a tiempo, la vida elige por ti, y casi
+   siempre peor. Cada susto sale una vez por vida.
+   Los ids van de 9856 a 9858: nacieron en 9850-9852, encima de tres
+   OPORTUNIDADES, y ver un susto marcaba esa oportunidad como vista
+   para siempre (y al recargar, la oportunidad volvía como susto).
+   ============================================================ */
+const SUSTOS = [
+  {
+    id: 9856, min: 0, max: 6, susto: "asalto", seg: 5,
+    k: "Una noche, saliendo de la oficina", t: "«¡Dame el celular, rápido!»",
+    x: "Alguien te corta el paso en la cuadra oscura. Pide el celular y no parece de los que esperan.",
+    o: [
+      { t: "Entregar el celular", d: { cash: -900, animo: -1, msg: "Se lo das y se va corriendo. Pierdes el celular y un buen susto, pero llegas entero a la casa." } },
+      { t: "Enfrentarlo", d: { ene: -15, rep: 2, msg: "Lo empujas y sale corriendo, pero te tuerces la muñeca. Dos semanas con yeso y una historia que vas a contar mil veces." } },
+      { t: "Correr", d: { cash: -300, ene: -5, msg: "Corres hasta la esquina iluminada. No te alcanza, pero se te cae la billetera en la carrera." } },
+    ],
+    porTi: { t: "Te quedaste paralizado", d: { cash: -1200, animo: -2, msg: "No alcanzas a reaccionar. Te quita el celular y la billetera sin que digas nada." } },
+  },
+  {
+    id: 9857, min: 0, max: 6, susto: "crisis", seg: 6, cartera: 5000,
+    k: "Un lunes negro", t: "La bolsa cae 18% en una mañana",
+    x: "Las pantallas están en rojo, el teléfono no para y todo el mundo te pregunta qué haces con tu plata.",
+    o: [
+      { t: "Vender todo", d: { mercado: -0.18, animo: -1, msg: "Vendes en el piso. Te salvas de lo que siguió cayendo, pero te pierdes el rebote de los meses siguientes." } },
+      { t: "Aguantar", d: { mercado: -0.06, msg: "No tocas nada. Duele unas semanas, y el año termina casi donde empezó." } },
+      { t: "Comprar barato", d: { mercado: 0.06, ene: -5, msg: "Pones a trabajar tus ahorros con todo en rojo. Da miedo, y es de las mejores compras que vas a hacer." } },
+    ],
+    porTi: { t: "No decidiste nada", d: { mercado: -0.22, animo: -2, msg: "El pánico decide por ti: tu asesor vende la mitad justo en el peor momento." } },
+  },
+  {
+    id: 9858, min: 0, max: 6, susto: "estafa", seg: 7,
+    k: "Un martes cualquiera, en tu casa", t: "«Le llamamos del banco: deme el código que le llegó»",
+    x: "Número oculto. La voz suena muy profesional y dice que hay un movimiento raro en tu cuenta.",
+    o: [
+      { t: "Darle el código", d: { cash: -6500, animo: -2, msg: "Era una estafa. Esa misma tarde vacían tu cuenta, y el banco te devuelve una parte después de semanas de trámite." } },
+      { t: "Colgar y llamar al banco", d: { cri: 3, animo: 1, msg: "En el banco te confirman que nadie te llamó y bloquean la tarjeta por si acaso. Te salvaste." } },
+      { t: "Hacerle preguntas", d: { cri: 2, msg: "Le preguntas tu número de cliente y cuelga de inmediato. Era un estafador." } },
+    ],
+    porTi: { t: "Dudaste demasiado", d: { cash: -6500, animo: -2, msg: "El «banco» insiste hasta que le lees el código. Era una estafa." } },
+  },
+];
+const IDS_SUSTO = SUSTOS.map((e) => e.id);
+/* el susto que le puede tocar a esta partida, si toca */
+const sustoPosible = (st) => SUSTOS.filter((e) => st.vistos.indexOf(e.id) < 0
+  && (!e.cartera || numero(st.cartera, 0) >= e.cartera));
+
+function PersonaSusto({ x, y, s = 1, piel = "#E7B48A", pelo = "corto", colorPelo = "#2A2440", ropa, cara = "miedo", gorra, mascara }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <path d="M-46 170 Q-46 96 0 92 Q46 96 46 170 Z" fill={ropa} />
+      <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+      {pelo === "largo" && <path d="M-33 74 Q-40 10 0 4 Q40 10 33 74 Q28 32 18 22 Q0 28 -18 22 Q-28 32 -33 74 Z" fill={colorPelo} />}
+      <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+      {pelo === "corto" && !gorra && <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={colorPelo} />}
+      {gorra && <path d="M-32 30 Q-30 0 0 0 Q30 0 32 30 L54 34 L-32 34 Z" fill={gorra} />}
+      {mascara && <path d="M-30 46 Q0 40 30 46 L28 70 Q0 82 -28 70 Z" fill="#2A2440" />}
+      {cara === "miedo"
+        ? <g><g fill="#FFFFFF"><circle cx="-11" cy="42" r="7" /><circle cx="11" cy="42" r="7" /></g><g fill="#2A2440"><circle cx="-11" cy="42" r="3" /><circle cx="11" cy="42" r="3" /></g>
+            <ellipse cx="0" cy="60" rx="6" ry="7" fill="#2A2440" /></g>
+        : <g fill="#2A2440"><rect x="-17" y="34" width="11" height="3" rx="1.5" transform="rotate(14 -11 35)" /><rect x="6" y="34" width="11" height="3" rx="1.5" transform="rotate(-14 11 35)" />
+            <circle cx="-11" cy="43" r="3" /><circle cx="11" cy="43" r="3" /></g>}
+    </g>
+  );
+}
+function EscenaSusto({ tipo, genero, apurado }) {
+  const tu = genero === "f" ? LOOK_LARGO : LOOK_CORTO;
+  if (tipo === "asalto") {
+    return (
+      <g>
+        <rect width="720" height="450" fill="#1E1A30" /><rect width="720" height="300" fill="#2A2440" />
+        <g fill="#15121F"><rect x="20" y="60" width="120" height="240" /><rect x="560" y="40" width="150" height="260" /></g>
+        <g fill="#F2B632" opacity=".7"><rect x="40" y="90" width="16" height="20" /><rect x="90" y="140" width="16" height="20" /><rect x="590" y="80" width="16" height="20" /><rect x="640" y="150" width="16" height="20" /></g>
+        <rect x="360" y="60" width="8" height="240" fill="#3B3358" /><path d="M364 64 L330 74" stroke="#3B3358" strokeWidth="8" />
+        <ellipse cx="330" cy="300" rx="160" ry="40" fill="#F2B632" opacity=".18" /><circle cx="330" cy="78" r="12" fill="#F2B632" />
+        <rect y="300" width="720" height="150" fill="#3B3358" />
+        <g className={apurado ? "ea-sustoTiembla" : ""}><PersonaSusto x={240} y={130} s={1.25} {...tu} ropa="#2F5D8A" /></g>
+        <PersonaSusto x={460} y={125} s={1.3} piel="#8D5A3B" ropa="#15121F" cara="malo" gorra="#3B3358" mascara />
+      </g>
+    );
+  }
+  if (tipo === "crisis") {
+    return (
+      <g>
+        <rect width="720" height="450" fill="#2A2440" />
+        {[0, 1, 2].map((i) => (
+          <g key={i} transform={`translate(${70 + i * 200} 50)`}>
+            <rect width="180" height="120" rx="8" fill="#15121F" />
+            <polyline className="ea-sustoParpadea" points="12,22 40,30 62,26 90,58 118,52 146,96 168,104" fill="none" stroke="#E0503A" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" />
+            <text x="150" y="24" textAnchor="end" fill="#E0503A" fontFamily="Bricolage Grotesque, sans-serif" fontWeight="800" fontSize="16">{["−18%", "−22%", "−31%"][i]}</text>
+          </g>
+        ))}
+        <rect y="300" width="720" height="150" fill="#3B3358" /><rect x="80" y="290" width="560" height="22" rx="6" fill="#8A3A1C" />
+        <PersonaSusto x={360} y={130} s={1.3} {...tu} ropa="#2A2440" />
+        <g transform="translate(520 250)"><g className="ea-sustoVibra"><rect width="34" height="56" rx="6" fill="#15121F" /><rect x="4" y="6" width="26" height="40" rx="3" fill="#E0503A" /></g></g>
+      </g>
+    );
+  }
+  return (
+    <g>
+      <rect width="720" height="450" fill="#F3E2BF" /><rect y="300" width="720" height="150" fill="#E2CFA8" />
+      <rect x="430" y="50" width="220" height="180" rx="12" fill="#8CC4E8" />
+      <PersonaSusto x={240} y={130} s={1.25} {...tu} ropa="#2F8A54" />
+      <g transform="translate(360 150)"><g className="ea-sustoVibra">
+        <rect width="120" height="210" rx="16" fill="#2A2440" /><rect x="8" y="14" width="104" height="182" rx="8" fill="#FFF8EA" />
+        <text x="60" y="56" textAnchor="middle" fill="#2A2440" fontFamily="Nunito, sans-serif" fontWeight="800" fontSize="13">«Tu banco»</text>
+        <text x="60" y="76" textAnchor="middle" fill="#665C7A" fontFamily="Nunito, sans-serif" fontSize="11">número oculto</text>
+        <circle cx="34" cy="160" r="16" fill="#E0503A" /><circle cx="86" cy="160" r="16" fill="#2F8A54" />
+      </g></g>
+    </g>
+  );
+}
+/* la cinemática con reloj: eliges, o se te acaba el tiempo */
+function SustoRapido({ ev, ano, genero, onElegir, onTarde }) {
+  const total = numero(ev.seg, 6);
+  const [t, setT] = useState(total);
+  const [hecho, setHecho] = useState(false);
+  useEffect(() => {
+    if (hecho) return;
+    if (t <= 0) { setHecho(true); onTarde(); return; }
+    if (typeof setTimeout !== "function") return;
+    const id = setTimeout(() => setT((x) => Math.max(0, +(x - 0.1).toFixed(1))), 100);
+    return () => { try { clearTimeout(id); } catch (e) {} };
+  }, [t, hecho]);
+  const elegir = (o) => { if (hecho) return; setHecho(true); onElegir(o); };
+  return (
+    <div className="ea-golpeCapa">
+      <div className="ea-susto">
+        <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <EscenaSusto tipo={ev.susto} genero={genero} apurado={t < total / 2} />
+        </svg>
+        <div className="ea-sustoTxt">
+          <div className="ea-golpeK">{ev.k} · {ano}</div>
+          <div className="ea-sustoT">{ev.t}</div>
+          <div className="ea-sustoN">Decide: {Math.ceil(t)} s</div>
+          <div className="ea-sustoReloj"><div style={{ width: (t / total * 100) + "%" }} /></div>
+          <div className="ea-sustoOps">
+            {ev.o.map((o, i) => (
+              <button key={o.t} className={"ea-op ea-sustoOp v" + i} onClick={() => elegir(o)}>{o.t}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---- el contenido de los caminos: empresas, noticias y decisiones ---- */
+// Contenido de «tu empresa del camino»: la entidad central de cada camino de carrera,
+// las noticias que mueven su valor y las decisiones fuertes que se resuelven con minijuegos.
+// Convención: camParte: -1 significa «vender toda tu parte» (el motor debe dejar la parte en 0).
+
+const CAMINOS = {
+  // ── Economía ──
+  "eco-mercados": { familia: "mesa", que: "Tu mesa", nombres: ["Meridiano Macro Fund", "Fondo Brickell Global", "Altamar Estrategias"],
+    sector: "bonos, monedas y tasas de interés", valor: [15e6, 45e6], parte: 0.01,
+    inicio: "Entras a {e}, un fondo que apuesta a monedas, bonos y tasas según cómo lees el ciclo económico." },
+  "eco-mya": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Grupo Lumbre Retail", "Andina de Alimentos", "Corporación Vía Sur"],
+    sector: "consumo masivo", valor: [30e6, 80e6], parte: 0.005,
+    inicio: "Llevaste a {e} a la bolsa y parte de tu bono llegó en acciones: ahora sigues su precio todos los días." },
+  "eco-pe": { familia: "fondo", que: "Tu fondo", nombres: ["Fondo Cordillera I", "Andes Capital Partners", "Pacífico Crecimiento"],
+    sector: "empresas medianas de la región", valor: [18e6, 40e6], parte: 0.02,
+    inicio: "Entras al equipo de {e}, que compra empresas medianas para hacerlas crecer y venderlas." },
+  "eco-propia": { familia: "firma", que: "Tu consultora", nombres: ["Ciclo Consultores", "Brújula Económica", "Prisma Consultores"],
+    sector: "estudios económicos para empresas", valor: [0.3e6, 1.2e6], parte: 0.8,
+    inicio: "Abres {e} con tu nombre en la puerta: vendes a empresas tu lectura de la economía." },
+
+  // ── Contaduría ──
+  "con-socio": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Farmacias Altavista", "Cementos Arenal", "Naviera Coralina"],
+    sector: "empresas que cotizan en bolsa", valor: [25e6, 70e6], parte: 0.005,
+    inicio: "La firma te asigna {e}, que cotiza en bolsa: firmas sus cuentas y parte de tu bono viene en sus acciones." },
+  "con-dd": { familia: "fondo", que: "Tu fondo", nombres: ["Fondo Ceiba Capital", "Puente Andino Partners", "Altiplano Inversiones"],
+    sector: "empresas familiares que buscan comprador", valor: [12e6, 35e6], parte: 0.01,
+    inicio: "Te sumas a {e} para revisar a fondo cada empresa antes de que el fondo la compre." },
+  "con-tesoreria": { familia: "mesa", que: "Tu tesorería", nombres: ["Tesorería Halcón", "Tesorería Palmira", "Tesorería Cumbre"],
+    sector: "la caja de una multinacional", valor: [20e6, 60e6], parte: 0.005,
+    inicio: "Llegas a {e}, la tesorería de una multinacional: cada día mueves su caja entre bancos, monedas y coberturas." },
+  "con-propia": { familia: "firma", que: "Tu firma de auditoría", nombres: ["Auditores Ceiba", "Cuentas Claras", "Balance Norte"],
+    sector: "auditoría para empresas medianas", valor: [0.4e6, 1.5e6], parte: 0.75,
+    inicio: "Fundas {e}: clientes que vuelven en cada cierre de año, y ahora te pagan a ti." },
+
+  // ── Ingeniería ──
+  "ing-pf": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Puertos del Istmo", "Autopistas Cóndor", "Helios Andino Energía"],
+    sector: "puertos, autopistas y energía", valor: [35e6, 80e6], parte: 0.008,
+    inicio: "Financiaste el gran proyecto de {e}, que ahora cotiza en bolsa; parte de tu bono quedó en sus acciones." },
+  "ing-infra": { familia: "fondo", que: "Tu fondo", nombres: ["Fondo Cimientos", "Arco Infraestructura", "Fondo Puente Largo I"],
+    sector: "carreteras, puertos y plantas de energía", valor: [40e6, 80e6], parte: 0.01,
+    inicio: "Entras a {e}, que compra carreteras, puertos y plantas de energía para cobrar por ellos durante décadas." },
+  "ing-energia": { familia: "mesa", que: "Tu mesa", nombres: ["Mesa de Energía Petrel", "Volta Commodities", "Cuenca Trading"],
+    sector: "petróleo, gas y metales", valor: [20e6, 55e6], parte: 0.01,
+    inicio: "Te sientas en {e}, que compra y vende petróleo, gas y metales que entiendes por dentro." },
+  "ing-propia": { familia: "firma", que: "Tu constructora", nombres: ["Constructora Basalto", "Obras Pilar Andino", "Viga Maestra"],
+    sector: "obras civiles y edificios", valor: [0.6e6, 2e6], parte: 0.7,
+    inicio: "Fundas {e}: tus obras, tu balance y tu firma en cada contrato." },
+
+  // ── Derecho ──
+  "der-socio": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Grupo Telcaribe", "Seguros Horizonte", "Inmobiliaria Coral"],
+    sector: "telecomunicaciones, seguros y bienes raíces", valor: [30e6, 80e6], parte: 0.005,
+    inicio: "El bufete te pone al frente de {e}, que llevaste a la bolsa; cobraste parte de los honorarios en acciones." },
+  "der-fondos": { familia: "fondo", que: "El fondo que estructuras", nombres: ["Fondo Laurel Crédito", "Bahía Capital II", "Mangle Oportunidades"],
+    sector: "préstamos a empresas medianas", valor: [20e6, 60e6], parte: 0.008,
+    inicio: "Armas desde cero los contratos de {e} y, como parte del pago, te dan una pequeña participación." },
+  "der-sucesiones": { familia: "familia", que: "La familia que asesoras", nombres: ["Grupo Familiar Ibarra", "Patrimonio Valdivieso", "Familia Echeverri"],
+    sector: "empresas, campos y edificios de tres generaciones", valor: [40e6, 120e6], parte: 0.005,
+    inicio: "Te vuelves la persona de confianza de {e}: tres generaciones, muchas propiedades y pocas reglas claras." },
+  "der-propia": { familia: "firma", que: "Tu bufete", nombres: ["Roble & Asociados", "Lex Andina Abogados", "Mangrove Legal Group"],
+    sector: "asesoría legal a empresas", valor: [0.3e6, 1.2e6], parte: 0.8,
+    inicio: "Abres {e}: tu nombre en la puerta, el sueño de casi todo abogado." },
+
+  // ── Administración ──
+  "adm-mya": { familia: "cotizada", que: "Tu cliente en bolsa", nombres: ["Aerolíneas Colibrí", "Hoteles Bahía Azul", "Grupo Textil Marañón"],
+    sector: "aerolíneas, hoteles y textiles", valor: [25e6, 75e6], parte: 0.006,
+    inicio: "Cerraste la compra que llevó a {e} a la bolsa; parte de tu bono quedó en sus acciones." },
+  "adm-banca": { familia: "familia", que: "La familia que asesoras", nombres: ["Santamarina Holdings", "Grupo Familiar Quiroga", "Patrimonio Arteaga"],
+    sector: "inversiones, campos y edificios", valor: [30e6, 110e6], parte: 0.006,
+    inicio: "El banco te da la cuenta de {e}: cuidas su dinero y cobras una parte de lo que crece." },
+  "adm-pe": { familia: "fondo", que: "Tu fondo", nombres: ["Fondo Vértice Capital", "Altura Partners III", "Sendero Capital"],
+    sector: "empresas que necesitan mejor gestión", valor: [18e6, 50e6], parte: 0.015,
+    inicio: "Entras a {e}, que compra empresas mal administradas para ordenarlas y venderlas más caras." },
+  "adm-propia": { familia: "firma", que: "Tu firma", nombres: ["Rumbo Consultores", "Timón Asesores", "Norte Claro"],
+    sector: "consultoría de gestión", valor: [0.4e6, 1.5e6], parte: 0.85,
+    inicio: "Fundas {e}: veinte años de contactos, ahora trabajando para ti." },
+
+  // ── Sistemas ──
+  "sis-quant": { familia: "mesa", que: "Tu fondo de algoritmos", nombres: ["Fractal Quant Fund", "Kepler Sistemático", "Señal Cero Capital"],
+    sector: "algoritmos que compran y venden en milisegundos", valor: [15e6, 50e6], parte: 0.02,
+    inicio: "Entras a {e}, donde tus modelos compran y venden más rápido que cualquier persona." },
+  "sis-vc": { familia: "fondo", que: "Tu fondo de startups", nombres: ["Semilla Ventures", "Faro Capital", "Ola Digital Ventures I"],
+    sector: "startups de tecnología", valor: [10e6, 30e6], parte: 0.02,
+    inicio: "Te unes a {e}, que pone dinero en startups antes de que nadie sepa si van a funcionar." },
+  "sis-banco": { familia: "cotizada", que: "Tu banco", nombres: ["Banco Arrecife", "Banco Plata Sur", "Banco Cumbre"],
+    sector: "banca", valor: [50e6, 80e6], parte: 0.004,
+    inicio: "Entras a liderar datos e IA en {e}, que cotiza en bolsa; parte de tu sueldo llega en acciones." },
+  "sis-propia": { familia: "firma", que: "Tu empresa de software", nombres: ["Nodo Labs", "Cauce IA", "Brisa Software"],
+    sector: "software con inteligencia artificial", valor: [0.5e6, 2e6], parte: 0.7,
+    inicio: "Fundas {e}: un producto que puede crecer sin pedirte más horas." },
+};
+
+const NOTICIAS_CAMINO = {
+  cotizada: [
+    { t: "{e} entra al S&P 500 y la acción sube en una mañana", pct: 0.18 },
+    { t: "Un director de {e}, en un escándalo de infidelidad; la acción cae", pct: -0.14 },
+    { t: "{e} reporta ganancias récord y supera lo que esperaba el mercado", pct: 0.15 },
+    { t: "Demanda colectiva contra {e}: la acusan de ocultar pérdidas", pct: -0.2 },
+    { t: "Rumor de compra hostil: un gigante quiere quedarse con {e}", pct: 0.22 },
+    { t: "{e} recorta su pronóstico de ventas y la acción se desploma", pct: -0.28 },
+    { t: "{e} recompra sus propias acciones por USD 5 millones", pct: 0.07 },
+    { t: "Una calificadora baja la nota de la deuda de {e}", pct: -0.1 },
+    { t: "{e} gana un contrato de 10 años con el gobierno", pct: 0.2 },
+    { t: "Renuncia por sorpresa el director financiero de {e}", pct: -0.12 },
+    { t: "{e} llega a Estados Unidos y Wall Street lo celebra", pct: 0.12 },
+    { t: "Un fondo apuesta contra {e} y publica un informe demoledor", pct: -0.3 },
+    { t: "{e} sube su dividendo y los fondos de pensión compran", pct: 0.08 },
+    { t: "Un analista estrella elige a {e} como su acción favorita del año", pct: 0.1 },
+    { t: "La comisión de valores investiga las cuentas de {e}", pct: -0.25 },
+    { t: "{e} se fusiona con su rival y nace el líder de la región", pct: 0.3 },
+  ],
+  fondo: [
+    { t: "Una multinacional compra una empresa de {e}: tres veces lo invertido", pct: 0.3 },
+    { t: "Una startup de {e} se vuelve unicornio: ya vale USD 1.000 millones", pct: 0.35 },
+    { t: "Hackeo en la mayor empresa de {e}: datos de 2 millones de clientes", pct: -0.18 },
+    { t: "El regulador investiga cómo {e} calcula el valor de sus empresas", pct: -0.15 },
+    { t: "{e} levanta un segundo fondo y duplica el dinero que maneja", pct: 0.2 },
+    { t: "Quiebra una de las empresas de {e}: la inversión se pierde completa", pct: -0.22 },
+    { t: "{e} vende parte de su cartera a un fondo canadiense con ganancia", pct: 0.12 },
+    { t: "Suben las tasas y las deudas de las empresas de {e} salen más caras", pct: -0.1 },
+    { t: "Una empresa de {e} debuta en la bolsa de Nueva York con alza de 40%", pct: 0.25 },
+    { t: "Se retira el socio fundador de {e} y dos inversionistas piden su dinero", pct: -0.2 },
+    { t: "{e} compra a su mayor competidor a buen precio", pct: 0.1 },
+    { t: "Accidente en una obra de {e}: la planta queda parada tres meses", pct: -0.16 },
+    { t: "{e} gana la concesión de una autopista por 25 años", pct: 0.18 },
+    { t: "Un fondo soberano del Golfo pone USD 50 millones en {e}", pct: 0.15 },
+    { t: "Fraude en una empresa de {e}: el gerente inflaba las ventas", pct: -0.28 },
+    { t: "Una startup de {e} se queda sin caja y cierra de un día para otro", pct: -0.12 },
+    { t: "{e} cobra USD 8 millones en dividendos de sus empresas", pct: 0.08 },
+  ],
+  mesa: [
+    { t: "{e} anticipa el desplome del mercado y gana 22% en un mes", pct: 0.22 },
+    { t: "Caída relámpago: el mercado se hunde 9% en minutos y {e} queda atrapada", pct: -0.2 },
+    { t: "Un error en el algoritmo de {e} manda miles de órdenes por equivocación", pct: -0.3 },
+    { t: "{e} cierra el mejor trimestre de su historia", pct: 0.15 },
+    { t: "Un operador de {e} escondía pérdidas en apuestas no autorizadas", pct: -0.25 },
+    { t: "El petróleo se dispara y la apuesta de {e} paga en grande", pct: 0.28 },
+    { t: "El regulador multa a {e} por reportar tarde sus operaciones", pct: -0.08 },
+    { t: "Un banco grande le abre a {e} una línea de crédito de USD 100 millones", pct: 0.06 },
+    { t: "{e} se protege a tiempo antes de la devaluación y salva la caja", pct: 0.1 },
+    { t: "La Fed sube las tasas por sorpresa y {e} pierde con sus bonos", pct: -0.15 },
+    { t: "Tres fondos de pensión le confían su dinero a {e}", pct: 0.18 },
+    { t: "Se cae el sistema de {e} justo el día de más movimiento del año", pct: -0.12 },
+    { t: "El nuevo modelo de {e} acierta en 7 de cada 10 operaciones", pct: 0.14 },
+    { t: "Un cliente grande saca su dinero de {e} sin aviso", pct: -0.18 },
+    { t: "{e} gana con la volatilidad mientras el resto del mercado sufre", pct: 0.2 },
+    { t: "La mejor operadora de {e} se va a la competencia con su estrategia", pct: -0.1 },
+    { t: "{e} aprovecha una diferencia de precios entre Chicago y Nueva York", pct: 0.09 },
+  ],
+  familia: [
+    { t: "{e} vende sus tierras en Florida a un desarrollador por el doble", pct: 0.25 },
+    { t: "Los herederos de {e} se pelean en tribunales por el control", pct: -0.22 },
+    { t: "La empresa principal de {e} gana la distribución de todo el país", pct: 0.15 },
+    { t: "El patriarca de {e} enferma y nadie sabe quién decide", pct: -0.12 },
+    { t: "Las autoridades fiscales investigan las cuentas de {e} en el extranjero", pct: -0.2 },
+    { t: "Una cadena internacional compra el 30% del negocio de {e}", pct: 0.2 },
+    { t: "Los edificios de {e} en Brickell suben de valor con el auge de Miami", pct: 0.12 },
+    { t: "Un primo de {e} firmó deudas a nombre de toda la familia", pct: -0.18 },
+    { t: "La nieta mayor moderniza {e} y las ventas crecen 25%", pct: 0.14 },
+    { t: "Un huracán daña los hoteles de {e} en el Caribe", pct: -0.15 },
+    { t: "{e} cobra un dividendo extraordinario de sus empresas", pct: 0.06 },
+    { t: "Un divorcio en {e} pone en juego la mitad de las acciones", pct: -0.25 },
+    { t: "{e} apostó por una startup que ahora se vende por USD 300 millones", pct: 0.3 },
+    { t: "Un banco suizo congela cuentas de {e} por una revisión de cumplimiento", pct: -0.1 },
+    { t: "{e} firma un protocolo familiar y termina años de pelea", pct: 0.1 },
+    { t: "{e} vende su vieja fábrica y recibe USD 15 millones", pct: 0.08 },
+  ],
+  firma: [
+    { t: "{e} gana una licitación del gobierno por USD 3 millones", pct: 0.3 },
+    { t: "Una multinacional elige a {e} como su asesor en toda la región", pct: 0.25 },
+    { t: "El socio clave de {e} renuncia y se lleva a dos clientes", pct: -0.25 },
+    { t: "Hackeo en {e}: se filtran archivos de clientes", pct: -0.2 },
+    { t: "Una revista de negocios nombra a {e} la firma revelación del año", pct: 0.1 },
+    { t: "Un cliente demanda a {e} por un error en un informe", pct: -0.18 },
+    { t: "{e} abre oficina en Miami", pct: 0.12 },
+    { t: "El cliente más grande de {e} quiebra y deja facturas sin pagar", pct: -0.22 },
+    { t: "Tres empleados estrella de la competencia se pasan a {e}", pct: 0.1 },
+    { t: "{e} cierra el año con 40% más clientes", pct: 0.15 },
+    { t: "Un fondo ofrece comprar el 20% de {e} a buen precio", pct: 0.2 },
+    { t: "Un exempleado de {e} copia su método y abre una firma rival", pct: -0.1 },
+    { t: "{e} lanza un servicio nuevo que los clientes piden sin que nadie lo venda", pct: 0.18 },
+    { t: "La autoridad revisa la licencia de {e} tras una queja", pct: -0.12 },
+    { t: "Un cliente feliz recomienda a {e} en una entrevista en televisión", pct: 0.08 },
+    { t: "{e} pierde la renovación de su contrato más grande", pct: -0.16 },
+  ],
+  todas: [
+    { t: "La economía crece más de lo esperado y {e} lo aprovecha", pct: 0.08 },
+    { t: "Recesión en EE. UU.: los clientes de {e} recortan gastos", pct: -0.15 },
+    { t: "Bajan las tasas de interés y {e} sube de valor", pct: 0.1 },
+    { t: "Una devaluación fuerte golpea las cuentas de {e}", pct: -0.18 },
+    { t: "{e} sale en la portada de una revista de negocios", pct: 0.06 },
+    { t: "Un paro nacional de transporte frena la actividad de {e}", pct: -0.1 },
+    { t: "Una alianza con un banco grande le trae a {e} nuevos clientes", pct: 0.12 },
+    { t: "Un rumor falso sobre {e} se vuelve viral y asusta al mercado", pct: -0.08 },
+    { t: "{e} suma a un exministro como asesor y gana peso político", pct: 0.07 },
+    { t: "Cambian las reglas de impuestos y {e} paga más", pct: -0.1 },
+    { t: "La IA le ahorra a {e} un tercio de sus gastos", pct: 0.14 },
+    { t: "Elecciones tranquilas: los mercados respiran y {e} sube", pct: 0.09 },
+    { t: "Crisis bancaria en EE. UU.: se congela el crédito para {e}", pct: -0.2 },
+  ],
+};
+
+const DECISIONES_CAMINO = {
+  cotizada: [
+    {
+      t: "Oferta hostil por {e}: pagan 40% más por cada acción",
+      x: "Un grupo industrial de Monterrey ofrece comprar todas las acciones de {e} con una prima de 40%. La junta directiva dice que la empresa vale más y pide a los accionistas no vender. Tu parte vale hoy tus USD {parte}.",
+      o: [
+        { t: "Vender todas tus acciones a la oferta", d: { cashParte: 1.4, camParte: -1, rep: -2, animo: 1,
+          msg: "Cobras 40% por encima del precio de la bolsa. Si la empresa despega después, ya no vas a estar adentro." } },
+        { t: "Unir accionistas y negociar una prima mayor", j: "anclaje", stat: "red", d: { camVal: 0.25, red: 4, rep: 3,
+          msg: "Lideras a un grupo de accionistas y el comprador sube la oferta. Tu parte vale 25% más y nadie vendió barato." } },
+        { t: "Apoyar a la junta directiva y rechazar", d: { camVal: -0.12, rep: 4, animo: -1,
+          msg: "El comprador se retira y la acción vuelve a su precio de antes. La junta directiva te lo agradece; tu cuenta, no tanto." } },
+      ],
+    },
+    {
+      t: "El CEO de {e}, en medio de un escándalo: ¿lo despiden?",
+      x: "Salen mensajes del CEO de {e} prometiendo contratos a cambio de favores personales. La acción cae 15% en dos días y la junta directiva te pide opinión antes de votar.",
+      o: [
+        { t: "Despedirlo hoy y nombrar un interino", j: "comite", stat: "rep", d: { camVal: 0.12, rep: 5, car: 3,
+          msg: "El mercado premia la rapidez. El interino no es brillante, pero la acción recupera lo perdido." } },
+        { t: "Esperar la investigación interna", d: { camVal: -0.15, rep: -3, ene: -3,
+          msg: "La investigación tarda tres meses y la prensa no suelta el tema. Al final lo despiden igual, con la acción más abajo." } },
+        { t: "Defenderlo en público", d: { camVal: -0.25, red: 6, rep: -6,
+          msg: "La acción se hunde, pero el CEO te debe un favor enorme. Si sale limpio, vas a ser su persona de confianza." } },
+      ],
+    },
+    {
+      t: "{e} se queda sin caja y pide dinero a sus accionistas",
+      x: "Un préstamo de USD 20 millones vence en 60 días y los bancos no quieren renovarlo. {e} ofrece acciones nuevas con descuento a quien ponga dinero ahora. Para no quedarte atrás tendrías que poner la mitad de tus USD {parte}.",
+      o: [
+        { t: "Poner tu dinero para salvar la empresa", j: "calculo", stat: "cri", d: { cashParte: -0.5, camVal: 0.3, camParte: 0.002, rep: 4,
+          msg: "Con el dinero de los accionistas la empresa paga el préstamo y la acción rebota. Compraste barato, pero tus ahorros quedaron flacos." } },
+        { t: "No poner nada y aceptar que tu parte se achique", d: { camParte: -0.002, camVal: 0.1,
+          msg: "Otros ponen el dinero y la empresa se salva. Tu porcentaje ahora es más chico." } },
+        { t: "Proponer vender una división", j: "estructura", stat: "mod", d: { camVal: 0.15, cri: 4, car: 3,
+          msg: "La venta de la división paga la deuda sin emitir acciones nuevas. La empresa queda más chica, pero más sana." } },
+      ],
+    },
+    {
+      t: "Un cliente gigante pide a {e} exclusividad por cinco años",
+      x: "Una cadena de supermercados de Estados Unidos quiere comprar el 35% de lo que produce {e}, a cambio de que no le venda a su competencia. Las ventas se disparan, pero quedarían en manos de un solo comprador.",
+      o: [
+        { t: "Aceptar la exclusividad", d: { camVal: 0.2, ene: -2,
+          msg: "La acción sube con el anuncio. Desde ahora, cada renegociación con ese cliente va a doler." } },
+        { t: "Negociar exclusividad parcial y precio mínimo", j: "anclaje", stat: "red", d: { camVal: 0.28, red: 4, rep: 3,
+          msg: "Consigues el contrato con un precio mínimo garantizado y libertad para vender en otros países." } },
+        { t: "Rechazar y seguir con muchos clientes", d: { camVal: -0.05, rep: 2,
+          msg: "Los analistas critican la oportunidad perdida. La empresa sigue sin depender de nadie." } },
+      ],
+    },
+    {
+      t: "{e} quiere comprar a su rival con deuda",
+      x: "La gerencia de {e} propone comprar al segundo jugador del mercado por USD 60 millones, casi todo con préstamos. Si sale bien, domina la región; si sale mal, la deuda la ahoga.",
+      o: [
+        { t: "Revisar el contrato de compra antes de votar", j: "banderas", stat: "cri", d: { camVal: 0.18, cri: 5, rep: 3,
+          msg: "Encuentras juicios laborales que el rival escondía y el precio baja USD 8 millones. La compra se hace en mejores condiciones." } },
+        { t: "Votar a favor tal como está", d: { camVal: -0.2, car: 4,
+          msg: "La compra sale y tu jefe lo celebra, pero los intereses se comen las ganancias de dos años. La acción cae mientras el mercado espera." } },
+        { t: "Votar en contra", d: { camVal: 0.03, red: -3,
+          msg: "La compra se cae. La gerencia no te lo perdona, pero la empresa sigue sin deudas." } },
+      ],
+    },
+    {
+      t: "Te ofrecen un puesto en la junta directiva de {e}",
+      x: "Un fondo activista compra acciones de {e} y te propone entrar a la junta directiva con su apoyo. Ganarías voz y un sueldo extra, pero tu empleador lo ve como un conflicto de interés.",
+      o: [
+        { t: "Aceptar y prepararte en serio", j: "quiz", stat: "cri", d: { camVal: 0.1, car: 6, rep: 4, ene: -4,
+          msg: "Cada reunión exige horas de estudio. Tu nombre empieza a sonar como director de empresas." } },
+        { t: "Rechazar y quedarte en tu puesto", d: { rep: 2, red: -2,
+          msg: "Tu jefe agradece la lealtad. El fondo busca a otra persona y deja de llamarte." } },
+      ],
+    },
+  ],
+
+  fondo: [
+    {
+      t: "{e} puede sacar a la bolsa a su mejor empresa",
+      x: "La empresa estrella de {e} triplicó sus ventas en cuatro años. Los bancos dicen que hoy la bolsa pagaría muy bien, pero el mercado está nervioso y la oportunidad podría cerrarse en semanas.",
+      o: [
+        { t: "Salir a la bolsa ya", j: "orden", stat: "mod", d: { camVal: 0.35, car: 5, rep: 4, ene: -4,
+          msg: "Tres meses de auditorías, presentaciones y viajes. La empresa debuta con alza y el fondo marca una ganancia enorme." } },
+        { t: "Venderla a un fondo más grande", d: { camVal: 0.18, cashParte: 0.3,
+          msg: "El precio es menor que en la bolsa, pero el dinero es seguro y rápido. Cobras tu parte del éxito." } },
+        { t: "Esperar un año más", d: { camVal: -0.1, animo: -1,
+          msg: "El mercado se cierra y la oportunidad se pierde. La empresa sigue bien, pero nadie sabe cuándo vuelve el momento." } },
+      ],
+    },
+    {
+      t: "Fraude en una empresa de {e}: el fundador inflaba ventas",
+      x: "La auditoría descubre que el fundador de una empresa del fondo reportaba ventas que no existían. Si se sabe, los inversionistas de {e} van a pedir explicaciones.",
+      o: [
+        { t: "Despedirlo y contarlo todo a los inversionistas", j: "comite", stat: "rep", d: { camVal: -0.05, rep: 8, red: 2,
+          msg: "Pierdes dinero en esa empresa, pero ganas la confianza de los inversionistas para el próximo fondo." } },
+        { t: "Cambiar al fundador en silencio", d: { camVal: 0.05, rep: -5, cri: 2,
+          msg: "Nadie se entera por ahora. Si la noticia sale algún día, va a salir con tu nombre al lado." } },
+        { t: "Reunir pruebas y demandarlo", j: "banderas", stat: "cri", d: { camVal: 0.12, cri: 4, ene: -3,
+          msg: "Las pruebas son sólidas y el fundador acepta devolver parte de lo que cobró. El proceso te quita meses." } },
+      ],
+    },
+    {
+      t: "Un inversionista grande de {e} no puede poner su parte",
+      x: "Un fondo de pensión que prometió USD 10 millones a {e} dice que no puede cumplir. Sin ese dinero hay que cancelar una compra ya firmada. Los socios proponen que cada uno ponga de su bolsillo; a ti te tocaría más de la mitad de tus USD {parte}.",
+      o: [
+        { t: "Poner tu dinero para cerrar la compra", j: "calculo", stat: "cri", d: { cashParte: -0.6, camVal: 0.25, camParte: 0.005, rep: 4,
+          msg: "Pones dinero propio y la compra se cierra. Ahora tienes más en juego, y más que perder." } },
+        { t: "Buscar a otro inversionista", j: "anclaje", stat: "red", d: { camVal: 0.15, red: 5,
+          msg: "Una family office de Miami toma el lugar del fondo de pensión. Pide mejores condiciones, pero la compra sale." } },
+        { t: "Cancelar la compra y pagar la multa", d: { camVal: -0.12, rep: -3,
+          msg: "El vendedor cobra la multa por romper el contrato. El fondo sigue sano, pero pierde fama de cumplir." } },
+      ],
+    },
+    {
+      t: "{e} puede apostar casi un tercio del fondo a una empresa",
+      x: "Aparece la oportunidad de comprar el control de una empresa de pagos digitales que crece 80% al año. Para hacerlo, {e} tendría que poner casi 30% de su dinero en una sola apuesta.",
+      o: [
+        { t: "Defender la apuesta en el comité", j: "comite", stat: "mod", d: { camVal: 0.4, car: 6, ene: -3,
+          msg: "El comité aprueba y la empresa sigue creciendo. Tu nombre queda pegado al mejor negocio del fondo." } },
+        { t: "Proponer una entrada más chica", j: "estructura", stat: "cri", d: { camVal: 0.15, cri: 3,
+          msg: "Entras con 10% del fondo y el derecho a comprar más después. Menos ganancia posible, menos riesgo." } },
+        { t: "Dejarla pasar", d: { rep: 1, animo: -1,
+          msg: "Otro fondo la compra. Si triunfa, vas a ver esa noticia en todos lados." } },
+      ],
+    },
+    {
+      t: "Un fondo de Nueva York quiere comprar tu parte en {e}",
+      x: "Un fondo grande ofrece comprar las participaciones de los socios jóvenes de {e} con 15% de descuento. Recibirías dinero hoy, en lugar de esperar cinco años a que el fondo venda sus empresas.",
+      o: [
+        { t: "Vender toda tu parte", d: { cashParte: 0.85, camParte: -1, animo: 1,
+          msg: "Cobras hoy y duermes tranquilo. Si el fondo multiplica su valor, esa ganancia será de otro." } },
+        { t: "Negociar sin descuento y vender solo una parte", j: "anclaje", stat: "red", d: { cashParte: 0.5, camParte: -0.005, red: 3,
+          msg: "Vendes una parte a precio completo y te quedas con el resto. Dinero en mano y un pie adentro." } },
+        { t: "Quedarte con todo", d: { camVal: 0.05, rep: 2,
+          msg: "Los socios mayores notan tu confianza en el fondo. Tu dinero sigue atado varios años más." } },
+      ],
+    },
+    {
+      t: "El regulador revisa cómo {e} valora sus empresas",
+      x: "La comisión de valores sospecha que {e} infla el valor de sus empresas para cobrar más comisiones. Tienes dos semanas para entregar los cálculos.",
+      o: [
+        { t: "Rehacer las valoraciones antes de entregarlas", j: "calculo", stat: "mod", d: { camVal: -0.05, rep: 6, cri: 4, ene: -4,
+          msg: "Bajas el valor de dos empresas y el regulador cierra la revisión. Los inversionistas lo ven como una señal de seriedad." } },
+        { t: "Contratar abogados y discutir cada punto", d: { camVal: -0.12, cashParte: -0.1, rep: -2,
+          msg: "La pelea dura un año y sale cara. Termina en una multa chica, pero el ruido espanta inversionistas." } },
+      ],
+    },
+  ],
+
+  mesa: [
+    {
+      t: "El algoritmo de {e} pierde 8% en una hora: ¿lo apagas?",
+      x: "Un modelo de {e} empieza a comprar sin parar en un mercado que cae. Puede ser un error, o puede estar viendo un rebote que nadie más ve. Cada minuto cuenta.",
+      o: [
+        { t: "Leer las señales y decidir posición por posición", j: "semaforo", stat: "mod", d: { camVal: 0.12, cri: 4, ene: -3,
+          msg: "Cierras lo que estaba mal y dejas lo que tenía sentido. El mercado rebota y recuperas casi todo." } },
+        { t: "Apagar todo de inmediato", d: { camVal: -0.08, rep: 2,
+          msg: "Pierdes 8%, pero la herida se detiene. El equipo pasa la semana buscando el error." } },
+        { t: "Dejarlo correr", d: { camVal: -0.22, cri: 5,
+          msg: "El mercado sigue cayendo y el modelo con él. Aprendes exactamente cómo falla, pero la lección sale cara." } },
+      ],
+    },
+    {
+      t: "{e} puede apostar fuerte a que la Fed baja las tasas",
+      x: "Tus números dicen que la Reserva Federal va a bajar las tasas de interés antes de lo que cree el mercado. Para ganar en serio, {e} tendría que arriesgar 25% de su dinero en esa sola idea.",
+      o: [
+        { t: "Operar la apuesta con disciplina", j: "trading", stat: "mod", d: { camVal: 0.35, car: 5, rep: 4,
+          msg: "La Fed baja las tasas y la apuesta paga. Te dan más dinero para manejar." } },
+        { t: "Apostar solo 5%", d: { camVal: 0.06,
+          msg: "Ganas algo si aciertas y casi nada si fallas. En un mes nadie se acuerda de la operación." } },
+        { t: "No apostar", d: { animo: -1,
+          msg: "El mercado se mueve tal como pensabas. Lo ves desde afuera." } },
+      ],
+    },
+    {
+      t: "Un operador estrella de {e} escondió pérdidas",
+      x: "Descubres que el operador que más ganaba en {e} tapaba pérdidas de USD 3 millones con operaciones falsas. Te pide unos días para recuperarlas antes de que alguien se entere.",
+      o: [
+        { t: "Reportarlo y cerrar sus posiciones en orden", j: "orden", stat: "rep", d: { camVal: -0.05, rep: 7, car: 3,
+          msg: "Cierras el hoyo antes de que crezca. El regulador valora que el aviso salió de ustedes." } },
+        { t: "Darle una semana", d: { camVal: -0.25, rep: -6, red: 3,
+          msg: "Las pérdidas se duplican y el caso sale igual. Él te defiende ante todos, pero tu firma también aparece en los papeles." } },
+      ],
+    },
+    {
+      t: "Un cliente quiere que {e} trabaje solo para él",
+      x: "Una familia de Miami ofrece poner USD 80 millones en {e}, el doble de lo que maneja hoy, si deja de aceptar dinero de otros. Las comisiones se disparan, pero todo dependería de un solo cliente.",
+      o: [
+        { t: "Negociar las condiciones", j: "anclaje", stat: "red", d: { camVal: 0.3, red: 5,
+          msg: "Consigues el dinero con un plazo mínimo de tres años y permiso para tener otros dos clientes." } },
+        { t: "Aceptar tal cual", d: { camVal: 0.4, ene: -3, animo: -1,
+          msg: "El fondo crece de golpe. El cliente llama todos los días y cada pérdida termina en una reunión tensa." } },
+        { t: "Rechazar", d: { rep: 3,
+          msg: "Sigues con tus clientes de siempre. Creces más lento, pero nadie te maneja." } },
+      ],
+    },
+    {
+      t: "El banco exige a {e} USD 5 millones en garantía hoy",
+      x: "Una caída brusca hace que el banco pida más garantías antes del cierre de la bolsa. Si {e} no paga, el banco vende sus posiciones al peor precio del año.",
+      o: [
+        { t: "Calcular qué vender y qué mantener", j: "calculo", stat: "cri", d: { camVal: -0.03, cri: 4,
+          msg: "Vendes lo justo y lo menos dañado. Pasas el día y conservas las posiciones buenas." } },
+        { t: "Poner tu propio dinero", d: { cashParte: -0.4, camVal: 0.15, camParte: 0.005, rep: 3,
+          msg: "Tu dinero cubre parte de la garantía y el mercado rebota a la semana. Tu parte crece; tus ahorros se achican." } },
+        { t: "Dejar que el banco venda", d: { camVal: -0.3, animo: -2,
+          msg: "El banco vende todo al peor precio. La mesa sobrevive, pero con un tercio menos." } },
+      ],
+    },
+    {
+      t: "{e} puede pagar por llegar antes que nadie a la bolsa",
+      x: "Un proveedor ofrece a {e} conexión directa a la bolsa de Chicago por USD 2 millones al año. Las órdenes llegarían antes que las de la competencia, pero el gasto se come parte de las ganancias.",
+      o: [
+        { t: "Revisar el contrato del proveedor", j: "banderas", stat: "mod", d: { camVal: 0.15, cri: 3,
+          msg: "Encuentras una cláusula que te ataba por cinco años. La corriges y el sistema se paga solo en seis meses." } },
+        { t: "Firmar sin leer tanto", d: { camVal: 0.05, ene: 2,
+          msg: "El sistema funciona, pero el contrato te amarra cinco años aunque deje de servir." } },
+        { t: "No comprarlo", d: { camVal: -0.05,
+          msg: "Te ahorras el gasto, pero la competencia es más rápida y algunas operaciones dejan de salir." } },
+      ],
+    },
+  ],
+
+  familia: [
+    {
+      t: "Un heredero de {e} quiere vender su parte a un extraño",
+      x: "El hijo menor quiere vender su 20% de {e} a un fondo que ofrece buen precio. Sus hermanos temen que un extraño entre a las reuniones de la familia.",
+      o: [
+        { t: "Armar una compra entre los hermanos", j: "estructura", stat: "cri", d: { camVal: 0.08, rep: 5, red: 3,
+          msg: "Los hermanos le compran su parte en cuotas. El heredero recibe su dinero y la familia mantiene el control." } },
+        { t: "Dejar que venda al fondo", d: { camVal: 0.12, rep: -3,
+          msg: "El fondo paga bien y ordena la empresa. Las cenas familiares se vuelven incómodas." } },
+        { t: "Convencerlo de quedarse", d: { red: 2, animo: -1,
+          msg: "Se queda, de mala gana. El tema va a volver en cada cumpleaños." } },
+      ],
+    },
+    {
+      t: "Muere el patriarca de {e} sin un testamento claro",
+      x: "El fundador deja tres testamentos distintos y cinco herederos que no se hablan. Mientras pelean, los bancos congelan los créditos de {e}.",
+      o: [
+        { t: "Poner en orden los pasos de la sucesión", j: "orden", stat: "cri", d: { camVal: 0.15, rep: 6, car: 3, ene: -4,
+          msg: "Ordenas papeles, plazos y firmas. En seis meses la sucesión se cierra sin juicio." } },
+        { t: "Dejar que lo resuelva un juez", d: { camVal: -0.25, ene: 2,
+          msg: "El juicio dura años. Los abogados cobran y la empresa se queda sin rumbo." } },
+      ],
+    },
+    {
+      t: "El nieto quiere poner la mitad de {e} en criptomonedas",
+      x: "El nieto mayor convenció al consejo familiar de mover la mitad del patrimonio de {e} a monedas digitales. Te piden opinión en la reunión del viernes.",
+      o: [
+        { t: "Presentar un análisis al consejo familiar", j: "comite", stat: "rep", d: { camVal: 0.1, rep: 5,
+          msg: "Convences a la familia de poner solo 5%. Cuando las monedas caen, te llaman para agradecerte." } },
+        { t: "Apoyar la idea del nieto", d: { camVal: -0.3, red: 4,
+          msg: "El nieto te ve como su aliado. Seis meses después las monedas caen 60% y la abuela deja de saludarte." } },
+        { t: "Negarte de plano", d: { red: -3, rep: 2,
+          msg: "La familia lo hace igual con otro asesor. Te salvas de la culpa, pero pierdes influencia." } },
+      ],
+    },
+    {
+      t: "{e} necesita USD 3 millones para no perder su hotel",
+      x: "El hotel más querido de {e} tiene un préstamo que vence y la familia no tiene efectivo. Te proponen entrar como socio con tu propio dinero: la mitad de tus USD {parte}.",
+      o: [
+        { t: "Poner tu dinero a cambio de una parte mayor", j: "anclaje", stat: "red", d: { cashParte: -0.5, camVal: 0.2, camParte: 0.01, red: 4,
+          msg: "Pones tu dinero y quedas como socio. Si la familia se recupera, tu parte vale bastante más." } },
+        { t: "Conseguir un banco que refinancie", j: "quiz", stat: "cri", d: { camVal: 0.1, rep: 3,
+          msg: "Un banco de Miami estira el préstamo a 7 años. La familia respira y tú cobras tu comisión." } },
+        { t: "Recomendar vender el hotel", d: { camVal: -0.08, cashParte: 0.1,
+          msg: "Venden rápido y por debajo de su valor. La deuda se paga y la familia pierde su joya." } },
+      ],
+    },
+    {
+      t: "Un fondo ofrece comprar todo el negocio de {e}",
+      x: "Un fondo internacional ofrece 30% más de lo que vale el negocio de {e}. La abuela no quiere vender; los nietos, sí.",
+      o: [
+        { t: "Negociar la venta de una parte, no de todo", j: "estructura", stat: "mod", d: { camVal: 0.2, cashParte: 0.3, rep: 4,
+          msg: "El fondo compra 40% y la familia sigue al mando. Todos cobran algo y nadie se siente traicionado." } },
+        { t: "Recomendar vender todo", d: { camVal: 0.3, cashParte: 1, camParte: -1, rep: -2,
+          msg: "La familia cobra y tú recibes tu comisión de éxito. Se acaba tu cliente más grande." } },
+        { t: "Apoyar a la abuela y rechazar", d: { rep: 3, animo: 1,
+          msg: "La abuela queda feliz. Los nietos van a recordar ese precio por años." } },
+      ],
+    },
+    {
+      t: "Las autoridades fiscales revisan las cuentas de {e} afuera",
+      x: "Una revisión de impuestos encuentra empresas de {e} en otros países que nunca se declararon bien. La familia te pregunta qué hacer antes de responder.",
+      o: [
+        { t: "Revisar los documentos y declarar todo", j: "banderas", stat: "cri", d: { camVal: -0.08, rep: 6, cri: 4,
+          msg: "Encuentras las fallas y la familia paga lo que debe con un acuerdo. Sale caro, pero el tema queda cerrado." } },
+        { t: "Defender que todo está en regla", d: { camVal: -0.2, red: 2, rep: -5,
+          msg: "La revisión se convierte en juicio. La familia agradece tu lealtad; la prensa, no." } },
+      ],
+    },
+  ],
+
+  firma: [
+    {
+      t: "Tu socio quiere irse de {e} y cobrar su parte",
+      x: "Tu socio recibió una oferta de una firma grande y quiere que le compres su parte de {e}. Si se va, se lleva a dos clientes; para comprarle necesitas pagar un tercio de tus USD {parte}.",
+      o: [
+        { t: "Negociar el precio y comprarle su parte", j: "anclaje", stat: "red", d: { cashParte: -0.3, camParte: 0.15, camVal: -0.1, red: 2,
+          msg: "Te quedas con más de la firma, pero sin dos de sus clientes. Ahora todo depende de ti." } },
+        { t: "Ofrecerle más participación para que se quede", d: { camVal: 0.05, camParte: -0.08, animo: -1,
+          msg: "Se queda, a cambio de una parte mayor. La firma sigue entera; tu porcentaje, no." } },
+        { t: "Dejarlo ir con sus clientes", d: { camVal: -0.25, ene: 3,
+          msg: "La firma se achica y tú respiras. Menos gente, menos reuniones, menos ingresos." } },
+      ],
+    },
+    {
+      t: "Un cliente gigante quiere a {e} solo para él",
+      x: "Una multinacional ofrece un contrato de tres años con {e} a cambio de que no trabaje con su competencia. Ese contrato sería la mitad de los ingresos de la firma.",
+      o: [
+        { t: "Negociar exclusividad solo en su país", j: "anclaje", stat: "red", d: { camVal: 0.25, red: 4, rep: 2,
+          msg: "Firmas el contrato y conservas a tus otros clientes fuera de ese país. Creces sin quedar amarrado." } },
+        { t: "Aceptar la exclusividad completa", d: { camVal: 0.35, ene: -4, animo: -1,
+          msg: "Los ingresos se disparan. Si un día ese cliente se va, la mitad de la firma se va con él." } },
+        { t: "Rechazar", d: { rep: 3, camVal: -0.03,
+          msg: "Pierdes el contrato grande, pero sigues siendo una firma con muchos clientes y ningún dueño." } },
+      ],
+    },
+    {
+      t: "Un fondo de Miami quiere comprar 30% de {e}",
+      x: "Un fondo ofrece dinero para que {e} abra oficinas en tres países, a cambio de 30% de la firma. Valoran la firma 40% por encima de lo que crees, pero van a pedir resultados cada trimestre.",
+      o: [
+        { t: "Armar el trato con condiciones claras", j: "estructura", stat: "cri", d: { camVal: 0.35, camParte: -0.2, cashParte: 0.2, car: 4,
+          msg: "Cobras algo hoy, la firma crece con dinero ajeno y conservas el control. Ahora tienes un socio que mira cada número." } },
+        { t: "Rechazar y crecer con lo propio", d: { camVal: 0.05, animo: 1,
+          msg: "Sigues siendo tu propio jefe. Creces despacio, a tu ritmo." } },
+      ],
+    },
+    {
+      t: "{e} no tiene para pagar los sueldos este mes",
+      x: "Dos clientes pagan tarde y a {e} le faltan USD 80 mil para la nómina. Los empleados todavía no saben nada.",
+      o: [
+        { t: "Poner tu propio dinero", d: { cashParte: -0.15, camVal: 0.1, rep: 4, animo: -1,
+          msg: "Los sueldos salen a tiempo y nadie se entera. Tus ahorros, en cambio, sí lo notan." } },
+        { t: "Armar un plan de caja con el banco", j: "calculo", stat: "cri", d: { camVal: 0.05, cri: 3,
+          msg: "Consigues un crédito corto y cobras con descuento a un cliente. La nómina sale y aprendes a mirar la caja cada semana." } },
+        { t: "Pagar la mitad y explicar", d: { camVal: -0.1, rep: -4,
+          msg: "Dos empleados buenos renuncian. Los que quedan te creen, por ahora." } },
+      ],
+    },
+    {
+      t: "{e} puede competir por un contrato que la duplica",
+      x: "Sale una licitación del gobierno que vale el doble de lo que factura {e} en un año. Para ganarla tendrías que contratar diez personas antes de saber el resultado.",
+      o: [
+        { t: "Presentar la propuesta ante el comité evaluador", j: "comite", stat: "rep", d: { camVal: 0.45, car: 6, ene: -5,
+          msg: "Ganas la licitación. Los meses que vienen son los más duros y los mejores de tu carrera." } },
+        { t: "Presentarte junto a una firma más grande", d: { camVal: 0.15, red: 3,
+          msg: "Ganan juntos y te toca una parte chica del trabajo. Sumas experiencia y un aliado poderoso." } },
+        { t: "No presentarte", d: { animo: -1,
+          msg: "Una firma rival gana el contrato. La vas a ver crecer desde tu oficina." } },
+      ],
+    },
+    {
+      t: "Un error en un informe de {e} le costó dinero a un cliente",
+      x: "Un número mal copiado en un informe de {e} hizo que un cliente perdiera USD 200 mil. El cliente amenaza con demandar y con contarlo a todo el gremio.",
+      o: [
+        { t: "Encontrar qué falló y presentar la corrección", j: "banderas", stat: "mod", d: { camVal: 0.02, rep: 5, cri: 3,
+          msg: "Muestras el error, la corrección y el nuevo control. El cliente se queda y lo cuenta como ejemplo de seriedad." } },
+        { t: "Pagar el daño sin discutir", d: { cashParte: -0.2, rep: 3,
+          msg: "El cliente cobra y se calma. Tu bolsillo paga una lección que el equipo no vio." } },
+        { t: "Negar la responsabilidad", d: { camVal: -0.15, rep: -6,
+          msg: "El cliente se va y lo cuenta en cada reunión del gremio. Dos clientes más empiezan a dudar." } },
+      ],
+    },
+  ],
+};
+
+/* ============================================================
+   TU CAMINO: LA EMPRESA ALREDEDOR DE LA QUE GIRA TU VIDA
+   Alessandro, 10-nov-2026: que la decisión de «hacia dónde va tu
+   carrera» no abra un extra, sino que tu vida se dirija a eso, con un
+   trasfondo que se sienta («un miembro de la junta le fue infiel a su
+   mujer y las acciones se vieron afectadas», «si a la empresa le va
+   bien, que te avise si entra en el S&P 500») sin volverlo más
+   complicado de jugar.
+   Al elegir el camino nace tu empresa (CAMINOS): un nombre, un valor y
+   tu parte. El año que juegas de cada etapa trae una noticia que mueve
+   su valor (NOTICIAS_CAMINO); cada dos etapas, una decisión fuerte que
+   se resuelve con un minijuego (DECISIONES_CAMINO). Lo que vale tu parte
+   suma a tu patrimonio.
+   ============================================================ */
+const ID_CAMINO = 9860;
+const CAMINO_DERIVA = 0.03;   /* lo que crece una empresa en un año sin noticias */
+const nuevoCamino = (id, st, nombre) => {
+  const c = CAMINOS[id];
+  if (!c) return null;
+  const rnd = generadorDe("camino:" + entero(st && st.semilla, 0, 0, 2e9) + ":" + id);
+  const n = texto(nombre, "", 60) || c.nombres[Math.floor(rnd() * c.nombres.length)] || c.nombres[0];
+  const valor = Math.round(c.valor[0] + rnd() * (c.valor[1] - c.valor[0]));
+  return { id, n, valor, parte: clamp(numero(c.parte, 0.01), 0, 1), desde: entero(st && st.turno, 0, 0, 99), decs: [], hist: [] };
+};
+const caminoDe = (st) => (st && st.empresa && CAMINOS[st.empresa.id] ? st.empresa : null);
+const valorCaminoDe = (st) => {
+  const c = caminoDe(st);
+  return c ? Math.round(numero(c.valor, 0) * clamp(numero(c.parte, 0), 0, 1)) : 0;
+};
+const conEmpresa = (s, c) => String(s || "").split("{e}").join(c ? c.n : "tu empresa");
+/* la decisión fuerte de la etapa, armada con la semilla y el año: una
+   recarga la reconstruye igual */
+const escenaCamino = (st) => {
+  const c = caminoDe(st);
+  if (!c) return null;
+  const fam = CAMINOS[c.id].familia;
+  const pozo = DECISIONES_CAMINO[fam] || [];
+  if (!pozo.length) return null;
+  const usadas = Array.isArray(c.decs) ? c.decs : [];
+  const libres = pozo.map((x, i) => i).filter((i) => usadas.indexOf(i) < 0);
+  const rnd = generadorDe("decCamino:" + entero(st.semilla, 0, 0, 2e9) + ":" + entero(st.turno, 0, 0, 99));
+  const lista = libres.length ? libres : pozo.map((x, i) => i);
+  const k = lista[Math.floor(rnd() * lista.length)];
+  const dec = pozo[k];
+  const parte = fmt(valorCaminoDe(st));
+  const pon = (s) => conEmpresa(s, c).split("{parte}").join(parte);
+  return {
+    id: ID_CAMINO, min: 0, max: 6, clave: true, camino: true, decCamino: k,
+    t: pon(dec.t), x: pon(dec.x),
+    o: dec.o.map((o) => ({ ...o, t: pon(o.t), d: { ...o.d, msg: pon(o.d && o.d.msg) } })),
+  };
+};
+/* la noticia del año de tu empresa (solo el año que juegas de la etapa) */
+const noticiaCamino = (st) => {
+  const c = caminoDe(st);
+  if (!c) return null;
+  const fam = CAMINOS[c.id].familia;
+  const pozo = (NOTICIAS_CAMINO[fam] || []).concat(NOTICIAS_CAMINO.todas || []);
+  const vistas = Array.isArray(c.hist) ? c.hist.map((h) => h.t) : [];
+  const libres = pozo.filter((x) => vistas.indexOf(conEmpresa(x.t, c)) < 0);
+  const nt = elegirAzar(libres.length ? libres : pozo);
+  return nt ? { t: conEmpresa(nt.t, c), pct: clamp(numero(nt.pct, 0), -0.6, 0.6) } : null;
+};
+const pctTexto = (p) => (p >= 0 ? "+" : "−") + Math.round(Math.abs(p) * 100) + "%";
+
+/* tu empresa, junto a tus atributos */
+function PildoraCamino({ st }) {
+  const c = caminoDe(st);
+  if (!c) return null;
+  const ult = Array.isArray(c.hist) && c.hist.length ? c.hist[c.hist.length - 1] : null;
+  return (
+    <div className="ea-caminoPill" title={CAMINOS[c.id].que + ": " + c.n + ". Tu parte: " + Math.round(numero(c.parte, 0) * 1000) / 10 + "%."}>
+      <span className="ea-caminoQue ea-dis">{CAMINOS[c.id].que}</span>
+      <b>{c.n}</b>
+      <span className="ea-mono">tu parte USD {fmt(valorCaminoDe(st))}</span>
+      {ult && <span className={"ea-mono " + (ult.pct >= 0 ? "sube" : "baja")}>{pctTexto(ult.pct)}</span>}
+    </div>
+  );
+}
+
+/* ============================================================
+   TU EMPRESA: DE LA META A FUNDARLA Y FACTURAR
+   Alessandro, 10-nov-2026: que la sección del fondo cambie hacia lo
+   que va dirigida tu empresa; que aparezca al elegir hacia dónde va tu
+   carrera, que sea la meta, y que según tus decisiones crees tu propia
+   empresa y empieces a facturar con ella, estando tú a la cabeza.
+   Como empleado ves dónde trabajas y tu meta: montar tu firma, con lo
+   que te falta. Al cumplirlo te la ofrecen. Ya fundada, ves lo que
+   factura, tu equipo y tu ganancia, que reemplaza a tu sueldo.
+   ============================================================ */
+const META_RANGO = 3;          /* Asociado */
+const META_RED = 50;
+const EMPRESA_FACTURA = 0.6;   /* lo que factura al año, sobre lo que vale */
+const EMPRESA_MARGEN = 0.25;   /* lo que queda de ganancia */
+const facturacionDe = (st) => {
+  const c = caminoDe(st);
+  return c ? Math.round(numero(c.valor, 0) * EMPRESA_FACTURA) : 0;
+};
+const gananciaEmpresaDe = (st) => {
+  const c = caminoDe(st);
+  return c ? Math.round(facturacionDe(st) * EMPRESA_MARGEN * clamp(numero(c.parte, 0), 0, 1)) : 0;
+};
+const equipoDe = (st) => Math.max(2, Math.round(facturacionDe(st) / 80000));
+/* lo que te falta para montar tu firma */
+const requisitosMeta = (st, patrimonio) => {
+  const f = FIRMA_DE(st);
+  return [
+    { n: "Llegar a " + RANGO(META_RANGO).n, ok: st.rango >= META_RANGO, v: Math.min(1, (st.rango + 1) / (META_RANGO + 1)) },
+    { n: "Tener USD " + fmt(f.costo) + " de patrimonio", ok: patrimonio >= f.costo, v: clamp(patrimonio / Math.max(1, f.costo), 0, 1) },
+    { n: META_RED + " de contactos", ok: numero(st.red, 0) >= META_RED, v: clamp(numero(st.red, 0) / META_RED, 0, 1) },
+  ];
+};
+const metaCumplida = (st, patrimonio) => !sinJefe(st) && requisitosMeta(st, patrimonio).every((r) => r.ok);
+
+function PanelEmpresa({ st, patrimonio }) {
+  const c = caminoDe(st);
+  if (!c) return null;
+  const cam = CAMINOS[c.id];
+  const duena = !!st.propia;
+  const hist = (Array.isArray(c.hist) ? c.hist : []).slice(-4).reverse();
+  const f = FIRMA_DE(st);
+  return (
+    <div className="ea-empresa">
+      <div className="ea-rot ea-dis">{duena ? "Tu empresa" : cam.que}</div>
+      <div className="ea-empresaN ea-dis">{c.n}</div>
+      <div className="ea-empresaS">{texto(cam.sector, "", 120)}</div>
+      <div className="ea-empresaCifras">
+        <div><span>Vale</span><b className="ea-mono">USD {fmt(c.valor)}</b></div>
+        <div><span>Tu parte</span><b className="ea-mono">{Math.round(numero(c.parte, 0) * 1000) / 10}% · USD {fmt(valorCaminoDe(st))}</b></div>
+        {duena && <div><span>Factura al año</span><b className="ea-mono">USD {fmt(facturacionDe(st))}</b></div>}
+        {duena && <div><span>Tu equipo</span><b className="ea-mono">{equipoDe(st)} personas</b></div>}
+        {duena && <div><span>Tu ganancia al año</span><b className="ea-mono sube">USD {fmt(gananciaEmpresaDe(st))}</b></div>}
+      </div>
+      {duena && <p className="ea-itemD">Estás a la cabeza: lo que gana la empresa es tu ingreso, en lugar de un sueldo. Las decisiones fuertes que vienen son de dueño.</p>}
+      {!duena && !sinJefe(st) && (
+        <div className="ea-empresaMeta">
+          <div className="ea-empresaMetaT ea-dis">Tu meta: montar {f.n.toLowerCase()}</div>
+          {requisitosMeta(st, patrimonio).map((r) => (
+            <div className="ea-empresaReq" key={r.n}>
+              <span>{r.ok ? "✓" : "○"} {r.n}</span>
+              <div className="ea-empresaBar"><div style={{ width: (r.v * 100).toFixed(0) + "%" }} className={r.ok ? "ok" : ""} /></div>
+            </div>
+          ))}
+          <p className="ea-itemD">{metaCumplida(st, patrimonio) ? "Ya cumples todo: en la próxima etapa te van a ofrecer montarla." : "Cuando cumplas las tres, te van a ofrecer montarla."}</p>
+        </div>
+      )}
+      {hist.length > 0 && (
+        <div className="ea-empresaHist">
+          <div className="ea-rot ea-dis" style={{ marginTop: 14 }}>Lo último</div>
+          {hist.map((h, i) => (
+            <div className="ea-item" key={i}>
+              <span>{h.t}</span> <b className={"ea-mono " + (h.pct >= 0 ? "sube" : "baja")}>{pctTexto(h.pct)}</b>
+              <div className="ea-itemD">{2026 + entero(h.a, 0, 0, 99)}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   TUS RELACIONES, COMO EN DETROIT
+   Alessandro, 9-nov-2026: relaciones con personas (tu jefe, tu pareja,
+   tu mentor, tus padres) y avisos de consecuencia justo después de
+   decidir. Cada relación va de 0 a 100 y empieza en 50. Se mueve con lo
+   que decides, se nota en la etapa siguiente y abre o cierra cosas:
+   - tu jefe: con buena relación asciendes más rápido y negocias mejor;
+     con mala, tu reputación se gasta.
+   - tu pareja: con buena relación descansas más; con mala, te cansas.
+   - tu mentor: si sigues su consejo te ayuda en los minijuegos.
+   - tus padres: si estás cuando te necesitan, tus contactos crecen.
+   ============================================================ */
+const RELACIONES = [
+  { k: "jefe", n: "Tu jefe", e: "👔" },
+  { k: "pareja", n: "Tu pareja", e: "❤️" },
+  { k: "mentor", n: "Tu mentor", e: "🧭" },
+  { k: "padres", n: "Tus padres", e: "🏡" },
+];
+const relDe = (st) => {
+  const r = st && st.rel && typeof st.rel === "object" ? st.rel : {};
+  const o = {};
+  RELACIONES.forEach((x) => { o[x.k] = clamp(numero(r[x.k], 50), 0, 100); });
+  return o;
+};
+const DE_FAMILIA = /\b(papá|mamá|padre|madre|tus padres|tu viejo|tu vieja|abuel[ao])\b/i;
+/* lo que una decisión le hace a cada relación, y los avisos que deja */
+const relacionesTras = (antes, st, d, o, ev, siguioMentor, momentoTipo) => {
+  const rel = relDe(antes);
+  const delta = { jefe: 0, pareja: 0, mentor: 0, padres: 0 };
+  const n = (k) => numero(d && d[k], 0);
+  if (!sinJefe(st) && !(ev && (ev.pretemporada || ev.mentores))) {
+    if (st.patron && antes.patron && st.patron !== antes.patron) rel.jefe = 50;   /* jefe nuevo */
+    else delta.jefe = (n("car") > 0 ? 2 : 0) + (n("rep") > 0 ? 1 : n("rep") < 0 ? -3 : 0) + (n("ene") <= -10 ? 1 : 0);
+  }
+  if (st.pareja === "noviazgo" || st.pareja === "casado") {
+    delta.pareja = momentoTipo === "boda" ? 25 : momentoTipo === "hijo" ? 8 : (n("ene") >= 5 ? 2 : n("ene") <= -10 ? -3 : 0);
+  }
+  if (st.mentor && siguioMentor != null && !(ev && (ev.pretemporada || ev.mentores))) delta.mentor = siguioMentor ? 3 : -1;
+  if (ev && DE_FAMILIA.test(String(ev.t || "") + " " + String(ev.x || ""))) delta.padres = n("cash") < 0 || n("ene") < 0 ? 5 : -3;
+  Object.keys(delta).forEach((k) => { rel[k] = clamp(rel[k] + delta[k], 0, 100); });
+  const avisos = [];
+  const m = st.mentor ? MENTORES.find((x) => x.id === st.mentor) : null;
+  if (delta.jefe >= 2) avisos.push({ e: "👔", t: "Tu jefe valoró esto" });
+  else if (delta.jefe <= -2) avisos.push({ e: "👔", t: "Tu jefe recordará esto" });
+  if (delta.pareja >= 2) avisos.push({ e: "❤️", t: "A tu pareja le importó" });
+  else if (delta.pareja <= -2) avisos.push({ e: "❤️", t: "Tu pareja lo va a recordar" });
+  if (delta.padres >= 2) avisos.push({ e: "🏡", t: "Tus padres lo agradecen" });
+  else if (delta.padres <= -2) avisos.push({ e: "🏡", t: "Tus padres se sintieron solos" });
+  if (m && delta.mentor >= 2) avisos.push({ e: "🧭", t: m.n + " está de acuerdo" });
+  else if (m && delta.mentor < 0 && avisos.length < 2) avisos.push({ e: "🧭", t: m.n + " lo habría hecho distinto" });
+  const antesP = Array.isArray(antes.pendientes) ? antes.pendientes : [];
+  const nuevas = (Array.isArray(st.pendientes) ? st.pendientes : []).filter((p) => !antesP.some((q) => q.id === p.id));
+  if (nuevas.length) avisos.unshift({ e: "⏳", t: "Esta decisión tendrá consecuencias" });
+  return { rel, avisos: avisos.slice(0, 3) };
+};
+/* lo que cada relación hace en el año que juegas */
+const efectoRelaciones = (st, notas) => {
+  const r = relDe(st);
+  if (!sinJefe(st)) {
+    if (r.jefe >= 70) { st.carrera += 1; }
+    else if (r.jefe <= 25) { st.rep = clamp(st.rep - 2, 0, 100); notas.push("Tu jefe ya no te defiende en las reuniones. Se nota en tu reputación."); }
+  }
+  if (st.pareja === "noviazgo" || st.pareja === "casado") {
+    if (r.pareja >= 70) st.ene = clamp(st.ene + 3, 0, 100);
+    else if (r.pareja <= 25) { st.ene = clamp(st.ene - 3, 0, 100); notas.push("En la casa las cosas están tensas, y lo cargas a la oficina."); }
+  }
+  if (r.padres >= 70) st.red = clamp(st.red + 1, 0, 100);
+  /* todo vuelve un poco hacia el medio con el tiempo */
+  const o = {};
+  Object.keys(r).forEach((k) => { o[k] = r[k] > 50 ? r[k] - 1 : r[k] < 50 ? r[k] + 1 : 50; });
+  st.rel = o;
+};
+function BloqueRelaciones({ st }) {
+  const r = relDe(st);
+  const vivas = RELACIONES.filter((x) => x.k !== "pareja" || st.pareja === "noviazgo" || st.pareja === "casado")
+    .filter((x) => x.k !== "mentor" || st.mentor)
+    .filter((x) => x.k !== "jefe" || !sinJefe(st));
+  return (
+    <div className="ea-rel">
+      <div className="ea-rot ea-dis">Tus relaciones</div>
+      {vivas.map((x) => (
+        <div className="ea-relFila" key={x.k}>
+          <span>{x.e} {x.k === "mentor" ? (MENTORES.find((m) => m.id === st.mentor) || {}).n || x.n : x.n}</span>
+          <div className="ea-relBar"><div style={{ width: r[x.k] + "%" }} className={r[x.k] >= 70 ? "alta" : r[x.k] <= 25 ? "baja" : ""} /></div>
+          <span className="ea-relV ea-mono">{r[x.k] >= 70 ? "Confía en ti" : r[x.k] <= 25 ? "Distante" : "Normal"}</span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 /* ---- explicación antes de jugar ----
@@ -51165,13 +53506,21 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
   /* y el «para qué sirve», que no hace falta antes de jugar */
   const [porQue, setPorQue] = useState(false);
 
+  const empezar = () => { if (onVisto) onVisto(tipo); setListo(true); };
+  /* Un minijuego que ya jugaste no vuelve a pedir que leas las reglas:
+     del anuncio se entra a jugar (Alessandro, 9-nov-2026: «que no se
+     sienta pesado»). Las reglas siguen a un toque desde el anuncio.
+     Van ANTES del temporizador del anuncio: el componente a veces sale
+     antes de llegar aquí (un juego sin ficha, el contrato) y el
+     temporizador se encontraba la función sin declarar. */
+  const trasAnuncio = () => { if (visto) empezar(); else setPaso("reglas"); };
   /* el anuncio se pasa solo, y tambien al toque: quien ya lo vio veinte
      veces no tiene por que esperar */
   useEffect(() => {
     if (paso !== "anuncio") return;
-    if (typeof setTimeout !== "function") { setPaso("reglas"); return; }
+    if (typeof setTimeout !== "function") { trasAnuncio(); return; }
     const espera = sinMovimiento() ? 60 : 1150;
-    const t = setTimeout(() => setPaso("reglas"), espera);
+    const t = setTimeout(trasAnuncio, espera);
     return () => { try { clearTimeout(t); } catch (e) {} };
   }, [paso]);
   /* El torniquete. Todos los minijuegos cierran por aqui y aqui solo se
@@ -51188,6 +53537,8 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
        el precio en que cerró); los demás no mandan nada */
     try { onFin(nv, extra && typeof extra === "object" ? extra : null); } catch (e) { try { console.error("[El Analista] fin de juego", e); } catch (_) {} }
   };
+  /* el contrato con tu firma es un fichaje: destello y hoja, sin reglas */
+  if (tipo === "anclaje" && ctx && numero(ctx.actual, 0) > 0) return <ContratoFichaje ayuda={ayuda} ctx={ctx} onFin={cerrarUnaVez} />;
   const j = JUEGOS[tipo];
   if (!j) return <MiniJuego tipo={tipo} ayuda={ayuda} nivel={nivel} onFin={cerrarUnaVez} modo={modo} temas={temas} onTema={onTema} ctx={ctx} />;
   if (listo) {
@@ -51198,14 +53549,13 @@ function TarjetaJuego({ tipo, ayuda, nivel, statN, onFin, modo, temas, onTema, v
     );
   }
   const nivelJuego = tipo === "quiz" || tipo === "calculo" || tipo === "semaforo" || tipo === "catedra";
-  const empezar = () => { if (onVisto) onVisto(tipo); setListo(true); };
 
   /* ---- paso uno: el anuncio ----
      Una pantalla de color que no pide leer nada. Solo avisa de que esto
      ya no es una decision, es otra cosa. */
   if (paso === "anuncio") {
     return (
-      <div className="ea-anuncioJuego" onClick={() => setPaso("reglas")}>
+      <div className="ea-anuncioJuego" onClick={trasAnuncio}>
         <div className="ea-anuncioJK ea-dis">Hora de jugar</div>
         <div className="ea-anuncioJN ea-dis">{j.n}</div>
         <div className="ea-anuncioJT ea-dis">{j.tema} · {j.dur}</div>
@@ -52347,12 +54697,34 @@ function Desglose({ partes, oscuro }) {
   const filas = [
     ["Tus decisiones", partes.decisiones],
     ["Sueldo menos gastos", partes.sueldo],
-    ["Mercados", partes.mercados],
+    ["Tus inversiones", partes.mercados],
+    ["Tu empresa", partes.camino],
     ["Compras y lo demás", partes.otros],
   ].filter(([, v]) => Number.isFinite(v) && Math.abs(v) >= 1);
   if (!filas.length) return null;
   return (
     <div className={"ea-desglose" + (oscuro ? " oscuro" : "")}>
+      {filas.map(([n, v]) => (
+        <span key={n}><i>{n}</i> <b className={"ea-mono " + (v >= 0 ? "sube" : "baja")}>{v >= 0 ? "+" : "−"}{fmt(Math.abs(v))}</b></span>
+      ))}
+    </div>
+  );
+}
+
+/* En qué ganaste o perdiste lo invertido, con nombres de todos los días:
+   «Acciones +1.500 · Bonos −200». Las cuatro que más movieron; el resto
+   junto. Sin nada invertido, no sale. */
+function EnQueInvertiste({ cartera }) {
+  const gs = (cartera && Array.isArray(cartera.ganancias) ? cartera.ganancias : [])
+    .filter((g) => g && Number.isFinite(g.v) && Math.abs(g.v) >= 1)
+    .sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
+  if (!gs.length) return null;
+  const filas = gs.slice(0, 4).map((g) => [NOMBRE_CORTO[g.k] || "Otros", g.v]);
+  const resto = gs.slice(4).reduce((a, g) => a + g.v, 0);
+  if (Math.abs(resto) >= 1) filas.push(["Lo demás", resto]);
+  return (
+    <div className="ea-desglose oscuro" style={{ marginTop: 6 }}>
+      <span><i>En qué:</i></span>
       {filas.map(([n, v]) => (
         <span key={n}><i>{n}</i> <b className={"ea-mono " + (v >= 0 ? "sube" : "baja")}>{v >= 0 ? "+" : "−"}{fmt(Math.abs(v))}</b></span>
       ))}
@@ -52705,6 +55077,7 @@ const ICONO_VIDA = {
 /* El simbolo, el rotulo y el color de cada clase de escena. */
 const CLASE_ESCENA = (ev) => {
   if (!ev) return { k: "documento", n: "Memorando interno", c: "var(--gris)" };
+  if (ev.cuna) return { k: "persona", n: "Tu arranque", c: "var(--cobre)" };
   if (ev.pretemporada) return { k: "documento", n: "Inicio de etapa", c: "var(--cobre)" };
   if (ev.mentores) return { k: "persona", n: "Tu mentor", c: "var(--cobre)" };
   if (ev.legendaria) return { k: "corona", n: "Decisión legendaria", c: "#B8901C" };   /* dorado, como las cartas doradas */
@@ -53409,6 +55782,9 @@ const textoCompartir = (st, pat, hechos) => {
     "El Analista · " + cargoDe(st) + " a los " + edad(st.turno, st.edadIni),
     "USD " + fmt(pat) + " · «" + apodoDe(st) + "»",
   ];
+  /* el legado, como la idolatría que se comparte en El Ídolo */
+  const lv = clamp(numero(st && st.legadoMax, 0), 0, 100);
+  if (lv > 0) lineas.push("Legado: " + nivelLegado(lv).n + " " + Math.floor(lv) + "/100");
   if (st && st.dia && Array.isArray(hechos)) {
     lineas.push("Carrera del día " + st.dia + ": " + hechos.map((h) => (h ? "✅" : "❌")).join(""));
   }
@@ -53852,6 +56228,8 @@ function Motor() {
   /* el aumento que se cerró en la mesa del contrato, hasta aplicarlo */
   const aumentoPactado = useRef(null);
   const ctxJuego = useMemo(() => {
+    /* el examen: para meter preguntas de tu carrera */
+    if (op && (op.juego || op.j) === "quiz") return { estudio: s.estudio };
     /* la negociación del contrato: lo que cobras hoy */
     if (op && (op.juego || op.j) === "anclaje") return op.negocia || null;
     if (!op || (op.juego || op.j) !== "estructura") return null;
@@ -53869,6 +56247,12 @@ function Motor() {
   const [anuncio, setAnuncio] = useState(false);
   /* cuántas galas de este cierre ya se vieron */
   const [galaVista, setGalaVista] = useState(0);
+  /* el golpe de dinero de la etapa, si lo hubo: va antes del rodillo */
+  const [golpe, setGolpe] = useState(null);
+  /* los momentos que se ven en pantalla, uno tras otro (boda, hijo,
+     funeral, ascenso, despido, primera casa) */
+  const [momentos, setMomentos] = useState([]);
+  const setMomento = (m) => { if (m) setMomentos((c) => c.concat(m).slice(-4)); };
   useEffect(() => { setGalaVista(0); }, [cierre]);
   /* la segunda mitad de la leccion del año, la de las cifras propias */
   const [verLeccion, setVerLeccion] = useState(false);
@@ -53981,7 +56365,7 @@ function Motor() {
      y la cabecera, al volver, otra más grande. */
   const valorFondoDe = (st) => (st && st.fondo && Array.isArray(st.fondo.posiciones)
     ? st.fondo.posiciones.reduce((a, q) => a + numero(q.ticket, 0) * numero(st.fondo.pct, 0), 0) : 0);
-  const patrimonioDe = (st) => st.cash + st.cartera + valorBienes(st) + valorFondoDe(st) - numero(st.deuda, 0);
+  const patrimonioDe = (st) => st.cash + st.cartera + valorBienes(st) + valorFondoDe(st) + valorCaminoDe(st) - numero(st.deuda, 0);
   const vidaTotal = (st) => st.bienes.reduce((a, id) => a + ((bienDe(id) || {}).vida || 0), 0);
   const paisDe = (st) => NACIONES.find((x) => x.id === st.pais) || NACIONES[0];
   const salarioAnual = (st) =>
@@ -54019,6 +56403,33 @@ function Motor() {
     let pool = fuente.filter((e) => cabe(e) && st.vistos.indexOf(e.id) < 0);
     if (pool.length === 0 && !sinRepetir) pool = fuente.filter(cabe);
     return pool.length ? elegirAzar(pool) : null;
+  };
+
+  /* Como sacar, pero para las escenas con minijuego: pesa más lo que no
+     has jugado nunca y mucho menos lo que jugaste hace poco. Al azar
+     puro, de veinte minijuegos se veían cinco por vida y la negociación
+     se llevaba un tercio. */
+  const sacarJuego = (fuente, st, usados) => {
+    const cabe = (e) => st.rango >= e.min && st.rango <= e.max && usados.indexOf(e.id) < 0
+      && !(e.cultura && (!culturaDe(st) || culturaDe(st).k !== e.cultura))
+      && !(sinJefe(st) && esDeEmpleado(e)) && !(e.dueno && !sinJefe(st)) && huellasOk(e, st);
+    const pool = fuente.filter((e) => cabe(e) && st.vistos.indexOf(e.id) < 0);
+    if (!pool.length) return null;
+    const jug = Array.isArray(st.jugados) ? st.jugados : [];
+    const rec = Array.isArray(st.recientes) ? st.recientes : [];
+    const peso = (e) => {
+      const tipos = (e.o || []).map((o) => o && (o.j || o.juego)).filter(Boolean);
+      if (!tipos.length) return 1;
+      return Math.max.apply(null, tipos.map((k) => {
+        const i = rec.lastIndexOf(k);
+        if (i >= 0) return i >= rec.length - 2 ? 0.08 : 0.35;
+        return jug.indexOf(k) < 0 ? 3 : 1;
+      }));
+    };
+    const total = pool.reduce((a, e) => a + peso(e), 0);
+    let x = azar() * total;
+    for (let i = 0; i < pool.length; i++) { x -= peso(pool[i]); if (x <= 0) return pool[i]; }
+    return pool[pool.length - 1];
   };
 
   /* escenas de vida disponibles: filtran por edad y por estado familiar,
@@ -54099,6 +56510,19 @@ function Motor() {
        decisión clave: esas tres siempre entraron dentro del presupuesto
        normal del año, así que contarlas también duplicaba la duración del
        año. Solo lo empujado a mano tiene que sumar. */
+    /* cada dos etapas, una decisión fuerte sobre tu empresa */
+    if (caminoDe(st) && st.turno > st.empresa.desde && (st.turno - st.empresa.desde) % 4 === 2) {
+      const dc = escenaCamino(st);
+      if (dc) { lista.push(dc); usados.push(dc.id); }
+    }
+    /* tu meta cumplida: te ofrecen montar tu firma, sí o sí */
+    if (caminoDe(st) && metaCumplida(st, patrimonioDe(st)) && st.vistos.indexOf(IDS_FIRMA[0]) < 0 && usados.indexOf(IDS_FIRMA[0]) < 0) {
+      lista.push(escenaFirma(st, IDS_FIRMA[0])); usados.push(IDS_FIRMA[0]);
+    }
+    /* «¿Hacia dónde va tu carrera?» va con lo forzado: entraba detrás de
+       las consecuencias y la vida, y el recorte a tres escenas la dejaba
+       fuera casi siempre (en 2 de 3 vidas de prueba nunca se eligió). */
+    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) { lista.push(decisionRama(st)); usados.push(DECISION_RAMA.id); }
     const forzadas = lista.length;
     vuelven.forEach((e) => { lista.push(e); });
 
@@ -54125,7 +56549,7 @@ function Motor() {
        solo una de cada cuatro llegaba: el árbol de tu carrera ni se
        plantaba. Ahora llega en Analista Senior, o al quinto año si no
        has subido, con tiempo para que sus consecuencias se vean. */
-    if (!st.rama && !sinJefe(st) && (st.rango >= 2 || st.turno >= 4)) { lista.push(decisionRama(st)); usados.push(DECISION_RAMA.id); }
+    /* (la bifurcación ahora va con lo forzado, más arriba) */
     /* Las raíces de los árboles no pueden depender del sorteo: entre 75
        escenas, el rumor o el headhunter salían en una partida de cada
        tres, y con ellos todo lo que cuelga detrás. Cada una sale una vez
@@ -54199,36 +56623,70 @@ function Motor() {
     const conJuego = (e) => !!(e && Array.isArray(e.o) && e.o.some((o) => o && (o.j || o.juego)));
     const fuenteJuego = fuente.filter(conJuego);
     let juegos = lista.filter(conJuego).length;
+    const minJ = juegosEtapa(st.turno);
     while (lista.length < objetivo) {
-      const e = (juegos < MIN_JUEGOS_ANO && sacar(fuenteJuego, st, usados, true)) || sacar(fuente, st, usados);
+      const e = (juegos < minJ && sacarJuego(fuenteJuego, st, usados)) || sacar(fuente, st, usados);
       if (!e) break;
       lista.push(e); usados.push(e.id);
       if (conJuego(e)) juegos += 1;
     }
-    if (juegos < MIN_JUEGOS_ANO) {
-      const e = sacar(fuenteJuego, st, usados, true);
+    if (juegos < minJ) {
+      const e = sacarJuego(fuenteJuego, st, usados);
       if (e) { lista.push(e); usados.push(e.id); }
     }
     /* Partida corta: de todo lo que el año quería contar, se quedan las
-       dos primeras (lo forzado va delante: apertura, contrato, firma...).
-       Lo que no entra no se pierde: vuelve a intentarlo la etapa que viene.
-       Si ninguna de las dos trae minijuego, la segunda se cambia por una
-       que sí. */
+       ESCENAS_ETAPA primeras (lo forzado va delante: apertura, contrato,
+       firma...). Lo que no entra no se pierde: vuelve a intentarlo la
+       etapa que viene. Si traen menos minijuegos de los que toca, las
+       últimas sin juego se cambian por escenas que sí (nunca lo forzado:
+       contrato, apertura, firma...). */
     {
-      let corta = lista.slice(0, ESCENAS_ETAPA);
-      if (!corta.some(conJuego)) {
-        const j = lista.slice(ESCENAS_ETAPA).find(conJuego) || sacar(fuenteJuego, st, usados, true);
-        if (j) corta = corta.slice(0, ESCENAS_ETAPA - 1).concat(j);
+      const corta = lista.slice(0, ESCENAS_ETAPA);
+      /* La escena de vida tiene lugar asegurado. Entraba cuarta o quinta,
+         detrás de lo forzado y de las consecuencias, y el recorte la
+         dejaba fuera casi siempre: en una vida de prueba, 0 de 23 etapas.
+         Desplaza a la última que no sea forzada ni minijuego; lo
+         desplazado vuelve a pedir lugar la etapa siguiente. */
+      const vidaEtapa = lista.find((e) => VIDA.indexOf(e) >= 0);
+      if (vidaEtapa && corta.indexOf(vidaEtapa) < 0) {
+        let k = corta.length - 1;
+        while (k >= forzadas && conJuego(corta[k])) k--;
+        if (k < forzadas) k = corta.length - 1;
+        if (k >= forzadas) corta[k] = vidaEtapa;
+      }
+      const resto = lista.slice(ESCENAS_ETAPA).filter(conJuego);
+      for (let i = corta.length - 1; i >= forzadas && corta.filter(conJuego).length < minJ; i--) {
+        /* la escena de vida no se cambia nunca: si no, la cadena novio,
+           boda, hijos casi no arrancaba (en 3 vidas, 0 veces) */
+        if (conJuego(corta[i]) || VIDA.indexOf(corta[i]) >= 0) continue;
+        const j = resto.shift() || sacarJuego(fuenteJuego, st, usados);
+        if (!j) break;
+        if (usados.indexOf(j.id) < 0) usados.push(j.id);
+        corta[i] = j;
       }
       lista.length = 0;
       corta.forEach((e) => lista.push(e));
     }
     /* La pretemporada abre el año y va por fuera del presupuesto: se pone
        delante cuando todo lo demás ya está contado. */
-    lista.unshift(escenaPretemporada(st));
+    /* un susto, de vez en cuando (una vez cada uno por vida): suma una
+       escena corta a la etapa, con su reloj */
+    if (st.turno >= 2 && azar() < 0.16) {
+      const su = elegirAzar(sustoPosible(st).filter((e) => usados.indexOf(e.id) < 0));
+      if (su) { lista.push(su); usados.push(su.id); }
+    }
+    /* Tu arranque, como en El Ídolo: en la primera etapa el arquetipo
+       ocupa el lugar de la carta de inicio, y la clase va antes que todo.
+       Solo en una partida nueva: una empezada antes sigue como estaba. */
+    const arranque = entero(st.turno, 0, 0, 99) === 0;
+    const pideArq = arranque && !st.arq && st.vistos.indexOf(ID_ARQ) < 0;
+    const pideClase = arranque && !st.clase && st.vistos.indexOf(ID_CLASE) < 0;
+    if (!pideArq) lista.unshift(escenaPretemporada(st));
     /* sin mentor todavía: elegirlo es lo primero (también en una partida
        empezada antes de que hubiera mentores) */
-    if (!st.mentor && st.vistos.indexOf(ID_MENTOR) < 0) lista.unshift(escenaMentor());
+    if (!st.mentor && st.vistos.indexOf(ID_MENTOR) < 0) lista.unshift(escenaMentor(st));
+    if (pideArq) lista.unshift(escenaArquetipo(st));
+    if (pideClase) lista.unshift(escenaClase());
     return lista;
   };
 
@@ -54244,6 +56702,12 @@ function Motor() {
   const pesada = (e) => !!(e && (e.legendaria || e.rama || DRAMA_IDS.indexOf(e.id) >= 0));
   /* presenta una escena, con anuncio si toca */
   const ponerEscena = (e) => {
+    /* «Se murió»: primero el funeral, después la carta */
+    if (e && e.id === 9022) {
+      const ed = edad(s.turno, s.edadIni);
+      const quien = ed < 45 ? "tu abuela" : entero(s.semilla, 0, 0, 2e9) % 2 ? "tu papá" : "tu mamá";
+      setMomento(momentoDe("funeral", s, [], { quien }));
+    }
     setEv(e);
     setOp(null);
     irA("evento");
@@ -54361,6 +56825,10 @@ function Motor() {
         : "Entras al sector a los " + ed.e + ", con tu título de " + ca.n + " en " + na.ban,
     }];
     st.histo = [st.cash];   /* punto de partida, para que el primer cierre ya tenga curva */
+    /* el legado arranca con lo que ya hiciste: nada a los 20, algo a los 50 */
+    st.legado = st.rango * LEGADO.porRangoInicial;
+    st.legadoMax = st.legado;
+    st.legPatron = st.patron;
 
     st = sanear(st);
     setS(st);
@@ -54512,6 +56980,8 @@ function Motor() {
       : dado < 0.44 ? elegirAzar(SORPRESAS_MALAS) : null;
     aplicarCompra(c, sor);
     if (sor) setAviso(sor.msg);
+    if (c.id === "apto") setMomento(momentoDe("casa", s, [{ k: "cash", v: -c.c }], { antes: c.up ? ["Mantenimiento USD " + fmt(c.up) + " al año"] : [] }));
+    if (c.id === "boda" && s.pareja === "noviazgo") setMomento(momentoDe("boda", s, [{ k: "cash", v: -c.c }]));
   };
 
   const aplicarCompra = (c, sor) => setS((st) => {
@@ -54526,6 +56996,7 @@ function Motor() {
     /* Si pagas la boda estando de novios, te casas: no tendria sentido
        pagarla y seguir figurando como pareja sin mas. */
     if (c.id === "boda" && st.pareja === "noviazgo") n.pareja = "casado";
+    if (c.id === "apto" || (c.id === "boda" && st.pareja === "noviazgo")) n.animo = clamp(entero(n.animo, 0, -2, 2) + (c.id === "boda" ? 2 : 1), -2, 2);
 
     if (sor) {
       if (sor.pct) n.valores = { ...n.valores, [c.id]: clamp(numero(n.valores[c.id], 0) * (1 + sor.pct), 0, TOPE_PLATA) };
@@ -54599,14 +57070,50 @@ function Motor() {
 
   /* ---------- resolución de una escena ---------- */
   const resolverEscena = (dBruto, nivelBruto, o, azar) => {
-    const d = dBruto && typeof dBruto === "object" ? dBruto : {};
+    let d = dBruto && typeof dBruto === "object" ? dBruto : {};
+    /* tu empresa: lo que pagas o cobras va como dinero, en proporción a
+       lo que vale tu parte; la decisión fuerte se marca como vista */
+    if (s.empresa && (d.cashParte || d.camVal || d.camParte)) {
+      const vp = valorCaminoDe(s);
+      if (d.cashParte) d = { ...d, cash: Math.round(numero(d.cash, 0) + vp * clamp(numero(d.cashParte, 0), -3, 3)) };
+    }
     const nivel = nivelBruto === "exito" || nivelBruto === "parcial" || nivelBruto === "fallo" ? nivelBruto : "parcial";
     let st = { ...s, valores: { ...s.valores } };
+    /* el minijuego que se acaba de jugar, para variar los que vienen */
+    if (o && (o.j || o.juego) && JUEGOS[o.j || o.juego]) {
+      st.recientes = (Array.isArray(st.recientes) ? st.recientes : []).concat(o.j || o.juego).slice(-6);
+    }
     const cambios = [];
     /* los minijuegos ganados: uno de los objetivos del día los cuenta */
     if (nivel === "exito" && o && (o.j || o.juego)) st.ganados = entero(numero(st.ganados, 0) + 1, 0, 0, 999);
     if (o && o.ramaId) st.rama = o.ramaId;
+    /* elegir el camino es el día que nace tu empresa */
+    let msgCamino = "";
+    if (o && o.ramaId && CAMINOS[o.ramaId] && !st.empresa) {
+      st.empresa = nuevoCamino(o.ramaId, st);
+      if (st.empresa) {
+        msgCamino = " " + conEmpresa(CAMINOS[o.ramaId].inicio, st.empresa);
+        st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Empiezas con " + st.empresa.n });
+      }
+    }
+    if (st.empresa && (d.camVal || d.camParte)) {
+      const c = { ...st.empresa };
+      /* con minijuego, el éxito da todo, a medias la mitad y el fallo
+         lo contrario de lo que buscabas */
+      const f = !(o && (o.j || o.juego)) ? 1 : nivel === "exito" ? 1 : nivel === "parcial" ? 0.5 : -0.5;
+      if (d.camVal) c.valor = Math.max(0, Math.round(numero(c.valor, 0) * (1 + clamp(numero(d.camVal, 0), -0.9, 0.9) * (numero(d.camVal, 0) > 0 ? f : 1))));
+      if (d.camParte) c.parte = clamp(numero(c.parte, 0) + clamp(numero(d.camParte, 0), -1, 1) * (f > 0 ? 1 : 0), 0, 1);
+      st.empresa = c;
+    }
+    if (st.empresa && ev && ev.camino && Number.isInteger(ev.decCamino)) {
+      st.empresa = { ...st.empresa, decs: (st.empresa.decs || []).concat(ev.decCamino).slice(-20) };
+    }
     if (o && o.mentorId && IDS_MENTOR.indexOf(o.mentorId) >= 0) st.mentor = o.mentorId;
+    /* tu arranque: la clase y el arquetipo (los atributos del arquetipo
+       vienen en o.d y se aplican como cualquier otra escena) */
+    if (o && o.claseId && IDS_CLASE.indexOf(o.claseId) >= 0) st.clase = o.claseId;
+    if (o && o.arqId && IDS_ARQ.indexOf(o.arqId) >= 0) st.arq = o.arqId;
+    let siguioMentor = null, eleccion = -1;
     /* con qué mentores coincidió esta decisión (para el «Jugaste como…») */
     if (ev && o && !ev.mentores && !ev.pretemporada) {
       try {
@@ -54615,9 +57122,12 @@ function Motor() {
         if (opsEv.length >= 2 && iElegida >= 0) {
           st.nDec = entero(numero(st.nDec, 0) + 1, 0, 0, 99999);
           const afin = { ...(st.afin || {}) };
-          MENTORES.forEach((m) => {
+          mentoresDe(st).forEach((m) => {
             if (mentorElige(m, opsEv, riesgoDe) === iElegida) afin[m.id] = entero(numero(afin[m.id], 0) + 1, 0, 0, 99999);
           });
+          const mio = st.mentor ? MENTORES.find((m) => m.id === st.mentor) : null;
+          if (mio) siguioMentor = mentorElige(mio, opsEv, riesgoDe) === iElegida;
+          eleccion = iElegida;
           st.afin = afin;
         }
       } catch (e) { /* sin afinidad esta vez */ }
@@ -54633,6 +57143,12 @@ function Motor() {
       st.propia = true;
       st.patron = f.n;
       st.rama = st.rama || "boutique";
+      /* montar tu firma la vuelve tu empresa: el camino pasa a ser ella */
+      const idPropia = texto(st.estudio, "", 8) + "-propia";
+      if (CAMINOS[idPropia] && !(st.empresa && st.empresa.id === idPropia)) {
+        st.empresa = nuevoCamino(idPropia, st, f.n);
+        if (st.empresa) msgCamino = " " + conEmpresa(CAMINOS[idPropia].inicio, st.empresa);
+      }
       st.contrato = null;                 /* ya no hay quien te renueve nada */
       st.sueldoMult = clamp(numero(st.sueldoMult, 1) * (1 + (f.mult - 1) * bien), 0.6, TOPE_MULT);
       Object.keys(f.mods).forEach((k) => {
@@ -54653,8 +57169,10 @@ function Motor() {
          cerró en la mesa, ni más ni menos. */
       const pactado = o.negocia ? aumentoPactado.current : null;
       aumentoPactado.current = null;
+      /* los años que se firmaron en la mesa, si se firmaron */
+      if (pactado && pactado.anos) st.contrato = { ...st.contrato, anos: entero(pactado.anos, 3, 2, 4) };
       const parte = pactado || !negociada ? 1 : nivel === "exito" ? 1 : nivel === "parcial" ? 0.55 : 0;
-      const mult = pactado || 1 + (numero(o.contrato.mult, 1) - 1) * parte;
+      const mult = pactado ? numero(pactado.mult, 1) : 1 + (numero(o.contrato.mult, 1) - 1) * parte;
       st.sueldoMult = clamp(numero(st.sueldoMult, 1) * mult, 0.6, TOPE_MULT);
       /* Y si la negociación se cayó del todo, tampoco te mudas de firma:
          te quedas donde estabas, con el plazo nuevo y sin subida. */
@@ -54721,8 +57239,14 @@ function Motor() {
     }
 
     /* --- la vida --- */
+    /* la boda y los hijos se viven en pantalla; la muerte de alguien
+       cercano ya se vio antes de la carta, y aquí pega en el ánimo */
+    const momentoTipo = d.pareja === "casado" && s.pareja !== "casado" ? "boda"
+      : numero(d.hijos, 0) > 0 ? "hijo" : ev && ev.id === 9022 ? "funeral" : null;
     if (d.pareja && PAREJAS.indexOf(d.pareja) >= 0) st.pareja = d.pareja;
     if (d.hijos) st.hijos = entero(st.hijos + d.hijos, 0, 0, 8);
+    if (momentoTipo) st.animo = clamp(entero(st.animo, 0, -2, 2) + ANIMO_MOMENTO[momentoTipo], -2, 2);
+    if (d.animo) st.animo = clamp(entero(st.animo, 0, -2, 2) + entero(d.animo, 0, -2, 2), -2, 2);
     if (d.estudia) st.estudia = clamp(st.estudia + numero(d.estudia, 0), 0, 500);
     /* un divorcio no resta una cifra fija: se lleva un porcentaje de todo */
     if (d.patPct) {
@@ -54880,7 +57404,30 @@ function Motor() {
       nivel, cash: numero(enCaja, 0),
     }).slice(-6);
 
-    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600), nivel, cambios, azar: azar || null });
+    /* La carta del «Inicio de etapa» no tiene pantalla de resultado: lo
+       que ganas sale como aviso encima de la escena siguiente y se sigue
+       sin parar (23 pantallas menos en una vida desde los 20). */
+    const auto = !!(ev && ev.pretemporada);
+    let avisosRel = [];
+    try {
+      const rr = relacionesTras(s, st, d, o, ev, siguioMentor, momentoTipo);
+      st.rel = rr.rel; avisosRel = rr.avisos;
+    } catch (e) { avisosRel = []; }
+    /* el % de jugadores que eligió lo mismo (si SurEconomics lo ofrece) */
+    const idFijo = ev && Number.isInteger(ev.id) && !ev.camino && !ev.pretemporada && !ev.mentores && eleccion >= 0 ? ev.id : null;
+    if (idFijo != null && typeof window !== "undefined" && window.__elecciones) {
+      try { if (typeof window.__elecciones.anotar === "function") window.__elecciones.anotar({ e: idFijo, o: eleccion }); } catch (e) {}
+      try {
+        if (typeof window.__elecciones.porcentajes === "function") {
+          Promise.resolve(window.__elecciones.porcentajes(idFijo)).then((arr) => {
+            const p = Array.isArray(arr) ? numero(arr[eleccion], NaN) : NaN;
+            if (Number.isFinite(p)) setRes((r) => (r && r.ev === idFijo ? { ...r, pct: clamp(Math.round(p), 0, 100) } : r));
+          }).catch(() => {});
+        }
+      } catch (e) {}
+    }
+    if (momentoTipo && momentoTipo !== "funeral") setMomento(momentoDe(momentoTipo, st, cambios));
+    setRes({ msg: texto(d.msg, "El asunto quedo cerrado.", 600) + msgCamino, nivel, cambios, azar: azar || null, auto, avisos: avisosRel, ev: idFijo });
     irA("resultado");
   };
 
@@ -54912,8 +57459,8 @@ function Motor() {
   };
 
   /* Partida corta: el cierre de UN año, sin tocar la pantalla. El año
-     con decisiones lleva lo que decidiste; los otros cuatro de la etapa
-     se cierran solos y suman un poco de carrera por el año trabajado. */
+     con decisiones lleva lo que decidiste; el resto de la etapa se
+     cierra solo y suman un poco de carrera por el año trabajado. */
   const calcularCierre = (s0, conDecisiones) => {
     let st = { ...s0, valores: { ...s0.valores } };
     const hDec = conDecisiones ? hitosAno.current : [];
@@ -54952,10 +57499,16 @@ function Motor() {
     const salario = salarioAnual(st);
     const multB = clamp(0.5 + st.rep / 90 + st.carrera / 400, 0.3, 3);
     const bono = RANGO(st.rango).salario * multB * na.sal;
-    ing.push({ n: "Sueldo", v: salario });
-    ing.push({ n: "Bono por desempeño", v: bono });
+    const duenoDeEmpresa = !!(st.propia && caminoDe(st));
+    if (duenoDeEmpresa) {
+      /* a la cabeza de tu empresa: lo que gana es tu ingreso */
+      ing.push({ n: "Ganancia de " + st.empresa.n, v: gananciaEmpresaDe(st) });
+    } else {
+      ing.push({ n: "Sueldo", v: salario });
+      ing.push({ n: "Bono por desempeño", v: bono });
+    }
 
-    if (tipoRama(st) === "boutique") {
+    if (tipoRama(st) === "boutique" && !duenoDeEmpresa) {
       const v = salario * (azar() * 0.8 - 0.2);
       if (v >= 0) ing.push({ n: "Variable de la boutique", v });
       else egr.push({ n: "Año flojo de la boutique", v: -v });
@@ -55172,9 +57725,9 @@ function Motor() {
       const rA = a.mu + a.sd * vol * (a.b * zm + idio * gauss()) + imp;
       ret += x * rA;
       beta += x * a.b;
-      detalle.push({ n: a.n, w: x, r: rA });
+      detalle.push({ n: a.n, k: a.k, w: x, r: rA });
     });
-    if (wEf > 0.005) detalle.push({ n: "Efectivo dentro de la cartera", w: wEf, r: EFECTIVO_MU });
+    if (wEf > 0.005) detalle.push({ n: "Efectivo dentro de la cartera", k: "efectivo", w: wEf, r: EFECTIVO_MU });
     detalle.sort((a, b) => b.w - a.w);
     if (tiene(st, "terminal")) ret += 0.01;
     if (tipoRama(st) === "patrimonio") ret += 0.02;
@@ -55194,7 +57747,12 @@ function Motor() {
       ...x, mes: Math.max(1, Math.min(12, Math.round(((i + 1) * 12) / (cuantos + 1)))),
     }));
     st.curva = (Array.isArray(st.curva) ? st.curva : []).concat(camino.slice(1)).slice(-TOPE_CURVA);
-    const cartera = { antes: carteraAntes, despues: st.cartera, ret, detalle, aporte, obj, mu: est.mu, sd: est.sd, beta, camino, hitos: hitosDecision };
+    /* lo que ganó o perdió cada cosa en la que tienes dinero; lo que no
+       sale de un activo (la terminal, la rama, un golpe) va en «Otros» */
+    const ganancias = detalle.map((d) => ({ k: d.k, v: carteraAntes * d.w * d.r }));
+    const restoG = (st.cartera - carteraAntes) - ganancias.reduce((a, g) => a + g.v, 0);
+    if (Math.abs(restoG) >= 1) ganancias.push({ k: "otros", v: restoG });
+    const cartera = { antes: carteraAntes, despues: st.cartera, ret, detalle, ganancias, aporte, obj, mu: est.mu, sd: est.sd, beta, camino, hitos: hitosDecision };
 
     /* ---- bienes ---- */
     st.bienes.forEach((id) => {
@@ -55215,7 +57773,10 @@ function Motor() {
           : gv.f < 1 ? Math.round((1 - gv.f) * 100) + "% por debajo" : "en su nivel") + " de lo normal.");
     }
 
+    if (conDecisiones) efectoRelaciones(st, notas);
     let desgaste = (tiene(st, "coach") ? 2 : 4) + (tipoRama(st) === "boutique" ? 3 : 0);
+    /* con buen ánimo el año cansa menos; con el ánimo por el piso, más */
+    if (conDecisiones) desgaste -= entero(st.animo, 0, -2, 2) * 2;
     /* la cultura de la firma: cansa más o menos y empuja más o menos */
     const cul = culturaDe(st);
     if (cul) {
@@ -55243,6 +57804,8 @@ function Motor() {
     if (st.cri > 60) { st.cri = clamp(st.cri - 1, 0, 100); st.mod = st.cri; }
     if (st.red > 60) st.red = clamp(st.red - 1, 0, 100);
     let terminar = null;
+    /* para el legado: si este año hubo despido o agotamiento */
+    const burn0 = entero(st.burnouts, 0, 0, 99), desp0 = entero(st.despidos, 0, 0, 99);
     if (st.ene <= 0) {
       st.burnouts += 1;
       st.ene = 55; st.rep = clamp(st.rep - 8, 0, 100); st.cash -= 3000;
@@ -55257,7 +57820,7 @@ function Motor() {
            Nunca termina la partida: quedarse sin trabajo no es morirse. */
         st.rep = 26; st.carrera = Math.max(0, st.carrera - 6);
         st.cash -= 2000;
-        notas.push("Te dejan ir. Encuentras sitio en otra casa, pero llegas de cero y con la reputación por reconstruir.");
+        notas.push("Te dejan ir. Encuentras lugar en otra firma, pero llegas de cero y con la reputación por reconstruir.");
         st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Te dejan ir y empiezas en otra casa" });
       } else {
         st.rango = Math.max(0, st.rango - 1);
@@ -55332,12 +57895,28 @@ function Motor() {
        lo que hicieron los mercados y lo demás (compras, comisiones, lo que
        cambió el valor de tus bienes o de tu fondo). */
     const decisionesAno = hDec.reduce((a, x) => a + numero(x && x.cash, 0), 0);
-    const patVisible = patrimonio + valorFondoDe(st);
+    /* tu empresa: crece un poco cada año, y el año que juegas trae su noticia */
+    let camAno = null;
+    if (caminoDe(st)) {
+      const antesCam = valorCaminoDe(st);
+      const nt = conDecisiones ? noticiaCamino(st) : null;
+      const pct = (nt ? nt.pct : 0) + CAMINO_DERIVA;
+      st.empresa = { ...st.empresa, valor: Math.max(0, Math.round(numero(st.empresa.valor, 0) * (1 + pct))),
+        hist: nt ? (st.empresa.hist || []).concat({ t: nt.t, pct: nt.pct, a: st.turno }).slice(-12) : st.empresa.hist };
+      const delta = valorCaminoDe(st) - antesCam;
+      if (nt) {
+        camAno = { n: st.empresa.n, que: CAMINOS[st.empresa.id].que, t: nt.t, pct: nt.pct, delta };
+        notas.push(nt.t + " (" + pctTexto(nt.pct) + "). Tu parte en " + st.empresa.n + " vale ahora USD " + fmt(valorCaminoDe(st)) + ".");
+        if (Math.abs(nt.pct) >= 0.2) st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: nt.t });
+      } else camAno = { n: st.empresa.n, que: CAMINOS[st.empresa.id].que, t: null, pct: CAMINO_DERIVA, delta };
+    }
+    const camDelta = camAno ? camAno.delta : 0;
+    const patVisible = patrimonio + valorFondoDe(st) + valorCaminoDe(st);
     const patIni = conDecisiones && patAno.current != null && Number.isFinite(patAno.current) ? patAno.current : patAntes - decisionesAno;
     const mercadosAno = cartera.despues - cartera.antes;
     const sueldoAno = neto - pagoDeuda;
-    const partes = { decisiones: decisionesAno, sueldo: sueldoAno, mercados: mercadosAno,
-      otros: (patVisible - patIni) - decisionesAno - sueldoAno - mercadosAno };
+    const partes = { decisiones: decisionesAno, sueldo: sueldoAno, mercados: mercadosAno, camino: camDelta,
+      otros: (patVisible - patIni) - decisionesAno - sueldoAno - mercadosAno - camDelta };
 
     /* La del día: lo que se cumplió este año queda logrado y se premia ya,
        no al final de la carrera. Un mes de sueldo y algo de nombre. */
@@ -55362,13 +57941,25 @@ function Motor() {
       if (x) notas.push("Se terminó tu boost «" + x.n + "». Lo puedes volver a activar en Compras.");
     });
     st.boosts = (Array.isArray(st.boosts) ? st.boosts : []).filter((b) => b.hasta > st.turno + 1);
+    /* el legado del año (como la idolatría de El Ídolo) */
+    let legadoAno = null;
+    try {
+      const lg = legadoDelAno(st, { ascenso, premios: galas,
+        despido: entero(st.despidos, 0, 0, 99) > desp0, burnout: entero(st.burnouts, 0, 0, 99) > burn0 });
+      st = lg.st;
+      legadoAno = lg.legado;
+      if (legadoAno.subeNivel) {
+        notas.push("Tu legado sube de nivel: ahora eres " + legadoAno.subeNivel + ".");
+        st.titulares = st.titulares.concat({ q: String(2026 + st.turno), t: "Tu legado: " + legadoAno.subeNivel });
+      }
+    } catch (e) { /* el legado no puede tumbar el cierre */ }
     st.turno += 1;
     st = sanear(st);
     return { st, terminar, cierre: {
-      logros, galas,
+      logros, galas, legado: legadoAno,
       ano, notis, ascenso, cartera, notas, ing, egr, ingreso, egreso: egreso + pagoDeuda, neto: neto - pagoDeuda, ahorro,
       patAntes, patrimonio, bienesV, histo: st.histo, leccion, hitos, deuda,
-      patVisible, patIni, partes,
+      patVisible, patIni, partes, camino: camAno,
       /* "hitos" ya lo usan los hitos de patrimonio; las decisiones del
          año van por su propia clave para que no se pisen */
       hitosDec: cartera.hitos,
@@ -55378,7 +57969,7 @@ function Motor() {
   };
 
   /* La etapa: el año que jugaste y, detrás, los que se cierran solos,
-     hasta cinco o hasta el retiro. Un solo resumen para todos. */
+     hasta completar la etapa o hasta el retiro. Un solo resumen. */
   const cierreDelAno = () => {
     let r = calcularCierre(s, true);
     const todos = [r.cierre];
@@ -55386,8 +57977,27 @@ function Motor() {
       r = calcularCierre(r.st, false);
       todos.push(r.cierre);
     }
+    const cj = { ...juntarCierres(todos), anoIni: todos[0].ano };
+    /* el ascenso o el despido de la etapa se viven en pantalla, antes del golpe */
+    const despedido = entero(r.st.despidos, 0, 0, 9) > entero(s.despidos, 0, 0, 9);
+    if (despedido) {
+      r.st = { ...r.st, animo: clamp(entero(r.st.animo, 0, -2, 2) + ANIMO_MOMENTO.despido, -2, 2) };
+      setMomento(momentoDe("despido", r.st, [], r.st.rango < s.rango
+        ? { titulo: "Te bajan a " + cargoDe(r.st), antes: ["Cargo: " + cargoDe(r.st)] }
+        : { antes: ["Empiezas en otra firma"] }));
+    } else if (cj.ascenso) {
+      r.st = { ...r.st, animo: clamp(entero(r.st.animo, 0, -2, 2) + ANIMO_MOMENTO.ascenso, -2, 2) };
+      const subio = Math.round(sueldoCon(r.st, 1) - sueldoCon(s, 1));
+      setMomento(momentoDe("ascenso", r.st, [], { cargo: cj.ascenso, antes: subio > 0 ? ["Sueldo +USD " + fmt(subio) + " al año"] : [] }));
+    }
+    const animoAntes = entero(r.st.animo, 0, -2, 2);
+    let animo = animoAntes > 0 ? animoAntes - 1 : animoAntes < 0 ? animoAntes + 1 : 0;
+    const g = golpeDe(cj, cj.anoIni && cj.anoIni !== cj.ano ? cj.anoIni + " y " + cj.ano : String(cj.ano));
+    if (g) animo = clamp(animo + (g.sube ? 2 : -2), -2, 2);
+    r.st = { ...r.st, animo };
     setS(r.st);
-    setCierre({ ...juntarCierres(todos), anoIni: todos[0].ano });
+    setCierre(cj);
+    setGolpe(g ? { ...g, antes: animoAntes, despues: animo } : null);
     if (r.terminar) setFin(r.terminar);
     setAnuncio(true);       /* primero el rodillo, y despues el informe */
     setVerLeccion(false);   /* la leccion del año nuevo vuelve a su titular */
@@ -55406,6 +58016,10 @@ function Motor() {
     a += MODO(s.modo).ayuda;   /* el modo aprendiz perdona más */
     if (culturaDe(s)) a += culturaDe(s).ayuda;   /* en una firma escuela te explican */
     a += ayudaBoosts(s, tipo); /* los boosts activos */
+    a += entero(s.animo, 0, -2, 2) * 5;   /* el ánimo: ±5 por paso */
+    { const r = relDe(s);
+      if (s.mentor) a += r.mentor >= 70 ? 5 : r.mentor <= 25 ? -5 : 0;      /* tu mentor te ayuda si lo escuchas */
+      if (tipo === "anclaje" && !sinJefe(s)) a += r.jefe >= 70 ? 6 : r.jefe <= 25 ? -6 : 0; }
     return clamp(a, 0, 100);
   };
 
@@ -55445,6 +58059,21 @@ function Motor() {
       if (!todasFuera && faltaDe(o, s)) return;
     } catch (e) { /* ante la duda, se deja decidir */ }
     setOp(o);
+    if ((o.juego || o.j) && juegoAlOlfato(s, o, azar())) {
+      /* tu clase: el olfato decide en vez del minijuego. Lo que ayuda
+         a jugarlo (atributo, carrera, boosts) inclina la moneda, y el
+         resultado se cobra igual que si lo hubieras jugado. */
+      let ayuda = 50;
+      try { ayuda = ayudaDe(o); } catch (e) { /* con la ayuda media */ }
+      const ps = probsOlfato(ayuda, suerteBoosts(s));
+      const i = tirarAzar(ps);
+      const nivel = ["exito", "parcial", "fallo"][i] || "parcial";
+      const base = o.res ? o.res[nivel] : escalar(o.d || {}, nivel);
+      const b = { ...(base || {}) };
+      if (nivel === "fallo" && !o.res) b.msg = msgFallo(o);
+      resolverEscena(b, nivel, o, { i, ps, rots: ["Te salió redondo", "A medias", "No salió"], tonos: ["exito", "parcial", "fallo"] });
+      return;
+    }
     if (o.juego || o.j) { irA("minijuego"); return; }
     if (o.azar && Array.isArray(o.azar.esc) && o.azar.esc.length) {
       const ps = probsAzar(o, s);
@@ -55480,29 +58109,37 @@ function Motor() {
     /* Negociar el contrato: firmas exactamente el aumento que cerraste
        en la mesa. Si se levantó, sigues con lo que cobrabas. */
     if (op.negocia && op.contrato && extra) {
-      const pct = extra.acuerdo ? aumentoNeg(extra.precio) : 0;
-      const nuevo = extra.acuerdo ? sueldoNeg(op.negocia, extra.precio) : numero(op.negocia.actual, 0);
+      const pct = extra.acuerdo ? clamp(numero(extra.pct, 0), 0, NEG_MAX) / 100 : 0;
+      const nuevo = extra.acuerdo ? sueldoNeg(op.negocia, pct * 100) : numero(op.negocia.actual, 0);
+      const anosNeg = extra.acuerdo && extra.anos ? entero(extra.anos, 3, 2, 4) : null;
       const b = { ...(base || {}) };
       b.msg = (b.msg ? b.msg + " " : "") + (pct > 0
-        ? "Firmas por USD " + fmt(nuevo) + " al año: +" + Math.round(pct * 100) + "% sobre lo que cobrabas."
+        ? "Firmas por USD " + fmt(nuevo) + " al año: +" + Math.round(pct * 100) + "% sobre lo que cobrabas" + (anosNeg ? ", por " + anosNeg + " años." : ".")
         : "Sigues cobrando USD " + fmt(nuevo) + " al año.");
       /* la opción tiene que seguir siendo la misma (los mentores y los
          árboles la buscan por identidad): el aumento va aparte */
-      aumentoPactado.current = 1 + pct;
+      aumentoPactado.current = { mult: 1 + pct, anos: anosNeg };
       resolverEscena(b, nivel, op);
       return;
     }
     resolverEscena(base || {}, nivel, op);
   };
 
+  /* el aviso de lo que dio la carta del inicio de etapa */
+  const [flash, setFlash] = useState(null);
   const siguienteEscena = () => {
     if (!enFase("resultado")) return;
+    setFlash(res && res.auto ? { msg: res.msg, cambios: res.cambios, et: ev && ev.cuna ? "Tu arranque" : "Inicio de etapa" } : null);
     const resto = (Array.isArray(cola) ? cola : []).filter(escenaValida);
     if (resto.length > 0) {
       setCola(resto.slice(1)); ponerEscena(resto[0]);
       guardarEscena(s, resto);
     } else cerrarAno();
   };
+  /* el resultado de la carta del inicio de etapa se pasa solo */
+  useEffect(() => {
+    if (fase === "resultado" && res && res.auto) siguienteEscena();
+  }, [fase, res]);
 
   const siguienteAno = () => {
     if (!enFase("cierre")) return;
@@ -55536,7 +58173,9 @@ function Motor() {
 
   const bienesVal = valorBienes(s);
   const valorFondo = s.fondo ? s.fondo.posiciones.reduce((a, p) => a + p.ticket * s.fondo.pct, 0) : 0;
-  const patrimonio = s.cash + s.cartera + bienesVal + valorFondo - numero(s.deuda, 0);
+  /* con tu parte de la empresa: es lo que dice el encabezado de cada
+     etapa (patVisible) y lo que se manda al ranking */
+  const patrimonio = s.cash + s.cartera + bienesVal + valorFondo + valorCaminoDe(s) - numero(s.deuda, 0);
   const gastosAnuales = gastoAnual(s);
   const retiroAnual = patrimonio * 0.04;
   const rentaProps = s.bienes.reduce((a, id) => a + ((bienDe(id) || {}).renta || 0), 0) * 2;
@@ -55651,6 +58290,7 @@ function Motor() {
     || GRUPOS_COMPRA[0];
   const TABS = [
     ["ficha", "Ficha", true],
+    ["empresa", s.propia ? "Tu empresa" : "Empresa", !!caminoDe(s)],
     ["portafolio", "Cartera", abierto(s, "cartera")],
     /* «Compras» y no «Comprar»: la seccion es un sustantivo y el boton
        de dentro es el verbo. Con los dos llamados igual habia dos
@@ -55730,7 +58370,7 @@ function Motor() {
                   Las empresas, los fondos, las noticias y los números están inventados. No existe ninguna
                   de las oportunidades que vas a ver, no hay dinero de verdad en juego y nada de lo que
                   decidas aquí tiene la menor consecuencia fuera de esta pantalla. Puedes arruinarte
-                  tranquilo: es el mejor sitio para hacerlo.
+                  tranquilo: es el mejor lugar para hacerlo.
                 </p>
               </div>
 
@@ -55738,7 +58378,7 @@ function Motor() {
                 <div className="ea-avisoK ea-dis">Es para aprender, no para hacerte caso</div>
                 <p>
                   El juego enseña cómo funcionan el interés compuesto, la diversificación, el riesgo, la deuda
-                  y el coste de vivir por encima de tus posibilidades. Eso son conceptos, y los conceptos sí
+                  y el costo de vivir por encima de tus posibilidades. Eso son conceptos, y los conceptos sí
                   se trasladan a la vida. Las cifras concretas, no: <strong>esto no es asesoría financiera</strong>.
                   Ninguna decisión de tu dinero real debería basarse en lo que pase en una partida.
                 </p>
@@ -55768,7 +58408,7 @@ function Motor() {
                 <div className="ea-avisoK ea-dis">Tu partida no sale de tu navegador</div>
                 <p>
                   Lo que juegas se guarda en tu propio dispositivo para que puedas retomarlo. No se envía
-                  a ningún sitio, no se pide ningún dato tuyo y no hay cuenta que crear.
+                  a ningún lado, no se pide ningún dato tuyo y no hay cuenta que crear.
                 </p>
               </div>
             </div>
@@ -55803,17 +58443,15 @@ function Motor() {
             <circle className="ea-paPunto" cx="300" cy="8" r="5.5" />
           </svg>
           <p className="ea-lede">
-            Un año por turno. Decides, el mercado se mueve, y al final ves en qué quedó todo.
+            Empiezas desde abajo y decides todo: tu carrera, tu plata, tu familia y la empresa que vas a construir. Al final ves en qué quedó tu vida.
           </p>
           </div>
-          <button className="ea-atras ea-dis" style={{ marginBottom: 0, marginTop: 4 }}
-            onClick={() => { if (enFase("portada")) irA("aviso"); }}>Leer el aviso</button>
           <div className="ea-regla" />
           <div className="ea-cifras ea-cifrasPortada" style={{ marginBottom: 26 }}>
             <div><div className="ea-cifraK">La carrera</div><div className="ea-cifraV ea-dis">De pasante a socio</div>
               <div className="ea-cifraD">Ascensos, contratos y la opción de montar tu propia firma.</div></div>
             <div><div className="ea-cifraK">El punto de partida</div><div className="ea-cifraV ea-dis">Nunca es tarde para invertir</div>
-              <div className="ea-cifraD">Empieza a los 20, 30, 40 o 50: más joven, más tiempo; más tarde, más capital y experiencia.</div></div>
+              <div className="ea-cifraD">Empieza a la edad que quieras. Mientras más joven, más tiempo; más tarde, más capital y experiencia.</div></div>
             <div><div className="ea-cifraK">El objetivo</div><div className="ea-cifraV ea-dis">Independencia financiera</div>
               <div className="ea-cifraD">Que tu patrimonio cubra tu vida sin depender del sueldo.</div></div>
             <div><div className="ea-cifraK">Los imprevistos</div><div className="ea-cifraV ea-dis">Crisis, familia y fraudes</div>
@@ -56102,6 +58740,20 @@ function Motor() {
                 {/* El camino que elegiste no se anuncia en la placa: se
                     descubre entero al final, en «Tu camino». */}
               </div>
+              {/* Tu legado, como la idolatría de El Ídolo: el nivel, el
+                  número y cuánto falta para el que sigue. */}
+              {(() => {
+                const lv = clamp(numero(s.legado, 0), 0, 100);
+                const nv = nivelLegado(lv), sg = siguienteNivelLegado(lv);
+                return (
+                  <div className="ea-legado" title="Tu legado: lo que dejas en tu oficio. Sube quedándote, ascendiendo y ganando reconocimientos; baja si te vas o te despiden.">
+                    <span className="ea-legadoN ea-dis">{nv.n}</span>
+                    <span className="ea-mono">{Math.floor(lv)}/100</span>
+                    <span className="ea-legadoBar" aria-hidden="true"><i style={{ width: lv + "%" }} /></span>
+                    {sg && <span className="ea-legadoSig ea-dis">→ {sg.n} {sg.min}</span>}
+                  </div>
+                );
+              })()}
             </div>
             <div className="ea-reloj">
               {/* Sin «año X de Y»: saber cuándo se acaba la partida le quita
@@ -56157,7 +58809,7 @@ function Motor() {
                 debajo los cinco atributos, cada uno con su anillo. */}
             <div className="ea-stats">
               {/* Partida corta: la vida entera en una barra, de tu edad
-                  inicial a los 65, encima de la del cargo. Con nueve
+                  inicial a los 65, encima de la del cargo. Con veinte
                   etapas, ver cuánto queda ayuda a decidir. */}
               <div className="ea-xp" title={"Vas por los " + edad(s.turno, s.edadIni) + " de " + EDAD_RETIRO + " años"}>
                 <div className="ea-xpTop ea-dis">
@@ -56184,6 +58836,10 @@ function Motor() {
               })()}
               <div className="ea-anillos">
                 {["ene", "cri", "red", "rep"].map((k) => <Anillo key={k} k={k} v={s[k]} />)}
+              </div>
+              <PildoraCamino st={s} />
+              <div className="ea-animoPill ea-dis" title="Tu ánimo da o quita ayuda en los minijuegos y cansancio. Vuelve solo hacia Normal.">
+                <span>{animoDe(s.animo).e}</span>Ánimo: {animoDe(s.animo).n}
               </div>
             </div>
           </div>
@@ -56240,6 +58896,7 @@ function Motor() {
                 </button>
                 {tab === "ficha" && (
                   <div>
+                    <BloqueRelaciones st={s} />
                     <div className="ea-titular" style={{ marginBottom: 4 }}>
                       <div className="ea-titularK ea-dis">Patrimonio</div>
                       <div className="ea-titularV ea-mono" style={{ fontSize: 27 }}>USD {fmt(patrimonio)}</div>
@@ -56472,6 +59129,7 @@ function Motor() {
                 {/* Tu dinero y tu fondo son la misma actividad —invertir—
                     y eran dos pestañas. El fondo llega en rango 4, asi
                     que hasta entonces esto es solo la cartera. */}
+                {tab === "empresa" && caminoDe(s) && <PanelEmpresa st={s} patrimonio={patrimonioDe(s)} />}
                 {tab === "portafolio" && (
                   <PanelCartera st={s} onAplicar={aplicarCartera} onPendiente={setCarteraPend} />
                 )}
@@ -56507,7 +59165,7 @@ function Motor() {
                             <span className="ea-mono" style={{ fontSize: 12.5, flexShrink: 0 }}>{fmt(precio)}</span>
                           </div>
                           <div className="ea-etqs">
-                            <span className="ea-etq act">dura {b.anos === 1 ? "una etapa (5 años)" : b.anos + " etapas (" + b.anos * ETAPA + " años)"}</span>
+                            <span className="ea-etq act">dura {b.anos === 1 ? "una etapa (" + ETAPA + " años)" : b.anos + " etapas (" + b.anos * ETAPA + " años)"}</span>
                             {b.escala && <span className="ea-etq">sube con tu sueldo</span>}
                           </div>
                           <div className="ea-itemD">{b.d}</div>
@@ -56879,7 +59537,11 @@ function Motor() {
                   completa. Mismo memorando, mismas opciones y mismos
                   candados —un solo camino de pintado—, solo que dentro de
                   un marco que se lleva la pantalla. */}
-              {fase === "evento" && ev && (() => {
+              {fase === "evento" && ev && ev.susto && (
+                <SustoRapido key={ev.id} ev={ev} ano={ano} genero={s.genero} onElegir={elegir}
+                  onTarde={() => { if (enFase("evento") && ev.porTi) resolverEscena(ev.porTi.d, "fallo", ev.porTi); }} />
+              )}
+              {fase === "evento" && ev && !ev.susto && (() => {
                 const cl0 = CLASE_ESCENA(ev);
                 /* La última del año lleva «Cierre de año» (Alessandro, 8-oct):
                    si ya era especial, se dice también qué era. */
@@ -56901,6 +59563,17 @@ function Motor() {
                   {/* De donde viene. Sin esta linea una consecuencia se lee
                       como una escena mas y el jugador no ve que fue EL
                       quien la provoco, que es todo lo que se busca. */}
+                  {/* lo que dio la carta del inicio de etapa, sin pantalla propia */}
+                  {flash && !ev.pretemporada && Array.isArray(flash.cambios) && flash.cambios.some((c) => (c.nota || c.v) && c.k !== "cash") && (
+                    <div className="ea-cambios" style={{ marginTop: 0, marginBottom: 10 }}>
+                      <span className="ea-chip ea-dis">{flash.et || "Inicio de etapa"}</span>
+                      {flash.cambios.filter((c) => (c.nota || c.v) && c.k !== "cash").map((c, i) => (
+                        <span className={"ea-chip ea-mono k-" + c.k + " " + (c.k === "deuda" || c.neg ? "neg" : c.nota ? "pos" : c.v > 0 ? "pos" : "neg")} key={i}>
+                          {c.nota ? c.nota : (ETIQ[c.k] + " " + (c.v > 0 ? "+" : "") + c.v)}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   {ev.por && (
                     <div className="ea-porQue"><Icono k="eco" tam={14} /><span>Viene de: {ev.por}{(() => {
                       const pp = (Array.isArray(s.pendientes) ? s.pendientes : []).find((x) => x.id === ev.id && x.p != null);
@@ -56940,7 +59613,10 @@ function Motor() {
                         const efs = efectosDe(o);
                         const falta = faltas[i];
                         const bits = [];
-                        if (tipo) bits.push(JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Conocimiento") + " " + Math.round(ayudaDe(o)));
+                        if (tipo) bits.push((s.clase === "intuitivo" && juegoAlOlfato(s, o, 0) ? "🎲 A olfato: " : "")
+                          + JUEGO(tipo).n + " · te ayuda " + (ETIQ[o.stat] || "Conocimiento") + " " + Math.round(ayudaDe(o)));
+                        /* la línea que explica la clase o el arquetipo */
+                        if (o.tag) bits.push(o.tag);
                         /* la elección de mentor: su avatar, su nombre y lo que aconseja */
                         if (o.mentorId) {
                           const m = MENTOR(o.mentorId);
@@ -56959,7 +59635,7 @@ function Motor() {
                             title={falta ? "Te falta " + (ETIQ[falta.k] || falta.k).toLowerCase() : undefined}
                             onClick={() => elegir(o)}>
                             <span className="ea-opN ea-mono">{String.fromCharCode(65 + (i % 26))}</span>
-                            {o.rareza && <span className={"ea-opRareza ea-dis " + o.rareza}>{o.rareza === "dorada" ? "Dorada" : "Rara"}</span>}
+                            {o.rareza && <span className={"ea-opRareza ea-dis " + o.rareza}>{o.rareza === "iconica" ? "Icónica" : o.rareza === "dorada" ? "Dorada" : "Rara"}</span>}
                             {o.t}
                             {/* en el contrato: qué clase de oferta es y cuánto vas a cobrar */}
                             {o.sueldo > 0 && (
@@ -57079,6 +59755,12 @@ function Motor() {
                     </div>
                   )}
                   {res.azar && <BarraAzar azar={res.azar} />}
+                  {Array.isArray(res.avisos) && res.avisos.length > 0 && (
+                    <div className="ea-avisos">
+                      {res.avisos.map((a, i) => <div className="ea-aviso ea-dis" key={i} style={{ animationDelay: (500 + i * 250) + "ms" }}><span>{a.e}</span>{a.t}</div>)}
+                    </div>
+                  )}
+                  {res.pct != null && <div className="ea-pctJug">El {res.pct}% de los jugadores eligió lo mismo que tú.</div>}
                   <button className="ea-btn" disabled={carteraPend} onClick={siguienteEscena}>
                     {(Array.isArray(cola) ? cola : []).filter(escenaValida).length > 0 ? "Lo siguiente que pasó" : "Cerrar el año"}
                   </button>
@@ -57139,7 +59821,7 @@ function Motor() {
                     <div className="ea-hilo">
                       {(cierre.ecos || []).length > 0 && (
                         <>
-                          <div className="ea-hiloK ea-dis">Lo que volvió de tus decisiones</div>
+                          <div className="ea-hiloK ea-dis">Consecuencias de lo que decidiste antes</div>
                           {cierre.ecos.map((e, i) => (
                             <div className="ea-hiloL" key={"e" + i}><b>{e.t}</b><span>porque {e.por.charAt(0).toLowerCase() + e.por.slice(1)}</span></div>
                           ))}
@@ -57147,9 +59829,9 @@ function Motor() {
                       )}
                       {(cierre.abiertos || []).length > 0 && (
                         <>
-                          <div className="ea-hiloK ea-dis" style={{ marginTop: (cierre.ecos || []).length ? 10 : 0 }}>Lo que sigue abierto</div>
+                          <div className="ea-hiloK ea-dis" style={{ marginTop: (cierre.ecos || []).length ? 10 : 0 }}>Puede tener consecuencias más adelante</div>
                           {cierre.abiertos.map((t, i) => (
-                            <div className="ea-hiloL" key={"a" + i}><span>{t}: puede volver en los próximos años.</span></div>
+                            <div className="ea-hiloL" key={"a" + i}><span>{t}.</span></div>
                           ))}
                           {cierre.masAbiertos > 0 && <div className="ea-hiloL"><span>Y {cierre.masAbiertos} cosa{cierre.masAbiertos > 1 ? "s" : ""} más.</span></div>}
                         </>
@@ -57337,7 +60019,11 @@ function Motor() {
           el unico momento del juego que no pide leer nada: un numero
           grande girando y cuanto se movio. El informe espera debajo.
           ============================================================ */}
-      {fase === "cierre" && cierre && anuncio && (() => {
+      {momentos.length > 0 && <MomentoVida key={momentos[0].t + momentos.length} m={momentos[0]} onFin={() => setMomentos((c) => c.slice(1))} />}
+      {fase === "cierre" && cierre && golpe && !momentos.length && (
+        <GolpeDinero golpe={golpe} antes={golpe.antes} despues={golpe.despues} onFin={() => setGolpe(null)} />
+      )}
+      {fase === "cierre" && cierre && anuncio && !golpe && !momentos.length && (() => {
         const fin = cierre.patVisible != null ? cierre.patVisible : cierre.patrimonio;
         const ini = cierre.patIni != null ? cierre.patIni : cierre.patAntes;
         const sube = fin >= ini;
@@ -57348,19 +60034,39 @@ function Motor() {
                 finales.js para saber cuantos años se jugaron, y esta en
                 la cabecera del informe. Repetirla aqui hacia que cada
                 año se contara dos veces. */}
-            <div className="ea-anuncioK ea-dis">{cierre.anoIni && cierre.anoIni !== cierre.ano ? "De " + cierre.anoIni + " a " + cierre.ano : "Cierre de " + cierre.ano}</div>
+            {/* Los años de la etapa, uno y otro, y lo que tienes hoy.
+                «De 2028 a 2029» y luego «en estos 2 años» no se entendía
+                (Alessandro, 9-nov-2026). */}
+            <div className="ea-anuncioK ea-dis">{cierre.anoIni && cierre.anoIni !== cierre.ano ? cierre.anoIni + " y " + cierre.ano : "Cierre de " + cierre.ano}</div>
+            <div className="ea-anuncioL" style={{ marginTop: 0, marginBottom: 6, animation: "none" }}>Tu patrimonio</div>
             <div className="ea-anuncioN ea-mono">
               <span className="ea-anuncioU ea-dis">USD</span>
               <Rodillo v={fin} />
             </div>
-            <div className={"ea-anuncioD ea-mono " + (sube ? "sube" : "baja")}
+            <div className={"ea-anuncioD ea-dis " + (sube ? "sube" : "baja")}
               style={{ animationDelay: "1.5s" }}>
-              {sube ? "+" : "−"}{fmt(dif)} {cierre.anos > 1 ? "en estos " + cierre.anos + " años" : "en el año"}
+              {dif < 1 ? "Te quedaste igual" : (sube ? "Ganaste USD " : "Perdiste USD ") + fmt(dif)}
             </div>
             <Desglose partes={cierre.partes} oscuro />
+            <EnQueInvertiste cartera={cierre.cartera} />
+            {cierre.camino && cierre.camino.t && (
+              <div className="ea-caminoNoticia">
+                <span className="ea-dis">{cierre.camino.que} · {cierre.camino.n}</span>
+                {cierre.camino.t} <b className={"ea-mono " + (cierre.camino.pct >= 0 ? "sube" : "baja")}>{pctTexto(cierre.camino.pct)}</b>
+              </div>
+            )}
             {cierre.ascenso && (
               <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.8s", color: "var(--cobre)", fontSize: 16 }}>
                 Ascenso a {cierre.ascenso}
+              </div>
+            )}
+            {/* el legado de la etapa, como la idolatría tras cada temporada */}
+            {cierre.legado && (
+              <div className="ea-anuncioL ea-dis" style={{ animationDelay: "1.9s", fontSize: cierre.legado.subeNivel ? 16 : 13,
+                color: cierre.legado.subeNivel ? "var(--cobre)" : undefined }}>
+                {cierre.legado.subeNivel ? "¡Tu legado sube: ahora eres " + cierre.legado.subeNivel + "!"
+                  : "Legado · " + cierre.legado.nivel} {Math.floor(cierre.legado.antes)} → {Math.floor(cierre.legado.despues)}
+                {cierre.legado.techo ? " · sin un reconocimiento no pasas de 80" : ""}
               </div>
             )}
             {cierre.hitos.length > 0 && (
@@ -57459,6 +60165,24 @@ function Motor() {
             </div>
           </div>
 
+          {/* La gloria, como en El Ídolo: una sola cifra para comparar
+              carreras. La plata no suma; suma lo que dejaste. */}
+          {(() => {
+            const g = gloriaDe(s, cobertura);
+            const lv = clamp(numero(s.legadoMax, numero(s.legado, 0)), 0, 100);
+            return (
+              <div className="ea-gloria">
+                <div className="ea-cifraK">Tu gloria</div>
+                <div className="ea-gloriaN ea-dis">{fmt(g.total)}</div>
+                <div className="ea-gloriaP"><span>Tu legado más alto</span><span className="ea-mono">{nivelLegado(lv).n} · {Math.floor(lv)}/100</span></div>
+                {g.piezas.map((p) => (
+                  <div className="ea-gloriaP" key={p.n}><span>{p.n}</span><span className="ea-mono">{fmt(p.v)}</span></div>
+                ))}
+                {g.mult > 1 && <div className="ea-gloriaP"><span>Por empezar a los {s.edadIni}</span><span className="ea-mono">×{String(g.mult).replace(".", ",")}</span></div>}
+              </div>
+            );
+          })()}
+
           {s.dia && (() => {
             const h = hechosDelDia(s, { pat: patrimonio, gasto: gastosAnuales });
             return (
@@ -57540,7 +60264,7 @@ function Motor() {
                 </div>
                 <div className="ea-fila"><span style={{ fontSize: 13 }}>Tu patrimonio a los 65, sin tocarlo</span><span className="ea-mono">USD {fmt(sinTocar)}</span></div>
                 <div className="ea-fila"><span style={{ fontSize: 13 }}>Solo por dejarlo quieto</span><span className="ea-mono">+USD {fmt(sinTocar - patrimonio)}</span></div>
-                <div className="ea-fila"><span style={{ fontSize: 13 }}>Sueldo neto que dejaste sobre la mesa</span><span className="ea-mono">USD {fmt(deSueldo)}</span></div>
+                <div className="ea-fila"><span style={{ fontSize: 13 }}>Sueldo neto que dejaste de cobrar</span><span className="ea-mono">USD {fmt(deSueldo)}</span></div>
                 <div className="ea-fila"><span style={{ fontSize: 13 }}>Retirando 4% al año</span><span className="ea-mono">USD {fmt(retiroAnual)} · gastas {fmt(gastosAnuales)}</span></div>
                 <div className="ea-itemD" style={{ marginTop: 9 }}>
                   {mu > 0

@@ -11,6 +11,7 @@
     "robustez": "node pruebas/comparar.js",
     "cobertura": "node pruebas/cobertura.js 20",
     "finales": "node pruebas/finales.js 20",
+    "ritmo": "node pruebas/ritmo.js 8",
     "alcance": "node pruebas/alcance.js 12",
     "deuda": "node pruebas/deuda.js",
     "fondo": "node pruebas/fondo3.js",
@@ -35,7 +36,8 @@
     "cierre": "node pruebas/cierre.js",
     "contrato": "node pruebas/contrato.js",
     "boosts": "node pruebas/boosts.js",
-    "gala": "node pruebas/gala.js"
+    "gala": "node pruebas/gala.js",
+    "legado": "node pruebas/legado.js"
   },
   "devDependencies": {
     "@babel/core": "^7",

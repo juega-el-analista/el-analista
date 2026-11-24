@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El Analista · sustos</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Nunito:wght@400..800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<style>
+  html,body{margin:0;background:#2A2440;font-family:Nunito,system-ui,sans-serif}
+  .ea-root{--tinta:#2A2440;--crema:#FFF4DC;--mostaza:#F2B632;--rojo:#E0503A;--verde:#2F8A54}
+  .demo{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;box-sizing:border-box}
+  .demoBot{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .demoBot button{border:2px solid var(--crema);border-radius:999px;background:transparent;color:var(--crema);font:800 14px 'Bricolage Grotesque';padding:9px 15px;cursor:pointer}
+  .demoBot button.on{background:var(--mostaza);border-color:var(--mostaza);color:var(--tinta)}
+  .ea-susto{position:relative;width:100%;max-width:720px;aspect-ratio:16/10;border-radius:22px;overflow:hidden;animation:ea-entra .35s ease-out}
+  @keyframes ea-entra{from{opacity:0;transform:scale(1.05)}}
+  .ea-susto svg{position:absolute;inset:0;width:100%;height:100%}
+  .ea-sustoTxt{position:absolute;left:0;right:0;bottom:0;padding:60px 16px 16px;text-align:center;color:var(--crema);background:linear-gradient(transparent,rgba(20,16,32,.94))}
+  .ea-sustoK{font:700 12px Nunito,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mostaza)}
+  .ea-sustoT{font:800 clamp(22px,5vw,34px) 'Bricolage Grotesque',sans-serif;line-height:1.1;margin:4px 0 10px}
+  .ea-reloj{height:8px;border-radius:4px;background:rgba(255,244,220,.15);overflow:hidden;margin:0 auto 12px;max-width:420px}
+  .ea-reloj div{height:100%;background:var(--rojo);transition:width .1s linear}
+  .ea-relojN{font:800 13px 'Bricolage Grotesque';color:#F2A08E;margin-bottom:6px}
+  .ea-ops{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .ea-ops button{border:0;border-radius:999px;background:var(--mostaza);color:var(--tinta);font:800 14px 'Bricolage Grotesque';padding:11px 16px;cursor:pointer;box-shadow:0 3px 0 #C98F12}
+  .ea-ops button.b{background:var(--crema)} .ea-ops button.c{background:transparent;color:var(--crema);border:2px solid var(--crema);box-shadow:none}
+  .ea-res{font-size:15px;line-height:1.4;max-width:520px;margin:0 auto}
+  .ea-res b{display:block;font:800 20px 'Bricolage Grotesque';margin-bottom:4px}
+  .ea-tiembla{animation:ea-tiembla .25s infinite}
+  @keyframes ea-tiembla{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+  .ea-parpadea{animation:ea-parpadea .6s infinite alternate}
+  @keyframes ea-parpadea{to{opacity:.35}}
+  .ea-vibra{animation:ea-vibra .15s infinite}
+  @keyframes ea-vibra{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+  @media (prefers-reduced-motion:reduce){.ea-root *{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="raiz"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+function P({ x, y, s = 1, piel = "#E7B48A", pelo = "corto", colorPelo = "#2A2440", ropa, cara = "miedo", gorra, mascara }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <path d="M-46 170 Q-46 96 0 92 Q46 96 46 170 Z" fill={ropa} />
+      <rect x="-9" y="70" width="18" height="26" rx="8" fill={piel} />
+      <ellipse cx="0" cy="42" rx="30" ry="34" fill={piel} />
+      {pelo === "corto" && !gorra && <path d="M-31 36 Q-32 6 0 4 Q32 6 31 36 Q22 18 0 18 Q-20 18 -31 36 Z" fill={colorPelo} />}
+      {gorra && <path d="M-32 30 Q-30 0 0 0 Q30 0 32 30 L54 34 L-32 34 Z" fill={gorra} />}
+      {mascara && <path d="M-30 46 Q0 40 30 46 L28 70 Q0 82 -28 70 Z" fill="#2A2440" />}
+      {cara === "miedo"
+        ? <g><g fill="#FFFFFF"><circle cx="-11" cy="42" r="7" /><circle cx="11" cy="42" r="7" /></g><g fill="#2A2440"><circle cx="-11" cy="42" r="3" /><circle cx="11" cy="42" r="3" /></g>
+            <ellipse cx="0" cy="60" rx="6" ry="7" fill="#2A2440" /></g>
+        : <g fill="#2A2440"><rect x="-17" y="34" width="11" height="3" rx="1.5" transform="rotate(14 -11 35)" /><rect x="6" y="34" width="11" height="3" rx="1.5" transform="rotate(-14 11 35)" />
+            <circle cx="-11" cy="43" r="3" /><circle cx="11" cy="43" r="3" /></g>}
+    </g>
+  );
+}
+const SUSTOS = {
+  asalto: {
+    k: "Una noche de 2031 · Saliendo de la oficina", t: "«¡Dame el celular, rápido!»", seg: 5,
+    ops: [
+      { t: "Entregar el celular", r: "Se lo das y se va corriendo. Pierdes el celular y un buen susto, pero llegas entero a casa.", ef: ["−USD 900", "Ánimo −1"] },
+      { t: "Enfrentarlo", r: "Lo empujas y sale corriendo, pero te tuerces la muñeca. Dos semanas con yeso y una historia que vas a contar mil veces.", ef: ["Energía −15", "Reputación +2"] },
+      { t: "Correr", r: "Corres hasta la esquina iluminada. No te alcanza, pero se te cae la billetera en la carrera.", ef: ["−USD 300", "Energía −5"] },
+    ],
+    porTi: "Te quedaste paralizado. Te quita el celular y la billetera sin que digas nada.", porTiEf: ["−USD 1.200", "Ánimo −2"],
+    dibujo: (t) => (
+      <g>
+        <rect width="720" height="450" fill="#1E1A30" />
+        <rect x="0" y="0" width="720" height="300" fill="#2A2440" />
+        <g fill="#15121F"><rect x="20" y="60" width="120" height="240" /><rect x="560" y="40" width="150" height="260" /></g>
+        <g fill="#F2B632" opacity=".7"><rect x="40" y="90" width="16" height="20" /><rect x="90" y="140" width="16" height="20" /><rect x="590" y="80" width="16" height="20" /><rect x="640" y="150" width="16" height="20" /></g>
+        <rect x="360" y="60" width="8" height="240" fill="#3B3358" /><path d="M364 64 L330 74" stroke="#3B3358" strokeWidth="8" />
+        <ellipse cx="330" cy="300" rx="160" ry="40" fill="#F2B632" opacity=".18" /><circle cx="330" cy="78" r="12" fill="#F2B632" />
+        <rect y="300" width="720" height="150" fill="#3B3358" />
+        <g className={t < 3 ? "ea-tiembla" : ""}><P x={240} y={130} s={1.25} ropa="#2F5D8A" /></g>
+        <P x={460} y={125} s={1.3} piel="#8D5A3B" ropa="#15121F" cara="malo" gorra="#3B3358" mascara />
+      </g>
+    ),
+  },
+  crisis: {
+    k: "Lunes negro de 2037 · Tu oficina", t: "La bolsa cae 18% en una mañana", seg: 6,
+    ops: [
+      { t: "Vender todo", r: "Vendes en el piso. Te salvas de lo que siguió cayendo, pero te pierdes el rebote de los meses siguientes.", ef: ["Cartera −22%", "Ánimo −1"] },
+      { t: "Aguantar", r: "No tocas nada. Las semanas siguientes duelen, y al año la cartera ya está por encima de donde estaba.", ef: ["Cartera −18% hoy", "Recupera en 1 año"] },
+      { t: "Comprar barato", r: "Pones tus ahorros a trabajar con todo en rojo. Da miedo. Dos años después es la mejor compra de tu vida.", ef: ["−USD 15.000 en efectivo", "Cartera +35% en 2 años"] },
+    ],
+    porTi: "No decides nada y el pánico decide por ti: tu asesor vende la mitad en el peor momento.", porTiEf: ["Cartera −24%", "Ánimo −2"],
+    dibujo: (t) => (
+      <g>
+        <rect width="720" height="450" fill="#2A2440" />
+        {[0, 1, 2].map((i) => (
+          <g key={i} transform={`translate(${70 + i * 200} 50)`}>
+            <rect width="180" height="120" rx="8" fill="#15121F" />
+            <polyline className="ea-parpadea" points="12,22 40,30 62,26 90,58 118,52 146,96 168,104" fill="none" stroke="#E0503A" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" />
+            <text x="150" y="24" textAnchor="end" fill="#E0503A" fontFamily="Bricolage Grotesque" fontWeight="800" fontSize="16">{["−18%", "−22%", "−31%"][i]}</text>
+          </g>
+        ))}
+        <rect y="300" width="720" height="150" fill="#3B3358" />
+        <rect x="80" y="290" width="560" height="22" rx="6" fill="#8A3A1C" />
+        <P x={360} y={130} s={1.3} ropa="#2A2440" />
+        <g className="ea-vibra" transform="translate(520 250)"><rect width="34" height="56" rx="6" fill="#15121F" /><rect x="4" y="6" width="26" height="40" rx="3" fill="#E0503A" /></g>
+      </g>
+    ),
+  },
+  estafa: {
+    k: "Un martes de 2029 · Tu casa", t: "«Le llamamos del banco: deme el código que le llegó»", seg: 7,
+    ops: [
+      { t: "Darle el código", r: "Era una estafa. Esa misma tarde vacían tu cuenta. El banco te devuelve una parte después de semanas de trámite.", ef: ["−USD 6.500", "Ánimo −2"] },
+      { t: "Colgar y llamar al banco", r: "En el banco te confirman que nadie te llamó. Bloquean la tarjeta por si acaso. Te salvaste.", ef: ["Conocimiento +3", "Ánimo +1"] },
+      { t: "Hacerle preguntas", r: "Le preguntas tu número de cliente y cuelga. Era un estafador, y ya no te va a volver a llamar.", ef: ["Conocimiento +2"] },
+    ],
+    porTi: "Dudas demasiado y el «banco» insiste hasta que le lees el código. Era una estafa.", porTiEf: ["−USD 6.500", "Ánimo −2"],
+    dibujo: (t) => (
+      <g>
+        <rect width="720" height="450" fill="#F3E2BF" />
+        <rect y="300" width="720" height="150" fill="#E2CFA8" />
+        <rect x="430" y="50" width="220" height="180" rx="12" fill="#8CC4E8" />
+        <P x={240} y={130} s={1.25} ropa="#2F8A54" />
+        <g className="ea-vibra" transform="translate(360 150)">
+          <rect width="120" height="210" rx="16" fill="#2A2440" /><rect x="8" y="14" width="104" height="182" rx="8" fill="#FFF8EA" />
+          <text x="60" y="56" textAnchor="middle" fill="#2A2440" fontFamily="Nunito" fontWeight="800" fontSize="13">«Tu banco»</text>
+          <text x="60" y="76" textAnchor="middle" fill="#665C7A" fontFamily="Nunito" fontSize="11">número oculto</text>
+          <circle cx="34" cy="160" r="16" fill="#E0503A" /><circle cx="86" cy="160" r="16" fill="#2F8A54" />
+        </g>
+      </g>
+    ),
+  },
+};
+function Susto({ s, onFin }) {
+  const [t, setT] = useState(s.seg);
+  const [elegida, setElegida] = useState(null);
+  useEffect(() => {
+    if (elegida) return;
+    if (t <= 0) { setElegida({ t: "Sin decidir", r: s.porTi, ef: s.porTiEf, tarde: true }); return; }
+    const id = setTimeout(() => setT((x) => Math.max(0, +(x - 0.1).toFixed(1))), 100);
+    return () => clearTimeout(id);
+  }, [t, elegida]);
+  return (
+    <div className="ea-susto">
+      <svg viewBox="0 0 720 450" preserveAspectRatio="xMidYMid slice">{s.dibujo(t)}</svg>
+      <div className="ea-sustoTxt">
+        <div className="ea-sustoK">{s.k}</div>
+        <div className="ea-sustoT">{s.t}</div>
+        {!elegida ? (
+          <div>
+            <div className="ea-relojN">Decide: {Math.ceil(t)} s</div>
+            <div className="ea-reloj"><div style={{ width: (t / s.seg * 100) + "%" }} /></div>
+            <div className="ea-ops">
+              {s.ops.map((o, i) => <button key={o.t} className={["", "b", "c"][i]} onClick={() => setElegida(o)}>{o.t}</button>)}
+            </div>
+          </div>
+        ) : (
+          <div className="ea-res">
+            <b>{elegida.tarde ? "No decidiste a tiempo" : elegida.t}</b>{elegida.r}
+            <div className="ea-ops" style={{ marginTop: 10 }}>{elegida.ef.map((x) => <span key={x} style={{ background: "rgba(255,244,220,.14)", padding: "5px 10px", borderRadius: 999, fontSize: 12.5, fontWeight: 700 }}>{x}</span>)}</div>
+            <div className="ea-ops" style={{ marginTop: 12 }}><button onClick={onFin}>Seguir</button></div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+function Demo() {
+  const [cual, setCual] = useState({ k: "asalto", vez: 0 });
+  const [fin, setFin] = useState(false);
+  const ver = (k) => { setFin(false); setCual({ k, vez: cual.vez + 1 }); };
+  return (
+    <div className="ea-root demo">
+      {!fin ? <Susto key={cual.k + cual.vez} s={SUSTOS[cual.k]} onFin={() => setFin(true)} />
+        : <h2 style={{ color: "#FFF4DC", fontFamily: "'Bricolage Grotesque'" }}>Aquí sigue la partida.</h2>}
+      <div className="demoBot">
+        <button className={cual.k === "asalto" ? "on" : ""} onClick={() => ver("asalto")}>Asalto</button>
+        <button className={cual.k === "crisis" ? "on" : ""} onClick={() => ver("crisis")}>Crisis del mercado</button>
+        <button className={cual.k === "estafa" ? "on" : ""} onClick={() => ver("estafa")}>Llamada del «banco»</button>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("raiz")).render(<Demo />);
+</script>
+</body>
+</html>

@@ -77,7 +77,10 @@ async function primerAno(semilla, edad) {
   ok(anos.length >= 4, "se jugaron " + anos.length + " primeros años completos");
   anos.forEach(({ s, e, a }) => {
     console.log("     (semilla " + s + ", " + e + " años) " + a.join("  →  "));
-    ok(/^Inicio de año$/i.test(a[0]), "  empieza con «Inicio de año»");
+    /* la primera etapa de una partida nueva abre con tu arranque (clase y
+       arquetipo, como El Ídolo); las demás, con la carta de inicio */
+    ok(/^Tu arranque$/i.test(a[0]) && /^Tu arranque$/i.test(a[1] || ""), "  empieza con «Tu arranque»: la clase y el arquetipo");
+    ok(!a.some((c) => /^Inicio de (año|etapa)$/i.test(c)), "  y la primera etapa no trae carta de inicio: la reemplaza el arquetipo");
     ok(/^Cierre de año/i.test(a[a.length - 1]), "  y la última escena lleva «Cierre de año»");
     ok(a.slice(0, -1).every((c) => !/Cierre de año/i.test(c)), "  y ninguna otra lo lleva");
   });
