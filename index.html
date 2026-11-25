@@ -2397,6 +2397,26 @@ const CSS4 = `
 .ea-animoPill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--crema);background:rgba(255,244,220,.1);padding:4px 10px 4px 6px;border-radius:999px}
 .ea-animoPill span{font-size:15px;letter-spacing:0}
+/* tus boosts, al costado de la pregunta: círculos que se van gastando */
+/* Fuera del flujo: la tarjeta no se mueve ni se angosta. Con margen de
+   sobra flotan al costado; en pantallas más angostas se montan sobre el
+   borde izquierdo de la tarjeta, dentro de su relleno de 26px. */
+.ea-conBoosts{position:relative}
+.ea-boostsCol{position:absolute;top:0;right:calc(100% + 12px);z-index:3;display:flex;flex-direction:column;gap:10px}
+.ea-boostCirc{position:relative;width:44px;height:44px;padding:0;border:0;border-radius:50%;cursor:pointer;
+  background:var(--tinta);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(30,20,50,.18)}
+.ea-boostCirc svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ea-boostPista{fill:none;stroke:rgba(255,244,220,.14);stroke-width:3.5}
+.ea-boostArco{fill:none;stroke:var(--mostaza);stroke-width:3.5;stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.ea-boostCirc span{position:relative;font-size:19px;line-height:1;transition:opacity .8s ease}
+.ea-boostCirc:disabled{cursor:default}
+.ea-boostCirc:focus-visible{outline:2px solid var(--mostaza);outline-offset:2px}
+@media (max-width:1219px){
+  .ea-boostsCol{right:auto;left:-12px;top:64px;gap:8px}
+  .ea-boostCirc{width:30px;height:30px}
+  .ea-boostCirc span{font-size:14px}
+}
+.ea-quieto .ea-boostArco,.ea-quieto .ea-boostCirc span{transition:none}
 /* tu empresa del camino */
 .ea-caminoPill{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:8px;font-size:12px;color:var(--crema);
   background:rgba(255,244,220,.1);padding:6px 12px;border-radius:12px}
@@ -66669,6 +66689,11 @@ function Motor() {
      gastar) y Vida (como vives, tu gente y tu expediente).
      ============================================================ */
   const hayCompras = abierto(s, "inmuebles") || abierto(s, "mejoras") || abierto(s, "vida");
+  /* Los círculos de boosts se desbloquean con el anuncio de Mejoras
+     (la escena «Tu primera inversión en ti» y su «Sección nueva»): antes
+     de que se abra Mejoras, o mientras el anuncio sigue en pantalla, no
+     se ven aunque haya boosts guardados. */
+  const boostsVivos = abierto(s, "mejoras") && nuevoSistema !== "mejoras" ? BOOSTS.filter(b => boostActivo(s, b.id)) : [];
   /* los tres grupos de Comprar, con lo que cada uno hace en una linea */
   const GRUPOS_COMPRA = [{
     id: "caprichos",
@@ -68539,7 +68564,54 @@ function Motor() {
     key: i
   }, /*#__PURE__*/React.createElement("span", {
     className: "ea-titQ ea-mono"
-  }, t.q), /*#__PURE__*/React.createElement("span", null, t.t))))))), /*#__PURE__*/React.createElement("div", null, fase === "evento" && ev && ev.susto && /*#__PURE__*/React.createElement(SustoRapido, {
+  }, t.q), /*#__PURE__*/React.createElement("span", null, t.t))))))), /*#__PURE__*/React.createElement("div", {
+    className: boostsVivos.length ? "ea-conBoosts" : undefined
+  }, boostsVivos.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "ea-boostsCol",
+    "aria-label": "Tus boosts"
+  }, boostsVivos.map(b => {
+    /* lo que va del año en curso, como los puntos de la cinta */
+    const enAno = fase === "evento" || fase === "minijuego" || fase === "resultado";
+    const quedanEsc = cola.length + (fase === "evento" || fase === "minijuego" ? 1 : 0);
+    const hechas = hitosAno.current.length;
+    const avance = enAno && hechas + quedanEsc > 0 ? hechas / (hechas + quedanEsc) : 0;
+    const total = Math.max(1, b.anos * ETAPA);
+    const p = clamp((quedaBoost(s, b.id) - avance) / total, 0.04, 1);
+    const C = 2 * Math.PI * 16;
+    return /*#__PURE__*/React.createElement("button", {
+      key: b.id,
+      type: "button",
+      className: "ea-boostCirc",
+      title: b.n,
+      "aria-label": b.n,
+      disabled: !hayCompras,
+      onClick: () => {
+        if (carteraPend || !hayCompras) return;
+        setGrupo("boosts");
+        setTab("comprar");
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      viewBox: "0 0 40 40",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("circle", {
+      cx: "20",
+      cy: "20",
+      r: "16",
+      className: "ea-boostPista"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "20",
+      cy: "20",
+      r: "16",
+      className: "ea-boostArco",
+      strokeDasharray: C.toFixed(2),
+      strokeDashoffset: (C * (1 - p)).toFixed(2)
+    })), /*#__PURE__*/React.createElement("span", {
+      "aria-hidden": "true",
+      style: {
+        opacity: (0.55 + 0.45 * p).toFixed(2)
+      }
+    }, b.e));
+  })), fase === "evento" && ev && ev.susto && /*#__PURE__*/React.createElement(SustoRapido, {
     key: ev.id,
     ev: ev,
     ano: ano,
